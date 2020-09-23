@@ -1,10 +1,42 @@
+// mainwindow.h
+//
+// This file is part of the VSCP (https://www.vscp.org)
+//
+// The MIT License (MIT)
+//
+// Copyright © 2000-2020 Ake Hedman, Grodans Paradis AB
+// <info@grodansparadis.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+class QAction;
+class QMenu;
+class QPlainTextEdit;
+class QSessionManager;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -12,10 +44,37 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    MainWindow();
+
+    void loadFile(const QString &fileName);
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
+
+private slots:
+    void newFile();
+    void open();
+    bool save();
+    bool saveAs();
+    void about();
+    void documentWasModified();
+#ifndef QT_NO_SESSIONMANAGER
+    void commitData(QSessionManager &);
+#endif
+    void newSession();
 
 private:
-    Ui::MainWindow *ui;
+    void createActions();
+    void createStatusBar();
+    void readSettings();
+    void writeSettings();
+    bool maybeSave();
+    bool saveFile(const QString &fileName);
+    void setCurrentFile(const QString &fileName);
+    QString strippedName(const QString &fullFileName);
+
+    QPlainTextEdit *textEdit;
+    QString curFile;
 };
+
 #endif // MAINWINDOW_H
