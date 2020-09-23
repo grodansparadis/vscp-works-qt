@@ -44,6 +44,7 @@ class QToolBar;
 class QVBoxLayout;
 class QAction;
 class QTableWidget;
+class QToolBox;
 QT_END_NAMESPACE
 
 class CFrmSession : public QDialog
@@ -61,12 +62,15 @@ private:
     void createTxGridGroup();
     void createFormGroupBox();
 
+    void transmitEvent();
+
     enum { NumGridRows = 8, NumButtons = 4 };
 
     QMenuBar *menuBar;
     QToolBar *toolBar;
     QGroupBox *horizontalGroupBox;
     QGroupBox *gridGroupBox;
+    QGroupBox *txGroupBox;
     QGroupBox *formGroupBox;
     QTextEdit *smallEditor;
     QTextEdit *bigEditor;
@@ -125,6 +129,8 @@ private:
     // Settings menu
     QAction *setFilterAct;
     QAction *settingsAct;
+
+    QToolBar *txToolBar;
 };
 
 #endif // CFRMSESSION_H

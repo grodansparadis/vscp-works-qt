@@ -27,12 +27,36 @@
 //
 
 #include <QtWidgets>
+#include <QSqlTableModel>
+#include <QTableView>
 #include "cfrmsession.h"
 //#include "ui_cfrmsession.h"
 
+#include <stdlib.h>
+
+void initializeModel(QSqlTableModel *model)
+{
+    model->setTable("events");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Dir"));    // Direction
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Class"));  // VSCP Class
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Type"));   // VSCP Type
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("GUID"));   // GUID + node-id
+}
+
+QTableView *createView(QSqlTableModel *model, const QString &title = "")
+{
+    QTableView *view = new QTableView;
+    view->setModel(model);
+    view->setWindowTitle(title);
+    return view;
+}
 
 CFrmSession::~CFrmSession()
 {
+    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
     //delete ui;
 }
 
@@ -62,6 +86,7 @@ CFrmSession::CFrmSession(QWidget *parent) :
     createHorizontalGroupBox();
     createGridGroupBox();
     createFormGroupBox();
+    createTxGridGroup();    
 
     bigEditor = new QTextEdit;
     bigEditor->setPlainText(tr("This widget takes up all the remaining space "
@@ -79,7 +104,9 @@ CFrmSession::CFrmSession(QWidget *parent) :
     mainLayout->addWidget(toolBar);
     //mainLayout->addWidget(horizontalGroupBox);
     mainLayout->addWidget(gridGroupBox);
-    mainLayout->addWidget(formGroupBox);
+    mainLayout->addWidget(txGroupBox);
+    
+    //mainLayout->addWidget(formGroupBox);
     //mainLayout->addWidget(bigEditor);
     //mainLayout->addWidget(buttonBox);
     
@@ -176,6 +203,10 @@ void CFrmSession::createHorizontalGroupBox()
     horizontalGroupBox->setLayout(layout);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// createRxGridGroup
+//
+
 void CFrmSession::createGridGroupBox()
 {
     gridGroupBox = new QGroupBox(tr("Receive Events"));
@@ -188,7 +219,7 @@ void CFrmSession::createGridGroupBox()
     //     layout->addWidget(labels[i], i + 1, 0);
     //     layout->addWidget(lineEdits[i], i + 1, 1);
     // }
-    rxTable =new QTableWidget;
+    rxTable = new QTableWidget;
     layout->addWidget(rxTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan
 
     smallEditor = new QTextEdit;
@@ -201,23 +232,95 @@ void CFrmSession::createGridGroupBox()
     gridGroupBox->setLayout(layout);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// createTxGridGroup
+//
+
 void CFrmSession::createTxGridGroup()
 {
-    gridGroupBox = new QGroupBox(tr("Transmit"));
+    txGroupBox = new QGroupBox(tr("Transmit"));
     QGridLayout *layout = new QGridLayout;
     layout->setContentsMargins(1,1,1,1);
 
-    rxTable =new QTableWidget;
-    layout->addWidget(rxTable, 0, 0, 1, 8); //  fromRow, fromColumn, rowSpan, columnSpan
+    txTable =new QTableWidget;
+    layout->addWidget(txTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan
 
-    smallEditor = new QTextEdit;
-    smallEditor->setPlainText(tr("This widget takes up about two thirds of the "
-                                 "grid layout."));
-    layout->addWidget(smallEditor, 0, 8, 1, 1);
+    // Transmit/Add/Clone/Delete/Edit/Save/Load
+    txToolBar = new QToolBar;
+    txToolBar->setOrientation(Qt::Vertical);
 
-    layout->setColumnStretch(1, 70);
-    layout->setColumnStretch(2, 10);
-    gridGroupBox->setLayout(layout);
+    // Transmit
+    const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *transmitAct = new QAction(newIcon, tr("&Transmit"), this);
+    transmitAct->setShortcuts(QKeySequence::New);
+    transmitAct->setStatusTip(tr("Transmit selected event(s)"));
+    connect(transmitAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(transmitAct);
+
+    // Add tx row
+    const QIcon addIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *addAct = new QAction(addIcon, tr("&Add"), this);
+    addAct->setShortcuts(QKeySequence::New);
+    addAct->setStatusTip(tr("Add transmit event"));
+    connect(addAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(addAct);
+
+    // Edit tx row
+    const QIcon editIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *editAct = new QAction(editIcon, tr("&Edit"), this);
+    editAct->setShortcuts(QKeySequence::New);
+    editAct->setStatusTip(tr("Edit selected event"));
+    connect(editAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(editAct);
+
+    // Delete tx row
+    const QIcon deleteIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *deleteAct = new QAction(deleteIcon, tr("&Transmit"), this);
+    deleteAct->setShortcuts(QKeySequence::New);
+    deleteAct->setStatusTip(tr("Delete selected event"));
+    connect(deleteAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(deleteAct);
+
+    // Clone tx row
+    const QIcon cloneIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *cloneAct = new QAction(cloneIcon, tr("&Clone"), this);
+    cloneAct->setShortcuts(QKeySequence::New);
+    cloneAct->setStatusTip(tr("Clone selected event"));
+    connect(cloneAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(cloneAct);
+
+    txToolBar->addSeparator();
+
+    // Save tx rows
+    const QIcon saveIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
+    saveAct->setShortcuts(QKeySequence::New);
+    saveAct->setStatusTip(tr("Save selected transmit event(s)"));
+    connect(saveAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(saveAct);
+
+    // Load tx rows
+    const QIcon loadIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    QAction *loadAct = new QAction(loadIcon, tr("&Load"), this);
+    loadAct->setShortcuts(QKeySequence::New);
+    loadAct->setStatusTip(tr("Load transmit event(s)"));
+    connect(loadAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    txToolBar->addAction(loadAct);
+
+    layout->addWidget(txToolBar, 0, 4, 1, 1);
+
+    layout->setColumnStretch(0, 70);
+    layout->setColumnStretch(1, 10);
+    txGroupBox->setLayout(layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// transmitEvent
+//
+
+void CFrmSession::transmitEvent()
+{
+    QMessageBox::about(this, tr("Test"), tr("Carpe Diem") );
 }
 
 void CFrmSession::createFormGroupBox()

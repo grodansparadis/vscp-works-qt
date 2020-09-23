@@ -24,7 +24,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Quick Sql)
 
 set(TS_FILES vscp-works-qt_en_150.ts)
 
@@ -50,6 +50,6 @@ else()
   )
 endif()
 
-target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets)
+target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets Qt5::Sql)
 
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
