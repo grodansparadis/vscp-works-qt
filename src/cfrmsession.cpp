@@ -196,8 +196,8 @@ void CFrmSession::createGridGroupBox()
                                  "grid layout."));
     layout->addWidget(smallEditor, 0, 4, 1, 1);
 
-    layout->setColumnStretch(1, 30);
-    layout->setColumnStretch(2, 10);
+    layout->setColumnStretch(0, 30);
+    layout->setColumnStretch(1, 10);
     gridGroupBox->setLayout(layout);
 }
 
