@@ -5,6 +5,7 @@
     <name>CDlgOpenSession</name>
     <message>
         <location filename="cdlgopensession.ui" line="14"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgopensession.h" line="51"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
@@ -316,6 +317,329 @@
     </message>
 </context>
 <context>
+    <name>Dialog</name>
+    <message>
+        <location filename="canal.ui" line="20"/>
+        <location filename="filter.ui" line="14"/>
+        <location filename="remotehost.ui" line="20"/>
+        <location filename="remotehost_mqtt.ui" line="20"/>
+        <location filename="remotehost_tcp.ui" line="20"/>
+        <location filename="remotehost_ws1.ui" line="20"/>
+        <location filename="remotehost_ws2.ui" line="20"/>
+        <location filename="socketcan.ui" line="20"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="54"/>
+        <location filename="remotehost.ui" line="54"/>
+        <location filename="remotehost_mqtt.ui" line="54"/>
+        <location filename="remotehost_tcp.ui" line="54"/>
+        <location filename="remotehost_ws1.ui" line="54"/>
+        <location filename="remotehost_ws2.ui" line="54"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="67"/>
+        <source>Path to driver :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="80"/>
+        <source>Device configuration string :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="93"/>
+        <source>Device flags :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="115"/>
+        <location filename="socketcan.ui" line="119"/>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="128"/>
+        <source>Set...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="141"/>
+        <source>Wizard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="48"/>
+        <source>Class Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="55"/>
+        <location filename="filter.ui" line="69"/>
+        <location filename="filter.ui" line="165"/>
+        <location filename="filter.ui" line="179"/>
+        <source>0x0000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="62"/>
+        <source>Type Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="76"/>
+        <source>Priority Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="83"/>
+        <location filename="filter.ui" line="97"/>
+        <location filename="filter.ui" line="111"/>
+        <location filename="filter.ui" line="125"/>
+        <location filename="filter.ui" line="193"/>
+        <location filename="filter.ui" line="207"/>
+        <location filename="filter.ui" line="221"/>
+        <location filename="filter.ui" line="235"/>
+        <source>0x00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="90"/>
+        <source>Index Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="104"/>
+        <source>Zone Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="118"/>
+        <source>Sub zone Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="132"/>
+        <source>GUID Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="139"/>
+        <location filename="filter.ui" line="249"/>
+        <source>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="158"/>
+        <source>Class Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="172"/>
+        <source>Type Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="186"/>
+        <source>Priority Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="200"/>
+        <source>Index Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="214"/>
+        <source>Zone Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="228"/>
+        <source>Sub zone Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="242"/>
+        <source>GUID Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="265"/>
+        <source>Load Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="278"/>
+        <source>Save Filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="291"/>
+        <source>Filter setup wizard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="filter.ui" line="304"/>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="67"/>
+        <location filename="remotehost_tcp.ui" line="67"/>
+        <location filename="remotehost_ws1.ui" line="67"/>
+        <location filename="remotehost_ws2.ui" line="67"/>
+        <source>Host URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="80"/>
+        <location filename="remotehost_mqtt.ui" line="80"/>
+        <location filename="remotehost_tcp.ui" line="80"/>
+        <location filename="remotehost_ws1.ui" line="80"/>
+        <location filename="remotehost_ws2.ui" line="80"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="93"/>
+        <location filename="remotehost_mqtt.ui" line="93"/>
+        <location filename="remotehost_tcp.ui" line="93"/>
+        <location filename="remotehost_ws1.ui" line="93"/>
+        <location filename="remotehost_ws2.ui" line="93"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="106"/>
+        <location filename="remotehost_tcp.ui" line="106"/>
+        <source>Interface :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="143"/>
+        <location filename="remotehost_tcp.ui" line="147"/>
+        <location filename="remotehost_ws1.ui" line="127"/>
+        <location filename="remotehost_ws2.ui" line="127"/>
+        <source>Set filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="156"/>
+        <location filename="remotehost_mqtt.ui" line="148"/>
+        <location filename="remotehost_tcp.ui" line="160"/>
+        <location filename="remotehost_ws1.ui" line="140"/>
+        <location filename="remotehost_ws2.ui" line="140"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="169"/>
+        <location filename="remotehost_tcp.ui" line="173"/>
+        <source>Get interfaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost.ui" line="182"/>
+        <location filename="remotehost_tcp.ui" line="119"/>
+        <source>Full Level II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="67"/>
+        <source>Broker URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="106"/>
+        <source>Extended security</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="113"/>
+        <source>Subscribe :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="126"/>
+        <source>Publish :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="14"/>
+        <source>Scan for VSCP device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="45"/>
+        <source>Seraching on interface:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="67"/>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="93"/>
+        <source>Found devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="116"/>
+        <source>Device information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="129"/>
+        <source>Use slow search algorithm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="145"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="155"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scan.ui" line="165"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="socketcan.ui" line="54"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="socketcan.ui" line="67"/>
+        <source>Socketcan device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="socketcan.ui" line="77"/>
+        <source>vcan0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="socketcan.ui" line="84"/>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="socketcan.ui" line="97"/>
+        <source>Device flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
@@ -418,233 +742,239 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="49"/>
+        <source>Value = </source>
+        <oldsource>Value</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="147"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="142"/>
+        <location filename="mainwindow.cpp" line="154"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="161"/>
+        <location filename="mainwindow.cpp" line="173"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="162"/>
+        <location filename="mainwindow.cpp" line="174"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="165"/>
+        <location filename="mainwindow.cpp" line="177"/>
         <source>&amp;New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="167"/>
+        <location filename="mainwindow.cpp" line="179"/>
         <source>Create a new file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="174"/>
+        <location filename="mainwindow.cpp" line="186"/>
         <source>&amp;Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="188"/>
         <source>Open an existing file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="182"/>
+        <location filename="mainwindow.cpp" line="194"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="184"/>
+        <location filename="mainwindow.cpp" line="196"/>
         <source>Save the document to disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="190"/>
+        <location filename="mainwindow.cpp" line="202"/>
         <source>Save &amp;As...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="192"/>
+        <location filename="mainwindow.cpp" line="204"/>
         <source>Save the document under a new name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="mainwindow.cpp" line="212"/>
         <source>&amp;New Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="202"/>
+        <location filename="mainwindow.cpp" line="214"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="208"/>
+        <location filename="mainwindow.cpp" line="220"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="210"/>
+        <location filename="mainwindow.cpp" line="222"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="216"/>
+        <location filename="mainwindow.cpp" line="228"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="218"/>
+        <location filename="mainwindow.cpp" line="230"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="224"/>
+        <location filename="mainwindow.cpp" line="236"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="226"/>
+        <location filename="mainwindow.cpp" line="238"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="232"/>
+        <location filename="mainwindow.cpp" line="244"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="234"/>
+        <location filename="mainwindow.cpp" line="246"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="242"/>
+        <location filename="mainwindow.cpp" line="254"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="245"/>
+        <location filename="mainwindow.cpp" line="257"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="247"/>
+        <location filename="mainwindow.cpp" line="259"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="260"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="264"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="255"/>
+        <location filename="mainwindow.cpp" line="267"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="262"/>
+        <location filename="mainwindow.cpp" line="274"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="264"/>
+        <location filename="mainwindow.cpp" line="276"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="271"/>
+        <location filename="mainwindow.cpp" line="283"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="273"/>
+        <location filename="mainwindow.cpp" line="285"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="283"/>
+        <location filename="mainwindow.cpp" line="295"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="284"/>
+        <location filename="mainwindow.cpp" line="296"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="285"/>
+        <location filename="mainwindow.cpp" line="297"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="287"/>
+        <location filename="mainwindow.cpp" line="299"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="288"/>
+        <location filename="mainwindow.cpp" line="300"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="305"/>
+        <location filename="mainwindow.cpp" line="317"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="345"/>
-        <location filename="mainwindow.cpp" line="368"/>
-        <location filename="mainwindow.cpp" line="411"/>
+        <location filename="mainwindow.cpp" line="357"/>
+        <location filename="mainwindow.cpp" line="380"/>
+        <location filename="mainwindow.cpp" line="423"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="346"/>
+        <location filename="mainwindow.cpp" line="358"/>
         <source>The document has been modified.
 Do you want to save your changes?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="369"/>
+        <location filename="mainwindow.cpp" line="381"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="384"/>
+        <location filename="mainwindow.cpp" line="396"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="401"/>
+        <location filename="mainwindow.cpp" line="413"/>
         <source>Cannot write file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="405"/>
+        <location filename="mainwindow.cpp" line="417"/>
         <source>Cannot open file %1 for writing:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="416"/>
+        <location filename="mainwindow.cpp" line="428"/>
         <source>File saved</source>
         <translation type="unfinished"></translation>
     </message>

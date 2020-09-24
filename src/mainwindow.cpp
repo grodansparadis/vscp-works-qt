@@ -28,6 +28,9 @@
 
 
 #include <QtWidgets>
+#include <QMessageBox>
+#include <QJSEngine>
+
 #include "version.h"
 #include "cfrmsession.h"
 #include "mainwindow.h"
@@ -38,7 +41,16 @@
 
 MainWindow::MainWindow()
     : textEdit(new QPlainTextEdit)
-{
+{ 
+    QJSEngine myEngine;
+    QJSValue three = myEngine.evaluate("1 + 2 + Math.PI");
+
+    QString str;
+    QTextStream(&str) << tr("Value = ") << three.toInt();
+    QMessageBox msgBox;
+    msgBox.setText(str);
+    msgBox.exec();
+
     setCentralWidget(textEdit);
 
     createActions();
