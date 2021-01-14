@@ -3,7 +3,7 @@
         {
             "taskName": "build all",
             "type": "shell",
-            "command": "rm -rf dist; make",
+            "command": "cd build; make",
             "args": [],
             "group": {
                 "kind": "build",
@@ -14,7 +14,7 @@
         {
             "taskName": "clean & build all",
             "type": "shell",
-            "command": "rm -rf dist; make clean; make",
+            "command": "cd build; make clean; cmake .. ;  make",
             "args": [],
             "group": {
                 "kind": "build",
