@@ -36,7 +36,7 @@ include(FindEXPAT)
 find_package(EXPAT REQUIRED)
 include_directories(${EXPAT_INCLUDE_DIRS})
 
-include(FindMosquitto)
+include(FindMosquitto REQUIRED)
 find_package(EXPAT REQUIRED)
 
 
@@ -63,10 +63,14 @@ if(ANDROID)
     ../vscp/src/vscp/common/vscpdatetime.cpp
     ../vscp/src/vscp/common/guid.h
     ../vscp/src/vscp/common/guid.cpp
+    ../vscp/src/vscp/common/mdf.h
+    ../vscp/src/vscp/common/mdf.cpp
     ../vscp/src/vscp/common/vscphelper.h
     ../vscp/src/vscp/common/vscphelper.cpp
     ../vscp/src/vscp/common/canal.h
     ../vscp/src/vscp/common/canaldlldef.h
+    ../vscp/src/vscp/common/vscpcanaldeviceif.h
+    ../vscp/src/vscp/common/vscpcanaldeviceif.cpp
     ../vscp/src/common/third_party/nlohmann/json.hpp
     ../vscp/src/common/sockettcp.h
     ../vscp/src/common/sockettcp.c
@@ -102,10 +106,16 @@ else()
     ../vscp/src/vscp/common/vscpdatetime.cpp
     ../vscp/src/vscp/common/guid.h
     ../vscp/src/vscp/common/guid.cpp
+    ../vscp/src/vscp/common/mdf.h
+    ../vscp/src/vscp/common/mdf.cpp
     ../vscp/src/vscp/common/vscphelper.h
     ../vscp/src/vscp/common/vscphelper.cpp
     ../vscp/src/vscp/common/canal.h
     ../vscp/src/vscp/common/canaldlldef.h
+    ../vscp/src/vscp/common/vscpcanaldeviceif.h
+    ../vscp/src/vscp/common/vscpcanaldeviceif.cpp
+    ../vscp/src/vscp/common/vscp_bootloader.h
+    ../vscp/src/vscp/common/vscp_bootloader.cpp
     ../vscp/src/common/third_party/nlohmann/json.hpp
     ../vscp/src/common/sockettcp.h
     ../vscp/src/common/sockettcp.c
@@ -134,6 +144,8 @@ include_directories( PUBLIC ../vscp/src/vscp/common/
 
 target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets
     Qt5::Core Qt5::Quick Qt5::Sql
+    m
+    dl
     pthread
     OpenSSL::SSL OpenSSL::Crypto
     ${OPENSSL_LIBRARIES}
