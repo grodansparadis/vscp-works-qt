@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>545</width>
+    <height>453</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="btnSession">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>300</y>
+      <width>89</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Session</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images/png/128x128/database_search.png</normaloff>images/png/128x128/database_search.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnConfigDevice">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>300</y>
+      <width>89</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Config</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images/png/128x128/process.png</normaloff>images/png/128x128/process.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnMdfEditor">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>300</y>
+      <width>89</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>MDF</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images/png/128x128/database_add.png</normaloff>images/png/128x128/database_add.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnScan">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>300</y>
+      <width>89</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Scan</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images/png/128x128/search.png</normaloff>images/png/128x128/search.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBootLoadWiz">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>300</y>
+      <width>89</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Bootloader</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>images/png/128x128/image.png</normaloff>images/png/128x128/image.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logo">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>40</y>
+      <width>161</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>images/vscp_logo.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>545</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menutest">
+    <property name="title">
+     <string>VSCP</string>
+    </property>
+    <addaction name="actionVSCP_Client_Windows"/>
+    <addaction name="actionVSCP_Device_Configuration_Window"/>
+    <addaction name="actionVSCP_MDF_Editor"/>
+    <addaction name="actionScan_for_devices"/>
+    <addaction name="actionBoot_loader_wizzard"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionVSCP_Documentation"/>
+    <addaction name="actionVSCP_Site"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menutest"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionVSCP_Client_Windows">
+   <property name="text">
+    <string>Client Windows...</string>
+   </property>
+  </action>
+  <action name="actionVSCP_Device_Configuration_Window">
+   <property name="text">
+    <string>Device Configuration Window...</string>
+   </property>
+  </action>
+  <action name="actionVSCP_MDF_Editor">
+   <property name="text">
+    <string>MDF Editor...</string>
+   </property>
+  </action>
+  <action name="actionScan_for_devices">
+   <property name="text">
+    <string>Scan for devices...</string>
+   </property>
+  </action>
+  <action name="actionBoot_loader_wizzard">
+   <property name="text">
+    <string>Boot loader wizzard...</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings....</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About...</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionVSCP_Documentation">
+   <property name="text">
+    <string>VSCP Documentation</string>
+   </property>
+  </action>
+  <action name="actionVSCP_Site">
+   <property name="text">
+    <string>VSCP Site</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
