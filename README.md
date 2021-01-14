@@ -1,1 +1,0 @@
-# vscp-works-qt
