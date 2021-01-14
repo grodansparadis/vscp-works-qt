@@ -321,7 +321,6 @@
     <message>
         <location filename="canal.ui" line="20"/>
         <location filename="filter.ui" line="14"/>
-        <location filename="remotehost.ui" line="20"/>
         <location filename="remotehost_mqtt.ui" line="20"/>
         <location filename="remotehost_tcp.ui" line="20"/>
         <location filename="remotehost_ws1.ui" line="20"/>
@@ -332,9 +331,7 @@
     </message>
     <message>
         <location filename="canal.ui" line="54"/>
-        <location filename="remotehost.ui" line="54"/>
         <location filename="remotehost_mqtt.ui" line="54"/>
-        <location filename="remotehost_tcp.ui" line="54"/>
         <location filename="remotehost_ws1.ui" line="54"/>
         <location filename="remotehost_ws2.ui" line="54"/>
         <source>Description :</source>
@@ -356,18 +353,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="canal.ui" line="115"/>
+        <location filename="canal.ui" line="103"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="canal.ui" line="119"/>
         <location filename="socketcan.ui" line="119"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="canal.ui" line="128"/>
+        <location filename="canal.ui" line="132"/>
         <source>Set...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="canal.ui" line="141"/>
+        <location filename="canal.ui" line="145"/>
         <source>Wizard...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -488,63 +490,101 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="67"/>
-        <location filename="remotehost_tcp.ui" line="67"/>
         <location filename="remotehost_ws1.ui" line="67"/>
         <location filename="remotehost_ws2.ui" line="67"/>
         <source>Host URL :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="80"/>
-        <location filename="remotehost_mqtt.ui" line="80"/>
-        <location filename="remotehost_tcp.ui" line="80"/>
-        <location filename="remotehost_ws1.ui" line="80"/>
-        <location filename="remotehost_ws2.ui" line="80"/>
+        <location filename="remotehost_ws1.ui" line="77"/>
+        <source>http://localhost:9598/ws1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="84"/>
+        <location filename="remotehost_ws1.ui" line="84"/>
+        <location filename="remotehost_ws2.ui" line="84"/>
         <source>Username :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="93"/>
-        <location filename="remotehost_mqtt.ui" line="93"/>
-        <location filename="remotehost_tcp.ui" line="93"/>
-        <location filename="remotehost_ws1.ui" line="93"/>
-        <location filename="remotehost_ws2.ui" line="93"/>
+        <location filename="remotehost_mqtt.ui" line="97"/>
+        <location filename="remotehost_ws1.ui" line="101"/>
+        <location filename="remotehost_ws2.ui" line="101"/>
         <source>Password :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="106"/>
-        <location filename="remotehost_tcp.ui" line="106"/>
-        <source>Interface :</source>
+        <location filename="remotehost_tcp.ui" line="67"/>
+        <source>Host URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="143"/>
-        <location filename="remotehost_tcp.ui" line="147"/>
-        <location filename="remotehost_ws1.ui" line="127"/>
-        <location filename="remotehost_ws2.ui" line="127"/>
+        <location filename="remotehost_tcp.ui" line="77"/>
+        <source>tcp://localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="84"/>
+        <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="94"/>
+        <location filename="remotehost_ws1.ui" line="94"/>
+        <location filename="remotehost_ws2.ui" line="94"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="101"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="111"/>
+        <location filename="remotehost_ws1.ui" line="111"/>
+        <location filename="remotehost_ws2.ui" line="111"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="118"/>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="135"/>
+        <source>9598</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="142"/>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_tcp.ui" line="173"/>
+        <location filename="remotehost_ws1.ui" line="139"/>
+        <location filename="remotehost_ws2.ui" line="139"/>
         <source>Set filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="156"/>
-        <location filename="remotehost_mqtt.ui" line="148"/>
-        <location filename="remotehost_tcp.ui" line="160"/>
-        <location filename="remotehost_ws1.ui" line="140"/>
-        <location filename="remotehost_ws2.ui" line="140"/>
+        <location filename="remotehost_mqtt.ui" line="160"/>
+        <location filename="remotehost_tcp.ui" line="186"/>
+        <location filename="remotehost_ws1.ui" line="152"/>
+        <location filename="remotehost_ws2.ui" line="152"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="169"/>
-        <location filename="remotehost_tcp.ui" line="173"/>
+        <location filename="remotehost_tcp.ui" line="199"/>
         <source>Get interfaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost.ui" line="182"/>
-        <location filename="remotehost_tcp.ui" line="119"/>
+        <location filename="remotehost_tcp.ui" line="128"/>
         <source>Full Level II</source>
         <translation type="unfinished"></translation>
     </message>
@@ -554,18 +594,33 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost_mqtt.ui" line="106"/>
+        <location filename="remotehost_mqtt.ui" line="77"/>
+        <source>localhost:1883</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="110"/>
         <source>Extended security</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost_mqtt.ui" line="113"/>
+        <location filename="remotehost_mqtt.ui" line="117"/>
         <source>Subscribe :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="remotehost_mqtt.ui" line="126"/>
+        <location filename="remotehost_mqtt.ui" line="127"/>
+        <source>vscp/#</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="134"/>
         <source>Publish :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_mqtt.ui" line="144"/>
+        <source>vscp/00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00/{vscpClass}/{vscpType}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -614,6 +669,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="remotehost_tcp.ui" line="54"/>
         <location filename="socketcan.ui" line="54"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
@@ -636,6 +692,11 @@
     <message>
         <location filename="socketcan.ui" line="97"/>
         <source>Device flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="remotehost_ws2.ui" line="77"/>
+        <source>http://localhost:9598/ws2</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -27,7 +27,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Quick Sql Qml mqtt)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Quick Sql Qml)
 find_package(OpenSSL REQUIRED)
 
 set(TS_FILES vscp-works-qt_en_150.ts)
