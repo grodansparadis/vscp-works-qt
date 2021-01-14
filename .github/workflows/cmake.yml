@@ -17,6 +17,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Checkout vscp repo
+      uses: actions/checkout@v2
+      with:
+        repository: grodansparadis/vscp
+        path: vscp
+
     - name: Install libmosuitto-dev manually
       run: sudo apt install libmosquitto-dev
 
@@ -24,7 +30,7 @@ jobs:
       run: sudo apt install libexpat-dev
 
     - name: Install libssl-dev manually
-      run: apt-get install libssl-dev
+      run: sudo apt-get install libssl-dev
 
     - name: Install gtest manually
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp *.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
