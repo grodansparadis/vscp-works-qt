@@ -324,6 +324,7 @@ void MainWindow::createStatusBar()
 void MainWindow::readSettings()
 {
     QScreen *screen = QGuiApplication::primaryScreen();
+    // QList <QScreen*> screens = QGuiApplication::screens();  // Multiscreen v
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
