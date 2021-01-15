@@ -32,6 +32,7 @@
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QIcon;
 class QDialogButtonBox;
 class QGroupBox;
 class QLabel;
@@ -58,79 +59,82 @@ public:
 private:
     void createMenu();
     void createHorizontalGroupBox();
-    void createGridGroupBox();
+    void createRxGroupBox();
     void createTxGridGroup();
     void createFormGroupBox();
+
+    void menu_connect();
+    void menu_filter();
 
     void transmitEvent();
 
     enum { NumGridRows = 8, NumButtons = 4 };
 
-    QMenuBar *menuBar;
-    QToolBar *toolBar;
-    QGroupBox *horizontalGroupBox;
-    QGroupBox *gridGroupBox;
-    QGroupBox *txGroupBox;
-    QGroupBox *formGroupBox;
-    QTextEdit *smallEditor;
-    QTextEdit *bigEditor;
-    QLabel *labels[NumGridRows];
-    QLineEdit *lineEdits[NumGridRows];
-    QPushButton *buttons[NumButtons];
-    QDialogButtonBox *buttonBox;
+    QMenuBar *m_menuBar;
+    QToolBar *m_toolBar;
+    QGroupBox *m_horizontalGroupBox;
+    QGroupBox *m_gridGroupBox;
+    QGroupBox *m_txGroupBox;
+    QGroupBox *m_formGroupBox;
+    QTextEdit *m_infoArea;
+    QTextEdit *m_bigEditor;
+    QLabel *m_labels[NumGridRows];
+    QLineEdit *m_lineEdits[NumGridRows];
+    QPushButton *m_buttons[NumButtons];
+    QDialogButtonBox *m_buttonBox;
 
-    QTableWidget *rxTable;
-    QTableWidget *txTable;
+    QTableWidget *m_rxTable;
+    QTableWidget *m_txTable;
 
-    QMenu *fileMenu;
-    QMenu *hostMenu;
-    QMenu *editMenu;
-    QMenu *viewMenu;
-    QMenu *vscpMenu;
-    QMenu *settingsMenu;
-    QMenu *toolsMenu;
+    QMenu *m_fileMenu;
+    QMenu *m_hostMenu;
+    QMenu *m_editMenu;
+    QMenu *m_viewMenu;
+    QMenu *m_vscpMenu;
+    QMenu *m_settingsMenu;
+    QMenu *m_toolsMenu;
   
-    QToolBar *editToolBar;
+    QToolBar *m_editToolBar;
 
     // File menu
-    QAction *loadEventsAct;
-    QAction *saveEventsAct;
-    QAction *loadTxAct;
-    QAction *saveTxAct;
-    QAction *exitAct;
+    QAction *m_loadEventsAct;
+    QAction *m_saveEventsAct;
+    QAction *m_loadTxAct;
+    QAction *m_saveTxAct;
+    QAction *m_exitAct;
 
     // Host meny
-    QAction *connectAct;
-    QAction *disconnectAct;
-    QAction *pauseAct;
-    QAction *addHostAct;
-    QAction *editHostAct;
+    QAction *m_connectAct;
+    QAction *m_disconnectAct;
+    QAction *m_pauseAct;
+    QAction *m_addHostAct;
+    QAction *m_editHostAct;
 
     // Edit menu
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteBeforeAct;
-    QAction *pasteAfterAct;
+    QAction *m_cutAct;
+    QAction *m_copyAct;
+    QAction *m_pasteBeforeAct;
+    QAction *m_pasteAfterAct;
 
     // View menu
-    QAction *viewMessageAct;
-    QAction *viewCountAct;
-    QAction *viewClrRxListAct;
-    QAction *viewClrTxListAct;
+    QAction *m_viewMessageAct;
+    QAction *m_viewCountAct;
+    QAction *m_viewClrRxListAct;
+    QAction *m_viewClrTxListAct;
 
     // VSCP menu
-    QAction *readRegAct;
-    QAction *writeRegAct;
-    QAction *readAllRegAct;
-    QAction *readGuidAct;
-    QAction *readMdfAct;
-    QAction *loadMdfAct;
+    QAction *m_readRegAct;
+    QAction *m_writeRegAct;
+    QAction *m_readAllRegAct;
+    QAction *m_readGuidAct;
+    QAction *m_readMdfAct;
+    QAction *m_loadMdfAct;
 
     // Settings menu
-    QAction *setFilterAct;
-    QAction *settingsAct;
+    QAction *m_setFilterAct;
+    QAction *m_settingsAct;
 
-    QToolBar *txToolBar;
+    QToolBar *m_txToolBar;
 };
 
 #endif // CFRMSESSION_H

@@ -37,6 +37,7 @@ class QAction;
 class QMenu;
 class QPlainTextEdit;
 class QSessionManager;
+class QTableWidget;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -73,7 +74,8 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
-    QPlainTextEdit *textEdit;
+    QPlainTextEdit *m_textEdit;
+    QTableWidget *m_connTable;
     QString curFile;
 };
 

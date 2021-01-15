@@ -40,8 +40,9 @@
 //
 
 MainWindow::MainWindow()
-    : textEdit(new QPlainTextEdit)
+    : m_connTable(new QTableWidget)
 { 
+    /*
     QJSEngine myEngine;
     QJSValue three = myEngine.evaluate("1 + 2 + Math.PI");
 
@@ -50,16 +51,17 @@ MainWindow::MainWindow()
     QMessageBox msgBox;
     msgBox.setText(str);
     msgBox.exec();
+    */
 
-    setCentralWidget(textEdit);
+    setCentralWidget(m_connTable);
 
     createActions();
     createStatusBar();
 
     readSettings();
 
-    connect(textEdit->document(), &QTextDocument::contentsChanged,
-            this, &MainWindow::documentWasModified);
+    //connect(m_textEdit->document(), &QTextDocument::contentsChanged,
+    //        this, &MainWindow::documentWasModified);
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -92,7 +94,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::newFile()
 {
     if (maybeSave()) {
-        textEdit->clear();
+        m_textEdit->clear();
         setCurrentFile(QString());
     }
 }
@@ -160,7 +162,7 @@ void MainWindow::about()
 
 void MainWindow::documentWasModified()
 {
-    setWindowModified(textEdit->document()->isModified());
+    setWindowModified(m_textEdit->document()->isModified());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -266,7 +268,7 @@ void MainWindow::createActions()
     cutAct->setShortcuts(QKeySequence::Cut);
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
-    connect(cutAct, &QAction::triggered, textEdit, &QPlainTextEdit::cut);
+    connect(cutAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::cut);
     editMenu->addAction(cutAct);
     editToolBar->addAction(cutAct);
 
@@ -275,7 +277,7 @@ void MainWindow::createActions()
     copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    connect(copyAct, &QAction::triggered, textEdit, &QPlainTextEdit::copy);
+    connect(copyAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::copy);
     editMenu->addAction(copyAct);
     editToolBar->addAction(copyAct);
 
@@ -284,7 +286,7 @@ void MainWindow::createActions()
     pasteAct->setShortcuts(QKeySequence::Paste);
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    connect(pasteAct, &QAction::triggered, textEdit, &QPlainTextEdit::paste);
+    connect(pasteAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::paste);
     editMenu->addAction(pasteAct);
     editToolBar->addAction(pasteAct);
 
@@ -303,8 +305,8 @@ void MainWindow::createActions()
     cutAct->setEnabled(false);
 
     copyAct->setEnabled(false);
-    connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+    connect(m_textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
+    connect(m_textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
 #endif // !QT_NO_CLIPBOARD
 }
 
@@ -332,7 +334,8 @@ void MainWindow::readSettings()
         resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
         move((availableGeometry.width() - width()) / 2,
              (availableGeometry.height() - height()) / 2);
-    } else {
+    } 
+    else {
         restoreGeometry(geometry);
     }
 }
@@ -353,21 +356,23 @@ void MainWindow::writeSettings()
 
 bool MainWindow::maybeSave()
 {
-    if (!textEdit->document()->isModified())
-        return true;
-    const QMessageBox::StandardButton ret
-        = QMessageBox::warning(this, tr("Application"),
-                               tr("The document has been modified.\n"
-                                  "Do you want to save your changes?"),
-                               QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    switch (ret) {
-    case QMessageBox::Save:
-        return save();
-    case QMessageBox::Cancel:
-        return false;
-    default:
-        break;
-    }
+    // if (!m_textEdit->document()->isModified()) {
+    //     return true;
+    // }
+
+    // const QMessageBox::StandardButton ret
+    //     = QMessageBox::warning(this, tr("Application"),
+    //                            tr("The document has been modified.\n"
+    //                               "Do you want to save your changes?"),
+    //                            QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    // switch (ret) {
+    //     case QMessageBox::Save:
+    //         return save();
+    //     case QMessageBox::Cancel:
+    //         return false;
+    //     default:
+    //         break;
+    // }
     return true;
 }
 
@@ -389,7 +394,7 @@ void MainWindow::loadFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-    textEdit->setPlainText(in.readAll());
+    m_textEdit->setPlainText(in.readAll());
 #ifndef QT_NO_CURSOR
     QGuiApplication::restoreOverrideCursor();
 #endif
@@ -410,7 +415,7 @@ bool MainWindow::saveFile(const QString &fileName)
     QSaveFile file(fileName);
     if (file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
-        out << textEdit->toPlainText();
+        out << m_textEdit->toPlainText();
         if (!file.commit()) {
             errorMessage = tr("Cannot write file %1:\n%2.")
                            .arg(QDir::toNativeSeparators(fileName), file.errorString());
@@ -437,14 +442,14 @@ bool MainWindow::saveFile(const QString &fileName)
 
 void MainWindow::setCurrentFile(const QString &fileName)
 {
-    curFile = fileName;
-    textEdit->document()->setModified(false);
-    setWindowModified(false);
+    // curFile = fileName;
+    // m_textEdit->document()->setModified(false);
+    // setWindowModified(false);
 
-    QString shownName = curFile;
-    if (curFile.isEmpty())
-        shownName = "untitled.txt";
-    setWindowFilePath(shownName);
+    // QString shownName = curFile;
+    // if (curFile.isEmpty())
+    //     shownName = "untitled.txt";
+    // setWindowFilePath(shownName);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -468,7 +473,7 @@ void MainWindow::commitData(QSessionManager &manager)
             manager.cancel();
     } else {
         // Non-interactive: save without asking
-        if (textEdit->document()->isModified())
+        if (m_textEdit->document()->isModified())
             save();
     }
 }
