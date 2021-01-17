@@ -1,4 +1,4 @@
-// mainwindow.h
+// vscpworks.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,57 +26,22 @@
 // SOFTWARE.
 //
 
+#include "vscpworks.h"
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+///////////////////////////////////////////////////////////////////////////////
+// vscpworks
+//
 
-#include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-class QAction;
-class QMenu;
-class QPlainTextEdit;
-class QSessionManager;
-class QTableWidget;
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
+vscpworks::vscpworks()
 {
-    Q_OBJECT
 
-public:
-    MainWindow();
+}
 
-    void loadFile(const QString &fileName);
+///////////////////////////////////////////////////////////////////////////////
+// ~vscpworks
+//
 
-protected:
-    void closeEvent(QCloseEvent *event) override;
-
-private slots:
-    void newFile();
-    void open();
-    bool save();
-    bool saveAs();
-    void about();
-    void documentWasModified();
-#ifndef QT_NO_SESSIONMANAGER
-    void commitData(QSessionManager &);
-#endif
-    void newSession();
-
-private:
-    void createActions();
-    void createStatusBar();
-    void readSettings();
-    void writeSettings();
-    bool maybeSave();
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
-    QString strippedName(const QString &fullFileName);
-
-    QPlainTextEdit *m_textEdit;
-    QTableWidget *m_connTable;
-    QString curFile;
-};
-
-#endif // MAINWINDOW_H
+vscpworks::~vscpworks()
+{
+    
+}

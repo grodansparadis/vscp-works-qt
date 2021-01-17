@@ -22,7 +22,8 @@
                     "ignoreFailures": true
                 }
             ],
-            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/8e9e1cbfec5656fc208d236d815e6873/tonka3000.qtvsctools/qt.natvis.xml"
+            "preLaunchTask": "build",
+            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/c0af39e9134d98c8547df8ffed915c4e/tonka3000.qtvsctools/qt.natvis.xml"
         },
         {
             "name": "g++ build and debug active file",
@@ -44,7 +45,7 @@
             ],
             "preLaunchTask": "g++ build active file",
             "miDebuggerPath": "/usr/bin/gdb",
-            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/8e9e1cbfec5656fc208d236d815e6873/tonka3000.qtvsctools/qt.natvis.xml"
+            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/c0af39e9134d98c8547df8ffed915c4e/tonka3000.qtvsctools/qt.natvis.xml"
         }
     ]
 }

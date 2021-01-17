@@ -54,7 +54,8 @@ if(ANDROID)
     src/cdlgopensession.h
     src/cdlgopensession.cpp
     src/cfrmsession.cpp
-    src/mustache.hpp
+    src/connection.h
+    src/connection.cpp
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h
@@ -97,7 +98,8 @@ else()
     src/cdlgopensession.h
     src/cdlgopensession.cpp
     src/cfrmsession.cpp
-    src/mustache.hpp
+    src/connection.h
+    src/connection.cpp
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h

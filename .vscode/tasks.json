@@ -1,7 +1,7 @@
 {
     "tasks": [
         {
-            "taskName": "build all",
+            "taskName": "build",
             "type": "shell",
             "command": "cd build; make",
             "args": [],

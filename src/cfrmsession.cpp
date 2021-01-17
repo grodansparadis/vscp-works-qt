@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2020 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,6 +25,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
+// tableWidget->resizeRowsToContents();
 
 #include <QtWidgets>
 #include <QSqlTableModel>
