@@ -29,6 +29,6 @@
 #ifndef CONNECTION_TYPES_H
 #define CONNECTION_TYPES_H
 
-enum connection_type {none=0, tcpip, canal, socketcan, ws1, ws2, mqtt, udp, multicast};
+enum connection_type {NONE=0, TCPIP, CANAL, SOCKETCAN, WS1, WS2, MQTT, UDP, MULTICAST, REST, RAWCAN, RAWMQTT};
 
 #endif

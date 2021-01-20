@@ -44,7 +44,9 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
+
 add_executable(vscp-works-qt
+    src/vscpworks.qrc
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
@@ -122,3 +124,4 @@ target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets
     ${EXPAT_LIBRARIES})
 
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_add_resources(src/vscpworks.qrc) 

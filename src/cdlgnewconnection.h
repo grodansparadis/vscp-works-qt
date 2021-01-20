@@ -41,7 +41,7 @@ class CDlgNewConnection : public QDialog
     Q_OBJECT
 
 public:
-    enum ConnectionType {LOCAL=0, CANAL, TCPIP, MQTT, USP, MULTICAST, REST, SOCKETCAN, WS1, WS2};
+    
 
 public:
     explicit CDlgNewConnection(QWidget *parent = nullptr);

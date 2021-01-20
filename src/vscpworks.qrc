@@ -1,2 +1,7 @@
 <!DOCTYPE RCC>
-<RCC version="1.0"/>
+<RCC version="1.0">
+<qresource>
+    <file alias="accept.png">images/png/128x128/accept.png</file>
+    <file alias="add.png">images/png/128x128/add.png</file>
+</qresource>
+</RCC>

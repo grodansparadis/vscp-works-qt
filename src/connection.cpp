@@ -39,7 +39,7 @@ using json = nlohmann::json;
 
 connection::connection()
 {
-    m_type = none;
+    m_type = NONE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ connection::~connection()
 
 no_connection::no_connection()
 {
-    m_type = none;
+    m_type = NONE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ bool no_connection::fromJSON(const std::string& config)
 
 tcpip_connection::tcpip_connection()
 {
-    m_type = tcpip;
+    m_type = TCPIP;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -149,7 +149,7 @@ bool tcpip_connection::fromJSON(const std::string& config)
 
 canal_connection::canal_connection()
 {
-    m_type = canal;
+    m_type = CANAL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,7 +194,7 @@ bool canal_connection::fromJSON(const std::string& config)
 
 socketcan_connection::socketcan_connection()
 {
-    m_type = socketcan;
+    m_type = SOCKETCAN;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -239,7 +239,7 @@ bool socketcan_connection::fromJSON(const std::string& config)
 
 ws1_connection::ws1_connection()
 {
-    m_type = ws1;
+    m_type = WS1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -284,7 +284,7 @@ bool ws1_connection::fromJSON(const std::string& config)
 
 ws2_connection::ws2_connection()
 {
-    m_type = ws2;
+    m_type = WS2;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -330,7 +330,7 @@ bool ws2_connection::fromJSON(const std::string& config)
 
 mqtt_connection::mqtt_connection()
 {
-    m_type = mqtt;
+    m_type = MQTT;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -375,7 +375,7 @@ bool mqtt_connection::fromJSON(const std::string& config)
 
 udp_connection::udp_connection()
 {
-    m_type = udp;
+    m_type = UDP;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -421,7 +421,7 @@ bool udp_connection::fromJSON(const std::string& config)
 
 multicast_connection::multicast_connection()
 {
-    m_type = multicast;
+    m_type = MULTICAST;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -467,7 +467,7 @@ bool multicast_connection::fromJSON(const std::string& config)
 
 rest_connection::rest_connection()
 {
-    m_type = multicast;
+    m_type = REST;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -513,7 +513,7 @@ bool rest_connection::fromJSON(const std::string& config)
 
 rawcan_connection::rawcan_connection()
 {
-    m_type = multicast;
+    m_type = RAWCAN;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -559,7 +559,7 @@ bool rawcan_connection::fromJSON(const std::string& config)
 
 rawmqtt_connection::rawmqtt_connection()
 {
-    m_type = multicast;
+    m_type = RAWMQTT;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

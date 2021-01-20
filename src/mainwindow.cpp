@@ -114,7 +114,7 @@ void MainWindow::newConnection()
     CDlgNewConnection dialog(this);
     //dialog.addConnectionItem("Local");
     //dialog.addConnectionItems();
-    int n = CDlgNewConnection::canal;
+    //int n = CDlgNewConnection::CANAL;
 
     dialog.exec();
 }
