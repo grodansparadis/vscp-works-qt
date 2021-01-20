@@ -1,4 +1,4 @@
-// cdlgopensession.h
+// cdlnewconnection.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,30 +26,39 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGOPENSESSION_H
-#define CDLGOPENSESSION_H
+#ifndef CDLGNEWCONNECTION_H
+#define CDLGNEWCONNECTION_H
 
 #include <QDialog>
 
 namespace Ui {
-class CDlgOpenSession;
+class CDlgNewConnection;
 }
 
-class CDlgOpenSession : public QDialog
+
+class CDlgNewConnection : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgOpenSession(QWidget *parent = nullptr);
-    ~CDlgOpenSession();
+    enum ConnectionType {LOCAL=0, CANAL, TCPIP, MQTT, USP, MULTICAST, REST, SOCKETCAN, WS1, WS2};
+
+public:
+    explicit CDlgNewConnection(QWidget *parent = nullptr);
+    ~CDlgNewConnection();
+
+    void addConnectionItem(const std::string& str);
+    void addConnectionItems(void);
 
 private:
-    Ui::CDlgOpenSession *ui;
+    Ui::CDlgNewConnection *ui;
 
     void createMenu();
     void createHorizontalGroupBox();
     void createGridGroupBox();
     void createFormGroupBox();
+
 };
 
-#endif // CDLGOPENSESSION_H
+
+#endif // CDLGNEWCONNECTION_H

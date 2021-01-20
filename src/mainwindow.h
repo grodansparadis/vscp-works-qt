@@ -32,6 +32,8 @@
 
 #include <QMainWindow>
 
+#include <list>
+
 QT_BEGIN_NAMESPACE
 class QAction;
 class QMenu;
@@ -40,6 +42,8 @@ class QSessionManager;
 class QTableWidget;
 QT_END_NAMESPACE
 
+class connection;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -47,18 +51,18 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
 
-    void loadFile(const QString &fileName);
+    void loadConfiguration(const QString &fileName);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    void newFile();
+    void newConnection();
     void open();
     bool save();
     bool saveAs();
     void about();
-    void documentWasModified();
+    void connectionsWasModified();
 #ifndef QT_NO_SESSIONMANAGER
     void commitData(QSessionManager &);
 #endif
@@ -74,9 +78,12 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
-    QPlainTextEdit *m_textEdit;
+    //QPlainTextEdit *m_textEdit;
     QTableWidget *m_connTable;
     QString curFile;
+
+    /// List with defined connections
+    std::list<connection *> m_listConnections;
 };
 
 #endif // MAINWINDOW_H

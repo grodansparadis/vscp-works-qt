@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>547</width>
-    <height>322</height>
+    <height>323</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -147,7 +147,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="pushButton_test_connection">
    <property name="geometry">
     <rect>
      <x>380</x>
@@ -158,6 +158,19 @@
    </property>
    <property name="text">
     <string>Test connection</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_ssl">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>250</y>
+     <width>91</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>SSL</string>
    </property>
   </widget>
  </widget>

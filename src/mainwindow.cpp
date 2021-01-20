@@ -33,6 +33,8 @@
 
 #include "version.h"
 #include "cfrmsession.h"
+#include "connection.h"
+#include "cdlgnewconnection.h"
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +44,10 @@
 MainWindow::MainWindow()
     : m_connTable(new QTableWidget)
 { 
+    QCoreApplication::setOrganizationName("VSCP");
+    QCoreApplication::setOrganizationDomain("vscp.org");
+    QCoreApplication::setApplicationName("vscpworks+");
+
     /*
     QJSEngine myEngine;
     QJSValue three = myEngine.evaluate("1 + 2 + Math.PI");
@@ -53,15 +59,14 @@ MainWindow::MainWindow()
     msgBox.exec();
     */
 
-    setCentralWidget(m_connTable);
-
+    setCentralWidget(m_connTable);  // table widget
     createActions();
     createStatusBar();
 
     readSettings();
 
     //connect(m_textEdit->document(), &QTextDocument::contentsChanged,
-    //        this, &MainWindow::documentWasModified);
+    //        this, &MainWindow::connectionsWasModified);
 
 #ifndef QT_NO_SESSIONMANAGER
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -71,6 +76,13 @@ MainWindow::MainWindow()
 
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
+
+    QStringList headers(QString(tr("Type,Description")).split(','));
+    m_connTable->setColumnCount(2);
+    m_connTable->setColumnWidth(0, 20);     // Type
+    m_connTable->setColumnWidth(1, 200);    // Description
+    m_connTable->horizontalHeader()->setStretchLastSection(true);
+    m_connTable->setHorizontalHeaderLabels(headers);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,21 +94,29 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (maybeSave()) {
         writeSettings();
         event->accept();
-    } else {
+    } 
+    else {
         event->ignore();
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// newFile
+// newConnection
 //
 
-void MainWindow::newFile()
+void MainWindow::newConnection()
 {
     if (maybeSave()) {
-        m_textEdit->clear();
+        //m_textEdit->clear();
         setCurrentFile(QString());
     }
+
+    CDlgNewConnection dialog(this);
+    //dialog.addConnectionItem("Local");
+    //dialog.addConnectionItems();
+    int n = CDlgNewConnection::canal;
+
+    dialog.exec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,7 +128,7 @@ void MainWindow::open()
     if (maybeSave()) {
         QString fileName = QFileDialog::getOpenFileName(this);
         if (!fileName.isEmpty())
-            loadFile(fileName);
+            loadConfiguration(fileName);
     }
 }
 
@@ -157,12 +177,12 @@ void MainWindow::about()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// documentWasModified
+// connectionsWasModified
 //
 
-void MainWindow::documentWasModified()
+void MainWindow::connectionsWasModified()
 {
-    setWindowModified(m_textEdit->document()->isModified());
+    //setWindowModified(m_textEdit->document()->isModified());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -176,42 +196,39 @@ void MainWindow::createActions()
     QToolBar *fileToolBar = addToolBar(tr("File"));
     
     const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
-    QAction *newAct = new QAction(newIcon, tr("&New"), this);
+    QAction *newAct = new QAction(newIcon, tr("&New connection..."), this);
     newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Create a new file"));
-    connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
+    newAct->setStatusTip(tr("New connection"));
+    connect(newAct, &QAction::triggered, this, &MainWindow::newConnection);
     fileMenu->addAction(newAct);
     fileToolBar->addAction(newAct);
 
 
-    const QIcon openIcon = QIcon::fromTheme("document-open", QIcon(":/images/open.png"));
-    QAction *openAct = new QAction(openIcon, tr("&Open..."), this);
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::open);
-    fileMenu->addAction(openAct);
-    fileToolBar->addAction(openAct);
+    // const QIcon openIcon = QIcon::fromTheme("document-open", QIcon(":/images/open.png"));
+    // QAction *openAct = new QAction(openIcon, tr("&Open..."), this);
+    // openAct->setShortcuts(QKeySequence::Open);
+    // openAct->setStatusTip(tr("Open an existing file"));
+    // connect(openAct, &QAction::triggered, this, &MainWindow::open);
+    // fileMenu->addAction(openAct);
+    // fileToolBar->addAction(openAct);
 
-    const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
-    QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
-    saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save the document to disk"));
-    connect(saveAct, &QAction::triggered, this, &MainWindow::save);
-    fileMenu->addAction(saveAct);
-    fileToolBar->addAction(saveAct);
+    // const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
+    // QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
+    // saveAct->setShortcuts(QKeySequence::Save);
+    // saveAct->setStatusTip(tr("Save the document to disk"));
+    // connect(saveAct, &QAction::triggered, this, &MainWindow::save);
+    // fileMenu->addAction(saveAct);
+    // fileToolBar->addAction(saveAct);
 
-    const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
-    QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
-    saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
+    // const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
+    // QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
+    // saveAsAct->setShortcuts(QKeySequence::SaveAs);
+    // saveAsAct->setStatusTip(tr("Save the document under a new name"));
 
     fileMenu->addSeparator();
 
-    // http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html
-    // http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-
-    const QIcon newSessionIcon = QIcon::fromTheme("document-open");
-    QAction *newSessionAct = new QAction(newSessionIcon, tr("&New Session window..."), this);
+    const QIcon newSessionIcon = QIcon::fromTheme("emblem-symbolic-link");
+    QAction *newSessionAct = new QAction(newSessionIcon, tr("&Session window..."), this);
     newSessionAct->setShortcuts(QKeySequence::SaveAs);
     newSessionAct->setStatusTip(tr("Open a new VSCP Session window"));
     connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
@@ -224,31 +241,31 @@ void MainWindow::createActions()
     newDevConfigAct->setStatusTip(tr("Open a new VSCP configuration window"));
     connect(newDevConfigAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(newDevConfigAct);
-    fileToolBar->addAction(newDevConfigAct);
+    fileToolBar->addAction(newDevConfigAct);    
 
-    const QIcon newMdfEditorIcon = QIcon::fromTheme("applications-engineering");
-    QAction *newMdfEditorAct = new QAction(newMdfEditorIcon, tr("&MDF editor..."), this);
-    newMdfEditorAct->setShortcuts(QKeySequence::SaveAs);
-    newMdfEditorAct->setStatusTip(tr("Open a new NDF editor"));
-    connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::save);
-    fileMenu->addAction(newMdfEditorAct);
-    fileToolBar->addAction(newMdfEditorAct);
-
-    const QIcon scanForDeviceIcon = QIcon::fromTheme("network-wired");
-    QAction *scanForDeviceAct = new QAction(scanForDeviceIcon, tr("Scan for &Device..."), this);
+    const QIcon scanForDeviceIcon = QIcon::fromTheme("edit-find"); 
+    QAction *scanForDeviceAct = new QAction(scanForDeviceIcon, tr("Scan for &Device..."), this); 
     scanForDeviceAct->setShortcuts(QKeySequence::SaveAs);
     scanForDeviceAct->setStatusTip(tr("Open a new device scan window."));
     connect(scanForDeviceAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(scanForDeviceAct);
     fileToolBar->addAction(scanForDeviceAct);
 
-    const QIcon bootloaderIcon = QIcon::fromTheme("applications-system");
+    const QIcon bootloaderIcon = QIcon::fromTheme("emblem-downloads");
     QAction *bootloaderAct = new QAction(bootloaderIcon, tr("&Bootloader wizard..."), this);
     bootloaderAct->setShortcuts(QKeySequence::SaveAs);
     bootloaderAct->setStatusTip(tr("Open a new VSCP bootloader wizard."));
     connect(bootloaderAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(bootloaderAct);
     fileToolBar->addAction(bootloaderAct);
+
+    const QIcon newMdfEditorIcon = QIcon::fromTheme("emblem-documents"); // applications-office
+    QAction *newMdfEditorAct = new QAction(newMdfEditorIcon, tr("&MDF editor..."), this); 
+    newMdfEditorAct->setShortcuts(QKeySequence::SaveAs);
+    newMdfEditorAct->setStatusTip(tr("Open a new NDF editor"));
+    connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::save);
+    fileMenu->addAction(newMdfEditorAct);
+    fileToolBar->addAction(newMdfEditorAct);
 
     fileMenu->addSeparator();
 
@@ -268,7 +285,7 @@ void MainWindow::createActions()
     cutAct->setShortcuts(QKeySequence::Cut);
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
-    connect(cutAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::cut);
+    //connect(cutAct, &QAction::triggered, m_connTable, &QPlainTextEdit::cut);
     editMenu->addAction(cutAct);
     editToolBar->addAction(cutAct);
 
@@ -277,7 +294,7 @@ void MainWindow::createActions()
     copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    connect(copyAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::copy);
+    //connect(copyAct, &QAction::triggered, m_connTable, &QPlainTextEdit::copy);
     editMenu->addAction(copyAct);
     editToolBar->addAction(copyAct);
 
@@ -286,7 +303,7 @@ void MainWindow::createActions()
     pasteAct->setShortcuts(QKeySequence::Paste);
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    connect(pasteAct, &QAction::triggered, m_textEdit, &QPlainTextEdit::paste);
+    //connect(pasteAct, &QAction::triggered, m_connTable, &QPlainTextEdit::paste);
     editMenu->addAction(pasteAct);
     editToolBar->addAction(pasteAct);
 
@@ -305,13 +322,13 @@ void MainWindow::createActions()
     cutAct->setEnabled(false);
 
     copyAct->setEnabled(false);
-    connect(m_textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-    connect(m_textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+    //connect(m_textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
+    //connect(m_textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
 #endif // !QT_NO_CLIPBOARD
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// createStatusBar
+// createStatusBar *
 //
 
 void MainWindow::createStatusBar()
@@ -320,7 +337,7 @@ void MainWindow::createStatusBar()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSettings
+// readSettings *
 //
 
 void MainWindow::readSettings()
@@ -338,16 +355,46 @@ void MainWindow::readSettings()
     else {
         restoreGeometry(geometry);
     }
+
+    int size = settings.beginReadArray("hosts/connections");
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        std::string conn = settings.value("conn", "").toString().toStdString();
+    }
+    settings.endArray();
+
+    //int margin = settings.value("editor/wrapMargin").toInt();
+    //int margin = settings.value("editor/wrapMargin", 80).toInt();
+
+    //std::string source { "Hello, World!" };
+    //QVariant destination;        
+    //destination = QString::fromStdString(source);
+
+ 
+    std::string cfgfolder = settings.value("cfgfolder", "").toString().toStdString();
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// writeSettings
+// writeSettings *
 //
 
 void MainWindow::writeSettings()
 {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("geometry", saveGeometry());
+    //settings.setValue("editor/wrapMargin", 68);
+    settings.setValue("editor/wrapMargin", "{ 'test': ['aaa','bbb']}");
+
+    settings.beginWriteArray("hosts/connections");
+    //for (int i = 0; i < m_connections.size(); ++i) {
+    int i = 0;    
+    for (std::list<connection *>::iterator it = m_listConnections.begin(); it != m_listConnections.end(); ++it){    
+        settings.setArrayIndex(i);
+        settings.setValue("conn", QString::fromStdString((*it)->getName()));
+        //settings.setValue("conn", it->toJson);
+    }
+    settings.endArray();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -377,10 +424,10 @@ bool MainWindow::maybeSave()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// loadFile
+// loadConfiguration
 //
 
-void MainWindow::loadFile(const QString &fileName)
+void MainWindow::loadConfiguration(const QString &fileName)
 {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -394,7 +441,7 @@ void MainWindow::loadFile(const QString &fileName)
 #ifndef QT_NO_CURSOR
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
 #endif
-    m_textEdit->setPlainText(in.readAll());
+    //m_textEdit->setPlainText(in.readAll());
 #ifndef QT_NO_CURSOR
     QGuiApplication::restoreOverrideCursor();
 #endif
@@ -409,6 +456,7 @@ void MainWindow::loadFile(const QString &fileName)
 
 bool MainWindow::saveFile(const QString &fileName)
 {
+    /*
     QString errorMessage;
 
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
@@ -433,6 +481,7 @@ bool MainWindow::saveFile(const QString &fileName)
 
     setCurrentFile(fileName);
     statusBar()->showMessage(tr("File saved"), 2000);
+    */
     return true;
 }
 
@@ -473,8 +522,9 @@ void MainWindow::commitData(QSessionManager &manager)
             manager.cancel();
     } else {
         // Non-interactive: save without asking
-        if (m_textEdit->document()->isModified())
-            save();
+        // if (m_textEdit->document()->isModified()) {
+        //     save();
+        // }
     }
 }
 

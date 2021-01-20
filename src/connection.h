@@ -75,6 +75,19 @@ public:
     */
     std::string getName(void) { return m_name; };
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void) = 0;
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config) = 0;
+
 protected:
 
     // Name for connection
@@ -82,6 +95,9 @@ protected:
 
     // Connection type
     connection_type m_type;
+
+    // Input filter
+
 };
 
 // ----------------------------------------------------------------------------
@@ -92,6 +108,19 @@ public:
 
     no_connection();
     ~no_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
 
 private:
 
@@ -104,7 +133,38 @@ public:
     tcpip_connection();
     ~tcpip_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
 private:
+
+    /// VSCP tcp/ip host to connect to
+    std::string m_host;
+
+    /// port of host 
+    short m_port;
+
+    /// Username to login with
+    std::string m_user;
+
+    /// Password to login with
+    std::string m_password;
+
+    /// Timeout for connection in milliseconds
+    uint32_t m_connectTimeout;
+
+    /// Timeout for response in milliseconds
+    uint32_t m_responseTimeout;
 
 };
 
@@ -117,7 +177,29 @@ public:
     canal_connection();
     ~canal_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
 private:
+
+    /// Path to driver
+    std::string m_path;
+
+    /// Configuration string
+    std::string m_config;
+
+    /// Configuration flags
+    uint32_t m_flags;
 
 };
 
@@ -130,7 +212,22 @@ public:
     socketcan_connection();
     ~socketcan_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
 private:
+
+    std::string m_device;
 
 };
 
@@ -142,6 +239,19 @@ public:
 
     ws1_connection();
     ~ws1_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
 
 private:
 
@@ -156,6 +266,19 @@ public:
     ws2_connection();
     ~ws2_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
 private:
 
 };
@@ -168,6 +291,19 @@ public:
 
     mqtt_connection();
     ~mqtt_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
 
 private:
 
@@ -182,6 +318,19 @@ public:
     udp_connection();
     ~udp_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
 private:
 
 };
@@ -195,6 +344,103 @@ public:
     multicast_connection();
     ~multicast_connection();
 
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+
+private:
+
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+class rest_connection : public connection {
+
+public:
+
+    rest_connection();
+    ~rest_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+    
+private:
+
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+class rawcan_connection : public connection {
+
+public:
+
+    rawcan_connection();
+    ~rawcan_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+    
+private:
+
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+class rawmqtt_connection : public connection {
+
+public:
+
+    rawmqtt_connection();
+    ~rawmqtt_connection();
+
+    /*!
+        Return a JSON representation of connection
+        @return JSON representation as string
+    */
+    virtual std::string toJSON(void);
+
+    /*!
+        Set member variables from JSON representation of connection
+        @param config JSON representation as string
+        @return True on success, false on failure.
+    */
+    virtual bool fromJSON(const std::string& config);
+    
 private:
 
 };

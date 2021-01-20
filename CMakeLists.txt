@@ -39,23 +39,23 @@ include_directories(${EXPAT_INCLUDE_DIRS})
 include(FindMosquitto REQUIRED)
 find_package(EXPAT REQUIRED)
 
-
 # TODO Check SLL version and set variable accordingly
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
-if(ANDROID)
-  add_library(vscp-works-qt SHARED
+add_executable(vscp-works-qt
     src/main.cpp
     src/mainwindow.cpp
     src/mainwindow.h
     src/mainwindow.ui
-    src/cdlgopensession.h
-    src/cdlgopensession.cpp
+    src/cdlgnewconnection.h
+    src/cdlgnewconnection.cpp
     src/cfrmsession.cpp
     src/connection.h
     src/connection.cpp
+    src/vscpworks.h
+    src/vscpworks.cpp
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h
@@ -72,53 +72,19 @@ if(ANDROID)
     vscp/src/vscp/common/canaldlldef.h
     vscp/src/vscp/common/vscpcanaldeviceif.h
     vscp/src/vscp/common/vscpcanaldeviceif.cpp
-    vscp/src/common/third_party/nlohmann/json.hpp
-    vscp/src/common/sockettcp.h
-    vscp/src/common/sockettcp.c
-    vscp/src/common/vscpbase64.h
-    vscp/src/common/vscpbase64.c
-    vscp/src/common/vscp_aes.h
-    vscp/src/common/vscp_aes.c
-    vscp/src/common/crc.h
-    vscp/src/common/crc.c
-    vscp/src/common/crc8.h
-    vscp/src/common/crc8.c
-    vscp/src/common/vscpmd5.h
-    vscp/src/common/vscpmd5.c
-    vscp/src/common/fastpbkdf2.h
-    vscp/src/common/fastpbkdf2.c
-    ${TS_FILES}
-  )
-else()
-  add_executable(vscp-works-qt
-    src/main.cpp
-    src/mainwindow.cpp
-    src/mainwindow.h
-    src/mainwindow.ui
-    src/cdlgopensession.h
-    src/cdlgopensession.cpp
-    src/cfrmsession.cpp
-    src/connection.h
-    src/connection.cpp
-    vscp/src/vscp/common/version.h
-    vscp/src/vscp/common/vscp.h
-    vscp/src/vscp/common/vscpremotetcpif.h
-    vscp/src/vscp/common/vscpremotetcpif.cpp
-    vscp/src/vscp/common/vscpdatetime.h
-    vscp/src/vscp/common/vscpdatetime.cpp
-    vscp/src/vscp/common/guid.h
-    vscp/src/vscp/common/guid.cpp
-    vscp/src/vscp/common/mdf.h
-    vscp/src/vscp/common/mdf.cpp
-    vscp/src/vscp/common/vscphelper.h
-    vscp/src/vscp/common/vscphelper.cpp
-    vscp/src/vscp/common/canal.h
-    vscp/src/vscp/common/canaldlldef.h
-    vscp/src/vscp/common/vscpcanaldeviceif.h
-    vscp/src/vscp/common/vscpcanaldeviceif.cpp
+    vscp/src/vscp/common/vscp_client_base.h
+    vscp/src/vscp/common/vscp_client_base.cpp
+    vscp/src/vscp/common/vscp_client_mqtt.h
+    vscp/src/vscp/common/vscp_client_mqtt.cpp
+    vscp/src/vscp/common/vscp_client_canal.h
+    vscp/src/vscp/common/vscp_client_canal.cpp
+    vscp/src/vscp/common/vscp_client_tcp.h
+    vscp/src/vscp/common/vscp_client_tcp.cpp 
     vscp/src/vscp/common/vscp_bootloader.h
     vscp/src/vscp/common/vscp_bootloader.cpp
-    vscp/src/common/third_party/nlohmann/json.hpp
+    vscp/src/common/third_party/mustache.hpp
+    vscp/src/common/third_party/civetweb-1.13/include/civetweb.h
+    vscp/src/common/third_party/civetweb-1.13/src/civetweb.c
     vscp/src/common/sockettcp.h
     vscp/src/common/sockettcp.c
     vscp/src/common/vscpbase64.h
@@ -135,11 +101,12 @@ else()
     vscp/src/common/fastpbkdf2.c    
     ${TS_FILES}
   )
-endif()
 
 include_directories( PUBLIC ./src vscp/src/vscp/common/
     vscp/src/common
+    vscp/src/common/third_party
     vscp/src/common/third_party/nlohmann
+    vscp/src/common/third_party/civetweb-1.13/include
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS} )

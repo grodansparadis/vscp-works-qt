@@ -29,6 +29,10 @@
 #ifndef VSCPWORKS_H
 #define VSCPWORKS_H
 
+#include <list>
+
+
+class connection;
 
 /*!
     Encapsulates VSCP works main settings
@@ -47,6 +51,8 @@ public:
     ~vscpworks();
 
 
+    /// List with defined connections
+    std::list<connection *> m_connections;
 
 };
 

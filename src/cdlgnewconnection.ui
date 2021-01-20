@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgOpenSession</class>
- <widget class="QDialog" name="CDlgOpenSession">
+ <class>CDlgNewConnection</class>
+ <widget class="QDialog" name="CDlgNewConnection">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -32,14 +32,27 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QTreeView" name="treeView">
+  <widget class="QListWidget" name="listWidgetConnectionTypes">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
+     <y>30</y>
      <width>681</width>
-     <height>231</height>
+     <height>221</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>681</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select connection type</string>
    </property>
   </widget>
  </widget>
@@ -48,7 +61,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgOpenSession</receiver>
+   <receiver>CDlgNewConnection</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -64,7 +77,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgOpenSession</receiver>
+   <receiver>CDlgNewConnection</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

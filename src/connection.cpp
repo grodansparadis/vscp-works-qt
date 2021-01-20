@@ -26,7 +26,12 @@
 // SOFTWARE.
 //
 
+#include <nlohmann/json.hpp>
+
 #include "connection.h"
+
+// for convenience
+using json = nlohmann::json;
 
 ///////////////////////////////////////////////////////////////////////////////
 // connection
@@ -68,6 +73,26 @@ no_connection::~no_connection()
     
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string no_connection::toJSON(void) 
+{
+    std::string rv;
+
+    return rv;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool no_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -88,6 +113,30 @@ tcpip_connection::tcpip_connection()
 tcpip_connection::~tcpip_connection()
 {
     
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string tcpip_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool tcpip_connection::fromJSON(const std::string& config)
+{
+    return true;
 }
 
 
@@ -112,6 +161,29 @@ canal_connection::~canal_connection()
     
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string canal_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool canal_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -132,6 +204,30 @@ socketcan_connection::socketcan_connection()
 socketcan_connection::~socketcan_connection()
 {
     
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string socketcan_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool socketcan_connection::fromJSON(const std::string& config)
+{
+    return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -155,6 +251,29 @@ ws1_connection::~ws1_connection()
     
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string ws1_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool ws1_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -177,6 +296,31 @@ ws2_connection::~ws2_connection()
     
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string ws2_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool ws2_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
+
+
 // ----------------------------------------------------------------------------
 
 
@@ -190,7 +334,7 @@ mqtt_connection::mqtt_connection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ~ws1_connection
+// ~mqtt_connection
 //
 
 mqtt_connection::~mqtt_connection()
@@ -198,6 +342,29 @@ mqtt_connection::~mqtt_connection()
     
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string mqtt_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool mqtt_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -212,12 +379,36 @@ udp_connection::udp_connection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ~ws1_connection
+// ~udp_connection
 //
 
 udp_connection::~udp_connection()
 {
     
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string udp_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool udp_connection::fromJSON(const std::string& config)
+{
+    return true;
 }
 
 
@@ -234,10 +425,172 @@ multicast_connection::multicast_connection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ~ws1_connection
+// ~multicast_connection
 //
 
 multicast_connection::~multicast_connection()
 {
     
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string multicast_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool multicast_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
+
+
+// ----------------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
+// rest_connection
+//
+
+rest_connection::rest_connection()
+{
+    m_type = multicast;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// ~rest_connection
+//
+
+rest_connection::~rest_connection()
+{
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string rest_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool rest_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
+
+
+// ----------------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
+// rawcan_connection
+//
+
+rawcan_connection::rawcan_connection()
+{
+    m_type = multicast;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// ~rawcan_connection
+//
+
+rawcan_connection::~rawcan_connection()
+{
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string rawcan_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool rawcan_connection::fromJSON(const std::string& config)
+{
+    return true;
+}
+
+
+// ----------------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
+// rawmqtt_connection
+//
+
+rawmqtt_connection::rawmqtt_connection()
+{
+    m_type = multicast;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// ~rawcan_connection
+//
+
+rawmqtt_connection::~rawmqtt_connection()
+{
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toJSON
+//
+
+std::string rawmqtt_connection::toJSON(void) 
+{
+    json j;
+
+    j["name"] = m_name;
+    j["type"] = m_type;
+    
+    return j.dump();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fromJSON
+//
+
+bool rawmqtt_connection::fromJSON(const std::string& config)
+{
+    return true;
 }
