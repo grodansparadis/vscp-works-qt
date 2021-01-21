@@ -29,7 +29,10 @@
 #ifndef CDLGNEWCONNECTION_H
 #define CDLGNEWCONNECTION_H
 
+#include "connection_types.h"
+
 #include <QDialog>
+#include <QListWidgetItem>
 
 namespace Ui {
 class CDlgNewConnection;
@@ -47,10 +50,28 @@ public:
     explicit CDlgNewConnection(QWidget *parent = nullptr);
     ~CDlgNewConnection();
 
-    void addConnectionItem(const std::string& str);
+    /*!
+        Add connection items
+    */
     void addConnectionItems(void);
 
+    /*!
+        Called when the connection list is clicked
+    */
+    void onClicked(QListWidgetItem* item);
+
+    /*!
+        Called when the connection list is double clicked
+    */
+    void onDoubleClicked(QListWidgetItem* item);
+
+    /*!
+        Return the selected communication type
+    */
+    connection_type getSelectedType(void);
+
 private:
+
     Ui::CDlgNewConnection *ui;
 
     void createMenu();
@@ -58,6 +79,11 @@ private:
     void createGridGroupBox();
     void createFormGroupBox();
 
+    /*! 
+        This variable holds the connection type that 
+        the used select
+    */
+    connection_type m_selected_type;
 };
 
 

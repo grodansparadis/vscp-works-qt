@@ -102,12 +102,12 @@ protected:
 
 // ----------------------------------------------------------------------------
 
-class no_connection : public connection {
+class local_connection : public connection {
 
 public:
 
-    no_connection();
-    ~no_connection();
+    local_connection();
+    ~local_connection();
 
     /*!
         Return a JSON representation of connection

@@ -69,3 +69,17 @@ cd src
 mkdir build
 cd build
 cmake ..
+
+
+----
+
+## Linux
+
+  * Need to install libqt5serialport5-dev
+
+  sudo apt-get install libqt5serialport5
+  sudo apt-get install libqt5serialport5-dev
+
+## Enable debug
+
+  cmake -DCMAKE_BUILD_TYPE=Debug

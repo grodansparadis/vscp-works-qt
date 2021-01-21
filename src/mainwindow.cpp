@@ -30,6 +30,9 @@
 #include <QtWidgets>
 #include <QMessageBox>
 #include <QJSEngine>
+//#include <QtSerialPort/QSerialPort>
+//#include <QCanBus>
+
 
 #include "version.h"
 #include "cfrmsession.h"
@@ -42,11 +45,18 @@
 //
 
 MainWindow::MainWindow()
-    : m_connTable(new QTableWidget)
+    : m_connTreeTable(new QTreeWidget)
 { 
     QCoreApplication::setOrganizationName("VSCP");
     QCoreApplication::setOrganizationDomain("vscp.org");
     QCoreApplication::setApplicationName("vscpworks+");
+
+    connect(m_connTreeTable, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onDoubleClicked );
+
+
+    // if (QCanBus::instance()->plugins().contains(QStringLiteral("socketcan"))) {
+    //     // plugin available
+    // }
 
     /*
     QJSEngine myEngine;
@@ -59,7 +69,7 @@ MainWindow::MainWindow()
     msgBox.exec();
     */
 
-    setCentralWidget(m_connTable);  // table widget
+    setCentralWidget(m_connTreeTable);  // table widget
     createActions();
     createStatusBar();
 
@@ -77,12 +87,113 @@ MainWindow::MainWindow()
     setCurrentFile(QString());
     setUnifiedTitleAndToolBarOnMac(true);
 
-    QStringList headers(QString(tr("Type,Description")).split(','));
-    m_connTable->setColumnCount(2);
-    m_connTable->setColumnWidth(0, 20);     // Type
-    m_connTable->setColumnWidth(1, 200);    // Description
-    m_connTable->horizontalHeader()->setStretchLastSection(true);
-    m_connTable->setHorizontalHeaderLabels(headers);
+    QStringList headers(QString(tr("Connection")).split(','));
+    //m_connTreeTable->setColumnCount(2);
+    //m_connTreeTable->setColumnWidth(0, 20);     // Type
+    //m_connTreeTable->setColumnWidth(1, 200);    // Description
+    //m_connTreeTable->horizontalHeader()->setStretchLastSection(true);
+    //m_connTreeTable->setHorizontalHeaderLabels(headers);
+    m_connTreeTable->setHeaderLabel(tr("--- Saved Connections ---"));
+
+    // Add root items
+    
+    const QIcon iconConnections = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    const QIcon iconLocal = QIcon::fromTheme("network-offline", QIcon(":info.png"));
+    
+    //const QIcon iconTest = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    const QIcon iconTest(":process_accept.png");
+    
+    // Local
+    QStringList strlist_local(QString(tr("Local Connections")).split(','));
+    QTreeWidgetItem *topitem_local = new QTreeWidgetItem(strlist_local);
+    topitem_local->setIcon(0,iconTest);
+    topitem_local->setToolTip(0,tr("Holds local connections. Typically logfile and debug content containing VSCP events."));
+    m_connTreeTable->addTopLevelItem(topitem_local);
+
+    // tcp/ip
+    QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
+    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip);
+    topitem_tcpip->setIcon(0,iconTest);
+    topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
+    m_connTreeTable->addTopLevelItem(topitem_tcpip);
+
+    // canal
+    QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
+    QTreeWidgetItem *topitem_canal = new QTreeWidgetItem(strlist_canal);
+    topitem_canal->setIcon(0,iconTest);
+    topitem_canal->setToolTip(0,"Holds VSCP CANAL connections.");
+    m_connTreeTable->addTopLevelItem(topitem_canal);
+
+    // Socketcan
+    QStringList strlist_socketcan(QString(tr("Socketcan Connections")).split(','));
+    QTreeWidgetItem *topitem_socketcan = new QTreeWidgetItem(strlist_socketcan);
+    topitem_socketcan->setIcon(0,iconTest);
+    topitem_socketcan->setToolTip(0,"Holds VSCP socketcan connections.");
+    m_connTreeTable->addTopLevelItem(topitem_socketcan);
+
+    // WS1
+    QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
+    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1);
+    topitem_ws1->setIcon(0,iconTest);
+    topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
+    m_connTreeTable->addTopLevelItem(topitem_ws1);
+
+    // WS2
+    QStringList strlist_ws2(QString(tr("WS2 Connections")).split(','));
+    QTreeWidgetItem *topitem_ws2 = new QTreeWidgetItem(strlist_ws2);
+    topitem_ws2->setIcon(0,iconTest);
+    topitem_ws2->setToolTip(0,"Holds VSCP websocket ws2 connections.");
+    m_connTreeTable->addTopLevelItem(topitem_ws2);
+
+    // MQTT
+    QStringList strlist_mqtt(QString(tr("MQTT Connections")).split(','));
+    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt);
+    topitem_mqtt->setIcon(0,iconTest);
+    topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
+    m_connTreeTable->addTopLevelItem(topitem_mqtt);
+
+    // UDP
+    QStringList strlist_udp(QString(tr("UDP Connections")).split(','));
+    QTreeWidgetItem *topitem_udp = new QTreeWidgetItem(strlist_udp);
+    topitem_udp->setIcon(0,iconTest);
+    topitem_udp->setToolTip(0,"Holds VSCP UDP connections.");
+    m_connTreeTable->addTopLevelItem(topitem_udp);
+
+    // Multicast
+    QStringList strlist_multicast(QString(tr("Multicast Connections")).split(','));
+    QTreeWidgetItem *topitem_multicast = new QTreeWidgetItem(strlist_multicast);
+    topitem_multicast->setIcon(0,iconTest);
+    topitem_multicast->setToolTip(0,"Holds VSCP multicast connections.");
+    m_connTreeTable->addTopLevelItem(topitem_multicast);
+
+    // REST
+    QStringList strlist_rest(QString(tr("REST Connections")).split(','));
+    QTreeWidgetItem *topitem_rest = new QTreeWidgetItem(strlist_rest);
+    topitem_rest->setIcon(0,iconTest);
+    topitem_rest->setToolTip(0,"Holds VSCP REST connections.");
+    m_connTreeTable->addTopLevelItem(topitem_rest);
+
+    // RAWCAN
+    QStringList strlist_rawcan(QString(tr("RAWCAN Connections")).split(','));
+    QTreeWidgetItem *topitem_rawcan = new QTreeWidgetItem(strlist_rawcan);
+    topitem_rawcan->setIcon(0,iconTest);
+    topitem_rawcan->setToolTip(0,"Holds generic CAN connections.");
+    m_connTreeTable->addTopLevelItem(topitem_rawcan);
+
+    // RAWMQTT
+    QStringList strlist_rawmqtt(QString(tr("RAWMQTT Connections")).split(','));
+    QTreeWidgetItem *topitem_rawmqtt = new QTreeWidgetItem(strlist_rawmqtt);
+    topitem_rawmqtt->setIcon(0,iconTest);
+    topitem_rawmqtt->setToolTip(0,"Holds generic MQTT connections.");
+    m_connTreeTable->addTopLevelItem(topitem_rawmqtt);
+
+    // TEST
+    QStringList strlist_test(QString(tr("Fluorine")).split(',')); 
+    QTreeWidgetItem *topitem_test = new QTreeWidgetItem(topitem_tcpip,strlist_test);
+    const QIcon iconFluorine = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    topitem_test->setIcon(0,iconFluorine);
+    topitem_test->setToolTip(0,"This is just a test connection from a snowy country named Sweden.");
+    m_connTreeTable->addTopLevelItem(topitem_test);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,12 +222,84 @@ void MainWindow::newConnection()
         setCurrentFile(QString());
     }
 
-    CDlgNewConnection dialog(this);
-    //dialog.addConnectionItem("Local");
-    //dialog.addConnectionItems();
+    CDlgNewConnection dlg(this);
+    //dlg.addConnectionItem("Local");
+    //dlg.addConnectionItems();
     //int n = CDlgNewConnection::CANAL;
 
-    dialog.exec();
+    if (QDialog::Accepted == dlg.exec()) {
+
+        QMessageBox msgBox;
+         
+        switch (dlg.getSelectedType()) { 
+            
+            case LOCAL:
+                msgBox.setText("LOCAL"); 
+                break;
+
+            case TCPIP:
+                msgBox.setText("TCPIP");
+                break;
+
+            case CANAL: 
+                msgBox.setText("CANAL");
+                break;
+
+            case SOCKETCAN: 
+                msgBox.setText("SOCKETCAN");
+                break;
+
+            case WS1: 
+                msgBox.setText("WS1");
+                break;
+
+            case WS2: 
+                msgBox.setText("WS2");
+                break;
+
+            case MQTT: 
+                msgBox.setText("MQTT");
+                break;
+
+            case UDP: 
+                msgBox.setText("UDP");
+                break;
+
+            case MULTICAST: 
+                msgBox.setText("MULTICAST");
+                break;
+
+            case REST: 
+                msgBox.setText("REST");
+                break;
+
+            case RAWCAN: 
+                msgBox.setText("RAWCAN");
+                break;
+
+            case RAWMQTT: 
+                msgBox.setText("RAWMQTT");
+                break;
+                                                    
+            default:
+                msgBox.setText("default");
+                break;    
+        }
+
+        msgBox.exec();
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onDoubleClicked
+//
+
+void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
+{
+    QMessageBox msgBox;
+    msgBox.setText("Double click");
+    msgBox.exec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,7 +468,7 @@ void MainWindow::createActions()
     cutAct->setShortcuts(QKeySequence::Cut);
     cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                             "clipboard"));
-    //connect(cutAct, &QAction::triggered, m_connTable, &QPlainTextEdit::cut);
+    //connect(cutAct, &QAction::triggered, m_connTreeTable, &QPlainTextEdit::cut);
     editMenu->addAction(cutAct);
     editToolBar->addAction(cutAct);
 
@@ -294,7 +477,7 @@ void MainWindow::createActions()
     copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                              "clipboard"));
-    //connect(copyAct, &QAction::triggered, m_connTable, &QPlainTextEdit::copy);
+    //connect(copyAct, &QAction::triggered, m_connTreeTable, &QPlainTextEdit::copy);
     editMenu->addAction(copyAct);
     editToolBar->addAction(copyAct);
 
@@ -303,7 +486,7 @@ void MainWindow::createActions()
     pasteAct->setShortcuts(QKeySequence::Paste);
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                               "selection"));
-    //connect(pasteAct, &QAction::triggered, m_connTable, &QPlainTextEdit::paste);
+    //connect(pasteAct, &QAction::triggered, m_connTreeTable, &QPlainTextEdit::paste);
     editMenu->addAction(pasteAct);
     editToolBar->addAction(pasteAct);
 

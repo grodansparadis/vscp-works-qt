@@ -39,7 +39,9 @@ class QAction;
 class QMenu;
 class QPlainTextEdit;
 class QSessionManager;
-class QTableWidget;
+//class QTableWidget;
+class QTreeWidget;
+class QTreeWidgetItem;
 QT_END_NAMESPACE
 
 class connection;
@@ -68,6 +70,11 @@ private slots:
 #endif
     void newSession();
 
+    /*!
+        Called when the connection list is double clicked
+    */
+    void onDoubleClicked(QTreeWidgetItem* item);
+
 private:
     void createActions();
     void createStatusBar();
@@ -79,7 +86,9 @@ private:
     QString strippedName(const QString &fullFileName);
 
     //QPlainTextEdit *m_textEdit;
-    QTableWidget *m_connTable;
+    //QTableWidget *m_connTable;
+    QTreeWidget *m_connTreeTable;
+
     QString curFile;
 
     /// List with defined connections

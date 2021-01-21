@@ -56,19 +56,19 @@ connection::~connection()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// no_connection
+// local_connection
 //
 
-no_connection::no_connection()
+local_connection::local_connection()
 {
     m_type = NONE;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// ~no_connection
+// ~local_connection
 //
 
-no_connection::~no_connection()
+local_connection::~local_connection()
 {
     
 }
@@ -77,7 +77,7 @@ no_connection::~no_connection()
 // toJSON
 //
 
-std::string no_connection::toJSON(void) 
+std::string local_connection::toJSON(void) 
 {
     std::string rv;
 
@@ -89,7 +89,7 @@ std::string no_connection::toJSON(void)
 // fromJSON
 //
 
-bool no_connection::fromJSON(const std::string& config)
+bool local_connection::fromJSON(const std::string& config)
 {
     return true;
 }

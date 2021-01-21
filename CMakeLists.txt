@@ -27,7 +27,8 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 #    endif()
 #endif()
 
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Quick Sql Qml)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
+
 find_package(OpenSSL REQUIRED)
 
 set(TS_FILES vscp-works-qt_en_150.ts)
@@ -43,7 +44,6 @@ find_package(EXPAT REQUIRED)
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
-
 
 add_executable(vscp-works-qt
     src/vscpworks.qrc
@@ -102,19 +102,29 @@ add_executable(vscp-works-qt
     vscp/src/common/fastpbkdf2.h
     vscp/src/common/fastpbkdf2.c    
     ${TS_FILES}
-  )
+  ) 
 
-include_directories( PUBLIC ./src vscp/src/vscp/common/
+include_directories( PUBLIC ./src 
+    vscp/src/vscp/common/
     vscp/src/common
     vscp/src/common/third_party
     vscp/src/common/third_party/nlohmann
     vscp/src/common/third_party/civetweb-1.13/include
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5SerialBus_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
+    ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS} )
 
-target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets
-    Qt5::Core Qt5::Quick Qt5::Sql
+target_link_libraries(vscp-works-qt PRIVATE 
+    Qt5::Widgets
+    Qt5::Core 
+    Qt5::Network
+    Qt5::Quick 
+    Qt5::Sql 
+    Qt5::SerialPort
     m
     dl
     pthread
@@ -125,3 +135,12 @@ target_link_libraries(vscp-works-qt PRIVATE Qt5::Widgets
 
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
+
+message(" Qt5Widgets_INCLUDE_DIRS =${Qt5Widgets_INCLUDE_DIRS}     ")
+message(" Qt5Widgets_LIBRARIES =${Qt5Widgets_LIBRARIES}   ")
+
+message(" Qt5Core_INCLUDE_DIRS =${Qt5Core_INCLUDE_DIRS}   ")
+message(" Qt5Core_LIBRARIES =${Qt5Core_LIBRARIES}         ")
+
+message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
+message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
