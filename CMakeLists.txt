@@ -45,7 +45,10 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
+qt5_wrap_ui(UI canal.ui)
+
 add_executable(vscp-works-qt
+    ${UI}
     src/vscpworks.qrc
     src/main.cpp
     src/mainwindow.cpp
@@ -53,6 +56,8 @@ add_executable(vscp-works-qt
     src/mainwindow.ui
     src/cdlgnewconnection.h
     src/cdlgnewconnection.cpp
+    src/cdlgconnsettingstcpip.h
+    src/cdlgconnsettingstcpip.cpp
     src/cfrmsession.cpp
     src/connection.h
     src/connection.cpp

@@ -30,6 +30,7 @@
 #include <QtWidgets>
 #include <QMessageBox>
 #include <QJSEngine>
+
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
 
@@ -38,6 +39,7 @@
 #include "cfrmsession.h"
 #include "connection.h"
 #include "cdlgnewconnection.h"
+#include "cdlgconnsettingstcpip.h"
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,8 +53,15 @@ MainWindow::MainWindow()
     QCoreApplication::setOrganizationDomain("vscp.org");
     QCoreApplication::setApplicationName("vscpworks+");
 
+    // Enable custom context menu
+    m_connTreeTable->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    // Open communication item on double click
     connect(m_connTreeTable, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onDoubleClicked );
 
+    // Open pop up menu on right click
+    connect(m_connTreeTable, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
+    
 
     // if (QCanBus::instance()->plugins().contains(QStringLiteral("socketcan"))) {
     //     // plugin available
@@ -105,84 +114,84 @@ MainWindow::MainWindow()
     
     // Local
     QStringList strlist_local(QString(tr("Local Connections")).split(','));
-    QTreeWidgetItem *topitem_local = new QTreeWidgetItem(strlist_local);
+    QTreeWidgetItem *topitem_local = new QTreeWidgetItem(strlist_local, LOCAL);
     topitem_local->setIcon(0,iconTest);
     topitem_local->setToolTip(0,tr("Holds local connections. Typically logfile and debug content containing VSCP events."));
     m_connTreeTable->addTopLevelItem(topitem_local);
 
     // tcp/ip
     QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
-    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip);
+    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip, TCPIP);
     topitem_tcpip->setIcon(0,iconTest);
     topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
     m_connTreeTable->addTopLevelItem(topitem_tcpip);
 
     // canal
     QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
-    QTreeWidgetItem *topitem_canal = new QTreeWidgetItem(strlist_canal);
+    QTreeWidgetItem *topitem_canal = new QTreeWidgetItem(strlist_canal, CANAL);
     topitem_canal->setIcon(0,iconTest);
     topitem_canal->setToolTip(0,"Holds VSCP CANAL connections.");
     m_connTreeTable->addTopLevelItem(topitem_canal);
 
     // Socketcan
     QStringList strlist_socketcan(QString(tr("Socketcan Connections")).split(','));
-    QTreeWidgetItem *topitem_socketcan = new QTreeWidgetItem(strlist_socketcan);
+    QTreeWidgetItem *topitem_socketcan = new QTreeWidgetItem(strlist_socketcan, SOCKETCAN);
     topitem_socketcan->setIcon(0,iconTest);
     topitem_socketcan->setToolTip(0,"Holds VSCP socketcan connections.");
     m_connTreeTable->addTopLevelItem(topitem_socketcan);
 
     // WS1
     QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
-    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1);
+    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1, WS1);
     topitem_ws1->setIcon(0,iconTest);
     topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
     m_connTreeTable->addTopLevelItem(topitem_ws1);
 
     // WS2
     QStringList strlist_ws2(QString(tr("WS2 Connections")).split(','));
-    QTreeWidgetItem *topitem_ws2 = new QTreeWidgetItem(strlist_ws2);
+    QTreeWidgetItem *topitem_ws2 = new QTreeWidgetItem(strlist_ws2, WS2);
     topitem_ws2->setIcon(0,iconTest);
     topitem_ws2->setToolTip(0,"Holds VSCP websocket ws2 connections.");
     m_connTreeTable->addTopLevelItem(topitem_ws2);
 
     // MQTT
     QStringList strlist_mqtt(QString(tr("MQTT Connections")).split(','));
-    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt);
+    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt, MQTT);
     topitem_mqtt->setIcon(0,iconTest);
     topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
     m_connTreeTable->addTopLevelItem(topitem_mqtt);
 
     // UDP
     QStringList strlist_udp(QString(tr("UDP Connections")).split(','));
-    QTreeWidgetItem *topitem_udp = new QTreeWidgetItem(strlist_udp);
+    QTreeWidgetItem *topitem_udp = new QTreeWidgetItem(strlist_udp, UDP);
     topitem_udp->setIcon(0,iconTest);
     topitem_udp->setToolTip(0,"Holds VSCP UDP connections.");
     m_connTreeTable->addTopLevelItem(topitem_udp);
 
     // Multicast
     QStringList strlist_multicast(QString(tr("Multicast Connections")).split(','));
-    QTreeWidgetItem *topitem_multicast = new QTreeWidgetItem(strlist_multicast);
+    QTreeWidgetItem *topitem_multicast = new QTreeWidgetItem(strlist_multicast, MULTICAST);
     topitem_multicast->setIcon(0,iconTest);
     topitem_multicast->setToolTip(0,"Holds VSCP multicast connections.");
     m_connTreeTable->addTopLevelItem(topitem_multicast);
 
     // REST
     QStringList strlist_rest(QString(tr("REST Connections")).split(','));
-    QTreeWidgetItem *topitem_rest = new QTreeWidgetItem(strlist_rest);
+    QTreeWidgetItem *topitem_rest = new QTreeWidgetItem(strlist_rest, REST);
     topitem_rest->setIcon(0,iconTest);
     topitem_rest->setToolTip(0,"Holds VSCP REST connections.");
     m_connTreeTable->addTopLevelItem(topitem_rest);
 
     // RAWCAN
     QStringList strlist_rawcan(QString(tr("RAWCAN Connections")).split(','));
-    QTreeWidgetItem *topitem_rawcan = new QTreeWidgetItem(strlist_rawcan);
+    QTreeWidgetItem *topitem_rawcan = new QTreeWidgetItem(strlist_rawcan, RAWCAN);
     topitem_rawcan->setIcon(0,iconTest);
     topitem_rawcan->setToolTip(0,"Holds generic CAN connections.");
     m_connTreeTable->addTopLevelItem(topitem_rawcan);
 
     // RAWMQTT
     QStringList strlist_rawmqtt(QString(tr("RAWMQTT Connections")).split(','));
-    QTreeWidgetItem *topitem_rawmqtt = new QTreeWidgetItem(strlist_rawmqtt);
+    QTreeWidgetItem *topitem_rawmqtt = new QTreeWidgetItem(strlist_rawmqtt, RAWMQTT);
     topitem_rawmqtt->setIcon(0,iconTest);
     topitem_rawmqtt->setToolTip(0,"Holds generic MQTT connections.");
     m_connTreeTable->addTopLevelItem(topitem_rawmqtt);
@@ -210,6 +219,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         event->ignore();
     }
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // newConnection
@@ -292,6 +302,33 @@ void MainWindow::newConnection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// editConnectionItem
+//
+
+void MainWindow::editConnectionItem()
+{
+    QMessageBox::about(this, tr("Info"), tr("editConnectionItem") );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// cloneConnectionItem
+//
+
+void MainWindow::cloneConnectionItem()
+{
+    QMessageBox::about(this, tr("Info"), tr("cloneConnectionItem") );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeConnectionItem
+//
+
+void MainWindow::removeConnectionItem()
+{
+    QMessageBox::about(this, tr("Info"), tr("removeConnectionItem") );
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // onDoubleClicked
 //
 
@@ -300,6 +337,36 @@ void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
     QMessageBox msgBox;
     msgBox.setText("Double click");
     msgBox.exec();
+    newTcpipConnection();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showContextMenu
+//
+
+void MainWindow::showContextMenu(const QPoint& pos)
+{
+    // Context Menu Creation
+    QModelIndex selected = m_connTreeTable->indexAt(pos);
+    QModelIndex parent = selected.parent();
+    QTreeWidgetItem *item = m_connTreeTable->itemAt(pos);
+
+    if (nullptr != item) {
+        statusBar()->showMessage(item->text(0));
+    }
+
+    int row = selected.row();
+
+    if (QModelIndex() == parent) return;
+
+    QMenu *menu=new QMenu(this);
+    menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
+    menu->addAction(QString("Edit this connection"), this, SLOT(editConnectionItem()));
+    menu->addAction(QString("Remove this connection"),this, SLOT(removeConnectionItem()));
+    menu->addAction(QString("Clone this connection"),this, SLOT(cloneConnectionItem()));
+
+    menu->popup(m_connTreeTable->viewport()->mapToGlobal(pos));
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -358,6 +425,8 @@ void MainWindow::about()
             "</p>";
    QMessageBox::about(this, tr("About VSCP Works+"), str );
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // connectionsWasModified
@@ -719,6 +788,117 @@ void MainWindow::newSession()
 {
     CFrmSession *w = new CFrmSession(this);
     w->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newLocalConnection
+//
+
+void MainWindow::newLocalConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newTcpipConnection
+//
+
+void MainWindow::newTcpipConnection()
+{
+    Ui_CDlgConnSettingsTcpip dlg(this);
+
+    if (QDialog::Accepted == dlg.show()) {
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newCanalConnection
+//
+
+void MainWindow::newCanalConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newSocketcanConnection
+//
+
+void MainWindow::newSocketcanConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newWs1Connection
+//
+
+void MainWindow::newWs1Connection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newWs2Connection
+//
+
+void MainWindow::newWs2Connection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newMqttConnection
+//
+
+void MainWindow::newMqttConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newUdpConnection
+//
+
+void MainWindow::newUdpConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newMulticastConnection
+//
+
+void MainWindow::newMulticastConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newRestConnection
+//
+
+void MainWindow::newRestConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newRawcanConnection
+//
+
+void MainWindow::newRawcanConnection()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newRawMqttConnection
+//
+
+void MainWindow::newRawMqttConnection()
+{
+
 }
 
 #endif

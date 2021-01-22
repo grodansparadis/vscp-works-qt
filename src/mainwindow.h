@@ -42,6 +42,7 @@ class QSessionManager;
 //class QTableWidget;
 class QTreeWidget;
 class QTreeWidgetItem;
+class QModelIndex;
 QT_END_NAMESPACE
 
 class connection;
@@ -70,10 +71,34 @@ private slots:
 #endif
     void newSession();
 
+    void editConnectionItem();
+    void cloneConnectionItem();
+    void removeConnectionItem();
+
+    // New connections
+    void newLocalConnection();
+    void newTcpipConnection();
+    void newCanalConnection();
+    void newSocketcanConnection();
+    void newWs1Connection();
+    void newWs2Connection();
+    void newMqttConnection();
+    void newUdpConnection();
+    void newMulticastConnection();
+    void newRestConnection();
+    void newRawcanConnection();
+    void newRawMqttConnection();
+
     /*!
         Called when the connection list is double clicked
     */
     void onDoubleClicked(QTreeWidgetItem* item);
+
+    
+
+protected:
+    void showContextMenu(const QPoint&);
+    
 
 private:
     void createActions();
