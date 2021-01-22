@@ -51,19 +51,16 @@ public:
     ~CDlgConnSettingsLocal();
 
     /*!
-        Called when the connection list is clicked
+        Setters/getters for name/description
     */
-    void onClicked(QListWidgetItem* item);
+    std::string getName(void);
+    void setName(const std::string& str);
 
     /*!
-        Called when the connection list is double clicked
+        Setters/getters for path
     */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    connection_type getSelectedType(void);
+    std::string getPath(void);
+    void setPath(const std::string& str);
 
 private:
 
@@ -74,11 +71,6 @@ private:
     void createGridGroupBox();
     void createFormGroupBox();
 
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    connection_type m_selected_type;
 };
 
 

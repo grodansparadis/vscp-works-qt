@@ -52,30 +52,38 @@ CDlgConnSettingsLocal::~CDlgConnSettingsLocal()
     delete ui;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
-// onClicked
+// getName
 //
 
-void CDlgConnSettingsLocal::onClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<connection_type>(item->type());
+std::string CDlgConnSettingsLocal::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// onDoubleClicked
+// setName
 //
 
-void CDlgConnSettingsLocal::onDoubleClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<connection_type>(item->type());
-    accept();
+void CDlgConnSettingsLocal::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getSelectedType
+// getPath
 //
 
-connection_type CDlgConnSettingsLocal::getSelectedType(void) {
-    return m_selected_type;
+std::string CDlgConnSettingsLocal::getPath(void)
+{
+    return (ui->m_path->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPath
+//
+
+void CDlgConnSettingsLocal::setPath(const std::string& str)
+{
+    ui->m_path->insert(str.c_str());
 }

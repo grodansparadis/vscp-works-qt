@@ -30,6 +30,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "connection_types.h"
 #include <QMainWindow>
 
 #include <list>
@@ -71,9 +72,9 @@ private slots:
 #endif
     void newSession();
 
-    void editConnectionItem();
-    void cloneConnectionItem();
-    void removeConnectionItem();
+    void editConnectionItem(uint32_t connectionIndex);
+    void cloneConnectionItem(uint32_t connectionIndex);
+    void removeConnectionItem(uint32_t connectionIndex);
 
     // New connections
     void newLocalConnection();
@@ -89,6 +90,8 @@ private slots:
     void newRawCanConnection();
     void newRawMqttConnection();
 
+    void openConnectionSettingsDialog(connection_type type);
+
     /*!
         Called when the connection list is double clicked
     */
@@ -97,7 +100,7 @@ private slots:
     
 
 protected:
-    void showContextMenu(const QPoint&);
+    void showConnectionContextMenu(const QPoint&);
     
 
 private:

@@ -71,7 +71,7 @@ MainWindow::MainWindow()
     connect(m_connTreeTable, &QTreeWidget::itemDoubleClicked, this, &MainWindow::onDoubleClicked );
 
     // Open pop up menu on right click
-    connect(m_connTreeTable, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showContextMenu);
+    connect(m_connTreeTable, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showConnectionContextMenu);
     
 
     // if (QCanBus::instance()->plugins().contains(QStringLiteral("socketcan"))) {
@@ -231,6 +231,68 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// openConnectionSettingsDialog
+//
+
+void MainWindow::openConnectionSettingsDialog(connection_type type)
+{
+    switch (type) { 
+        
+        case LOCAL:
+            newLocalConnection();
+            break;
+
+        case TCPIP:
+            newTcpipConnection();
+            break;
+
+        case CANAL: 
+            newCanalConnection();
+            break;
+
+        case SOCKETCAN: 
+            newSocketCanConnection();
+            break;
+
+        case WS1: 
+            newWs1Connection();
+            break;
+
+        case WS2: 
+            newWs2Connection();
+            break;
+
+        case MQTT: 
+            newMqttConnection();
+            break;
+
+        case UDP: 
+            newUdpConnection();
+            break;
+
+        case MULTICAST: 
+            newMulticastConnection();
+            break;
+
+        case REST: 
+            newRestConnection();
+            break;
+
+        case RAWCAN: 
+            newRawCanConnection();
+            break;
+
+        case RAWMQTT: 
+            newRawMqttConnection();
+            break;
+                                                
+        default:
+            break;    
+    }    
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // newConnection
@@ -245,62 +307,8 @@ void MainWindow::newConnection()
 
     CDlgNewConnection dlg(this);
 
-    if (QDialog::Accepted == dlg.exec()) {
-         
-        switch (dlg.getSelectedType()) { 
-            
-            case LOCAL:
-                newLocalConnection();
-                break;
-
-            case TCPIP:
-                newTcpipConnection();
-                break;
-
-            case CANAL: 
-                newCanalConnection();
-                break;
-
-            case SOCKETCAN: 
-                newSocketCanConnection();
-                break;
-
-            case WS1: 
-                newWs1Connection();
-                break;
-
-            case WS2: 
-                newWs2Connection();
-                break;
-
-            case MQTT: 
-                newMqttConnection();
-                break;
-
-            case UDP: 
-                newUdpConnection();
-                break;
-
-            case MULTICAST: 
-                newMulticastConnection();
-                break;
-
-            case REST: 
-                newRestConnection();
-                break;
-
-            case RAWCAN: 
-                newRawCanConnection();
-                break;
-
-            case RAWMQTT: 
-                newRawMqttConnection();
-                break;
-                                                    
-            default:
-                break;    
-        }
-
+    if (QDialog::Accepted == dlg.exec()) {         
+        openConnectionSettingsDialog( dlg.getSelectedType() ); 
     }
 }
 
@@ -308,7 +316,7 @@ void MainWindow::newConnection()
 // editConnectionItem
 //
 
-void MainWindow::editConnectionItem()
+void MainWindow::editConnectionItem(uint32_t connectionIndex)
 {
     QMessageBox::about(this, tr("Info"), tr("editConnectionItem") );
 }
@@ -317,7 +325,7 @@ void MainWindow::editConnectionItem()
 // cloneConnectionItem
 //
 
-void MainWindow::cloneConnectionItem()
+void MainWindow::cloneConnectionItem(uint32_t connectionIndex)
 {
     QMessageBox::about(this, tr("Info"), tr("cloneConnectionItem") );
 }
@@ -326,7 +334,7 @@ void MainWindow::cloneConnectionItem()
 // removeConnectionItem
 //
 
-void MainWindow::removeConnectionItem()
+void MainWindow::removeConnectionItem(uint32_t connectionIndex)
 {
     QMessageBox::about(this, tr("Info"), tr("removeConnectionItem") );
 }
@@ -344,10 +352,10 @@ void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// showContextMenu
+// showConnectionContextMenu
 //
 
-void MainWindow::showContextMenu(const QPoint& pos)
+void MainWindow::showConnectionContextMenu(const QPoint& pos)
 {
     // Context Menu Creation
     QModelIndex selected = m_connTreeTable->indexAt(pos);
@@ -360,13 +368,127 @@ void MainWindow::showContextMenu(const QPoint& pos)
 
     int row = selected.row();
 
-    if (QModelIndex() == parent) return;
-
     QMenu *menu=new QMenu(this);
-    menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
-    menu->addAction(QString("Edit this connection"), this, SLOT(editConnectionItem()));
-    menu->addAction(QString("Remove this connection"),this, SLOT(removeConnectionItem()));
-    menu->addAction(QString("Clone this connection"),this, SLOT(cloneConnectionItem()));
+
+    // If this is a top level item allow just new connection
+    if (QModelIndex() == parent) {
+        switch (static_cast<connection_type>(item->type())) {
+
+            case LOCAL:
+                menu->addAction(QString("Add new local connection"), this, SLOT(newLocalConnection()));
+                break;
+
+            case TCPIP:
+                menu->addAction(QString("Add new tcp/ip connection"), this, SLOT(newTcpipConnection()));
+                break;
+
+            case CANAL: 
+                menu->addAction(QString("Add new CANAL connection"), this, SLOT(newCanalConnection()));
+                break;
+
+            case SOCKETCAN: 
+                menu->addAction(QString("Add new Socketcan connection"), this, SLOT(newSocketCanConnection()));
+                break;
+
+            case WS1: 
+                menu->addAction(QString("Add new websocket WS1 connection"), this, SLOT(newWs1Connection()));
+                break;
+
+            case WS2: 
+                menu->addAction(QString("Add new websocket WS2 connection"), this, SLOT(newWs2Connection()));
+                break;
+
+            case MQTT: 
+                menu->addAction(QString("Add new MQTT connection"), this, SLOT(newMqttConnection()));
+                break;
+
+            case UDP: 
+                menu->addAction(QString("Add new UDP connection"), this, SLOT(newUdpConnection()));
+                break;
+
+            case MULTICAST: 
+                menu->addAction(QString("Add new multicast connection"), this, SLOT(newMulticastConnection()));
+                break;
+
+            case REST: 
+                menu->addAction(QString("Add new REST connection"), this, SLOT(newRestConnection()));
+                break;
+
+            case RAWCAN: 
+                menu->addAction(QString("Add new raw CAN connection"), this, SLOT(newRawCanConnection()));
+                break;
+
+            case RAWMQTT: 
+                menu->addAction(QString("Add new raw MQTT connection"), this, SLOT(newRawMqttConnection()));
+                break;
+                                                    
+            default:
+                menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
+                break;    
+        }
+    }
+    else {
+        switch (static_cast<connection_type>(item->parent()->type())) {
+
+            case LOCAL:
+                menu->addAction(QString("Add new local connection"), this, SLOT(newLocalConnection()));
+                break;
+
+            case TCPIP:
+                menu->addAction(QString("Add new tcp/ip connection"), this, SLOT(newTcpipConnection()));
+                break;
+
+            case CANAL: 
+                menu->addAction(QString("Add new CANAL connection"), this, SLOT(newCanalConnection()));
+                break;
+
+            case SOCKETCAN: 
+                menu->addAction(QString("Add new Socketcan connection"), this, SLOT(newSocketCanConnection()));
+                break;
+
+            case WS1: 
+                menu->addAction(QString("Add new websocket WS1 connection"), this, SLOT(newWs1Connection()));
+                break;
+
+            case WS2: 
+                menu->addAction(QString("Add new websocket WS2 connection"), this, SLOT(newWs2Connection()));
+                break;
+
+            case MQTT: 
+                menu->addAction(QString("Add new MQTT connection"), this, SLOT(newMqttConnection()));
+                break;
+
+            case UDP: 
+                menu->addAction(QString("Add new UDP connection"), this, SLOT(newUdpConnection()));
+                break;
+
+            case MULTICAST: 
+                menu->addAction(QString("Add new multicast connection"), this, SLOT(newMulticastConnection()));
+                break;
+
+            case REST: 
+                menu->addAction(QString("Add new REST connection"), this, SLOT(newRestConnection()));
+                break;
+
+            case RAWCAN: 
+                menu->addAction(QString("Add new raw CAN connection"), this, SLOT(newRawCanConnection()));
+                break;
+
+            case RAWMQTT: 
+                menu->addAction(QString("Add new raw MQTT connection"), this, SLOT(newRawMqttConnection()));
+                break;
+                                                    
+            default:
+                menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
+                break;    
+        }
+
+        // Connections are stored in a list and there position is the index. item->type() is
+        // this index + 1000 therefore we need to subtract 1000 to get the correct index
+        menu->addAction(QString("Edit this connection"), this, SLOT(editConnectionItem(item->type()-1000)));
+        menu->addAction(QString("Remove this connection"),this, SLOT(removeConnectionItem(item->type()-1000)));
+        menu->addAction(QString("Clone this connection"),this, SLOT(cloneConnectionItem(item->type()-1000)));
+    }
 
     menu->popup(m_connTreeTable->viewport()->mapToGlobal(pos));
 
@@ -801,8 +923,15 @@ void MainWindow::newLocalConnection()
 {
     CDlgConnSettingsLocal dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -815,7 +944,7 @@ void MainWindow::newTcpipConnection()
     CDlgConnSettingsTcpip dlg(this);
 
     if (QDialog::Accepted == dlg.exec()) {
-
+        
     } 
 }
 
