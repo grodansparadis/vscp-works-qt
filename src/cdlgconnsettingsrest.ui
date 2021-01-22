@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>CDlgConnSettingsRest</class>
+ <widget class="QDialog" name="CDlgConnSettingsRest">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>220</height>
+    <width>547</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -23,8 +23,8 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>180</y>
-     <width>631</width>
+     <y>100</y>
+     <width>511</width>
      <height>32</height>
     </rect>
    </property>
@@ -44,14 +44,14 @@
      <x>20</x>
      <y>10</y>
      <width>501</width>
-     <height>131</height>
+     <height>71</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Description :</string>
+       <string>Description</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -59,12 +59,19 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit_description"/>
+     <widget class="QLineEdit" name="m_description">
+      <property name="toolTip">
+       <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Path to driver :</string>
+       <string>url</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -72,78 +79,16 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_path"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
+     <widget class="QLineEdit" name="m_url">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
       <property name="text">
-       <string>Device configuration string :</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_config"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Device flags :</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_flags">
-      <property name="text">
-       <string>0</string>
+       <string/>
       </property>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QPushButton" name="btnTest">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>150</y>
-     <width>91</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Test</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnSetPath">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>40</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Set...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnWizard">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>70</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Wizard...</string>
-   </property>
   </widget>
  </widget>
  <resources/>
@@ -151,7 +96,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>CDlgConnSettingsRest</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -167,7 +112,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>CDlgConnSettingsRest</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -2,6 +2,818 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_150">
 <context>
+    <name>CDlgConnSettingsCanal</name>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="123"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="124"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="67"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="125"/>
+        <source>Path to driver :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="80"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="126"/>
+        <source>Device configuration string :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="93"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="127"/>
+        <source>Device flags :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="103"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="128"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="119"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="129"/>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="132"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="130"/>
+        <source>Set...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="145"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="131"/>
+        <source>Wizard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsLocal</name>
+    <message>
+        <location filename="src/cdlgconnsettingslocal.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingslocal.h" line="84"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingslocal.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingslocal.h" line="85"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingslocal.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingslocal.h" line="87"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingslocal.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingslocal.h" line="90"/>
+        <source>Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingslocal.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingslocal.h" line="92"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsMqtt</name>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="162"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="163"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="71"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="165"/>
+        <source>Broker URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="81"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="166"/>
+        <source>localhost:1883</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="88"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="167"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="101"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="168"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="114"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="169"/>
+        <source>Extended security</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="121"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="170"/>
+        <source>Subscribe :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="132"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="175"/>
+        <source>vscp/#</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="140"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="178"/>
+        <source>Publish :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="162"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="179"/>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="175"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="180"/>
+        <source>SSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="188"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="201"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="181"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="182"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsMulticast</name>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="84"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="85"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="87"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="90"/>
+        <source>Multicast ip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="92"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="87"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="94"/>
+        <source>224.0.23.158</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsRawCan</name>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="115"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="116"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="118"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="121"/>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="123"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="87"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="125"/>
+        <source>vcan0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="126"/>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="128"/>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="172"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="128"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="136"/>
+        <source>Define incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="131"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="130"/>
+        <source>Add filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="144"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="132"/>
+        <source>Test connection to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="147"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="134"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="175"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="138"/>
+        <source>Delete filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsRawMqtt</name>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="162"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="163"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="71"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="165"/>
+        <source>Broker URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="81"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="166"/>
+        <source>localhost:1883</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="88"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="167"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="101"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="168"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="114"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="169"/>
+        <source>Extended security</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="121"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="170"/>
+        <source>Subscribe :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="132"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="175"/>
+        <source>vscp/#</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="140"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="178"/>
+        <source>Publish :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="162"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="179"/>
+        <source>Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="175"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="180"/>
+        <source>SSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="188"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="201"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="181"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="182"/>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsRest</name>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="84"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="85"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="87"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="90"/>
+        <source>Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="92"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsSocketCan</name>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="115"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="116"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="118"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="121"/>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="123"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="87"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="125"/>
+        <source>vcan0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="126"/>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="128"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="172"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="128"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="136"/>
+        <source>Define incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="131"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="130"/>
+        <source>Add filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="144"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="132"/>
+        <source>Test connection to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="147"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="134"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="175"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="138"/>
+        <source>Delete filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsTcpip</name>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="164"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="165"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="167"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="170"/>
+        <source>Host URL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="172"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="87"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="174"/>
+        <source>tcp://localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="175"/>
+        <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="104"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="177"/>
+        <source>Username to connect to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="107"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="179"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="114"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="180"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="124"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="182"/>
+        <source>Password to connect to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="127"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="184"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="134"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="185"/>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="144"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="187"/>
+        <source>Enable full level II communication (no Level I over Level II)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="147"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="189"/>
+        <source>Full Level II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="154"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="191"/>
+        <source>Port on remote host to connect to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="157"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="193"/>
+        <source>9598</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="164"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="194"/>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="171"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="196"/>
+        <source>Interface to use on remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="199"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="199"/>
+        <source>Define incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="202"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="201"/>
+        <source>Set filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="215"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="203"/>
+        <source>Test connection to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="218"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="205"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="231"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="207"/>
+        <source>Get available interfaces from remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="234"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="209"/>
+        <source>Get interfaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="259"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="211"/>
+        <source>SSL/TLS settings for remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="262"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="213"/>
+        <source>SSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsUdp</name>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="89"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="90"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="92"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="74"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="95"/>
+        <source>IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="97"/>
+        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="103"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="100"/>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsWs1</name>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="121"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="122"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="67"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="123"/>
+        <source>Host URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="77"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="124"/>
+        <source>http://localhost:9598/ws1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="125"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="126"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="101"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="127"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="111"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="128"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="139"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="129"/>
+        <source>Set filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws1.ui" line="152"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="130"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgConnSettingsWs2</name>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="20"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="121"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="54"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="122"/>
+        <source>Description :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="67"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="123"/>
+        <source>Host URL :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="77"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="124"/>
+        <source>http://localhost:9598/ws2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="125"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="126"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="101"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="127"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="111"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="128"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="139"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="129"/>
+        <source>Set filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsws2.ui" line="152"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="130"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgNewConnection</name>
     <message>
         <location filename="src/cdlgnewconnection.ui" line="14"/>
@@ -21,6 +833,7 @@
     <message>
         <location filename="src/cfrmsession.ui" line="14"/>
         <location filename="src/ssl.ui" line="14"/>
+        <location filename="build/ui_cfrmsession.h" line="75"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
@@ -355,58 +1168,8 @@
 <context>
     <name>Dialog</name>
     <message>
-        <location filename="src/canal.ui" line="20"/>
         <location filename="src/filter.ui" line="14"/>
-        <location filename="src/remotehost_mqtt.ui" line="20"/>
-        <location filename="src/remotehost_socketcan.ui" line="20"/>
-        <location filename="src/remotehost_tcp.ui" line="20"/>
-        <location filename="src/remotehost_ws1.ui" line="20"/>
-        <location filename="src/remotehost_ws2.ui" line="20"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="54"/>
-        <location filename="src/remotehost_mqtt.ui" line="54"/>
-        <location filename="src/remotehost_ws1.ui" line="54"/>
-        <location filename="src/remotehost_ws2.ui" line="54"/>
-        <source>Description :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="67"/>
-        <source>Path to driver :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="80"/>
-        <source>Device configuration string :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="93"/>
-        <source>Device flags :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="103"/>
-        <source>0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="119"/>
-        <location filename="src/remotehost_socketcan.ui" line="119"/>
-        <source>Test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="132"/>
-        <source>Set...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canal.ui" line="145"/>
-        <source>Wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -523,177 +1286,6 @@
     <message>
         <location filename="src/filter.ui" line="304"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="67"/>
-        <source>Broker URL :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="77"/>
-        <source>localhost:1883</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="84"/>
-        <location filename="src/remotehost_ws1.ui" line="84"/>
-        <location filename="src/remotehost_ws2.ui" line="84"/>
-        <source>Username :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="97"/>
-        <location filename="src/remotehost_ws1.ui" line="101"/>
-        <location filename="src/remotehost_ws2.ui" line="101"/>
-        <source>Password :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="110"/>
-        <source>Extended security</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="117"/>
-        <source>Subscribe :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="127"/>
-        <source>vscp/#</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="134"/>
-        <source>Publish :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="144"/>
-        <source>vscp/00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00/{vscpClass}/{vscpType}</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="160"/>
-        <location filename="src/remotehost_tcp.ui" line="186"/>
-        <location filename="src/remotehost_ws1.ui" line="152"/>
-        <location filename="src/remotehost_ws2.ui" line="152"/>
-        <source>Test connection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_mqtt.ui" line="173"/>
-        <location filename="src/remotehost_tcp.ui" line="224"/>
-        <source>SSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_socketcan.ui" line="54"/>
-        <location filename="src/remotehost_tcp.ui" line="54"/>
-        <source>Description</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_socketcan.ui" line="67"/>
-        <source>Socketcan device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_socketcan.ui" line="77"/>
-        <source>vcan0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_socketcan.ui" line="84"/>
-        <source>Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_socketcan.ui" line="97"/>
-        <source>Device flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="67"/>
-        <source>Host URL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="77"/>
-        <source>tcp://localhost</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="84"/>
-        <source>Username</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="94"/>
-        <location filename="src/remotehost_ws1.ui" line="94"/>
-        <location filename="src/remotehost_ws2.ui" line="94"/>
-        <source>admin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="101"/>
-        <source>Password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="111"/>
-        <location filename="src/remotehost_ws1.ui" line="111"/>
-        <location filename="src/remotehost_ws2.ui" line="111"/>
-        <source>secret</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="118"/>
-        <source>Interface</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="128"/>
-        <source>Full Level II</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="135"/>
-        <source>9598</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="142"/>
-        <source>Port</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="173"/>
-        <location filename="src/remotehost_ws1.ui" line="139"/>
-        <location filename="src/remotehost_ws2.ui" line="139"/>
-        <source>Set filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_tcp.ui" line="199"/>
-        <source>Get interfaces</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_ws1.ui" line="67"/>
-        <location filename="src/remotehost_ws2.ui" line="67"/>
-        <source>Host URL :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_ws1.ui" line="77"/>
-        <source>http://localhost:9598/ws1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/remotehost_ws2.ui" line="77"/>
-        <source>http://localhost:9598/ws2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -845,183 +1437,280 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="87"/>
-        <source>Type,Description</source>
+        <location filename="src/mainwindow.cpp" line="110"/>
+        <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="237"/>
+        <location filename="src/mainwindow.cpp" line="116"/>
+        <source>--- Saved Connections ---</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="127"/>
+        <source>Local Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="130"/>
+        <source>Holds local connections. Typically logfile and debug content containing VSCP events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="134"/>
+        <source>CANAL Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="141"/>
+        <source>Socketcan Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="148"/>
+        <source>TCP/IP Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="155"/>
+        <source>MQTT Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="162"/>
+        <source>WS2 Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="169"/>
+        <source>WS1 Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="176"/>
+        <source>UDP Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="183"/>
+        <source>Multicast Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="190"/>
+        <source>REST Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="197"/>
+        <source>RAWCAN Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="204"/>
+        <source>RAWMQTT Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="211"/>
+        <source>Fluorine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="321"/>
+        <location filename="src/mainwindow.cpp" line="330"/>
+        <location filename="src/mainwindow.cpp" line="339"/>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="321"/>
+        <source>editConnectionItem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="330"/>
+        <source>cloneConnectionItem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="339"/>
+        <source>removeConnectionItem</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="430"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="244"/>
+        <location filename="src/mainwindow.cpp" line="437"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="263"/>
+        <location filename="src/mainwindow.cpp" line="458"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="264"/>
+        <location filename="src/mainwindow.cpp" line="459"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="267"/>
+        <location filename="src/mainwindow.cpp" line="462"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="269"/>
+        <location filename="src/mainwindow.cpp" line="464"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="299"/>
+        <location filename="src/mainwindow.cpp" line="494"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="301"/>
+        <location filename="src/mainwindow.cpp" line="496"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="307"/>
+        <location filename="src/mainwindow.cpp" line="502"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="309"/>
+        <location filename="src/mainwindow.cpp" line="504"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="315"/>
+        <location filename="src/mainwindow.cpp" line="510"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="317"/>
+        <location filename="src/mainwindow.cpp" line="512"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="323"/>
+        <location filename="src/mainwindow.cpp" line="518"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="325"/>
+        <location filename="src/mainwindow.cpp" line="520"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="331"/>
+        <location filename="src/mainwindow.cpp" line="526"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="333"/>
+        <location filename="src/mainwindow.cpp" line="528"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="341"/>
+        <location filename="src/mainwindow.cpp" line="536"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="344"/>
+        <location filename="src/mainwindow.cpp" line="539"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="346"/>
+        <location filename="src/mainwindow.cpp" line="541"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="347"/>
+        <location filename="src/mainwindow.cpp" line="542"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="351"/>
+        <location filename="src/mainwindow.cpp" line="546"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="354"/>
+        <location filename="src/mainwindow.cpp" line="549"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="361"/>
+        <location filename="src/mainwindow.cpp" line="556"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="363"/>
+        <location filename="src/mainwindow.cpp" line="558"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="370"/>
+        <location filename="src/mainwindow.cpp" line="565"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="372"/>
+        <location filename="src/mainwindow.cpp" line="567"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="382"/>
+        <location filename="src/mainwindow.cpp" line="577"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="383"/>
+        <location filename="src/mainwindow.cpp" line="578"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="384"/>
+        <location filename="src/mainwindow.cpp" line="579"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="386"/>
+        <location filename="src/mainwindow.cpp" line="581"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="387"/>
+        <location filename="src/mainwindow.cpp" line="582"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="404"/>
+        <location filename="src/mainwindow.cpp" line="599"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="502"/>
+        <location filename="src/mainwindow.cpp" line="697"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="503"/>
+        <location filename="src/mainwindow.cpp" line="698"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="518"/>
+        <location filename="src/mainwindow.cpp" line="713"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>

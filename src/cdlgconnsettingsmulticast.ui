@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>CDlgConnSettingsMulticast</class>
+ <widget class="QDialog" name="CDlgConnSettingsMulticast">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>201</height>
+    <width>547</width>
+    <height>151</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -23,8 +23,8 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>160</y>
-     <width>631</width>
+     <y>100</y>
+     <width>511</width>
      <height>32</height>
     </rect>
    </property>
@@ -44,7 +44,7 @@
      <x>20</x>
      <y>10</y>
      <width>501</width>
-     <height>131</height>
+     <height>71</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -59,12 +59,19 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit_description"/>
+     <widget class="QLineEdit" name="m_description">
+      <property name="toolTip">
+       <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Socketcan device</string>
+       <string>Multicast ip</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -72,52 +79,16 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_path">
+     <widget class="QLineEdit" name="m_multicastIp">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
       <property name="text">
-       <string>vcan0</string>
+       <string>224.0.23.158</string>
       </property>
      </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Filter</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_config"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Device flags</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_flags"/>
     </item>
    </layout>
-  </widget>
-  <widget class="QPushButton" name="btnTest">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>90</y>
-     <width>91</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Test</string>
-   </property>
   </widget>
  </widget>
  <resources/>
@@ -125,7 +96,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>CDlgConnSettingsMulticast</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -141,7 +112,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>CDlgConnSettingsMulticast</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

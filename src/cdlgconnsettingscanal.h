@@ -1,4 +1,4 @@
-// cdlgconnsettingstcpip.h
+// cdlgconnsettingscanal.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSTCPIP_H
-#define CDLGCONNSETTINGSTCPIP_H
+#ifndef CDLGCONNSETTINGSCANAL_H
+#define CDLGCONNSETTINGSCANAL_H
 
 #include "connection_types.h"
 
@@ -35,11 +35,11 @@
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgConnSettingsTcpip;
+class CDlgConnSettingsCanal;
 }
 
 
-class CDlgConnSettingsTcpip : public QDialog
+class CDlgConnSettingsCanal : public QDialog
 {
     Q_OBJECT
 
@@ -47,8 +47,8 @@ public:
     
 
 public:
-    explicit CDlgConnSettingsTcpip(QWidget *parent = nullptr);
-    ~CDlgConnSettingsTcpip();
+    explicit CDlgConnSettingsCanal(QWidget *parent = nullptr);
+    ~CDlgConnSettingsCanal();
 
     /*!
         Called when the connection list is clicked
@@ -67,7 +67,7 @@ public:
 
 private:
 
-    Ui::CDlgConnSettingsTcpip *ui;
+    Ui::CDlgConnSettingsCanal *ui;
 
     void createMenu();
     void createHorizontalGroupBox();
@@ -82,4 +82,4 @@ private:
 };
 
 
-#endif // CDLGCONNSETTINGSTCPIP_H
+#endif // CDLGCONNSETTINGSCANAL_H

@@ -1,4 +1,4 @@
-// cdlgconnsettingstcpip.h
+// cdlgconnsettingsrest.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,60 +26,56 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSTCPIP_H
-#define CDLGCONNSETTINGSTCPIP_H
-
 #include "connection_types.h"
+#include "cdlgconnsettingsrest.h"
+#include "ui_cdlgconnsettingsrest.h"
 
-#include <QDialog>
-#include <QListWidgetItem>
+#include <QMessageBox>
 
-namespace Ui {
-class CDlgConnSettingsTcpip;
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
+
+CDlgConnSettingsRest::CDlgConnSettingsRest(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::CDlgConnSettingsRest)
+{
+    ui->setupUi(this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+CDlgConnSettingsRest::~CDlgConnSettingsRest()
+{
+    delete ui;
 }
 
 
-class CDlgConnSettingsTcpip : public QDialog
-{
-    Q_OBJECT
+///////////////////////////////////////////////////////////////////////////////
+// onClicked
+//
 
-public:
-    
+void CDlgConnSettingsRest::onClicked(QListWidgetItem* item)
+{       
+    m_selected_type = static_cast<connection_type>(item->type());
+}
 
-public:
-    explicit CDlgConnSettingsTcpip(QWidget *parent = nullptr);
-    ~CDlgConnSettingsTcpip();
+///////////////////////////////////////////////////////////////////////////////
+// onDoubleClicked
+//
 
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
+void CDlgConnSettingsRest::onDoubleClicked(QListWidgetItem* item)
+{       
+    m_selected_type = static_cast<connection_type>(item->type());
+    accept();
+}
 
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedType
+//
 
-    /*!
-        Return the selected communication type
-    */
-    connection_type getSelectedType(void);
-
-private:
-
-    Ui::CDlgConnSettingsTcpip *ui;
-
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
-
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    connection_type m_selected_type;
-};
-
-
-#endif // CDLGCONNSETTINGSTCPIP_H
+connection_type CDlgConnSettingsRest::getSelectedType(void) {
+    return m_selected_type;
+}

@@ -1,4 +1,4 @@
-// cdlgconnsettingstcpip.h
+// cdlgconnsettingsrawmqtt.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSTCPIP_H
-#define CDLGCONNSETTINGSTCPIP_H
+#ifndef CDLGCONNSETTINGSRAWMQTT_H
+#define CDLGCONNSETTINGSRAWMQTT_H
 
 #include "connection_types.h"
 
@@ -35,11 +35,11 @@
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgConnSettingsTcpip;
+class CDlgConnSettingsRawMqtt;
 }
 
 
-class CDlgConnSettingsTcpip : public QDialog
+class CDlgConnSettingsRawMqtt : public QDialog
 {
     Q_OBJECT
 
@@ -47,8 +47,8 @@ public:
     
 
 public:
-    explicit CDlgConnSettingsTcpip(QWidget *parent = nullptr);
-    ~CDlgConnSettingsTcpip();
+    explicit CDlgConnSettingsRawMqtt(QWidget *parent = nullptr);
+    ~CDlgConnSettingsRawMqtt();
 
     /*!
         Called when the connection list is clicked
@@ -67,7 +67,7 @@ public:
 
 private:
 
-    Ui::CDlgConnSettingsTcpip *ui;
+    Ui::CDlgConnSettingsRawMqtt *ui;
 
     void createMenu();
     void createHorizontalGroupBox();
@@ -82,4 +82,4 @@ private:
 };
 
 
-#endif // CDLGCONNSETTINGSTCPIP_H
+#endif // CDLGCONNSETTINGSRAWMQTT_H

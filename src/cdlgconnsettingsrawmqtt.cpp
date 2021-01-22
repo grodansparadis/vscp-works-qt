@@ -1,4 +1,4 @@
-// cdlgconnsettingstcpip.h
+// cdlgconnsettingsrawmqtt.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,60 +26,56 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSTCPIP_H
-#define CDLGCONNSETTINGSTCPIP_H
-
 #include "connection_types.h"
+#include "cdlgconnsettingsrawmqtt.h"
+#include "ui_cdlgconnsettingsrawmqtt.h"
 
-#include <QDialog>
-#include <QListWidgetItem>
+#include <QMessageBox>
 
-namespace Ui {
-class CDlgConnSettingsTcpip;
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
+
+CDlgConnSettingsRawMqtt::CDlgConnSettingsRawMqtt(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::CDlgConnSettingsRawMqtt)
+{
+    ui->setupUi(this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+CDlgConnSettingsRawMqtt::~CDlgConnSettingsRawMqtt()
+{
+    delete ui;
 }
 
 
-class CDlgConnSettingsTcpip : public QDialog
-{
-    Q_OBJECT
+///////////////////////////////////////////////////////////////////////////////
+// onClicked
+//
 
-public:
-    
+void CDlgConnSettingsRawMqtt::onClicked(QListWidgetItem* item)
+{       
+    m_selected_type = static_cast<connection_type>(item->type());
+}
 
-public:
-    explicit CDlgConnSettingsTcpip(QWidget *parent = nullptr);
-    ~CDlgConnSettingsTcpip();
+///////////////////////////////////////////////////////////////////////////////
+// onDoubleClicked
+//
 
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
+void CDlgConnSettingsRawMqtt::onDoubleClicked(QListWidgetItem* item)
+{       
+    m_selected_type = static_cast<connection_type>(item->type());
+    accept();
+}
 
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedType
+//
 
-    /*!
-        Return the selected communication type
-    */
-    connection_type getSelectedType(void);
-
-private:
-
-    Ui::CDlgConnSettingsTcpip *ui;
-
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
-
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    connection_type m_selected_type;
-};
-
-
-#endif // CDLGCONNSETTINGSTCPIP_H
+connection_type CDlgConnSettingsRawMqtt::getSelectedType(void) {
+    return m_selected_type;
+}

@@ -79,14 +79,14 @@ private slots:
     void newLocalConnection();
     void newTcpipConnection();
     void newCanalConnection();
-    void newSocketcanConnection();
+    void newSocketCanConnection();
     void newWs1Connection();
     void newWs2Connection();
     void newMqttConnection();
     void newUdpConnection();
     void newMulticastConnection();
     void newRestConnection();
-    void newRawcanConnection();
+    void newRawCanConnection();
     void newRawMqttConnection();
 
     /*!

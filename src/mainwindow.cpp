@@ -39,7 +39,18 @@
 #include "cfrmsession.h"
 #include "connection.h"
 #include "cdlgnewconnection.h"
+#include "cdlgconnsettingslocal.h"
+#include "cdlgconnsettingscanal.h"
 #include "cdlgconnsettingstcpip.h"
+#include "cdlgconnsettingssocketcan.h"
+#include "cdlgconnsettingsmqtt.h"
+#include "cdlgconnsettingsws1.h"
+#include "cdlgconnsettingsws2.h"
+#include "cdlgconnsettingsrest.h"
+#include "cdlgconnsettingsudp.h"
+#include "cdlgconnsettingsmulticast.h"
+#include "cdlgconnsettingsrawcan.h"
+#include "cdlgconnsettingsrawmqtt.h"
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,14 +128,7 @@ MainWindow::MainWindow()
     QTreeWidgetItem *topitem_local = new QTreeWidgetItem(strlist_local, LOCAL);
     topitem_local->setIcon(0,iconTest);
     topitem_local->setToolTip(0,tr("Holds local connections. Typically logfile and debug content containing VSCP events."));
-    m_connTreeTable->addTopLevelItem(topitem_local);
-
-    // tcp/ip
-    QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
-    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip, TCPIP);
-    topitem_tcpip->setIcon(0,iconTest);
-    topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
-    m_connTreeTable->addTopLevelItem(topitem_tcpip);
+    m_connTreeTable->addTopLevelItem(topitem_local);    
 
     // canal
     QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
@@ -140,12 +144,19 @@ MainWindow::MainWindow()
     topitem_socketcan->setToolTip(0,"Holds VSCP socketcan connections.");
     m_connTreeTable->addTopLevelItem(topitem_socketcan);
 
-    // WS1
-    QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
-    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1, WS1);
-    topitem_ws1->setIcon(0,iconTest);
-    topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
-    m_connTreeTable->addTopLevelItem(topitem_ws1);
+    // tcp/ip
+    QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
+    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip, TCPIP);
+    topitem_tcpip->setIcon(0,iconTest);
+    topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
+    m_connTreeTable->addTopLevelItem(topitem_tcpip);
+
+    // MQTT
+    QStringList strlist_mqtt(QString(tr("MQTT Connections")).split(','));
+    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt, MQTT);
+    topitem_mqtt->setIcon(0,iconTest);
+    topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
+    m_connTreeTable->addTopLevelItem(topitem_mqtt);
 
     // WS2
     QStringList strlist_ws2(QString(tr("WS2 Connections")).split(','));
@@ -154,12 +165,12 @@ MainWindow::MainWindow()
     topitem_ws2->setToolTip(0,"Holds VSCP websocket ws2 connections.");
     m_connTreeTable->addTopLevelItem(topitem_ws2);
 
-    // MQTT
-    QStringList strlist_mqtt(QString(tr("MQTT Connections")).split(','));
-    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt, MQTT);
-    topitem_mqtt->setIcon(0,iconTest);
-    topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
-    m_connTreeTable->addTopLevelItem(topitem_mqtt);
+    // WS1
+    QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
+    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1, WS1);
+    topitem_ws1->setIcon(0,iconTest);
+    topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
+    m_connTreeTable->addTopLevelItem(topitem_ws1);
 
     // UDP
     QStringList strlist_udp(QString(tr("UDP Connections")).split(','));
@@ -233,70 +244,62 @@ void MainWindow::newConnection()
     }
 
     CDlgNewConnection dlg(this);
-    //dlg.addConnectionItem("Local");
-    //dlg.addConnectionItems();
-    //int n = CDlgNewConnection::CANAL;
 
     if (QDialog::Accepted == dlg.exec()) {
-
-        QMessageBox msgBox;
          
         switch (dlg.getSelectedType()) { 
             
             case LOCAL:
-                msgBox.setText("LOCAL"); 
+                newLocalConnection();
                 break;
 
             case TCPIP:
-                msgBox.setText("TCPIP");
+                newTcpipConnection();
                 break;
 
             case CANAL: 
-                msgBox.setText("CANAL");
+                newCanalConnection();
                 break;
 
             case SOCKETCAN: 
-                msgBox.setText("SOCKETCAN");
+                newSocketCanConnection();
                 break;
 
             case WS1: 
-                msgBox.setText("WS1");
+                newWs1Connection();
                 break;
 
             case WS2: 
-                msgBox.setText("WS2");
+                newWs2Connection();
                 break;
 
             case MQTT: 
-                msgBox.setText("MQTT");
+                newMqttConnection();
                 break;
 
             case UDP: 
-                msgBox.setText("UDP");
+                newUdpConnection();
                 break;
 
             case MULTICAST: 
-                msgBox.setText("MULTICAST");
+                newMulticastConnection();
                 break;
 
             case REST: 
-                msgBox.setText("REST");
+                newRestConnection();
                 break;
 
             case RAWCAN: 
-                msgBox.setText("RAWCAN");
+                newRawCanConnection();
                 break;
 
             case RAWMQTT: 
-                msgBox.setText("RAWMQTT");
+                newRawMqttConnection();
                 break;
                                                     
             default:
-                msgBox.setText("default");
                 break;    
         }
-
-        msgBox.exec();
 
     }
 }
@@ -796,7 +799,11 @@ void MainWindow::newSession()
 
 void MainWindow::newLocalConnection()
 {
+    CDlgConnSettingsLocal dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -805,10 +812,11 @@ void MainWindow::newLocalConnection()
 
 void MainWindow::newTcpipConnection()
 {
-    Ui_CDlgConnSettingsTcpip dlg(this);
+    CDlgConnSettingsTcpip dlg(this);
 
-    if (QDialog::Accepted == dlg.show()) {
-    }
+    if (QDialog::Accepted == dlg.exec()) {
+
+    } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -817,34 +825,24 @@ void MainWindow::newTcpipConnection()
 
 void MainWindow::newCanalConnection()
 {
+    CDlgConnSettingsCanal dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// newSocketcanConnection
+// newSocketCanConnection
 //
 
-void MainWindow::newSocketcanConnection()
+void MainWindow::newSocketCanConnection()
 {
+    CDlgConnSettingsSocketCan dlg(this);
 
-}
+    if (QDialog::Accepted == dlg.exec()) {
 
-///////////////////////////////////////////////////////////////////////////////
-// newWs1Connection
-//
-
-void MainWindow::newWs1Connection()
-{
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// newWs2Connection
-//
-
-void MainWindow::newWs2Connection()
-{
-
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -853,8 +851,40 @@ void MainWindow::newWs2Connection()
 
 void MainWindow::newMqttConnection()
 {
+    CDlgConnSettingsMqtt dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// newWs1Connection
+//
+
+void MainWindow::newWs1Connection()
+{
+    CDlgConnSettingsWs1 dlg(this);
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newWs2Connection
+//
+
+void MainWindow::newWs2Connection()
+{
+    CDlgConnSettingsWs2 dlg(this);
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // newUdpConnection
@@ -862,7 +892,11 @@ void MainWindow::newMqttConnection()
 
 void MainWindow::newUdpConnection()
 {
+    CDlgConnSettingsUdp dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -871,7 +905,11 @@ void MainWindow::newUdpConnection()
 
 void MainWindow::newMulticastConnection()
 {
+    CDlgConnSettingsMulticast dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -880,16 +918,24 @@ void MainWindow::newMulticastConnection()
 
 void MainWindow::newRestConnection()
 {
+    CDlgConnSettingsRest dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// newRawcanConnection
+// newRawCanConnection
 //
 
-void MainWindow::newRawcanConnection()
+void MainWindow::newRawCanConnection()
 {
+    CDlgConnSettingsRawCan dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -898,7 +944,11 @@ void MainWindow::newRawcanConnection()
 
 void MainWindow::newRawMqttConnection()
 {
+    CDlgConnSettingsRawMqtt dlg(this);
 
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 #endif
