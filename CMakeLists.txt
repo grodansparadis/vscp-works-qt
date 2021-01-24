@@ -40,12 +40,21 @@ include_directories(${EXPAT_INCLUDE_DIRS})
 include(FindMosquitto REQUIRED)
 find_package(EXPAT REQUIRED)
 
-# TODO Check SLL version and set variable accordingly
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
+# DELETE Check SLL version and set variable accordingly
+#set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
+#set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
-#set(UI )
+# Set civetweb build flags
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET")
+string(FIND "${OPENSSL_VERSION}" "1.1." SSL_VER_POS)
+if(${SSL_VER_POS})
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
+else()
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
+endif()
+
+# set(UI )
 qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgconnsettingslocal.ui
     src/cdlgconnsettingscanal.ui
@@ -60,10 +69,8 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgconnsettingsrawcan.ui
     src/cdlgconnsettingsrawmqtt.ui
     src/cfrmsession.ui)
-#message(" UI Files =${UI}     ")
 
 add_executable(vscp-works-qt
-#    ${UI}
     src/vscpworks.qrc
     src/main.cpp
     src/mainwindow.cpp
@@ -131,14 +138,22 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscpcanaldeviceif.cpp
     vscp/src/vscp/common/vscp_client_base.h
     vscp/src/vscp/common/vscp_client_base.cpp
+    vscp/src/vscp/common/vscp_client_local.h
+    vscp/src/vscp/common/vscp_client_local.cpp
     vscp/src/vscp/common/vscp_client_canal.h
     vscp/src/vscp/common/vscp_client_canal.cpp
     vscp/src/vscp/common/vscp_client_mqtt.h
     vscp/src/vscp/common/vscp_client_mqtt.cpp
-    vscp/src/vscp/common/vscp_client_canal.h
-    vscp/src/vscp/common/vscp_client_canal.cpp
     vscp/src/vscp/common/vscp_client_tcp.h
     vscp/src/vscp/common/vscp_client_tcp.cpp 
+    vscp/src/vscp/common/vscp_client_ws1.h
+    vscp/src/vscp/common/vscp_client_ws1.cpp 
+    vscp/src/vscp/common/vscp_client_ws2.h
+    vscp/src/vscp/common/vscp_client_ws2.cpp 
+    vscp/src/vscp/common/vscp_client_udp.h
+    vscp/src/vscp/common/vscp_client_udp.cpp 
+    vscp/src/vscp/common/vscp_client_multicast.h
+    vscp/src/vscp/common/vscp_client_multicast.cpp 
     vscp/src/vscp/common/vscp_client_rest.h
     vscp/src/vscp/common/vscp_client_rest.cpp
     vscp/src/vscp/common/vscp_bootloader.h
@@ -187,7 +202,8 @@ target_link_libraries(vscp-works-qt PRIVATE
     m
     dl
     pthread
-    OpenSSL::SSL OpenSSL::Crypto
+    OpenSSL::SSL 
+    OpenSSL::Crypto
     ${OPENSSL_LIBRARIES}
     ${MOSQUITTO_LIBRARIES}
     ${EXPAT_LIBRARIES})

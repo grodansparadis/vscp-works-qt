@@ -30,6 +30,7 @@
 #define CDLGCONNSETTINGSLOCAL_H
 
 #include "connection_types.h"
+#include "vscp_client_local.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -71,6 +72,7 @@ private:
     void createGridGroupBox();
     void createFormGroupBox();
 
+    vscpClientLocal m_vscpClient;
 };
 
 
