@@ -79,3 +79,21 @@ void CDlgConnSettingsRawCan::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgConnSettingsRawCan::getSelectedType(void) {
     return m_selected_type;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getName
+//
+
+std::string CDlgConnSettingsRawCan::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void CDlgConnSettingsRawCan::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
+}

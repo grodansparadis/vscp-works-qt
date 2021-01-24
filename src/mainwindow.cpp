@@ -936,19 +936,6 @@ restart:
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// newTcpipConnection
-//
-
-void MainWindow::newTcpipConnection()
-{
-    CDlgConnSettingsTcpip dlg(this);
-
-    if (QDialog::Accepted == dlg.exec()) {
-        
-    } 
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // newCanalConnection
 //
 
@@ -956,8 +943,35 @@ void MainWindow::newCanalConnection()
 {
     CDlgConnSettingsCanal dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+    } 
+}
 
+///////////////////////////////////////////////////////////////////////////////
+// newTcpipConnection
+//
+
+void MainWindow::newTcpipConnection()
+{
+    CDlgConnSettingsTcpip dlg(this);
+
+restart:
+    if (QDialog::Accepted == dlg.exec()) {
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     } 
 }
 
@@ -969,8 +983,15 @@ void MainWindow::newSocketCanConnection()
 {
     CDlgConnSettingsSocketCan dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -982,8 +1003,15 @@ void MainWindow::newMqttConnection()
 {
     CDlgConnSettingsMqtt dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -995,8 +1023,15 @@ void MainWindow::newWs1Connection()
 {
     CDlgConnSettingsWs1 dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1008,8 +1043,15 @@ void MainWindow::newWs2Connection()
 {
     CDlgConnSettingsWs2 dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1023,8 +1065,15 @@ void MainWindow::newUdpConnection()
 {
     CDlgConnSettingsUdp dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1036,8 +1085,15 @@ void MainWindow::newMulticastConnection()
 {
     CDlgConnSettingsMulticast dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1049,8 +1105,15 @@ void MainWindow::newRestConnection()
 {
     CDlgConnSettingsRest dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1062,8 +1125,15 @@ void MainWindow::newRawCanConnection()
 {
     CDlgConnSettingsRawCan dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 
@@ -1075,8 +1145,15 @@ void MainWindow::newRawMqttConnection()
 {
     CDlgConnSettingsRawMqtt dlg(this);
 
+restart:
     if (QDialog::Accepted == dlg.exec()) {
-
+        std::string strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("You must enter a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
     }
 }
 

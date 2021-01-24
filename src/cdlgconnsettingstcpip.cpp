@@ -79,3 +79,21 @@ void CDlgConnSettingsTcpip::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgConnSettingsTcpip::getSelectedType(void) {
     return m_selected_type;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getName
+//
+
+std::string CDlgConnSettingsTcpip::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void CDlgConnSettingsTcpip::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
+}

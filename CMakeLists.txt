@@ -131,12 +131,16 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscpcanaldeviceif.cpp
     vscp/src/vscp/common/vscp_client_base.h
     vscp/src/vscp/common/vscp_client_base.cpp
+    vscp/src/vscp/common/vscp_client_canal.h
+    vscp/src/vscp/common/vscp_client_canal.cpp
     vscp/src/vscp/common/vscp_client_mqtt.h
     vscp/src/vscp/common/vscp_client_mqtt.cpp
     vscp/src/vscp/common/vscp_client_canal.h
     vscp/src/vscp/common/vscp_client_canal.cpp
     vscp/src/vscp/common/vscp_client_tcp.h
     vscp/src/vscp/common/vscp_client_tcp.cpp 
+    vscp/src/vscp/common/vscp_client_rest.h
+    vscp/src/vscp/common/vscp_client_rest.cpp
     vscp/src/vscp/common/vscp_bootloader.h
     vscp/src/vscp/common/vscp_bootloader.cpp
     vscp/src/common/third_party/mustache.hpp

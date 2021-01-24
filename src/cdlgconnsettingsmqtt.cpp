@@ -79,3 +79,21 @@ void CDlgConnSettingsMqtt::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgConnSettingsMqtt::getSelectedType(void) {
     return m_selected_type;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getName
+//
+
+std::string CDlgConnSettingsMqtt::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void CDlgConnSettingsMqtt::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
+}

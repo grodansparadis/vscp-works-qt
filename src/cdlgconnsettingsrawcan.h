@@ -65,6 +65,18 @@ public:
     */
     connection_type getSelectedType(void);
 
+    /*!
+        Setters/getters for name/description
+    */
+    std::string getName(void);
+    void setName(const std::string& str);
+
+    /*!
+        Setters/getters for path
+    */
+    std::string getPath(void);
+    void setPath(const std::string& str);
+
 private:
 
     Ui::CDlgConnSettingsRawCan *ui;

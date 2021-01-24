@@ -79,3 +79,21 @@ void CDlgConnSettingsMulticast::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgConnSettingsMulticast::getSelectedType(void) {
     return m_selected_type;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getName
+//
+
+std::string CDlgConnSettingsMulticast::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void CDlgConnSettingsMulticast::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
+}

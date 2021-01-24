@@ -396,7 +396,7 @@
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="74"/>
         <location filename="build/ui_cdlgconnsettingsrest.h" line="90"/>
-        <source>Path</source>
+        <source>url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -652,37 +652,73 @@
     <name>CDlgConnSettingsUdp</name>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="89"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="130"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="90"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="131"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="92"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="133"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="95"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="136"/>
         <source>IP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="97"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="138"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsudp.ui" line="103"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="100"/>
+        <location filename="src/cdlgconnsettingsudp.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="141"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="105"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="146"/>
+        <source>No encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="110"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="148"/>
+        <source>AES128</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="115"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="150"/>
+        <source>AES192</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="120"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="152"/>
+        <source>AES256</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="131"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="155"/>
+        <source>Key (hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="154"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="156"/>
         <source>Filter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1539,179 +1575,211 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="430"/>
+        <location filename="src/mainwindow.cpp" line="544"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="437"/>
+        <location filename="src/mainwindow.cpp" line="551"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="458"/>
+        <location filename="src/mainwindow.cpp" line="572"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="459"/>
+        <location filename="src/mainwindow.cpp" line="573"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="462"/>
+        <location filename="src/mainwindow.cpp" line="576"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="464"/>
+        <location filename="src/mainwindow.cpp" line="578"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="494"/>
+        <location filename="src/mainwindow.cpp" line="608"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="496"/>
+        <location filename="src/mainwindow.cpp" line="610"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="502"/>
+        <location filename="src/mainwindow.cpp" line="616"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="504"/>
+        <location filename="src/mainwindow.cpp" line="618"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="510"/>
+        <location filename="src/mainwindow.cpp" line="624"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="512"/>
+        <location filename="src/mainwindow.cpp" line="626"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="518"/>
+        <location filename="src/mainwindow.cpp" line="632"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="520"/>
+        <location filename="src/mainwindow.cpp" line="634"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="526"/>
+        <location filename="src/mainwindow.cpp" line="640"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="528"/>
+        <location filename="src/mainwindow.cpp" line="642"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="536"/>
+        <location filename="src/mainwindow.cpp" line="650"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="539"/>
+        <location filename="src/mainwindow.cpp" line="653"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="541"/>
+        <location filename="src/mainwindow.cpp" line="655"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="542"/>
+        <location filename="src/mainwindow.cpp" line="656"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="546"/>
+        <location filename="src/mainwindow.cpp" line="660"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="549"/>
+        <location filename="src/mainwindow.cpp" line="663"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="556"/>
+        <location filename="src/mainwindow.cpp" line="670"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="558"/>
+        <location filename="src/mainwindow.cpp" line="672"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="565"/>
+        <location filename="src/mainwindow.cpp" line="679"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="567"/>
+        <location filename="src/mainwindow.cpp" line="681"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="577"/>
+        <location filename="src/mainwindow.cpp" line="691"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="578"/>
+        <location filename="src/mainwindow.cpp" line="692"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="579"/>
+        <location filename="src/mainwindow.cpp" line="693"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="581"/>
+        <location filename="src/mainwindow.cpp" line="695"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="582"/>
+        <location filename="src/mainwindow.cpp" line="696"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="599"/>
+        <location filename="src/mainwindow.cpp" line="713"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="697"/>
+        <location filename="src/mainwindow.cpp" line="811"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="698"/>
+        <location filename="src/mainwindow.cpp" line="812"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="713"/>
+        <location filename="src/mainwindow.cpp" line="827"/>
         <source>File loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="930"/>
+        <location filename="src/mainwindow.cpp" line="950"/>
+        <location filename="src/mainwindow.cpp" line="970"/>
+        <location filename="src/mainwindow.cpp" line="990"/>
+        <location filename="src/mainwindow.cpp" line="1010"/>
+        <location filename="src/mainwindow.cpp" line="1030"/>
+        <location filename="src/mainwindow.cpp" line="1050"/>
+        <location filename="src/mainwindow.cpp" line="1072"/>
+        <location filename="src/mainwindow.cpp" line="1092"/>
+        <location filename="src/mainwindow.cpp" line="1112"/>
+        <location filename="src/mainwindow.cpp" line="1132"/>
+        <location filename="src/mainwindow.cpp" line="1152"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="931"/>
+        <location filename="src/mainwindow.cpp" line="951"/>
+        <location filename="src/mainwindow.cpp" line="971"/>
+        <location filename="src/mainwindow.cpp" line="991"/>
+        <location filename="src/mainwindow.cpp" line="1011"/>
+        <location filename="src/mainwindow.cpp" line="1031"/>
+        <location filename="src/mainwindow.cpp" line="1051"/>
+        <location filename="src/mainwindow.cpp" line="1073"/>
+        <location filename="src/mainwindow.cpp" line="1093"/>
+        <location filename="src/mainwindow.cpp" line="1113"/>
+        <location filename="src/mainwindow.cpp" line="1133"/>
+        <location filename="src/mainwindow.cpp" line="1153"/>
+        <source>You must enter a description</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

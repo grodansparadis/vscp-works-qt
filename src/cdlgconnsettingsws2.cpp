@@ -79,3 +79,21 @@ void CDlgConnSettingsWs2::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgConnSettingsWs2::getSelectedType(void) {
     return m_selected_type;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getName
+//
+
+std::string CDlgConnSettingsWs2::getName(void)
+{
+    return (ui->m_description->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void CDlgConnSettingsWs2::setName(const std::string& str)
+{
+    ui->m_description->insert(str.c_str());
+}

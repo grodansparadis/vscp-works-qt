@@ -157,3 +157,4 @@ void CDlgNewConnection::onDoubleClicked(QListWidgetItem* item)
 connection_type CDlgNewConnection::getSelectedType(void) {
     return m_selected_type;
 }
+
