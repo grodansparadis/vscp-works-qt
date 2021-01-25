@@ -53,6 +53,37 @@
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
+// QTreeWidgetItemConn
+//
+
+
+QTreeWidgetItemConn::QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *client) : 
+    QTreeWidgetItem(topItem, 1000) 
+{
+    setText(0, client->getName().c_str());
+    m_client = client;
+
+    const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    setIcon(0, icon);
+    //item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
+    // m_connTreeTable->addTopLevelItem(item_test);
+    //topItem->addChild(this);
+    topItem->setExpanded(true);
+    //topItem->setSelected(false);
+    setSelected(true);
+}
+
+QTreeWidgetItemConn::~QTreeWidgetItemConn()
+{
+    delete m_client;
+    m_client = nullptr;
+}
+
+
+// ----------------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
 // MainWindow
 //
 
@@ -124,95 +155,127 @@ MainWindow::MainWindow()
     
     // Local
     QStringList strlist_local(QString(tr("Local Connections")).split(','));
-    QTreeWidgetItem *topitem_local = new QTreeWidgetItem(strlist_local, static_cast<int>(CVscpClient::connType::LOCAL));
-    topitem_local->setIcon(0,iconTest);
-    topitem_local->setToolTip(0,tr("Holds local connections. Typically logfile and debug content containing VSCP events."));
-    m_connTreeTable->addTopLevelItem(topitem_local);    
+    m_topitem_local = new QTreeWidgetItem(strlist_local, static_cast<int>(CVscpClient::connType::LOCAL));
+    m_topitem_local->setIcon(0,iconTest);
+    m_topitem_local->setToolTip(0,tr("Holds local connections. Typically logfile and debug content containing VSCP events."));
+    m_connTreeTable->addTopLevelItem(m_topitem_local);    
 
     // canal
     QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
-    QTreeWidgetItem *topitem_canal = new QTreeWidgetItem(strlist_canal, static_cast<int>(CVscpClient::connType::CANAL));
-    topitem_canal->setIcon(0,iconTest);
-    topitem_canal->setToolTip(0,"Holds VSCP CANAL connections.");
-    m_connTreeTable->addTopLevelItem(topitem_canal);
+    m_topitem_canal = new QTreeWidgetItem(strlist_canal, static_cast<int>(CVscpClient::connType::CANAL));
+    m_topitem_canal->setIcon(0,iconTest);
+    m_topitem_canal->setToolTip(0,"Holds VSCP CANAL connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_canal);
 
     // Socketcan
     QStringList strlist_socketcan(QString(tr("Socketcan Connections")).split(','));
-    QTreeWidgetItem *topitem_socketcan = new QTreeWidgetItem(strlist_socketcan, static_cast<int>(CVscpClient::connType::SOCKETCAN));
-    topitem_socketcan->setIcon(0,iconTest);
-    topitem_socketcan->setToolTip(0,"Holds VSCP socketcan connections.");
-    m_connTreeTable->addTopLevelItem(topitem_socketcan);
+    m_topitem_socketcan = new QTreeWidgetItem(strlist_socketcan, static_cast<int>(CVscpClient::connType::SOCKETCAN));
+    m_topitem_socketcan->setIcon(0,iconTest);
+    m_topitem_socketcan->setToolTip(0,"Holds VSCP socketcan connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_socketcan);
 
     // tcp/ip
     QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
-    QTreeWidgetItem *topitem_tcpip = new QTreeWidgetItem(strlist_tcpip, static_cast<int>(CVscpClient::connType::TCPIP));
-    topitem_tcpip->setIcon(0,iconTest);
-    topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
-    m_connTreeTable->addTopLevelItem(topitem_tcpip);
+    m_topitem_tcpip = new QTreeWidgetItem(strlist_tcpip, static_cast<int>(CVscpClient::connType::TCPIP));
+    m_topitem_tcpip->setIcon(0,iconTest);
+    m_topitem_tcpip->setToolTip(0,"Holds VSCP tcp/ip connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_tcpip);
 
     // MQTT
     QStringList strlist_mqtt(QString(tr("MQTT Connections")).split(','));
-    QTreeWidgetItem *topitem_mqtt = new QTreeWidgetItem(strlist_mqtt, static_cast<int>(CVscpClient::connType::MQTT));
-    topitem_mqtt->setIcon(0,iconTest);
-    topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
-    m_connTreeTable->addTopLevelItem(topitem_mqtt);
+    m_topitem_mqtt = new QTreeWidgetItem(strlist_mqtt, static_cast<int>(CVscpClient::connType::MQTT));
+    m_topitem_mqtt->setIcon(0,iconTest);
+    m_topitem_mqtt->setToolTip(0,"Holds VSCP MQTT connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_mqtt);
 
     // WS1
     QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
-    QTreeWidgetItem *topitem_ws1 = new QTreeWidgetItem(strlist_ws1, static_cast<int>(CVscpClient::connType::WS1));
-    topitem_ws1->setIcon(0,iconTest);
-    topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
-    m_connTreeTable->addTopLevelItem(topitem_ws1);
+    m_topitem_ws1 = new QTreeWidgetItem(strlist_ws1, static_cast<int>(CVscpClient::connType::WS1));
+    m_topitem_ws1->setIcon(0,iconTest);
+    m_topitem_ws1->setToolTip(0,"Holds VSCP websocket ws1 connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_ws1);
 
     // WS2
     QStringList strlist_ws2(QString(tr("WS2 Connections")).split(','));
-    QTreeWidgetItem *topitem_ws2 = new QTreeWidgetItem(strlist_ws2, static_cast<int>(CVscpClient::connType::WS2));
-    topitem_ws2->setIcon(0,iconTest);
-    topitem_ws2->setToolTip(0,"Holds VSCP websocket ws2 connections.");
-    m_connTreeTable->addTopLevelItem(topitem_ws2);
+    m_topitem_ws2 = new QTreeWidgetItem(strlist_ws2, static_cast<int>(CVscpClient::connType::WS2));
+    m_topitem_ws2->setIcon(0,iconTest);
+    m_topitem_ws2->setToolTip(0,"Holds VSCP websocket ws2 connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_ws2);
 
     // UDP
     QStringList strlist_udp(QString(tr("UDP Connections")).split(','));
-    QTreeWidgetItem *topitem_udp = new QTreeWidgetItem(strlist_udp, static_cast<int>(CVscpClient::connType::UDP));
-    topitem_udp->setIcon(0,iconTest);
-    topitem_udp->setToolTip(0,"Holds VSCP UDP connections.");
-    m_connTreeTable->addTopLevelItem(topitem_udp);
+    m_topitem_udp = new QTreeWidgetItem(strlist_udp, static_cast<int>(CVscpClient::connType::UDP));
+    m_topitem_udp->setIcon(0,iconTest);
+    m_topitem_udp->setToolTip(0,"Holds VSCP UDP connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_udp);
 
     // Multicast
     QStringList strlist_multicast(QString(tr("Multicast Connections")).split(','));
-    QTreeWidgetItem *topitem_multicast = new QTreeWidgetItem(strlist_multicast, static_cast<int>(CVscpClient::connType::MULTICAST));
-    topitem_multicast->setIcon(0,iconTest);
-    topitem_multicast->setToolTip(0,"Holds VSCP multicast connections.");
-    m_connTreeTable->addTopLevelItem(topitem_multicast);
+    m_topitem_multicast = new QTreeWidgetItem(strlist_multicast, static_cast<int>(CVscpClient::connType::MULTICAST));
+    m_topitem_multicast->setIcon(0,iconTest);
+    m_topitem_multicast->setToolTip(0,"Holds VSCP multicast connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_multicast);
 
     // REST
     QStringList strlist_rest(QString(tr("REST Connections")).split(','));
-    QTreeWidgetItem *topitem_rest = new QTreeWidgetItem(strlist_rest, static_cast<int>(CVscpClient::connType::REST));
-    topitem_rest->setIcon(0,iconTest);
-    topitem_rest->setToolTip(0,"Holds VSCP REST connections.");
-    m_connTreeTable->addTopLevelItem(topitem_rest);
+    m_topitem_rest = new QTreeWidgetItem(strlist_rest, static_cast<int>(CVscpClient::connType::REST));
+    m_topitem_rest->setIcon(0,iconTest);
+    m_topitem_rest->setToolTip(0,"Holds VSCP REST connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_rest);
 
     // RAWCAN
     QStringList strlist_rawcan(QString(tr("RAWCAN Connections")).split(','));
-    QTreeWidgetItem *topitem_rawcan = new QTreeWidgetItem(strlist_rawcan, static_cast<int>(CVscpClient::connType::RAWCAN));
-    topitem_rawcan->setIcon(0,iconTest);
-    topitem_rawcan->setToolTip(0,"Holds generic CAN connections.");
-    m_connTreeTable->addTopLevelItem(topitem_rawcan);
+    m_topitem_rawcan = new QTreeWidgetItem(strlist_rawcan, static_cast<int>(CVscpClient::connType::RAWCAN));
+    m_topitem_rawcan->setIcon(0,iconTest);
+    m_topitem_rawcan->setToolTip(0,"Holds generic CAN connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_rawcan);
 
     // RAWMQTT
     QStringList strlist_rawmqtt(QString(tr("RAWMQTT Connections")).split(','));
-    QTreeWidgetItem *topitem_rawmqtt = new QTreeWidgetItem(strlist_rawmqtt, static_cast<int>(CVscpClient::connType::RAWMQTT));
-    topitem_rawmqtt->setIcon(0,iconTest);
-    topitem_rawmqtt->setToolTip(0,"Holds generic MQTT connections.");
-    m_connTreeTable->addTopLevelItem(topitem_rawmqtt);
+    m_topitem_rawmqtt = new QTreeWidgetItem(strlist_rawmqtt, static_cast<int>(CVscpClient::connType::RAWMQTT));
+    m_topitem_rawmqtt->setIcon(0,iconTest);
+    m_topitem_rawmqtt->setToolTip(0,"Holds generic MQTT connections.");
+    m_connTreeTable->addTopLevelItem(m_topitem_rawmqtt);
 
     // TEST
     QStringList strlist_test(QString(tr("Fluorine")).split(',')); 
-    QTreeWidgetItem *topitem_test = new QTreeWidgetItem(topitem_tcpip,strlist_test);
+    // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
+    QTreeWidgetItem *item_test = new QTreeWidgetItem(strlist_test);
     const QIcon iconFluorine = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    topitem_test->setIcon(0,iconFluorine);
-    topitem_test->setToolTip(0,"This is just a test connection from a snowy country named Sweden.");
-    m_connTreeTable->addTopLevelItem(topitem_test);
+    item_test->setIcon(0, iconFluorine);
+    item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
+    // m_connTreeTable->addTopLevelItem(item_test);
+    m_topitem_tcpip->addChild(item_test);
+
+    addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addChildItemToConnectionTree
+//
+
+void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name) 
+{
+    QStringList strlstname(QString(name.c_str()).split(',')); 
+    // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
+    QTreeWidgetItem *childitem = new QTreeWidgetItem(topitem, strlstname, 1000 + 1);
+    const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    childitem->setIcon(0, icon);
+    //item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
+    // m_connTreeTable->addTopLevelItem(item_test);
+    topitem->addChild(childitem);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addChildItemToConnectionTree
+//
+
+void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, CVscpClient *client) 
+{
+    QTreeWidgetItemConn *childitem = new QTreeWidgetItemConn(topitem, client);
+    m_connTreeTable->clearSelection();
+    topitem->addChild(childitem);
+    childitem->setSelected(true);    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -374,55 +437,55 @@ void MainWindow::showConnectionContextMenu(const QPoint& pos)
         switch (item->type()) {
 
             case static_cast<int>(CVscpClient::connType::LOCAL):
-                menu->addAction(QString("Add new local connection"), this, SLOT(newLocalConnection()));
+                menu->addAction(QString("Add new local connection..."), this, SLOT(newLocalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::TCPIP):
-                menu->addAction(QString("Add new tcp/ip connection"), this, SLOT(newTcpipConnection()));
+                menu->addAction(QString("Add new tcp/ip connection..."), this, SLOT(newTcpipConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::CANAL): 
-                menu->addAction(QString("Add new CANAL connection"), this, SLOT(newCanalConnection()));
+                menu->addAction(QString("Add new CANAL connection..."), this, SLOT(newCanalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
-                menu->addAction(QString("Add new Socketcan connection"), this, SLOT(newSocketCanConnection()));
+                menu->addAction(QString("Add new Socketcan connection..."), this, SLOT(newSocketCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS1): 
-                menu->addAction(QString("Add new websocket WS1 connection"), this, SLOT(newWs1Connection()));
+                menu->addAction(QString("Add new websocket WS1 connection..."), this, SLOT(newWs1Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS2): 
-                menu->addAction(QString("Add new websocket WS2 connection"), this, SLOT(newWs2Connection()));
+                menu->addAction(QString("Add new websocket WS2 connection..."), this, SLOT(newWs2Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MQTT): 
-                menu->addAction(QString("Add new MQTT connection"), this, SLOT(newMqttConnection()));
+                menu->addAction(QString("Add new MQTT connection..."), this, SLOT(newMqttConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::UDP): 
-                menu->addAction(QString("Add new UDP connection"), this, SLOT(newUdpConnection()));
+                menu->addAction(QString("Add new UDP connection..."), this, SLOT(newUdpConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MULTICAST): 
-                menu->addAction(QString("Add new multicast connection"), this, SLOT(newMulticastConnection()));
+                menu->addAction(QString("Add new multicast connection..."), this, SLOT(newMulticastConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::REST): 
-                menu->addAction(QString("Add new REST connection"), this, SLOT(newRestConnection()));
+                menu->addAction(QString("Add new REST connection..."), this, SLOT(newRestConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWCAN): 
-                menu->addAction(QString("Add new raw CAN connection"), this, SLOT(newRawCanConnection()));
+                menu->addAction(QString("Add new raw CAN connection..."), this, SLOT(newRawCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWMQTT): 
-                menu->addAction(QString("Add new raw MQTT connection"), this, SLOT(newRawMqttConnection()));
+                menu->addAction(QString("Add new raw MQTT connection..."), this, SLOT(newRawMqttConnection()));
                 break;
                                                     
             default:
-                menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
+                menu->addAction(QString("Add new connection..."), this, SLOT(newConnection()));
                 break;    
         }
     }
@@ -932,10 +995,14 @@ restart:
             goto restart;
         }
 
-        // Create a new local com object
+        // Create a new local communication object
         vscpClientLocal *pClient = new vscpClientLocal();
         pClient->setName(strName);
         pClient->setPath(dlg.getPath());
+        m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_local, pClient);
     }
 }
 

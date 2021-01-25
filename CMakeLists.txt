@@ -116,7 +116,6 @@ add_executable(vscp-works-qt
     build/ui_cfrmsession.h
     src/cfrmsession.h
     src/cfrmsession.cpp
-    src/connection.h
     src/vscpworks.h
     src/vscpworks.cpp
     vscp/src/vscp/common/version.h

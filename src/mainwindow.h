@@ -34,6 +34,7 @@
 #include "vscp_client_base.h"
 
 #include <QMainWindow>
+#include <QTreeWidgetItem>
 
 #include <list>
 
@@ -47,7 +48,16 @@ class QTreeWidgetItem;
 class QModelIndex;
 QT_END_NAMESPACE
 
-class connection;
+class QTreeWidgetItemConn : public QTreeWidgetItem
+{
+
+public:
+    QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *client);
+    ~QTreeWidgetItemConn();
+
+private:
+    CVscpClient *m_client;
+};
 
 class MainWindow : public QMainWindow
 {
@@ -101,10 +111,25 @@ private slots:
     
 
 protected:
+
+    /*
+        Display a context meny when user right click on
+        an item in the connection tree
+        @param point Coordinates for user right clicked.
+    */
     void showConnectionContextMenu(const QPoint&);
     
+    /*!
+        Add one child item to the connection tree
+        @param topitem Pointer to top item this subitem belongs to
+        @param name Name for sub item.
+    */
+    void addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name);
+
+    void addChildItemToConnectionTree(QTreeWidgetItem *topitem, CVscpClient *client);
 
 private:
+
     void createActions();
     void createStatusBar();
     void readSettings();
@@ -122,6 +147,20 @@ private:
 
     /// List with defined connections
     std::list<CVscpClient *> m_listConn;
+
+    // Top items in tree control
+    QTreeWidgetItem *m_topitem_local;
+    QTreeWidgetItem *m_topitem_canal;
+    QTreeWidgetItem *m_topitem_socketcan;
+    QTreeWidgetItem *m_topitem_tcpip;
+    QTreeWidgetItem *m_topitem_mqtt;
+    QTreeWidgetItem *m_topitem_ws1;
+    QTreeWidgetItem *m_topitem_ws2;
+    QTreeWidgetItem *m_topitem_udp;
+    QTreeWidgetItem *m_topitem_multicast;
+    QTreeWidgetItem *m_topitem_rest;
+    QTreeWidgetItem *m_topitem_rawcan;
+    QTreeWidgetItem *m_topitem_rawmqtt;
 };
 
 #endif // MAINWINDOW_H
