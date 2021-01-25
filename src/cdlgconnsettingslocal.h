@@ -72,6 +72,7 @@ private:
     void createGridGroupBox();
     void createFormGroupBox();
 
+    // Dummy client
     vscpClientLocal m_vscpClient;
 };
 

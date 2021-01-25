@@ -1,5 +1,10 @@
 # vscp-works-qt
 
+## !!!! WARNING !!!!!    Work in progress
+This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far from a usable state. There is no documentation. No user setup information and help.
+
+**Internal project Notes below**
+
 ## config
 
 The config file for VSCP works qt is JSON based and have the following format

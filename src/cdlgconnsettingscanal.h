@@ -30,6 +30,7 @@
 #define CDLGCONNSETTINGSCANAL_H
 
 #include "connection_types.h"
+#include "vscp_client_canal.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -91,6 +92,9 @@ private:
         the used select
     */
     connection_type m_selected_type;
+
+    // Dummy client
+    vscpClientCanal m_vscpClient;
 };
 
 
