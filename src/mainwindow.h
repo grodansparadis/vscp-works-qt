@@ -30,7 +30,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "connection_types.h"
+//#include "connection_types.h"
+#include "vscp_client_base.h"
+
 #include <QMainWindow>
 
 #include <list>
@@ -40,7 +42,6 @@ class QAction;
 class QMenu;
 class QPlainTextEdit;
 class QSessionManager;
-//class QTableWidget;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QModelIndex;
@@ -90,7 +91,7 @@ private slots:
     void newRawCanConnection();
     void newRawMqttConnection();
 
-    void openConnectionSettingsDialog(connection_type type);
+    void openConnectionSettingsDialog(CVscpClient::connType type);
 
     /*!
         Called when the connection list is double clicked
@@ -120,7 +121,7 @@ private:
     QString curFile;
 
     /// List with defined connections
-    std::list<connection *> m_listConnections;
+    std::list<CVscpClient *> m_listConn;
 };
 
 #endif // MAINWINDOW_H

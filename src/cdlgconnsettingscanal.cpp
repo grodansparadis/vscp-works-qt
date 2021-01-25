@@ -26,7 +26,7 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+
 #include "cdlgconnsettingscanal.h"
 #include "ui_cdlgconnsettingscanal.h"
 
@@ -59,7 +59,7 @@ CDlgConnSettingsCanal::~CDlgConnSettingsCanal()
 
 void CDlgConnSettingsCanal::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ void CDlgConnSettingsCanal::onClicked(QListWidgetItem* item)
 
 void CDlgConnSettingsCanal::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
     accept();
 }
 
@@ -76,7 +76,7 @@ void CDlgConnSettingsCanal::onDoubleClicked(QListWidgetItem* item)
 // getSelectedType
 //
 
-connection_type CDlgConnSettingsCanal::getSelectedType(void) {
+CVscpClient::connType CDlgConnSettingsCanal::getSelectedType(void) {
     return m_selected_type;
 }
 

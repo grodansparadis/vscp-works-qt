@@ -26,7 +26,7 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+
 #include "cdlgconnsettingsrawcan.h"
 #include "ui_cdlgconnsettingsrawcan.h"
 
@@ -59,7 +59,7 @@ CDlgConnSettingsRawCan::~CDlgConnSettingsRawCan()
 
 void CDlgConnSettingsRawCan::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ void CDlgConnSettingsRawCan::onClicked(QListWidgetItem* item)
 
 void CDlgConnSettingsRawCan::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
     accept();
 }
 
@@ -76,7 +76,7 @@ void CDlgConnSettingsRawCan::onDoubleClicked(QListWidgetItem* item)
 // getSelectedType
 //
 
-connection_type CDlgConnSettingsRawCan::getSelectedType(void) {
+CVscpClient::connType CDlgConnSettingsRawCan::getSelectedType(void) {
     return m_selected_type;
 }
 

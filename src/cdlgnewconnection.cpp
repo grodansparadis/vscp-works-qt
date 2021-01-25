@@ -26,7 +26,8 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+//#include "connection_types.h"
+
 #include "cdlgnewconnection.h"
 #include "ui_cdlgnewconnection.h"
 
@@ -50,7 +51,7 @@ CDlgNewConnection::CDlgNewConnection(QWidget *parent) :
     
     addConnectionItems();
 
-    m_selected_type = LOCAL;
+    m_selected_type = CVscpClient::connType::LOCAL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,63 +71,63 @@ CDlgNewConnection::~CDlgNewConnection()
 void CDlgNewConnection::addConnectionItems(void)
 {
     const QIcon localIcon = QIcon::fromTheme("network-offline", QIcon(":info.png"));
-    QListWidgetItem *itemLocal = new QListWidgetItem(localIcon, QString::fromUtf8("Local"), nullptr, LOCAL);    
+    QListWidgetItem *itemLocal = new QListWidgetItem(localIcon, QString::fromUtf8("Local"), nullptr, static_cast<int>(CVscpClient::connType::LOCAL));    
     ui->listWidgetConnectionTypes->addItem(itemLocal);
     itemLocal->setToolTip("No connection (logfile or similar)");
     itemLocal->setSelected(true);
 
     const QIcon iconCanal = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemCanal = new QListWidgetItem(iconCanal, QString::fromUtf8("CANAL"), nullptr, CANAL);    
+    QListWidgetItem *itemCanal = new QListWidgetItem(iconCanal, QString::fromUtf8("CANAL"), nullptr, static_cast<int>(CVscpClient::connType::CANAL));    
     ui->listWidgetConnectionTypes->addItem(itemCanal);
     itemCanal->setToolTip("VSCP over CANAL (CAN Abstraction Layer)");
     
     const QIcon iconSocketcan = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemSocketcan = new QListWidgetItem(iconSocketcan, QString::fromUtf8("Socketcan"), nullptr, SOCKETCAN);    
+    QListWidgetItem *itemSocketcan = new QListWidgetItem(iconSocketcan, QString::fromUtf8("Socketcan"), nullptr, static_cast<int>(CVscpClient::connType::SOCKETCAN));    
     ui->listWidgetConnectionTypes->addItem(itemSocketcan);
     itemSocketcan->setToolTip("VSCP over socketcan");
 
     const QIcon iconTcpIp = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemTcpIp = new QListWidgetItem(iconTcpIp, QString::fromUtf8("TCP/IP"), nullptr, TCPIP);    
+    QListWidgetItem *itemTcpIp = new QListWidgetItem(iconTcpIp, QString::fromUtf8("TCP/IP"), nullptr, static_cast<int>(CVscpClient::connType::TCPIP));    
     ui->listWidgetConnectionTypes->addItem(itemTcpIp);
     itemTcpIp->setToolTip("VSCP over tcp/ip");
 
     const QIcon iconMqtt = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemMqtt = new QListWidgetItem(iconMqtt, QString::fromUtf8("MQTT"), nullptr, MQTT);    
+    QListWidgetItem *itemMqtt = new QListWidgetItem(iconMqtt, QString::fromUtf8("MQTT"), nullptr, static_cast<int>(CVscpClient::connType::MQTT));    
     ui->listWidgetConnectionTypes->addItem(itemMqtt);
     itemMqtt->setToolTip("VSCP over MQTT");
 
     const QIcon iconWs1 = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemWs1 = new QListWidgetItem(iconWs1, QString::fromUtf8("Websocket WS1"), nullptr, WS1);    
+    QListWidgetItem *itemWs1 = new QListWidgetItem(iconWs1, QString::fromUtf8("Websocket WS1"), nullptr, static_cast<int>(CVscpClient::connType::WS1));    
     ui->listWidgetConnectionTypes->addItem(itemWs1);
     itemWs1->setToolTip("VSCP over websocket protocol ws1");
 
     const QIcon iconWs2 = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemWs2 = new QListWidgetItem(iconWs2, QString::fromUtf8("Websocket WS2"), nullptr, WS2);    
+    QListWidgetItem *itemWs2 = new QListWidgetItem(iconWs2, QString::fromUtf8("Websocket WS2"), nullptr, static_cast<int>(CVscpClient::connType::WS2));    
     ui->listWidgetConnectionTypes->addItem(itemWs2);
     itemWs2->setToolTip("VSCP over websocket protocol ws2");    
 
     const QIcon iconUdp = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemUdp = new QListWidgetItem(iconUdp, QString::fromUtf8("UDP"), nullptr, UDP);    
+    QListWidgetItem *itemUdp = new QListWidgetItem(iconUdp, QString::fromUtf8("UDP"), nullptr, static_cast<int>(CVscpClient::connType::UDP));    
     ui->listWidgetConnectionTypes->addItem(itemUdp);
     itemUdp->setToolTip("VSCP over UDP");
 
     const QIcon iconMulticast = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemMulticast = new QListWidgetItem(iconMulticast, QString::fromUtf8("Multicast"), nullptr, MULTICAST);    
+    QListWidgetItem *itemMulticast = new QListWidgetItem(iconMulticast, QString::fromUtf8("Multicast"), nullptr, static_cast<int>(CVscpClient::connType::MULTICAST));    
     ui->listWidgetConnectionTypes->addItem(itemMulticast);
     itemMulticast->setToolTip("VSCP over Multicast");
 
     const QIcon iconRest = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemRest = new QListWidgetItem(iconRest, QString::fromUtf8("REST"), nullptr, REST);    
+    QListWidgetItem *itemRest = new QListWidgetItem(iconRest, QString::fromUtf8("REST"), nullptr, static_cast<int>(CVscpClient::connType::REST));    
     ui->listWidgetConnectionTypes->addItem(itemRest);
     itemRest->setToolTip("VSCP REST protocol");
 
     const QIcon iconRawCan = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemRawCan = new QListWidgetItem(iconRawCan, QString::fromUtf8("Raw CAN"), nullptr, RAWCAN);    
+    QListWidgetItem *itemRawCan = new QListWidgetItem(iconRawCan, QString::fromUtf8("Raw CAN"), nullptr, static_cast<int>(CVscpClient::connType::RAWCAN));    
     ui->listWidgetConnectionTypes->addItem(itemRawCan);
     itemRawCan->setToolTip("Raw CAN");
 
     const QIcon iconRawMqtt = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    QListWidgetItem *itemRawMqtt = new QListWidgetItem(iconRawMqtt, QString::fromUtf8("Raw MQTT"), nullptr, RAWMQTT);    
+    QListWidgetItem *itemRawMqtt = new QListWidgetItem(iconRawMqtt, QString::fromUtf8("Raw MQTT"), nullptr, static_cast<int>(CVscpClient::connType::RAWMQTT));    
     ui->listWidgetConnectionTypes->addItem(itemRawMqtt);
     itemRawMqtt->setToolTip("Raw MQTT");
 }
@@ -137,7 +138,7 @@ void CDlgNewConnection::addConnectionItems(void)
 
 void CDlgNewConnection::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -146,7 +147,7 @@ void CDlgNewConnection::onClicked(QListWidgetItem* item)
 
 void CDlgNewConnection::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
     accept();
 }
 
@@ -154,7 +155,7 @@ void CDlgNewConnection::onDoubleClicked(QListWidgetItem* item)
 // getSelectedType
 //
 
-connection_type CDlgNewConnection::getSelectedType(void) {
+CVscpClient::connType CDlgNewConnection::getSelectedType(void) {
     return m_selected_type;
 }
 

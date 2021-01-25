@@ -26,7 +26,7 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+
 #include "cdlgconnsettingstcpip.h"
 #include "ui_cdlgconnsettingstcpip.h"
 
@@ -59,7 +59,7 @@ CDlgConnSettingsTcpip::~CDlgConnSettingsTcpip()
 
 void CDlgConnSettingsTcpip::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ void CDlgConnSettingsTcpip::onClicked(QListWidgetItem* item)
 
 void CDlgConnSettingsTcpip::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
     accept();
 }
 
@@ -76,7 +76,7 @@ void CDlgConnSettingsTcpip::onDoubleClicked(QListWidgetItem* item)
 // getSelectedType
 //
 
-connection_type CDlgConnSettingsTcpip::getSelectedType(void) {
+CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
     return m_selected_type;
 }
 

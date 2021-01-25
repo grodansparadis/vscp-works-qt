@@ -29,7 +29,6 @@
 #ifndef CDLGCONNSETTINGSLOCAL_H
 #define CDLGCONNSETTINGSLOCAL_H
 
-#include "connection_types.h"
 #include "vscp_client_local.h"
 
 #include <QDialog>

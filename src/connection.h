@@ -31,8 +31,7 @@
 
 #include <string>
 
-#include "connection_types.h"
-
+#include "vscp_client_base.h"
 
 /*!
     Encapsulates one connection
@@ -55,7 +54,7 @@ public:
         Set connection type
         @param type The connection type to set
     */
-    void setType(connection_type type) { m_type = type; };
+    void setType(CVscpClient::connType type) { m_type = type; };
 
     /*!
         Set connection name
@@ -67,7 +66,7 @@ public:
         Get connection type
         @return Type for the connection
     */
-    connection_type getType(void);
+    CVscpClient::connType getType(void);
 
     /*!
         Get connection type
@@ -94,7 +93,7 @@ protected:
     std::string m_name;
 
     // Connection type
-    connection_type m_type;
+    CVscpClient::connType m_type;
 
     // Input filter
 

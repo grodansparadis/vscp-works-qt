@@ -26,7 +26,7 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+
 #include "cdlgconnsettingsmulticast.h"
 #include "ui_cdlgconnsettingsmulticast.h"
 
@@ -59,7 +59,7 @@ CDlgConnSettingsMulticast::~CDlgConnSettingsMulticast()
 
 void CDlgConnSettingsMulticast::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ void CDlgConnSettingsMulticast::onClicked(QListWidgetItem* item)
 
 void CDlgConnSettingsMulticast::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<connection_type>(item->type());
+    m_selected_type = static_cast<CVscpClient::connType>(item->type());
     accept();
 }
 
@@ -76,7 +76,7 @@ void CDlgConnSettingsMulticast::onDoubleClicked(QListWidgetItem* item)
 // getSelectedType
 //
 
-connection_type CDlgConnSettingsMulticast::getSelectedType(void) {
+CVscpClient::connType CDlgConnSettingsMulticast::getSelectedType(void) {
     return m_selected_type;
 }
 

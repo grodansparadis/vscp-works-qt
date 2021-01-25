@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSWS1_H
 #define CDLGCONNSETTINGSWS1_H
 
-#include "connection_types.h"
+#include "vscp_client_ws1.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -63,7 +63,7 @@ public:
     /*!
         Return the selected communication type
     */
-    connection_type getSelectedType(void);
+    CVscpClient::connType getSelectedType(void);
 
     /*!
         Setters/getters for name/description
@@ -90,7 +90,7 @@ private:
         This variable holds the connection type that 
         the used select
     */
-    connection_type m_selected_type;
+    CVscpClient::connType m_selected_type;
 };
 
 

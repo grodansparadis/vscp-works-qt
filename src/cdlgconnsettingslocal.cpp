@@ -26,7 +26,7 @@
 // SOFTWARE.
 //
 
-#include "connection_types.h"
+
 #include "cdlgconnsettingslocal.h"
 #include "ui_cdlgconnsettingslocal.h"
 
