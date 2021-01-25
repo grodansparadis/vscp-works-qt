@@ -51,6 +51,11 @@ public:
     ~CDlgConnSettingsLocal();
 
     /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
+
+    /*!
         Setters/getters for name/description
     */
     std::string getName(void);

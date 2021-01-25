@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSSOCKETCAN_H
 #define CDLGCONNSETTINGSSOCKETCAN_H
 
-#include "vscp_client_base.h"
+#include "vscp_client_socketcan.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -49,6 +49,11 @@ public:
 public:
     explicit CDlgConnSettingsSocketCan(QWidget *parent = nullptr);
     ~CDlgConnSettingsSocketCan();
+
+    /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
 
     /*!
         Called when the connection list is clicked

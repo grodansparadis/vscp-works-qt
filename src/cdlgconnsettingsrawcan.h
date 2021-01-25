@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSRAWCAN_H
 #define CDLGCONNSETTINGSRAWCAN_H
 
-#include "vscp_client_base.h"
+#include "vscp_client_rawcan.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -49,6 +49,11 @@ public:
 public:
     explicit CDlgConnSettingsRawCan(QWidget *parent = nullptr);
     ~CDlgConnSettingsRawCan();
+
+    /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
 
     /*!
         Called when the connection list is clicked

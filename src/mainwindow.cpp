@@ -238,33 +238,33 @@ MainWindow::MainWindow()
     m_connTreeTable->addTopLevelItem(m_topitem_rawmqtt);
 
     // TEST
-    QStringList strlist_test(QString(tr("Fluorine")).split(',')); 
-    // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
-    QTreeWidgetItem *item_test = new QTreeWidgetItem(strlist_test);
-    const QIcon iconFluorine = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    item_test->setIcon(0, iconFluorine);
-    item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
-    // m_connTreeTable->addTopLevelItem(item_test);
-    m_topitem_tcpip->addChild(item_test);
+    // QStringList strlist_test(QString(tr("Fluorine")).split(',')); 
+    // // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
+    // QTreeWidgetItem *item_test = new QTreeWidgetItem(strlist_test);
+    // const QIcon iconFluorine = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+    // item_test->setIcon(0, iconFluorine);
+    // item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
+    // // m_connTreeTable->addTopLevelItem(item_test);
+    // m_topitem_tcpip->addChild(item_test);
 
-    addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
+    //addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // addChildItemToConnectionTree
 //
 
-void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name) 
-{
-    QStringList strlstname(QString(name.c_str()).split(',')); 
-    // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
-    QTreeWidgetItem *childitem = new QTreeWidgetItem(topitem, strlstname, 1000 + 1);
-    const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-    childitem->setIcon(0, icon);
-    //item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
-    // m_connTreeTable->addTopLevelItem(item_test);
-    topitem->addChild(childitem);
-}
+// void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name) 
+// {
+//     QStringList strlstname(QString(name.c_str()).split(',')); 
+//     // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
+//     QTreeWidgetItem *childitem = new QTreeWidgetItem(topitem, strlstname, 1000 + 1);
+//     const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+//     childitem->setIcon(0, icon);
+//     //item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
+//     // m_connTreeTable->addTopLevelItem(item_test);
+//     topitem->addChild(childitem);
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 // addChildItemToConnectionTree
@@ -984,6 +984,7 @@ void MainWindow::newSession()
 void MainWindow::newLocalConnection()
 {
     CDlgConnSettingsLocal dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -999,7 +1000,6 @@ restart:
         vscpClientLocal *pClient = new vscpClientLocal();
         pClient->setName(strName);
         pClient->setPath(dlg.getPath());
-        m_listConn.push_back(pClient);
 
         // Add connection to connection tree
         addChildItemToConnectionTree(m_topitem_local, pClient);
@@ -1013,6 +1013,7 @@ restart:
 void MainWindow::newCanalConnection()
 {
     CDlgConnSettingsCanal dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1023,6 +1024,14 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientCanal *pClient = new vscpClientCanal();
+        pClient->setName(strName);
+        pClient->init(dlg.getPath(), dlg.getConfig(), dlg.getFlags() );
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_canal, pClient);
     } 
 }
 
@@ -1033,6 +1042,7 @@ restart:
 void MainWindow::newTcpipConnection()
 {
     CDlgConnSettingsTcpip dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1043,6 +1053,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientTcp *pClient = new vscpClientTcp();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_tcpip, pClient);
     } 
 }
 
@@ -1053,6 +1072,7 @@ restart:
 void MainWindow::newSocketCanConnection()
 {
     CDlgConnSettingsSocketCan dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1063,6 +1083,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientSocketCan *pClient = new vscpClientSocketCan();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_socketcan, pClient);
     }
 }
 
@@ -1073,6 +1102,7 @@ restart:
 void MainWindow::newMqttConnection()
 {
     CDlgConnSettingsMqtt dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1083,6 +1113,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientMqtt *pClient = new vscpClientMqtt();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_mqtt, pClient);
     }
 }
 
@@ -1093,6 +1132,7 @@ restart:
 void MainWindow::newWs1Connection()
 {
     CDlgConnSettingsWs1 dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1103,6 +1143,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientWs1 *pClient = new vscpClientWs1();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_ws1, pClient);
     }
 }
 
@@ -1113,6 +1162,7 @@ restart:
 void MainWindow::newWs2Connection()
 {
     CDlgConnSettingsWs2 dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1123,6 +1173,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientWs2 *pClient = new vscpClientWs2();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_ws2, pClient);
     }
 }
 
@@ -1135,6 +1194,7 @@ restart:
 void MainWindow::newUdpConnection()
 {
     CDlgConnSettingsUdp dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1145,6 +1205,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientUdp *pClient = new vscpClientUdp();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_udp, pClient);
     }
 }
 
@@ -1155,6 +1224,7 @@ restart:
 void MainWindow::newMulticastConnection()
 {
     CDlgConnSettingsMulticast dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1165,6 +1235,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientMulticast *pClient = new vscpClientMulticast();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_multicast, pClient);
     }
 }
 
@@ -1175,6 +1254,7 @@ restart:
 void MainWindow::newRestConnection()
 {
     CDlgConnSettingsRest dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1185,6 +1265,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientRest *pClient = new vscpClientRest();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_rest, pClient);
     }
 }
 
@@ -1195,6 +1284,7 @@ restart:
 void MainWindow::newRawCanConnection()
 {
     CDlgConnSettingsRawCan dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1205,6 +1295,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientRawCan *pClient = new vscpClientRawCan();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_rawcan, pClient);
     }
 }
 
@@ -1215,6 +1314,7 @@ restart:
 void MainWindow::newRawMqttConnection()
 {
     CDlgConnSettingsRawMqtt dlg(this);
+    dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
@@ -1225,6 +1325,15 @@ restart:
                                QMessageBox::Ok);
             goto restart;
         }
+
+        // Create a new local communication object
+        vscpClientRawMqtt *pClient = new vscpClientRawMqtt();
+        pClient->setName(strName);
+        //pClient->setPath(dlg.getPath());
+        //m_listConn.push_back(pClient);
+
+        // Add connection to connection tree
+        addChildItemToConnectionTree(m_topitem_rawmqtt, pClient);
     }
 }
 

@@ -143,7 +143,9 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscp_client_mqtt.h
     vscp/src/vscp/common/vscp_client_mqtt.cpp
     vscp/src/vscp/common/vscp_client_tcp.h
-    vscp/src/vscp/common/vscp_client_tcp.cpp 
+    vscp/src/vscp/common/vscp_client_tcp.cpp
+    vscp/src/vscp/common/vscp_client_socketcan.h
+    vscp/src/vscp/common/vscp_client_socketcan.cpp
     vscp/src/vscp/common/vscp_client_ws1.h
     vscp/src/vscp/common/vscp_client_ws1.cpp 
     vscp/src/vscp/common/vscp_client_ws2.h
@@ -154,6 +156,10 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscp_client_multicast.cpp 
     vscp/src/vscp/common/vscp_client_rest.h
     vscp/src/vscp/common/vscp_client_rest.cpp
+    vscp/src/vscp/common/vscp_client_rawcan.h
+    vscp/src/vscp/common/vscp_client_rawcan.cpp
+    vscp/src/vscp/common/vscp_client_rawmqtt.h
+    vscp/src/vscp/common/vscp_client_rawmqtt.cpp
     vscp/src/vscp/common/vscp_bootloader.h
     vscp/src/vscp/common/vscp_bootloader.cpp
     vscp/src/common/third_party/mustache.hpp

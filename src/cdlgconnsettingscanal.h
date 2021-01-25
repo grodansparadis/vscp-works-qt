@@ -51,6 +51,11 @@ public:
     ~CDlgConnSettingsCanal();
 
     /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
+
+    /*!
         Called when the connection list is clicked
     */
     void onClicked(QListWidgetItem* item);
@@ -72,10 +77,22 @@ public:
     void setName(const std::string& str);
 
     /*!
-        Setters/getters for path
+        Setters/getters for path to driver
     */
     std::string getPath(void);
     void setPath(const std::string& str);
+
+    /*!
+        Setters/getters for config
+    */
+    std::string getConfig(void);
+    void setConfig(const std::string& str);
+
+    /*!
+        Setters/getters for flags
+    */
+    uint32_t getFlags(void);
+    void setFlags(uint32_t flags);
 
 private:
 
@@ -90,7 +107,7 @@ private:
         This variable holds the connection type that 
         the used select
     */
-    CVscpClient::connType m_selected_type;
+    //CVscpClient::connType m_selected_type;
 
     // Dummy client
     vscpClientCanal m_vscpClient;

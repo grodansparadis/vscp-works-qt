@@ -88,3 +88,7 @@ cmake ..
 ## Enable debug
 
   cmake -DCMAKE_BUILD_TYPE=Debug
+
+## deb install
+
+  * https://www.debian.org/doc/manuals/debmake-doc/ch08.en.html#cmake-single

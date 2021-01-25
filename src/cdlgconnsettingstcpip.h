@@ -52,6 +52,11 @@ public:
     ~CDlgConnSettingsTcpip();
 
     /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
+
+    /*!
         Called when the connection list is clicked
     */
     void onClicked(QListWidgetItem* item);

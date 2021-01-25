@@ -107,13 +107,12 @@ private slots:
         Called when the connection list is double clicked
     */
     void onDoubleClicked(QTreeWidgetItem* item);
-
     
 
-protected:
+protected:    
 
     /*
-        Display a context meny when user right click on
+        Display a context menu when user right click on
         an item in the connection tree
         @param point Coordinates for user right clicked.
     */
@@ -124,7 +123,7 @@ protected:
         @param topitem Pointer to top item this subitem belongs to
         @param name Name for sub item.
     */
-    void addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name);
+    //void addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name);
 
     void addChildItemToConnectionTree(QTreeWidgetItem *topitem, CVscpClient *client);
 

@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSMQTT_H
 #define CDLGCONNSETTINGSMQTT_H
 
-#include "vscp_client_base.h"
+#include "vscp_client_mqtt.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -49,6 +49,11 @@ public:
 public:
     explicit CDlgConnSettingsMqtt(QWidget *parent = nullptr);
     ~CDlgConnSettingsMqtt();
+
+    /*!
+        Set inital focus to description
+    */
+    void setInitialFocus(void);
 
     /*!
         Called when the connection list is clicked

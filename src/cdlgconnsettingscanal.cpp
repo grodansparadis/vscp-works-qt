@@ -29,8 +29,11 @@
 
 #include "cdlgconnsettingscanal.h"
 #include "ui_cdlgconnsettingscanal.h"
+#include "vscphelper.h"
 
 #include <QMessageBox>
+
+#include <string>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -52,33 +55,15 @@ CDlgConnSettingsCanal::~CDlgConnSettingsCanal()
     delete ui;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
-// onClicked
+// setInitialFocus
 //
 
-void CDlgConnSettingsCanal::onClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
+void CDlgConnSettingsCanal::setInitialFocus(void)
+{
+    ui->m_description->setFocus();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// onDoubleClicked
-//
-
-void CDlgConnSettingsCanal::onDoubleClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
-    accept();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// getSelectedType
-//
-
-CVscpClient::connType CDlgConnSettingsCanal::getSelectedType(void) {
-    return m_selected_type;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // getName
@@ -96,4 +81,59 @@ std::string CDlgConnSettingsCanal::getName(void)
 void CDlgConnSettingsCanal::setName(const std::string& str)
 {
     ui->m_description->insert(str.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPath
+//
+
+std::string CDlgConnSettingsCanal::getPath(void)
+{
+    return (ui->m_path->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPath
+//
+
+void CDlgConnSettingsCanal::setPath(const std::string& str)
+{
+    ui->m_path->insert(str.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getConfig
+//
+
+std::string CDlgConnSettingsCanal::getConfig(void)
+{
+    return (ui->m_config->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setConfig
+//
+
+void CDlgConnSettingsCanal::setConfig(const std::string& str)
+{
+    ui->m_config->insert(str.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getFlags
+//
+
+uint32_t CDlgConnSettingsCanal::getFlags(void)
+{
+    return vscp_readStringValue(ui->m_flags->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setFlags
+//
+
+void CDlgConnSettingsCanal::setFlags(uint32_t flags)
+{
+    std::string str = vscp_str_format("%lu", (unsigned long)flags);
+    ui->m_flags->insert(str.c_str());
 }
