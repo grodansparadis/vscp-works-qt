@@ -25,6 +25,9 @@ jobs:
         path: vscp
         ref: development
 
+    - name: Update before installing packages
+      run: sudo apt-get update
+
     - name: Install libmosuitto-dev manually
       run: sudo apt install libmosquitto-dev
 
