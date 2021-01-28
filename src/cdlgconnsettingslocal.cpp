@@ -76,7 +76,7 @@ std::string CDlgConnSettingsLocal::getName(void)
 
 void CDlgConnSettingsLocal::setName(const std::string& str)
 {
-    ui->m_description->insert(str.c_str());
+    ui->m_description->setText(str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,5 +94,5 @@ std::string CDlgConnSettingsLocal::getPath(void)
 
 void CDlgConnSettingsLocal::setPath(const std::string& str)
 {
-    ui->m_path->insert(str.c_str());
+    ui->m_path->setText(str.c_str());
 }

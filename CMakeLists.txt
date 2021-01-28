@@ -134,6 +134,8 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/canaldlldef.h
     vscp/src/vscp/common/vscpcanaldeviceif.h
     vscp/src/vscp/common/vscpcanaldeviceif.cpp
+    vscp/src/vscp/common/canal_config.h
+    vscp/src/vscp/common/canal_config.cpp
     vscp/src/vscp/common/vscp_client_base.h
     vscp/src/vscp/common/vscp_client_base.cpp
     vscp/src/vscp/common/vscp_client_local.h

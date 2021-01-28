@@ -94,6 +94,11 @@ public:
     uint32_t getFlags(void);
     void setFlags(uint32_t flags);
 
+private slots:
+    void testDriver();
+    void setDriverPath();
+    void wizard();
+
 private:
 
     Ui::CDlgConnSettingsCanal *ui;

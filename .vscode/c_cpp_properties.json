@@ -6,7 +6,7 @@
                 "/usr/include",
                 "/usr/local/include",
                 "${workspaceRoot}"
-            ],    
+            ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
@@ -53,14 +53,15 @@
                     "/usr/include",
                     "${workspaceFolder}/src",
                     "${workspaceFolder}/_vscp_common",
-                "   ${workspaceFolder}/_vscp_common_general"
+                    "   ${workspaceFolder}/_vscp_common_general"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
             },
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
-            "cppStandard": "c++17"
+            "cppStandard": "c++17",
+            "configurationProvider": "ms-vscode.cmake-tools"
         },
         {
             "name": "Win32",

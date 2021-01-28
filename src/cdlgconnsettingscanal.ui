@@ -44,7 +44,7 @@
      <x>20</x>
      <y>10</y>
      <width>501</width>
-     <height>131</height>
+     <height>151</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -104,13 +104,30 @@
       </property>
      </widget>
     </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="m_datarate">
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Datarate :</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QPushButton" name="btnTest">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>150</y>
+     <x>530</x>
+     <y>130</y>
      <width>91</width>
      <height>25</height>
     </rect>
@@ -146,6 +163,16 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>m_description</tabstop>
+  <tabstop>m_path</tabstop>
+  <tabstop>m_config</tabstop>
+  <tabstop>m_flags</tabstop>
+  <tabstop>m_datarate</tabstop>
+  <tabstop>btnTest</tabstop>
+  <tabstop>btnSetPath</tabstop>
+  <tabstop>btnWizard</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

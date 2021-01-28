@@ -5,56 +5,105 @@
     <name>CDlgConnSettingsCanal</name>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="123"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="143"/>
         <source>CANAL Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="124"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="144"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="67"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="125"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="145"/>
         <source>Path to driver :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="80"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="126"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="146"/>
         <source>Device configuration string :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="93"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="127"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="147"/>
         <source>Device flags :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="103"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="128"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="110"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="148"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="149"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="119"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="129"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="117"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="150"/>
+        <source>Datarate :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="136"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="151"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="132"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="130"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="149"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="152"/>
         <source>Set...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="145"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="131"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="162"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="153"/>
         <source>Wizard...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="156"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="171"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="185"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="237"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="251"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="270"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="157"/>
+        <source>The driver does not exist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="206"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="212"/>
+        <source>Set path to CANAL driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="208"/>
+        <source>Drivers (*.so)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="214"/>
+        <source>Drivers (*.so);;All (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="252"/>
+        <source>Driver is a generation 1 driver that does not have configuration embedded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="271"/>
+        <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
