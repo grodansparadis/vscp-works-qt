@@ -66,43 +66,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="156"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="171"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="185"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="237"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="251"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="270"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="157"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="172"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="190"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="242"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="256"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="277"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="284"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="157"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="158"/>
         <source>The driver does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="206"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="212"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="211"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="217"/>
         <source>Set path to CANAL driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="208"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="213"/>
         <source>Drivers (*.so)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="214"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="219"/>
         <source>Drivers (*.so);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="252"/>
-        <source>Driver is a generation 1 driver that does not have configuration embedded</source>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="257"/>
+        <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="271"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="278"/>
+        <source>Failed to parse XML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="285"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>

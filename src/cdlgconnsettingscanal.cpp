@@ -29,6 +29,7 @@
 
 #include "cdlgconnsettingscanal.h"
 #include "ui_cdlgconnsettingscanal.h"
+#include "canal_xmlconfig.h"
 #include "vscphelper.h"
 
 #include <QMessageBox>
@@ -175,12 +176,16 @@ void CDlgConnSettingsCanal::testDriver()
     else {
         uint32_t dllversion = m_vscpClient.m_canalif.CanalGetDllVersion();
         const char *pVendor = m_vscpClient.m_canalif.CanalGetVendorString();
-        std::string str = vscp_str_format("The driver appears to be OK. \nVersion = %d.%d.%d.%d\n%s", 
+        std::string strGenerationOne = m_vscpClient.m_canalif.isGenerationOne() ?
+                                            "Generation one driver (wizard will not work)" : "Generation two driver";
+        std::string str = vscp_str_format("The driver is OK. \n\nVersion = %d.%d.%d.%d\n%s\n\n%s", 
                                             (dllversion >> 24) & 0xff,
                                             (dllversion >> 16) & 0xff,
                                             (dllversion >> 8) & 0xff,
                                              dllversion & 0xff,
-                                             pVendor);
+                                             pVendor,
+                                             strGenerationOne.c_str());
+                                               
         QMessageBox::information(this, 
                                     tr("vscpworks+"),
                                     str.c_str(),
@@ -190,7 +195,7 @@ void CDlgConnSettingsCanal::testDriver()
     // Release the driver
     m_vscpClient.m_canalif.releaseDriver(); 
 
-    // Reset old path
+    // Restore old path
     m_vscpClient.m_canalif.setPath(save_path);
 }
 
@@ -249,7 +254,7 @@ void CDlgConnSettingsCanal::wizard()
     if (m_vscpClient.m_canalif.isGenerationOne()) {
         QMessageBox::warning(this, 
                                 tr("vscpworks+"),
-                                tr("Driver is a generation 1 driver that does not have configuration embedded"),
+                                tr("Driver is a generation one driver that does not have any configuration data embedded"),
                                 QMessageBox::Ok );
         // Release the driver
         m_vscpClient.m_canalif.releaseDriver(); 
@@ -262,8 +267,17 @@ void CDlgConnSettingsCanal::wizard()
 
     const char *p = m_vscpClient.m_canalif.CanalGetDriverInfo();
 
+    std::string xml;
     if ( NULL != p ) {
-        std::string xml_config(p);
+        xml.assign(p);
+
+        canalXmlConfig cfg;
+        if (!cfg.parseXML(xml)) {
+            QMessageBox::warning(this, 
+                                tr("vscpworks+"),
+                                tr("Failed to parse XML file"),
+                                QMessageBox::Ok );
+        }
     }
     else {
         QMessageBox::warning(this, 
@@ -273,7 +287,7 @@ void CDlgConnSettingsCanal::wizard()
     }
 
     // Release the driver
-    m_vscpClient.m_canalif.releaseDriver(); 
+    m_vscpClient.m_canalif.releaseDriver();
 
     // Reset old path
     m_vscpClient.m_canalif.setPath(save_path);
