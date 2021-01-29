@@ -66,49 +66,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="157"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="172"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="190"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="242"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="256"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="277"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="284"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="158"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="173"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="191"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="246"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="260"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="283"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="290"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="158"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="159"/>
         <source>The driver does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="211"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="217"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="212"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="218"/>
         <source>Set path to CANAL driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="213"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="214"/>
         <source>Drivers (*.so)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="219"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="220"/>
         <source>Drivers (*.so);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="257"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="261"/>
         <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="278"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="284"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="285"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="291"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1257,6 +1257,118 @@
     </message>
 </context>
 <context>
+    <name>CanalConfigWizard</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="50"/>
+        <source>Class Wizard</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ClassInfoPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="222"/>
+        <source>Class Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="223"/>
+        <source>Specify basic information about the class for which you want to generate skeleton source code files.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="228"/>
+        <source>&amp;Class name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="232"/>
+        <source>B&amp;ase class:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="236"/>
+        <source>Generate Q_OBJECT &amp;macro</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="239"/>
+        <source>C&amp;onstructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="242"/>
+        <source>&amp;QObject-style constructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="243"/>
+        <source>Q&amp;Widget-style constructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="244"/>
+        <source>&amp;Default constructor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="245"/>
+        <source>&amp;Generate copy constructor and operator=</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CodeStylePage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="290"/>
+        <source>Code Style Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="291"/>
+        <source>Choose the formatting of the generated code.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="294"/>
+        <source>&amp;Start generated files with a comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="299"/>
+        <source>&amp;Protect header file against multiple inclusions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="303"/>
+        <source>&amp;Macro name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="307"/>
+        <source>&amp;Include base class definition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="308"/>
+        <source>Base class include:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConclusionPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="425"/>
+        <source>Conclusion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="444"/>
+        <source>Click %1 to generate the class skeleton.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Dialog</name>
     <message>
         <location filename="src/filter.ui" line="14"/>
@@ -1422,6 +1534,19 @@
     <message>
         <location filename="src/scan.ui" line="165"/>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IntroPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="201"/>
+        <source>CANAL configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="204"/>
+        <source>This wizard will help to generate and fill in the configuration string and the flag bits. </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1834,7 +1959,48 @@
     </message>
 </context>
 <context>
+    <name>OutputFilesPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="374"/>
+        <source>Output Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="375"/>
+        <source>Specify where you want the wizard to put the generated skeleton code.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="379"/>
+        <source>&amp;Output directory:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="383"/>
+        <source>&amp;Header file name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="387"/>
+        <source>&amp;Implementation file name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="125"/>
+        <location filename="src/canalconfigwizard.cpp" line="183"/>
+        <source>Simple Wizard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="126"/>
+        <location filename="src/canalconfigwizard.cpp" line="184"/>
+        <source>Cannot write file %1:
+%2</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="48"/>
         <source>Dir</source>

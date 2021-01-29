@@ -118,6 +118,8 @@ add_executable(vscp-works-qt
     src/cfrmsession.cpp
     src/vscpworks.h
     src/vscpworks.cpp
+    src/canalconfigwizard.h
+    src/canalconfigwizard.cpp
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h
@@ -141,7 +143,7 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscp_client_local.h
     vscp/src/vscp/common/vscp_client_local.cpp
     vscp/src/vscp/common/vscp_client_canal.h
-    vscp/src/vscp/common/vscp_client_canal.cpp
+    vscp/src/vscp/common/vscp_client_canal.cpp    
     vscp/src/vscp/common/vscp_client_mqtt.h
     vscp/src/vscp/common/vscp_client_mqtt.cpp
     vscp/src/vscp/common/vscp_client_tcp.h

@@ -1,0 +1,28 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>"                            
+<!-- Version 1.0   2021-01-26   -->                                      
+<config>                                         
+	<description format="text">Level I (CANAL) SocketCan driver<description>
+	<level>1</level>
+	<blocking>yes</blocking>
+	<infourl>https://github.com/grodansparadis/vscpl1drv-socketcan</infourl>   
+    <items>                                                                    
+    	<item type="string" optional="false"                                         
+  				description="socketcan interface (vcan, can0, can1...)"                
+  				infourl="https://github.com/grodansparadis/vscpl1drv-socketcan#configuration-string" /> 
+		<item type="string" optional="true"                                         
+  				description="mask (priority,class,type,guid)"                          
+  				infourl="https://github.com/grodansparadis/vscpl1drv-socketcan#configuration-string" /> 
+		<item type="string" optional="true"                                         
+  				description="filter (priority,class,type,guid)"                        
+  				infourl="https://github.com/grodansparadis/vscpl1drv-socketcan#configuration-string" /> 
+	</items>                                                                   
+
+	<flags>                                                                    
+		<bit pos="31" width="1" type="bool"                                  
+  				description="Enable debug"                                             
+  				infourl="https://github.com/grodansparadis/vscpl1drv-socketcan#flags" />
+	</flags>                                                                   
+</config>                                                                  
+                    
+                    
+

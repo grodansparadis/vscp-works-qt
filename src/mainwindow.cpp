@@ -50,6 +50,7 @@
 #include "cdlgconnsettingsmulticast.h"
 #include "cdlgconnsettingsrawcan.h"
 #include "cdlgconnsettingsrawmqtt.h"
+
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -248,6 +249,7 @@ MainWindow::MainWindow()
     // m_topitem_tcpip->addChild(item_test);
 
     //addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

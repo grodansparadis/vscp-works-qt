@@ -35,6 +35,7 @@
 #include <QMessageBox>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QDebug>
 
 #include <string>
 
@@ -257,15 +258,17 @@ void CDlgConnSettingsCanal::wizard()
                                 tr("Driver is a generation one driver that does not have any configuration data embedded"),
                                 QMessageBox::Ok );
         // Release the driver
-        m_vscpClient.m_canalif.releaseDriver(); 
+        m_vscpClient.m_canalif.releaseDriver();
 
         // Reset old path
-        m_vscpClient.m_canalif.setPath(save_path);
+        m_vscpClient.m_canalif.setPath(save_path);        
 
         return;
     }
 
     const char *p = m_vscpClient.m_canalif.CanalGetDriverInfo();
+
+    qDebug() << "Driver XML info \n" << p;
 
     std::string xml;
     if ( NULL != p ) {
@@ -292,6 +295,8 @@ void CDlgConnSettingsCanal::wizard()
     // Reset old path
     m_vscpClient.m_canalif.setPath(save_path);
 
-
+    //hide();
+    CanalConfigWizard wizard(this);
+    wizard.exec();
 
 }

@@ -26,9 +26,11 @@
 // SOFTWARE.
 //
 
+
 #ifndef CDLGCONNSETTINGSCANAL_H
 #define CDLGCONNSETTINGSCANAL_H
 
+#include "canalconfigwizard.h"
 #include "vscp_client_canal.h"
 
 #include <QDialog>
