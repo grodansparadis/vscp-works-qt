@@ -46,6 +46,10 @@ class QRadioButton;
 class QListWidget;
 QT_END_NAMESPACE
 
+
+// ----------------------------------------------------------------------------
+
+
 class CanalConfigWizard : public QWizard
 {
     Q_OBJECT
@@ -75,74 +79,6 @@ private:
 // ----------------------------------------------------------------------------
 
 
-class ClassInfoPage : public QWizardPage
-{
-    Q_OBJECT
-
-public:
-    ClassInfoPage(QWidget *parent = nullptr);
-
-private:
-    QLabel *classNameLabel;
-    QLabel *baseClassLabel;
-    QLineEdit *classNameLineEdit;
-    QLineEdit *baseClassLineEdit;
-    QCheckBox *qobjectMacroCheckBox;
-    QGroupBox *groupBox;
-    QRadioButton *qobjectCtorRadioButton;
-    QRadioButton *qwidgetCtorRadioButton;
-    QRadioButton *defaultCtorRadioButton;
-    QCheckBox *copyCtorCheckBox;
-};
-
-
-// ----------------------------------------------------------------------------
-
-class CodeStylePage : public QWizardPage
-{
-    Q_OBJECT
-
-public:
-    CodeStylePage(QWidget *parent = nullptr);
-
-protected:
-    void initializePage() override;
-
-private:
-    QCheckBox *commentCheckBox;
-    QCheckBox *protectCheckBox;
-    QCheckBox *includeBaseCheckBox;
-    QLabel *macroNameLabel;
-    QLabel *baseIncludeLabel;
-    QLineEdit *macroNameLineEdit;
-    QLineEdit *baseIncludeLineEdit;
-};
-
-
-// ----------------------------------------------------------------------------
-
-class OutputFilesPage : public QWizardPage
-{
-    Q_OBJECT
-
-public:
-    OutputFilesPage(QWidget *parent = nullptr);
-
-protected:
-    void initializePage() override;
-
-private:
-    QLabel *outputDirLabel;
-    QLabel *headerLabel;
-    QLabel *implementationLabel;
-    QLineEdit *outputDirLineEdit;
-    QLineEdit *headerLineEdit;
-    QLineEdit *implementationLineEdit;
-};
-
-
-// ----------------------------------------------------------------------------
-
 class ConclusionPage : public QWizardPage
 {
     Q_OBJECT
@@ -151,7 +87,7 @@ public:
     ConclusionPage(QWidget *parent = nullptr);
 
 protected:
-    void initializePage() override;
+    void  initializePage() override;
 
 private:
     QLabel *label;    
@@ -171,16 +107,31 @@ class ConfigStringPage : public QWizardPage
     Q_OBJECT
 
 public:
-    ConfigStringPage(QWidget *parent = nullptr, 
+    /*!
+        CTor - Create config string class object
+        @param parent Pointer to window that owns the wizard or nullptr
+        @param fieldname Resulting name for the string field collted in action
+        @param title Title to use in the wizard page
+        @param subtitle Subtitle to use in the wizard page
+    */
+    ConfigStringPage(QWidget *parent, 
+                        const std::string& fieldname,
+                        const std::string& labeltext = "String value",
                         const std::string& title = "Set configuration: string",
                         const std::string& subtitle = "");
 
+    void setLabelText(const std::string& labeltext);                       
+
 protected:
-    void initializePage() override;
+    void  initializePage() override;
+    void  cleanupPage() override;       // Prevent defaults on "back"
 
 private:
     QLabel *m_label;
     QLineEdit *m_edit;
+
+    std::string m_fieldName;
+    std::string m_labelText;
 };
 
 
@@ -192,15 +143,28 @@ class ConfigBoolPage : public QWizardPage
     Q_OBJECT
 
 public:
-    ConfigBoolPage(QWidget *parent = nullptr, 
-                    const std::string& title = "Set configuration: bool",
-                    const std::string& subtitle="");
+    /*!
+        CTor - Create config boolean class object
+        @param parent Pointer to window that owns the wizard or nullptr
+        @param fieldname Resulting name for the string field collted in action
+        @param title Title to use in the wizard page
+        @param subtitle Subtitle to use in the wizard page
+    */
+    ConfigBoolPage(QWidget *parent, 
+                    const std::string& fieldname,
+                    const std::string& labeltext = "String value",
+                    const std::string& title = "Set configuration: string",
+                    const std::string& subtitle = "");
 
 protected:
-    void initializePage() override;
+    void  initializePage() override;
+    void  cleanupPage() override;       // Prevent defaults on "back"
 
 private:
     QCheckBox *m_checkbox;
+
+    std::string m_fieldName;
+    std::string m_labelText;
 };
 
 
@@ -212,16 +176,31 @@ class ConfigChoicePage : public QWizardPage
     Q_OBJECT
 
 public:
-    ConfigChoicePage(QWidget *parent = nullptr, 
-                        const std::string& title = "Set configuration: choice",
-                        const std::string& subtitle="");
+    /*!
+        CTor - Create config choice class object
+        @param parent Pointer to window that owns the wizard or nullptr
+        @param fieldname Resulting name for the string field collted in action
+        @param title Title to use in the wizard page
+        @param subtitle Subtitle to use in the wizard page
+    */
+    ConfigChoicePage(QWidget *parent, 
+                        const std::string& fieldname,
+                        const std::list<std::string>& strlist,
+                        const std::string& labeltext = "String value",
+                        const std::string& title = "Set configuration: string",
+                        const std::string& subtitle = "");
 
+    
 protected:
-    void initializePage() override;
+    void  initializePage() override;
+    void  cleanupPage() override;       // Prevent defaults on "back"
 
 private:
     QLabel *m_label;
     QListWidget *m_list;
+
+    std::string m_fieldName;
+    std::string m_labelText;
 };
 
 #endif

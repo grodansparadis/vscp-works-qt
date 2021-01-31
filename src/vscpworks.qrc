@@ -10,10 +10,14 @@
     <file alias="process_add.png">images/png/128x128/process_add.png</file>
     <file alias="process_remove.png">images/png/128x128/process_remove.png</file>
 
+    <file alias="attachment.png">images/png/64x64/attachment.png</file>
+
     <file>images/banner.png</file>
     <file>images/logo1.png</file>
     <file>images/logo2.png</file>
     <file>images/logo3.png</file>
+    <file>images/watermark.png</file>
+    <file>images/watermark-canal.png</file>
     <file>images/watermark1.png</file>
     <file>images/watermark2.png</file>
 </qresource>

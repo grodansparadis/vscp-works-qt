@@ -31,6 +31,9 @@
 
 #include "canalconfigwizard.h"
 
+#include <string>
+#include <list>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor - CanalConfigWizard
@@ -40,18 +43,25 @@ CanalConfigWizard::CanalConfigWizard(QWidget *parent)
     : QWizard(parent)
 {
     addPage(new IntroPage);
-    //addPage(new ClassInfoPage);
-    addPage(new ConfigStringPage(this,"String config", "This is a string test")); 
-    addPage(new ConfigBoolPage(this,"Bool config", "This is a bool test"));
-    addPage(new ConfigChoicePage(this,"Choice config", "This is a choice test"));
-    //addPage(new CodeStylePage);
-    //addPage(new OutputFilesPage);
+    addPage(new ConfigStringPage(this, "cfg1", "String value", "Configuration pos 1", "This is a string test"));
+    addPage(new ConfigStringPage(this, "cfg2", "String value", "Configuration pos 2", "This is a string test")); 
+    addPage(new ConfigStringPage(this, "cfg3", "String value", "Configuration pos 3", "This is a string test")); 
+    addPage(new ConfigBoolPage(this, "cfg4", "Boolean value", "Bool config", "This is a bool test"));
+    std::list<std::string> list;
+    list.push_back(std::string("Ettan"));
+    list.push_back(std::string("Tvåan"));
+    list.push_back(std::string("Trean"));
+    list.push_back(std::string("Fyran"));
+    list.push_back(std::string("Femman"));
+    addPage(new ConfigChoicePage(this, "cfg5", list, "Choose one", "Choice config", "This is a choice test"));
+
+    addPage(new ConfigChoicePage(this, "cfg5", list, "Choose one", "Choice config", "This is a choice test"));
     addPage(new ConclusionPage);
 
     setPixmap(QWizard::BannerPixmap, QPixmap(":/images/banner.png"));
     setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/background.png"));
 
-    setWindowTitle(tr("Class Wizard"));
+    setWindowTitle(tr("CANAL driver configuration Wizard"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,231 +96,17 @@ IntroPage::IntroPage(QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("CANAL configuration"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark1.png"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
+    setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
 
     label = new QLabel(tr("This wizard will help to generate and fill in the "
-                          "configuration string and the flag bits. "));
+                          "configuration string and the flag bits for the. "
+                          "Level I (CANAL) driver."));
     label->setWordWrap(true);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(label);
     setLayout(layout);
-}
-
-
-// ----------------------------------------------------------------------------
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-// CTor - ClassInfoPage
-//
-
-ClassInfoPage::ClassInfoPage(QWidget *parent)
-    : QWizardPage(parent)
-{
-
-    setTitle(tr("Class Information"));
-    setSubTitle(tr("Specify basic information about the class for which you "
-                   "want to generate skeleton source code files."));
-    setPixmap(QWizard::LogoPixmap, QPixmap(":/images/logo1.png"));
-
-
-    classNameLabel = new QLabel(tr("&Class name:"));
-    classNameLineEdit = new QLineEdit;
-    classNameLabel->setBuddy(classNameLineEdit);
-
-    baseClassLabel = new QLabel(tr("B&ase class:"));
-    baseClassLineEdit = new QLineEdit;
-    baseClassLabel->setBuddy(baseClassLineEdit);
-
-    qobjectMacroCheckBox = new QCheckBox(tr("Generate Q_OBJECT &macro"));
-
-
-    groupBox = new QGroupBox(tr("C&onstructor"));
-
-
-    qobjectCtorRadioButton = new QRadioButton(tr("&QObject-style constructor"));
-    qwidgetCtorRadioButton = new QRadioButton(tr("Q&Widget-style constructor"));
-    defaultCtorRadioButton = new QRadioButton(tr("&Default constructor"));
-    copyCtorCheckBox = new QCheckBox(tr("&Generate copy constructor and "
-                                        "operator="));
-
-    defaultCtorRadioButton->setChecked(true);
-
-    connect(defaultCtorRadioButton, &QAbstractButton::toggled,
-            copyCtorCheckBox, &QWidget::setEnabled);
-
-
-    registerField("className*", classNameLineEdit);
-    registerField("baseClass", baseClassLineEdit);
-    registerField("qobjectMacro", qobjectMacroCheckBox);
-
-    registerField("qobjectCtor", qobjectCtorRadioButton);
-    registerField("qwidgetCtor", qwidgetCtorRadioButton);
-    registerField("defaultCtor", defaultCtorRadioButton);
-    registerField("copyCtor", copyCtorCheckBox);
-
-    QVBoxLayout *groupBoxLayout = new QVBoxLayout;
-
-    groupBoxLayout->addWidget(qobjectCtorRadioButton);
-    groupBoxLayout->addWidget(qwidgetCtorRadioButton);
-    groupBoxLayout->addWidget(defaultCtorRadioButton);
-    groupBoxLayout->addWidget(copyCtorCheckBox);
-    groupBox->setLayout(groupBoxLayout);
-
-    QGridLayout *layout = new QGridLayout;
-    layout->addWidget(classNameLabel, 0, 0);
-    layout->addWidget(classNameLineEdit, 0, 1);
-    layout->addWidget(baseClassLabel, 1, 0);
-    layout->addWidget(baseClassLineEdit, 1, 1);
-    layout->addWidget(qobjectMacroCheckBox, 2, 0, 1, 2);
-    layout->addWidget(groupBox, 3, 0, 1, 2);
-    setLayout(layout);
-
-}
-
-
-// ----------------------------------------------------------------------------
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-// CTor - CodeStylePage
-//
-
-CodeStylePage::CodeStylePage(QWidget *parent)
-    : QWizardPage(parent)
-{
-    setTitle(tr("Code Style Options"));
-    setSubTitle(tr("Choose the formatting of the generated code."));
-    setPixmap(QWizard::LogoPixmap, QPixmap(":/images/logo2.png"));
-
-    commentCheckBox = new QCheckBox(tr("&Start generated files with a "
-
-                                       "comment"));
-    commentCheckBox->setChecked(true);
-
-    protectCheckBox = new QCheckBox(tr("&Protect header file against multiple "
-                                       "inclusions"));
-    protectCheckBox->setChecked(true);
-
-    macroNameLabel = new QLabel(tr("&Macro name:"));
-    macroNameLineEdit = new QLineEdit;
-    macroNameLabel->setBuddy(macroNameLineEdit);
-
-    includeBaseCheckBox = new QCheckBox(tr("&Include base class definition"));
-    baseIncludeLabel = new QLabel(tr("Base class include:"));
-    baseIncludeLineEdit = new QLineEdit;
-    baseIncludeLabel->setBuddy(baseIncludeLineEdit);
-
-    connect(protectCheckBox, &QAbstractButton::toggled,
-            macroNameLabel, &QWidget::setEnabled);
-    connect(protectCheckBox, &QAbstractButton::toggled,
-            macroNameLineEdit, &QWidget::setEnabled);
-    connect(includeBaseCheckBox, &QAbstractButton::toggled,
-            baseIncludeLabel, &QWidget::setEnabled);
-    connect(includeBaseCheckBox, &QAbstractButton::toggled,
-            baseIncludeLineEdit, &QWidget::setEnabled);
-
-    registerField("comment", commentCheckBox);
-    registerField("protect", protectCheckBox);
-    registerField("macroName", macroNameLineEdit);
-    registerField("includeBase", includeBaseCheckBox);
-    registerField("baseInclude", baseIncludeLineEdit);
-
-    QGridLayout *layout = new QGridLayout;
-    layout->setColumnMinimumWidth(0, 20);
-    layout->addWidget(commentCheckBox, 0, 0, 1, 3);
-    layout->addWidget(protectCheckBox, 1, 0, 1, 3);
-    layout->addWidget(macroNameLabel, 2, 1);
-    layout->addWidget(macroNameLineEdit, 2, 2);
-    layout->addWidget(includeBaseCheckBox, 3, 0, 1, 3);
-    layout->addWidget(baseIncludeLabel, 4, 1);
-    layout->addWidget(baseIncludeLineEdit, 4, 2);
-
-    setLayout(layout);
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// initializePage
-//
-
-void CodeStylePage::initializePage()
-{
-    QString className = field("className").toString();
-    macroNameLineEdit->setText(className.toUpper() + "_H");
-
-    QString baseClass = field("baseClass").toString();
-
-    includeBaseCheckBox->setChecked(!baseClass.isEmpty());
-    includeBaseCheckBox->setEnabled(!baseClass.isEmpty());
-    baseIncludeLabel->setEnabled(!baseClass.isEmpty());
-    baseIncludeLineEdit->setEnabled(!baseClass.isEmpty());
-
-    QRegularExpression rx("Q[A-Z].*");
-    if (baseClass.isEmpty()) {
-        baseIncludeLineEdit->clear();
-    } else if (rx.match(baseClass).hasMatch()) {
-        baseIncludeLineEdit->setText('<' + baseClass + '>');
-    } else {
-        baseIncludeLineEdit->setText('"' + baseClass.toLower() + ".h\"");
-    }
-}
-
-
-// ----------------------------------------------------------------------------
-
-
-///////////////////////////////////////////////////////////////////////////////
-// CTor - OutputFilesPage
-//
-
-OutputFilesPage::OutputFilesPage(QWidget *parent)
-    : QWizardPage(parent)
-{
-    setTitle(tr("Output Files"));
-    setSubTitle(tr("Specify where you want the wizard to put the generated "
-                   "skeleton code."));
-    setPixmap(QWizard::LogoPixmap, QPixmap(":/images/logo3.png"));
-
-    outputDirLabel = new QLabel(tr("&Output directory:"));
-    outputDirLineEdit = new QLineEdit;
-    outputDirLabel->setBuddy(outputDirLineEdit);
-
-    headerLabel = new QLabel(tr("&Header file name:"));
-    headerLineEdit = new QLineEdit;
-    headerLabel->setBuddy(headerLineEdit);
-
-    implementationLabel = new QLabel(tr("&Implementation file name:"));
-    implementationLineEdit = new QLineEdit;
-    implementationLabel->setBuddy(implementationLineEdit);
-
-    registerField("outputDir*", outputDirLineEdit);
-    registerField("header*", headerLineEdit);
-    registerField("implementation*", implementationLineEdit);
-
-    QGridLayout *layout = new QGridLayout;
-    layout->addWidget(outputDirLabel, 0, 0);
-    layout->addWidget(outputDirLineEdit, 0, 1);
-    layout->addWidget(headerLabel, 1, 0);
-    layout->addWidget(headerLineEdit, 1, 1);
-    layout->addWidget(implementationLabel, 2, 0);
-    layout->addWidget(implementationLineEdit, 2, 1);
-    setLayout(layout);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// initializePage
-//
-
-void OutputFilesPage::initializePage()
-{
-    QString className = field("className").toString();
-    headerLineEdit->setText(className.toLower() + ".h");
-    implementationLineEdit->setText(className.toLower() + ".cpp");
-    outputDirLineEdit->setText(QDir::toNativeSeparators(QDir::tempPath()));
 }
 
 
@@ -324,8 +120,9 @@ void OutputFilesPage::initializePage()
 ConclusionPage::ConclusionPage(QWidget *parent)
     : QWizardPage(parent)
 {
-    setTitle(tr("Conclusion"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark2.png"));
+    setTitle(tr("Wizard is ready"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
+    setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
 
     label = new QLabel;
     label->setWordWrap(true);
@@ -336,15 +133,13 @@ ConclusionPage::ConclusionPage(QWidget *parent)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// initializePage
+//  initializePage
 //
 
-void ConclusionPage::initializePage()
+void ConclusionPage:: initializePage()
 {
-    QString finishText = wizard()->buttonText(QWizard::FinishButton);
-    finishText.remove('&');
-    label->setText(tr("String")
-                   .arg(finishText));
+    label->setText(tr("Pressing finish will write configuration and flags "
+                       "to the configuration dialog."));
 }
 
 
@@ -356,20 +151,29 @@ void ConclusionPage::initializePage()
 //
 
 ConfigStringPage::ConfigStringPage(QWidget *parent, 
+                                    const std::string& fieldname,
+                                    const std::string& labeltext,
                                     const std::string& title,
                                     const std::string& subtitle)
     : QWizardPage(parent)
 {
+    m_labelText = labeltext;
+    m_fieldName = fieldname;
+
     setTitle(QString::fromUtf8(title.c_str()));
-    setSubTitle(QString::fromUtf8(subtitle.c_str()));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark2.png"));
+    if (subtitle.length()) {
+        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+    }
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
+    setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
 
     m_label = new QLabel;
     m_label->setWordWrap(true);
     m_edit = new QLineEdit;
     m_label->setBuddy(m_edit);
 
-    registerField("edit1", m_edit);
+    qDebug() <<  "Fieldname " << QString::fromUtf8(m_fieldName.c_str());
+    registerField(QString::fromUtf8(m_fieldName.c_str()), m_edit);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_label, 0, 0);
@@ -378,19 +182,33 @@ ConfigStringPage::ConfigStringPage(QWidget *parent,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// initializePage
+//  initializePage
 //
 
 void ConfigStringPage::initializePage()
 {
-    QString stringText = wizard()->buttonText(QWizard::FinishButton);
-    //finishText.remove('&');
-    m_label->setText(tr("Value")
-                   .arg(stringText));
-    QString cfgstr = field("cfgstr").toString();
-    m_edit->setText(cfgstr);
+    m_label->setText(QString::fromUtf8(m_labelText.c_str()));
+    QString strvalue = field(m_fieldName.c_str()).toString();
+    m_edit->setText(strvalue);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//  cleanupPage
+//
+
+void ConfigStringPage::cleanupPage()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  setLabelText
+//
+
+void ConfigStringPage::setLabelText(const std::string& labeltext)
+{
+    m_labelText = labeltext;
+}
 
 // ----------------------------------------------------------------------------
 
@@ -400,35 +218,48 @@ void ConfigStringPage::initializePage()
 //
 
 ConfigBoolPage::ConfigBoolPage(QWidget *parent, 
+                                const std::string& fieldname,
+                                const std::string& labeltext,
                                 const std::string& title,
                                 const std::string& subtitle)
     : QWizardPage(parent)
 {
-    setTitle(QString::fromUtf8(title.c_str()));
-    setSubTitle(QString::fromUtf8(subtitle.c_str()));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark2.png"));
+    m_labelText = labeltext;
+    m_fieldName = fieldname;
 
-    m_checkbox = new QCheckBox(tr("&bool"));
-    m_checkbox->setChecked(true);
+    setTitle(QString::fromUtf8(title.c_str()));
+    if (subtitle.length()) {
+        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+    }
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
+    setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
+
+    m_checkbox = new QCheckBox(QString::fromUtf8(labeltext.c_str()));
+    
+
+    registerField(QString::fromUtf8(m_fieldName.c_str()), m_checkbox);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_checkbox, 0, 0);
-    //layout->addWidget(m_edit, 0, 1);
     setLayout(layout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// initializePage
+//  initializePage
 //
 
-void ConfigBoolPage::initializePage()
+void ConfigBoolPage:: initializePage()
 {
-    // QString stringText = wizard()->buttonText(QWizard::FinishButton);
-    // //finishText.remove('&');
-    // m_label->setText(tr("Value")
-    //                .arg(stringText));
-    // QString cfgstr = field("cfgstr").toString();
-    // m_edit->setText(cfgstr);
+    m_checkbox->setChecked(field(QString::fromUtf8(m_fieldName.c_str())).toBool());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  cleanupPage
+//
+
+void ConfigBoolPage::cleanupPage()
+{
+
 }
 
 
@@ -440,18 +271,32 @@ void ConfigBoolPage::initializePage()
 //
 
 ConfigChoicePage::ConfigChoicePage(QWidget *parent, 
+                                    const std::string& fieldname,
+                                    const std::list<std::string>& strlist,
+                                    const std::string& labeltext,
                                     const std::string& title,
                                     const std::string& subtitle)
     : QWizardPage(parent)
 {
+    m_labelText = labeltext;
+    m_fieldName = fieldname;
+
     setTitle(QString::fromUtf8(title.c_str()));
-    setSubTitle(QString::fromUtf8(subtitle.c_str()));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark2.png"));
+    if (subtitle.length()) {
+        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+    }
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
+    setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
 
     m_label = new QLabel;
     m_label->setWordWrap(true);
     m_list = new QListWidget;
     m_label->setBuddy(m_list);
+
+    for (std::list<std::string>::const_iterator it = strlist.begin(); it != strlist.end(); ++it){
+        qDebug() << it->c_str();
+        m_list->addItem(QString::fromUtf8(it->c_str()));
+    }
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(m_label);
@@ -460,14 +305,19 @@ ConfigChoicePage::ConfigChoicePage(QWidget *parent,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// initializePage
+//  initializePage
 //
 
-void ConfigChoicePage::initializePage()
+void ConfigChoicePage:: initializePage()
 {
-    // QString stringText = wizard()->buttonText(QWizard::FinishButton);
-    // //finishText.remove('&');
     m_label->setText(tr("Select on of the available choices"));
-    // QString cfgstr = field("cfgstr").toString();
-    // m_edit->setText(cfgstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  cleanupPage
+//
+
+void ConfigChoicePage::cleanupPage()
+{
+
 }

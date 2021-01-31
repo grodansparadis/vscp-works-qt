@@ -69,10 +69,10 @@
         <location filename="src/cdlgconnsettingscanal.cpp" line="158"/>
         <location filename="src/cdlgconnsettingscanal.cpp" line="173"/>
         <location filename="src/cdlgconnsettingscanal.cpp" line="191"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="246"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="260"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="283"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="290"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="243"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="257"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="280"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -98,17 +98,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="261"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="258"/>
         <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="284"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="281"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="291"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="288"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1259,112 +1259,29 @@
 <context>
     <name>CanalConfigWizard</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="50"/>
-        <source>Class Wizard</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ClassInfoPage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="222"/>
-        <source>Class Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="223"/>
-        <source>Specify basic information about the class for which you want to generate skeleton source code files.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="228"/>
-        <source>&amp;Class name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="232"/>
-        <source>B&amp;ase class:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="236"/>
-        <source>Generate Q_OBJECT &amp;macro</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="239"/>
-        <source>C&amp;onstructor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="242"/>
-        <source>&amp;QObject-style constructor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="243"/>
-        <source>Q&amp;Widget-style constructor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="244"/>
-        <source>&amp;Default constructor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="245"/>
-        <source>&amp;Generate copy constructor and operator=</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CodeStylePage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="290"/>
-        <source>Code Style Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="291"/>
-        <source>Choose the formatting of the generated code.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="294"/>
-        <source>&amp;Start generated files with a comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="299"/>
-        <source>&amp;Protect header file against multiple inclusions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="303"/>
-        <source>&amp;Macro name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="307"/>
-        <source>&amp;Include base class definition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="308"/>
-        <source>Base class include:</source>
+        <location filename="src/canalconfigwizard.cpp" line="53"/>
+        <source>CANAL driver configuration Wizard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ConclusionPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="425"/>
-        <source>Conclusion</source>
+        <location filename="src/canalconfigwizard.cpp" line="112"/>
+        <source>Wizard is ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="444"/>
-        <source>Click %1 to generate the class skeleton.</source>
+        <location filename="src/canalconfigwizard.cpp" line="130"/>
+        <source>Pressing finish will write configuration and flags to the configuration dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConfigChoicePage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="304"/>
+        <source>Select on of the available choices</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1540,13 +1457,13 @@
 <context>
     <name>IntroPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="201"/>
+        <location filename="src/canalconfigwizard.cpp" line="87"/>
         <source>CANAL configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="204"/>
-        <source>This wizard will help to generate and fill in the configuration string and the flag bits. </source>
+        <location filename="src/canalconfigwizard.cpp" line="91"/>
+        <source>This wizard will help to generate and fill in the configuration string and the flag bits for the. Level I (CANAL) driver.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1653,354 +1570,313 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="140"/>
+        <location filename="src/mainwindow.cpp" line="141"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="146"/>
+        <location filename="src/mainwindow.cpp" line="147"/>
         <source>--- Saved Connections ---</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="157"/>
+        <location filename="src/mainwindow.cpp" line="158"/>
         <source>Local Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="160"/>
+        <location filename="src/mainwindow.cpp" line="161"/>
         <source>Holds local connections. Typically logfile and debug content containing VSCP events.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="164"/>
+        <location filename="src/mainwindow.cpp" line="165"/>
         <source>CANAL Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="171"/>
+        <location filename="src/mainwindow.cpp" line="172"/>
         <source>Socketcan Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="178"/>
+        <location filename="src/mainwindow.cpp" line="179"/>
         <source>TCP/IP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="185"/>
+        <location filename="src/mainwindow.cpp" line="186"/>
         <source>MQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="192"/>
+        <location filename="src/mainwindow.cpp" line="193"/>
         <source>WS1 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="199"/>
+        <location filename="src/mainwindow.cpp" line="200"/>
         <source>WS2 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="206"/>
+        <location filename="src/mainwindow.cpp" line="207"/>
         <source>UDP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="213"/>
+        <location filename="src/mainwindow.cpp" line="214"/>
         <source>Multicast Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="220"/>
+        <location filename="src/mainwindow.cpp" line="221"/>
         <source>REST Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="227"/>
+        <location filename="src/mainwindow.cpp" line="228"/>
         <source>RAWCAN Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="234"/>
+        <location filename="src/mainwindow.cpp" line="235"/>
         <source>RAWMQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="383"/>
-        <location filename="src/mainwindow.cpp" line="392"/>
-        <location filename="src/mainwindow.cpp" line="401"/>
+        <location filename="src/mainwindow.cpp" line="385"/>
+        <location filename="src/mainwindow.cpp" line="394"/>
+        <location filename="src/mainwindow.cpp" line="403"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="383"/>
+        <location filename="src/mainwindow.cpp" line="385"/>
         <source>editConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="392"/>
+        <location filename="src/mainwindow.cpp" line="394"/>
         <source>cloneConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="401"/>
+        <location filename="src/mainwindow.cpp" line="403"/>
         <source>removeConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="606"/>
+        <location filename="src/mainwindow.cpp" line="608"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="613"/>
+        <location filename="src/mainwindow.cpp" line="615"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="634"/>
+        <location filename="src/mainwindow.cpp" line="636"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="635"/>
+        <location filename="src/mainwindow.cpp" line="637"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="638"/>
+        <location filename="src/mainwindow.cpp" line="640"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="640"/>
+        <location filename="src/mainwindow.cpp" line="642"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="670"/>
+        <location filename="src/mainwindow.cpp" line="672"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="672"/>
+        <location filename="src/mainwindow.cpp" line="674"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="678"/>
+        <location filename="src/mainwindow.cpp" line="680"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="680"/>
+        <location filename="src/mainwindow.cpp" line="682"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="686"/>
+        <location filename="src/mainwindow.cpp" line="688"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="688"/>
+        <location filename="src/mainwindow.cpp" line="690"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="694"/>
+        <location filename="src/mainwindow.cpp" line="696"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="696"/>
+        <location filename="src/mainwindow.cpp" line="698"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="702"/>
+        <location filename="src/mainwindow.cpp" line="704"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="704"/>
+        <location filename="src/mainwindow.cpp" line="706"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="712"/>
+        <location filename="src/mainwindow.cpp" line="714"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="715"/>
+        <location filename="src/mainwindow.cpp" line="717"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="717"/>
+        <location filename="src/mainwindow.cpp" line="719"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="718"/>
+        <location filename="src/mainwindow.cpp" line="720"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="722"/>
+        <location filename="src/mainwindow.cpp" line="724"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="725"/>
+        <location filename="src/mainwindow.cpp" line="727"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="732"/>
+        <location filename="src/mainwindow.cpp" line="734"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="734"/>
+        <location filename="src/mainwindow.cpp" line="736"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="741"/>
+        <location filename="src/mainwindow.cpp" line="743"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="743"/>
+        <location filename="src/mainwindow.cpp" line="745"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="753"/>
+        <location filename="src/mainwindow.cpp" line="755"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="754"/>
+        <location filename="src/mainwindow.cpp" line="756"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="755"/>
+        <location filename="src/mainwindow.cpp" line="757"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="757"/>
+        <location filename="src/mainwindow.cpp" line="759"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="758"/>
+        <location filename="src/mainwindow.cpp" line="760"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="775"/>
+        <location filename="src/mainwindow.cpp" line="777"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="873"/>
+        <location filename="src/mainwindow.cpp" line="875"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="874"/>
+        <location filename="src/mainwindow.cpp" line="876"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="889"/>
+        <location filename="src/mainwindow.cpp" line="891"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="993"/>
-        <location filename="src/mainwindow.cpp" line="1022"/>
-        <location filename="src/mainwindow.cpp" line="1051"/>
-        <location filename="src/mainwindow.cpp" line="1081"/>
-        <location filename="src/mainwindow.cpp" line="1111"/>
-        <location filename="src/mainwindow.cpp" line="1141"/>
-        <location filename="src/mainwindow.cpp" line="1171"/>
-        <location filename="src/mainwindow.cpp" line="1203"/>
-        <location filename="src/mainwindow.cpp" line="1233"/>
-        <location filename="src/mainwindow.cpp" line="1263"/>
-        <location filename="src/mainwindow.cpp" line="1293"/>
-        <location filename="src/mainwindow.cpp" line="1323"/>
+        <location filename="src/mainwindow.cpp" line="995"/>
+        <location filename="src/mainwindow.cpp" line="1024"/>
+        <location filename="src/mainwindow.cpp" line="1053"/>
+        <location filename="src/mainwindow.cpp" line="1083"/>
+        <location filename="src/mainwindow.cpp" line="1113"/>
+        <location filename="src/mainwindow.cpp" line="1143"/>
+        <location filename="src/mainwindow.cpp" line="1173"/>
+        <location filename="src/mainwindow.cpp" line="1205"/>
+        <location filename="src/mainwindow.cpp" line="1235"/>
+        <location filename="src/mainwindow.cpp" line="1265"/>
+        <location filename="src/mainwindow.cpp" line="1295"/>
+        <location filename="src/mainwindow.cpp" line="1325"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="994"/>
-        <location filename="src/mainwindow.cpp" line="1023"/>
-        <location filename="src/mainwindow.cpp" line="1052"/>
-        <location filename="src/mainwindow.cpp" line="1082"/>
-        <location filename="src/mainwindow.cpp" line="1112"/>
-        <location filename="src/mainwindow.cpp" line="1142"/>
-        <location filename="src/mainwindow.cpp" line="1172"/>
-        <location filename="src/mainwindow.cpp" line="1204"/>
-        <location filename="src/mainwindow.cpp" line="1234"/>
-        <location filename="src/mainwindow.cpp" line="1264"/>
-        <location filename="src/mainwindow.cpp" line="1294"/>
-        <location filename="src/mainwindow.cpp" line="1324"/>
+        <location filename="src/mainwindow.cpp" line="996"/>
+        <location filename="src/mainwindow.cpp" line="1025"/>
+        <location filename="src/mainwindow.cpp" line="1054"/>
+        <location filename="src/mainwindow.cpp" line="1084"/>
+        <location filename="src/mainwindow.cpp" line="1114"/>
+        <location filename="src/mainwindow.cpp" line="1144"/>
+        <location filename="src/mainwindow.cpp" line="1174"/>
+        <location filename="src/mainwindow.cpp" line="1206"/>
+        <location filename="src/mainwindow.cpp" line="1236"/>
+        <location filename="src/mainwindow.cpp" line="1266"/>
+        <location filename="src/mainwindow.cpp" line="1296"/>
+        <location filename="src/mainwindow.cpp" line="1326"/>
         <source>You must enter a description</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>OutputFilesPage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="374"/>
-        <source>Output Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="375"/>
-        <source>Specify where you want the wizard to put the generated skeleton code.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="379"/>
-        <source>&amp;Output directory:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="383"/>
-        <source>&amp;Header file name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="387"/>
-        <source>&amp;Implementation file name:</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>QObject</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="125"/>
-        <location filename="src/canalconfigwizard.cpp" line="183"/>
-        <source>Simple Wizard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="126"/>
-        <location filename="src/canalconfigwizard.cpp" line="184"/>
-        <source>Cannot write file %1:
-%2</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="48"/>
         <source>Dir</source>
