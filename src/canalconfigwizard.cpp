@@ -42,26 +42,12 @@
 CanalConfigWizard::CanalConfigWizard(QWidget *parent)
     : QWizard(parent)
 {
-    addPage(new IntroPage);
-    addPage(new ConfigStringPage(this, "cfg1", "String value", "Configuration pos 1", "This is a string test"));
-    addPage(new ConfigStringPage(this, "cfg2", "String value", "Configuration pos 2", "This is a string test")); 
-    addPage(new ConfigStringPage(this, "cfg3", "String value", "Configuration pos 3", "This is a string test")); 
-    addPage(new ConfigBoolPage(this, "cfg4", "Boolean value", "Bool config", "This is a bool test"));
-    std::list<std::string> list;
-    list.push_back(std::string("Ettan"));
-    list.push_back(std::string("Tvåan"));
-    list.push_back(std::string("Trean"));
-    list.push_back(std::string("Fyran"));
-    list.push_back(std::string("Femman"));
-    addPage(new ConfigChoicePage(this, "cfg5", list, "Choose one", "Choice config", "This is a choice test"));
-
-    addPage(new ConfigChoicePage(this, "cfg5", list, "Choose one", "Choice config", "This is a choice test"));
-    addPage(new ConclusionPage);
+    
 
     setPixmap(QWizard::BannerPixmap, QPixmap(":/images/banner.png"));
     setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/background.png"));
 
-    setWindowTitle(tr("CANAL driver configuration Wizard"));
+    setWindowTitle(tr("VSCP level I (CANAL) driver configuration Wizard"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,23 +78,36 @@ void CanalConfigWizard::accept()
 // CTor - IntroPage
 //
 
-IntroPage::IntroPage(QWidget *parent)
+IntroPage::IntroPage(QWidget *parent, const QString& title, const QString& lbltext)
     : QWizardPage(parent)
 {
-    setTitle(tr("CANAL configuration"));
+    setTitle(title);
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
     setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
+    setPixmap(QWizard::BannerPixmap, QPixmap(":/images/banner.png"));
 
-    label = new QLabel(tr("This wizard will help to generate and fill in the "
-                          "configuration string and the flag bits for the. "
-                          "Level I (CANAL) driver."));
-    label->setWordWrap(true);
+    m_label = new QLabel(lbltext);
+    m_label->setOpenExternalLinks(true);
+    m_label->setWordWrap(true);
 
+    m_button = new QPushButton("Open manual page...");
+    
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(label);
+    layout->addWidget(m_label);
+    layout->addWidget(m_button);
     setLayout(layout);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//  initializePage
+//
+
+void IntroPage:: initializePage()
+{
+    // const QSize BUTTON_SIZE = QSize(200, 30);
+    // m_button->setMaximumSize(BUTTON_SIZE);
+    m_label->setOpenExternalLinks(true);
+}
 
 // ----------------------------------------------------------------------------
 
@@ -151,18 +150,22 @@ void ConclusionPage:: initializePage()
 //
 
 ConfigStringPage::ConfigStringPage(QWidget *parent, 
-                                    const std::string& fieldname,
-                                    const std::string& labeltext,
-                                    const std::string& title,
-                                    const std::string& subtitle)
+                                    const QString& fieldname,
+                                    const QString& labeltext,
+                                    const QString& title,
+                                    const QString& subtitle,
+                                    const QString& value,
+                                    const QString& infolink)
     : QWizardPage(parent)
 {
+    m_value = value;
     m_labelText = labeltext;
     m_fieldName = fieldname;
-
-    setTitle(QString::fromUtf8(title.c_str()));
+    m_infolink = infolink;
+    
+    setTitle(title);
     if (subtitle.length()) {
-        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+        setSubTitle(subtitle);
     }
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
     setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
@@ -172,13 +175,31 @@ ConfigStringPage::ConfigStringPage(QWidget *parent,
     m_edit = new QLineEdit;
     m_label->setBuddy(m_edit);
 
-    qDebug() <<  "Fieldname " << QString::fromUtf8(m_fieldName.c_str());
-    registerField(QString::fromUtf8(m_fieldName.c_str()), m_edit);
+    registerField(fieldname, m_edit);
+    setField(fieldname, value);
+
+    m_button = new QPushButton(tr("Info..."));
+    connect(m_button, &QPushButton::clicked, this, &ConfigStringPage::showInfo );
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_label, 0, 0);
     layout->addWidget(m_edit, 0, 1);
+    layout->addWidget(m_button, 3, 1);
     setLayout(layout);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  showInfo
+//
+
+void ConfigStringPage::showInfo(void)
+{
+    if (m_infolink.length()) {
+        QDesktopServices::openUrl(QUrl(m_infolink));
+    }
+    else {
+        QDesktopServices::openUrl(QUrl("https://docs.vscp.org"));
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,8 +208,8 @@ ConfigStringPage::ConfigStringPage(QWidget *parent,
 
 void ConfigStringPage::initializePage()
 {
-    m_label->setText(QString::fromUtf8(m_labelText.c_str()));
-    QString strvalue = field(m_fieldName.c_str()).toString();
+    //m_label->setText(m_labelText);
+    QString strvalue = field(m_fieldName).toString();
     m_edit->setText(strvalue);
 }
 
@@ -205,12 +226,15 @@ void ConfigStringPage::cleanupPage()
 //  setLabelText
 //
 
-void ConfigStringPage::setLabelText(const std::string& labeltext)
+void ConfigStringPage::setLabelText(const QString& labeltext)
 {
     m_labelText = labeltext;
 }
 
+
+
 // ----------------------------------------------------------------------------
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -218,29 +242,37 @@ void ConfigStringPage::setLabelText(const std::string& labeltext)
 //
 
 ConfigBoolPage::ConfigBoolPage(QWidget *parent, 
-                                const std::string& fieldname,
-                                const std::string& labeltext,
-                                const std::string& title,
-                                const std::string& subtitle)
+                                const QString& fieldname,
+                                const QString& labeltext,
+                                const QString& title,
+                                const QString& subtitle,
+                                bool bvalue,
+                                const QString& infolink)
     : QWizardPage(parent)
 {
+    m_bvalue = bvalue;
     m_labelText = labeltext;
     m_fieldName = fieldname;
+    m_infolink = infolink;
 
-    setTitle(QString::fromUtf8(title.c_str()));
+    setTitle(title);
     if (subtitle.length()) {
-        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+        setSubTitle(subtitle);
     }
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
     setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
 
-    m_checkbox = new QCheckBox(QString::fromUtf8(labeltext.c_str()));
-    
+    m_checkbox = new QCheckBox(labeltext);    
 
-    registerField(QString::fromUtf8(m_fieldName.c_str()), m_checkbox);
+    registerField(fieldname, m_checkbox);
+    setField(fieldname, bvalue);
+
+    m_button = new QPushButton(tr("Info..."));
+    connect(m_button, &QPushButton::clicked, this, &ConfigBoolPage::showInfo );
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_checkbox, 0, 0);
+    layout->addWidget(m_button, 1, 0);
     setLayout(layout);
 }
 
@@ -250,7 +282,7 @@ ConfigBoolPage::ConfigBoolPage(QWidget *parent,
 
 void ConfigBoolPage:: initializePage()
 {
-    m_checkbox->setChecked(field(QString::fromUtf8(m_fieldName.c_str())).toBool());
+    m_checkbox->setChecked(field(m_fieldName).toBool());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -262,6 +294,29 @@ void ConfigBoolPage::cleanupPage()
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//  setLabelText
+//
+
+void ConfigBoolPage::setLabelText(const QString& labeltext)
+{
+    m_labelText = labeltext;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  showInfo
+//
+
+void ConfigBoolPage::showInfo(void)
+{
+    if (m_infolink.length()) {
+        QDesktopServices::openUrl(QUrl(m_infolink));
+    }
+    else {
+        QDesktopServices::openUrl(QUrl("https://docs.vscp.org"));
+    }
+}
+
 
 // ----------------------------------------------------------------------------
 
@@ -271,19 +326,21 @@ void ConfigBoolPage::cleanupPage()
 //
 
 ConfigChoicePage::ConfigChoicePage(QWidget *parent, 
-                                    const std::string& fieldname,
+                                    const QString& fieldname,
                                     const std::list<std::string>& strlist,
-                                    const std::string& labeltext,
-                                    const std::string& title,
-                                    const std::string& subtitle)
+                                    const QString& labeltext,
+                                    const QString& title,
+                                    const QString& subtitle,
+                                    uint8_t nSelect,
+                                    const QString& infolink)
     : QWizardPage(parent)
 {
     m_labelText = labeltext;
     m_fieldName = fieldname;
 
-    setTitle(QString::fromUtf8(title.c_str()));
+    setTitle(title);
     if (subtitle.length()) {
-        setSubTitle(QString::fromUtf8(subtitle.c_str()));
+        setSubTitle(subtitle);
     }
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark-canal.png"));
     setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));

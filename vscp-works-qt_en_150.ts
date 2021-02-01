@@ -66,49 +66,49 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="158"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="173"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="191"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="243"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="257"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="280"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="160"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="175"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="193"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="249"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="263"/>
         <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="294"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="159"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="161"/>
         <source>The driver does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="212"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="218"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="214"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="220"/>
         <source>Set path to CANAL driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="214"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="216"/>
         <source>Drivers (*.so)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="220"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="222"/>
         <source>Drivers (*.so);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="258"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="264"/>
         <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="281"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="288"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="288"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="295"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1259,7 +1259,7 @@
 <context>
     <name>CanalConfigWizard</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="53"/>
+        <location filename="src/canalconfigwizard.cpp" line="50"/>
         <source>CANAL driver configuration Wizard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1267,12 +1267,12 @@
 <context>
     <name>ConclusionPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="112"/>
+        <location filename="src/canalconfigwizard.cpp" line="110"/>
         <source>Wizard is ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="130"/>
+        <location filename="src/canalconfigwizard.cpp" line="128"/>
         <source>Pressing finish will write configuration and flags to the configuration dialog.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1280,8 +1280,16 @@
 <context>
     <name>ConfigChoicePage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="304"/>
+        <location filename="src/canalconfigwizard.cpp" line="334"/>
         <source>Select on of the available choices</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConfigStringPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="169"/>
+        <source>Info...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1457,12 +1465,12 @@
 <context>
     <name>IntroPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="87"/>
+        <location filename="src/canalconfigwizard.cpp" line="84"/>
         <source>CANAL configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="91"/>
+        <location filename="src/canalconfigwizard.cpp" line="89"/>
         <source>This wizard will help to generate and fill in the configuration string and the flag bits for the. Level I (CANAL) driver.</source>
         <translation type="unfinished"></translation>
     </message>

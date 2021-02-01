@@ -69,10 +69,14 @@ class IntroPage : public QWizardPage
     Q_OBJECT
 
 public:
-    IntroPage(QWidget *parent = nullptr);
+    IntroPage(QWidget *parent, const QString& title, const QString& lbltext);
 
+protected:
+    void  initializePage() override;
+    
 private:
-    QLabel *label;
+    QLabel *m_label;
+    QPushButton *m_button; 
 };
 
 
@@ -90,7 +94,8 @@ protected:
     void  initializePage() override;
 
 private:
-    QLabel *label;    
+    QLabel *label;
+      
 };
 
 
@@ -115,23 +120,40 @@ public:
         @param subtitle Subtitle to use in the wizard page
     */
     ConfigStringPage(QWidget *parent, 
-                        const std::string& fieldname,
-                        const std::string& labeltext = "String value",
-                        const std::string& title = "Set configuration: string",
-                        const std::string& subtitle = "");
+                        const QString& fieldname,
+                        const QString& labeltext = "String value",
+                        const QString& title = "Set configuration: string",
+                        const QString& subtitle = "",
+                        const QString& value = "",
+                        const QString& infolink="");
 
-    void setLabelText(const std::string& labeltext);                       
+    /*! 
+        Set text for label
+        @param labeltext Labeltext to set
+    */
+    void setLabelText(const QString& labeltext);                       
+
+public slots:
+    /// Show info link URL content in browser
+    void showInfo(void);
 
 protected:
+
+    /// Initialize the wizard page
     void  initializePage() override;
-    void  cleanupPage() override;       // Prevent defaults on "back"
+
+    /// Prevent load of defaults on "back"
+    void  cleanupPage() override;
 
 private:
     QLabel *m_label;
     QLineEdit *m_edit;
+    QPushButton *m_button;
 
-    std::string m_fieldName;
-    std::string m_labelText;
+    QString m_fieldName;
+    QString m_labelText;
+    QString m_value;
+    QString m_infolink;
 };
 
 
@@ -151,20 +173,39 @@ public:
         @param subtitle Subtitle to use in the wizard page
     */
     ConfigBoolPage(QWidget *parent, 
-                    const std::string& fieldname,
-                    const std::string& labeltext = "String value",
-                    const std::string& title = "Set configuration: string",
-                    const std::string& subtitle = "");
+                    const QString& fieldname,
+                    const QString& labeltext = "String value",
+                    const QString& title = "Set configuration: string",
+                    const QString& subtitle = "",
+                    bool bvalue = false,
+                    const QString& infolink="");
+
+    /*! 
+        Set text for label
+        @param labeltext Labeltext to set
+    */
+    void setLabelText(const QString& labeltext);                       
+
+public slots:
+    /// Show info link URL content in browser
+    void showInfo(void);                    
 
 protected:
+    /// Initialize the wizard page
     void  initializePage() override;
-    void  cleanupPage() override;       // Prevent defaults on "back"
+
+    /// Prevent load of defaults on "back"
+    void  cleanupPage() override;       
 
 private:
     QCheckBox *m_checkbox;
+    QPushButton *m_button;
 
-    std::string m_fieldName;
-    std::string m_labelText;
+    QString m_fieldName;
+    QString m_labelText;
+    QString m_infolink;
+
+    bool m_bvalue;
 };
 
 
@@ -183,24 +224,39 @@ public:
         @param title Title to use in the wizard page
         @param subtitle Subtitle to use in the wizard page
     */
-    ConfigChoicePage(QWidget *parent, 
-                        const std::string& fieldname,
+    ConfigChoicePage(QWidget *parent,
+                        const QString& fieldname,
                         const std::list<std::string>& strlist,
-                        const std::string& labeltext = "String value",
-                        const std::string& title = "Set configuration: string",
-                        const std::string& subtitle = "");
+                        const QString& labeltext = "String value",
+                        const QString& title = "Set configuration: string",
+                        const QString& subtitle = "",
+                        uint8_t nSelect = 0,
+                        const QString& infolink="");
 
+    /*! 
+        Set text for label
+        @param labeltext Labeltext to set
+    */
+    void setLabelText(const QString& labeltext);                       
+
+// public slots:
+//     /// Show info link URL content in browser
+//     void showInfo(void);
     
 protected:
+    /// Initialize the wizard page
     void  initializePage() override;
-    void  cleanupPage() override;       // Prevent defaults on "back"
+
+    /// Prevent load of defaults on "back"
+    void  cleanupPage() override;       
 
 private:
     QLabel *m_label;
     QListWidget *m_list;
+    QPushButton *m_button;
 
-    std::string m_fieldName;
-    std::string m_labelText;
+    QString m_fieldName;
+    QString m_labelText;
 };
 
 #endif
