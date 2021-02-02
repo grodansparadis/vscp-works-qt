@@ -29,6 +29,7 @@
 #include <QtWidgets>
 #include <QDebug>
 
+#include <vscphelper.h>
 #include "canalconfigwizard.h"
 
 #include <string>
@@ -56,16 +57,16 @@ CanalConfigWizard::CanalConfigWizard(QWidget *parent)
 
 void CanalConfigWizard::accept()
 {
-    QByteArray className = field("className").toByteArray();
+    //QByteArray className = field("className").toByteArray();
 
-    QString outputDir = field("edit1").toString();
-    qDebug() << outputDir;
-    QString header = field("header").toString();
-    QString implementation = field("implementation").toString();
+    //QString outputDir = field("edit1").toString();
+    //qDebug() << outputDir;
+    //QString header = field("header").toString();
+    //QString implementation = field("implementation").toString();
 
-    if (field("comment").toBool()) {
+    // if (field("comment").toBool()) {
 
-    }
+    // }
 
     QDialog::accept();
 }
@@ -78,7 +79,7 @@ void CanalConfigWizard::accept()
 // CTor - IntroPage
 //
 
-IntroPage::IntroPage(QWidget *parent, const QString& title, const QString& lbltext)
+IntroPage::IntroPage(QWidget *parent, const QString& title, const QString& lbltext, const QString& infolink)
     : QWizardPage(parent)
 {
     setTitle(title);
@@ -86,15 +87,16 @@ IntroPage::IntroPage(QWidget *parent, const QString& title, const QString& lblte
     setPixmap(QWizard::LogoPixmap, QPixmap(":attachment.png"));
     setPixmap(QWizard::BannerPixmap, QPixmap(":/images/banner.png"));
 
+    m_labelText = lbltext;
     m_label = new QLabel(lbltext);
-    m_label->setOpenExternalLinks(true);
     m_label->setWordWrap(true);
 
-    m_button = new QPushButton("Open manual page...");
+    m_labelInfo = new QLabel(vscp_str_format("<a href=\"%s\">Info</a>", infolink.toStdString().c_str()).c_str());
+    m_labelInfo->setOpenExternalLinks(true);
     
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(m_label);
-    layout->addWidget(m_button);
+    layout->addWidget(m_labelInfo);
     setLayout(layout);
 }
 
@@ -104,9 +106,7 @@ IntroPage::IntroPage(QWidget *parent, const QString& title, const QString& lblte
 
 void IntroPage:: initializePage()
 {
-    // const QSize BUTTON_SIZE = QSize(200, 30);
-    // m_button->setMaximumSize(BUTTON_SIZE);
-    m_label->setOpenExternalLinks(true);
+    m_label->setText(m_labelText);
 }
 
 // ----------------------------------------------------------------------------
@@ -149,19 +149,25 @@ void ConclusionPage:: initializePage()
 // CTor - ConfigStringPage
 //
 
-ConfigStringPage::ConfigStringPage(QWidget *parent, 
+ConfigStringPage::ConfigStringPage(QWidget *parent,
+                                    wizardStepBase::wizardType type,
                                     const QString& fieldname,
                                     const QString& labeltext,
                                     const QString& title,
                                     const QString& subtitle,
                                     const QString& value,
-                                    const QString& infolink)
+                                    const QString& infolink,
+                                    uint8_t width)
     : QWizardPage(parent)
 {
+    m_type = type;
     m_value = value;
     m_labelText = labeltext;
     m_fieldName = fieldname;
     m_infolink = infolink;
+
+    // Remove any asterisk from name used as 'required'
+    m_fieldName = m_fieldName.remove('*');
     
     setTitle(title);
     if (subtitle.length()) {
@@ -172,19 +178,41 @@ ConfigStringPage::ConfigStringPage(QWidget *parent,
 
     m_label = new QLabel;
     m_label->setWordWrap(true);
-    m_edit = new QLineEdit;
+    m_edit = new QLineEdit();
     m_label->setBuddy(m_edit);
 
     registerField(fieldname, m_edit);
-    setField(fieldname, value);
+    setField(m_fieldName, value);       // Reference name without asterisk (if any)
 
-    m_button = new QPushButton(tr("Info..."));
-    connect(m_button, &QPushButton::clicked, this, &ConfigStringPage::showInfo );
+    m_labelInfo = new QLabel(vscp_str_format("<a href=\"%s\">Info</a>", infolink.toStdString().c_str()).c_str());
+    m_labelInfo->setOpenExternalLinks(true);
+    
+    if (wizardStepBase::wizardType::INT32 == m_type) {
+        m_edit->setValidator(new QIntValidator(INT32_MIN, INT32_MAX));
+    }
+    else if (wizardStepBase::wizardType::UINT32 == m_type) {
+        if (width) {  
+            uint32_t max = (1 << width) - 1;
+            m_edit->setValidator(new QIntValidator(0, max));
+        }
+        else {
+            m_edit->setValidator(new QIntValidator(0, INT32_MAX));        
+        }
+    }
+    else if (wizardStepBase::wizardType::INT64 == m_type) {
+        m_edit->setValidator(new QIntValidator(INT32_MIN/*INT64_MIN*/, INT32_MAX/*INT64_MAX*/));  
+    }
+    else if (wizardStepBase::wizardType::UINT64 == m_type) {
+        m_edit->setValidator(new QIntValidator(0, INT32_MAX/*UINT64_MAX*/));         
+    }
+    else if (wizardStepBase::wizardType::FLOAT == m_type) {
+        m_edit->setValidator(new QDoubleValidator(std::numeric_limits<double>::min(), std::numeric_limits<double>::max(), -1));
+    }
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_label, 0, 0);
     layout->addWidget(m_edit, 0, 1);
-    layout->addWidget(m_button, 3, 1);
+    layout->addWidget(m_labelInfo, 3, 1);
     setLayout(layout);
 }
 
@@ -208,9 +236,10 @@ void ConfigStringPage::showInfo(void)
 
 void ConfigStringPage::initializePage()
 {
-    //m_label->setText(m_labelText);
+    m_label->setText(m_labelText);
     QString strvalue = field(m_fieldName).toString();
     m_edit->setText(strvalue);
+    qDebug() << strvalue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -267,12 +296,14 @@ ConfigBoolPage::ConfigBoolPage(QWidget *parent,
     registerField(fieldname, m_checkbox);
     setField(fieldname, bvalue);
 
-    m_button = new QPushButton(tr("Info..."));
-    connect(m_button, &QPushButton::clicked, this, &ConfigBoolPage::showInfo );
+    //connect(m_button, &QPushButton::clicked, this, &ConfigBoolPage::showInfo );
+
+    m_labelInfo = new QLabel(vscp_str_format("<a href=\"%s\">Info</a>", infolink.toStdString().c_str()).c_str());
+    m_labelInfo->setOpenExternalLinks(true);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(m_checkbox, 0, 0);
-    layout->addWidget(m_button, 1, 0);
+    layout->addWidget(m_labelInfo, 1, 0);
     setLayout(layout);
 }
 
@@ -355,9 +386,13 @@ ConfigChoicePage::ConfigChoicePage(QWidget *parent,
         m_list->addItem(QString::fromUtf8(it->c_str()));
     }
 
+    m_labelInfo = new QLabel(vscp_str_format("<a href=\"%s\">Info</a>", infolink.toStdString().c_str()).c_str());
+    m_labelInfo->setOpenExternalLinks(true);
+
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(m_label);
     layout->addWidget(m_list);
+    layout->addWidget(m_labelInfo);
     setLayout(layout);
 }
 

@@ -71,8 +71,8 @@
         <location filename="src/cdlgconnsettingscanal.cpp" line="193"/>
         <location filename="src/cdlgconnsettingscanal.cpp" line="249"/>
         <location filename="src/cdlgconnsettingscanal.cpp" line="263"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="294"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="286"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="293"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -103,17 +103,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="288"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="295"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="294"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="313"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="314"/>
         <source>This wizard will help to generate and fill in the configuration string 
 and the flag bits for the. the driver.
 
@@ -1267,7 +1267,7 @@ and the flag bits for the. the driver.
 <context>
     <name>CanalConfigWizard</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="50"/>
+        <location filename="src/canalconfigwizard.cpp" line="51"/>
         <source>VSCP level I (CANAL) driver configuration Wizard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1286,26 +1286,10 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
-    <name>ConfigBoolPage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="270"/>
-        <source>Info...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ConfigChoicePage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="370"/>
+        <location filename="src/canalconfigwizard.cpp" line="405"/>
         <source>Select on of the available choices</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ConfigStringPage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="181"/>
-        <source>Info...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -273,7 +273,6 @@ void CDlgConnSettingsCanal::wizard()
     }
 
     const char *p = m_vscpClient.m_canalif.CanalGetDriverInfo();
-
     qDebug() << "Driver XML info \n" << p;
 
     std::string xml;
@@ -309,22 +308,22 @@ void CDlgConnSettingsCanal::wizard()
     CanalConfigWizard wizard(this);
     //wizard.setWizardStyle(QWizard::MacStyle);
 
-
+    // ************************************************************************
+    //                               Intro page
+    // ************************************************************************
     QString lbl = tr("This wizard will help to generate and fill in the "
                         "configuration string \nand the flag bits for the. "
                         "the driver.\n\n");
     lbl += vscp_str_format("Driver is a level %d driver\n",(int)xmlcfg.getLevel()+1).c_str();
-    lbl += xmlcfg.getBlocking() ? "Driver is blocking.\n" : "Driver is not blocking.\n";   
-    lbl += "\n\n";
-    lbl += "<a href=\"https://docs.vscxp.org\">VSCP Documentaion page</a>";                    
+    lbl += xmlcfg.getBlocking() ? "Driver is blocking.\n" : "Driver is not blocking.\n";                      
 
-    wizard.addPage(new IntroPage(nullptr, xmlcfg.getDescription().c_str(), lbl));
+    wizard.addPage(new IntroPage(nullptr, xmlcfg.getDescription().c_str(), lbl, xmlcfg.getInfoUrl().c_str()));
 
     // For test use
     if (0) {  
-        wizard.addPage(new ConfigStringPage(this, "cfg1", "String value", "Configuration pos 1", "This is a string test"));
-        wizard.addPage(new ConfigStringPage(this, "cfg2", "String value", "Configuration pos 2", "This is a string test")); 
-        wizard.addPage(new ConfigStringPage(this, "cfg3", "String value", "Configuration pos 3", "This is a string test")); 
+        wizard.addPage(new ConfigStringPage(this, wizardStepBase::wizardType::STRING, "cfg1", "String value", "Configuration pos 1", "This is a string test"));
+        wizard.addPage(new ConfigStringPage(this, wizardStepBase::wizardType::STRING, "cfg2", "String value", "Configuration pos 2", "This is a string test")); 
+        wizard.addPage(new ConfigStringPage(this, wizardStepBase::wizardType::STRING, "cfg3", "String value", "Configuration pos 3", "This is a string test")); 
         wizard.addPage(new ConfigBoolPage(this, "cfg4", "Boolean value", "Bool config", "This is a bool test"));
         std::list<std::string> list;
         list.push_back(std::string("Ettan"));
@@ -336,24 +335,22 @@ void CDlgConnSettingsCanal::wizard()
         wizard.addPage(new ConfigChoicePage(this, "cfg6", list, "Choose one", "Choice config", "This is a choice test"));
     }
 
-    int idx = 0;
-    std::list<wizardStepBase *>::iterator it;
-    for (it = xmlcfg.m_stepsWizardItems.begin(); it != xmlcfg.m_stepsWizardItems.end(); ++it){
+    int cfgidx = 0;
+    std::list<wizardStepBase *>::iterator itcfg;
+    for (itcfg = xmlcfg.m_stepsWizardItems.begin(); itcfg != xmlcfg.m_stepsWizardItems.end(); ++itcfg){
         
-        fprintf(stderr,"\tType = %d\n", static_cast<int>((*it)->m_type));
-        std::string idstr = vscp_str_format("config%d", idx);           // id for wizard field
-        std::string idtxt = vscp_str_format("Config pos %d", idx + 1);  // Text in head of wizard
-        idx++;
+        std::string idstr = vscp_str_format("config%d", cfgidx);           // id for wizard field
+        std::string idtxt = vscp_str_format("Config pos %d", cfgidx + 1);  // Text in head of wizard
+        cfgidx++;
         
-        switch ((*it)->m_type) {
+        switch ((*itcfg)->m_type) {
 
             case wizardStepBase::wizardType::NONE:
-                fprintf(stderr, "\twizardType::NONE\n"); 
                 break;
             
             case wizardStepBase::wizardType::STRING:
                 {
-                    wizardStepString *item = (wizardStepString *)(*it);
+                    wizardStepString *item = (wizardStepString *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -365,19 +362,21 @@ void CDlgConnSettingsCanal::wizard()
                     }
                     
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::STRING,
                                                             idstr.c_str(),
                                                             "String value",
                                                             idtxt.c_str(),
                                                             item->getDescription().c_str(),
                                                             item->getValue().c_str(),
                                                             item->getInfoUrl().c_str()));
-                    wizard.setField(idstr.c_str(), item->getValue().c_str());
+                    // Set default value
+                    wizard.setField(QString::fromUtf8(idstr.c_str()).remove('*'), item->getValue().c_str());
                 }
                 break;
             
             case wizardStepBase::wizardType::BOOL:
                 { 
-                    wizardStepBool *item = (wizardStepBool *)(*it);
+                    wizardStepBool *item = (wizardStepBool *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -388,20 +387,20 @@ void CDlgConnSettingsCanal::wizard()
                         idstr += "*";
                     }
 
-                    wizard.addPage(new ConfigStringPage(this,
-                                                            idstr.c_str(),
-                                                            "Bool value",
-                                                            idtxt.c_str(),
-                                                            item->getDescription().c_str(),
-                                                            item->getValue().c_str(),
-                                                            item->getInfoUrl().c_str()));
+                    wizard.addPage(new ConfigBoolPage(this,
+                                                        idstr.c_str(),
+                                                        "Bool value",
+                                                        idtxt.c_str(),
+                                                        item->getDescription().c_str(),
+                                                        item->getValue().c_str(),
+                                                        item->getInfoUrl().c_str()));
                     wizard.setField(idstr.c_str(), item->getValue().c_str());
                 }
                 break;
             
             case wizardStepBase::wizardType::INT32:
                 {
-                    wizardStepInt32 *item = (wizardStepInt32 *)(*it);
+                    wizardStepInt32 *item = (wizardStepInt32 *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -413,8 +412,9 @@ void CDlgConnSettingsCanal::wizard()
                     }
 
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::INT32,
                                                             idstr.c_str(),
-                                                            "Int32 value",
+                                                            "Int32 valuee",
                                                             idtxt.c_str(),
                                                             item->getDescription().c_str(),
                                                             item->getValue().c_str(),
@@ -425,7 +425,7 @@ void CDlgConnSettingsCanal::wizard()
             
             case wizardStepBase::wizardType::UINT32:
                 { 
-                    wizardStepUInt32 *item = (wizardStepUInt32 *)(*it);
+                    wizardStepUInt32 *item = (wizardStepUInt32 *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -437,6 +437,7 @@ void CDlgConnSettingsCanal::wizard()
                     }
 
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::UINT32,
                                                             idstr.c_str(),
                                                             "Uint32 value",
                                                             idtxt.c_str(),
@@ -449,7 +450,7 @@ void CDlgConnSettingsCanal::wizard()
             
             case wizardStepBase::wizardType::INT64:
                 {
-                    wizardStepInt64 *item = (wizardStepInt64 *)(*it);
+                    wizardStepInt64 *item = (wizardStepInt64 *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -461,6 +462,7 @@ void CDlgConnSettingsCanal::wizard()
                     }
 
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::INT64,
                                                             idstr.c_str(),
                                                             "Int64 value",
                                                             idtxt.c_str(),
@@ -473,7 +475,7 @@ void CDlgConnSettingsCanal::wizard()
             
             case wizardStepBase::wizardType::UINT64:
                 {
-                    wizardStepUInt64 *item = (wizardStepUInt64 *)(*it); 
+                    wizardStepUInt64 *item = (wizardStepUInt64 *)(*itcfg); 
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -485,6 +487,7 @@ void CDlgConnSettingsCanal::wizard()
                     }
 
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::UINT64,
                                                             idstr.c_str(),
                                                             "Uint64 value",
                                                             idtxt.c_str(),
@@ -497,7 +500,7 @@ void CDlgConnSettingsCanal::wizard()
             
             case wizardStepBase::wizardType::FLOAT:
                 {
-                    wizardStepFloat *item = (wizardStepFloat *)(*it);
+                    wizardStepFloat *item = (wizardStepFloat *)(*itcfg);
 
                     std::string description = item->getDescription();
                     if (item->isOptional()) {
@@ -509,6 +512,7 @@ void CDlgConnSettingsCanal::wizard()
                     }
                     
                     wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::FLOAT,
                                                             idstr.c_str(),
                                                             "Floating point value",
                                                             idtxt.c_str(),
@@ -521,16 +525,32 @@ void CDlgConnSettingsCanal::wizard()
 
             case wizardStepBase::wizardType::CHOICE:
                 {
-                    wizardStepChoice *item = (wizardStepChoice *)(*it);
+                    std::list<std::string> choicelist;
+                    wizardStepChoice *item = (wizardStepChoice *)(*itcfg);
 
-                    std::list<wizardChoiceItem *>::iterator it;
+                    std::string description = item->getDescription();
+                    if (item->isOptional()) {
+                        description += " ";
+                        description += "(optional)";
+                    }
+                    else {
+                        idstr += "*";
+                    }
+
+                    std::vector<wizardChoiceItem *>::iterator it;
                     for (it = item->m_choices.begin(); it != item->m_choices.end(); ++it){
                         wizardChoiceItem *itemChoice = (wizardChoiceItem *)(*it);
-                        fprintf(stderr, 
-                                    "\t\tChoice Value=%s Description=%s\n",
-                                    itemChoice->getValue().c_str(), 
-                                    itemChoice->getDescription().c_str());
+                        choicelist.push_back(itemChoice->getDescription());
                     }
+
+                    wizard.addPage(new ConfigChoicePage(this,
+                                        idstr.c_str(),
+                                        choicelist,
+                                        "Choices",
+                                        idtxt.c_str(),
+                                        item->getDescription().c_str(),
+                                        0,
+                                        item->getInfoUrl().c_str()));
                 }
                 break;    
 
@@ -540,7 +560,156 @@ void CDlgConnSettingsCanal::wizard()
         }
     }
 
+
+    // ************************************************************************
+    //                                Flags
+    // ************************************************************************
+
+    int flagidx = 0;
+    std::list<wizardFlagBitBase *>::iterator itflg;
+    for (itflg = xmlcfg.m_stepsWizardFlags.begin(); itflg != xmlcfg.m_stepsWizardFlags.end(); ++itflg){
+        
+        std::string idstr = vscp_str_format("flag%d", flagidx);         // id for wizard flag field
+        flagidx++;
+        
+        switch ((*itflg)->m_type) {
+
+            case wizardStepBase::wizardType::NONE:
+                break;
+            
+            case wizardStepBase::wizardType::BOOL:
+                { 
+                    std::string idtxt;
+                    wizardFlagBitBool *item = (wizardFlagBitBool *)(*itflg);
+
+                    std::string description = item->getDescription();
+
+                    uint8_t width;
+                    if ((width = item->getWidth()) > 1) {
+                        idtxt = vscp_str_format("Flag bit %d-%d", item->getPos(), item->getPos() + width - 1);
+                    }
+                    else {
+                        idtxt = vscp_str_format("Flag bit %d", item->getPos());
+                    }
+
+                    wizard.addPage(new ConfigBoolPage(this,
+                                                        idstr.c_str(),
+                                                        item->getDescription().c_str(),
+                                                        idtxt.c_str(),
+                                                        item->getDescription().c_str(),
+                                                        item->getValue().c_str(),
+                                                        item->getInfoUrl().c_str()));
+                    wizard.setField(idstr.c_str(), item->getValue().c_str());
+                }
+                break;
+            
+            case wizardStepBase::wizardType::UINT32:
+                { 
+                    std::string idtxt;
+
+                    wizardFlagBitNumber *item = (wizardFlagBitNumber *)(*itflg);
+
+                    std::string description = item->getDescription();
+                                         
+                    uint8_t width;
+                    if ((width = item->getWidth()) > 1) {
+                        idtxt = vscp_str_format("Flag bit %d-%d", item->getPos(), item->getPos() + width - 1);
+                    }
+                    else {
+                        idtxt = vscp_str_format("Flag bit %d", item->getPos());
+                    }
+                    //idstr += "*";
+
+                    wizard.addPage(new ConfigStringPage(this,
+                                                            wizardStepBase::wizardType::UINT32,
+                                                            idstr.c_str(),
+                                                            "Uint32 value",
+                                                            idtxt.c_str(),
+                                                            item->getDescription().c_str(),
+                                                            item->getValue().c_str(),
+                                                            item->getInfoUrl().c_str(),
+                                                            item->getWidth()));
+                    wizard.setField(idstr.c_str(), item->getValue().c_str());
+                }
+                break;
+
+            case wizardStepBase::wizardType::CHOICE:
+                {
+                    std::string idtxt;
+
+                    std::list<std::string> choicelist;
+                    wizardFlagBitChoice *item = (wizardFlagBitChoice *)(*itflg);
+
+                    std::string description = item->getDescription();
+
+                    uint8_t width;
+                    if ((width = item->getWidth()) > 1) {
+                        idtxt = vscp_str_format("Flag bit %d-%d", item->getPos(), item->getPos() + width - 1);
+                    }
+                    else {
+                        idtxt = vscp_str_format("Flag bit %d", item->getPos());
+                    }
+
+                    std::vector<wizardBitChoice *>::iterator it;
+                    for (it = item->m_choices.begin(); it != item->m_choices.end(); ++it){
+                        wizardBitChoice *itemChoice = (wizardBitChoice *)(*it);
+                        choicelist.push_back(itemChoice->getDescription());
+                    }
+
+                    wizard.addPage(new ConfigChoicePage(this,
+                                        idstr.c_str(),
+                                        choicelist,
+                                        "Choices",
+                                        idtxt.c_str(),
+                                        item->getDescription().c_str(),
+                                        0,
+                                        item->getInfoUrl().c_str()));
+                }
+                break;    
+
+            default:
+                // we do nothing
+                break;                               
+        }
+
+    }
+
+
+    // ************************************************************************
+    //                               Last page
+    // ************************************************************************
     wizard.addPage(new ConclusionPage);
-    wizard.exec();
+
+    // ************************************************************************
+    //                               go, go, go...
+    // ************************************************************************
+    if (wizard.exec()) {
+        
+        // Finish - OK
+
+        int cfgidx = 0;
+        std::list<std::string> configStrings;
+        std::list<wizardStepBase *>::iterator itcfg;
+        for (itcfg = xmlcfg.m_stepsWizardItems.begin(); itcfg != xmlcfg.m_stepsWizardItems.end(); ++itcfg){
+        
+            std::string idstr = vscp_str_format("config%d", cfgidx);           // id for wizard field
+            cfgidx++;
+
+            qDebug() << "C " << wizard.field(idstr.c_str()).toString();
+            configStrings.push_back(wizard.field(idstr.c_str()).toString().toStdString());
+            qDebug() << (*itcfg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString()).c_str();
+        }
+
+        int flagidx = 0;
+        std::list<wizardFlagBitBase *>::iterator itflg;
+        for (itflg = xmlcfg.m_stepsWizardFlags.begin(); itflg != xmlcfg.m_stepsWizardFlags.end(); ++itflg){
+        
+            std::string idstr = vscp_str_format("flag%d", flagidx);         // id for wizard flag field
+            flagidx++;
+
+            qDebug() << "F " << wizard.field(idstr.c_str()).toString();
+            qDebug() << (*itflg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString());
+        }
+    }
 
 }

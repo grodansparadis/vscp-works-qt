@@ -32,6 +32,7 @@
 #ifndef CANALCONFIGWIZARD_H
 #define CANALCONFIGWIZARD_H
 
+#include <canal_xmlconfig.h>
 #include "vscp_client_canal.h"
 
 #include <QWizard>
@@ -69,14 +70,16 @@ class IntroPage : public QWizardPage
     Q_OBJECT
 
 public:
-    IntroPage(QWidget *parent, const QString& title, const QString& lbltext);
+    IntroPage(QWidget *parent, const QString& title, const QString& lbltext, const QString& infolink="");
 
 protected:
     void  initializePage() override;
     
 private:
     QLabel *m_label;
-    QPushButton *m_button; 
+    QLabel *m_labelInfo;
+
+    QString m_labelText;
 };
 
 
@@ -118,14 +121,19 @@ public:
         @param fieldname Resulting name for the string field collted in action
         @param title Title to use in the wizard page
         @param subtitle Subtitle to use in the wizard page
+        @param value Initial value on string form
+        @param infolink Link to information about setting
+        @param width Number of bits for numerical value - determines maximum value
     */
     ConfigStringPage(QWidget *parent, 
+                        wizardStepBase::wizardType type,
                         const QString& fieldname,
                         const QString& labeltext = "String value",
                         const QString& title = "Set configuration: string",
                         const QString& subtitle = "",
                         const QString& value = "",
-                        const QString& infolink="");
+                        const QString& infolink="",
+                        uint8_t width = 0);
 
     /*! 
         Set text for label
@@ -148,8 +156,9 @@ protected:
 private:
     QLabel *m_label;
     QLineEdit *m_edit;
-    QPushButton *m_button;
+    QLabel *m_labelInfo;
 
+    wizardStepBase::wizardType m_type;
     QString m_fieldName;
     QString m_labelText;
     QString m_value;
@@ -199,7 +208,7 @@ protected:
 
 private:
     QCheckBox *m_checkbox;
-    QPushButton *m_button;
+    QLabel *m_labelInfo;
 
     QString m_fieldName;
     QString m_labelText;
@@ -253,7 +262,7 @@ protected:
 private:
     QLabel *m_label;
     QListWidget *m_list;
-    QPushButton *m_button;
+    QLabel *m_labelInfo;
 
     QString m_fieldName;
     QString m_labelText;
