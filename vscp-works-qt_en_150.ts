@@ -112,6 +112,14 @@
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="313"/>
+        <source>This wizard will help to generate and fill in the configuration string 
+and the flag bits for the. the driver.
+
+</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CDlgConnSettingsLocal</name>
@@ -1260,27 +1268,35 @@
     <name>CanalConfigWizard</name>
     <message>
         <location filename="src/canalconfigwizard.cpp" line="50"/>
-        <source>CANAL driver configuration Wizard</source>
+        <source>VSCP level I (CANAL) driver configuration Wizard</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ConclusionPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="110"/>
+        <location filename="src/canalconfigwizard.cpp" line="122"/>
         <source>Wizard is ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="128"/>
+        <location filename="src/canalconfigwizard.cpp" line="140"/>
         <source>Pressing finish will write configuration and flags to the configuration dialog.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ConfigBoolPage</name>
+    <message>
+        <location filename="src/canalconfigwizard.cpp" line="270"/>
+        <source>Info...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ConfigChoicePage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="334"/>
+        <location filename="src/canalconfigwizard.cpp" line="370"/>
         <source>Select on of the available choices</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1288,7 +1304,7 @@
 <context>
     <name>ConfigStringPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="169"/>
+        <location filename="src/canalconfigwizard.cpp" line="181"/>
         <source>Info...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1459,19 +1475,6 @@
     <message>
         <location filename="src/scan.ui" line="165"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>IntroPage</name>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="84"/>
-        <source>CANAL configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/canalconfigwizard.cpp" line="89"/>
-        <source>This wizard will help to generate and fill in the configuration string and the flag bits for the. Level I (CANAL) driver.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
