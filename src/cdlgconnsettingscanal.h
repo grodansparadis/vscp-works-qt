@@ -94,6 +94,7 @@ public:
         Setters/getters for flags
     */
     uint32_t getFlags(void);
+    std::string getFlagsStr(void);
     void setFlags(uint32_t flags);
 
 private slots:

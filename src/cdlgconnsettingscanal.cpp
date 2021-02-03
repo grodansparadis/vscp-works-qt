@@ -139,13 +139,22 @@ uint32_t CDlgConnSettingsCanal::getFlags(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getFlagsStr
+//
+
+std::string CDlgConnSettingsCanal::getFlagsStr(void)
+{
+    return ui->m_flags->text().toStdString(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // setFlags
 //
 
 void CDlgConnSettingsCanal::setFlags(uint32_t flags)
 {
     std::string str = vscp_str_format("%lu", (unsigned long)flags);
-    ui->m_flags->insert(str.c_str());
+    ui->m_flags->setText(str.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -235,6 +244,12 @@ void CDlgConnSettingsCanal::wizard()
     ///////////////////////////////////////////////////////////////////////////
 
     std::string path = ui->m_path->text().toStdString();
+    std::string config = getConfig();
+    uint32_t flags = getFlags();
+
+    // Get config items
+    std::deque<std::string> m_configItems; 
+    vscp_split(m_configItems, getConfig(), ";");
 
     // Save set path
     std::string save_path = m_vscpClient.m_canalif.getPath();
@@ -342,6 +357,14 @@ void CDlgConnSettingsCanal::wizard()
         std::string idstr = vscp_str_format("config%d", cfgidx);           // id for wizard field
         std::string idtxt = vscp_str_format("Config pos %d", cfgidx + 1);  // Text in head of wizard
         cfgidx++;
+
+        std::string dlgcfgval;          // Set to current config value for this pos   
+        bool bUIseDlgCfgVal = false;    // Set to tru of there is a value already set for this pos
+        if (m_configItems.size()) {
+            dlgcfgval = m_configItems.front();
+            m_configItems.pop_front();
+            bUIseDlgCfgVal = true;
+        }
         
         switch ((*itcfg)->m_type) {
 
@@ -367,10 +390,11 @@ void CDlgConnSettingsCanal::wizard()
                                                             "String value",
                                                             idtxt.c_str(),
                                                             item->getDescription().c_str(),
-                                                            item->getValue().c_str(),
+                                                            bUIseDlgCfgVal ? dlgcfgval.c_str() : item->getValue().c_str(),
                                                             item->getInfoUrl().c_str()));
                     // Set default value
-                    wizard.setField(QString::fromUtf8(idstr.c_str()).remove('*'), item->getValue().c_str());
+                    wizard.setField(QString::fromUtf8(idstr.c_str()).remove('*'), 
+                                                        bUIseDlgCfgVal ? dlgcfgval.c_str() : item->getValue().c_str());
                 }
                 break;
             
@@ -571,6 +595,14 @@ void CDlgConnSettingsCanal::wizard()
         
         std::string idstr = vscp_str_format("flag%d", flagidx);         // id for wizard flag field
         flagidx++;
+
+        bool bFlagValue = false;
+        std::string strFlags = getFlagsStr();
+        uint32_t cfgflags = vscp_readStringValue(strFlags);
+        vscp_trim(strFlags);
+        if (strFlags.length()) {
+            bFlagValue = true;
+        }
         
         switch ((*itflg)->m_type) {
 
@@ -684,6 +716,9 @@ void CDlgConnSettingsCanal::wizard()
     //                               go, go, go...
     // ************************************************************************
     if (wizard.exec()) {
+
+        uint32_t flags = 0;
+        std::string strConfig;
         
         // Finish - OK
 
@@ -695,9 +730,21 @@ void CDlgConnSettingsCanal::wizard()
             std::string idstr = vscp_str_format("config%d", cfgidx);           // id for wizard field
             cfgidx++;
 
-            qDebug() << "C " << wizard.field(idstr.c_str()).toString();
-            configStrings.push_back(wizard.field(idstr.c_str()).toString().toStdString());
-            qDebug() << (*itcfg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString()).c_str();
+            // Set the value
+            std::string newValue = wizard.field(idstr.c_str()).toString().toStdString();
+            (*itcfg)->setValue(newValue);
+
+            qDebug() << "C: " << wizard.field(idstr.c_str()).toString();
+            qDebug() << "R: " << (*itcfg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString()).c_str();
+
+            // If optional and no value set we are done
+            qDebug() << " O: " << (*itcfg)->isOptional();
+            if (!newValue.length() && (*itcfg)->isOptional()) {
+                break;
+            }
+
+            if (strConfig.length()) strConfig += ";";
+            strConfig += (*itcfg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString());
         }
 
         int flagidx = 0;
@@ -707,9 +754,17 @@ void CDlgConnSettingsCanal::wizard()
             std::string idstr = vscp_str_format("flag%d", flagidx);         // id for wizard flag field
             flagidx++;
 
-            qDebug() << "F " << wizard.field(idstr.c_str()).toString();
+            qDebug() << "F: " << wizard.field(idstr.c_str()).toString();
             qDebug() << (*itflg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString());
+            flags += (*itflg)->getRealValue(wizard.field(idstr.c_str()).toString().toStdString());
         }
+
+        qDebug() << "Config str = " << strConfig.c_str();
+        setConfig(strConfig);
+
+        qDebug() << "flags = " << flags;
+        setFlags(flags);
+
     }
 
 }
