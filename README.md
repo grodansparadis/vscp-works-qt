@@ -1,7 +1,52 @@
 # vscp-works-qt
 
-## !!!!! WARNING !!!!!!    Work in progress
-This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far from a usable state. There is no documentation. No user setup information and help.
+## !!!!! WARNING !!!!!!  This IS Work in progress
+This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far far far from a usable state. There is no documentation. No user setup information and no help.
+
+## Build
+If you still want to build this project
+
+### Install qt 5.0.
+```bash
+  sudo apt install qttools5-dev
+  sudo apt install qt5-default
+  sudo apt install qtdeclarative5-dev
+  sudo apt install libqt5serialport5
+  sudo apt install libqt5serialport5-dev
+```
+
+### Install other needed libs
+
+You need expat, mosquitto, openssl to build this project
+
+```bash
+  sudo apt install libexpat-dev
+  sudo apt install libmosquitto-dev
+  sudo apt install lipopenssl-dev
+```
+
+### Clone this repository in a folder.
+```bash
+  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
+```  
+
+### Go to the build folder and make the project
+```bash
+  cd vscp-works-qt
+  mkdir build
+  cd build
+  cmake ..
+```
+
+use
+
+```bash
+  cmake -DCMAKE_BUILD_TYPE=Debug ..
+```
+
+if you want to build a version suitable for debugging.
+
+----
 
 **Internal project Notes below**
 
@@ -31,6 +76,7 @@ The name that is displayed to the user
 The type for the connection. One of the following
 
 | Type | Description |
+| ---- | ----------- |
 | 0 | No connection |
 | 1 | tcp/ip connection |
 | 2 | CANAL connection |
