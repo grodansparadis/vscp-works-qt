@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlglevel1filterwizard.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,20 +26,18 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGNEWCONNECTION_H
-#define CDLGNEWCONNECTION_H
-
-#include "vscp_client_base.h"
+#ifndef CDLGLEVEL1FILTERWIZARD_H
+#define CDLGLEVEL1FILTERWIZARD_H
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgNewConnection;
+class CDlgLevel1FilterWizard;
 }
 
 
-class CDlgNewConnection : public QDialog
+class CDlgLevel1FilterWizard : public QDialog
 {
     Q_OBJECT
 
@@ -47,44 +45,40 @@ public:
     
 
 public:
-    explicit CDlgNewConnection(QWidget *parent = nullptr);
-    ~CDlgNewConnection();
+    explicit CDlgLevel1FilterWizard(QWidget *parent = nullptr);
+    ~CDlgLevel1FilterWizard();
 
     /*!
-        Add connection items
+        set Initial focus
     */
-    void addConnectionItems(void);
+    void setInitialFocus(void);
+
+public slots:
+    /*!
+        Numerical base changed -recalc
+    */
+    void onBaseChange(int index);
 
     /*!
-        Called when the connection list is clicked
+        Transfer info to visual side
     */
-    void onClicked(QListWidgetItem* item);
+    void transferToVisual(void);
 
     /*!
-        Called when the connection list is double clicked
+        Transfer info to id/mask
     */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
+    void transferFromVisual(void);
 
 private:
 
-    Ui::CDlgNewConnection *ui;
+    Ui::CDlgLevel1FilterWizard *ui;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
+    // void createMenu();
+    // void createHorizontalGroupBox();
+    // void createGridGroupBox();
+    // void createFormGroupBox();
 
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
 };
 
 
-#endif // CDLGNEWCONNECTION_H
+#endif // CDLGLEVEL1FILTERWIZARD_H

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>547</width>
-    <height>270</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -23,7 +23,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>230</y>
+     <y>250</y>
      <width>541</width>
      <height>32</height>
     </rect>
@@ -59,7 +59,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
+     <widget class="QLineEdit" name="editDescription">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -79,7 +79,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_device">
+     <widget class="QLineEdit" name="editDevice">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -88,7 +88,7 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Filters</string>
@@ -98,12 +98,32 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="1">
+     <widget class="QListWidget" name="listFilters"/>
+    </item>
     <item row="2" column="1">
-     <widget class="QListWidget" name="listWidgetFilters"/>
+     <widget class="QLineEdit" name="editResponseTimeout">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Response timeout</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="pushButtonSetFilter">
+  <widget class="QPushButton" name="btnAddFilter">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -131,10 +151,10 @@
     <string>Add filter</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonTestConnection">
+  <widget class="QPushButton" name="btnTestConnection">
    <property name="geometry">
     <rect>
-     <x>380</x>
+     <x>390</x>
      <y>200</y>
      <width>131</width>
      <height>25</height>
@@ -147,10 +167,10 @@
     <string>Test connection</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButtonSetFilter_2">
+  <widget class="QPushButton" name="btnDeleteFilter">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>220</x>
      <y>200</y>
      <width>101</width>
      <height>25</height>
@@ -173,6 +193,47 @@
    </property>
    <property name="text">
     <string>Delete filter</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnEditFilter">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>200</y>
+     <width>91</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="toolTip">
+    <string>Define incoming filter</string>
+   </property>
+   <property name="text">
+    <string>Edit filter</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>27</x>
+     <y>230</y>
+     <width>491</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

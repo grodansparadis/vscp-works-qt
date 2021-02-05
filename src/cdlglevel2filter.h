@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlglevel2filter.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,20 +26,18 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGNEWCONNECTION_H
-#define CDLGNEWCONNECTION_H
-
-#include "vscp_client_base.h"
+#ifndef CDLGLEVEL2FILTER_H
+#define CDLGLEVEL2FILTER_H
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgNewConnection;
+class CDlgLevel2Filter;
 }
 
 
-class CDlgNewConnection : public QDialog
+class CDlgLevel2Filter : public QDialog
 {
     Q_OBJECT
 
@@ -47,44 +45,19 @@ public:
     
 
 public:
-    explicit CDlgNewConnection(QWidget *parent = nullptr);
-    ~CDlgNewConnection();
-
-    /*!
-        Add connection items
-    */
-    void addConnectionItems(void);
-
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
+    explicit CDlgLevel2Filter(QWidget *parent = nullptr);
+    ~CDlgLevel2Filter();
 
 private:
 
-    Ui::CDlgNewConnection *ui;
+    Ui::CDlgLevel2Filter *ui;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
+    // void createMenu();
+    // void createHorizontalGroupBox();
+    // void createGridGroupBox();
+    // void createFormGroupBox();
 
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
 };
 
 
-#endif // CDLGNEWCONNECTION_H
+#endif // CDLGLEVEL2FILTER_H

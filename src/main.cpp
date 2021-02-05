@@ -1,11 +1,34 @@
-#include "mainwindow.h"
+//#include <QApplication>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
-#include <QApplication>
+#include "vscpworks.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show(); 
-    return a.exec();
+    vscpworks app(argc, argv);
+    QCoreApplication::setOrganizationName("VSCP");
+    QCoreApplication::setOrganizationDomain("vscp.org");
+    QCoreApplication::setApplicationName("vscpworks+");
+    QCoreApplication::setApplicationVersion(VSCPWORKS_VERSION_STR);
+
+    // vscpworks --config "config folder"
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::applicationName());
+    parser.addHelpOption();
+    parser.addVersionOption();
+    //parser.addPositionalArgument("file", "The file to open.");
+    QCommandLineOption targetDirectoryOption(QStringList() << "c" << "config",
+            QCoreApplication::translate("main", "Set <directory> as home."),
+            QCoreApplication::translate("main", "directory"));
+    parser.process(app);
+
+    MainWindow mainWin; 
+    if (!parser.positionalArguments().isEmpty()) {
+        //mainWin.loadFile(parser.positionalArguments().first());
+    }
+
+    mainWin.show(); 
+    return app.exec();
 }

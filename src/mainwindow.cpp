@@ -34,6 +34,8 @@
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
 
+#include "vscpworks.h"
+
 #include "version.h"
 #include "cfrmsession.h"
 #include "vscp_client_base.h"
@@ -91,10 +93,6 @@ QTreeWidgetItemConn::~QTreeWidgetItemConn()
 MainWindow::MainWindow()
     : m_connTreeTable(new QTreeWidget)
 { 
-    QCoreApplication::setOrganizationName("VSCP");
-    QCoreApplication::setOrganizationDomain("vscp.org");
-    QCoreApplication::setApplicationName("vscpworks+");
-
     // Enable custom context menu
     m_connTreeTable->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -412,7 +410,7 @@ void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
     QMessageBox msgBox;
     msgBox.setText("Double click");
     msgBox.exec();
-    newTcpipConnection();
+    //newTcpipConnection();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -792,7 +790,7 @@ void MainWindow::readSettings()
         resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
         move((availableGeometry.width() - width()) / 2,
              (availableGeometry.height() - height()) / 2);
-    } 
+    }
     else {
         restoreGeometry(geometry);
     }
@@ -804,6 +802,9 @@ void MainWindow::readSettings()
     }
     settings.endArray();
 
+
+    
+
     //int margin = settings.value("editor/wrapMargin").toInt();
     //int margin = settings.value("editor/wrapMargin", 80).toInt();
 
@@ -811,8 +812,11 @@ void MainWindow::readSettings()
     //QVariant destination;        
     //destination = QString::fromStdString(source);
 
- 
+    // Configuration folder vscpworks
     std::string cfgfolder = settings.value("cfgfolder", "").toString().toStdString();
+
+    // Default numerical base
+    //default_base_ numerical_base = settings.value("general/numerical-base", 0).toInt();
 
 }
 

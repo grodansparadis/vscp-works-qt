@@ -68,7 +68,11 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgconnsettingsrest.ui
     src/cdlgconnsettingsrawcan.ui
     src/cdlgconnsettingsrawmqtt.ui
-    src/cfrmsession.ui)
+    src/cfrmsession.ui
+    src/cdlglevel1filter.ui
+    src/cdlglevel1filterwizard.ui
+    src/cdlglevel2filter.ui
+)
 
 add_executable(vscp-works-qt
     src/vscpworks.qrc
@@ -114,6 +118,15 @@ add_executable(vscp-works-qt
     src/cdlgconnsettingsrest.h
     src/cdlgconnsettingsrest.cpp
     build/ui_cfrmsession.h
+    src/cdlglevel1filter.h
+    src/cdlglevel1filter.cpp
+    build/ui_cdlglevel1filter.h
+    src/cdlglevel1filterwizard.h
+    src/cdlglevel1filterwizard.cpp
+    build/ui_cdlglevel1filterwizard.h
+    src/cdlglevel1filter.h
+    src/cdlglevel1filter.cpp
+    build/ui_cdlglevel1filter.h
     src/cfrmsession.h
     src/cfrmsession.cpp
     src/vscpworks.h

@@ -29,30 +29,54 @@
 #ifndef VSCPWORKS_H
 #define VSCPWORKS_H
 
-#include <list>
+#include <QApplication>
+
+#define VSCPWORKS_MAJOR_VERSION     0
+#define VSCPWORKS_MINOR_VERSION     0
+#define VSCPWORKS_RELEASE_VERSION   1
+#define VSCPWORKS_BUILD_VERSION     0
+#define VSCPWORKS_VERSION_STR       "alfa 0.0.1.0"
 
 
-class connection;
+enum numerical_base {HEX, DECIMAL, OCTAL, BINARY};
+
+// home folder is used for storage of program configuration
+// system folder holds databases etc
+#ifdef WIN32
+#define DEFAULT_HOME_FOLDER       "c:/programdata/vscp/vscpworks/"
+#define DEFAULT_VSCP_SYSTEM_FOLDER  "c:/programdata/vscp/"
+#else 
+#define DEFAULT_HOME_FOLDER       "~/.vscpworks/"
+#define DEFAULT_VSCP_SYSTEM_FOLDER  "/var/lib/vscp/"
+#endif
+
+// class connection;
 
 /*!
     Encapsulates VSCP works main settings
 */
-class vscpworks {
+class vscpworks : public QApplication {
 
 public:
     /*!
         Constructor
     */
-    vscpworks();
+    vscpworks(int &argc, char **argv);
 
     /*!
         Destructor
     */
     ~vscpworks();
 
+    // ------------------------------------------------------------------------
+    // Global Configuration information below
+    //   This info is read from a configuration file 
+    //   at startup and saved on close. The configuration
+    //   file should be placed in the home folder. 
+    // ------------------------------------------------------------------------
 
-    /// List with defined connections
-    std::list<connection *> m_connections;
+    // Numerical base for all numericals in system
+    numerical_base m_base;
 
 };
 

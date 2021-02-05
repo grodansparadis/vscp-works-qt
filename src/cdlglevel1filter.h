@@ -1,4 +1,4 @@
-// cdlgconnsettingssocketcan.h
+// cdlglevel1filter.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,20 +26,20 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSSOCKETCAN_H
-#define CDLGCONNSETTINGSSOCKETCAN_H
+#ifndef CDLGLEVEL1FILTER_H
+#define CDLGLEVEL1FILTER_H
 
-#include "vscp_client_socketcan.h"
+#include <vscpworks.h>
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgConnSettingsSocketCan;
+class CDlgLevel1Filter;
 }
 
 
-class CDlgConnSettingsSocketCan : public QDialog
+class CDlgLevel1Filter : public QDialog
 {
     Q_OBJECT
 
@@ -47,71 +47,44 @@ public:
     
 
 public:
-    explicit CDlgConnSettingsSocketCan(QWidget *parent = nullptr);
-    ~CDlgConnSettingsSocketCan();
+    explicit CDlgLevel1Filter(QWidget *parent = nullptr);
+    ~CDlgLevel1Filter();
 
     /*!
         Set inital focus to description
     */
     void setInitialFocus(void);
 
-    /*!
-        Add filters to list
-    */
-    void addFilterItems(void);
+
+ public slots:
 
     /*!
-        Called when an item in the filter list is clicked
+        Wizard button has been clicked
     */
-    void onClicked(QListWidgetItem* item);
+    void onWizard(void);
 
     /*!
-        Called when ab item in the filter list is double clicked
+        Numerical base changed -recalc
     */
-    void onDoubleClicked(QListWidgetItem* item);
+    void onBaseChange(int index);
+
+    // void onBaseChange(const QString&);
 
     /*!
-        Called when the add filter button is clicked
+        ID and MASK should be entered
     */
-    void onAddFilter(void);
-
-    /*!
-        Called when the delete filter button is clicked
-    */
-    void onDeleteFilter(void);
-
-    /*!
-        Called when the delete filter button is clicked
-    */
-    void onEditFilter(void);
-
-    /*!
-        Called when the test connection is clicked
-    */
-    void onTestConnection(void);
-
-    /*!
-        Setters/getters for name/description
-    */
-    std::string getName(void);
-    void setName(const std::string& str);
-
-    /*!
-        Setters/getters for path
-    */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    void onIdMask(void);
 
 private:
 
-    Ui::CDlgConnSettingsSocketCan *ui;
+    Ui::CDlgLevel1Filter *ui;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
+    // void createMenu();
+    // void createHorizontalGroupBox();
+    // void createGridGroupBox();
+    // void createFormGroupBox();
 
 };
 
 
-#endif // CDLGCONNSETTINGSSOCKETCAN_H
+#endif // CDLGLEVEL1FILTER_H

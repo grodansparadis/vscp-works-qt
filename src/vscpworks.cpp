@@ -32,9 +32,10 @@
 // vscpworks
 //
 
-vscpworks::vscpworks()
+vscpworks::vscpworks(int &argc, char **argv) :
+    QApplication(argc, argv)
 {
-
+    m_base = HEX;   // Numerical base
 }
 
 ///////////////////////////////////////////////////////////////////////////////

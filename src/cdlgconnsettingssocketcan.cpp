@@ -26,6 +26,7 @@
 // SOFTWARE.
 //
 
+#include "cdlglevel1filter.h"
 
 #include "cdlgconnsettingssocketcan.h"
 #include "ui_cdlgconnsettingssocketcan.h"
@@ -41,6 +42,16 @@ CDlgConnSettingsSocketCan::CDlgConnSettingsSocketCan(QWidget *parent) :
     ui(new Ui::CDlgConnSettingsSocketCan)
 {
     ui->setupUi(this);
+
+    connect(ui->listFilters, &QListWidget::itemClicked, this, &CDlgConnSettingsSocketCan::onClicked ); 
+    connect(ui->listFilters, &QListWidget::itemDoubleClicked, this, &CDlgConnSettingsSocketCan::onDoubleClicked ); 
+
+    connect(ui->btnAddFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onAddFilter ); 
+    connect(ui->btnEditFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onEditFilter ); 
+    connect(ui->btnDeleteFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onDeleteFilter );
+    connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onTestConnection );  
+
+    addFilterItems();  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +69,16 @@ CDlgConnSettingsSocketCan::~CDlgConnSettingsSocketCan()
 
 void CDlgConnSettingsSocketCan::setInitialFocus(void)
 {
-    ui->m_description->setFocus();
+    ui->editDescription->setFocus();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addFilterItems
+//
+
+void CDlgConnSettingsSocketCan::addFilterItems()
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +87,7 @@ void CDlgConnSettingsSocketCan::setInitialFocus(void)
 
 void CDlgConnSettingsSocketCan::onClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
+    //m_selected_type = static_cast<CVscpClient::connType>(item->type());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,16 +96,53 @@ void CDlgConnSettingsSocketCan::onClicked(QListWidgetItem* item)
 
 void CDlgConnSettingsSocketCan::onDoubleClicked(QListWidgetItem* item)
 {       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
-    accept();
+    //m_selected_type = static_cast<CVscpClient::connType>(item->type());
+    //accept();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getSelectedType
+// onAddFilter
 //
 
-CVscpClient::connType CDlgConnSettingsSocketCan::getSelectedType(void) {
-    return m_selected_type;
+void CDlgConnSettingsSocketCan::onAddFilter(void)
+{
+    CDlgLevel1Filter dlg(this);
+    dlg.exec();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onDeleteFilter
+//
+
+void CDlgConnSettingsSocketCan::onDeleteFilter(void)
+{
+    QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("Edit filter"),
+                                QMessageBox::Ok ); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onEditFilter
+//
+
+void CDlgConnSettingsSocketCan::onEditFilter(void)
+{
+    CDlgLevel1Filter dlg(this);
+    dlg.exec();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onTestConnection
+//
+
+void CDlgConnSettingsSocketCan::onTestConnection(void)
+{
+    QCoreApplication *core = QCoreApplication::instance();
+    QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("Test connection"),
+                                QMessageBox::Ok ); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,7 +151,7 @@ CVscpClient::connType CDlgConnSettingsSocketCan::getSelectedType(void) {
 
 std::string CDlgConnSettingsSocketCan::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->editDescription->text().toStdString()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,5 +160,5 @@ std::string CDlgConnSettingsSocketCan::getName(void)
 
 void CDlgConnSettingsSocketCan::setName(const std::string& str)
 {
-    ui->m_description->insert(str.c_str());
+    ui->editDescription->setText(str.c_str());
 }

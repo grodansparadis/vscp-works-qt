@@ -26,8 +26,6 @@
 // SOFTWARE.
 //
 
-//#include "connection_types.h"
-
 #include "cdlgnewconnection.h"
 #include "ui_cdlgnewconnection.h"
 
@@ -38,7 +36,7 @@
 //
 
 CDlgNewConnection::CDlgNewConnection(QWidget *parent) :
-    QDialog(parent),
+        QDialog(parent),
     ui(new Ui::CDlgNewConnection)
 {
     ui->setupUi(this);

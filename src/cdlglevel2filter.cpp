@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlglevel2filter.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,65 +26,36 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGNEWCONNECTION_H
-#define CDLGNEWCONNECTION_H
 
-#include "vscp_client_base.h"
+#include "cdlglevel2filter.h"
+#include "ui_cdlglevel2filter.h"
 
-#include <QDialog>
-#include <QListWidgetItem>
+#include <QMessageBox>
 
-namespace Ui {
-class CDlgNewConnection;
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
+
+CDlgLevel1Filter::CDlgLevel2Filter(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::CDlgLevel2Filter)
+{
+    ui->setupUi(this);
+
+    // Hook to row clicked
+    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemClicked, this, &CDlgLevel1Filter::onClicked ); 
+
+    // Hook to row double clicked
+    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );           
+    
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
 
-class CDlgNewConnection : public QDialog
+CDlgLevel2Filter::~CDlgLevel2Filter()
 {
-    Q_OBJECT
+    delete ui;
+}
 
-public:
-    
-
-public:
-    explicit CDlgNewConnection(QWidget *parent = nullptr);
-    ~CDlgNewConnection();
-
-    /*!
-        Add connection items
-    */
-    void addConnectionItems(void);
-
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
-
-private:
-
-    Ui::CDlgNewConnection *ui;
-
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
-
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
-};
-
-
-#endif // CDLGNEWCONNECTION_H
