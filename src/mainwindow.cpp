@@ -802,7 +802,7 @@ void MainWindow::readSettings()
     }
     settings.endArray();
 
-
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     
 
     //int margin = settings.value("editor/wrapMargin").toInt();
@@ -813,7 +813,7 @@ void MainWindow::readSettings()
     //destination = QString::fromStdString(source);
 
     // Configuration folder vscpworks
-    std::string cfgfolder = settings.value("cfgfolder", "").toString().toStdString();
+    pworks->m_cfgfolder = settings.value("cfgfolder", "").toString().toStdString();
 
     // Default numerical base
     //default_base_ numerical_base = settings.value("general/numerical-base", 0).toInt();

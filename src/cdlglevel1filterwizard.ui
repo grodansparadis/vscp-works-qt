@@ -41,9 +41,9 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>370</x>
      <y>10</y>
-     <width>501</width>
+     <width>391</width>
      <height>381</height>
     </rect>
    </property>
@@ -110,7 +110,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>191</width>
+     <width>301</width>
      <height>381</height>
     </rect>
    </property>
@@ -124,12 +124,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editId</cstring>
+       <cstring>editVscpPriorityFilter</cstring>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="editId">
+     <widget class="QLineEdit" name="editVscpPriorityFilter">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -147,12 +147,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editMask</cstring>
+       <cstring>editVscpPriorityMask</cstring>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="editMask">
+     <widget class="QLineEdit" name="editVscpPriorityMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -177,12 +177,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editMask</cstring>
+       <cstring>editVscpPriorityMask</cstring>
       </property>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="editMask_2">
+     <widget class="QLineEdit" name="editVscpClassFilter">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -200,17 +200,24 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editMask</cstring>
+       <cstring>editVscpPriorityMask</cstring>
       </property>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="editMask_3">
+     <widget class="QLineEdit" name="editVscpClassMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
       <property name="text">
        <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="Line" name="line_6">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -223,12 +230,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editId</cstring>
+       <cstring>editVscpPriorityFilter</cstring>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QLineEdit" name="editMask_4">
+     <widget class="QLineEdit" name="editVscpTypeFilter">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -246,17 +253,24 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editId</cstring>
+       <cstring>editVscpPriorityFilter</cstring>
       </property>
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QLineEdit" name="editMask_5">
+     <widget class="QLineEdit" name="editVscpTypeMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
       <property name="text">
        <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="Line" name="line_7">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
@@ -269,12 +283,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editId</cstring>
+       <cstring>editVscpPriorityFilter</cstring>
       </property>
      </widget>
     </item>
     <item row="9" column="1">
-     <widget class="QLineEdit" name="editMask_6">
+     <widget class="QLineEdit" name="editVscpNodeIdFilter">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -292,12 +306,12 @@
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editId</cstring>
+       <cstring>editVscpPriorityFilter</cstring>
       </property>
      </widget>
     </item>
     <item row="10" column="1">
-     <widget class="QLineEdit" name="editMask_7">
+     <widget class="QLineEdit" name="editVscpNodeIdMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -306,55 +320,45 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="12" column="1">
+     <widget class="QComboBox" name="comboNumberBase">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+      <item>
+       <property name="text">
+        <string>HEX</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>DECIMAL</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>OCTAL</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>BINARY</string>
+       </property>
+      </item>
+     </widget>
     </item>
-    <item row="11" column="1">
-     <spacer name="verticalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="12" column="0">
+    <item row="13" column="0">
      <widget class="Line" name="line_4">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="13" column="0">
+    <item row="14" column="0">
      <widget class="Line" name="line_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="Line" name="line_6">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0">
-     <widget class="Line" name="line_7">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -365,7 +369,7 @@
   <widget class="QPushButton" name="btnTransferRight">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>320</x>
      <y>160</y>
      <width>41</width>
      <height>25</height>
@@ -378,7 +382,7 @@
   <widget class="QPushButton" name="btnTransferLeft">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>320</x>
      <y>190</y>
      <width>41</width>
      <height>25</height>
@@ -391,7 +395,7 @@
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>330</x>
      <y>10</y>
      <width>20</width>
      <height>141</height>
@@ -404,7 +408,7 @@
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>330</x>
      <y>230</y>
      <width>20</width>
      <height>161</height>
@@ -416,8 +420,8 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>editId</tabstop>
-  <tabstop>editMask</tabstop>
+  <tabstop>editVscpPriorityFilter</tabstop>
+  <tabstop>editVscpPriorityMask</tabstop>
   <tabstop>listClasses</tabstop>
   <tabstop>listTypes</tabstop>
   <tabstop>listPriority</tabstop>

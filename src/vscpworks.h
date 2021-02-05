@@ -75,6 +75,12 @@ public:
     //   file should be placed in the home folder. 
     // ------------------------------------------------------------------------
 
+    // Folder used for configuration
+    std::string m_cfgfolder;
+
+    // Folder used for VSCP files like db's
+    std::string m_vscpfolder;
+
     // Numerical base for all numericals in system
     numerical_base m_base;
 
