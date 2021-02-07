@@ -30,15 +30,19 @@
 #include <QtWidgets>
 #include <QMessageBox>
 #include <QJSEngine>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
 
 #include "vscpworks.h"
+#include "filedownloader.h"
 
 #include "version.h"
 #include "cfrmsession.h"
 #include "vscp_client_base.h"
+#include "cdlgmainsettings.h"
 #include "cdlgnewconnection.h"
 #include "cdlgconnsettingslocal.h"
 #include "cdlgconnsettingscanal.h"
@@ -52,6 +56,7 @@
 #include "cdlgconnsettingsmulticast.h"
 #include "cdlgconnsettingsrawcan.h"
 #include "cdlgconnsettingsrawmqtt.h"
+#include "filedownloader.h"
 
 #include "mainwindow.h"
 
@@ -74,6 +79,7 @@ QTreeWidgetItemConn::QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *
     topItem->setExpanded(true);
     //topItem->setSelected(false);
     setSelected(true);
+    
 }
 
 QTreeWidgetItemConn::~QTreeWidgetItemConn()
@@ -248,6 +254,99 @@ MainWindow::MainWindow()
 
     //addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    // Get version for remote events
+    QUrl versionUrl("https://vscp.org/events/version.json");
+    m_pVersionCtrl = new FileDownloader(versionUrl, this);
+
+    //bool success = connect(m_pVersionCtrl, SIGNAL(downloaded()), this, SLOT(checkRemoteEventDbVersion()));
+    bool success = connect(m_pVersionCtrl, &FileDownloader::downloaded, 
+                            this, &MainWindow::checkRemoteEventDbVersion);
+
+    QSqlDatabase evdb;
+    evdb = QSqlDatabase::addDatabase("QSQLITE");
+    QString dbpath = pworks->m_shareFolder;
+    dbpath += "vscp_events.sqlite3";
+    qDebug() << "db = " << dbpath;
+    evdb.setDatabaseName(dbpath);
+
+    if (!evdb.open()) {
+        //qDebug() << Database.lastError().text();
+        qDebug() << "This is the end";
+    }
+    else {
+        QSqlQuery query("SELECT * FROM vscp_class");
+        // query.bindValue(":id", 1001);
+        // query.bindValue(":forename", "Bart");
+        // query.bindValue(":surname", "Simpson");
+        //query.exec();
+        while (query.next()) {
+            QString className = query.value(1).toString();
+            qDebug() << className;
+            //doSomething(country);
+        }
+    }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// checkRemoteEventDbVersion
+//
+
+void MainWindow::checkRemoteEventDbVersion()
+{
+    json j;
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    QString ver(m_pVersionCtrl->downloadedData());
+    //qDebug() << "Data: " << ver;
+
+    j = json::parse(ver.toStdString().c_str());   
+
+    QString dd(j["generated"].get<std::string>().c_str());
+    QDateTime dt = QDateTime::fromString(dd, Qt::ISODateWithMs);
+
+    // If there is a newer version we should download it
+    if ( ( pworks->m_lastEventDbLoadDateTime.toTime_t() - dt.toTime_t() ) > 0 ) {
+        //qDebug() << pworks->m_lastEventDbLoadDateTime.toTime_t() - dt.toTime_t();
+
+        // Get version for remote events
+        QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
+        m_pVersionCtrl = new FileDownloader(eventUrl, this);
+
+        bool success = connect(m_pVersionCtrl, &FileDownloader::downloaded, 
+                                this, &MainWindow::downloadedEventDb);
+    } 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// downloadedEventDb
+//
+
+void MainWindow::downloadedEventDb()
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    QFile file("/tmp/vscp_events.sqlite3");
+    file.open(QIODevice::WriteOnly);
+    file.write(m_pVersionCtrl->downloadedData());
+    file.close();
+    qDebug() << "A new event database file has been download";
+    
+    QString path = pworks->m_shareFolder;
+    path += "vscp_events.sqlite3";
+    if (QFile::exists(path)) {
+        QFile::remove(path);
+    }
+
+    QFile::copy("/tmp/vscp_events.sqlite3", path);    
+
+    QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("A new VSCP event database has been downloaded."),
+                                QMessageBox::Ok );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -750,8 +849,13 @@ void MainWindow::createActions()
 
 #endif // !QT_NO_CLIPBOARD
 
+    QMenu *toolsMenu = menuBar()->addMenu(tr("&Tools"));
+    QAction *aboutAct = toolsMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
+    aboutAct->setStatusTip(tr("Open settins..."));
+
+
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
+    QAction *settingsAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
     aboutAct->setStatusTip(tr("Show the application's About box"));
 
     QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
@@ -759,7 +863,6 @@ void MainWindow::createActions()
 
 #ifndef QT_NO_CLIPBOARD
     cutAct->setEnabled(false);
-
     copyAct->setEnabled(false);
     //connect(m_textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
     //connect(m_textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
@@ -813,7 +916,9 @@ void MainWindow::readSettings()
     //destination = QString::fromStdString(source);
 
     // Configuration folder vscpworks
-    pworks->m_cfgfolder = settings.value("cfgfolder", "").toString().toStdString();
+    //pworks->m_cfgfolder = settings.value("cfgfolder", "").toString();
+
+    
 
     // Default numerical base
     //default_base_ numerical_base = settings.value("general/numerical-base", 0).toInt();
@@ -827,19 +932,9 @@ void MainWindow::readSettings()
 void MainWindow::writeSettings()
 {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-    settings.setValue("geometry", saveGeometry());
-    //settings.setValue("editor/wrapMargin", 68);
-    settings.setValue("editor/wrapMargin", "{ 'test': ['aaa','bbb']}");
 
-    settings.beginWriteArray("hosts/connections");
-    //for (int i = 0; i < m_connections.size(); ++i) {
-    int i = 0;    
-    for (std::list<CVscpClient *>::iterator it = m_listConn.begin(); it != m_listConn.end(); ++it){    
-        settings.setArrayIndex(i);
-        settings.setValue("conn", QString::fromStdString((*it)->getName()));
-        //settings.setValue("conn", it->toJson);
-    }
-    settings.endArray();
+    settings.setValue("geometry", saveGeometry());
+ 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -981,6 +1076,19 @@ void MainWindow::newSession()
 {
     CFrmSession *w = new CFrmSession(this);
     w->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showMainsettings
+//
+
+void MainWindow::showMainsettings(void)
+{
+    CDlgMainSettings *dlg = new CDlgMainSettings(this);
+    dlg->show();
+
+    //CFrmSession *w = new CFrmSession(this);
+    //w->show();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

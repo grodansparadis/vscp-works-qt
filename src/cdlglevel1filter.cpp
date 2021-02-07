@@ -47,12 +47,17 @@ CDlgLevel1Filter::CDlgLevel1Filter(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    m_baseIndex = pworks->m_base;
+    ui->comboNumberBase->setCurrentIndex(static_cast<int>(m_baseIndex));
+    onBaseChange(static_cast<int>(m_baseIndex));
+
     connect(ui->btnIdMask, &QPushButton::clicked, this, &CDlgLevel1Filter::onIdMask );
     connect(ui->btnWizard, &QPushButton::clicked, this, &CDlgLevel1Filter::onWizard );
     //connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(const QString&)),
     //            this,SLOT(onBaseChange(const QString&)));
     connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(int)),
-                    this, SLOT(onBaseChange(int)));                
+            this, SLOT(onBaseChange(int)));                
 
     setInitialFocus();             
 }
@@ -76,12 +81,24 @@ void CDlgLevel1Filter::setInitialFocus(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// setVscpPriorityFilter
+//
+
+void CDlgLevel1Filter::setVscpPriorityFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpPriorityFilter->setText(qstr);
+};
+
+///////////////////////////////////////////////////////////////////////////////
 // onWizard
 //
 
 void CDlgLevel1Filter::onWizard(void)
 {
     CDlgLevel1FilterWizard dlg(this);
+    
     dlg.exec();
 }
 
@@ -108,6 +125,7 @@ void CDlgLevel1Filter::onBaseChange(int index)
     QString qstr;
     QString prefix;
     numerical_base numbase = static_cast<numerical_base>(index);
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     
     switch (numbase) {
         case HEX:
@@ -154,14 +172,3 @@ void CDlgLevel1Filter::onBaseChange(int index)
     ui->editVscpNodeIdMask->setText(qstr);                            
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// onBaseChange
-//
-
-// void CDlgLevel1Filter::onBaseChange(const QString& str)
-// {
-//     QMessageBox::information(this, 
-//                                 tr("vscpworks+"),
-//                                 str,
-//                                 QMessageBox::Ok );   
-// }

@@ -55,6 +55,45 @@ public:
     */
     void setInitialFocus(void);
 
+    /*!
+    */
+    void setVscpPriorityFilter(uint8_t value);
+
+
+    //     QString qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString()), base);
+    //     int base = 10;
+    //     QString qstr;
+    //     QString prefix;
+
+    //     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    //     switch (pworks->m_base) {
+    //     case HEX:
+    //         prefix = "0x";
+    //         base = 16;
+    //         break;
+    //     case DECIMAL:
+    //     default:
+    //         prefix = "";
+    //         base = 10;
+    //         break;
+    //     case OCTAL:
+    //         prefix = "0o";
+    //         base = 8;
+    //         break;
+    //     case BINARY:
+    //         prefix = "0b";
+    //         base = 2;
+    //         break;
+    // }
+    //     QString str = 
+    //     qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString()), base);
+    //     ui->editVscpPriorityFilter->setText(qstr);
+    
+    uint8_t getVscpPriorityFilter(void);
+
+    void setVscpPriorityMask(uint8_t value) { };
+    uint8_t getVscpPriorityMask(void);
 
  public slots:
 
@@ -79,6 +118,7 @@ private:
 
     Ui::CDlgLevel1Filter *ui;
 
+    int m_baseIndex;
     // void createMenu();
     // void createHorizontalGroupBox();
     // void createGridGroupBox();

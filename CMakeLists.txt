@@ -56,6 +56,7 @@ endif()
 
 # set(UI )
 qt5_wrap_ui(UI src/mainwindow.ui
+    src/cdlgmainsettings.ui
     src/cdlgconnsettingslocal.ui
     src/cdlgconnsettingscanal.ui
     src/cdlgconnsettingstcpip.ui
@@ -78,9 +79,14 @@ add_executable(vscp-works-qt
     src/vscpworks.qrc
     src/main.cpp
     src/mainwindow.cpp
-    src/mainwindow.h    
+    src/mainwindow.h
+    src/filedownloader.h
+    src/filedownloader.cpp    
     src/cdlgnewconnection.h
     src/cdlgnewconnection.cpp
+    build/ui_cdlgmainsettings.h
+    src/cdlgmainsettings.h
+    src/cdlgmainsettings.cpp
     build/ui_cdlgconnsettingslocal.h
     src/cdlgconnsettingslocal.h
     src/cdlgconnsettingslocal.cpp

@@ -30,7 +30,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//#include "connection_types.h"
 #include "vscp_client_base.h"
 
 #include <QMainWindow>
@@ -47,6 +46,8 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QModelIndex;
 QT_END_NAMESPACE
+
+class FileDownloader;
 
 class QTreeWidgetItemConn : public QTreeWidgetItem
 {
@@ -72,6 +73,8 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
+    void checkRemoteEventDbVersion();
+    void downloadedEventDb();
     void newConnection();
     void open();
     bool save();
@@ -81,7 +84,9 @@ private slots:
 #ifndef QT_NO_SESSIONMANAGER
     void commitData(QSessionManager &);
 #endif
-    void newSession();
+    void newSession(void);
+
+    void showMainsettings(void);
 
     void editConnectionItem(uint32_t connectionIndex);
     void cloneConnectionItem(uint32_t connectionIndex);
@@ -109,7 +114,7 @@ private slots:
     void onDoubleClicked(QTreeWidgetItem* item);
     
 
-protected:    
+protected:        
 
     /*
         Display a context menu when user right click on
@@ -142,10 +147,7 @@ private:
     //QTableWidget *m_connTable;
     QTreeWidget *m_connTreeTable;
 
-    QString curFile;
-
-    /// List with defined connections
-    std::list<CVscpClient *> m_listConn;
+    QString curFile;    
 
     // Top items in tree control
     QTreeWidgetItem *m_topitem_local;
@@ -160,6 +162,9 @@ private:
     QTreeWidgetItem *m_topitem_rest;
     QTreeWidgetItem *m_topitem_rawcan;
     QTreeWidgetItem *m_topitem_rawmqtt;
+
+private:
+    FileDownloader  *m_pVersionCtrl;    
 };
 
 #endif // MAINWINDOW_H

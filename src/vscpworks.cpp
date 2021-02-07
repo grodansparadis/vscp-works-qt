@@ -26,7 +26,22 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
 #include "vscpworks.h"
+#include "filedownloader.h"
+
+#include <QDebug>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QDir>
+#include <QFile>
+
+#include <nlohmann/json.hpp>
+
+// for convenience
+using json = nlohmann::json;
 
 ///////////////////////////////////////////////////////////////////////////////
 // vscpworks
@@ -34,8 +49,8 @@
 
 vscpworks::vscpworks(int &argc, char **argv) :
     QApplication(argc, argv)
-{
-    m_base = HEX;   // Numerical base
+{        
+    m_base = HEX;   // Numerical base    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,5 +59,145 @@ vscpworks::vscpworks(int &argc, char **argv) :
 
 vscpworks::~vscpworks()
 {
-    
+    writeSettings();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// decimalToStringInBase
+//
+
+QString vscpworks::decimalToStringInBase(uint32_t value, int tobase) 
+{
+    int base = 10;
+    QString qstr;
+    QString prefix;
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    numerical_base selbase = (-1 == tobase) ? pworks->m_base : static_cast<numerical_base>(base);
+    switch (selbase) {
+        case HEX:
+            prefix = "0x";
+            base = 16;
+            break;
+        case DECIMAL:
+        default:
+            prefix = "";
+            base = 10;
+            break;
+        case OCTAL:
+            prefix = "0o";
+            base = 8;
+            break;
+        case BINARY:
+            prefix = "0b";
+            base = 2;
+            break;
+        }
+    
+        return (prefix + QString::number(value, base));
+    };
+
+///////////////////////////////////////////////////////////////////////////////
+// decimalToStringInBase
+//
+
+QString vscpworks::decimalToStringInBase(const QString& strvalue, int tobase) 
+{
+    uint32_t value = vscp_readStringValue(strvalue.toStdString());
+    return decimalToStringInBase(value, tobase);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSettings *
+//
+
+void vscpworks::readSettings()
+{
+    QString str;   
+
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());    
+
+    // Configuration folder 
+    // --------------------
+    // Linux: "/home/akhe/.config"                      Config file is here (VSCP/vscp-works-qt)
+    // Windows: 
+    {
+        QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+        path += "/";
+        path += QCoreApplication::applicationName();
+        path += "/";
+        m_configFolder = settings.value("configFolder", path).toString();
+        qDebug() << "Config folder = " << path;        
+    }
+
+    // Share folder
+    // ------------
+    // Linux: "/home/akhe/.local/share/vscp-works-qt"   user data is here
+    // Windows: 
+    {
+        QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        path += "/";
+        // path += QCoreApplication::organizationName();
+        // path += "/";        
+        m_shareFolder = settings.value("shareFolder", path).toString();
+        qDebug() << "" << path;
+        // If folder does not exist, create it
+        QDir dir(path);
+        if (!dir.exists())  {
+            dir.mkpath(".");
+        }
+    }
+
+    // VSCP Home folder
+    // ----------------
+    #ifdef WIN32
+        m_vscpHomeFolder = settings.value("vscpHomeFolder", "c:/program files/vscp").toString();
+    #else 
+        m_vscpHomeFolder = settings.value("vscpHomeFolder", "/var/lib/vscp").toString();          
+    #endif
+
+    // System numerical base
+    // ---------------------
+    m_base = static_cast<numerical_base>(settings.value("numericBase", "0").toInt());
+
+    // VSCP event database last load date/time
+    // ---------------------------------------
+    m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00").toDateTime();
+    
+    // Connections
+    // -----------
+    int size = settings.beginReadArray("hosts/connections");
+    for (int i = 0; i < size; ++i) {
+        settings.setArrayIndex(i);
+        std::string conn = settings.value("conn", "").toString().toStdString();
+    }
+    settings.endArray(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// writeSettings *
+//
+
+void vscpworks::writeSettings()
+{
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    // General settings
+    settings.setValue("configFolder", m_configFolder);
+    settings.setValue("shareFolder", m_shareFolder);
+    settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
+    settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
+    settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
+
+    // Connections
+    settings.beginWriteArray("hosts/connections");
+    int i = 0;    
+    for (std::list<CVscpClient *>::iterator it = m_listConn.begin(); it != m_listConn.end(); ++it){    
+        settings.setArrayIndex(i);
+        settings.setValue("conn", QString::fromStdString((*it)->getName()));
+        //settings.setValue("conn", it->toJson);
+    }
+    settings.endArray();
+}
+

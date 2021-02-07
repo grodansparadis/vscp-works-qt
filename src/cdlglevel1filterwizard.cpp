@@ -26,6 +26,8 @@
 // SOFTWARE.
 //
 
+#include "vscpworks.h"
+#include "vscphelper.h"
 
 #include "cdlglevel1filterwizard.h"
 #include "ui_cdlglevel1filterwizard.h"
@@ -46,7 +48,7 @@ CDlgLevel1FilterWizard::CDlgLevel1FilterWizard(QWidget *parent) :
     connect(ui->btnTransferLeft, &QPushButton::clicked, this, &CDlgLevel1FilterWizard::transferFromVisual);
 
     connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(int)),
-                    this, SLOT(onBaseChange(int))); 
+                    this, SLOT(onBaseChange(int)));
     
     setInitialFocus();
 }
@@ -75,10 +77,54 @@ void CDlgLevel1FilterWizard::setInitialFocus(void)
 
 void CDlgLevel1FilterWizard::onBaseChange(int index)
 {
-    QMessageBox::information(this, 
-                                tr("vscpworks+"),
-                                tr("Numerical base has changeed"),
-                                QMessageBox::Ok );
+    int base = 10;
+    QString qstr;
+    QString prefix;
+    numerical_base numbase = static_cast<numerical_base>(index);
+    
+    switch (numbase) {
+        case HEX:
+            prefix = "0x";
+            base = 16;
+            break;
+        case DECIMAL:
+        default:
+            prefix = "";
+            base = 10;
+            break;
+        case OCTAL:
+            prefix = "0o";
+            base = 8;
+            break;
+        case BINARY:
+            prefix = "0b";
+            base = 2;
+            break;
+    }
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString()), base);
+    ui->editVscpPriorityFilter->setText(qstr);
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityMask->text().toStdString()), base);
+    ui->editVscpPriorityMask->setText(qstr);
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpClassFilter->text().toStdString()), base);
+    ui->editVscpClassFilter->setText(qstr);
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpClassMask->text().toStdString()), base);
+    ui->editVscpClassMask->setText(qstr);
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpTypeFilter->text().toStdString()), base);
+    ui->editVscpTypeFilter->setText(qstr);
+
+    qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpTypeMask->text().toStdString()), base);
+    ui->editVscpTypeMask->setText(qstr);
+
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()),16);
+    ui->editVscpNodeIdFilter->setText(qstr);
+
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()),16);
+    ui->editVscpNodeIdMask->setText(qstr);                            
 }
 
 ///////////////////////////////////////////////////////////////////////////////

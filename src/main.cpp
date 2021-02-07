@@ -1,4 +1,6 @@
-//#include <QApplication>
+#include "vscp.h"
+#include "version.h"
+
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
@@ -11,7 +13,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("VSCP");
     QCoreApplication::setOrganizationDomain("vscp.org");
     QCoreApplication::setApplicationName("vscpworks+");
-    QCoreApplication::setApplicationVersion(VSCPWORKS_VERSION_STR);
+    QCoreApplication::setApplicationVersion(VSCPWORKS_DISPLAY_VERSION);
 
     // vscpworks --config "config folder"
     QCommandLineParser parser;
@@ -24,6 +26,8 @@ int main(int argc, char *argv[])
             QCoreApplication::translate("main", "directory"));
     parser.process(app);
 
+    app.readSettings();
+
     MainWindow mainWin; 
     if (!parser.positionalArguments().isEmpty()) {
         //mainWin.loadFile(parser.positionalArguments().first());
@@ -31,4 +35,7 @@ int main(int argc, char *argv[])
 
     mainWin.show(); 
     return app.exec();
+
+    // Save configuration
+    app.writeSettings();
 }

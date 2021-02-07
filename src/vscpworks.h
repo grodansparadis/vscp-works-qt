@@ -29,24 +29,29 @@
 #ifndef VSCPWORKS_H
 #define VSCPWORKS_H
 
+#include "version.h"
+#include "vscp_client_base.h"
+
 #include <QApplication>
 
-#define VSCPWORKS_MAJOR_VERSION     0
-#define VSCPWORKS_MINOR_VERSION     0
-#define VSCPWORKS_RELEASE_VERSION   1
-#define VSCPWORKS_BUILD_VERSION     0
-#define VSCPWORKS_VERSION_STR       "alfa 0.0.1.0"
+#include <QObject>
+#include <QByteArray>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QDateTime>
 
+#include <list>
 
 enum numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 
 // home folder is used for storage of program configuration
 // system folder holds databases etc
 #ifdef WIN32
-#define DEFAULT_HOME_FOLDER       "c:/programdata/vscp/vscpworks/"
+#define DEFAULT_HOME_FOLDER         "c:/programdata/vscp/vscpworks/"
 #define DEFAULT_VSCP_SYSTEM_FOLDER  "c:/programdata/vscp/"
 #else 
-#define DEFAULT_HOME_FOLDER       "~/.vscpworks/"
+#define DEFAULT_HOME_FOLDER         "~/.vscpworks/"
 #define DEFAULT_VSCP_SYSTEM_FOLDER  "/var/lib/vscp/"
 #endif
 
@@ -57,7 +62,7 @@ enum numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 */
 class vscpworks : public QApplication {
 
-public:
+ public:
     /*!
         Constructor
     */
@@ -68,6 +73,65 @@ public:
     */
     ~vscpworks();
 
+    const QString URL_EVENT_VERSION = tr("https://www.vscp.org/events/version.js");
+    const QString URL_EVENT_DATABASE = tr("https://www.vscp.org/events/vscp_events.sqlite3");
+
+    /*!
+        Load configuration settings from disk
+    */
+    void readSettings(void);
+
+    /*!
+        Save configuration settings to disk
+    */
+    void writeSettings(void);
+
+    /*!
+        Check the remote event information at
+        https://vscp.org/events for the file
+        version.json which hold the release
+        version for the files. A new version
+        of the db should be downloaded if this
+        date is newer then stored.
+        
+        @return True if current rate is up to date, if not
+            false is returned and a new version of the
+            database should be downloaded.
+    */
+    //bool checkRemoteEventDbVersion(void);
+
+    /*!
+        Convert integer number to selected base. 
+        The resulting string  representation of the number have 
+        - No prefix if decimal
+        - "0x" prefix if hexadecimal
+        - "0o" prefix if octal
+        - "0b" prefix if binary
+        @param value Integer that should be converted to a number
+        in the current base.
+        @param tobase If set to -1 (default) the current base is used for
+            base, otherwise the set base will be used.
+        @return String representing number with prepended base  prefix.
+    */
+    QString decimalToStringInBase(uint32_t value, int tobase = -1);
+
+    /*!
+        Convert integer number to selected base
+        The resulting string  representation of the number have 
+        - No prefix if decimal
+        - "0x" prefix if hexadecimal
+        - "0o" prefix if octal
+        - "0b" prefix if binary
+        @param strvalue Integer on string form whish should be converted to 
+        a number in the current base.
+        @param tobase If set to -1 (default) the current base is used for
+            base, otherwise the set base will be used.
+        @return String representing number with prepended base prefix.
+    */
+    QString decimalToStringInBase(const QString& strvalue, int tobase = -1); 
+
+
+
     // ------------------------------------------------------------------------
     // Global Configuration information below
     //   This info is read from a configuration file 
@@ -75,15 +139,52 @@ public:
     //   file should be placed in the home folder. 
     // ------------------------------------------------------------------------
 
-    // Folder used for configuration
-    std::string m_cfgfolder;
+    // ----------------------------------------------------
+
+    /// Folder used for configuration
+    /// Linux: ~/.configure/VSCP/(vscpworks+.conf)
+    QString m_configFolder;
+
+    /// Folder for writeable data
+    /// Linux: ~/.local/share/vscp/vscpworks+
+    QString m_shareFolder;
 
     // Folder used for VSCP files like db's
-    std::string m_vscpfolder;
+    // Linux:
+    // vscp/drivers/level1 - contain level one drivers
+    // vscp/drivers/level2 - contain level two drivers
+    // Windows:
+    // c:/program data/vscp/drivers/level1
+    // c:/program data/vscp/drivers/level2
+    QString m_vscpHomeFolder;
 
-    // Numerical base for all numericals in system
+    // ---------------------------------------------------
+
+    /// Numerical base for all numericals in system
     numerical_base m_base;
 
+    // ---------------------------------------------------
+
+    /// URL for event database
+    QUrl m_eventDbUrl;
+
+    /*! 
+        This is the date and time  for the last event
+        database download
+    */    
+    QDate m_lastEventUrlDownLoad;
+
+    /*!
+        Latest VSCP event download
+    */
+    QDateTime m_lastEventDbLoadDateTime;
+
+    // --------------------------------------------------
+
+    /// List with defined connections
+    std::list<CVscpClient *> m_listConn;
+
+ 
 };
 
 

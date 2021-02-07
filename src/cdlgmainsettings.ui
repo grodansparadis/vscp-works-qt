@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgLevel1Filter</class>
- <widget class="QDialog" name="CDlgLevel1Filter">
+ <class>CDlgMainSettings</class>
+ <widget class="QDialog" name="CDlgMainSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
+    <width>820</width>
     <height>474</height>
    </rect>
   </property>
@@ -64,12 +64,12 @@
            <string>Numerical base</string>
           </property>
           <property name="buddy">
-           <cstring>comboBox</cstring>
+           <cstring>comboNumberBase</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="comboNumberBase">
           <item>
            <property name="text">
             <string>Hexadecimal</string>
@@ -167,7 +167,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgLevel1Filter</receiver>
+   <receiver>CDlgMainSettings</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -183,7 +183,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgLevel1Filter</receiver>
+   <receiver>CDlgMainSettings</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
