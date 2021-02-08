@@ -107,6 +107,7 @@ void CDlgConnSettingsSocketCan::onDoubleClicked(QListWidgetItem* item)
 void CDlgConnSettingsSocketCan::onAddFilter(void)
 {
     CDlgLevel1Filter dlg(this);
+    
     dlg.exec();
 }
 

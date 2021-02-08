@@ -43,7 +43,7 @@
 
 #include <list>
 
-enum numerical_base {HEX, DECIMAL, OCTAL, BINARY};
+enum class numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 
 // home folder is used for storage of program configuration
 // system folder holds databases etc
@@ -55,7 +55,7 @@ enum numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 #define DEFAULT_VSCP_SYSTEM_FOLDER  "/var/lib/vscp/"
 #endif
 
-// class connection;
+class FileDownloader;
 
 /*!
     Encapsulates VSCP works main settings
@@ -99,6 +99,12 @@ class vscpworks : public QApplication {
             database should be downloaded.
     */
     //bool checkRemoteEventDbVersion(void);
+
+    /*!
+        Loading data from the VSCP Event database into memory
+        @return true on success
+    */
+    bool loadEventDb(void);
 
     /*!
         Convert integer number to selected base. 
@@ -172,19 +178,30 @@ class vscpworks : public QApplication {
         This is the date and time  for the last event
         database download
     */    
-    QDate m_lastEventUrlDownLoad;
+    //QDateTime m_lastEventUrlDownLoad;
 
     /*!
         Latest VSCP event download
     */
     QDateTime m_lastEventDbLoadDateTime;
 
+    /*!
+        Latest VSCP events on server
+    */
+    QDateTime m_lastEventDbServerDateTime;
+
     // --------------------------------------------------
+
+    FileDownloader  *m_pVersionCtrl; 
 
     /// List with defined connections
     std::list<CVscpClient *> m_listConn;
 
- 
+    /// VSCP classes (class-id) -> token
+    std::map<uint16_t, QString> mapVscpClassToToken;
+
+    /// VSCP (class-id + token-id) -> token
+    std::map<uint32_t, QString> mapVscpTypeToToken;
 };
 
 

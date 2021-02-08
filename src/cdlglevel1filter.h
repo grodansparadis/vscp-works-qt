@@ -56,44 +56,67 @@ public:
     void setInitialFocus(void);
 
     /*!
+        set combo numbase index
+    */
+    void setNumBaseComboIndex(uint8_t index);
+
+    /*!
+        Get combo numbase index
+    */
+    uint8_t getNumComboIndex(void);
+
+    // ----------------------------------------------------------------------------
+    //                             Getters & Setters
+    // ----------------------------------------------------------------------------
+
+    /*!
+        Priority filter getter/setters
     */
     void setVscpPriorityFilter(uint8_t value);
-
-
-    //     QString qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString()), base);
-    //     int base = 10;
-    //     QString qstr;
-    //     QString prefix;
-
-    //     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-
-    //     switch (pworks->m_base) {
-    //     case HEX:
-    //         prefix = "0x";
-    //         base = 16;
-    //         break;
-    //     case DECIMAL:
-    //     default:
-    //         prefix = "";
-    //         base = 10;
-    //         break;
-    //     case OCTAL:
-    //         prefix = "0o";
-    //         base = 8;
-    //         break;
-    //     case BINARY:
-    //         prefix = "0b";
-    //         base = 2;
-    //         break;
-    // }
-    //     QString str = 
-    //     qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString()), base);
-    //     ui->editVscpPriorityFilter->setText(qstr);
-    
     uint8_t getVscpPriorityFilter(void);
 
-    void setVscpPriorityMask(uint8_t value) { };
+    /*!
+        Priority mask getter/setters
+    */
+    void setVscpPriorityMask(uint8_t value);
     uint8_t getVscpPriorityMask(void);
+
+    /*!
+        Class filter getter/setters
+    */
+    void setVscpClassFilter(uint16_t value);
+    uint16_t getVscpClassFilter(void);
+
+    /*!
+        Class mask getter/setters
+    */
+    void setVscpClassMask(uint16_t value);
+    uint16_t getVscpClassMask(void);
+
+    /*!
+        Type filter getter/setters
+    */
+    void setVscpTypeFilter(uint8_t value);
+    uint8_t getVscpTypeFilter(void);
+
+    /*!
+        Type mask getter/setters
+    */
+    void setVscpTypeMask(uint8_t value);
+    uint8_t getVscpTypeMask(void);
+
+    /*!
+        Nodeid filter getter/setters
+    */
+    void setVscpNodeIdFilter(uint8_t value);
+    uint8_t getVscpNodeIdFilter(void);
+
+    /*!
+        Nodeid mask getter/setters
+    */
+    void setVscpNodeIdMask(uint8_t value);
+    uint8_t getVscpNodeIdMask(void);
+    
 
  public slots:
 
@@ -118,7 +141,7 @@ private:
 
     Ui::CDlgLevel1Filter *ui;
 
-    int m_baseIndex;
+    numerical_base m_baseIndex;
     // void createMenu();
     // void createHorizontalGroupBox();
     // void createGridGroupBox();

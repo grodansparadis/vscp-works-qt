@@ -44,6 +44,11 @@ CDlgLevel1FilterWizard::CDlgLevel1FilterWizard(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    m_baseIndex = pworks->m_base;
+    ui->comboNumberBase->setCurrentIndex(static_cast<int>(m_baseIndex));
+    onBaseChange(static_cast<int>(m_baseIndex));
+
     connect(ui->btnTransferRight, &QPushButton::clicked, this, &CDlgLevel1FilterWizard::transferToVisual); 
     connect(ui->btnTransferLeft, &QPushButton::clicked, this, &CDlgLevel1FilterWizard::transferFromVisual);
 
@@ -72,6 +77,25 @@ void CDlgLevel1FilterWizard::setInitialFocus(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// setNumBaseComboIndex
+//
+
+void CDlgLevel1FilterWizard::setNumBaseComboIndex(uint8_t index)
+{
+    if (index > 3) index = 0;
+    ui->comboNumberBase->setCurrentIndex(index);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getNumComboIndex
+//
+
+uint8_t CDlgLevel1FilterWizard::getNumComboIndex(void)
+{
+    return ui->comboNumberBase->currentIndex();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // onBaseChange
 //
 
@@ -83,20 +107,20 @@ void CDlgLevel1FilterWizard::onBaseChange(int index)
     numerical_base numbase = static_cast<numerical_base>(index);
     
     switch (numbase) {
-        case HEX:
+        case numerical_base::HEX:
             prefix = "0x";
             base = 16;
             break;
-        case DECIMAL:
+        case numerical_base::DECIMAL:
         default:
             prefix = "";
             base = 10;
             break;
-        case OCTAL:
+        case numerical_base::OCTAL:
             prefix = "0o";
             base = 8;
             break;
-        case BINARY:
+        case numerical_base::BINARY:
             prefix = "0b";
             base = 2;
             break;
@@ -120,10 +144,10 @@ void CDlgLevel1FilterWizard::onBaseChange(int index)
     qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpTypeMask->text().toStdString()), base);
     ui->editVscpTypeMask->setText(qstr);
 
-    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()),16);
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()),base);
     ui->editVscpNodeIdFilter->setText(qstr);
 
-    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()),16);
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()),base);
     ui->editVscpNodeIdMask->setText(qstr);                            
 }
 
@@ -150,3 +174,186 @@ void CDlgLevel1FilterWizard::transferFromVisual(void)
                                 tr("From Visual"),
                                 QMessageBox::Ok ); 
 }
+
+
+
+// ----------------------------------------------------------------------------
+//                             Getters & Setters
+// ----------------------------------------------------------------------------
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpPriorityFilter
+//
+
+void CDlgLevel1FilterWizard::setVscpPriorityFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x07);
+    ui->editVscpPriorityFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpPriorityFilter
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpPriorityFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString() ) & 0x07); 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpPriorityMask
+//
+
+void CDlgLevel1FilterWizard::setVscpPriorityMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x07);
+    ui->editVscpPriorityMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpPriorityMask
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpPriorityMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpPriorityMask->text().toStdString() ) & 0x07); 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpClassFilter
+//
+
+void CDlgLevel1FilterWizard::setVscpClassFilter(uint16_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x1ff);
+    ui->editVscpClassFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpClassFilter
+//
+
+uint16_t CDlgLevel1FilterWizard::getVscpClassFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpClassFilter->text().toStdString() ) & 0x1ff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpClassMask
+//
+
+void CDlgLevel1FilterWizard::setVscpClassMask(uint16_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x1ff);
+    ui->editVscpClassMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpClassMask
+//
+
+uint16_t CDlgLevel1FilterWizard::getVscpClassMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpClassMask->text().toStdString() ) & 0x1ff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpTypeFilter
+//
+
+void CDlgLevel1FilterWizard::setVscpTypeFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpTypeFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpTypeFilter
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpTypeFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpTypeFilter->text().toStdString() ) & 0xff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpTypeMask
+//
+
+void CDlgLevel1FilterWizard::setVscpTypeMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpTypeMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpTypeMask
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpTypeMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpTypeMask->text().toStdString() )  & 0xff); 
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpNodeIdFilter
+//
+
+void CDlgLevel1FilterWizard::setVscpNodeIdFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpNodeIdFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpNodeIdFilter
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpNodeIdFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpNodeIdFilter->text().toStdString() ) & 0xff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpNodeIdMask
+//
+
+void CDlgLevel1FilterWizard::setVscpNodeIdMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpNodeIdMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpNodeIdMask
+//
+
+uint8_t CDlgLevel1FilterWizard::getVscpNodeIdMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpNodeIdMask->text().toStdString() ) & 0xff); 
+}
+
+

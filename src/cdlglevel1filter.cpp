@@ -81,15 +81,23 @@ void CDlgLevel1Filter::setInitialFocus(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setVscpPriorityFilter
+// setNumBaseComboIndex
 //
 
-void CDlgLevel1Filter::setVscpPriorityFilter(uint8_t value) 
-{ 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    QString qstr = pworks->decimalToStringInBase(value);
-    ui->editVscpPriorityFilter->setText(qstr);
-};
+void CDlgLevel1Filter::setNumBaseComboIndex(uint8_t index)
+{
+    if (index > 3) index = 0;
+    ui->comboNumberBase->setCurrentIndex(index);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getNumComboIndex
+//
+
+uint8_t CDlgLevel1Filter::getNumComboIndex(void)
+{
+    return ui->comboNumberBase->currentIndex();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // onWizard
@@ -98,8 +106,37 @@ void CDlgLevel1Filter::setVscpPriorityFilter(uint8_t value)
 void CDlgLevel1Filter::onWizard(void)
 {
     CDlgLevel1FilterWizard dlg(this);
+
+    dlg.setVscpPriorityFilter( getVscpPriorityFilter() );
+    dlg.setVscpPriorityMask( getVscpPriorityMask() );
+
+    dlg.setVscpClassFilter( getVscpClassFilter() );
+    dlg.setVscpClassMask( getVscpClassMask() );
     
-    dlg.exec();
+    dlg.setVscpTypeFilter( getVscpTypeFilter() );
+    dlg.setVscpTypeMask( getVscpTypeMask() );
+    
+    dlg.setVscpNodeIdFilter( getVscpNodeIdFilter() );
+    dlg.setVscpNodeIdMask( getVscpNodeIdMask() );
+
+    dlg.setNumBaseComboIndex(ui->comboNumberBase->currentIndex());
+    
+    if (QDialog::Accepted == dlg.exec()) {
+
+        setVscpPriorityFilter( dlg.getVscpPriorityFilter() );
+        setVscpPriorityMask( dlg.getVscpPriorityMask() );
+
+        setVscpClassFilter( dlg.getVscpClassFilter() );
+        setVscpClassMask( dlg.getVscpClassMask() );
+
+        setVscpTypeFilter( dlg.getVscpTypeFilter() );
+        setVscpTypeMask( dlg.getVscpTypeMask() );
+
+        setVscpNodeIdFilter( dlg.getVscpNodeIdFilter() );
+        setVscpNodeIdMask( dlg.getVscpNodeIdMask() );
+
+        ui->comboNumberBase->setCurrentIndex(dlg.getNumComboIndex());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,20 +165,20 @@ void CDlgLevel1Filter::onBaseChange(int index)
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     
     switch (numbase) {
-        case HEX:
+        case numerical_base::HEX:
             prefix = "0x";
             base = 16;
             break;
-        case DECIMAL:
+        case numerical_base::DECIMAL:
         default:
             prefix = "";
             base = 10;
             break;
-        case OCTAL:
+        case numerical_base::OCTAL:
             prefix = "0o";
             base = 8;
             break;
-        case BINARY:
+        case numerical_base::BINARY:
             prefix = "0b";
             base = 2;
             break;
@@ -165,10 +202,191 @@ void CDlgLevel1Filter::onBaseChange(int index)
     qstr = prefix + QString::number( vscp_readStringValue( ui->editVscpTypeMask->text().toStdString()), base);
     ui->editVscpTypeMask->setText(qstr);
 
-    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()),16);
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()),base);
     ui->editVscpNodeIdFilter->setText(qstr);
 
-    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()),16);
+    qstr = prefix + QString::number(vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()),base);
     ui->editVscpNodeIdMask->setText(qstr);                            
 }
 
+
+
+// ----------------------------------------------------------------------------
+//                             Getters & Setters
+// ----------------------------------------------------------------------------
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpPriorityFilter
+//
+
+void CDlgLevel1Filter::setVscpPriorityFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x07);
+    ui->editVscpPriorityFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpPriorityFilter
+//
+
+uint8_t CDlgLevel1Filter::getVscpPriorityFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpPriorityFilter->text().toStdString() ) & 0x07); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpPriorityMask
+//
+
+void CDlgLevel1Filter::setVscpPriorityMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x07);
+    ui->editVscpPriorityMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpPriorityMask
+//
+
+uint8_t CDlgLevel1Filter::getVscpPriorityMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpPriorityMask->text().toStdString() ) & 0x07); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpClassFilter
+//
+
+void CDlgLevel1Filter::setVscpClassFilter(uint16_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x1ff);
+    ui->editVscpClassFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpClassFilter
+//
+
+uint16_t CDlgLevel1Filter::getVscpClassFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpClassFilter->text().toStdString() ) & 0x1ff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpClassMask
+//
+
+void CDlgLevel1Filter::setVscpClassMask(uint16_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value & 0x1ff);
+    ui->editVscpClassMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpClassMask
+//
+
+uint16_t CDlgLevel1Filter::getVscpClassMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpClassMask->text().toStdString() ) & 0x1ff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpTypeFilter
+//
+
+void CDlgLevel1Filter::setVscpTypeFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpTypeFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpTypeFilter
+//
+
+uint8_t CDlgLevel1Filter::getVscpTypeFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpTypeFilter->text().toStdString() ) & 0xff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpTypeMask
+//
+
+void CDlgLevel1Filter::setVscpTypeMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpTypeMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpTypeMask
+//
+
+uint8_t CDlgLevel1Filter::getVscpTypeMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpTypeMask->text().toStdString() )  & 0xff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpNodeIdFilter
+//
+
+void CDlgLevel1Filter::setVscpNodeIdFilter(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpNodeIdFilter->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpNodeIdFilter
+//
+
+uint8_t CDlgLevel1Filter::getVscpNodeIdFilter(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpNodeIdFilter->text().toStdString() ) & 0xff); 
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setVscpNodeIdMask
+//
+
+void CDlgLevel1Filter::setVscpNodeIdMask(uint8_t value) 
+{ 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString qstr = pworks->decimalToStringInBase(value);
+    ui->editVscpNodeIdMask->setText(qstr);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpNodeIdMask
+//
+
+uint8_t CDlgLevel1Filter::getVscpNodeIdMask(void) 
+{ 
+    return (vscp_readStringValue( ui->editVscpNodeIdMask->text().toStdString() ) & 0xff); 
+}

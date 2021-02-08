@@ -40,6 +40,13 @@
       </widget>
      </item>
      <item>
+      <widget class="Line" name="line_7">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboNumberBase">
        <property name="enabled">
         <bool>true</bool>

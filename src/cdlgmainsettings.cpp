@@ -31,6 +31,7 @@
 
 #include "vscpworks.h"
 
+#include "mainwindow.h"
 #include "cdlgmainsettings.h"
 #include "ui_cdlgmainsettings.h"
 
@@ -56,9 +57,32 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
     //onBaseChange(static_cast<int>(m_baseIndex));
 
-    // VSCP home folder
+    // Local storage folder
+    ui->pathLocalStorage->setText(pworks->m_shareFolder);
 
-    //connect(ui->CDlgMainSettings, &QDialog::accepted(), this, &CDlgMainSettings::accepted ); 
+    // VSCP home folder
+    ui->pathVscpHome->setText(pworks->m_vscpHomeFolder);
+
+    // Path to config folder
+    ui->pathConfigFile->setText(pworks->m_configFolder);
+
+    // Path to event db
+    {
+        QString path = pworks->m_shareFolder;
+        path += "vscp_events.sqlite3";
+        ui->pathVscpEventDb->setText(path);
+    }
+    
+    // Event DB last download
+    QString str = pworks->m_lastEventDbLoadDateTime.toString(Qt::ISODate);
+    str += " @ server [";
+    str += pworks->m_lastEventDbServerDateTime.toString(Qt::ISODate);
+    str += "]";
+    ui->lastDownload->setText(str);
+
+    connect(ui->btnDownLoadNewEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onDownloadEventDb);
+    connect(ui->btnReLoadEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onReLoadEventDb ); 
+    
 
     // Hook to row double clicked
     //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );           
@@ -95,5 +119,40 @@ void CDlgMainSettings::done(int r)
 
 void CDlgMainSettings::onBaseChange(int index)
 {
+    
+}
 
+///////////////////////////////////////////////////////////////////////////////
+// onDownloadEventDb
+//
+
+void CDlgMainSettings::onDownloadEventDb(void)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    //pworks->writeSettings();
+    //QWidget* widget = this-> parentWidget();
+    MainWindow *main = (MainWindow *)this-> parentWidget();
+    main->initForcedRemoteEventDbFetch();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onReLoadEventDb
+//
+
+void CDlgMainSettings::onReLoadEventDb(void)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    if (!pworks->loadEventDb()) {
+        QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("Unable to load events from VSCP event database."),
+                                QMessageBox::Ok );
+        return;                                
+    }
+    else {
+        QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("Events reloaded from event database."),
+                                QMessageBox::Ok );
+    }
 }

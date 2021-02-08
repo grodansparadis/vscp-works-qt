@@ -26,12 +26,13 @@
 // SOFTWARE.
 //
 
+#include <syslog.h>
+
 
 #include <QtWidgets>
 #include <QMessageBox>
 #include <QJSEngine>
-#include <QSqlDatabase>
-#include <QSqlQuery>
+
 
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
@@ -256,38 +257,46 @@ MainWindow::MainWindow()
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    // Get version for remote events
+    initRemoteEventDbFetch();
+
+    if (!pworks->loadEventDb()) {
+        QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to load remote event data. Will not be used."),
+                                    QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// initRemoteEventDbFetch
+//
+
+void MainWindow::initRemoteEventDbFetch()
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    // Get version for remote event database
     QUrl versionUrl("https://vscp.org/events/version.json");
-    m_pVersionCtrl = new FileDownloader(versionUrl, this);
+    pworks->m_pVersionCtrl = new FileDownloader(versionUrl, this);
 
-    //bool success = connect(m_pVersionCtrl, SIGNAL(downloaded()), this, SLOT(checkRemoteEventDbVersion()));
-    bool success = connect(m_pVersionCtrl, &FileDownloader::downloaded, 
+    bool success = connect(pworks->m_pVersionCtrl, &FileDownloader::downloaded,
                             this, &MainWindow::checkRemoteEventDbVersion);
+}
 
-    QSqlDatabase evdb;
-    evdb = QSqlDatabase::addDatabase("QSQLITE");
-    QString dbpath = pworks->m_shareFolder;
-    dbpath += "vscp_events.sqlite3";
-    qDebug() << "db = " << dbpath;
-    evdb.setDatabaseName(dbpath);
+///////////////////////////////////////////////////////////////////////////////
+// initRemoteEventDbFetch
+//
 
-    if (!evdb.open()) {
-        //qDebug() << Database.lastError().text();
-        qDebug() << "This is the end";
-    }
-    else {
-        QSqlQuery query("SELECT * FROM vscp_class");
-        // query.bindValue(":id", 1001);
-        // query.bindValue(":forename", "Bart");
-        // query.bindValue(":surname", "Simpson");
-        //query.exec();
-        while (query.next()) {
-            QString className = query.value(1).toString();
-            qDebug() << className;
-            //doSomething(country);
-        }
-    }
+void MainWindow::initForcedRemoteEventDbFetch()
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
+    // Get version for remote events
+    QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
+    pworks->m_pVersionCtrl = new FileDownloader(eventUrl, this);
+
+    bool success = connect(pworks->m_pVersionCtrl, &FileDownloader::downloaded, 
+                            this, &MainWindow::downloadedEventDb);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -299,25 +308,44 @@ void MainWindow::checkRemoteEventDbVersion()
     json j;
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    QString ver(m_pVersionCtrl->downloadedData());
-    //qDebug() << "Data: " << ver;
+    QString ver(pworks->m_pVersionCtrl->downloadedData());
+    qDebug() << "Data: " << ver;
+    if ( -1 != ver.indexOf("<title>404 Not Found</title>")) {
+        QMessageBox::information(this, 
+                                tr("vscpworks+"),
+                                tr("Unable to get version for remote VSCP event data. Will not be downloaded."),
+                                QMessageBox::Ok );
+        return;
+    }
 
-    j = json::parse(ver.toStdString().c_str());   
+    try {
+        j = json::parse(ver.toStdString().c_str());   
 
-    QString dd(j["generated"].get<std::string>().c_str());
-    QDateTime dt = QDateTime::fromString(dd, Qt::ISODateWithMs);
+        QString dd(j["generated"].get<std::string>().c_str());
+        pworks->m_lastEventDbServerDateTime = QDateTime::fromString(dd, Qt::ISODateWithMs);
+        // qDebug() << dt;
+        // qDebug() << pworks->m_lastEventDbLoadDateTime;
+        // qDebug() << dt.toTime_t() << " " << pworks->m_lastEventDbLoadDateTime.toTime_t();
 
-    // If there is a newer version we should download it
-    if ( ( pworks->m_lastEventDbLoadDateTime.toTime_t() - dt.toTime_t() ) > 0 ) {
-        //qDebug() << pworks->m_lastEventDbLoadDateTime.toTime_t() - dt.toTime_t();
+        QString path = pworks->m_shareFolder;
+        path += "vscp_events.sqlite3";
 
-        // Get version for remote events
-        QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
-        m_pVersionCtrl = new FileDownloader(eventUrl, this);
+        // If there is a newer version we should download it
+        if ( !QFile::exists(path) || 
+             ( pworks->m_lastEventDbServerDateTime.toTime_t() > 
+               pworks->m_lastEventDbLoadDateTime.toTime_t() ) ) {
+            
+            // Get version for remote events
+            QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
+            pworks->m_pVersionCtrl = new FileDownloader(eventUrl, this);
 
-        bool success = connect(m_pVersionCtrl, &FileDownloader::downloaded, 
-                                this, &MainWindow::downloadedEventDb);
-    } 
+            bool success = connect(pworks->m_pVersionCtrl, &FileDownloader::downloaded, 
+                                    this, &MainWindow::downloadedEventDb);
+        } 
+    }
+    catch (...) {
+        syslog(LOG_ERR,"Parsing VSCP Event version information failed");
+    }
 }
 
 
@@ -331,7 +359,7 @@ void MainWindow::downloadedEventDb()
 
     QFile file("/tmp/vscp_events.sqlite3");
     file.open(QIODevice::WriteOnly);
-    file.write(m_pVersionCtrl->downloadedData());
+    file.write(pworks->m_pVersionCtrl->downloadedData());
     file.close();
     qDebug() << "A new event database file has been download";
     
@@ -343,9 +371,12 @@ void MainWindow::downloadedEventDb()
 
     QFile::copy("/tmp/vscp_events.sqlite3", path);    
 
+    //pworks->m_lastEventDbLoadDateTime = QDateTime::currentDateTime();
+    pworks->m_lastEventDbLoadDateTime = pworks->m_lastEventDbServerDateTime;
+    pworks->writeSettings();
     QMessageBox::information(this, 
                                 tr("vscpworks+"),
-                                tr("A new VSCP event database has been downloaded."),
+                                tr("A new VSCP event database has been downloaded. Restart your application to use the new database."),
                                 QMessageBox::Ok );
 }
 

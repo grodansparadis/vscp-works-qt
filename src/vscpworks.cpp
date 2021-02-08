@@ -26,15 +26,20 @@
 // SOFTWARE.
 //
 
-#include "vscp.h"
-#include "vscphelper.h"
+#include <syslog.h>
+
+#include <vscp.h>
+#include <vscphelper.h>
 
 #include "vscpworks.h"
 #include "filedownloader.h"
 
 #include <QDebug>
+#include <QMessageBox>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QDir>
 #include <QFile>
 
@@ -50,7 +55,7 @@ using json = nlohmann::json;
 vscpworks::vscpworks(int &argc, char **argv) :
     QApplication(argc, argv)
 {        
-    m_base = HEX;   // Numerical base    
+    m_base = numerical_base::HEX;   // Numerical base    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,24 +77,24 @@ QString vscpworks::decimalToStringInBase(uint32_t value, int tobase)
     QString qstr;
     QString prefix;
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    //vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    numerical_base selbase = (-1 == tobase) ? pworks->m_base : static_cast<numerical_base>(base);
+    numerical_base selbase = (-1 == tobase) ? m_base : static_cast<numerical_base>(base);
     switch (selbase) {
-        case HEX:
+        case numerical_base::HEX:
             prefix = "0x";
             base = 16;
             break;
-        case DECIMAL:
+        case numerical_base::DECIMAL:
         default:
             prefix = "";
             base = 10;
             break;
-        case OCTAL:
+        case numerical_base::OCTAL:
             prefix = "0o";
             base = 8;
             break;
-        case BINARY:
+        case numerical_base::BINARY:
             prefix = "0b";
             base = 2;
             break;
@@ -163,7 +168,8 @@ void vscpworks::readSettings()
 
     // VSCP event database last load date/time
     // ---------------------------------------
-    m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00").toDateTime();
+    m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
+    qDebug() << m_lastEventDbLoadDateTime;
     
     // Connections
     // -----------
@@ -201,3 +207,58 @@ void vscpworks::writeSettings()
     settings.endArray();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// loadEventDb
+//
+
+bool vscpworks::loadEventDb(void)
+{
+    QSqlDatabase evdb;
+    evdb = QSqlDatabase::addDatabase("QSQLITE");
+    QString dbpath = m_shareFolder;
+    dbpath += "vscp_events.sqlite3";
+    qDebug() << "db = " << dbpath;
+
+    // If the database don't exist, bail out
+    if (!QFile::exists(dbpath)) {
+        QString err = QString(tr("The VSCP event database does not exist. Is it available? [%s]")).arg(dbpath);
+        syslog(LOG_ERR, "%s", err.toStdString().c_str());
+        return false;
+    }
+
+    evdb.setDatabaseName(dbpath);
+
+    if (!evdb.open()) {
+        //qDebug() << Database.lastError().text();
+        QString err = QString(tr("The VSCP event database could not be opened. Is it available? [%s]")).arg(dbpath);
+        syslog(LOG_ERR, "%s", err.toStdString().c_str());
+        return false;
+    }
+    else {
+        QSqlQuery queryClass("SELECT * FROM vscp_class");
+
+        while (queryClass.next()) {
+            uint16_t classid = queryClass.value(0).toUInt();
+            QString className = queryClass.value(1).toString();
+            QString classToken = queryClass.value(2).toString();
+            //qDebug() << classid << " - " << className << " - " << classToken;
+            mapVscpClassToToken[classid] = classToken;
+
+            QString sqlTypeQuery = QString("SELECT * FROM vscp_type WHERE link_to_class=%1").arg(classid);
+            QSqlQuery queryType(sqlTypeQuery);
+            //qDebug() << sqlTypeQuery;
+            while (queryType.next()) {
+                uint typeIdx = queryType.value(0).toUInt();
+                uint16_t typeId = queryType.value(1).toUInt();
+                QString typeToken = queryType.value(3).toString();
+                uint32_t combined = ((classid << 16) + typeId);
+                //qDebug() << typeIdx << " - " << typeId << " - " <<  typeToken  << " " << combined;
+                //qDebug() << (combined & 0xffff) << (combined >> 16); 
+                mapVscpTypeToToken[((classid << 16) + typeId)] = typeToken;
+            }
+        }
+
+    }
+
+    return true;
+}

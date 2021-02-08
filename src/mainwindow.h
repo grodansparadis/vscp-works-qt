@@ -72,6 +72,10 @@ public:
 protected:
     void closeEvent(QCloseEvent *event) override;
 
+public slots:
+    void initRemoteEventDbFetch();
+    void initForcedRemoteEventDbFetch();
+
 private slots:
     void checkRemoteEventDbVersion();
     void downloadedEventDb();
@@ -162,9 +166,7 @@ private:
     QTreeWidgetItem *m_topitem_rest;
     QTreeWidgetItem *m_topitem_rawcan;
     QTreeWidgetItem *m_topitem_rawmqtt;
-
-private:
-    FileDownloader  *m_pVersionCtrl;    
+ 
 };
 
 #endif // MAINWINDOW_H

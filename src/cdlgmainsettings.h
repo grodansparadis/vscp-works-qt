@@ -58,6 +58,12 @@ public slots:
         Numerical base changed -recalc
     */
     void onBaseChange(int index);
+
+    /// Download VSCP event db
+    void onDownloadEventDb(void);
+
+    /// Reload VSCP event db
+    void onReLoadEventDb(void);
     
     /// Dialog return
     void done(int r);    

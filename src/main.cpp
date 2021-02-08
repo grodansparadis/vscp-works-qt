@@ -1,11 +1,13 @@
 #include "vscp.h"
 #include "version.h"
+#include "vscphelper.h"
 
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
 #include "vscpworks.h"
 #include "mainwindow.h"
+
 
 int main(int argc, char *argv[])
 {

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
+    <width>772</width>
     <height>474</height>
    </rect>
   </property>
@@ -33,13 +33,13 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="toolTip">
       <string>General settings</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -52,9 +52,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>291</width>
-         <height>391</height>
+         <y>10</y>
+         <width>381</width>
+         <height>381</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout">
@@ -70,6 +70,12 @@
         </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="comboNumberBase">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <item>
            <property name="text">
             <string>Hexadecimal</string>
@@ -103,59 +109,167 @@
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>80</y>
-         <width>581</width>
-         <height>311</height>
+         <y>20</y>
+         <width>561</width>
+         <height>71</height>
         </rect>
        </property>
-       <layout class="QFormLayout" name="formLayout_2"/>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Path to local storgage</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="pathLocalStorage">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(193, 125, 17);</string>
+          </property>
+          <property name="text">
+           <string>Last download</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Path VSCP Home</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="pathVscpHome">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(193, 125, 17);</string>
+          </property>
+          <property name="text">
+           <string>Last download</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Path config. folder</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="pathConfigFile">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(193, 125, 17);</string>
+          </property>
+          <property name="text">
+           <string>Last download</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="formLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>561</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_3">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Path</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="pathVscpEventDb">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(193, 125, 17);</string>
+          </property>
+          <property name="text">
+           <string>Last download</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Last db download</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="lastDownload">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(193, 125, 17);</string>
+          </property>
+          <property name="text">
+           <string>Last download</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>10</y>
-         <width>197</width>
-         <height>25</height>
+         <y>110</y>
+         <width>311</width>
+         <height>17</height>
         </rect>
-       </property>
-       <property name="text">
-        <string>Path to VSCP event database</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_path_eventdb">
-       <property name="geometry">
-        <rect>
-         <x>220</x>
-         <y>10</y>
-         <width>381</width>
-         <height>25</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <italic>true</italic>
-        </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color: rgb(186, 189, 182);</string>
+        <string notr="true">color: rgb(78, 154, 6);</string>
        </property>
        <property name="text">
-        <string>Path to VSCP event database</string>
+        <string>VSCP Event Database</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QWidget" name="horizontalLayoutWidget_2">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>40</y>
-         <width>111</width>
-         <height>25</height>
+         <y>190</y>
+         <width>201</width>
+         <height>41</height>
         </rect>
        </property>
-       <property name="text">
-        <string>Download new</string>
-       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="btnDownLoadNewEventDb">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Download new</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnReLoadEventDb">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Reload db</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </widget>
