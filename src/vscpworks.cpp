@@ -235,7 +235,7 @@ bool vscpworks::loadEventDb(void)
         return false;
     }
     else {
-        QSqlQuery queryClass("SELECT * FROM vscp_class");
+        QSqlQuery queryClass("SELECT * FROM vscp_class order by class");
 
         while (queryClass.next()) {
             uint16_t classid = queryClass.value(0).toUInt();

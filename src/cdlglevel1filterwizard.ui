@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>793</width>
-    <height>454</height>
+    <width>957</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -17,13 +17,13 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>VSCP Level I Filter</string>
+   <string>VSCP Level I Filter Wizard</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>410</y>
+     <x>20</x>
+     <y>550</y>
      <width>741</width>
      <height>32</height>
     </rect>
@@ -41,14 +41,14 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>330</x>
      <y>10</y>
-     <width>391</width>
-     <height>381</height>
+     <width>621</width>
+     <height>521</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>VSCP Class</string>
@@ -56,15 +56,9 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy">
-       <cstring>listClasses</cstring>
-      </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QListView" name="listClasses"/>
-    </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>VSCP Type</string>
@@ -72,15 +66,16 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy">
-       <cstring>listTypes</cstring>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QCheckBox" name="chkShowFiltered">
+      <property name="text">
+       <string>Show only items going trough filter</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QListView" name="listTypes"/>
-    </item>
-    <item row="2" column="0">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Priority</string>
@@ -88,18 +83,55 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy">
-       <cstring>listPriority</cstring>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QListWidget" name="listPriority">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QListWidget" name="listClass">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QListView" name="listPriority"/>
+     <widget class="QListWidget" name="listType">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Node id</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QCheckBox" name="chkShowFiltered">
-      <property name="text">
-       <string>Show only filtered items</string>
+     <widget class="QListWidget" name="listNodeId">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
     </item>
@@ -110,8 +142,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>301</width>
-     <height>381</height>
+     <width>261</width>
+     <height>291</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout_2">
@@ -132,6 +164,9 @@
      <widget class="QLineEdit" name="editVscpPriorityFilter">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(138, 226, 52);</string>
       </property>
       <property name="text">
        <string>0</string>
@@ -155,6 +190,9 @@
      <widget class="QLineEdit" name="editVscpPriorityMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(252, 233, 79);</string>
       </property>
       <property name="text">
        <string>0</string>
@@ -186,6 +224,9 @@
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(138, 226, 52);</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -208,6 +249,9 @@
      <widget class="QLineEdit" name="editVscpClassMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(252, 233, 79);</string>
       </property>
       <property name="text">
        <string>0</string>
@@ -239,6 +283,9 @@
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(138, 226, 52);</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -261,6 +308,9 @@
      <widget class="QLineEdit" name="editVscpTypeMask">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(252, 233, 79);</string>
       </property>
       <property name="text">
        <string>0</string>
@@ -292,6 +342,9 @@
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(138, 226, 52);</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -315,49 +368,22 @@
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(252, 233, 79);</string>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="12" column="1">
-     <widget class="QComboBox" name="comboNumberBase">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <item>
-       <property name="text">
-        <string>HEX</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>DECIMAL</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>OCTAL</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>BINARY</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="13" column="0">
+    <item row="11" column="0">
      <widget class="Line" name="line_4">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="14" column="0">
+    <item row="12" column="0">
      <widget class="Line" name="line_3">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -369,8 +395,8 @@
   <widget class="QPushButton" name="btnTransferRight">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>160</y>
+     <x>280</x>
+     <y>130</y>
      <width>41</width>
      <height>25</height>
     </rect>
@@ -382,8 +408,8 @@
   <widget class="QPushButton" name="btnTransferLeft">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>190</y>
+     <x>280</x>
+     <y>160</y>
      <width>41</width>
      <height>25</height>
     </rect>
@@ -395,10 +421,10 @@
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>290</x>
      <y>10</y>
      <width>20</width>
-     <height>141</height>
+     <height>111</height>
     </rect>
    </property>
    <property name="orientation">
@@ -408,23 +434,56 @@
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>230</y>
+     <x>290</x>
+     <y>200</y>
      <width>20</width>
-     <height>161</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
    </property>
   </widget>
+  <widget class="QComboBox" name="comboNumberBase">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>93</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <item>
+    <property name="text">
+     <string>HEX</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>DECIMAL</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>OCTAL</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>BINARY</string>
+    </property>
+   </item>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>editVscpPriorityFilter</tabstop>
   <tabstop>editVscpPriorityMask</tabstop>
-  <tabstop>listClasses</tabstop>
-  <tabstop>listTypes</tabstop>
-  <tabstop>listPriority</tabstop>
   <tabstop>chkShowFiltered</tabstop>
   <tabstop>btnTransferRight</tabstop>
   <tabstop>btnTransferLeft</tabstop>

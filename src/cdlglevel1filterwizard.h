@@ -70,6 +70,50 @@ public slots:
     void onBaseChange(int index);
 
     /*!
+        Add priorities to the list box
+    */
+    void AddPriorities(void);
+
+    /*!
+        Add VSCP classes to the list box
+    */
+    void AddVscpClasses(void);
+
+    /*!
+        Add VSCP types to the list box
+    */
+    void AddVscpTypes(void);
+
+    /*!
+        Add node-id's to the list box
+    */
+    void AddVscpNodeIds(void);
+
+    /*!
+        Fill in selected priorities from
+        set priority filter/mask
+    */
+    void doPrioritySelections(void);
+
+    /*!
+        Fill in selected VSCP classes from
+        set class filter/mask
+    */
+    void doVscpClassSelections(void);
+
+    /*!
+        Fill in selected VSCP types from
+        set type filter/mask
+    */
+    void doVscpTypeSelections(void);
+
+    /*!
+        Fill in selected node-id's from
+        set node id filter/mask
+    */
+    void doVscpNodeIdSelections(void);
+
+    /*!
         Transfer info to visual side
     */
     void transferToVisual(void);
@@ -78,6 +122,12 @@ public slots:
         Transfer info to id/mask
     */
     void transferFromVisual(void);
+
+    /*!
+        Calculate and set priority filter and
+        mask values from listbox selection
+    */
+    void calculatePriorityValues(void);
 
     // ----------------------------------------------------------------------------
     //                             Getters & Setters
@@ -131,16 +181,30 @@ public slots:
     void setVscpNodeIdMask(uint8_t value);
     uint8_t getVscpNodeIdMask(void);
 
+private slots:
+    void onTextChangedPriorityFilter(const QString &text);
+    void onTextChangedPriorityMask(const QString &text);  
+
+    void onTextChangedVscpClassFilter(const QString &text);
+    void onTextChangedVscpClassMask(const QString &text);
+
+    void onTextChangedVscpTypeFilter(const QString &text);
+    void onTextChangedVscpTypeMask(const QString &text);
+
+    void onTextChangedVscpNodeIdFilter(const QString &text);
+    void onTextChangedVscpNodeIdMask(const QString &text);
+
 private:
 
     Ui::CDlgLevel1FilterWizard *ui;
 
     numerical_base m_baseIndex;
 
-    // void createMenu();
-    // void createHorizontalGroupBox();
-    // void createGridGroupBox();
-    // void createFormGroupBox();
+    // Vector that maps VSCP class to list index
+    std::map<uint16_t,uint16_t> m_classToIndexMap;
+
+    // Vector that maps VSCP type to list index
+    std::map<uint32_t,uint16_t> m_typeToIndexMap;
 
 };
 
