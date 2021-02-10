@@ -30,6 +30,7 @@
 #include <vscphelper.h>
 
 #include <vscpworks.h>
+#include "cdlgcanfilter.h"
 #include "cdlglevel1filterwizard.h"
 
 #include "cdlglevel1filter.h"
@@ -145,10 +146,66 @@ void CDlgLevel1Filter::onWizard(void)
 
 void CDlgLevel1Filter::onIdMask(void)
 {
-    QMessageBox::information(this, 
-                                tr("vscpworks+"),
-                                tr("ID/MASK"),
-                                QMessageBox::Ok );
+    CDlgCanFilter dlg(this);
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    uint32_t canid = vscp_getCANALidFromData(vscp_readStringValue(ui->editVscpPriorityFilter->text().toStdString()) & 0x07,
+                                            vscp_readStringValue(ui->editVscpClassFilter->text().toStdString()) & 0x1ff,
+                                            vscp_readStringValue(ui->editVscpTypeFilter->text().toStdString()) & 0xff);
+    canid += vscp_readStringValue(ui->editVscpNodeIdFilter->text().toStdString()) & 0xff;
+    if (ui->chkHardcoded->isChecked()) {
+        canid |= (1 << 25);
+    }
+
+    uint32_t mask = vscp_getCANALidFromData(vscp_readStringValue(ui->editVscpPriorityMask->text().toStdString()) & 0x07,
+                                            vscp_readStringValue(ui->editVscpClassMask->text().toStdString()) & 0x1ff,
+                                            vscp_readStringValue(ui->editVscpTypeMask->text().toStdString()) & 0xff);
+    mask += vscp_readStringValue(ui->editVscpNodeIdMask->text().toStdString()) & 0xff;
+    if (ui->chkHardcoded->isChecked()) {
+        mask |= (1 << 25);
+    }
+
+    dlg.setCanId(pworks->decimalToStringInBase(canid, ui->comboNumberBase->currentIndex()).toStdString());
+    dlg.setCanMask(pworks->decimalToStringInBase(mask,ui->comboNumberBase->currentIndex()).toStdString());
+
+    if (QDialog::Accepted == dlg.exec()) {
+        canid = vscp_readStringValue(dlg.getCanId());
+        mask = vscp_readStringValue(dlg.getCanMask());
+
+        ui->editVscpPriorityFilter->setText(pworks->decimalToStringInBase((vscp_getHeadFromCANALid(canid) >> 5), 
+                                            ui->comboNumberBase->currentIndex()));
+
+        ui->editVscpPriorityMask->setText(pworks->decimalToStringInBase((vscp_getHeadFromCANALid(mask) >> 5), 
+                                            ui->comboNumberBase->currentIndex()));
+
+        if (vscp_getHeadFromCANALid(mask) & VSCP_HEADER_HARD_CODED) {
+            ui->chkHardcoded->setChecked(true);
+        }
+        else {
+            ui->chkHardcoded->setChecked(false);
+        }
+
+        ui->editVscpClassFilter->setText(pworks->decimalToStringInBase(vscp_getVscpClassFromCANALid(canid), 
+                                            ui->comboNumberBase->currentIndex()));
+
+        ui->editVscpClassMask->setText(pworks->decimalToStringInBase(vscp_getVscpClassFromCANALid(mask), 
+                                            ui->comboNumberBase->currentIndex()));
+
+
+        ui->editVscpTypeFilter->setText(pworks->decimalToStringInBase(vscp_getVscpTypeFromCANALid(canid), 
+                                            ui->comboNumberBase->currentIndex()));
+
+        ui->editVscpTypeMask->setText(pworks->decimalToStringInBase(vscp_getVscpTypeFromCANALid(mask), 
+                                            ui->comboNumberBase->currentIndex())); 
+
+
+        ui->editVscpNodeIdFilter->setText(pworks->decimalToStringInBase(canid & 0xff, 
+                                            ui->comboNumberBase->currentIndex()));
+
+        ui->editVscpNodeIdMask->setText(pworks->decimalToStringInBase(mask & 0xff, 
+                                            ui->comboNumberBase->currentIndex()));                                                                                        
+    }
 }
 
 

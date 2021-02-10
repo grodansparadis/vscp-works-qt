@@ -77,9 +77,7 @@ QString vscpworks::decimalToStringInBase(uint32_t value, int tobase)
     QString qstr;
     QString prefix;
 
-    //vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-
-    numerical_base selbase = (-1 == tobase) ? m_base : static_cast<numerical_base>(base);
+    numerical_base selbase = (-1 == tobase) ? m_base : static_cast<numerical_base>(tobase);
     switch (selbase) {
         case numerical_base::HEX:
             prefix = "0x";
@@ -254,7 +252,9 @@ bool vscpworks::loadEventDb(void)
                 uint32_t combined = ((classid << 16) + typeId);
                 //qDebug() << typeIdx << " - " << typeId << " - " <<  typeToken  << " " << combined;
                 //qDebug() << (combined & 0xffff) << (combined >> 16); 
-                mapVscpTypeToToken[((classid << 16) + typeId)] = typeToken;
+                mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] = typeToken;
+                // qDebug() << mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] << " " << (((uint32_t)classid << 16) + typeId) << " " << classid;
+                // qDebug() << " OK";
             }
         }
 

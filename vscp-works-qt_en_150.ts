@@ -2,46 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_150">
 <context>
-    <name>CDlgCanFilter</name>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="20"/>
-        <source>VSCP filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="54"/>
-        <source>Description</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="64"/>
-        <location filename="src/cdlgcanfilter.ui" line="90"/>
-        <location filename="src/cdlgcanfilter.ui" line="116"/>
-        <source>Description for  connection used in connection table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="74"/>
-        <source>Id Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="100"/>
-        <source>Id Mask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="126"/>
-        <source>Invert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgcanfilter.ui" line="142"/>
-        <source>Wizard</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>CDlgConnSettingsCanal</name>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="20"/>
@@ -592,7 +552,7 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="167"/>
         <location filename="build/ui_cdlgconnsettingssocketcan.h" line="165"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="144"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="145"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -605,13 +565,13 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="223"/>
         <location filename="build/ui_cdlgconnsettingssocketcan.h" line="173"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="121"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="122"/>
         <source>Edit filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="120"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="143"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="121"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="144"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -985,152 +945,152 @@ and the flag bits for the. the driver.
 <context>
     <name>CDlgLevel1Filter</name>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="20"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="319"/>
+        <location filename="src/cdlglevel1filter.ui" line="32"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="337"/>
         <source>VSCP Level I Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="28"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="320"/>
-        <location filename="src/cdlglevel1filter.cpp" line="113"/>
+        <location filename="src/cdlglevel1filter.ui" line="40"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="338"/>
+        <location filename="src/cdlglevel1filter.cpp" line="150"/>
         <source>ID/MASK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="38"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="321"/>
+        <location filename="src/cdlglevel1filter.ui" line="50"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="339"/>
         <source>Wizard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="48"/>
-        <location filename="src/cdlglevel1filter.ui" line="52"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="322"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="327"/>
+        <location filename="src/cdlglevel1filter.ui" line="67"/>
+        <location filename="src/cdlglevel1filter.ui" line="71"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="340"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="345"/>
         <source>Hex</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="57"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="323"/>
+        <location filename="src/cdlglevel1filter.ui" line="76"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="341"/>
         <source>Dec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="62"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="324"/>
+        <location filename="src/cdlglevel1filter.ui" line="81"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="342"/>
         <source>Oct</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="67"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="325"/>
+        <location filename="src/cdlglevel1filter.ui" line="86"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="343"/>
         <source>Bin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="92"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="328"/>
+        <location filename="src/cdlglevel1filter.ui" line="111"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="346"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="102"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="330"/>
+        <location filename="src/cdlglevel1filter.ui" line="121"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="348"/>
         <source>Description for VSCP Level I filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="119"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="333"/>
+        <location filename="src/cdlglevel1filter.ui" line="138"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="351"/>
         <source>Priority Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="138"/>
-        <location filename="src/cdlglevel1filter.ui" line="164"/>
-        <location filename="src/cdlglevel1filter.ui" line="197"/>
-        <location filename="src/cdlglevel1filter.ui" line="223"/>
-        <location filename="src/cdlglevel1filter.ui" line="256"/>
-        <location filename="src/cdlglevel1filter.ui" line="282"/>
-        <location filename="src/cdlglevel1filter.ui" line="318"/>
-        <location filename="src/cdlglevel1filter.ui" line="347"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="334"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="336"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="338"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="340"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="342"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="344"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="349"/>
+        <location filename="src/cdlglevel1filter.ui" line="160"/>
+        <location filename="src/cdlglevel1filter.ui" line="189"/>
+        <location filename="src/cdlglevel1filter.ui" line="225"/>
+        <location filename="src/cdlglevel1filter.ui" line="254"/>
+        <location filename="src/cdlglevel1filter.ui" line="290"/>
+        <location filename="src/cdlglevel1filter.ui" line="319"/>
+        <location filename="src/cdlglevel1filter.ui" line="358"/>
+        <location filename="src/cdlglevel1filter.ui" line="390"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="352"/>
         <location filename="build/ui_cdlglevel1filter.h" line="354"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="356"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="358"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="360"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="362"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="367"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="372"/>
         <source>0x00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="145"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="335"/>
+        <location filename="src/cdlglevel1filter.ui" line="167"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="353"/>
         <source>Priority Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="178"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="337"/>
+        <location filename="src/cdlglevel1filter.ui" line="203"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="355"/>
         <source>VSCP Class Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="204"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="339"/>
+        <location filename="src/cdlglevel1filter.ui" line="232"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="357"/>
         <source>VSCP Class Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="237"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="341"/>
+        <location filename="src/cdlglevel1filter.ui" line="268"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="359"/>
         <source>VSCP Type Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="263"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="343"/>
+        <location filename="src/cdlglevel1filter.ui" line="297"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="361"/>
         <source>VSCP Type Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="296"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="345"/>
+        <location filename="src/cdlglevel1filter.ui" line="333"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="363"/>
         <source>Node ID Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="315"/>
-        <location filename="src/cdlglevel1filter.ui" line="344"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="347"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="352"/>
+        <location filename="src/cdlglevel1filter.ui" line="352"/>
+        <location filename="src/cdlglevel1filter.ui" line="384"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="365"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="370"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="325"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="350"/>
+        <location filename="src/cdlglevel1filter.ui" line="365"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="368"/>
         <source>Node ID Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="361"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="355"/>
+        <location filename="src/cdlglevel1filter.ui" line="404"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="373"/>
         <source>Only Hardcoded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.ui" line="368"/>
-        <location filename="build/ui_cdlglevel1filter.h" line="356"/>
+        <location filename="src/cdlglevel1filter.ui" line="411"/>
+        <location filename="build/ui_cdlglevel1filter.h" line="374"/>
         <source>Invert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filter.cpp" line="112"/>
+        <location filename="src/cdlglevel1filter.cpp" line="149"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1138,173 +1098,173 @@ and the flag bits for the. the driver.
 <context>
     <name>CDlgLevel1FilterWizard</name>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="20"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="315"/>
-        <source>VSCP Level I Filter</source>
+        <location filename="src/cdlglevel1filterwizard.ui" line="38"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="339"/>
+        <source>VSCP Level I Filter Wizard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="54"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="316"/>
-        <source>VSCP Class</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="70"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="317"/>
-        <source>VSCP Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="86"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="318"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="72"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="340"/>
         <source>Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="102"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="319"/>
-        <source>Show only filtered items</source>
+        <location filename="src/cdlglevel1filterwizard.ui" line="95"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="341"/>
+        <source>VSCP Class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="121"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="320"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="118"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="342"/>
+        <source>VSCP Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="141"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="343"/>
+        <source>Node id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="176"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="344"/>
         <source>Priority Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="134"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="157"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="187"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="210"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="240"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="263"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="293"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="316"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="322"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="327"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="332"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="337"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="342"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="347"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="352"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="357"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="189"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="215"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="248"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="274"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="307"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="333"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="366"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="392"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="346"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="351"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="356"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="361"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="366"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="371"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="376"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="381"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="137"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="160"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="190"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="213"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="243"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="266"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="296"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="319"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="324"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="329"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="334"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="339"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="344"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="349"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="354"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="359"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="195"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="221"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="254"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="280"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="313"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="339"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="372"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="398"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="348"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="353"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="358"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="363"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="368"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="373"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="378"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="383"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="144"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="325"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="202"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="349"/>
         <source>Priority Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="174"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="330"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="235"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="354"/>
         <source>VSCP Class Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="197"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="335"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="261"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="359"/>
         <source>VSCP Class Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="227"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="340"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="294"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="364"/>
         <source>VSCP Type Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="250"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="345"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="320"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="369"/>
         <source>VSCP Type Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="280"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="350"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="353"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="374"/>
         <source>Node ID Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="303"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="355"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="379"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="379"/>
         <source>Node ID Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="333"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="360"/>
-        <source>HEX</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="338"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="361"/>
-        <source>DECIMAL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="343"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="362"/>
-        <source>OCTAL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="348"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="363"/>
-        <source>BINARY</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="379"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="365"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="428"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="384"/>
         <source>&gt;&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="392"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="366"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="441"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="385"/>
         <source>&lt;&lt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="137"/>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="149"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="487"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="386"/>
+        <source>HEX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="492"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="387"/>
+        <source>DECIMAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="497"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="388"/>
+        <source>OCTAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="502"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="389"/>
+        <source>BINARY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1195"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1253"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="138"/>
-        <source>To Visual</source>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1196"/>
+        <source>Nothing selected. Filter and mask will be set to zero.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="150"/>
-        <source>From Visual</source>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1254"/>
+        <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1370,72 +1330,136 @@ and the flag bits for the. the driver.
     <name>CDlgMainSettings</name>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="20"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="127"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="225"/>
         <source>VSCP Level I Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="39"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="129"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="227"/>
         <source>General settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="49"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="137"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="235"/>
         <source>General</source>
         <extracomment>General settings</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="64"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="131"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="229"/>
         <source>Numerical base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="75"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="132"/>
+        <location filename="src/cdlgmainsettings.ui" line="81"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="230"/>
         <source>Hexadecimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="80"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="133"/>
+        <location filename="src/cdlgmainsettings.ui" line="86"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="231"/>
         <source>Decimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="85"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="134"/>
+        <location filename="src/cdlgmainsettings.ui" line="91"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="232"/>
         <source>Octal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="90"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="135"/>
+        <location filename="src/cdlgmainsettings.ui" line="96"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="233"/>
         <source>Binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="100"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="141"/>
+        <location filename="src/cdlgmainsettings.ui" line="106"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="249"/>
         <source>Data</source>
         <extracomment>Database and similar settings</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="123"/>
-        <location filename="src/cdlgmainsettings.ui" line="144"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="138"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="139"/>
-        <source>Path to VSCP event database</source>
+        <location filename="src/cdlgmainsettings.ui" line="121"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="236"/>
+        <source>Path to local storgage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="157"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="140"/>
+        <location filename="src/cdlgmainsettings.ui" line="131"/>
+        <location filename="src/cdlgmainsettings.ui" line="148"/>
+        <location filename="src/cdlgmainsettings.ui" line="165"/>
+        <location filename="src/cdlgmainsettings.ui" line="194"/>
+        <location filename="src/cdlgmainsettings.ui" line="211"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="237"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="239"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="241"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="243"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="245"/>
+        <source>Last download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="138"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="238"/>
+        <source>Path VSCP Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="155"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="240"/>
+        <source>Path config. folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="184"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="242"/>
+        <source>Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="201"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="244"/>
+        <source>Last db download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="233"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="246"/>
+        <source>VSCP Event Database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="255"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="247"/>
         <source>Download new</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="268"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="248"/>
+        <source>Reload db</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.cpp" line="147"/>
+        <location filename="src/cdlgmainsettings.cpp" line="154"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.cpp" line="148"/>
+        <source>Unable to load events from VSCP event database.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.cpp" line="155"/>
+        <source>Events reloaded from event database.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1823,6 +1847,24 @@ and the flag bits for the. the driver.
 <context>
     <name>Dialog</name>
     <message>
+        <location filename="src/cdlgcanfilter.ui" line="14"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="80"/>
+        <source>Id and Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgcanfilter.ui" line="45"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="81"/>
+        <source>Id</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgcanfilter.ui" line="55"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="82"/>
+        <source>Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/filter.ui" line="14"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
@@ -2167,265 +2209,265 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="271"/>
-        <location filename="src/mainwindow.cpp" line="290"/>
-        <location filename="src/mainwindow.cpp" line="347"/>
-        <location filename="src/mainwindow.cpp" line="1107"/>
-        <location filename="src/mainwindow.cpp" line="1136"/>
-        <location filename="src/mainwindow.cpp" line="1165"/>
-        <location filename="src/mainwindow.cpp" line="1195"/>
-        <location filename="src/mainwindow.cpp" line="1225"/>
-        <location filename="src/mainwindow.cpp" line="1255"/>
-        <location filename="src/mainwindow.cpp" line="1285"/>
-        <location filename="src/mainwindow.cpp" line="1317"/>
-        <location filename="src/mainwindow.cpp" line="1347"/>
-        <location filename="src/mainwindow.cpp" line="1377"/>
-        <location filename="src/mainwindow.cpp" line="1407"/>
-        <location filename="src/mainwindow.cpp" line="1437"/>
+        <location filename="src/mainwindow.cpp" line="264"/>
+        <location filename="src/mainwindow.cpp" line="315"/>
+        <location filename="src/mainwindow.cpp" line="378"/>
+        <location filename="src/mainwindow.cpp" line="1138"/>
+        <location filename="src/mainwindow.cpp" line="1167"/>
+        <location filename="src/mainwindow.cpp" line="1196"/>
+        <location filename="src/mainwindow.cpp" line="1226"/>
+        <location filename="src/mainwindow.cpp" line="1256"/>
+        <location filename="src/mainwindow.cpp" line="1286"/>
+        <location filename="src/mainwindow.cpp" line="1316"/>
+        <location filename="src/mainwindow.cpp" line="1348"/>
+        <location filename="src/mainwindow.cpp" line="1378"/>
+        <location filename="src/mainwindow.cpp" line="1408"/>
+        <location filename="src/mainwindow.cpp" line="1438"/>
+        <location filename="src/mainwindow.cpp" line="1468"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="272"/>
+        <location filename="src/mainwindow.cpp" line="265"/>
         <source>Failed to load remote event data. Will not be used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="291"/>
+        <location filename="src/mainwindow.cpp" line="316"/>
         <source>Unable to get version for remote VSCP event data. Will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="348"/>
+        <location filename="src/mainwindow.cpp" line="379"/>
         <source>A new VSCP event database has been downloaded. Restart your application to use the new database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="482"/>
-        <location filename="src/mainwindow.cpp" line="491"/>
-        <location filename="src/mainwindow.cpp" line="500"/>
+        <location filename="src/mainwindow.cpp" line="513"/>
+        <location filename="src/mainwindow.cpp" line="522"/>
+        <location filename="src/mainwindow.cpp" line="531"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="482"/>
+        <location filename="src/mainwindow.cpp" line="513"/>
         <source>editConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="491"/>
+        <location filename="src/mainwindow.cpp" line="522"/>
         <source>cloneConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="500"/>
+        <location filename="src/mainwindow.cpp" line="531"/>
         <source>removeConnectionItem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="705"/>
+        <location filename="src/mainwindow.cpp" line="736"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="712"/>
+        <location filename="src/mainwindow.cpp" line="743"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="733"/>
+        <location filename="src/mainwindow.cpp" line="764"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="734"/>
+        <location filename="src/mainwindow.cpp" line="765"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="737"/>
+        <location filename="src/mainwindow.cpp" line="768"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="739"/>
+        <location filename="src/mainwindow.cpp" line="770"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="769"/>
+        <location filename="src/mainwindow.cpp" line="800"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="771"/>
+        <location filename="src/mainwindow.cpp" line="802"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="777"/>
+        <location filename="src/mainwindow.cpp" line="808"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="779"/>
+        <location filename="src/mainwindow.cpp" line="810"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="785"/>
+        <location filename="src/mainwindow.cpp" line="816"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="787"/>
+        <location filename="src/mainwindow.cpp" line="818"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="793"/>
+        <location filename="src/mainwindow.cpp" line="824"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="795"/>
+        <location filename="src/mainwindow.cpp" line="826"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="801"/>
+        <location filename="src/mainwindow.cpp" line="832"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="803"/>
+        <location filename="src/mainwindow.cpp" line="834"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="811"/>
+        <location filename="src/mainwindow.cpp" line="842"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="814"/>
+        <location filename="src/mainwindow.cpp" line="845"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="816"/>
+        <location filename="src/mainwindow.cpp" line="847"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="817"/>
+        <location filename="src/mainwindow.cpp" line="848"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="821"/>
+        <location filename="src/mainwindow.cpp" line="852"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="824"/>
+        <location filename="src/mainwindow.cpp" line="855"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="831"/>
+        <location filename="src/mainwindow.cpp" line="862"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="833"/>
+        <location filename="src/mainwindow.cpp" line="864"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="840"/>
+        <location filename="src/mainwindow.cpp" line="871"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="842"/>
+        <location filename="src/mainwindow.cpp" line="873"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="852"/>
+        <location filename="src/mainwindow.cpp" line="883"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="853"/>
+        <location filename="src/mainwindow.cpp" line="884"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="854"/>
+        <location filename="src/mainwindow.cpp" line="885"/>
         <source>Open settins...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="857"/>
+        <location filename="src/mainwindow.cpp" line="888"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="858"/>
+        <location filename="src/mainwindow.cpp" line="889"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="859"/>
+        <location filename="src/mainwindow.cpp" line="890"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="861"/>
+        <location filename="src/mainwindow.cpp" line="892"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="862"/>
+        <location filename="src/mainwindow.cpp" line="893"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="878"/>
+        <location filename="src/mainwindow.cpp" line="909"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="974"/>
+        <location filename="src/mainwindow.cpp" line="1005"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="975"/>
+        <location filename="src/mainwindow.cpp" line="1006"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="990"/>
+        <location filename="src/mainwindow.cpp" line="1021"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1108"/>
-        <location filename="src/mainwindow.cpp" line="1137"/>
-        <location filename="src/mainwindow.cpp" line="1166"/>
-        <location filename="src/mainwindow.cpp" line="1196"/>
-        <location filename="src/mainwindow.cpp" line="1226"/>
-        <location filename="src/mainwindow.cpp" line="1256"/>
-        <location filename="src/mainwindow.cpp" line="1286"/>
-        <location filename="src/mainwindow.cpp" line="1318"/>
-        <location filename="src/mainwindow.cpp" line="1348"/>
-        <location filename="src/mainwindow.cpp" line="1378"/>
-        <location filename="src/mainwindow.cpp" line="1408"/>
-        <location filename="src/mainwindow.cpp" line="1438"/>
+        <location filename="src/mainwindow.cpp" line="1139"/>
+        <location filename="src/mainwindow.cpp" line="1168"/>
+        <location filename="src/mainwindow.cpp" line="1197"/>
+        <location filename="src/mainwindow.cpp" line="1227"/>
+        <location filename="src/mainwindow.cpp" line="1257"/>
+        <location filename="src/mainwindow.cpp" line="1287"/>
+        <location filename="src/mainwindow.cpp" line="1317"/>
+        <location filename="src/mainwindow.cpp" line="1349"/>
+        <location filename="src/mainwindow.cpp" line="1379"/>
+        <location filename="src/mainwindow.cpp" line="1409"/>
+        <location filename="src/mainwindow.cpp" line="1439"/>
+        <location filename="src/mainwindow.cpp" line="1469"/>
         <source>You must enter a description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2456,12 +2498,12 @@ and the flag bits for the. the driver.
 <context>
     <name>main</name>
     <message>
-        <location filename="src/main.cpp" line="25"/>
+        <location filename="src/main.cpp" line="27"/>
         <source>Set &lt;directory&gt; as home.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="26"/>
+        <location filename="src/main.cpp" line="28"/>
         <source>directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2469,7 +2511,12 @@ and the flag bits for the. the driver.
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="225"/>
+        <location filename="src/vscpworks.cpp" line="222"/>
+        <source>The VSCP event database does not exist. Is it available? [%s]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/vscpworks.cpp" line="231"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>

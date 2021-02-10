@@ -72,22 +72,22 @@ public slots:
     /*!
         Add priorities to the list box
     */
-    void AddPriorities(void);
+    void fillPriorities(void);
 
     /*!
         Add VSCP classes to the list box
     */
-    void AddVscpClasses(void);
+    void fillVscpClasses(void);
 
     /*!
         Add VSCP types to the list box
     */
-    void AddVscpTypes(void);
+    void fillVscpTypes(void);
 
     /*!
         Add node-id's to the list box
     */
-    void AddVscpNodeIds(void);
+    void fillVscpNodeIds(void);
 
     /*!
         Fill in selected priorities from
@@ -128,6 +128,25 @@ public slots:
         mask values from listbox selection
     */
     void calculatePriorityValues(void);
+
+    /*!
+        Calculate and set VSCP class filter and
+        mask values from listbox selection
+    */
+    void calculateVscpClassValues(void);
+
+    /*!
+        Calculate and set VSCP type filter and
+        mask values from listbox selection
+    */
+    void calculateVscpTypeValues(void);
+
+    /*!
+        Calculate and set node-id filter and
+        mask values from listbox selection
+    */
+    void calculateNodeIdValues(void);
+
 
     // ----------------------------------------------------------------------------
     //                             Getters & Setters
@@ -179,9 +198,27 @@ public slots:
         Nodeid mask getter/setters
     */
     void setVscpNodeIdMask(uint8_t value);
-    uint8_t getVscpNodeIdMask(void);
+    uint8_t getVscpNodeIdMask(void);    
 
 private slots:
+    
+    void showPriorityContextMenu(const QPoint& pos);
+    void showVscpClassContextMenu(const QPoint& pos);
+    void showVscpTypeContextMenu(const QPoint& pos);
+    void showNodeIdContextMenu(const QPoint& pos);
+
+    void clrAllPrioritySelections(void);
+    void selectAllPrioritySelections(void);
+
+    void clrAllVscpClassSelections(void);
+    void selectAllVscpClassSelections(void);
+
+    void clrAllVscpTypeSelections(void);
+    void selectAllVscpTypeSelections(void);
+
+    void clrAllNodeIdSelections(void);
+    void selectAllNodeIdSelections(void);
+
     void onTextChangedPriorityFilter(const QString &text);
     void onTextChangedPriorityMask(const QString &text);  
 
@@ -194,6 +231,8 @@ private slots:
     void onTextChangedVscpNodeIdFilter(const QString &text);
     void onTextChangedVscpNodeIdMask(const QString &text);
 
+    void onVscpTypeItemClicked(QListWidgetItem *item);
+
 private:
 
     Ui::CDlgLevel1FilterWizard *ui;
@@ -205,6 +244,12 @@ private:
 
     // Vector that maps VSCP type to list index
     std::map<uint32_t,uint16_t> m_typeToIndexMap;
+
+    /*!
+        Used by update mechanism to prevent automatic
+        sections when base is changed.
+    */
+    bool m_bSkipAutomaticUpdate;
 
 };
 

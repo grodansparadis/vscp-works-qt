@@ -6,25 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
-    <height>206</height>
+    <width>536</width>
+    <height>194</height>
    </rect>
   </property>
-  <property name="baseSize">
-   <size>
-    <width>0</width>
-    <height>0</height>
-   </size>
-  </property>
   <property name="windowTitle">
-   <string>VSCP filter</string>
+   <string>Id and Mask</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>160</y>
-     <width>611</width>
+     <y>150</y>
+     <width>521</width>
      <height>32</height>
     </rect>
    </property>
@@ -32,114 +26,66 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-   <property name="centerButtons">
-    <bool>true</bool>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
-     <width>501</width>
-     <height>131</height>
+     <y>20</y>
+     <width>201</width>
+     <height>80</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Description</string>
+       <string>Id</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <property name="buddy">
+       <cstring>canid</cstring>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
-      <property name="toolTip">
-       <string>Description for  connection used in connection table</string>
-      </property>
-      <property name="text">
-       <string/>
+     <widget class="QLineEdit" name="canid">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Id Filter</string>
+       <string>Mask</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <property name="buddy">
+       <cstring>canmask</cstring>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_description_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string>Description for  connection used in connection table</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Id Mask</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="m_description_3">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string>Description for  connection used in connection table</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QCheckBox" name="m_chkInvert">
-      <property name="text">
-       <string>Invert</string>
+     <widget class="QLineEdit" name="canmask">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>270</x>
      <y>10</y>
-     <width>91</width>
-     <height>25</height>
+     <width>251</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
-    <string>Wizard</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 0-7&lt;/span&gt; is node-id&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 8-15&lt;/span&gt; is VSCP type&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 16-24&lt;/span&gt; is VSCP Class (9-bits)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit 25&lt;/span&gt; is hardcoded flag&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit 26-28&lt;/span&gt; is priority (0 is lowest)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>
