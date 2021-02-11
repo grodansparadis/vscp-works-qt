@@ -33,6 +33,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsLocal;
@@ -55,29 +56,40 @@ public:
     */
     void setInitialFocus(void);
 
+
+    /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJsonObj(void);
+    void SetJsonObj(const QJsonObject& obj);
+
+
     /*!
         Setters/getters for name/description
     */
-    std::string getName(void);
-    void setName(const std::string& str);
+    QString getName(void);
+    void setName(const QString& str);
 
     /*!
         Setters/getters for path
     */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    QString getPath(void);
+    void setPath(const QString& str);
 
 private:
 
     Ui::CDlgConnSettingsLocal *ui;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
+    // void createMenu();
+    // void createHorizontalGroupBox();
+    // void createGridGroupBox();
+    // void createFormGroupBox();
 
     // Dummy client
     vscpClientLocal m_vscpClient;
+
+    // JSON configuration object
+    QJsonObject m_jsonConfig;
 };
 
 

@@ -35,6 +35,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsCanal;
@@ -72,23 +73,30 @@ public:
     */
     CVscpClient::connType getSelectedType(void);
 
-        /*!
+    /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJsonObj(void);
+    void SetJsonObj(const QJsonObject& obj);
+
+
+    /*!
         Setters/getters for name/description
     */
-    std::string getName(void);
-    void setName(const std::string& str);
+    QString getName(void);
+    void setName(const QString& str);
 
     /*!
         Setters/getters for path to driver
     */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    QString getPath(void);
+    void setPath(const QString& str);
 
     /*!
         Setters/getters for config
     */
-    std::string getConfig(void);
-    void setConfig(const std::string& str);
+    QString getConfig(void);
+    void setConfig(const QString& str);
 
     /*!
         Setters/getters for flags
@@ -119,6 +127,9 @@ private:
 
     // Dummy client
     vscpClientCanal m_vscpClient;
+
+    // JSON configuration object
+    QJsonObject m_jsonConfig;
 };
 
 

@@ -87,20 +87,62 @@ CVscpClient::connType CDlgConnSettingsUdp::getSelectedType(void) {
     return m_selected_type;
 }
 
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsUdp::getJsonObj(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsUdp::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;    
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsUdp::getName(void)
+QString CDlgConnSettingsUdp::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->m_description->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsUdp::setName(const std::string& str)
+void CDlgConnSettingsUdp::setName(const QString& str)
 {
-    ui->m_description->insert(str.c_str());
+    ui->m_description->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPath
+//
+
+QString CDlgConnSettingsUdp::getPath(void)
+{
+    return (ui->m_path->text()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPath
+//
+
+void CDlgConnSettingsUdp::setPath(const QString& str)
+{
+    ui->m_path->setText(str);
 }

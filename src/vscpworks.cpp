@@ -42,6 +42,9 @@
 #include <QSqlQuery>
 #include <QDir>
 #include <QFile>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QUuid>
 
 #include <nlohmann/json.hpp>
 
@@ -55,7 +58,12 @@ using json = nlohmann::json;
 vscpworks::vscpworks(int &argc, char **argv) :
     QApplication(argc, argv)
 {        
-    m_base = numerical_base::HEX;   // Numerical base    
+    m_base = numerical_base::HEX;   // Numerical base   
+
+    // QUuid uuid; 
+    // uuid = QUuid::createUuid();
+    // qDebug() << QUuid::createUuid().toString();
+    // qDebug() << "\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,10 +120,10 @@ QString vscpworks::decimalToStringInBase(const QString& strvalue, int tobase)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSettings *
+// loadSettings *
 //
 
-void vscpworks::readSettings()
+void vscpworks::loadSettings(void)
 {
     QString str;   
 
@@ -169,18 +177,19 @@ void vscpworks::readSettings()
     m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
     qDebug() << m_lastEventDbLoadDateTime;
     
-    // Connections
-    // -----------
+    // * * *  Read in defined connections  * * *
+    
     int size = settings.beginReadArray("hosts/connections");
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
-        std::string conn = settings.value("conn", "").toString().toStdString();
+        QJsonObject conn = settings.value("connection").toJsonObject();
+        addConnection(conn);
     }
     settings.endArray(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// writeSettings *
+// writeSettings
 //
 
 void vscpworks::writeSettings()
@@ -194,15 +203,113 @@ void vscpworks::writeSettings()
     settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
     settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
 
+    writeConnections();
+
+    // TODO TEST remove
+    QJsonObject j1
+    {
+        {"p1", 1},
+        {"p1", 2}
+    };
+
+    QJsonObject j2
+    {
+        {"p1", 2},
+        {"p1", 3}
+    };
+
+    QJsonArray aaa;
+    aaa.push_back(1);
+    aaa.push_back(2);
+    aaa.push_back(3);
+
+    QJsonObject jj
+    {
+        {"property1", 1},
+        {"property2", 2},
+        {"property3", "teststring"},
+        {"property4", aaa },
+    };
+    // {"property4", [{"p1":1,"p2":2},{"p1":3,"p2":4}]}
+    qDebug() << jj["property4"];
+
+    settings.setValue("test", jj);
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// writeConnections
+//
+
+void vscpworks::writeConnections(void)
+{
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    // Remove old entries
+    int size = settings.beginReadArray("hosts/connections");
+    for(auto i=0; i<size; i++) {
+        settings.setArrayIndex(i);
+        settings.remove("connection");
+    }
+    settings.endArray();
+    
     // Connections
     settings.beginWriteArray("hosts/connections");
     int i = 0;    
-    for (std::list<CVscpClient *>::iterator it = m_listConn.begin(); it != m_listConn.end(); ++it){    
+    for (std::map<QString,QJsonObject>::iterator it = m_listConn.begin(); it != m_listConn.end(); ++it){    
         settings.setArrayIndex(i);
-        settings.setValue("conn", QString::fromStdString((*it)->getName()));
-        //settings.setValue("conn", it->toJson);
+        settings.setValue("connection", it->second);
+        i++;
     }
     settings.endArray();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConnection
+//
+
+bool vscpworks::addConnection(const QJsonObject& conn, bool bSave )
+{
+    QString uuid = QUuid::createUuid().toString();
+    conn["uuid"] = uuid;
+
+    // Add configuration item to map
+    m_listConn[uuid] = conn; 
+
+    std::map<QString,QJsonObject>::iterator it;
+    it = m_listConn.find(uuid);
+    if ( m_listConn.end() != it ) {
+        qDebug() << it->second << "<-----";
+    }
+
+    // Save settings if requested to do so
+    if (bSave) writeConnections();
+
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeConnection
+//
+
+bool vscpworks::removeConnection(const QString& uuid, bool bSave )
+{
+    qDebug() << uuid;
+
+    std::map<QString,QJsonObject>::iterator it;
+    it = m_listConn.find(uuid);
+    if ( m_listConn.end() != it ) {
+        qDebug() << it->second << "second";
+    }
+
+    // Remove configuration from map
+    size_t num = m_listConn.erase(uuid);
+
+    // Save settings if requested to do so
+    if (bSave) writeConnections();
+
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

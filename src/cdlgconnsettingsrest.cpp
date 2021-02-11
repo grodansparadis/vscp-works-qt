@@ -88,20 +88,44 @@ CVscpClient::connType CDlgConnSettingsRest::getSelectedType(void) {
     return m_selected_type;
 }
 
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsRest::getJsonObj(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsRest::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;    
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsRest::getName(void)
+QString CDlgConnSettingsRest::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->m_description->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsRest::setName(const std::string& str)
+void CDlgConnSettingsRest::setName(const QString& str)
 {
-    ui->m_description->insert(str.c_str());
+    ui->m_description->setText(str);
 }

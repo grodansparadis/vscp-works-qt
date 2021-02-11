@@ -88,20 +88,45 @@ CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
     return m_selected_type;
 }
 
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsTcpip::getJsonObj(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsTcpip::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;    
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsTcpip::getName(void)
+QString CDlgConnSettingsTcpip::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->m_description->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsTcpip::setName(const std::string& str)
+void CDlgConnSettingsTcpip::setName(const QString& str)
 {
-    ui->m_description->insert(str.c_str());
+    ui->m_description->setText(str);
 }
+

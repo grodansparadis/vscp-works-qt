@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
             QCoreApplication::translate("main", "directory"));
     parser.process(app);
 
-    app.readSettings();
+    app.loadSettings();
 
     MainWindow mainWin; 
     if (!parser.positionalArguments().isEmpty()) {

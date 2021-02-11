@@ -77,14 +77,33 @@ class vscpworks : public QApplication {
     const QString URL_EVENT_DATABASE = tr("https://www.vscp.org/events/vscp_events.sqlite3");
 
     /*!
+        Add connection
+        @param conn JSON connection object
+        @param bSave Save connections if set to true
+    */
+    bool addConnection(const QJsonObject& conn, bool bSave = false);
+
+    /*!
+        Remove connection
+        @param uuid Id for connection
+        @param bSave Save connections if set to true
+    */
+    bool removeConnection(const QString&  uuid, bool bSave = false);
+
+    /*!
         Load configuration settings from disk
     */
-    void readSettings(void);
+    void loadSettings(void);
 
     /*!
         Save configuration settings to disk
     */
     void writeSettings(void);
+
+    /*!
+        Save connections to disk
+    */
+    void writeConnections(void);
 
     /*!
         Check the remote event information at
@@ -194,8 +213,8 @@ class vscpworks : public QApplication {
 
     FileDownloader  *m_pVersionCtrl; 
 
-    /// List with defined connections
-    std::list<CVscpClient *> m_listConn;
+    /// List with defined connections uuid,conf-obj
+    std::map<QString,QJsonObject> m_listConn;
 
     /// VSCP classes (class-id) -> token
     std::map<uint16_t, QString> mapVscpClassToToken;

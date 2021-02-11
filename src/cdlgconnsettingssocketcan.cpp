@@ -107,8 +107,17 @@ void CDlgConnSettingsSocketCan::onDoubleClicked(QListWidgetItem* item)
 void CDlgConnSettingsSocketCan::onAddFilter(void)
 {
     CDlgLevel1Filter dlg(this);
-    
-    dlg.exec();
+
+restart:    
+    if (QDialog::Accepted == dlg.exec() ) {
+        std::string strName = dlg.getDescription();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                                tr("The filter need a description"),
+                                QMessageBox::Ok);
+            goto restart;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,27 +148,65 @@ void CDlgConnSettingsSocketCan::onEditFilter(void)
 
 void CDlgConnSettingsSocketCan::onTestConnection(void)
 {
-    QCoreApplication *core = QCoreApplication::instance();
-    QMessageBox::information(this, 
-                                tr("vscpworks+"),
-                                tr("Test connection"),
-                                QMessageBox::Ok ); 
+    CDlgLevel1Filter dlg(this);
+
+restart:    
+    if (QDialog::Accepted == dlg.exec() ) {
+        std::string strName = dlg.getDescription();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                                tr("The filter need a description"),
+                                QMessageBox::Ok);
+            goto restart;
+        }
+    }
 }
+
+
+// ----------------------------------------------------------------------------
+//                             Getters & Setters
+// ----------------------------------------------------------------------------
+
+
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsSocketCan::getJsonObj(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsSocketCan::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;    
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsSocketCan::getName(void)
+QString CDlgConnSettingsSocketCan::getName(void)
 {
-    return (ui->editDescription->text().toStdString()); 
+    return (ui->editDescription->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsSocketCan::setName(const std::string& str)
+void CDlgConnSettingsSocketCan::setName(const QString& str)
 {
-    ui->editDescription->setText(str.c_str());
+    ui->editDescription->setText(str);
 }
+

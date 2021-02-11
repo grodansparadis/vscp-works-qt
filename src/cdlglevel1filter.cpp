@@ -273,6 +273,24 @@ void CDlgLevel1Filter::onBaseChange(int index)
 // ----------------------------------------------------------------------------
 
 
+///////////////////////////////////////////////////////////////////////////////
+// getDescription
+//
+
+std::string CDlgLevel1Filter::getDescription(void)
+{
+    return (ui->editDescription->text().toStdString()); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDescription
+//
+
+void CDlgLevel1Filter::setDescription(const std::string& str)
+{
+    ui->editDescription->setText(str.c_str());
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // setVscpPriorityFilter

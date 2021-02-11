@@ -33,6 +33,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsSocketCan;
@@ -91,16 +92,18 @@ public:
     void onTestConnection(void);
 
     /*!
-        Setters/getters for name/description
+        Setters/getters for JSON config object
     */
-    std::string getName(void);
-    void setName(const std::string& str);
+    QJsonObject getJsonObj(void);
+    void SetJsonObj(const QJsonObject& obj);
+
 
     /*!
-        Setters/getters for path
+        Setters/getters for name/description
     */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    QString getName(void);
+    void setName(const QString& str);
+
 
 private:
 
@@ -110,6 +113,9 @@ private:
     void createHorizontalGroupBox();
     void createGridGroupBox();
     void createFormGroupBox();
+
+    // JSON configuration object
+    QJsonObject m_jsonConfig;
 
 };
 

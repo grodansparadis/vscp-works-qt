@@ -33,6 +33,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsMulticast;
@@ -69,33 +70,32 @@ public:
         Return the selected communication type
     */
     CVscpClient::connType getSelectedType(void);
+    
+    /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJsonObj(void);
+    void SetJsonObj(const QJsonObject& obj);
 
     /*!
         Setters/getters for name/description
     */
-    std::string getName(void);
-    void setName(const std::string& str);
-
-    /*!
-        Setters/getters for path
-    */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    QString getName(void);
+    void setName(const QString& str);
 
 private:
 
     Ui::CDlgConnSettingsMulticast *ui;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
 
     /*! 
         This variable holds the connection type that 
         the used select
     */
     CVscpClient::connType m_selected_type;
+
+    // JSON configuration object
+    QJsonObject m_jsonConfig;
 };
 
 

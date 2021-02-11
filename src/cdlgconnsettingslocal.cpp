@@ -41,6 +41,16 @@ CDlgConnSettingsLocal::CDlgConnSettingsLocal(QWidget *parent) :
     ui(new Ui::CDlgConnSettingsLocal)
 {
     ui->setupUi(this);
+
+    // {
+    //  "type": drv_enum_local,
+    // 	"name": "name of connection item",
+    // 	"path": "Path to driver",
+    // };
+
+    m_jsonConfig.insert("type", static_cast<int>(CVscpClient::connType::LOCAL));
+    m_jsonConfig.insert("name", "local driver name");
+    m_jsonConfig.insert("path", "path to local file");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,38 +71,69 @@ void CDlgConnSettingsLocal::setInitialFocus(void)
     ui->m_description->setFocus();
 }
 
+
+
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsLocal::getJsonObj(void)
+{
+    m_jsonConfig["name"] = getName();
+    m_jsonConfig["path"] = getPath();
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsLocal::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;
+
+    setName(m_jsonConfig["name"].toString()); 
+    setPath(m_jsonConfig["path"].toString()); 
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsLocal::getName(void)
+QString CDlgConnSettingsLocal::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->m_description->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsLocal::setName(const std::string& str)
+void CDlgConnSettingsLocal::setName(const QString& str)
 {
-    ui->m_description->setText(str.c_str());
+    ui->m_description->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getPath
 //
 
-std::string CDlgConnSettingsLocal::getPath(void)
+QString CDlgConnSettingsLocal::getPath(void)
 {
-    return (ui->m_path->text().toStdString()); 
+    return (ui->m_path->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setPath
 //
 
-void CDlgConnSettingsLocal::setPath(const std::string& str)
+void CDlgConnSettingsLocal::setPath(const QString& str)
 {
-    ui->m_path->setText(str.c_str());
+    ui->m_path->setText(str);
 }

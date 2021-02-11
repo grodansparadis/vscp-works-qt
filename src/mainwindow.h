@@ -34,6 +34,7 @@
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
+#include <QJsonObject>
 
 #include <list>
 
@@ -49,16 +50,45 @@ QT_END_NAMESPACE
 
 class FileDownloader;
 
-class QTreeWidgetItemConn : public QTreeWidgetItem
+///////////////////////////////////////////////////////////////////////////////
+// treeWidgetItemConn
+//
+
+class treeWidgetItemConn : public QTreeWidgetItem
 {
 
 public:
-    QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *client);
-    ~QTreeWidgetItemConn();
+    /*!
+        Create connection tree list item
+
+        @param topItem Pointer to tree list top item
+        @param client Pointer to communication client
+    */
+    treeWidgetItemConn(QTreeWidgetItem *topItem, 
+                            QJsonObject *conf);
+    ~treeWidgetItemConn();
+
+    /// Getter/Setter for configuration object
+    QJsonObject *getConfObject() { return m_pconf; };
+    void setConfObject(QJsonObject *conf) { m_pconf = conf; };
 
 private:
-    CVscpClient *m_client;
+
+    /*!
+        JSON configuration for the
+        communication client.
+    */
+    QJsonObject *m_pconf;
+    
 };
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// MainWindow
+//
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -92,23 +122,23 @@ private slots:
 
     void showMainsettings(void);
 
-    void editConnectionItem(uint32_t connectionIndex);
-    void cloneConnectionItem(uint32_t connectionIndex);
-    void removeConnectionItem(uint32_t connectionIndex);
+    void editConnectionItem(void);
+    void cloneConnectionItem(void);
+    void removeConnectionItem(void);
 
     // New connections
-    void newLocalConnection();
-    void newTcpipConnection();
-    void newCanalConnection();
-    void newSocketCanConnection();
-    void newWs1Connection();
-    void newWs2Connection();
-    void newMqttConnection();
-    void newUdpConnection();
-    void newMulticastConnection();
-    void newRestConnection();
-    void newRawCanConnection();
-    void newRawMqttConnection();
+    void newLocalConnection(void);
+    void newTcpipConnection(void);
+    void newCanalConnection(void);
+    void newSocketCanConnection(void);
+    void newWs1Connection(void);
+    void newWs2Connection(void);
+    void newMqttConnection(void);
+    void newUdpConnection(void);
+    void newMulticastConnection(void);
+    void newRestConnection(void);
+    void newRawCanConnection(void);
+    void newRawMqttConnection(void);
 
     void openConnectionSettingsDialog(CVscpClient::connType type);
 
@@ -128,13 +158,19 @@ protected:
     void showConnectionContextMenu(const QPoint&);
     
     /*!
-        Add one child item to the connection tree
-        @param topitem Pointer to top item this subitem belongs to
-        @param name Name for sub item.
-    */
-    //void addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name);
+        Create connection tree list item
 
-    void addChildItemToConnectionTree(QTreeWidgetItem *topitem, CVscpClient *client);
+        @param topItem Pointer to tree list top item
+        @param client Pointer to communication client
+    */
+    void addChildItemToConnectionTree(QTreeWidgetItem *topitem,  
+                                        QJsonObject *pconn);
+
+    /*!
+        Fill in loaded connections to the tree
+        at correct positions
+    */
+    void addLoadedConnections(void);                                        
 
 private:
 

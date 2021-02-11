@@ -62,15 +62,18 @@
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-// QTreeWidgetItemConn
+// treeWidgetItemConn
 //
 
 
-QTreeWidgetItemConn::QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *client) : 
+treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, QJsonObject *pconf) : 
     QTreeWidgetItem(topItem, 1000) 
 {
-    setText(0, client->getName().c_str());
-    m_client = client;
+    assert(nullptr != topItem);
+    assert(nullptr != pconf);
+
+    setText(0, (*pconf)["name"].toString());
+    m_pconf = pconf;
 
     const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
     setIcon(0, icon);
@@ -83,14 +86,18 @@ QTreeWidgetItemConn::QTreeWidgetItemConn(QTreeWidgetItem *topItem, CVscpClient *
     
 }
 
-QTreeWidgetItemConn::~QTreeWidgetItemConn()
+treeWidgetItemConn::~treeWidgetItemConn()
 {
-    delete m_client;
-    m_client = nullptr;
+    // Conf object must be deleted in map
+    m_pconf = nullptr;
 }
 
 
+
+
 // ----------------------------------------------------------------------------
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,6 +262,9 @@ MainWindow::MainWindow()
 
     //addChildItemToConnectionTree(m_topitem_tcpip, "Kalle tupp");
 
+    // Load connections
+    addLoadedConnections();
+
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
     initRemoteEventDbFetch();
@@ -265,6 +275,7 @@ MainWindow::MainWindow()
                                     tr("Failed to load remote event data. Will not be used."),
                                     QMessageBox::Ok );
     }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -400,12 +411,100 @@ void MainWindow::downloadedEventDb()
 // addChildItemToConnectionTree
 //
 
-void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, CVscpClient *client) 
+void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, 
+                                                QJsonObject *pconn) 
 {
-    QTreeWidgetItemConn *childitem = new QTreeWidgetItemConn(topitem, client);
+    // Check pointers
+    assert(nullptr != topitem);
+    assert(nullptr != pconn);
+    treeWidgetItemConn *childitem = new treeWidgetItemConn(topitem, pconn);
     m_connTreeTable->clearSelection();
     topitem->addChild(childitem);
     childitem->setSelected(true);    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addLoadedConnections
+//
+
+void MainWindow::addLoadedConnections(void)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    for (std::map<QString,QJsonObject>::iterator it = pworks->m_listConn.begin(); it != pworks->m_listConn.end(); ++it){ 
+
+        if ( !(it->second)["type"].isUndefined() && !(it->second)["type"].isNull() ) {
+
+            switch(static_cast<CVscpClient::connType>((it->second)["type"].toInt())) {
+
+                case CVscpClient::connType::LOCAL:
+                    {
+                        // Create a new local communication object
+                        // vscpClientLocal *pClient = new vscpClientLocal();
+
+                        // pClient->setName((it->second)["name"].toString().toStdString());
+                        // pClient->setPath((it->second)["path"].toString().toStdString());
+                        // pClient->fromJSON(QJsonDocument(it->second).toJson(QJsonDocument::Compact).toStdString());
+
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_local, &(it->second));
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
+                    break;
+
+                case CVscpClient::connType::TCPIP:
+                    newTcpipConnection();
+                    break;
+
+                case CVscpClient::connType::CANAL: 
+                    newCanalConnection();
+                    break;
+
+                case CVscpClient::connType::SOCKETCAN: 
+                    newSocketCanConnection();
+                    break;
+
+                case CVscpClient::connType::WS1: 
+                    newWs1Connection();
+                    break;
+
+                case CVscpClient::connType::WS2: 
+                    newWs2Connection();
+                    break;
+
+                case CVscpClient::connType::MQTT: 
+                    newMqttConnection();
+                    break;
+
+                case CVscpClient::connType::UDP: 
+                    newUdpConnection();
+                    break;
+
+                case CVscpClient::connType::MULTICAST: 
+                    newMulticastConnection();
+                    break;
+
+                case CVscpClient::connType::REST: 
+                    newRestConnection();
+                    break;
+
+                case CVscpClient::connType::RAWCAN: 
+                    newRawCanConnection();
+                    break;
+
+                case CVscpClient::connType::RAWMQTT: 
+                    newRawMqttConnection();
+                    break;
+                                                        
+                default:
+                    break;  
+
+            }    
+
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -505,30 +604,50 @@ void MainWindow::newConnection()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// editConnectionItem
+// editConnectionItem  uint32_t connectionIndex
 //
 
-void MainWindow::editConnectionItem(uint32_t connectionIndex)
+void MainWindow::editConnectionItem(void)
 {
     QMessageBox::about(this, tr("Info"), tr("editConnectionItem") );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// cloneConnectionItem
+// cloneConnectionItem  uint32_t connectionIndex
 //
 
-void MainWindow::cloneConnectionItem(uint32_t connectionIndex)
+void MainWindow::cloneConnectionItem(void)
 {
     QMessageBox::about(this, tr("Info"), tr("cloneConnectionItem") );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// removeConnectionItem
+// removeConnectionItem  uint32_t connectionIndex
 //
 
-void MainWindow::removeConnectionItem(uint32_t connectionIndex)
+void MainWindow::removeConnectionItem(void)
 {
-    QMessageBox::about(this, tr("Info"), tr("removeConnectionItem") );
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    // Context Menu Creation
+    // QModelIndex selected = m_connTreeTable->indexAt(pos);
+    // QModelIndex parent = selected.parent();
+    //QTreeWidgetItem *item = m_connTreeTable->selectedItems();
+    
+    QList<QTreeWidgetItem *> itemList;
+    itemList = m_connTreeTable->selectedItems();
+    foreach(QTreeWidgetItem *item, itemList) {
+        treeWidgetItemConn * itemConn = (treeWidgetItemConn *)item;
+        if (itemConn->isSelected()) {
+            //qDebug() << itemConn->m_confObj;
+            //qDebug() << *(itemConn->getConfObject());
+            QJsonObject *pconn = itemConn->getConfObject();
+            qDebug() << (*pconn)["uuid"].toString();
+            pworks->removeConnection((*pconn)["uuid"].toString(), true);
+            QTreeWidgetItem *parent = item->parent();
+            parent->removeChild(item);
+            delete item;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -671,15 +790,17 @@ void MainWindow::showConnectionContextMenu(const QPoint& pos)
                 break;
                                                     
             default:
-                menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
+                menu->addAction(QString("Add new connection..."), this, SLOT(newConnection()));
                 break;    
         }
 
         // Connections are stored in a list and there position is the index. item->type() is
         // this index + 1000 therefore we need to subtract 1000 to get the correct index
-        menu->addAction(QString("Edit this connection"), this, SLOT(editConnectionItem(item->type()-1000)));
-        menu->addAction(QString("Remove this connection"),this, SLOT(removeConnectionItem(item->type()-1000)));
-        menu->addAction(QString("Clone this connection"),this, SLOT(cloneConnectionItem(item->type()-1000)));
+        // (uint32_t)(item->type()))
+        menu->addAction(QString("Edit this connection"), this, SLOT(editConnectionItem()));
+        menu->addAction(QString("Remove this connection"),this, SLOT(removeConnectionItem()));
+        menu->addAction(QString("Clone this connection"),this, SLOT(cloneConnectionItem()));
+        menu->addAction(QString("Add new connection"), this, SLOT(newConnection()));
     }
 
     menu->popup(m_connTreeTable->viewport()->mapToGlobal(pos));
@@ -1128,26 +1249,44 @@ void MainWindow::showMainsettings(void)
 
 void MainWindow::newLocalConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsLocal dlg(this);
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        // Add the new connection
+        //pworks->m_listConn.push_back(dlg.getJsonObj());
+        QJsonObject conn = dlg.getJsonObj();
+        // QString uuid = QUuid::createUuid().toString();
+        // conn["uuid"] = uuid;
+        // pworks->m_listConn[uuid] = conn;
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientLocal *pClient = new vscpClientLocal();
-        pClient->setName(strName);
-        pClient->setPath(dlg.getPath());
+        // vscpClientLocal *pClient = new vscpClientLocal();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->setPath(dlg.getPath().toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_local, pClient);
+        addChildItemToConnectionTree(m_topitem_local, &conn);
     }
 }
 
@@ -1157,26 +1296,38 @@ restart:
 
 void MainWindow::newCanalConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsCanal dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientCanal *pClient = new vscpClientCanal();
-        pClient->setName(strName);
-        pClient->init(dlg.getPath(), dlg.getConfig(), dlg.getFlags() );
+        // vscpClientCanal *pClient = new vscpClientCanal();
+        
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->init(dlg.getPath().toStdString(), dlg.getConfig().toStdString(), dlg.getFlags() );
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_canal, pClient);
+        addChildItemToConnectionTree(m_topitem_canal, &conn);
     } 
 }
 
@@ -1186,27 +1337,39 @@ restart:
 
 void MainWindow::newTcpipConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsTcpip dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientTcp *pClient = new vscpClientTcp();
-        pClient->setName(strName);
+        // vscpClientTcp *pClient = new vscpClientTcp();
+        // pClient->setName(strName.toStdString());
+
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_tcpip, pClient);
+        addChildItemToConnectionTree(m_topitem_tcpip, &conn);
     } 
 }
 
@@ -1216,27 +1379,39 @@ restart:
 
 void MainWindow::newSocketCanConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsSocketCan dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientSocketCan *pClient = new vscpClientSocketCan();
-        pClient->setName(strName);
+        // vscpClientSocketCan *pClient = new vscpClientSocketCan();
+        // pClient->setName(strName.toStdString());
+
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_socketcan, pClient);
+        addChildItemToConnectionTree(m_topitem_socketcan, &conn);
     }
 }
 
@@ -1246,27 +1421,39 @@ restart:
 
 void MainWindow::newMqttConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsMqtt dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientMqtt *pClient = new vscpClientMqtt();
-        pClient->setName(strName);
+        // vscpClientMqtt *pClient = new vscpClientMqtt();
+        // pClient->setName(strName.toStdString());
+
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_mqtt, pClient);
+        addChildItemToConnectionTree(m_topitem_mqtt, &conn);
     }
 }
 
@@ -1276,27 +1463,39 @@ restart:
 
 void MainWindow::newWs1Connection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsWs1 dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientWs1 *pClient = new vscpClientWs1();
-        pClient->setName(strName);
+        // vscpClientWs1 *pClient = new vscpClientWs1();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_ws1, pClient);
+        addChildItemToConnectionTree(m_topitem_ws1, &conn);
     }
 }
 
@@ -1306,27 +1505,39 @@ restart:
 
 void MainWindow::newWs2Connection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsWs2 dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientWs2 *pClient = new vscpClientWs2();
-        pClient->setName(strName);
+        // vscpClientWs2 *pClient = new vscpClientWs2();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_ws2, pClient);
+        addChildItemToConnectionTree(m_topitem_ws2, &conn);
     }
 }
 
@@ -1338,27 +1549,39 @@ restart:
 
 void MainWindow::newUdpConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsUdp dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientUdp *pClient = new vscpClientUdp();
-        pClient->setName(strName);
+        // vscpClientUdp *pClient = new vscpClientUdp();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_udp, pClient);
+        addChildItemToConnectionTree(m_topitem_udp, &conn);
     }
 }
 
@@ -1368,27 +1591,39 @@ restart:
 
 void MainWindow::newMulticastConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsMulticast dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientMulticast *pClient = new vscpClientMulticast();
-        pClient->setName(strName);
+        // vscpClientMulticast *pClient = new vscpClientMulticast();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_multicast, pClient);
+        addChildItemToConnectionTree(m_topitem_multicast, &conn);
     }
 }
 
@@ -1398,27 +1633,39 @@ restart:
 
 void MainWindow::newRestConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsRest dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientRest *pClient = new vscpClientRest();
-        pClient->setName(strName);
+        // vscpClientRest *pClient = new vscpClientRest();
+
+        // pClient->setName(strName.toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rest, pClient);
+        addChildItemToConnectionTree(m_topitem_rest, &conn);
     }
 }
 
@@ -1428,27 +1675,39 @@ restart:
 
 void MainWindow::newRawCanConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsRawCan dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientRawCan *pClient = new vscpClientRawCan();
-        pClient->setName(strName);
+        // vscpClientRawCan *pClient = new vscpClientRawCan();
+
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rawcan, pClient);
+        addChildItemToConnectionTree(m_topitem_rawcan, &conn);
     }
 }
 
@@ -1458,27 +1717,39 @@ restart:
 
 void MainWindow::newRawMqttConnection()
 {
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     CDlgConnSettingsRawMqtt dlg(this);
     dlg.setInitialFocus();
 
 restart:
     if (QDialog::Accepted == dlg.exec()) {
-        std::string strName = dlg.getName();
+        QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this, tr("vscpworks+"),
-                               tr("You must enter a description"),
+                               tr("A connection needs a description"),
                                QMessageBox::Ok);
             goto restart;
         }
 
+        QJsonObject conn = dlg.getJsonObj();
+        if (!pworks->addConnection(conn, true)) {
+            QMessageBox::information(this, 
+                                    tr("vscpworks+"),
+                                    tr("Failed to add new connection."),
+                                    QMessageBox::Ok );
+        }
+
         // Create a new local communication object
-        vscpClientRawMqtt *pClient = new vscpClientRawMqtt();
-        pClient->setName(strName);
+        // vscpClientRawMqtt *pClient = new vscpClientRawMqtt();
+
+        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
         //m_listConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rawmqtt, pClient);
+        addChildItemToConnectionTree(m_topitem_rawmqtt, &conn);
     }
 }
 

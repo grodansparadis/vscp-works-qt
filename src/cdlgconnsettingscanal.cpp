@@ -75,58 +75,82 @@ void CDlgConnSettingsCanal::setInitialFocus(void)
 }
 
 
+// Getters / Setters
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// getJsonObj
+//
+
+QJsonObject CDlgConnSettingsCanal::getJsonObj(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// SetFromJsonObj
+//
+
+void CDlgConnSettingsCanal::SetJsonObj(const QJsonObject& obj)
+{
+    m_jsonConfig = obj;    
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-std::string CDlgConnSettingsCanal::getName(void)
+QString CDlgConnSettingsCanal::getName(void)
 {
-    return (ui->m_description->text().toStdString()); 
+    return (ui->m_description->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsCanal::setName(const std::string& str)
+void CDlgConnSettingsCanal::setName(const QString& str)
 {
-    ui->m_description->setText(str.c_str());
+    ui->m_description->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getPath
 //
 
-std::string CDlgConnSettingsCanal::getPath(void)
+QString CDlgConnSettingsCanal::getPath(void)
 {
-    return (ui->m_path->text().toStdString()); 
+    return (ui->m_path->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setPath
 //
 
-void CDlgConnSettingsCanal::setPath(const std::string& str)
+void CDlgConnSettingsCanal::setPath(const QString& str)
 {
-    ui->m_path->setText(str.c_str());
+    ui->m_path->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getConfig
 //
 
-std::string CDlgConnSettingsCanal::getConfig(void)
+QString CDlgConnSettingsCanal::getConfig(void)
 {
-    return (ui->m_config->text().toStdString());
+    return (ui->m_config->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setConfig
 //
 
-void CDlgConnSettingsCanal::setConfig(const std::string& str)
+void CDlgConnSettingsCanal::setConfig(const QString& str)
 {
-    ui->m_config->setText(str.c_str());
+    ui->m_config->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,15 +268,15 @@ void CDlgConnSettingsCanal::wizard()
     ///////////////////////////////////////////////////////////////////////////
 
     std::string path = ui->m_path->text().toStdString();
-    std::string config = getConfig();
+    std::string config = getConfig().toStdString();
     uint32_t flags = getFlags();
 
     // Get config items
     std::deque<std::string> m_configItems; 
-    vscp_split(m_configItems, getConfig(), ";");
+    vscp_split(m_configItems, getConfig().toStdString(), ";");
 
     // Save set path
-    std::string save_path = m_vscpClient.m_canalif.getPath();
+    QString save_path = m_vscpClient.m_canalif.getPath().c_str();
 
     // Set new path
     m_vscpClient.m_canalif.setPath(path);
@@ -268,7 +292,7 @@ void CDlgConnSettingsCanal::wizard()
         m_vscpClient.m_canalif.releaseDriver(); 
 
         // Reset old path
-        m_vscpClient.m_canalif.setPath(save_path);
+        m_vscpClient.m_canalif.setPath(save_path.toStdString());
 
         return;
     }
@@ -282,7 +306,7 @@ void CDlgConnSettingsCanal::wizard()
         m_vscpClient.m_canalif.releaseDriver();
 
         // Reset old path
-        m_vscpClient.m_canalif.setPath(save_path);        
+        m_vscpClient.m_canalif.setPath(save_path.toStdString());        
 
         return;
     }
@@ -314,7 +338,7 @@ void CDlgConnSettingsCanal::wizard()
     m_vscpClient.m_canalif.releaseDriver();
 
     // Reset old path
-    m_vscpClient.m_canalif.setPath(save_path);
+    m_vscpClient.m_canalif.setPath(save_path.toStdString());
 
     ///////////////////////////////////////////////////////////////////////////
     //                          Set up wizard steps
@@ -760,7 +784,7 @@ void CDlgConnSettingsCanal::wizard()
         }
 
         qDebug() << "Config str = " << strConfig.c_str();
-        setConfig(strConfig);
+        setConfig(strConfig.c_str());
 
         qDebug() << "flags = " << flags;
         setFlags(flags);

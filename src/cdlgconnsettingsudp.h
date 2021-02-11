@@ -33,6 +33,7 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
+#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsUdp;
@@ -71,16 +72,22 @@ public:
     CVscpClient::connType getSelectedType(void);
 
     /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJsonObj(void);
+    void SetJsonObj(const QJsonObject& obj);
+
+    /*!
         Setters/getters for name/description
     */
-    std::string getName(void);
-    void setName(const std::string& str);
+    QString getName(void);
+    void setName(const QString& str);
 
     /*!
         Setters/getters for path
     */
-    std::string getPath(void);
-    void setPath(const std::string& str);
+    QString getPath(void);
+    void setPath(const QString& str);
 
 private:
 
@@ -96,6 +103,9 @@ private:
         the used select
     */
     CVscpClient::connType m_selected_type;
+
+    // JSON configuration object
+    QJsonObject m_jsonConfig;
 };
 
 

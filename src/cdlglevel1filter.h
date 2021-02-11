@@ -72,6 +72,12 @@ public:
     /*!
         Priority filter getter/setters
     */
+    void setDescription(const std::string& description);
+    std::string getDescription(void);
+
+    /*!
+        Priority filter getter/setters
+    */
     void setVscpPriorityFilter(uint8_t value);
     uint8_t getVscpPriorityFilter(void);
 
