@@ -115,6 +115,8 @@ void CDlgConnSettingsRest::setName(const QString& str)
 
 QJsonObject CDlgConnSettingsRest::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::REST);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 

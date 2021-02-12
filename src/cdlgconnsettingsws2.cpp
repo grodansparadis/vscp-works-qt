@@ -116,6 +116,8 @@ void CDlgConnSettingsWs2::setName(const QString& str)
 
 QJsonObject CDlgConnSettingsWs2::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::WS2);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 

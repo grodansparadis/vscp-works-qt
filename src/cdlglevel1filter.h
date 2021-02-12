@@ -123,6 +123,23 @@ public:
     void setVscpNodeIdMask(uint8_t value);
     uint8_t getVscpNodeIdMask(void);
     
+    /*!
+        Set value for hardcoded checkbox
+    */
+    void setHardcoded(bool val);
+    bool getHardcoded(void);
+
+    /*!
+        Set/get value for inverted checkbox
+    */
+    void setInverted(bool val);
+    bool getInverted(void);
+
+    /*!
+        Enable disable the description field
+    */
+    void disableDescriptionField(void);
+    void enableDescriptionField(void);
 
  public slots:
 

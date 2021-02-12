@@ -115,6 +115,8 @@ void CDlgConnSettingsRawCan::setName(const QString& str)
 
 QJsonObject CDlgConnSettingsRawCan::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::RAWCAN);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 

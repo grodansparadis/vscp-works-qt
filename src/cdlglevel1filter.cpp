@@ -170,6 +170,7 @@ void CDlgLevel1Filter::onIdMask(void)
     dlg.setCanMask(pworks->decimalToStringInBase(mask,ui->comboNumberBase->currentIndex()).toStdString());
 
     if (QDialog::Accepted == dlg.exec()) {
+
         canid = vscp_readStringValue(dlg.getCanId());
         mask = vscp_readStringValue(dlg.getCanMask());
 
@@ -464,4 +465,58 @@ void CDlgLevel1Filter::setVscpNodeIdMask(uint8_t value)
 uint8_t CDlgLevel1Filter::getVscpNodeIdMask(void) 
 { 
     return (vscp_readStringValue( ui->editVscpNodeIdMask->text().toStdString() ) & 0xff); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setHardCoded
+//
+
+void CDlgLevel1Filter::setHardcoded(bool val)
+{
+    ui->chkHardcoded->setChecked(val);   
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getHardcoded
+//
+
+bool CDlgLevel1Filter::getHardcoded(void)
+{
+    return ui->chkHardcoded->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setInverted
+//
+
+void CDlgLevel1Filter::setInverted(bool val)
+{
+    ui->chkInvert->setChecked(val);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getInverted
+//
+
+bool CDlgLevel1Filter::getInverted(void)
+{
+    return ui->chkInvert->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// disableDescriptionField
+//
+
+void CDlgLevel1Filter::disableDescriptionField(void)
+{
+    ui->editDescription->setEnabled(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enableDescriptionField
+//
+
+void CDlgLevel1Filter::enableDescriptionField(void)
+{
+    ui->editDescription->setEnabled(true);
 }

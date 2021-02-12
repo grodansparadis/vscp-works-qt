@@ -98,6 +98,8 @@ CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
 
 QJsonObject CDlgConnSettingsTcpip::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 

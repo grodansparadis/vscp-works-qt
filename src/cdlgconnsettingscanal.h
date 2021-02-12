@@ -108,6 +108,7 @@ private slots:
     void testDriver();
     void setDriverPath();
     void wizard();
+    void filterwizard();
 
 private:
 

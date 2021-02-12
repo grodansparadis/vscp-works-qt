@@ -127,6 +127,8 @@ QJsonObject CDlgConnSettingsRawMqtt::getJson(void)
 
 void CDlgConnSettingsRawMqtt::setJson(const QJsonObject *pobj)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::RAWMQTT);
+    m_jsonConfig["name"] = getName();
     m_jsonConfig = *pobj;    
 }
 

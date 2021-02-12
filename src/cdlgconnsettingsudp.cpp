@@ -133,6 +133,8 @@ void CDlgConnSettingsUdp::setPath(const QString& str)
 
 QJsonObject CDlgConnSettingsUdp::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::UDP);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 

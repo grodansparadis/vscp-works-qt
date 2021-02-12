@@ -29,6 +29,9 @@
 
 #include "cdlgconnsettingscanal.h"
 #include "ui_cdlgconnsettingscanal.h"
+
+#include "cdlglevel1filter.h"
+
 #include "canal_xmlconfig.h"
 #include "canalconfigwizard.h"
 #include "vscphelper.h"
@@ -54,6 +57,7 @@ CDlgConnSettingsCanal::CDlgConnSettingsCanal(QWidget *parent) :
     connect(ui->btnTest, SIGNAL(clicked()), this, SLOT(testDriver()));
     connect(ui->btnSetPath, SIGNAL(clicked()), this, SLOT(setDriverPath()));
     connect(ui->btnWizard, SIGNAL(clicked()), this, SLOT(wizard()));
+    connect(ui->btnFilterWizard, SIGNAL(clicked()), this, SLOT(filterwizard()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -795,3 +799,71 @@ void CDlgConnSettingsCanal::wizard()
     }
 
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// filterwizard
+//
+
+void CDlgConnSettingsCanal::filterwizard()
+{
+    CDlgLevel1Filter dlg(this);
+
+    dlg.disableDescriptionField();  // Description filed is not needed here
+
+    uint32_t canid = vscp_readStringValue(ui->editFilter->text().toStdString());
+    uint32_t mask = vscp_readStringValue(ui->editMask->text().toStdString());
+
+    dlg.setVscpPriorityFilter(vscp_getHeadFromCANALid(canid) >> 5);
+    dlg.setVscpPriorityMask(vscp_getHeadFromCANALid(mask) >> 5);
+
+    if (vscp_getHeadFromCANALid(mask) & VSCP_HEADER_HARD_CODED) {
+        dlg.setHardcoded(true);
+    }
+    else {
+        dlg.setHardcoded(false);
+    }
+
+    dlg.setVscpClassFilter(vscp_getVscpClassFromCANALid(canid));
+    dlg.setVscpClassMask(vscp_getVscpClassFromCANALid(mask));
+
+
+    dlg.setVscpTypeFilter(vscp_getVscpTypeFromCANALid(canid));
+    dlg.setVscpTypeMask(vscp_getVscpTypeFromCANALid(mask)); 
+
+
+    dlg.setVscpNodeIdFilter(canid & 0xff);
+    dlg.setVscpNodeIdMask(mask & 0xff); 
+
+   
+    if (QDialog::Accepted == dlg.exec() ) {
+
+        vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+        uint32_t canid = vscp_getCANALidFromData(dlg.getVscpPriorityFilter(),
+                                                    dlg.getVscpClassFilter(),
+                                                    dlg.getVscpTypeFilter());
+        canid += dlg.getVscpNodeIdFilter();
+        if (dlg.getHardcoded()) {
+            canid |= (1 << 25);
+        }
+
+        uint32_t mask = vscp_getCANALidFromData(dlg.getVscpPriorityMask(),
+                                                dlg.getVscpClassMask(),
+                                                dlg.getVscpTypeMask());
+        mask += dlg.getVscpNodeIdMask();
+        if (dlg.getHardcoded()) {
+            mask |= (1 << 25);
+        }
+
+        if (dlg.getInverted()) {
+            mask = ~mask;
+        }
+
+        ui->editFilter->setText(pworks->decimalToStringInBase(canid));
+        ui->editMask->setText(pworks->decimalToStringInBase(mask));    
+
+    }
+}
+
+
+    

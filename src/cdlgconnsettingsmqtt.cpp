@@ -114,6 +114,8 @@ void CDlgConnSettingsMqtt::setName(const QString& str)
 
 QJsonObject CDlgConnSettingsMqtt::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::MQTT);
+    m_jsonConfig["name"] = getName();
     return m_jsonConfig; 
 }
 
