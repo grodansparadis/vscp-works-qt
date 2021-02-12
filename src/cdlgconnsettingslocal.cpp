@@ -78,11 +78,12 @@ void CDlgConnSettingsLocal::setInitialFocus(void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// getJsonObj
+// getJson
 //
 
-QJsonObject CDlgConnSettingsLocal::getJsonObj(void)
+QJsonObject CDlgConnSettingsLocal::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::LOCAL);
     m_jsonConfig["name"] = getName();
     m_jsonConfig["path"] = getPath();
     return m_jsonConfig; 
@@ -90,12 +91,12 @@ QJsonObject CDlgConnSettingsLocal::getJsonObj(void)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// SetFromJsonObj
+// setJson
 //
 
-void CDlgConnSettingsLocal::SetJsonObj(const QJsonObject& obj)
+void CDlgConnSettingsLocal::setJson(const QJsonObject *pobj)
 {
-    m_jsonConfig = obj;
+    m_jsonConfig = *pobj;
 
     setName(m_jsonConfig["name"].toString()); 
     setPath(m_jsonConfig["path"].toString()); 

@@ -94,26 +94,6 @@ CVscpClient::connType CDlgConnSettingsRawMqtt::getSelectedType(void) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// getJsonObj
-//
-
-QJsonObject CDlgConnSettingsRawMqtt::getJsonObj(void)
-{
-    return m_jsonConfig; 
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// SetFromJsonObj
-//
-
-void CDlgConnSettingsRawMqtt::SetJsonObj(const QJsonObject& obj)
-{
-    m_jsonConfig = obj;    
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
@@ -129,5 +109,24 @@ QString CDlgConnSettingsRawMqtt::getName(void)
 void CDlgConnSettingsRawMqtt::setName(const QString& str)
 {
     ui->m_description->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getJson
+//
+
+QJsonObject CDlgConnSettingsRawMqtt::getJson(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setJson
+//
+
+void CDlgConnSettingsRawMqtt::setJson(const QJsonObject *pobj)
+{
+    m_jsonConfig = *pobj;    
 }
 

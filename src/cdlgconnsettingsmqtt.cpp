@@ -90,27 +90,6 @@ CVscpClient::connType CDlgConnSettingsMqtt::getSelectedType(void) {
 // Getters / Setters
 
 
-
-///////////////////////////////////////////////////////////////////////////////
-// getJsonObj
-//
-
-QJsonObject CDlgConnSettingsMqtt::getJsonObj(void)
-{
-    return m_jsonConfig; 
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// SetFromJsonObj
-//
-
-void CDlgConnSettingsMqtt::SetJsonObj(const QJsonObject& obj)
-{
-    m_jsonConfig = obj;    
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
@@ -129,3 +108,21 @@ void CDlgConnSettingsMqtt::setName(const QString& str)
     ui->m_description->setText(str);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// getJson
+//
+
+QJsonObject CDlgConnSettingsMqtt::getJson(void)
+{
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setJson
+//
+
+void CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
+{
+    m_jsonConfig = *pobj;    
+}

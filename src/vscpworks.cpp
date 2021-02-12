@@ -179,7 +179,7 @@ void vscpworks::loadSettings(void)
     
     // * * *  Read in defined connections  * * *
     
-    int size = settings.beginReadArray("hosts/connections");
+    int size = settings.beginReadArray("hosts");
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
         QJsonObject conn = settings.value("connection").toJsonObject();
@@ -247,7 +247,7 @@ void vscpworks::writeConnections(void)
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
     // Remove old entries
-    int size = settings.beginReadArray("hosts/connections");
+    int size = settings.beginReadArray("hosts");
     for(auto i=0; i<size; i++) {
         settings.setArrayIndex(i);
         settings.remove("connection");
@@ -255,12 +255,15 @@ void vscpworks::writeConnections(void)
     settings.endArray();
     
     // Connections
-    settings.beginWriteArray("hosts/connections");
+    settings.beginWriteArray("hosts");
     int i = 0;    
-    for (std::map<QString,QJsonObject>::iterator it = m_listConn.begin(); it != m_listConn.end(); ++it){    
+    //for (QMap<QString,QJsonObject>::iterator it = m_mapConn.begin(); it != m_mapConn.end(); ++it){    
+    QMap<QString,QJsonObject>::const_iterator it = m_mapConn.constBegin();
+    while (it != m_mapConn.constEnd()) {    
         settings.setArrayIndex(i);
-        settings.setValue("connection", it->second);
+        settings.setValue("connection", it.value());
         i++;
+        it++;
     }
     settings.endArray();
 }
@@ -269,19 +272,21 @@ void vscpworks::writeConnections(void)
 // addConnection
 //
 
-bool vscpworks::addConnection(const QJsonObject& conn, bool bSave )
+bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 {
     QString uuid = QUuid::createUuid().toString();
+    qDebug() << "uuid = " << uuid;
     conn["uuid"] = uuid;
+    //conn.remove("uuid");
 
     // Add configuration item to map
-    m_listConn[uuid] = conn; 
+    m_mapConn[uuid] = conn; 
 
-    std::map<QString,QJsonObject>::iterator it;
-    it = m_listConn.find(uuid);
-    if ( m_listConn.end() != it ) {
-        qDebug() << it->second << "<-----";
-    }
+    // QMap<QString,QJsonObject>::iterator it;
+    // it = m_mapConn.find(uuid);
+    // if ( m_mapConn.end() != it ) {
+    //     qDebug() << it.key() << " " << it.value() << "<-----";
+    // }
 
     // Save settings if requested to do so
     if (bSave) writeConnections();
@@ -297,14 +302,22 @@ bool vscpworks::removeConnection(const QString& uuid, bool bSave )
 {
     qDebug() << uuid;
 
-    std::map<QString,QJsonObject>::iterator it;
-    it = m_listConn.find(uuid);
-    if ( m_listConn.end() != it ) {
-        qDebug() << it->second << "second";
-    }
+    QMap<QString,QJsonObject>::iterator it;
+    // for (it = m_mapConn.begin(); it != m_mapConn.end(); ++it){ 
+    //     qDebug() << it.key() << " " << it.value();
+    // } 
 
-    // Remove configuration from map
-    size_t num = m_listConn.erase(uuid);
+    //qDebug() << uuid;
+    int n = m_mapConn.remove(uuid);
+
+    // it = m_mapConn.find(uuid);
+    // if ( m_mapConn.end() != it ) {
+        
+    //     qDebug() << it.value() << "second";
+        
+    //     // Remove configuration from map
+    //     it = m_mapConn.erase(it);
+    // }
 
     // Save settings if requested to do so
     if (bSave) writeConnections();

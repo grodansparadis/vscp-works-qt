@@ -81,7 +81,7 @@ class vscpworks : public QApplication {
         @param conn JSON connection object
         @param bSave Save connections if set to true
     */
-    bool addConnection(const QJsonObject& conn, bool bSave = false);
+    bool addConnection(QJsonObject& conn, bool bSave = false);
 
     /*!
         Remove connection
@@ -214,7 +214,7 @@ class vscpworks : public QApplication {
     FileDownloader  *m_pVersionCtrl; 
 
     /// List with defined connections uuid,conf-obj
-    std::map<QString,QJsonObject> m_listConn;
+    QMap<QString,QJsonObject> m_mapConn;
 
     /// VSCP classes (class-id) -> token
     std::map<uint16_t, QString> mapVscpClassToToken;

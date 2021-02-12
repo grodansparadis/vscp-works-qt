@@ -66,7 +66,11 @@
         "ranges": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "cassert": "cpp",
+        "cerrno": "cpp",
+        "cfloat": "cpp",
+        "climits": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

@@ -74,13 +74,6 @@ public:
     CVscpClient::connType getSelectedType(void);
 
     /*!
-        Setters/getters for JSON config object
-    */
-    QJsonObject getJsonObj(void);
-    void SetJsonObj(const QJsonObject& obj);
-
-
-    /*!
         Setters/getters for name/description
     */
     QString getName(void);
@@ -105,6 +98,12 @@ public:
     std::string getFlagsStr(void);
     void setFlags(uint32_t flags);
 
+    /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJson(void);
+    void setJson(const QJsonObject *pobj);
+
 private slots:
     void testDriver();
     void setDriverPath();
@@ -113,11 +112,6 @@ private slots:
 private:
 
     Ui::CDlgConnSettingsCanal *ui;
-
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
 
     /*! 
         This variable holds the connection type that 

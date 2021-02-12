@@ -96,7 +96,7 @@ CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
 // getJsonObj
 //
 
-QJsonObject CDlgConnSettingsTcpip::getJsonObj(void)
+QJsonObject CDlgConnSettingsTcpip::getJson(void)
 {
     return m_jsonConfig; 
 }
@@ -106,9 +106,9 @@ QJsonObject CDlgConnSettingsTcpip::getJsonObj(void)
 // SetFromJsonObj
 //
 
-void CDlgConnSettingsTcpip::SetJsonObj(const QJsonObject& obj)
+void CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
 {
-    m_jsonConfig = obj;    
+    m_jsonConfig = *pobj;    
 }
 
 

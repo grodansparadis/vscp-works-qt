@@ -72,12 +72,6 @@ public:
     CVscpClient::connType getSelectedType(void);
 
     /*!
-        Setters/getters for JSON config object
-    */
-    QJsonObject getJsonObj(void);
-    void SetJsonObj(const QJsonObject& obj);
-
-    /*!
         Setters/getters for name/description
     */
     QString getName(void);
@@ -88,6 +82,12 @@ public:
     */
     QString getPath(void);
     void setPath(const QString& str);
+
+    /*!
+        Setters/getters for JSON config object
+    */
+    QJsonObject getJson(void);
+    void setJson(const QJsonObject *pobj);
 
 private:
 

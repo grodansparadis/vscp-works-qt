@@ -66,14 +66,13 @@
 //
 
 
-treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, QJsonObject *pconf) : 
+treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, const QJsonObject& conn) : 
     QTreeWidgetItem(topItem, 1000) 
 {
     assert(nullptr != topItem);
-    assert(nullptr != pconf);
 
-    setText(0, (*pconf)["name"].toString());
-    m_pconf = pconf;
+    setText(0, conn["name"].toString());
+    m_conn = conn;
 
     const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
     setIcon(0, icon);
@@ -88,8 +87,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, QJsonObject *pc
 
 treeWidgetItemConn::~treeWidgetItemConn()
 {
-    // Conf object must be deleted in map
-    m_pconf = nullptr;
+
 }
 
 
@@ -412,12 +410,13 @@ void MainWindow::downloadedEventDb()
 //
 
 void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, 
-                                                QJsonObject *pconn) 
+                                                const QJsonObject& conn) 
 {
     // Check pointers
     assert(nullptr != topitem);
-    assert(nullptr != pconn);
-    treeWidgetItemConn *childitem = new treeWidgetItemConn(topitem, pconn);
+
+    //QJsonObject conn = m_mapConn[(*pconn)["uuid"]];
+    treeWidgetItemConn *childitem = new treeWidgetItemConn(topitem, conn);
     m_connTreeTable->clearSelection();
     topitem->addChild(childitem);
     childitem->setSelected(true);    
@@ -431,11 +430,16 @@ void MainWindow::addLoadedConnections(void)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    for (std::map<QString,QJsonObject>::iterator it = pworks->m_listConn.begin(); it != pworks->m_listConn.end(); ++it){ 
+    m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+    m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
 
-        if ( !(it->second)["type"].isUndefined() && !(it->second)["type"].isNull() ) {
+    //for (QMap<QString,QJsonObject>::iterator it = pworks->m_mapConn.begin(); it != pworks->m_mapConn.end(); ++it){ 
+    QMap<QString,QJsonObject>::const_iterator it = pworks->m_mapConn.constBegin();
+    while (it != pworks->m_mapConn.constEnd()) {
 
-            switch(static_cast<CVscpClient::connType>((it->second)["type"].toInt())) {
+        if ( !(it.value())["type"].isUndefined() && !(it.value())["type"].isNull() ) {
+
+            switch(static_cast<CVscpClient::connType>((it.value())["type"].toInt())) {
 
                 case CVscpClient::connType::LOCAL:
                     {
@@ -447,7 +451,7 @@ void MainWindow::addLoadedConnections(void)
                         // pClient->fromJSON(QJsonDocument(it->second).toJson(QJsonDocument::Compact).toStdString());
 
                         // Add connection to connection tree
-                        addChildItemToConnectionTree(m_topitem_local, &(it->second));
+                        addChildItemToConnectionTree(m_topitem_local, it.value());
 
                         m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
                         m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
@@ -455,47 +459,113 @@ void MainWindow::addLoadedConnections(void)
                     break;
 
                 case CVscpClient::connType::TCPIP:
-                    newTcpipConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_tcpip, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::CANAL: 
-                    newCanalConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_canal, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::SOCKETCAN: 
-                    newSocketCanConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_socketcan, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::WS1: 
-                    newWs1Connection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_ws1, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::WS2: 
-                    newWs2Connection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_ws2, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::MQTT: 
-                    newMqttConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_mqtt, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::UDP: 
-                    newUdpConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_udp, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::MULTICAST: 
-                    newMulticastConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_multicast, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::REST: 
-                    newRestConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_rest, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::RAWCAN: 
-                    newRawCanConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_rawcan, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
 
                 case CVscpClient::connType::RAWMQTT: 
-                    newRawMqttConnection();
+                    {
+                        // Add connection to connection tree
+                        addChildItemToConnectionTree(m_topitem_rawmqtt, it.value());
+
+                        m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
+                        m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
+                    }
                     break;
                                                         
                 default:
@@ -504,6 +574,9 @@ void MainWindow::addLoadedConnections(void)
             }    
 
         }
+
+        it++;
+
     }
 }
 
@@ -609,7 +682,77 @@ void MainWindow::newConnection()
 
 void MainWindow::editConnectionItem(void)
 {
-    QMessageBox::about(this, tr("Info"), tr("editConnectionItem") );
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    QList<QTreeWidgetItem *> itemList;
+    itemList = m_connTreeTable->selectedItems();
+    
+    foreach(QTreeWidgetItem *item, itemList) {
+
+        // Not intereste din top level items
+        if (NULL != item->parent()) {
+
+            // Get item
+            treeWidgetItemConn *itemConn = (treeWidgetItemConn *)item;
+
+            // Get the connection object  
+            QJsonObject *pconn = itemConn->getJson();
+
+            switch ((*pconn)["type"].toInt()) {
+
+                case static_cast<int>(CVscpClient::connType::LOCAL):
+                    editLocalConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::TCPIP):
+                    editTcpipConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::CANAL): 
+                    editCanalConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
+                    editSocketCanConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::WS1): 
+                    editWs1Connection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::WS2): 
+                    editWs2Connection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::MQTT): 
+                    editMqttConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::UDP): 
+                    editUdpConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::MULTICAST): 
+                    editMulticastConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::REST): 
+                    editRestConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::RAWCAN): 
+                    editRawCanConnection(itemConn);
+                    break;
+
+                case static_cast<int>(CVscpClient::connType::RAWMQTT): 
+                    editRawMqttConnection(itemConn);
+                    break;
+                                                        
+                default:
+                    break;    
+            }
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -618,11 +761,90 @@ void MainWindow::editConnectionItem(void)
 
 void MainWindow::cloneConnectionItem(void)
 {
-    QMessageBox::about(this, tr("Info"), tr("cloneConnectionItem") );
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    QList<QTreeWidgetItem *> itemList;
+    itemList = m_connTreeTable->selectedItems();
+    
+    foreach(QTreeWidgetItem *item, itemList) {
+
+        // Not intereste din top level items
+        if (NULL != item->parent()) {
+
+            // Get item
+            treeWidgetItemConn *itemConn = (treeWidgetItemConn *)item;            
+
+            // Get the connection object  
+            QJsonObject *pconn = itemConn->getJson();
+
+            // Make copy of config
+            QJsonObject conn_copy = *pconn;
+
+            // Add to main table
+            pworks->addConnection(conn_copy, true);
+
+            // Add connection to connection tree
+            addChildItemToConnectionTree(m_topitem_local, conn_copy);
+
+            // switch ((*pconn)["type"].toInt()) {
+
+            //     case static_cast<int>(CVscpClient::connType::LOCAL):
+            //         editLocalConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::TCPIP):
+            //         editTcpipConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::CANAL): 
+            //         editCanalConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
+            //         editSocketCanConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::WS1): 
+            //         editWs1Connection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::WS2): 
+            //         editWs2Connection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::MQTT): 
+            //         editMqttConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::UDP): 
+            //         editUdpConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::MULTICAST): 
+            //         editMulticastConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::REST): 
+            //         editRestConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::RAWCAN): 
+            //         editRawCanConnection(itemConn);
+            //         break;
+
+            //     case static_cast<int>(CVscpClient::connType::RAWMQTT): 
+            //         editRawMqttConnection(itemConn);
+            //         break;
+                                                        
+            //     default:
+            //         break;    
+            // }
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// removeConnectionItem  uint32_t connectionIndex
+// removeConnectionItem  
 //
 
 void MainWindow::removeConnectionItem(void)
@@ -638,14 +860,20 @@ void MainWindow::removeConnectionItem(void)
     foreach(QTreeWidgetItem *item, itemList) {
         treeWidgetItemConn * itemConn = (treeWidgetItemConn *)item;
         if (itemConn->isSelected()) {
-            //qDebug() << itemConn->m_confObj;
-            //qDebug() << *(itemConn->getConfObject());
-            QJsonObject *pconn = itemConn->getConfObject();
-            qDebug() << (*pconn)["uuid"].toString();
-            pworks->removeConnection((*pconn)["uuid"].toString(), true);
-            QTreeWidgetItem *parent = item->parent();
-            parent->removeChild(item);
-            delete item;
+            QJsonObject *pconn = itemConn->getJson();
+
+            QString str = tr("Are you sure that you want to delete [");
+            str += (*pconn)["name"].toString();
+            str += "]";
+            
+            if ( QMessageBox::Yes == QMessageBox::question(this, tr("vscpworks+"), str,
+                                                            QMessageBox::Yes|QMessageBox::No) ) {                
+                //qDebug() << (*pconn)["uuid"].toString();
+                pworks->removeConnection((*pconn)["uuid"].toString(), true);
+                QTreeWidgetItem *parent = item->parent();
+                parent->removeChild(item);
+                delete item;
+            }
         }
     }
 }
@@ -656,10 +884,132 @@ void MainWindow::removeConnectionItem(void)
 
 void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 {
-    QMessageBox msgBox;
-    msgBox.setText("Double click");
-    msgBox.exec();
-    //newTcpipConnection();
+    // Get parent of item if any
+    //QTreeWidgetItem *itemParent = item->parent();
+
+    // If this is a top level item allow just new connection
+    if (NULL != item->parent()) {
+
+        // Get item
+        treeWidgetItemConn * itemConn = (treeWidgetItemConn *)item;
+
+        // Get the connection object  
+        QJsonObject *pconn = itemConn->getJson();
+
+        switch ((*pconn)["type"].toInt()) {
+
+            case static_cast<int>(CVscpClient::connType::LOCAL):
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::TCPIP):
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::CANAL): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::WS1): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::WS2): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::MQTT): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::UDP): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::MULTICAST): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::REST): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::RAWCAN): 
+                newSession();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::RAWMQTT): 
+                newSession();
+                break;
+                                                    
+            default:
+                newSession();
+                break;    
+        }
+    }
+
+    // This is a top level item
+    else {
+
+        switch (item->type()) {
+
+            case static_cast<int>(CVscpClient::connType::LOCAL):
+                newLocalConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::TCPIP):
+                newTcpipConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::CANAL): 
+                newCanalConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
+                newSocketCanConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::WS1): 
+                newWs1Connection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::WS2): 
+                newWs2Connection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::MQTT): 
+                newMqttConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::UDP): 
+                newUdpConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::MULTICAST): 
+                newMulticastConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::REST): 
+                newRestConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::RAWCAN): 
+                newRawCanConnection();
+                break;
+
+            case static_cast<int>(CVscpClient::connType::RAWMQTT): 
+                newRawMqttConnection();
+                break;
+                                                    
+            default:
+                newConnection();
+                break;    
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1266,11 +1616,11 @@ restart:
         }
 
         // Add the new connection
-        //pworks->m_listConn.push_back(dlg.getJsonObj());
-        QJsonObject conn = dlg.getJsonObj();
+        //pworks->m_mapConn.push_back(dlg.getJson());
+        QJsonObject conn = dlg.getJson();
         // QString uuid = QUuid::createUuid().toString();
         // conn["uuid"] = uuid;
-        // pworks->m_listConn[uuid] = conn;
+        // pworks->m_mapConn[uuid] = conn;
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1283,10 +1633,51 @@ restart:
 
         // pClient->setName(strName.toStdString());
         // pClient->setPath(dlg.getPath().toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_local, &conn);
+        addChildItemToConnectionTree(m_topitem_local, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editLocalConnection
+//
+
+void MainWindow::editLocalConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsLocal dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1311,7 +1702,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1323,12 +1714,53 @@ restart:
         // vscpClientCanal *pClient = new vscpClientCanal();
         
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         // pClient->init(dlg.getPath().toStdString(), dlg.getConfig().toStdString(), dlg.getFlags() );
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_canal, &conn);
+        addChildItemToConnectionTree(m_topitem_canal, conn);
     } 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editCanalConnection
+//
+
+void MainWindow::editCanalConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsCanal dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1352,7 +1784,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1364,13 +1796,54 @@ restart:
         // vscpClientTcp *pClient = new vscpClientTcp();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_tcpip, &conn);
+        addChildItemToConnectionTree(m_topitem_tcpip, conn);
     } 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editTcpipConnection
+//
+
+void MainWindow::editTcpipConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsTcpip dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1394,7 +1867,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1406,12 +1879,53 @@ restart:
         // vscpClientSocketCan *pClient = new vscpClientSocketCan();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_socketcan, &conn);
+        addChildItemToConnectionTree(m_topitem_socketcan, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editSocketCanConnection
+//
+
+void MainWindow::editSocketCanConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsSocketCan dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1436,7 +1950,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1448,12 +1962,53 @@ restart:
         // vscpClientMqtt *pClient = new vscpClientMqtt();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_mqtt, &conn);
+        addChildItemToConnectionTree(m_topitem_mqtt, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editMqttConnection
+//
+
+void MainWindow::editMqttConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsMqtt dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1478,7 +2033,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1490,12 +2045,53 @@ restart:
         // vscpClientWs1 *pClient = new vscpClientWs1();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_ws1, &conn);
+        addChildItemToConnectionTree(m_topitem_ws1, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editWs1Connection
+//
+
+void MainWindow::editWs1Connection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsWs1 dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1520,7 +2116,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1532,16 +2128,55 @@ restart:
         // vscpClientWs2 *pClient = new vscpClientWs2();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_ws2, &conn);
+        addChildItemToConnectionTree(m_topitem_ws2, conn);
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// editWs2Connection
+//
 
+void MainWindow::editWs2Connection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsWs2 dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
+    }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // newUdpConnection
@@ -1564,7 +2199,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1576,12 +2211,53 @@ restart:
         // vscpClientUdp *pClient = new vscpClientUdp();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_udp, &conn);
+        addChildItemToConnectionTree(m_topitem_udp, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editUdpConnection
+//
+
+void MainWindow::editUdpConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsUdp dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1606,7 +2282,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1618,12 +2294,53 @@ restart:
         // vscpClientMulticast *pClient = new vscpClientMulticast();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_multicast, &conn);
+        addChildItemToConnectionTree(m_topitem_multicast, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editMulticatsConnection
+//
+
+void MainWindow::editMulticastConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsMulticast dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1648,7 +2365,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1660,12 +2377,53 @@ restart:
         // vscpClientRest *pClient = new vscpClientRest();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rest, &conn);
+        addChildItemToConnectionTree(m_topitem_rest, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editRestConnection
+//
+
+void MainWindow::editRestConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsRest dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1690,7 +2448,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1701,13 +2459,54 @@ restart:
         // Create a new local communication object
         // vscpClientRawCan *pClient = new vscpClientRawCan();
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rawcan, &conn);
+        addChildItemToConnectionTree(m_topitem_rawcan, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editRawCanConnection
+//
+
+void MainWindow::editRawCanConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsRawCan dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 
@@ -1732,7 +2531,7 @@ restart:
             goto restart;
         }
 
-        QJsonObject conn = dlg.getJsonObj();
+        QJsonObject conn = dlg.getJson();
         if (!pworks->addConnection(conn, true)) {
             QMessageBox::information(this, 
                                     tr("vscpworks+"),
@@ -1743,13 +2542,54 @@ restart:
         // Create a new local communication object
         // vscpClientRawMqtt *pClient = new vscpClientRawMqtt();
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJsonObj()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
         // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
-        //m_listConn.push_back(pClient);
+        //m_mapConn.push_back(pClient);
 
         // Add connection to connection tree
-        addChildItemToConnectionTree(m_topitem_rawmqtt, &conn);
+        addChildItemToConnectionTree(m_topitem_rawmqtt, conn);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editRawMqttConnection
+//
+
+void MainWindow::editRawMqttConnection(treeWidgetItemConn *itemConn)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    
+    // Get the connection object  
+    QJsonObject *pconn = itemConn->getJson();
+
+    CDlgConnSettingsRawMqtt dlg(this);
+    dlg.setJson(pconn);
+    dlg.setInitialFocus();
+
+restart:
+
+    if (QDialog::Accepted == dlg.exec()) {
+        QString strName = dlg.getName();
+        if (!strName.length()) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                               tr("A connection needs a description"),
+                               QMessageBox::Ok);
+            goto restart;
+        }
+
+        // Set the new connection
+        QJsonObject conn = dlg.getJson();
+        
+        // Update listTree data
+        itemConn->setJson(conn);
+
+        // Update main table data
+        pworks->m_mapConn[conn["uuid"].toString()] = conn;
+        pworks->writeConnections();
+
+        // Replace any possible new name
+        itemConn->setText(0, conn["name"].toString());
     }
 }
 

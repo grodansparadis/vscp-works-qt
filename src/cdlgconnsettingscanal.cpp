@@ -78,27 +78,6 @@ void CDlgConnSettingsCanal::setInitialFocus(void)
 // Getters / Setters
 
 
-
-///////////////////////////////////////////////////////////////////////////////
-// getJsonObj
-//
-
-QJsonObject CDlgConnSettingsCanal::getJsonObj(void)
-{
-    return m_jsonConfig; 
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// SetFromJsonObj
-//
-
-void CDlgConnSettingsCanal::SetJsonObj(const QJsonObject& obj)
-{
-    m_jsonConfig = obj;    
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
@@ -179,6 +158,30 @@ void CDlgConnSettingsCanal::setFlags(uint32_t flags)
 {
     std::string str = vscp_str_format("%lu", (unsigned long)flags);
     ui->m_flags->setText(str.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getJson
+//
+
+QJsonObject CDlgConnSettingsCanal::getJson(void)
+{
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::CANAL);
+    m_jsonConfig["name"] = getName();
+    m_jsonConfig["path"] = getPath();
+    m_jsonConfig["config"] = getConfig();
+    m_jsonConfig["flags"] = (int)getFlags();
+    return m_jsonConfig; 
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// setJson
+//
+
+void CDlgConnSettingsCanal::setJson(const QJsonObject *pobj)
+{
+    m_jsonConfig = *pobj;    
 }
 
 ///////////////////////////////////////////////////////////////////////////////

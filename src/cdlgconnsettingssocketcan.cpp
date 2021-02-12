@@ -173,22 +173,25 @@ restart:
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// getJsonObj
+// getJson
 //
 
-QJsonObject CDlgConnSettingsSocketCan::getJsonObj(void)
+QJsonObject CDlgConnSettingsSocketCan::getJson(void)
 {
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::SOCKETCAN);
+    m_jsonConfig["name"] = getName();
+
     return m_jsonConfig; 
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// SetFromJsonObj
+// setJson
 //
 
-void CDlgConnSettingsSocketCan::SetJsonObj(const QJsonObject& obj)
+void CDlgConnSettingsSocketCan::setJson(const QJsonObject *pobj)
 {
-    m_jsonConfig = obj;    
+    m_jsonConfig = *pobj;    
 }
 
 

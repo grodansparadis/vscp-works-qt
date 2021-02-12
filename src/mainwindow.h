@@ -65,12 +65,12 @@ public:
         @param client Pointer to communication client
     */
     treeWidgetItemConn(QTreeWidgetItem *topItem, 
-                            QJsonObject *conf);
+                            const QJsonObject& conn);
     ~treeWidgetItemConn();
 
     /// Getter/Setter for configuration object
-    QJsonObject *getConfObject() { return m_pconf; };
-    void setConfObject(QJsonObject *conf) { m_pconf = conf; };
+    QJsonObject *getJson() { return &m_conn; };
+    void setJson(QJsonObject& conn) { m_conn = conn; };
 
 private:
 
@@ -78,7 +78,7 @@ private:
         JSON configuration for the
         communication client.
     */
-    QJsonObject *m_pconf;
+    QJsonObject m_conn;
     
 };
 
@@ -140,6 +140,20 @@ private slots:
     void newRawCanConnection(void);
     void newRawMqttConnection(void);
 
+    // Edit connections
+    void editLocalConnection(treeWidgetItemConn *itemConn);
+    void editTcpipConnection(treeWidgetItemConn *itemConn);
+    void editCanalConnection(treeWidgetItemConn *itemConn);
+    void editSocketCanConnection(treeWidgetItemConn *itemConn);
+    void editWs1Connection(treeWidgetItemConn *itemConn);
+    void editWs2Connection(treeWidgetItemConn *itemConn);
+    void editMqttConnection(treeWidgetItemConn *itemConn);
+    void editUdpConnection(treeWidgetItemConn *itemConn);
+    void editMulticastConnection(treeWidgetItemConn *itemConn);
+    void editRestConnection(treeWidgetItemConn *itemConn);
+    void editRawCanConnection(treeWidgetItemConn *itemConn);
+    void editRawMqttConnection(treeWidgetItemConn *itemConn);
+
     void openConnectionSettingsDialog(CVscpClient::connType type);
 
     /*!
@@ -164,7 +178,7 @@ protected:
         @param client Pointer to communication client
     */
     void addChildItemToConnectionTree(QTreeWidgetItem *topitem,  
-                                        QJsonObject *pconn);
+                                        const QJsonObject& conn);
 
     /*!
         Fill in loaded connections to the tree
