@@ -75,7 +75,7 @@ CDlgConnSettingsCanal::~CDlgConnSettingsCanal()
 
 void CDlgConnSettingsCanal::setInitialFocus(void)
 {
-    ui->m_description->setFocus();
+    ui->editDescription->setFocus();
 }
 
 
@@ -88,7 +88,7 @@ void CDlgConnSettingsCanal::setInitialFocus(void)
 
 QString CDlgConnSettingsCanal::getName(void)
 {
-    return (ui->m_description->text()); 
+    return (ui->editDescription->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ QString CDlgConnSettingsCanal::getName(void)
 
 void CDlgConnSettingsCanal::setName(const QString& str)
 {
-    ui->m_description->setText(str);
+    ui->editDescription->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ void CDlgConnSettingsCanal::setName(const QString& str)
 
 QString CDlgConnSettingsCanal::getPath(void)
 {
-    return (ui->m_path->text()); 
+    return (ui->editPath->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ QString CDlgConnSettingsCanal::getPath(void)
 
 void CDlgConnSettingsCanal::setPath(const QString& str)
 {
-    ui->m_path->setText(str);
+    ui->editPath->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ void CDlgConnSettingsCanal::setPath(const QString& str)
 
 QString CDlgConnSettingsCanal::getConfig(void)
 {
-    return (ui->m_config->text());
+    return (ui->editConfig->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ QString CDlgConnSettingsCanal::getConfig(void)
 
 void CDlgConnSettingsCanal::setConfig(const QString& str)
 {
-    ui->m_config->setText(str);
+    ui->editConfig->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ void CDlgConnSettingsCanal::setConfig(const QString& str)
 
 uint32_t CDlgConnSettingsCanal::getFlags(void)
 {
-    return vscp_readStringValue(ui->m_flags->text().toStdString()); 
+    return vscp_readStringValue(ui->editFlags->text().toStdString()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ uint32_t CDlgConnSettingsCanal::getFlags(void)
 
 std::string CDlgConnSettingsCanal::getFlagsStr(void)
 {
-    return ui->m_flags->text().toStdString(); 
+    return ui->editFlags->text().toStdString(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -161,8 +161,28 @@ std::string CDlgConnSettingsCanal::getFlagsStr(void)
 void CDlgConnSettingsCanal::setFlags(uint32_t flags)
 {
     std::string str = vscp_str_format("%lu", (unsigned long)flags);
-    ui->m_flags->setText(str.c_str());
+    ui->editFlags->setText(str.c_str());
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// getDataRate
+//
+
+uint32_t CDlgConnSettingsCanal::getDataRate(void)
+{
+    return vscp_readStringValue(ui->editDataRate->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDataRate
+//
+
+void CDlgConnSettingsCanal::setDataRate(uint32_t datarate)
+{
+    std::string str = vscp_str_format("%lu", (unsigned long)datarate);
+    ui->editDataRate->setText(str.c_str());   
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // getJson
@@ -175,6 +195,7 @@ QJsonObject CDlgConnSettingsCanal::getJson(void)
     m_jsonConfig["path"] = getPath();
     m_jsonConfig["config"] = getConfig();
     m_jsonConfig["flags"] = (int)getFlags();
+    m_jsonConfig["datarate"] = (int)getDataRate();
     return m_jsonConfig; 
 }
 
@@ -184,8 +205,14 @@ QJsonObject CDlgConnSettingsCanal::getJson(void)
 //
 
 void CDlgConnSettingsCanal::setJson(const QJsonObject *pobj)
-{
+{    
     m_jsonConfig = *pobj;    
+
+    if (!m_jsonConfig["name"].isNull()) setName(m_jsonConfig["name"].toString());
+    if (!m_jsonConfig["path"].isNull()) setPath(m_jsonConfig["path"].toString());
+    if (!m_jsonConfig["config"].isNull()) setConfig(m_jsonConfig["config"].toString());
+    if (!m_jsonConfig["flags"].isNull()) setFlags(uint32_t(m_jsonConfig["flags"].toInt()));
+    if (!m_jsonConfig["datarate"].isNull()) setDataRate(m_jsonConfig["datarate"].toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,7 +221,7 @@ void CDlgConnSettingsCanal::setJson(const QJsonObject *pobj)
 
 void CDlgConnSettingsCanal::testDriver()
 {
-    std::string path = ui->m_path->text().toStdString();
+    std::string path = ui->editPath->text().toStdString();
 
     if (!((QFileInfo::exists(path.c_str()) && QFileInfo(path.c_str()).isFile()) || QFileInfo(path.c_str()).isSymLink())) {
         int ret = QMessageBox::warning(this, tr("vscpworks+"),
@@ -261,7 +288,7 @@ void CDlgConnSettingsCanal::setDriverPath()
                                             "/var/lib/vscp/drivers/level1", 
                                             tr("Drivers (*.so);;All (*)")).toStdString();
 #endif     
-    ui->m_path->setText(filename.c_str());                                       
+    ui->editPath->setText(filename.c_str());                                       
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -274,7 +301,7 @@ void CDlgConnSettingsCanal::wizard()
     //                          Get XML config data
     ///////////////////////////////////////////////////////////////////////////
 
-    std::string path = ui->m_path->text().toStdString();
+    std::string path = ui->editPath->text().toStdString();
     std::string config = getConfig().toStdString();
     uint32_t flags = getFlags();
 
@@ -826,14 +853,11 @@ void CDlgConnSettingsCanal::filterwizard()
     dlg.setVscpClassFilter(vscp_getVscpClassFromCANALid(canid));
     dlg.setVscpClassMask(vscp_getVscpClassFromCANALid(mask));
 
-
     dlg.setVscpTypeFilter(vscp_getVscpTypeFromCANALid(canid));
     dlg.setVscpTypeMask(vscp_getVscpTypeFromCANALid(mask)); 
 
-
     dlg.setVscpNodeIdFilter(canid & 0xff);
     dlg.setVscpNodeIdMask(mask & 0xff); 
-
    
     if (QDialog::Accepted == dlg.exec() ) {
 

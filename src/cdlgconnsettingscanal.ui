@@ -59,7 +59,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description"/>
+     <widget class="QLineEdit" name="editDescription"/>
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
@@ -72,7 +72,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_path"/>
+     <widget class="QLineEdit" name="editPath"/>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_3">
@@ -85,7 +85,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="m_config"/>
+     <widget class="QLineEdit" name="editConfig"/>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_4">
@@ -98,14 +98,14 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="m_flags">
+     <widget class="QLineEdit" name="editFlags">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="m_datarate">
+     <widget class="QLineEdit" name="editDataRate">
       <property name="text">
        <string>0</string>
       </property>
@@ -222,11 +222,11 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>m_description</tabstop>
-  <tabstop>m_path</tabstop>
-  <tabstop>m_config</tabstop>
-  <tabstop>m_flags</tabstop>
-  <tabstop>m_datarate</tabstop>
+  <tabstop>editDescription</tabstop>
+  <tabstop>editPath</tabstop>
+  <tabstop>editConfig</tabstop>
+  <tabstop>editFlags</tabstop>
+  <tabstop>editDataRate</tabstop>
   <tabstop>btnTest</tabstop>
   <tabstop>btnSetPath</tabstop>
   <tabstop>btnWizard</tabstop>

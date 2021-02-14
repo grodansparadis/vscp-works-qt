@@ -99,6 +99,12 @@ public:
     void setFlags(uint32_t flags);
 
     /*!
+        Setters/getters for datarate
+    */
+    uint32_t getDataRate(void);
+    void setDataRate(uint32_t datarate);
+
+    /*!
         Setters/getters for JSON config object
     */
     QJsonObject getJson(void);

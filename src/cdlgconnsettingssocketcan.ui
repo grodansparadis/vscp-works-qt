@@ -32,7 +32,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>true</bool>
@@ -133,9 +133,9 @@
   <widget class="QPushButton" name="btnAddFilter">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>160</x>
      <y>200</y>
-     <width>91</width>
+     <width>81</width>
      <height>25</height>
     </rect>
    </property>
@@ -161,7 +161,7 @@
   <widget class="QPushButton" name="btnTestConnection">
    <property name="geometry">
     <rect>
-     <x>390</x>
+     <x>20</x>
      <y>200</y>
      <width>131</width>
      <height>25</height>
@@ -177,9 +177,9 @@
   <widget class="QPushButton" name="btnDeleteFilter">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>430</x>
      <y>200</y>
-     <width>101</width>
+     <width>91</width>
      <height>25</height>
     </rect>
    </property>
@@ -205,9 +205,9 @@
   <widget class="QPushButton" name="btnEditFilter">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>250</x>
      <y>200</y>
-     <width>91</width>
+     <width>81</width>
      <height>25</height>
     </rect>
    </property>
@@ -241,6 +241,34 @@
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnEditFilter_2">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>200</y>
+     <width>81</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="toolTip">
+    <string>Define incoming filter</string>
+   </property>
+   <property name="text">
+    <string>Clone filter</string>
    </property>
   </widget>
  </widget>

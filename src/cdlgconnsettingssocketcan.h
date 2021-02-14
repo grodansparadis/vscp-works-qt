@@ -34,11 +34,28 @@
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QJsonObject>
+#include <QList>
+
+// ----------------------------------------------------------------------------
+
+class CFilterListItem : public QListWidgetItem {
+ 
+ public:
+    CFilterListItem(const QString &name, uint32_t filter, uint32_t mask, bool bInvert);
+    ~CFilterListItem();
+
+ public:
+    QString m_name;     // Name/description for filters
+    uint32_t m_filter;  // Filter
+    uint32_t m_mask;    // Mask
+    bool m_bInvert;     // Invert flags
+};
+
+// ----------------------------------------------------------------------------
 
 namespace Ui {
 class CDlgConnSettingsSocketCan;
 }
-
 
 class CDlgConnSettingsSocketCan : public QDialog
 {
@@ -51,15 +68,21 @@ public:
     explicit CDlgConnSettingsSocketCan(QWidget *parent = nullptr);
     ~CDlgConnSettingsSocketCan();
 
+
+    typedef struct filterlist {
+        QString m_name;
+        uint32_t m_filter;
+        uint32_t m_mask;
+        bool m_bInvert;
+    } filterlist;
+
+
     /*!
         Set inital focus to description
     */
     void setInitialFocus(void);
 
-    /*!
-        Add filters to list
-    */
-    void addFilterItems(void);
+    
 
     /*!
         Called when an item in the filter list is clicked
@@ -71,20 +94,7 @@ public:
     */
     void onDoubleClicked(QListWidgetItem* item);
 
-    /*!
-        Called when the add filter button is clicked
-    */
-    void onAddFilter(void);
-
-    /*!
-        Called when the delete filter button is clicked
-    */
-    void onDeleteFilter(void);
-
-    /*!
-        Called when the delete filter button is clicked
-    */
-    void onEditFilter(void);
+    
 
     /*!
         Called when the test connection is clicked
@@ -104,11 +114,43 @@ public:
     QString getName(void);
     void setName(const QString& str);
 
+    /*!
+        Setters/getters for device
+    */
+    QString getDevice(void);
+    void setDevice(const QString& str);
 
-private:
+    /*!
+        Setters/getters for name/description
+    */
+    uint32_t getResponseTimeout(void);
+    void setResponseTimout(uint32_t timeout);
+
+ public slots:
+
+    /*!
+        Pop up menu for filter list
+    */
+    void showContextMenu(const QPoint& pos);
+
+    /*!
+        Called when the add filter button is clicked
+    */
+    void onAddFilter(void);
+
+    /*!
+        Called when the delete filter button is clicked
+    */
+    void onDeleteFilter(void);
+
+    /*!
+        Called when the delete filter button is clicked
+    */
+    void onEditFilter(void);
+
+ private:
 
     Ui::CDlgConnSettingsSocketCan *ui;
-
 
     // JSON configuration object
     QJsonObject m_jsonConfig;
