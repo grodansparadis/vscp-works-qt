@@ -32,115 +32,129 @@
     <name>CDlgConnSettingsCanal</name>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="143"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="164"/>
         <source>CANAL Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="144"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="165"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="67"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="145"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="166"/>
         <source>Path to driver :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="80"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="146"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="167"/>
         <source>Device configuration string :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="93"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="147"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="168"/>
         <source>Device flags :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="103"/>
         <location filename="src/cdlgconnsettingscanal.ui" line="110"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="148"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="149"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="169"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="170"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="117"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="150"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="171"/>
         <source>Datarate :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="136"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="151"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="172"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="149"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="152"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="173"/>
         <source>Set...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="162"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="153"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="174"/>
         <source>Wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="193"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="208"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="226"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="288"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="302"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="325"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="332"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="178"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="207"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="175"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="177"/>
+        <source>0x00000000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="191"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="176"/>
+        <source>Filter wizard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="227"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="242"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="260"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="322"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="336"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="359"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="366"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="194"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="228"/>
         <source>The driver does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="247"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="253"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="281"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
         <source>Set path to CANAL driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="249"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="283"/>
         <source>Drivers (*.so)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="255"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="289"/>
         <source>Drivers (*.so);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="303"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="337"/>
         <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="326"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="360"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="333"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="367"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="353"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="387"/>
         <source>This wizard will help to generate and fill in the configuration string 
 and the flag bits for the. the driver.
 
@@ -500,112 +514,126 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsSocketCan</name>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="141"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="149"/>
         <source>Socketcan Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="142"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="150"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="144"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="152"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="147"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="155"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="84"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="107"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="149"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="154"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="114"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="157"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="162"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="87"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="151"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="159"/>
         <source>vcan0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="152"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="160"/>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="110"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="156"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="117"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="164"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="117"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="157"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="124"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="165"/>
         <source>Response timeout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="148"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="192"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="220"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="159"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="155"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="199"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="227"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="268"/>
         <location filename="build/ui_cdlgconnsettingssocketcan.h" line="167"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="171"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="175"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="179"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="183"/>
         <source>Define incoming filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="151"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="161"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="158"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="169"/>
         <source>Add filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="164"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="163"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="171"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="171"/>
         <source>Test connection to remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="167"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="165"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="174"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="173"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="195"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="169"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="202"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="177"/>
         <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="223"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="173"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="131"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="230"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="181"/>
         <source>Edit filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="115"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="130"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="157"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="271"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="185"/>
+        <source>Clone filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="288"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="324"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="370"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="416"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="116"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="158"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="289"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="371"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="417"/>
         <source>The filter need a description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="325"/>
+        <source>Do you really want to delete filter?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2143,362 +2171,376 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="153"/>
+        <location filename="src/mainwindow.cpp" line="151"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="159"/>
+        <location filename="src/mainwindow.cpp" line="157"/>
         <source>--- Saved Connections ---</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="170"/>
+        <location filename="src/mainwindow.cpp" line="168"/>
         <source>Local Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="173"/>
+        <location filename="src/mainwindow.cpp" line="171"/>
         <source>Holds local connections. Typically logfile and debug content containing VSCP events.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="177"/>
+        <location filename="src/mainwindow.cpp" line="175"/>
         <source>CANAL Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="184"/>
+        <location filename="src/mainwindow.cpp" line="182"/>
         <source>Socketcan Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="191"/>
+        <location filename="src/mainwindow.cpp" line="189"/>
         <source>TCP/IP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="198"/>
+        <location filename="src/mainwindow.cpp" line="196"/>
         <source>MQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="205"/>
+        <location filename="src/mainwindow.cpp" line="203"/>
         <source>WS1 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="212"/>
+        <location filename="src/mainwindow.cpp" line="210"/>
         <source>WS2 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="219"/>
+        <location filename="src/mainwindow.cpp" line="217"/>
         <source>UDP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="226"/>
+        <location filename="src/mainwindow.cpp" line="224"/>
         <source>Multicast Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="233"/>
+        <location filename="src/mainwindow.cpp" line="231"/>
         <source>REST Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="240"/>
+        <location filename="src/mainwindow.cpp" line="238"/>
         <source>RAWCAN Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="247"/>
+        <location filename="src/mainwindow.cpp" line="245"/>
         <source>RAWMQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="274"/>
-        <location filename="src/mainwindow.cpp" line="326"/>
-        <location filename="src/mainwindow.cpp" line="389"/>
-        <location filename="src/mainwindow.cpp" line="1264"/>
-        <location filename="src/mainwindow.cpp" line="1278"/>
-        <location filename="src/mainwindow.cpp" line="1310"/>
-        <location filename="src/mainwindow.cpp" line="1319"/>
-        <location filename="src/mainwindow.cpp" line="1351"/>
-        <location filename="src/mainwindow.cpp" line="1360"/>
-        <location filename="src/mainwindow.cpp" line="1393"/>
-        <location filename="src/mainwindow.cpp" line="1402"/>
-        <location filename="src/mainwindow.cpp" line="1435"/>
-        <location filename="src/mainwindow.cpp" line="1444"/>
-        <location filename="src/mainwindow.cpp" line="1477"/>
-        <location filename="src/mainwindow.cpp" line="1486"/>
-        <location filename="src/mainwindow.cpp" line="1519"/>
-        <location filename="src/mainwindow.cpp" line="1528"/>
-        <location filename="src/mainwindow.cpp" line="1563"/>
-        <location filename="src/mainwindow.cpp" line="1572"/>
-        <location filename="src/mainwindow.cpp" line="1605"/>
-        <location filename="src/mainwindow.cpp" line="1614"/>
-        <location filename="src/mainwindow.cpp" line="1647"/>
-        <location filename="src/mainwindow.cpp" line="1656"/>
-        <location filename="src/mainwindow.cpp" line="1689"/>
-        <location filename="src/mainwindow.cpp" line="1698"/>
-        <location filename="src/mainwindow.cpp" line="1731"/>
-        <location filename="src/mainwindow.cpp" line="1740"/>
+        <location filename="src/mainwindow.cpp" line="272"/>
+        <location filename="src/mainwindow.cpp" line="324"/>
+        <location filename="src/mainwindow.cpp" line="387"/>
+        <location filename="src/mainwindow.cpp" line="869"/>
+        <location filename="src/mainwindow.cpp" line="1612"/>
+        <location filename="src/mainwindow.cpp" line="1626"/>
+        <location filename="src/mainwindow.cpp" line="1663"/>
+        <location filename="src/mainwindow.cpp" line="1699"/>
+        <location filename="src/mainwindow.cpp" line="1708"/>
+        <location filename="src/mainwindow.cpp" line="1745"/>
+        <location filename="src/mainwindow.cpp" line="1781"/>
+        <location filename="src/mainwindow.cpp" line="1790"/>
+        <location filename="src/mainwindow.cpp" line="1828"/>
+        <location filename="src/mainwindow.cpp" line="1864"/>
+        <location filename="src/mainwindow.cpp" line="1873"/>
+        <location filename="src/mainwindow.cpp" line="1911"/>
+        <location filename="src/mainwindow.cpp" line="1947"/>
+        <location filename="src/mainwindow.cpp" line="1956"/>
+        <location filename="src/mainwindow.cpp" line="1994"/>
+        <location filename="src/mainwindow.cpp" line="2030"/>
+        <location filename="src/mainwindow.cpp" line="2039"/>
+        <location filename="src/mainwindow.cpp" line="2077"/>
+        <location filename="src/mainwindow.cpp" line="2113"/>
+        <location filename="src/mainwindow.cpp" line="2122"/>
+        <location filename="src/mainwindow.cpp" line="2160"/>
+        <location filename="src/mainwindow.cpp" line="2196"/>
+        <location filename="src/mainwindow.cpp" line="2205"/>
+        <location filename="src/mainwindow.cpp" line="2243"/>
+        <location filename="src/mainwindow.cpp" line="2279"/>
+        <location filename="src/mainwindow.cpp" line="2288"/>
+        <location filename="src/mainwindow.cpp" line="2326"/>
+        <location filename="src/mainwindow.cpp" line="2362"/>
+        <location filename="src/mainwindow.cpp" line="2371"/>
+        <location filename="src/mainwindow.cpp" line="2409"/>
+        <location filename="src/mainwindow.cpp" line="2445"/>
+        <location filename="src/mainwindow.cpp" line="2454"/>
+        <location filename="src/mainwindow.cpp" line="2492"/>
+        <location filename="src/mainwindow.cpp" line="2528"/>
+        <location filename="src/mainwindow.cpp" line="2537"/>
+        <location filename="src/mainwindow.cpp" line="2575"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="275"/>
+        <location filename="src/mainwindow.cpp" line="273"/>
         <source>Failed to load remote event data. Will not be used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="327"/>
+        <location filename="src/mainwindow.cpp" line="325"/>
         <source>Unable to get version for remote VSCP event data. Will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="390"/>
+        <location filename="src/mainwindow.cpp" line="388"/>
         <source>A new VSCP event database has been downloaded. Restart your application to use the new database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="614"/>
-        <location filename="src/mainwindow.cpp" line="623"/>
-        <source>Info</source>
+        <location filename="src/mainwindow.cpp" line="865"/>
+        <source>Are you sure that you want to delete [</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="614"/>
-        <source>editConnectionItem</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/mainwindow.cpp" line="623"/>
-        <source>cloneConnectionItem</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/mainwindow.cpp" line="859"/>
+        <location filename="src/mainwindow.cpp" line="1207"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="866"/>
+        <location filename="src/mainwindow.cpp" line="1214"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="887"/>
+        <location filename="src/mainwindow.cpp" line="1235"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="888"/>
+        <location filename="src/mainwindow.cpp" line="1236"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="891"/>
+        <location filename="src/mainwindow.cpp" line="1239"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="893"/>
+        <location filename="src/mainwindow.cpp" line="1241"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="923"/>
+        <location filename="src/mainwindow.cpp" line="1271"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="925"/>
+        <location filename="src/mainwindow.cpp" line="1273"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="931"/>
+        <location filename="src/mainwindow.cpp" line="1279"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="933"/>
+        <location filename="src/mainwindow.cpp" line="1281"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="939"/>
+        <location filename="src/mainwindow.cpp" line="1287"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="941"/>
+        <location filename="src/mainwindow.cpp" line="1289"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="947"/>
+        <location filename="src/mainwindow.cpp" line="1295"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="949"/>
+        <location filename="src/mainwindow.cpp" line="1297"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="955"/>
+        <location filename="src/mainwindow.cpp" line="1303"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="957"/>
+        <location filename="src/mainwindow.cpp" line="1305"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="965"/>
+        <location filename="src/mainwindow.cpp" line="1313"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="968"/>
+        <location filename="src/mainwindow.cpp" line="1316"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="970"/>
+        <location filename="src/mainwindow.cpp" line="1318"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="971"/>
+        <location filename="src/mainwindow.cpp" line="1319"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="975"/>
+        <location filename="src/mainwindow.cpp" line="1323"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="978"/>
+        <location filename="src/mainwindow.cpp" line="1326"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="985"/>
+        <location filename="src/mainwindow.cpp" line="1333"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="987"/>
+        <location filename="src/mainwindow.cpp" line="1335"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="994"/>
+        <location filename="src/mainwindow.cpp" line="1342"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="996"/>
+        <location filename="src/mainwindow.cpp" line="1344"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1006"/>
+        <location filename="src/mainwindow.cpp" line="1354"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1007"/>
+        <location filename="src/mainwindow.cpp" line="1355"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1008"/>
+        <location filename="src/mainwindow.cpp" line="1356"/>
         <source>Open settins...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1011"/>
+        <location filename="src/mainwindow.cpp" line="1359"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1012"/>
+        <location filename="src/mainwindow.cpp" line="1360"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1013"/>
+        <location filename="src/mainwindow.cpp" line="1361"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1015"/>
+        <location filename="src/mainwindow.cpp" line="1363"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1016"/>
+        <location filename="src/mainwindow.cpp" line="1364"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1032"/>
+        <location filename="src/mainwindow.cpp" line="1380"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1128"/>
+        <location filename="src/mainwindow.cpp" line="1476"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1129"/>
+        <location filename="src/mainwindow.cpp" line="1477"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1144"/>
+        <location filename="src/mainwindow.cpp" line="1492"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1265"/>
-        <location filename="src/mainwindow.cpp" line="1311"/>
-        <location filename="src/mainwindow.cpp" line="1352"/>
-        <location filename="src/mainwindow.cpp" line="1394"/>
-        <location filename="src/mainwindow.cpp" line="1436"/>
-        <location filename="src/mainwindow.cpp" line="1478"/>
-        <location filename="src/mainwindow.cpp" line="1520"/>
-        <location filename="src/mainwindow.cpp" line="1564"/>
-        <location filename="src/mainwindow.cpp" line="1606"/>
-        <location filename="src/mainwindow.cpp" line="1648"/>
-        <location filename="src/mainwindow.cpp" line="1690"/>
-        <location filename="src/mainwindow.cpp" line="1732"/>
+        <location filename="src/mainwindow.cpp" line="1613"/>
+        <location filename="src/mainwindow.cpp" line="1664"/>
+        <location filename="src/mainwindow.cpp" line="1700"/>
+        <location filename="src/mainwindow.cpp" line="1746"/>
+        <location filename="src/mainwindow.cpp" line="1782"/>
+        <location filename="src/mainwindow.cpp" line="1829"/>
+        <location filename="src/mainwindow.cpp" line="1865"/>
+        <location filename="src/mainwindow.cpp" line="1912"/>
+        <location filename="src/mainwindow.cpp" line="1948"/>
+        <location filename="src/mainwindow.cpp" line="1995"/>
+        <location filename="src/mainwindow.cpp" line="2031"/>
+        <location filename="src/mainwindow.cpp" line="2078"/>
+        <location filename="src/mainwindow.cpp" line="2114"/>
+        <location filename="src/mainwindow.cpp" line="2161"/>
+        <location filename="src/mainwindow.cpp" line="2197"/>
+        <location filename="src/mainwindow.cpp" line="2244"/>
+        <location filename="src/mainwindow.cpp" line="2280"/>
+        <location filename="src/mainwindow.cpp" line="2327"/>
+        <location filename="src/mainwindow.cpp" line="2363"/>
+        <location filename="src/mainwindow.cpp" line="2410"/>
+        <location filename="src/mainwindow.cpp" line="2446"/>
+        <location filename="src/mainwindow.cpp" line="2493"/>
+        <location filename="src/mainwindow.cpp" line="2529"/>
+        <location filename="src/mainwindow.cpp" line="2576"/>
         <source>A connection needs a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1279"/>
-        <location filename="src/mainwindow.cpp" line="1320"/>
-        <location filename="src/mainwindow.cpp" line="1361"/>
-        <location filename="src/mainwindow.cpp" line="1403"/>
-        <location filename="src/mainwindow.cpp" line="1445"/>
-        <location filename="src/mainwindow.cpp" line="1487"/>
-        <location filename="src/mainwindow.cpp" line="1529"/>
-        <location filename="src/mainwindow.cpp" line="1573"/>
-        <location filename="src/mainwindow.cpp" line="1615"/>
-        <location filename="src/mainwindow.cpp" line="1657"/>
-        <location filename="src/mainwindow.cpp" line="1699"/>
-        <location filename="src/mainwindow.cpp" line="1741"/>
+        <location filename="src/mainwindow.cpp" line="1627"/>
+        <location filename="src/mainwindow.cpp" line="1709"/>
+        <location filename="src/mainwindow.cpp" line="1791"/>
+        <location filename="src/mainwindow.cpp" line="1874"/>
+        <location filename="src/mainwindow.cpp" line="1957"/>
+        <location filename="src/mainwindow.cpp" line="2040"/>
+        <location filename="src/mainwindow.cpp" line="2123"/>
+        <location filename="src/mainwindow.cpp" line="2206"/>
+        <location filename="src/mainwindow.cpp" line="2289"/>
+        <location filename="src/mainwindow.cpp" line="2372"/>
+        <location filename="src/mainwindow.cpp" line="2455"/>
+        <location filename="src/mainwindow.cpp" line="2538"/>
         <source>Failed to add new connection.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2542,12 +2584,12 @@ and the flag bits for the. the driver.
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="339"/>
+        <location filename="src/vscpworks.cpp" line="342"/>
         <source>The VSCP event database does not exist. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="348"/>
+        <location filename="src/vscpworks.cpp" line="351"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>

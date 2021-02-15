@@ -121,7 +121,13 @@ public:
     void setDevice(const QString& str);
 
     /*!
-        Setters/getters for name/description
+        Setters/getters for flags
+    */
+    uint32_t getFlags(void);
+    void setFlags(uint32_t flags);
+
+    /*!
+        Setters/getters for timeout
     */
     uint32_t getResponseTimeout(void);
     void setResponseTimout(uint32_t timeout);
@@ -148,13 +154,25 @@ public:
     */
     void onEditFilter(void);
 
+    /*!
+        Called when the clone filter button is clicked
+    */
+    void onCloneFilter(void);
+
+    /*!
+        Called when the set filter button is clicked
+    */
+    void onSetFilter(void);
+
  private:
 
     Ui::CDlgConnSettingsSocketCan *ui;
 
-    // JSON configuration object
+    /// JSON configuration object
     QJsonObject m_jsonConfig;
 
+    /// SocketCan client
+    vscpClientSocketCan m_clientSocketcan;
 };
 
 

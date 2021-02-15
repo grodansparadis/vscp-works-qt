@@ -27,8 +27,10 @@
 //
 
 #include <vscphelper.h>
+#include <vscp_client_socketcan.h>
 
 #include "cdlglevel1filter.h"
+#include "cdlgsocketcanflags.h"
 
 #include "cdlgconnsettingssocketcan.h"
 #include "ui_cdlgconnsettingssocketcan.h"
@@ -69,15 +71,20 @@ CDlgConnSettingsSocketCan::CDlgConnSettingsSocketCan(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // Enable custom context menu
+    ui->listFilters->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(ui->listFilters, &QListWidget::itemClicked, this, &CDlgConnSettingsSocketCan::onClicked ); 
     connect(ui->listFilters, &QListWidget::itemDoubleClicked, this, &CDlgConnSettingsSocketCan::onDoubleClicked ); 
-    //connect(ui->listFilters, &QListWidget::customContextMenuRequested, this, &CDlgConnSettingsSocketCan::showContextMenu);
-    connect(ui->listFilters, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+    connect(ui->listFilters, &QListWidget::customContextMenuRequested, this, &CDlgConnSettingsSocketCan::showContextMenu);
     
     connect(ui->btnAddFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onAddFilter ); 
     connect(ui->btnEditFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onEditFilter ); 
     connect(ui->btnDeleteFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onDeleteFilter );
+    connect(ui->btnCloneFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onCloneFilter );
     connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onTestConnection );   
+
+    connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onSetFilter );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,7 +126,7 @@ void CDlgConnSettingsSocketCan::showContextMenu(const QPoint& pos)
 
     menu->addAction(QString("Edit this filter"), this, SLOT(onEditFilter()));
     menu->addAction(QString("Remove  filter"),this, SLOT(onDeleteFilter()));
-    menu->addAction(QString("Clone this filter"),this, SLOT(onEditFilter()));
+    menu->addAction(QString("Clone this filter"),this, SLOT(onCloneFilter()));
     menu->addAction(QString("Add new filter"), this, SLOT(onAddFilter()));
 
     menu->popup(ui->listFilters->viewport()->mapToGlobal(pos));
@@ -169,6 +176,26 @@ void CDlgConnSettingsSocketCan::setDevice(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getFlags
+//
+
+uint32_t CDlgConnSettingsSocketCan::getFlags(void)
+{
+    return vscp_readStringValue(ui->editFlags->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setResponseTimeout
+//
+
+void CDlgConnSettingsSocketCan::setFlags(uint32_t flags)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString str = pworks->decimalToStringInBase(flags);
+    ui->editFlags->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // getResponseTimoeut
 //
 
@@ -183,8 +210,9 @@ uint32_t CDlgConnSettingsSocketCan::getResponseTimeout(void)
 
 void CDlgConnSettingsSocketCan::setResponseTimout(uint32_t timeout)
 {
-    std::string str = vscp_str_format("%lu", (unsigned long)timeout);
-    ui->editResponseTimeout->setText(str.c_str());   
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    QString str = pworks->decimalToStringInBase(timeout);
+    ui->editResponseTimeout->setText(str); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,7 +224,9 @@ QJsonObject CDlgConnSettingsSocketCan::getJson(void)
     m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::SOCKETCAN);
     m_jsonConfig["name"] = getName();
     m_jsonConfig["device"] = getDevice();
+    m_jsonConfig["flags"] = (int)getFlags();
     m_jsonConfig["resonse-timeout"] = (int)getResponseTimeout();
+
 
     QJsonArray filterArray;
 
@@ -226,6 +256,7 @@ void CDlgConnSettingsSocketCan::setJson(const QJsonObject *pobj)
 
     if (!m_jsonConfig["name"].isNull()) setName(m_jsonConfig["name"].toString());
     if (!m_jsonConfig["device"].isNull()) setDevice(m_jsonConfig["device"].toString());
+    if (!m_jsonConfig["flags"].isNull()) setFlags((uint32_t)(m_jsonConfig["flags"].toInt()));
     if (!m_jsonConfig["response-timeout"].isNull()) setResponseTimout((uint32_t)(m_jsonConfig["response-timeout"].toInt()));
 
     if (m_jsonConfig["filters"].isArray()) {
@@ -402,22 +433,68 @@ void CDlgConnSettingsSocketCan::onEditFilter(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// onSetFilter
+//
+
+void CDlgConnSettingsSocketCan::onSetFilter(void)
+{
+    CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
+
+    CDlgSocketCanFlags dlg(this);
+
+    dlg.setDebug(getFlags() & vscpClientSocketCan::FLAG_ENABLE_DEBUG);
+    dlg.setFd(getFlags() & vscpClientSocketCan::FLAG_FD_MODE);
+
+    if ( QDialog::Accepted == dlg.exec() ) {
+        uint32_t flags = 0;
+        if (dlg.getDebug()) flags |= vscpClientSocketCan::FLAG_ENABLE_DEBUG;
+        if (dlg.getFd()) flags |= vscpClientSocketCan::FLAG_FD_MODE;
+        setFlags(flags);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onCloneFilter
+//
+
+void CDlgConnSettingsSocketCan::onCloneFilter(void)
+{
+
+    CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
+
+    ui->listFilters->addItem(new CFilterListItem(item->m_name, item->m_filter, item->m_mask, item->m_bInvert));
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // onTestConnection
 //
 
 void CDlgConnSettingsSocketCan::onTestConnection(void)
 {
-    CDlgLevel1Filter dlg(this);
-
-restart:    
-    if (QDialog::Accepted == dlg.exec() ) {
-        std::string strName = dlg.getDescription();
-        if (!strName.length()) {
-            QMessageBox::warning(this, tr("vscpworks+"),
-                                tr("The filter need a description"),
+    int rv;
+    m_clientSocketcan.init(getDevice().toStdString(), 
+                            getFlags(), 
+                            getResponseTimeout());
+    
+    if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.connect())) {
+        QString errorstr = tr("Failed to connect to interface. [%s]");
+        QMessageBox::question(this, 
+                                tr("vscpworks+"), 
+                                errorstr.arg(rv),
                                 QMessageBox::Ok);
-            goto restart;
-        }
+    }
+    else {
+        QMessageBox::question(this, 
+                                tr("vscpworks+"), 
+                                tr("Successful connect"),
+                                QMessageBox::Ok);
+    }
+
+    if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.disconnect())) {
+        QMessageBox::question(this, 
+                                tr("vscpworks+"), 
+                                tr("Failed to disconnect from interface."),
+                                QMessageBox::Ok);
     }
 }
 

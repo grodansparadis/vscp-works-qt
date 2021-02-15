@@ -74,6 +74,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlglevel1filterwizard.ui
     src/cdlglevel2filter.ui
     src/cdlgcanfilter.ui
+    src/cdlgsocketcanflags.ui
 )
 
 add_executable(vscp-works-qt
@@ -88,42 +89,59 @@ add_executable(vscp-works-qt
     build/ui_cdlgmainsettings.h
     src/cdlgmainsettings.h
     src/cdlgmainsettings.cpp
+
     build/ui_cdlgconnsettingslocal.h
     src/cdlgconnsettingslocal.h
     src/cdlgconnsettingslocal.cpp
+
     build/ui_cdlgconnsettingscanal.h
     src/cdlgconnsettingscanal.h
     src/cdlgconnsettingscanal.cpp
+
     build/ui_cdlgconnsettingstcpip.h
     src/cdlgconnsettingstcpip.h
     src/cdlgconnsettingstcpip.cpp
+
     build/ui_cdlgconnsettingssocketcan.h
     src/cdlgconnsettingssocketcan.h
     src/cdlgconnsettingssocketcan.cpp
+
+    build/ui_cdlgsocketcanflags.h
+    src/cdlgsocketcanflags.h
+    src/cdlgsocketcanflags.cpp
+
     build/ui_cdlgconnsettingsmqtt.h
     src/cdlgconnsettingsmqtt.h
     src/cdlgconnsettingsmqtt.cpp
+
     build/ui_cdlgconnsettingsws1.h
     src/cdlgconnsettingsws1.h
     src/cdlgconnsettingsws1.cpp
+
     build/ui_cdlgconnsettingsws2.h
     src/cdlgconnsettingsws2.h
     src/cdlgconnsettingsws2.cpp
+
     build/ui_cdlgconnsettingsudp.h
     src/cdlgconnsettingsudp.h
     src/cdlgconnsettingsudp.cpp
+
     build/ui_cdlgconnsettingsmulticast.h
     src/cdlgconnsettingsmulticast.h
     src/cdlgconnsettingsmulticast.cpp
+
     build/ui_cdlgconnsettingsrawcan.h
     src/cdlgconnsettingsrawcan.h
     src/cdlgconnsettingsrawcan.cpp
+
     build/ui_cdlgconnsettingsrawmqtt.h
     src/cdlgconnsettingsrawmqtt.h
     src/cdlgconnsettingsrawmqtt.cpp
+
     build/ui_cdlgconnsettingsrest.h
     src/cdlgconnsettingsrest.h
     src/cdlgconnsettingsrest.cpp
+
     build/ui_cfrmsession.h
     
     src/cdlglevel1filter.h
