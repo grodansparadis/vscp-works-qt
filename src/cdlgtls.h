@@ -47,14 +47,54 @@ public:
     ~CDlgTLS();
 
 public:
-    /// Setters/getters for debug
-    void setDebug(bool bDebug = true);
-    bool getDebug(void);
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isTLSEnabled(void);
+    void enableTLS(bool bTLS);
 
-    /// Setters/getters for FD
-    void setFd(bool bFd = true);
-    bool getFd(void);
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isVerifyPeerEnabled(void);
+    void enableVerifyPeer(bool bverifypeer);
 
+    /*!
+        Setters/getters for TLS CA file
+    */
+    QString getCaFile(void);
+    void setCaFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS CA path
+    */
+    QString getCaPath(void);
+    void setCaPath(const QString& str);
+
+    /*!
+        Setters/getters for TLS Cert file
+    */
+    QString getCertFile(void);
+    void setCertFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS key file
+    */
+    QString getKeyFile(void);
+    void setKeyFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS pw key file
+    */
+    QString getPwKeyFile(void);
+    void setPwKeyFile(const QString& str);
+
+private slots:
+    void onSetCaFile(void);
+    void onSetCaPath(void);
+    void onSetCertFile(void);
+    void onSetKeyFile(void);
+    void onSetPwKeyFile(void);
 
 private:
 

@@ -26,12 +26,17 @@
 // SOFTWARE.
 //
 
+#include "vscpworks.h"
 
 #include "cdlgconnsettingstcpip.h"
 #include "ui_cdlgconnsettingstcpip.h"
-#include "vscpworks.h"
 
+#include "cdlglevel2filter.h"
+#include "cdlgtls.h"
+
+#include <QDebug>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -42,6 +47,17 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget *parent) :
     ui(new Ui::CDlgConnSettingsTcpip)
 {
     ui->setupUi(this);
+
+    // Set defaults
+    m_bTLS = false;
+
+    connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings );
+    connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter );
+    connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTestConnection );
+    connect(ui->btnGetInterfaces, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onGetInterfaces );
+
+    // Help button
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgConnSettingsTcpip::onGetHelp );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,38 +73,31 @@ CDlgConnSettingsTcpip::~CDlgConnSettingsTcpip()
 // setInitialFocus
 //
 
-void CDlgConnSettingsTcpip::setInitialFocus(void)
+void 
+CDlgConnSettingsTcpip::setInitialFocus(void)
 {
     ui->editName->setFocus();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// onClicked
-//
-
-void CDlgConnSettingsTcpip::onClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// onDoubleClicked
-//
-
-void CDlgConnSettingsTcpip::onDoubleClicked(QListWidgetItem* item)
-{       
-    m_selected_type = static_cast<CVscpClient::connType>(item->type());
-    accept();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getSelectedType
 //
 
-CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
+CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) 
+{
     return m_selected_type;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// onGetHelp
+//
+
+void 
+CDlgConnSettingsTcpip::onGetHelp() 
+{
+    QUrl helpUrl("https://docs.vscp.org/");
+    QDesktopServices::openUrl(helpUrl);
+}
 
 
 // Getters / Setters
@@ -98,7 +107,8 @@ CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) {
 // getName
 //
 
-QString CDlgConnSettingsTcpip::getName(void)
+QString 
+CDlgConnSettingsTcpip::getName(void)
 {
     return (ui->editName->text()); 
 }
@@ -107,7 +117,8 @@ QString CDlgConnSettingsTcpip::getName(void)
 // setName
 //
 
-void CDlgConnSettingsTcpip::setName(const QString& str)
+void 
+CDlgConnSettingsTcpip::setName(const QString& str)
 {
     ui->editName->setText(str);
 }
@@ -116,7 +127,8 @@ void CDlgConnSettingsTcpip::setName(const QString& str)
 // getHost
 //
 
-QString CDlgConnSettingsTcpip::getHost(void)
+QString 
+CDlgConnSettingsTcpip::getHost(void)
 {
     return (ui->editHost->text()); 
 }
@@ -125,7 +137,8 @@ QString CDlgConnSettingsTcpip::getHost(void)
 // setHost
 //
 
-void CDlgConnSettingsTcpip::setHost(const QString& str)
+void 
+CDlgConnSettingsTcpip::setHost(const QString& str)
 {
     ui->editHost->setText(str);
 }
@@ -134,7 +147,8 @@ void CDlgConnSettingsTcpip::setHost(const QString& str)
 // getPort
 //
 
-short CDlgConnSettingsTcpip::getPort(void)
+short 
+CDlgConnSettingsTcpip::getPort(void)
 {
     short port = vscp_readStringValue(ui->editPort->text().toStdString());
     return port; 
@@ -144,7 +158,8 @@ short CDlgConnSettingsTcpip::getPort(void)
 // setPort
 //
 
-void CDlgConnSettingsTcpip::setPort(short port)
+void 
+CDlgConnSettingsTcpip::setPort(short port)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     QString str = pworks->decimalToStringInBase(port);
@@ -155,7 +170,8 @@ void CDlgConnSettingsTcpip::setPort(short port)
 // getUser
 //
 
-QString CDlgConnSettingsTcpip::getUser(void)
+QString 
+CDlgConnSettingsTcpip::getUser(void)
 {
     return (ui->editUser->text()); 
 }
@@ -164,16 +180,18 @@ QString CDlgConnSettingsTcpip::getUser(void)
 // setUser
 //
 
-void CDlgConnSettingsTcpip::setUser(const QString& str)
+void 
+CDlgConnSettingsTcpip::setUser(const QString& str)
 {
-    ui->editHost->setText(str);
+    ui->editUser->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getPassword
 //
 
-QString CDlgConnSettingsTcpip::getPassword(void)
+QString 
+CDlgConnSettingsTcpip::getPassword(void)
 {
     return (ui->editPassword->text()); 
 }
@@ -182,7 +200,8 @@ QString CDlgConnSettingsTcpip::getPassword(void)
 // setPassword
 //
 
-void CDlgConnSettingsTcpip::setPassword(const QString& str)
+void 
+CDlgConnSettingsTcpip::setPassword(const QString& str)
 {
     ui->editPassword->setText(str);
 }
@@ -191,7 +210,8 @@ void CDlgConnSettingsTcpip::setPassword(const QString& str)
 // getInterface
 //
 
-QString CDlgConnSettingsTcpip::getInterface(void)
+QString 
+CDlgConnSettingsTcpip::getInterface(void)
 {
     return ui->comboInterface->currentText(); 
 }
@@ -200,7 +220,8 @@ QString CDlgConnSettingsTcpip::getInterface(void)
 // setInterface
 //
 
-void CDlgConnSettingsTcpip::setInterface(const QString& str)
+void 
+CDlgConnSettingsTcpip::setInterface(const QString& str)
 {
     ui->comboInterface->setCurrentText(str);
 }
@@ -209,7 +230,8 @@ void CDlgConnSettingsTcpip::setInterface(const QString& str)
 // getFullL2
 //
 
-bool CDlgConnSettingsTcpip::getFullL2(void)
+bool 
+CDlgConnSettingsTcpip::getFullL2(void)
 {
     return ui->chkFullLevel2->isChecked(); 
 }
@@ -218,16 +240,158 @@ bool CDlgConnSettingsTcpip::getFullL2(void)
 // setFullL2
 //
 
-void CDlgConnSettingsTcpip::setFullL2(bool l2)
+void 
+CDlgConnSettingsTcpip::setFullL2(bool l2)
 {
     ui->chkFullLevel2->setChecked(l2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isTLSEnabled
+//
+
+bool 
+CDlgConnSettingsTcpip::isTLSEnabled(void)
+{
+    return m_bTLS; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enableTLS
+//
+
+void 
+CDlgConnSettingsTcpip::enableTLS(bool btls)
+{
+    m_bTLS = btls;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isVerifyPeerEnabled
+//
+
+bool 
+CDlgConnSettingsTcpip::isVerifyPeerEnabled(void)
+{
+    return m_bTLS; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enableVerifyPeer
+//
+
+void 
+CDlgConnSettingsTcpip::enableVerifyPeer(bool bverifypeer)
+{
+    m_bVerifyPeer = bverifypeer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCaFile
+//
+
+QString 
+CDlgConnSettingsTcpip::getCaFile(void)
+{
+    return m_cafile; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCaFile
+//
+
+void 
+CDlgConnSettingsTcpip::setCaFile(const QString& str)
+{
+    m_cafile = str;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCaPath
+//
+
+QString 
+CDlgConnSettingsTcpip::getCaPath(void)
+{
+    return m_capath; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCaPath
+//
+
+void 
+CDlgConnSettingsTcpip::setCaPath(const QString& str)
+{
+    m_capath = str;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCertFile
+//
+
+QString 
+CDlgConnSettingsTcpip::getCertFile(void)
+{
+    return m_certfile; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCertFile
+//
+
+void 
+CDlgConnSettingsTcpip::setCertFile(const QString& str)
+{
+    m_certfile = str;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getKeyFile
+//
+
+QString 
+CDlgConnSettingsTcpip::getKeyFile(void)
+{
+    return m_keyfile; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setKeyFile
+//
+
+void 
+CDlgConnSettingsTcpip::setKeyFile(const QString& str)
+{
+    m_keyfile = str;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPwKeyFile
+//
+
+QString 
+CDlgConnSettingsTcpip::getPwKeyFile(void)
+{
+    return m_pwkeyfile; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPwKeyFile
+//
+
+void 
+CDlgConnSettingsTcpip::setPwKeyFile(const QString& str)
+{
+    m_pwkeyfile = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getJsonObj
 //
 
-QJsonObject CDlgConnSettingsTcpip::getJson(void)
+QJsonObject 
+CDlgConnSettingsTcpip::getJson(void)
 {
     m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
     m_jsonConfig["name"] = getName();
@@ -237,6 +401,14 @@ QJsonObject CDlgConnSettingsTcpip::getJson(void)
     m_jsonConfig["password"] = getPassword();
     m_jsonConfig["bfull-l2"] = getFullL2();
     m_jsonConfig["interface"] = getInterface();
+    m_jsonConfig["btls"] = isTLSEnabled();
+
+    m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+    m_jsonConfig["cafile"] = getCaFile();
+    m_jsonConfig["capath"] = getCaPath();
+    m_jsonConfig["certfile"] = getCertFile();
+    m_jsonConfig["keyfile"] = getKeyFile();
+    m_jsonConfig["pwkeyfile"] = getPwKeyFile();
     return m_jsonConfig; 
 }
 
@@ -245,7 +417,8 @@ QJsonObject CDlgConnSettingsTcpip::getJson(void)
 // SetFromJsonObj
 //
 
-void CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
+void 
+CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
 {
     m_jsonConfig = *pobj; 
 
@@ -256,8 +429,163 @@ void CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
     if (!m_jsonConfig["password"].isNull()) setPassword(m_jsonConfig["password"].toString());
     if (!m_jsonConfig["interface"].isNull()) setInterface(m_jsonConfig["interface"].toString());
     if (!m_jsonConfig["bfull-l2"].isNull()) setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
+    if (!m_jsonConfig["btls"].isNull()) enableTLS((short)m_jsonConfig["btls"].toBool());
+
+    if (!m_jsonConfig["bverifypeer"].isNull()) enableVerifyPeer((short)m_jsonConfig["bverifypeer"].toBool());
+    if (!m_jsonConfig["cafile"].isNull()) setCaFile(m_jsonConfig["cafile"].toString());
+    if (!m_jsonConfig["capath"].isNull()) setCaPath(m_jsonConfig["capath"].toString());
+    if (!m_jsonConfig["certfile"].isNull()) setCertFile(m_jsonConfig["certfile"].toString());
+    if (!m_jsonConfig["keyfile"].isNull()) setKeyFile(m_jsonConfig["keyfile"].toString());
+    if (!m_jsonConfig["pwkeyfile"].isNull()) setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
 }
 
+// ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// onSetFilter
+//
 
+void 
+CDlgConnSettingsTcpip::onSetFilter(void)
+{
+    CDlgLevel2Filter dlg;
 
+    if (QDialog::Accepted == dlg.exec() ) {
+        
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onTestConnection
+//
+
+void 
+CDlgConnSettingsTcpip::onTestConnection(void)
+{
+    // Initialize host connection
+    if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
+                                                getPort(),
+                                                getUser().toStdString().c_str(),
+                                                getPassword().toStdString().c_str() ) ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip object"));
+        return;                                                
+    }
+
+    // Connect to remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to connect to remote tcp/ip host"));
+        m_client.disconnect();
+        return;
+    }
+
+    // Get server version
+    uint8_t major_ver;
+    uint8_t minor_ver;
+    uint8_t release_ver;
+    uint8_t build_ver;
+    QString strVersion;
+    if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
+                                                    &minor_ver,
+                                                    &release_ver,
+                                                    &build_ver ) ) {
+        
+        strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
+                                        (int)major_ver,
+                                        (int)minor_ver,
+                                        (int)release_ver,
+                                        (int)build_ver ).c_str();      
+    }
+    else {
+        strVersion = tr("Failed to get version from server");
+    }
+
+    // Disconnect from remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to disconnect from remote tcp/ip host"));
+        return;
+    }    
+
+    QString msg = tr("Connection test was successful");
+    msg += "\n";
+    msg += strVersion;
+    QMessageBox::information(this, tr("vscpworks+"), msg );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onGetInterfaces
+//
+
+void 
+CDlgConnSettingsTcpip::onGetInterfaces(void)
+{
+    // Initialize host connection
+    if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
+                                                getPort(),
+                                                getUser().toStdString().c_str(),
+                                                getPassword().toStdString().c_str() ) ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip object"));
+        return;                                                
+    }
+
+    m_client.setResponseTimeout(2000);
+
+    // Connect to remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to connect to remote tcp/ip host"));
+        m_client.disconnect();
+        return;
+    }
+
+    ui->comboInterface->clear();
+
+    // Get interfaces
+    std::deque<std::string> iflist;
+    if ( VSCP_ERROR_SUCCESS == m_client.getinterfaces(iflist) ) {
+        for (int i = 0; i < iflist.size(); i++) {           
+            ui->comboInterface->addItem(iflist[i].c_str(), i);
+            qDebug() << iflist.size();
+            qDebug() << iflist[i].c_str();
+        }                
+    }
+    else {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to get interfaces from server") );
+        m_client.disconnect();
+        return;
+    }
+
+    // Disconnect from remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to disconnect from remote tcp/ip host"));
+        return;
+    }    
+
+    QMessageBox::information(this, tr("vscpworks+"), tr("Interfaces fetched from remote server") );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onTLSSettings
+//
+
+void 
+CDlgConnSettingsTcpip::onTLSSettings(void)
+{
+    CDlgTLS dlg;
+
+    dlg.enableTLS(m_bTLS);
+    dlg.enableVerifyPeer(m_bVerifyPeer);
+    dlg.setCaFile(m_cafile);
+    dlg.setCaPath(m_capath);
+    dlg.setCertFile(m_certfile);
+    dlg.setKeyFile(m_keyfile);
+    dlg.setPwKeyFile(m_pwkeyfile);
+
+    if (QDialog::Accepted == dlg.exec() ) {
+        m_bTLS = dlg.isTLSEnabled();
+        m_bVerifyPeer = dlg.isVerifyPeerEnabled();
+        m_cafile = dlg.getCaFile();
+        m_capath = dlg.getCaPath();
+        m_certfile = dlg.getCertFile();
+        m_keyfile = dlg.getKeyFile();
+        m_pwkeyfile = dlg.getPwKeyFile();
+    }
+}

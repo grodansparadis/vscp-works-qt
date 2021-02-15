@@ -153,9 +153,9 @@ add_executable(vscp-works-qt
     src/cdlglevel1filterwizard.cpp
     build/ui_cdlglevel1filterwizard.h
 
-    src/cdlglevel1filter.h
-    src/cdlglevel1filter.cpp
-    build/ui_cdlglevel1filter.h
+    src/cdlglevel2filter.h
+    src/cdlglevel2filter.cpp
+    build/ui_cdlglevel2filter.h
 
     src/cdlgcanfilter.h
     src/cdlgcanfilter.cpp

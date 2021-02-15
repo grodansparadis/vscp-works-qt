@@ -36,7 +36,7 @@
 // CTor
 //
 
-CDlgLevel1Filter::CDlgLevel2Filter(QWidget *parent) :
+CDlgLevel2Filter::CDlgLevel2Filter(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CDlgLevel2Filter)
 {

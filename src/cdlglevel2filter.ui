@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>547</width>
-    <height>443</height>
+    <width>980</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -22,9 +22,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>400</y>
-     <width>541</width>
+     <x>10</x>
+     <y>410</y>
+     <width>961</width>
      <height>32</height>
     </rect>
    </property>
@@ -32,26 +32,26 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>540</x>
      <y>10</y>
-     <width>501</width>
+     <width>431</width>
      <height>381</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>Description</string>
+       <string>Priority</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -59,12 +59,9 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
-      <property name="toolTip">
-       <string>Description for  connection used in connection table</string>
-      </property>
-      <property name="text">
-       <string/>
+     <widget class="QListView" name="m_listPriority">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
       </property>
      </widget>
     </item>
@@ -79,7 +76,11 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QListView" name="m_listClasses"/>
+     <widget class="QListView" name="m_listClasses">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+     </widget>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_4">
@@ -92,12 +93,16 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QListView" name="m_listTypes_2"/>
+     <widget class="QListView" name="m_listTypes_2">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+     </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="label_13">
       <property name="text">
-       <string>Priority</string>
+       <string>GUID Count</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -105,43 +110,272 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QListView" name="m_listPriority"/>
+     <widget class="QLineEdit" name="lineEdit"/>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_3">
+   </layout>
+  </widget>
+  <widget class="QWidget" name="formLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>471</width>
+     <height>381</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout_2">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_12">
       <property name="text">
-       <string>Node id</string>
+       <string>Priority filter</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="m_nodeid_8">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Priority mask</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
      <widget class="QLineEdit" name="m_nodeid">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
       <property name="text">
-       <string>3</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
-     <widget class="QCheckBox" name="m_chkInvert">
+    <item row="2" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_11">
       <property name="text">
-       <string>Invert</string>
+       <string>VSCP Class filter</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="m_nodeid_3">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>VSCP Class mask</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="m_nodeid_4">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>VSCP Type filter</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QCheckBox" name="m_chkHardcoded">
+     <widget class="QLineEdit" name="m_nodeid_5">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
       <property name="text">
-       <string>Hardcoded</string>
+       <string>0</string>
       </property>
      </widget>
     </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>VSCP Type mask</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="m_nodeid_6">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>GUID filter</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QLineEdit" name="m_nodeid_7">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
+      <property name="text">
+       <string>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>GUID mask</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QLineEdit" name="m_nodeid_2">
+      <property name="toolTip">
+       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
+      <property name="text">
+       <string>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="Line" name="line_4">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>150</y>
+     <width>41</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&gt;&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>180</y>
+     <width>41</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;&lt;</string>
+   </property>
   </widget>
  </widget>
  <resources/>

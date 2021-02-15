@@ -85,7 +85,7 @@ CDlgConnSettingsSocketCan::CDlgConnSettingsSocketCan(QWidget *parent) :
     connect(ui->btnCloneFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onCloneFilter );
     connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onTestConnection );   
 
-    connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onSetFilter );
+    connect(ui->btnSetFlags, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onSetFlags );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -358,6 +358,14 @@ void CDlgConnSettingsSocketCan::onDeleteFilter(void)
                                     QMessageBox::Yes|QMessageBox::No) ) {
 
         CFilterListItem *item = (CFilterListItem *)ui->listFilters->takeItem(ui->listFilters->currentRow());
+
+        if (nullptr == item) {
+            QMessageBox::warning(this, tr("vscpworks+"),
+                                    tr("A filter must be selected from the list before you can delete it"),
+                                    QMessageBox::Ok);
+            return;                                    
+        }
+
         delete item;
     }
 }
@@ -370,6 +378,13 @@ void CDlgConnSettingsSocketCan::onEditFilter(void)
 {
 
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
+    
+    if (nullptr == item) {
+        QMessageBox::warning(this, tr("vscpworks+"),
+                                tr("A filter must be selected from the list before you can edit it"),
+                                QMessageBox::Ok);
+        return;
+    }
 
     CDlgLevel1Filter dlg(this);
 
@@ -434,12 +449,19 @@ void CDlgConnSettingsSocketCan::onEditFilter(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// onSetFilter
+// onSetFlags
 //
 
-void CDlgConnSettingsSocketCan::onSetFilter(void)
+void CDlgConnSettingsSocketCan::onSetFlags(void)
 {
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
+
+    if (nullptr == item) {
+        QMessageBox::warning(this, tr("vscpworks+"),
+                                tr("A filter must be selected from the list before you can set it"),
+                                QMessageBox::Ok);
+        return;                                
+    }
 
     CDlgSocketCanFlags dlg(this);
 
@@ -463,6 +485,13 @@ void CDlgConnSettingsSocketCan::onCloneFilter(void)
 
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
 
+    if (nullptr == item) {
+        QMessageBox::warning(this, tr("vscpworks+"),
+                                tr("A filter must be selected from the list before you can clone it"),
+                                QMessageBox::Ok);
+        return;                                
+    }
+
     ui->listFilters->addItem(new CFilterListItem(item->m_name, item->m_filter, item->m_mask, item->m_bInvert));
 }
 
@@ -478,7 +507,7 @@ void CDlgConnSettingsSocketCan::onTestConnection(void)
                             getResponseTimeout());
     
     if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.connect())) {
-        QString errorstr = tr("Failed to connect to interface. [%s]");
+        QString errorstr = tr("Failed to connect to interface. [%1] rv=%2").arg(getDevice().arg(rv));
         QMessageBox::question(this, 
                                 tr("vscpworks+"), 
                                 errorstr.arg(rv),

@@ -109,16 +109,77 @@ public:
     void setInterface(const QString& str);
 
     /*!
-        Setters/getters for host
+        Setters/getters for Full level II
     */
     bool getFullL2(void);
     void setFullL2(bool l2);
+
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isTLSEnabled(void);
+    void enableTLS(bool bTLS);
+
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isVerifyPeerEnabled(void);
+    void enableVerifyPeer(bool bverifypeer);
+
+    /*!
+        Setters/getters for TLS CA file
+    */
+    QString getCaFile(void);
+    void setCaFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS CA path
+    */
+    QString getCaPath(void);
+    void setCaPath(const QString& str);
+
+    /*!
+        Setters/getters for TLS Cert file
+    */
+    QString getCertFile(void);
+    void setCertFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS key file
+    */
+    QString getKeyFile(void);
+    void setKeyFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS pw key file
+    */
+    QString getPwKeyFile(void);
+    void setPwKeyFile(const QString& str);
+
+
 
     /*!
         Setters/getters for JSON config object
     */
     QJsonObject getJson(void);
     void setJson(const QJsonObject *pobj);
+
+ private slots:
+
+    /// Set filter button clicked
+    void onSetFilter(void);
+
+    /// Test connection button clicked
+    void onTestConnection(void);
+
+    /// Get interfaces button clicked
+    void onGetInterfaces(void);
+
+    /// TLS settings button clicked
+    void onTLSSettings(void);
+
+    /// Get help with settings
+    void onGetHelp(void);
 
 private:
 
@@ -135,19 +196,19 @@ private:
     bool m_bVerifyPeer;
 
     /// CA file
-    std::string m_cafile;
+    QString m_cafile;
 
     /// Path to CA file (can hold filename also)
-    std::string m_capath;
+    QString m_capath;
 
     /// Path to CERT file
-    std::string m_certfile;
+    QString m_certfile;
 
     /// Key file
-    std::string m_keyfile;
+    QString m_keyfile;
 
     /// Password keyfile
-    std::string m_pwKeyfile;
+    QString m_pwkeyfile;
 
     /*! 
         This variable holds the connection type that 
@@ -155,8 +216,11 @@ private:
     */
     CVscpClient::connType m_selected_type;
 
-    // JSON configuration object
+    /// JSON configuration object
     QJsonObject m_jsonConfig;
+
+    /// VSCP tcp/ip client
+    vscpClientTcp m_client;
 };
 
 

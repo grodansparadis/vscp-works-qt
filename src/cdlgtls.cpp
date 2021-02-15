@@ -30,6 +30,7 @@
 #include "ui_cdlgtls.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -41,6 +42,11 @@ CDlgTLS::CDlgTLS(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgTLS::onSetCaFile );
+    connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgTLS::onSetCaPath ); 
+    connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgTLS::onSetCertFile ); 
+    connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetKeyFile ); 
+    connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetPwKeyFile );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,42 +59,229 @@ CDlgTLS::~CDlgTLS()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setDebug
+// isTLSEnabled
 //
 
-void CDlgTLS::setDebug(bool bDebug)
+bool 
+CDlgTLS::isTLSEnabled(void)
 {
-    //ui->chkEnableDebug->setChecked(bDebug);
+    return ui->chkTlsEnable->isChecked(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getDebug
+// enableTLS
 //
 
-bool CDlgTLS::getDebug(void)
+void 
+CDlgTLS::enableTLS(bool btls)
 {
-    //return ui->chkEnableDebug->isChecked();
-    return false;
+    return ui->chkTlsEnable->setChecked(btls);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setFd
+// isVerifyPeerEnabled
 //
 
-void CDlgTLS::setFd(bool bFd)
+bool 
+CDlgTLS::isVerifyPeerEnabled(void)
 {
-    //ui->chkEnableFd->setChecked(bFd);
+    return ui->chkVerifyPeer->isChecked(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getFd
+// enableVerifyPeer
 //
 
-bool CDlgTLS::getFd(void)
+void 
+CDlgTLS::enableVerifyPeer(bool bverifypeer)
 {
-    //return ui->chkEnableFd->isChecked();
-    return false;
+    return ui->chkVerifyPeer->setChecked(bverifypeer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCaFile
+//
+
+QString 
+CDlgTLS::getCaFile(void)
+{
+    return ui->editCaFile->text(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCaFile
+//
+
+void 
+CDlgTLS::setCaFile(const QString& str)
+{
+    ui->editCaFile->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCaPath
+//
+
+QString 
+CDlgTLS::getCaPath(void)
+{
+    return ui->editCaPath->text(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCaPath
+//
+
+void 
+CDlgTLS::setCaPath(const QString& str)
+{
+    ui->editCaPath->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getCertFile
+//
+
+QString 
+CDlgTLS::getCertFile(void)
+{
+    return ui->editCertFile->text(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setCertFile
+//
+
+void 
+CDlgTLS::setCertFile(const QString& str)
+{
+    ui->editCertFile->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getKeyFile
+//
+
+QString 
+CDlgTLS::getKeyFile(void)
+{
+    return ui->editKeyFile->text(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setKeyFile
+//
+
+void 
+CDlgTLS::setKeyFile(const QString& str)
+{
+    ui->editKeyFile->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPwKeyFile
+//
+
+QString 
+CDlgTLS::getPwKeyFile(void)
+{
+    return ui->editPwKeyFile->text(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPwKeyFile
+//
+
+void 
+CDlgTLS::setPwKeyFile(const QString& str)
+{
+    ui->editPwKeyFile->setText(str);
 }
 
 
 
+// ----------------------------------------------------------------------------
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// onSetCaFile
+//
+
+void
+CDlgTLS::onSetCaFile(void)
+{
+    QFileDialog dlg;
+    QString str = dlg.getOpenFileName(this,
+                                      "Select CA file",
+                                      ".",
+                                      tr("Certificates (*.ca *.crt);;All (*)"));
+    if (str.length()) {
+        setCaFile(str);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSetCaPath
+// 
+
+void 
+CDlgTLS::onSetCaPath(void)
+{
+    QFileDialog dlg;  
+    QString str = dlg.getExistingDirectory(this,"Select CA path", ".");
+    if (str.length()) {
+        setCaPath(str);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSetCertFile
+//
+
+void
+CDlgTLS::onSetCertFile(void)
+{
+    QFileDialog dlg;
+    QString str = dlg.getOpenFileName(this,
+                                      "Select cert file",
+                                      ".",
+                                      tr("Certificates (*.ca *.crt);;All (*)"));
+    if (str.length()) {
+        setCertFile(str);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSetKeyFile
+//
+
+void
+CDlgTLS::onSetKeyFile(void)
+{
+    QFileDialog dlg;
+    QString str = dlg.getOpenFileName(this,
+                                      "Select key file",
+                                      ".",
+                                      tr("Key-files (*.key);;All (*)"));
+    if (str.length()) {
+        setKeyFile(str);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSetPwKeyFile
+//
+
+void
+CDlgTLS::onSetPwKeyFile(void)
+{
+    QFileDialog dlg;
+    QString str = dlg.getOpenFileName(this,
+                                      "Select key file",
+                                      ".",
+                                      tr("Key-files (*.key);;All (*)"));
+    if (str.length()) {
+        setPwKeyFile(str);
+    }
+}

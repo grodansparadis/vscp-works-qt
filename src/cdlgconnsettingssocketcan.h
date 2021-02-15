@@ -162,7 +162,7 @@ public:
     /*!
         Called when the set filter button is clicked
     */
-    void onSetFilter(void);
+    void onSetFlags(void);
 
  private:
 
