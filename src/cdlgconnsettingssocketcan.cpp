@@ -31,6 +31,7 @@
 
 #include "cdlglevel1filter.h"
 #include "cdlgsocketcanflags.h"
+#include "vscpworks.h"
 
 #include "cdlgconnsettingssocketcan.h"
 #include "ui_cdlgconnsettingssocketcan.h"

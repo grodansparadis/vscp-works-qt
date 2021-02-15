@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlgtls.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,41 +26,69 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGSOCKETCANFLAGS_H
-#define CDLGSOCKETCANFLAGS_H
+#include "cdlgtls.h"
+#include "ui_cdlgtls.h"
 
+#include <QMessageBox>
 
-#include <QDialog>
-#include <QListWidgetItem>
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
 
-namespace Ui {
-class CDlgSocketCanFlags;
+CDlgTLS::CDlgTLS(QWidget *parent) :
+        QDialog(parent),
+    ui(new Ui::CDlgTLS)
+{
+    ui->setupUi(this);
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+CDlgTLS::~CDlgTLS()
+{
+    delete ui;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDebug
+//
+
+void CDlgTLS::setDebug(bool bDebug)
+{
+    //ui->chkEnableDebug->setChecked(bDebug);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDebug
+//
+
+bool CDlgTLS::getDebug(void)
+{
+    //return ui->chkEnableDebug->isChecked();
+    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setFd
+//
+
+void CDlgTLS::setFd(bool bFd)
+{
+    //ui->chkEnableFd->setChecked(bFd);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getFd
+//
+
+bool CDlgTLS::getFd(void)
+{
+    //return ui->chkEnableFd->isChecked();
+    return false;
 }
 
 
-class CDlgSocketCanFlags : public QDialog
-{
-    Q_OBJECT
 
-public:
-    explicit CDlgSocketCanFlags(QWidget *parent = nullptr);
-    ~CDlgSocketCanFlags();
-    
-public:
-    /// Setters/getters for debug
-    void setDebug(bool bDebug = true);
-    bool getDebug(void);
-
-    /// Setters/getters for FD
-    void setFd(bool bFd = true);
-    bool getFd(void);
-
-
-private:
-
-    Ui::CDlgSocketCanFlags *ui;
-
-};
-
-
-#endif // CDLGSOCKETCANFLAGS_H

@@ -79,10 +79,40 @@ public:
     void setName(const QString& str);
 
     /*!
-        Setters/getters for path
+        Setters/getters for host
     */
-    QString getPath(void);
-    void setPath(const QString& str);
+    QString getHost(void);
+    void setHost(const QString& str);
+
+    /*!
+        Setters/getters for port
+    */
+    short getPort(void);
+    void setPort(short port);
+
+    /*!
+        Setters/getters for user
+    */
+    QString getUser(void);
+    void setUser(const QString& str);
+
+    /*!
+        Setters/getters for password
+    */
+    QString getPassword(void);
+    void setPassword(const QString& str);
+
+    /*!
+        Setters/getters for interface (selected)
+    */
+    QString getInterface(void);
+    void setInterface(const QString& str);
+
+    /*!
+        Setters/getters for host
+    */
+    bool getFullL2(void);
+    void setFullL2(bool l2);
 
     /*!
         Setters/getters for JSON config object
@@ -94,6 +124,30 @@ private:
 
     Ui::CDlgConnSettingsTcpip *ui;
 
+
+    /// TLS flag (secure transport if enabled)
+    bool m_bTLS;
+
+    /*!
+        the server certificate will be verified and the connection 
+        aborted if the verification fails.
+    */
+    bool m_bVerifyPeer;
+
+    /// CA file
+    std::string m_cafile;
+
+    /// Path to CA file (can hold filename also)
+    std::string m_capath;
+
+    /// Path to CERT file
+    std::string m_certfile;
+
+    /// Key file
+    std::string m_keyfile;
+
+    /// Password keyfile
+    std::string m_pwKeyfile;
 
     /*! 
         This variable holds the connection type that 

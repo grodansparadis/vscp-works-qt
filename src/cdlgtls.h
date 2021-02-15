@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlgtls.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,26 +26,26 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGSOCKETCANFLAGS_H
-#define CDLGSOCKETCANFLAGS_H
+#ifndef CDLGTLS_H
+#define CDLGTLS_H
 
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgSocketCanFlags;
+class CDlgTLS;
 }
 
 
-class CDlgSocketCanFlags : public QDialog
+class CDlgTLS : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgSocketCanFlags(QWidget *parent = nullptr);
-    ~CDlgSocketCanFlags();
-    
+    explicit CDlgTLS(QWidget *parent = nullptr);
+    ~CDlgTLS();
+
 public:
     /// Setters/getters for debug
     void setDebug(bool bDebug = true);
@@ -58,9 +58,9 @@ public:
 
 private:
 
-    Ui::CDlgSocketCanFlags *ui;
+    Ui::CDlgTLS *ui;
 
 };
 
 
-#endif // CDLGSOCKETCANFLAGS_H
+#endif // CDLGTLS_H

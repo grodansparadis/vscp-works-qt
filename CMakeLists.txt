@@ -75,6 +75,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlglevel2filter.ui
     src/cdlgcanfilter.ui
     src/cdlgsocketcanflags.ui
+    src/cdlgtls.ui
 )
 
 add_executable(vscp-works-qt
@@ -159,6 +160,10 @@ add_executable(vscp-works-qt
     src/cdlgcanfilter.h
     src/cdlgcanfilter.cpp
     src/cdlgcanfilter.ui
+
+    src/cdlgtls.h
+    src/cdlgtls.cpp
+    src/cdlgtls.ui
 
     src/cfrmsession.h
     src/cfrmsession.cpp

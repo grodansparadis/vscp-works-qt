@@ -56,9 +56,9 @@ CDlgSocketCanFlags::~CDlgSocketCanFlags()
 // setDebug
 //
 
-void CDlgSocketCanFlags::setDebug(bool bDebúg)
+void CDlgSocketCanFlags::setDebug(bool bDebug)
 {
-    ui->chkEnableDebug->setChecked(bDebúg);
+    ui->chkEnableDebug->setChecked(bDebug);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

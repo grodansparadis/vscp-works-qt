@@ -514,126 +514,164 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsSocketCan</name>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="149"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="168"/>
         <source>Socketcan Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="150"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="169"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="152"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="171"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="155"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="174"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="84"/>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="114"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="157"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="162"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="134"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="176"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="181"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="186"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="87"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="159"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="178"/>
         <source>vcan0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="160"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="179"/>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="117"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="164"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="183"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="124"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="165"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="184"/>
         <source>Response timeout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="155"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="199"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="227"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="268"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="167"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="175"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="179"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="183"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="137"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="188"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="144"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="189"/>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="175"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="219"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="247"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="288"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="316"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="191"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="199"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="203"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="207"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="211"/>
         <source>Define incoming filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="158"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="169"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="178"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="193"/>
         <source>Add filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="171"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="171"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="191"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="195"/>
         <source>Test connection to remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="174"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="173"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="194"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="197"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="202"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="177"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="222"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="201"/>
         <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="230"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="181"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="250"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="205"/>
         <source>Edit filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="271"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="185"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="291"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="209"/>
         <source>Clone filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="288"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="324"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="370"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="416"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="319"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="213"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="320"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="356"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="402"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="483"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="489"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="496"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="289"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="371"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="417"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="321"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="403"/>
         <source>The filter need a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="325"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="357"/>
         <source>Do you really want to delete filter?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="481"/>
+        <source>Failed to connect to interface. [%s]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="490"/>
+        <source>Successful connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="497"/>
+        <source>Failed to disconnect from interface.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1530,6 +1568,86 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgnewconnection.ui" line="55"/>
         <location filename="build/vscp-works-qt_autogen/include/ui_cdlgnewconnection.h" line="56"/>
         <source>Select connection type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgSocketCanFlags</name>
+    <message>
+        <location filename="src/cdlgsocketcanflags.ui" line="14"/>
+        <location filename="build/ui_cdlgsocketcanflags.h" line="53"/>
+        <source>Socketcan flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsocketcanflags.ui" line="42"/>
+        <location filename="build/ui_cdlgsocketcanflags.h" line="54"/>
+        <source>Enable debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsocketcanflags.ui" line="55"/>
+        <location filename="build/ui_cdlgsocketcanflags.h" line="55"/>
+        <source>Enable FD (Flexible data-rate)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgTLS</name>
+    <message>
+        <location filename="src/cdlgtls.ui" line="14"/>
+        <location filename="build/ui_cdlgtls.h" line="144"/>
+        <source>TLS Communication settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="45"/>
+        <location filename="build/ui_cdlgtls.h" line="145"/>
+        <source>CaFile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="55"/>
+        <location filename="build/ui_cdlgtls.h" line="146"/>
+        <source>CaPath</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="65"/>
+        <location filename="build/ui_cdlgtls.h" line="147"/>
+        <source>Cert File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="81"/>
+        <location filename="build/ui_cdlgtls.h" line="148"/>
+        <source>Key File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="88"/>
+        <location filename="build/ui_cdlgtls.h" line="149"/>
+        <source>Password key file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="95"/>
+        <location filename="build/ui_cdlgtls.h" line="150"/>
+        <source>SSL/TLS verify peer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="111"/>
+        <location filename="src/cdlgtls.ui" line="124"/>
+        <location filename="src/cdlgtls.ui" line="137"/>
+        <location filename="src/cdlgtls.ui" line="150"/>
+        <location filename="src/cdlgtls.ui" line="163"/>
+        <location filename="build/ui_cdlgtls.h" line="151"/>
+        <location filename="build/ui_cdlgtls.h" line="152"/>
+        <location filename="build/ui_cdlgtls.h" line="153"/>
+        <location filename="build/ui_cdlgtls.h" line="154"/>
+        <location filename="build/ui_cdlgtls.h" line="155"/>
+        <source>...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
