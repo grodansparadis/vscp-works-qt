@@ -221,6 +221,9 @@ private:
 
     /// VSCP tcp/ip client
     vscpClientTcp m_client;
+
+    /// VSCP tcp/ip main filter
+    vscpEventFilter m_filter;
 };
 
 

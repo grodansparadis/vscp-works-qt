@@ -780,65 +780,79 @@ void MainWindow::cloneConnectionItem(void)
             // Make copy of config
             QJsonObject conn_copy = *pconn;
 
+            int type = 0 ;
+            if (!(*pconn)["type"].isNull()) {
+                type = (*pconn)["type"].toInt();
+            }
+
             // Add to main table
             pworks->addConnection(conn_copy, true);
 
-            // Add connection to connection tree
-            addChildItemToConnectionTree(m_topitem_local, conn_copy);
+            switch (type) {
 
-            // switch ((*pconn)["type"].toInt()) {
+                case static_cast<int>(CVscpClient::connType::LOCAL):
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_local, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::LOCAL):
-            //         editLocalConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::TCPIP):
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_tcpip, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::TCPIP):
-            //         editTcpipConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::CANAL): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_canal, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::CANAL): 
-            //         editCanalConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_socketcan, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::SOCKETCAN): 
-            //         editSocketCanConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::WS1): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_ws1, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::WS1): 
-            //         editWs1Connection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::WS2): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_ws2, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::WS2): 
-            //         editWs2Connection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::MQTT): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_mqtt, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::MQTT): 
-            //         editMqttConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::UDP): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_udp, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::UDP): 
-            //         editUdpConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::MULTICAST): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_multicast, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::MULTICAST): 
-            //         editMulticastConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::REST): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_rest, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::REST): 
-            //         editRestConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::RAWCAN): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_rawcan, conn_copy);
+                    break;
 
-            //     case static_cast<int>(CVscpClient::connType::RAWCAN): 
-            //         editRawCanConnection(itemConn);
-            //         break;
-
-            //     case static_cast<int>(CVscpClient::connType::RAWMQTT): 
-            //         editRawMqttConnection(itemConn);
-            //         break;
+                case static_cast<int>(CVscpClient::connType::RAWMQTT): 
+                    // Add connection to connection tree
+                    addChildItemToConnectionTree(m_topitem_rawmqtt, conn_copy);
+                    break;
                                                         
-            //     default:
-            //         break;    
-            // }
+                default:
+                    break;    
+            }
         }
     }
 }

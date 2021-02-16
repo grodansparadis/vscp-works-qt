@@ -29,6 +29,8 @@
 #ifndef CDLGLEVEL2FILTER_H
 #define CDLGLEVEL2FILTER_H
 
+#include <vscp.h>
+
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -39,23 +41,144 @@ class CDlgLevel2Filter;
 
 class CDlgLevel2Filter : public QDialog
 {
-    Q_OBJECT
-
-public:
-    
+    Q_OBJECT 
 
 public:
     explicit CDlgLevel2Filter(QWidget *parent = nullptr);
     ~CDlgLevel2Filter();
 
+public:
+
+    // Getters setters for filter
+    void getFilter(vscpEventFilter *pfilter);
+    void setFilter(const vscpEventFilter *pfilter);  
+
+    /*!
+        set Initial focus
+    */
+    void setInitialFocus(void);
+
+    /*!
+        set combo numbase index
+    */
+    void setNumBaseComboIndex(uint8_t index);
+
+    /*!
+        Get combo numbase index
+    */
+    uint8_t getNumComboIndex(void);
+
+public slots:
+    /*!
+        Numerical base changed -recalc
+    */
+    void onBaseChange(int index);
+
+    /*!
+        Add priorities to the list box
+    */
+    void fillPriorities(void);
+
+    /*!
+        Add VSCP classes to the list box
+    */
+    void fillVscpClasses(void);
+
+    /*!
+        Add VSCP types to the list box
+    */
+    void fillVscpTypes(void);
+
+    /*!
+        Fill in selected priorities from
+        set priority filter/mask
+    */
+    void doPrioritySelections(void);
+
+    /*!
+        Fill in selected VSCP classes from
+        set class filter/mask
+    */
+    void doVscpClassSelections(void);
+
+    /*!
+        Fill in selected VSCP types from
+        set type filter/mask
+    */
+    void doVscpTypeSelections(void);
+
+    /*!
+        Transfer info to visual side
+    */
+    void transferToVisual(void);
+
+    /*!
+        Transfer info to id/mask
+    */
+    void transferFromVisual(void);
+
+    /*!
+        Calculate and set priority filter and
+        mask values from listbox selection
+    */
+    void calculatePriorityValues(void);
+
+    /*!
+        Calculate and set VSCP class filter and
+        mask values from listbox selection
+    */
+    void calculateVscpClassValues(void);
+
+    /*!
+        Calculate and set VSCP type filter and
+        mask values from listbox selection
+    */
+    void calculateVscpTypeValues(void);
+
+
+private slots:
+    
+    void showPriorityContextMenu(const QPoint& pos);
+    void showVscpClassContextMenu(const QPoint& pos);
+    void showVscpTypeContextMenu(const QPoint& pos);
+
+    void clrAllPrioritySelections(void);
+    void selectAllPrioritySelections(void);
+
+    void clrAllVscpClassSelections(void);
+    void selectAllVscpClassSelections(void);
+
+    void clrAllVscpTypeSelections(void);
+    void selectAllVscpTypeSelections(void);
+
+    void onTextChangedPriorityFilter(const QString &text);
+    void onTextChangedPriorityMask(const QString &text);  
+
+    void onTextChangedVscpClassFilter(const QString &text);
+    void onTextChangedVscpClassMask(const QString &text);
+
+    void onTextChangedVscpTypeFilter(const QString &text);
+    void onTextChangedVscpTypeMask(const QString &text);
+
+    void onVscpTypeItemClicked(QListWidgetItem *item);
+
 private:
 
     Ui::CDlgLevel2Filter *ui;
 
-    // void createMenu();
-    // void createHorizontalGroupBox();
-    // void createGridGroupBox();
-    // void createFormGroupBox();
+    numerical_base m_baseIndex;
+
+    // Vector that maps VSCP class to list index
+    std::map<uint16_t,uint16_t> m_classToIndexMap;
+
+    // Vector that maps VSCP type to list index
+    std::map<uint32_t,uint16_t> m_typeToIndexMap;
+
+    /*!
+        Used by update mechanism to prevent automatic
+        sections when base is changed.
+    */
+    bool m_bSkipAutomaticUpdate;
 
 };
 

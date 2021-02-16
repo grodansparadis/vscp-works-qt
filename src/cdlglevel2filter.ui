@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
-    <height>451</height>
+    <width>1081</width>
+    <height>477</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -17,14 +17,14 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>VSCP filter</string>
+   <string>VSCP Level II Filter</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>410</y>
-     <width>961</width>
+     <y>440</y>
+     <width>1051</width>
      <height>32</height>
     </rect>
    </property>
@@ -43,7 +43,7 @@
     <rect>
      <x>540</x>
      <y>10</y>
-     <width>431</width>
+     <width>531</width>
      <height>381</height>
     </rect>
    </property>
@@ -59,9 +59,15 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QListView" name="m_listPriority">
+     <widget class="QListWidget" name="listPriority">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
       </property>
      </widget>
     </item>
@@ -76,9 +82,15 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QListView" name="m_listClasses">
+     <widget class="QListWidget" name="listClass">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(211, 215, 207)</string>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
     </item>
@@ -93,24 +105,17 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QListView" name="m_listTypes_2">
+     <widget class="QListWidget" name="listType">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(211, 215, 207)</string>
       </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_13">
-      <property name="text">
-       <string>GUID Count</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::MultiSelection</enum>
       </property>
      </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
     </item>
    </layout>
   </widget>
@@ -132,10 +137,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpPriorityFilter</cstring>
+      </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_nodeid_8">
+     <widget class="QLineEdit" name="editVscpPriorityFilter">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -155,10 +163,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpPriorityMask</cstring>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_nodeid">
+     <widget class="QLineEdit" name="editVscpPriorityMask">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -185,10 +196,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpClassFilter</cstring>
+      </property>
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QLineEdit" name="m_nodeid_3">
+     <widget class="QLineEdit" name="editVscpClassFilter">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -208,10 +222,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpClassMask</cstring>
+      </property>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="m_nodeid_4">
+     <widget class="QLineEdit" name="editVscpClassMask">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -238,10 +255,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpTypeFilter</cstring>
+      </property>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QLineEdit" name="m_nodeid_5">
+     <widget class="QLineEdit" name="editVscpTypeFilter">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -261,10 +281,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpTypeMask</cstring>
+      </property>
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QLineEdit" name="m_nodeid_6">
+     <widget class="QLineEdit" name="editVscpTypeMask">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -291,10 +314,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpGuidFilter</cstring>
+      </property>
      </widget>
     </item>
     <item row="9" column="1">
-     <widget class="QLineEdit" name="m_nodeid_7">
+     <widget class="QLineEdit" name="editVscpGuidFilter">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -314,10 +340,13 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editVscpGuidMask</cstring>
+      </property>
      </widget>
     </item>
     <item row="10" column="1">
-     <widget class="QLineEdit" name="m_nodeid_2">
+     <widget class="QLineEdit" name="editVscpGuidMask">
       <property name="toolTip">
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
@@ -351,7 +380,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="btnTransferRight">
    <property name="geometry">
     <rect>
      <x>490</x>
@@ -364,7 +393,7 @@
     <string>&gt;&gt;</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="btnTransferLeft">
    <property name="geometry">
     <rect>
      <x>490</x>
@@ -377,7 +406,59 @@
     <string>&lt;&lt;</string>
    </property>
   </widget>
+  <widget class="QComboBox" name="comboNumberBase">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>400</y>
+     <width>93</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <item>
+    <property name="text">
+     <string>HEX</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>DECIMAL</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>OCTAL</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>BINARY</string>
+    </property>
+   </item>
+  </widget>
  </widget>
+ <tabstops>
+  <tabstop>editVscpPriorityFilter</tabstop>
+  <tabstop>editVscpPriorityMask</tabstop>
+  <tabstop>editVscpClassFilter</tabstop>
+  <tabstop>editVscpClassMask</tabstop>
+  <tabstop>editVscpTypeFilter</tabstop>
+  <tabstop>editVscpTypeMask</tabstop>
+  <tabstop>editVscpGuidFilter</tabstop>
+  <tabstop>editVscpGuidMask</tabstop>
+  <tabstop>listPriority</tabstop>
+  <tabstop>listClass</tabstop>
+  <tabstop>listType</tabstop>
+  <tabstop>btnTransferRight</tabstop>
+  <tabstop>btnTransferLeft</tabstop>
+  <tabstop>comboNumberBase</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
