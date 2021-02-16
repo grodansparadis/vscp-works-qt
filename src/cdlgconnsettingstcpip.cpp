@@ -51,6 +51,12 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget *parent) :
 
     // Set defaults
     m_bTLS = false;
+    setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
+    setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
+    setHost("localhost");
+    setPort(VSCP_DEFAULT_TCP_PORT);
+    setUser("admin");
+    setPassword("secret");
 
     connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings );
     connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter );
@@ -80,14 +86,6 @@ CDlgConnSettingsTcpip::setInitialFocus(void)
     ui->editName->setFocus();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getSelectedType
-//
-
-CVscpClient::connType CDlgConnSettingsTcpip::getSelectedType(void) 
-{
-    return m_selected_type;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // onGetHelp
@@ -225,6 +223,42 @@ void
 CDlgConnSettingsTcpip::setInterface(const QString& str)
 {
     ui->comboInterface->setCurrentText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getConnectionTimeout
+//
+
+uint32_t CDlgConnSettingsTcpip::getConnectionTimeout(void)
+{
+    return m_client.getConnectionTimeout();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setConnectionTimeout
+//
+
+void CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
+{
+    m_client.setConnectionTimeout(timeout);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getResponseTimeout
+//
+
+uint32_t CDlgConnSettingsTcpip::getResponseTimeout(void)
+{
+    return m_client.getResponseTimeout();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setResponseTimeout
+//
+
+void CDlgConnSettingsTcpip::setResponseTimeout(uint32_t timeout)
+{
+    m_client.setResponseTimeout(timeout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -402,11 +436,12 @@ CDlgConnSettingsTcpip::getJson(void)
     m_jsonConfig["port"] = getPort();
     m_jsonConfig["user"] = getUser();
     m_jsonConfig["password"] = getPassword();
+    m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
+    m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
     m_jsonConfig["bfull-l2"] = getFullL2();
     m_jsonConfig["selected-interface"] = getInterface();
-    qDebug() << getInterface();
+    
     m_jsonConfig["btls"] = isTLSEnabled();
-
     m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
     m_jsonConfig["cafile"] = getCaFile();
     m_jsonConfig["capath"] = getCaPath();
@@ -452,7 +487,9 @@ CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
     if (!m_jsonConfig["host"].isNull()) setHost(m_jsonConfig["host"].toString());
     if (!m_jsonConfig["port"].isNull()) setPort((short)m_jsonConfig["port"].toInt());
     if (!m_jsonConfig["user"].isNull()) setUser(m_jsonConfig["user"].toString());
-    if (!m_jsonConfig["password"].isNull()) setPassword(m_jsonConfig["password"].toString());    
+    if (!m_jsonConfig["password"].isNull()) setPassword(m_jsonConfig["password"].toString());   
+    if (!m_jsonConfig["connection-timeout"].isNull()) setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt()); 
+    if (!m_jsonConfig["response-timeout"].isNull()) setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());  
     if (!m_jsonConfig["bfull-l2"].isNull()) setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
     if (!m_jsonConfig["btls"].isNull()) enableTLS((short)m_jsonConfig["btls"].toBool());
 
@@ -535,7 +572,9 @@ CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
 
 }
 
+
 // ----------------------------------------------------------------------------
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // onSetFilter

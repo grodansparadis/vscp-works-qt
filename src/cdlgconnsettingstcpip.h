@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSTCPIP_H
 #define CDLGCONNSETTINGSTCPIP_H
 
-//#include "connection_types.h"
+
 #include "vscp_client_tcp.h"
 
 #include <QDialog>
@@ -70,7 +70,7 @@ public:
     /*!
         Return the selected communication type
     */
-    CVscpClient::connType getSelectedType(void);
+    //CVscpClient::connType getSelectedType(void);
 
     /*!
         Setters/getters for name/description
@@ -107,6 +107,18 @@ public:
     */
     QString getInterface(void);
     void setInterface(const QString& str);
+
+    /*!
+        Setters/getters for connection timeout
+    */
+    uint32_t getConnectionTimeout(void);
+    void setConnectionTimeout(uint32_t timeout);
+
+    /*!
+        Setters/getters for response timeout
+    */
+    uint32_t getResponseTimeout(void);
+    void setResponseTimeout(uint32_t timeout);
 
     /*!
         Setters/getters for Full level II
@@ -214,7 +226,7 @@ private:
         This variable holds the connection type that 
         the used select
     */
-    CVscpClient::connType m_selected_type;
+    // CVscpClient::connType m_selected_type;
 
     /// JSON configuration object
     QJsonObject m_jsonConfig;

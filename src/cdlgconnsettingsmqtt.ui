@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>461</height>
+    <width>633</width>
+    <height>506</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -19,23 +19,27 @@
   <property name="windowTitle">
    <string>MQTT Connection</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="vscpworks.qrc">
+    <normaloff>:/process.png</normaloff>:/process.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>430</y>
-     <width>641</width>
-     <height>32</height>
+     <x>10</x>
+     <y>470</y>
+     <width>611</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -56,10 +60,16 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editDescription</cstring>
+      </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
+     <widget class="QLineEdit" name="editDescription">
+      <property name="toolTip">
+       <string>Description for  connection used in connection table</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -73,16 +83,51 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editHost</cstring>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_broker">
+     <widget class="QLineEdit" name="editHost">
+      <property name="toolTip">
+       <string>URL for MQTT broker </string>
+      </property>
       <property name="text">
-       <string>localhost:1883</string>
+       <string>localhost</string>
       </property>
      </widget>
     </item>
     <item row="2" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Broker port</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editPort</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editPort">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>Port to connect to on MQTT broker </string>
+      </property>
+      <property name="text">
+       <string>1883</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Username :</string>
@@ -90,12 +135,19 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editUser</cstring>
+      </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="m_user"/>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editUser">
+      <property name="toolTip">
+       <string>Username to connect to MQTT broker</string>
+      </property>
+     </widget>
     </item>
-    <item row="3" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Password :</string>
@@ -103,19 +155,29 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editPassword</cstring>
+      </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="m_password"/>
-    </item>
     <item row="4" column="1">
-     <widget class="QCheckBox" name="bExtendedSecurity">
+     <widget class="QLineEdit" name="editPassword">
+      <property name="toolTip">
+       <string>Password to connect to MQTT broker</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QCheckBox" name="chkExtendedSecurity">
+      <property name="toolTip">
+       <string>Enable extended security</string>
+      </property>
       <property name="text">
        <string>Extended security</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Subscribe :</string>
@@ -123,18 +185,22 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>listSubscribe</cstring>
+      </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QListWidget" name="listWidget">
-      <item>
-       <property name="text">
-        <string>vscp/#</string>
-       </property>
-      </item>
+    <item row="7" column="1">
+     <widget class="QListWidget" name="listSubscribe">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+      <property name="toolTip">
+       <string>Subscriptions topics</string>
+      </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="8" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Publish :</string>
@@ -142,67 +208,150 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>listPublish</cstring>
+      </property>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QListWidget" name="btnAddPublish"/>
+    <item row="8" column="1">
+     <widget class="QListWidget" name="listPublish">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+      <property name="toolTip">
+       <string>Publish topics</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="editKeepAlive">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>Port to connect to on MQTT broker </string>
+      </property>
+      <property name="statusTip">
+       <string>Keepalive interval in milliseconds (zero disables)</string>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>Keepalive</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editPassword</cstring>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="btnTest">
+  <widget class="QPushButton" name="btnTestConnection">
    <property name="geometry">
     <rect>
-     <x>540</x>
+     <x>530</x>
      <y>40</y>
      <width>91</width>
      <height>25</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Test connection to MQTT broker´</string>
+   </property>
    <property name="text">
-    <string>Test</string>
+    <string>Test...</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnSSL">
+  <widget class="QPushButton" name="btnTLS">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>20</x>
      <y>400</y>
      <width>91</width>
      <height>25</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Define TLS/SSL settings</string>
+   </property>
    <property name="text">
-    <string>SSL</string>
+    <string>TLS/SSL</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnAdddPublish">
+  <widget class="QPushButton" name="btnAddPublish">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>270</y>
+     <x>530</x>
+     <y>310</y>
      <width>89</width>
      <height>25</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Add Publish</string>
+   </property>
    <property name="text">
-    <string>Add</string>
+    <string>Add...</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnAddSubscription">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>170</y>
+     <x>530</x>
+     <y>230</y>
      <width>89</width>
      <height>25</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>Add Subscription</string>
+   </property>
    <property name="text">
-    <string>Add</string>
+    <string>Add...</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>430</y>
+     <width>611</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>
- <resources/>
+ <tabstops>
+  <tabstop>editDescription</tabstop>
+  <tabstop>editHost</tabstop>
+  <tabstop>editPort</tabstop>
+  <tabstop>editUser</tabstop>
+  <tabstop>editPassword</tabstop>
+  <tabstop>chkExtendedSecurity</tabstop>
+  <tabstop>listSubscribe</tabstop>
+  <tabstop>listPublish</tabstop>
+  <tabstop>btnTLS</tabstop>
+  <tabstop>btnTestConnection</tabstop>
+  <tabstop>btnAddSubscription</tabstop>
+  <tabstop>btnAddPublish</tabstop>
+ </tabstops>
+ <resources>
+  <include location="vscpworks.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

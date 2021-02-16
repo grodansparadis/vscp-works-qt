@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>319</height>
+    <height>394</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -23,7 +23,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>280</y>
+     <y>350</y>
      <width>541</width>
      <height>32</height>
     </rect>
@@ -44,7 +44,7 @@
      <x>10</x>
      <y>10</y>
      <width>561</width>
-     <height>221</height>
+     <height>273</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -55,6 +55,9 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editName</cstring>
       </property>
      </widget>
     </item>
@@ -76,6 +79,9 @@
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
+      <property name="buddy">
+       <cstring>editHost</cstring>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
@@ -88,17 +94,33 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_3">
+    <item row="2" column="0">
+     <widget class="QLabel" name="portLabel">
       <property name="text">
-       <string>Username</string>
+       <string>Port</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <property name="buddy">
+       <cstring>editPort</cstring>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editPort">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>Port on remote host to connect to</string>
+      </property>
+      <property name="text">
+       <string>9598</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
      <widget class="QLineEdit" name="editUser">
       <property name="toolTip">
        <string>Username to connect to remote host</string>
@@ -108,37 +130,7 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Password</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QLineEdit" name="editPassword">
-      <property name="toolTip">
-       <string>Password to connect to remote host</string>
-      </property>
-      <property name="text">
-       <string>secret</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Interface</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="1">
+    <item row="8" column="1">
      <widget class="QCheckBox" name="chkFullLevel2">
       <property name="toolTip">
        <string>Enable full level II communication (no Level I over Level II)</string>
@@ -148,27 +140,117 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="editPort">
-      <property name="toolTip">
-       <string>Port on remote host to connect to</string>
-      </property>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>9598</string>
+       <string>Username</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editUser</cstring>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="portLabel">
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="editPassword">
+      <property name="toolTip">
+       <string>Password to connect to remote host</string>
+      </property>
       <property name="text">
-       <string>Port</string>
+       <string>secret</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Password</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editPassword</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="comboInterface">
+      <property name="toolTip">
+       <string>Interface to use on remote host</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Interface</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>comboInterface</cstring>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QComboBox" name="comboInterface">
+     <widget class="QLineEdit" name="editConnectTimeout">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="toolTip">
-       <string>Interface to use on remote host</string>
+       <string>Connection timeout in seconds</string>
+      </property>
+      <property name="text">
+       <string>15</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Connect timeout</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editConnectTimeout</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="editResponseTimeout">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>Response timeout in milliseconds</string>
+      </property>
+      <property name="text">
+       <string>2000</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Response timeout</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editResponseTimeout</cstring>
       </property>
      </widget>
     </item>
@@ -178,7 +260,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>240</y>
+     <y>300</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -206,7 +288,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>240</y>
+     <y>300</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -222,7 +304,7 @@
    <property name="geometry">
     <rect>
      <x>430</x>
-     <y>240</y>
+     <y>300</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -238,7 +320,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>240</y>
+     <y>300</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -263,6 +345,21 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>editName</tabstop>
+  <tabstop>editHost</tabstop>
+  <tabstop>editPort</tabstop>
+  <tabstop>editUser</tabstop>
+  <tabstop>editPassword</tabstop>
+  <tabstop>comboInterface</tabstop>
+  <tabstop>editConnectTimeout</tabstop>
+  <tabstop>editResponseTimeout</tabstop>
+  <tabstop>chkFullLevel2</tabstop>
+  <tabstop>btnSetFilter</tabstop>
+  <tabstop>btnTestConnection</tabstop>
+  <tabstop>btnTLS</tabstop>
+  <tabstop>btnGetInterfaces</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -273,7 +370,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>248</x>
-     <y>254</y>
+     <y>350</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -289,7 +386,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>316</x>
-     <y>260</y>
+     <y>350</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
