@@ -493,9 +493,11 @@ void CDlgLevel2Filter::selectAllVscpTypeSelections(void)
 void
 CDlgLevel2Filter::transferToVisual(void)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     doPrioritySelections();
     doVscpClassSelections();
     doVscpTypeSelections();
+    QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -519,7 +521,11 @@ CDlgLevel2Filter::transferFromVisual(void)
 void
 CDlgLevel2Filter::onTextChangedPriorityFilter(const QString& text)
 {
-    if (!m_bSkipAutomaticUpdate)  doPrioritySelections();
+    if (!m_bSkipAutomaticUpdate)  {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        doPrioritySelections();
+        QApplication::restoreOverrideCursor();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -529,7 +535,11 @@ CDlgLevel2Filter::onTextChangedPriorityFilter(const QString& text)
 void
 CDlgLevel2Filter::onTextChangedPriorityMask(const QString& text)
 {
-    if (!m_bSkipAutomaticUpdate)  doPrioritySelections();
+    if (!m_bSkipAutomaticUpdate)  {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        doPrioritySelections();
+        QApplication::restoreOverrideCursor();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -539,8 +549,10 @@ CDlgLevel2Filter::onTextChangedPriorityMask(const QString& text)
 void
 CDlgLevel2Filter::onTextChangedVscpClassFilter(const QString& text)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     if (!m_bSkipAutomaticUpdate)  doVscpClassSelections();
     if (!m_bSkipAutomaticUpdate)  doVscpTypeSelections();
+    QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -550,8 +562,10 @@ CDlgLevel2Filter::onTextChangedVscpClassFilter(const QString& text)
 void
 CDlgLevel2Filter::onTextChangedVscpClassMask(const QString& text)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     if (!m_bSkipAutomaticUpdate)  doVscpClassSelections();
     if (!m_bSkipAutomaticUpdate)  doVscpTypeSelections();
+    QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -561,7 +575,9 @@ CDlgLevel2Filter::onTextChangedVscpClassMask(const QString& text)
 void
 CDlgLevel2Filter::onTextChangedVscpTypeFilter(const QString& text)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     if (!m_bSkipAutomaticUpdate)  doVscpTypeSelections();
+    QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -571,7 +587,9 @@ CDlgLevel2Filter::onTextChangedVscpTypeFilter(const QString& text)
 void
 CDlgLevel2Filter::onTextChangedVscpTypeMask(const QString& text)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     if (!m_bSkipAutomaticUpdate)  doVscpTypeSelections();
+    QApplication::restoreOverrideCursor();
 }
 
 
