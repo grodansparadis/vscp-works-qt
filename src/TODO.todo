@@ -1,7 +1,7 @@
 
 LOCAL Dialog
 ============
-TODO:  Add log file types
+TODO  Add log file types
 
 CANAL - dialog
 ==============
@@ -13,21 +13,18 @@ SOCKETCAN - dialog
 
 UDP - dialog
 ============
-
-TODO test connection needs to be implemented
+TODO test connection needs to be implemented.
 
 MULTICAST - dialog
 ==================
-
-TODO test connection needs to be implemented
+TODO test connection needs to be implemented.
 
 GUID database
 =============
-TODO: GUID to name (database, DNS)
-
+TODO GUID to name (database, DNS).
 
 RAW CANAL
 =========
-TODO: Colleect id's and allow to filter omn them
-TODO: Two views (ID frequency, messages)
+TODO Collect id's and allow to filtering on them (SavveyCAN).
+TODO Two views (ID frequency, messages) a'la PEAK.
 

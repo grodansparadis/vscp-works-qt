@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>520</width>
-    <height>281</height>
+    <height>279</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -22,9 +22,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>100</y>
-     <width>511</width>
+     <x>10</x>
+     <y>240</y>
+     <width>501</width>
      <height>32</height>
     </rect>
    </property>
@@ -32,10 +32,10 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -145,25 +145,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>240</y>
-     <width>501</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
-   </property>
-   <property name="centerButtons">
-    <bool>false</bool>
-   </property>
   </widget>
   <widget class="QPushButton" name="btnSetFilter">
    <property name="geometry">

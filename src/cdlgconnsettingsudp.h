@@ -34,6 +34,8 @@
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QJsonObject>
+#include <QList>
+
 
 namespace Ui {
 class CDlgConnSettingsUdp;
@@ -55,21 +57,6 @@ public:
         Set inital focus to description
     */
     void setInitialFocus(void);
-
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
 
     /*!
         Setters/getters for name/description
@@ -120,21 +107,10 @@ public:
 
     /// Test connection button clicked
     void onTestConnection(void);
-    
+
 private:
 
     Ui::CDlgConnSettingsUdp *ui;
-
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
-
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
 
     // JSON configuration object
     QJsonObject m_jsonConfig;
