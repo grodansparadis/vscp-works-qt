@@ -72,6 +72,7 @@ public:
     /// Getters/setters for retain
     bool getRetain(void) { return m_bRetain; };
     void setRetain(bool bretain) { m_bRetain = bretain; };
+    
 private:
 
     /// Quality of service

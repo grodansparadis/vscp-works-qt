@@ -31,7 +31,6 @@
 #include <QSqlTableModel>
 #include <QTableView>
 #include "cfrmsession.h"
-//#include "ui_cfrmsession.h"
 
 #include <stdlib.h>
 

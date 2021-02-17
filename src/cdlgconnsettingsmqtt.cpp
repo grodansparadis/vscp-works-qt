@@ -631,25 +631,28 @@ void CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
 void 
 CDlgConnSettingsMqtt::onTestConnection(void)
 {
-    // QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    // // Initialize host connection
-    // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-    //                                             getPort(),
-    //                                             getUser().toStdString().c_str(),
-    //                                             getPassword().toStdString().c_str() ) ) {
-    //     QApplication::restoreOverrideCursor();                                                        
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip object"));        
-    //     return;                                                
-    // }
+    // Initialize host connection
+    if ( VSCP_ERROR_SUCCESS != m_client.init(getBroker().toStdString().c_str(),
+                                                getPort(),
+                                                "#",
+                                                "test",
+                                                "",
+                                                getUser().toStdString().c_str(),
+                                                getPassword().toStdString().c_str())) {
+        QApplication::restoreOverrideCursor();                                                        
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize MQTT client"));        
+        return;                                                
+    }
 
-    // // Connect to remote host
-    // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
-    //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to connect to remote tcp/ip host"));
-    //     m_client.disconnect();        
-    //     return;
-    // }
+    // Connect to remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
+        QApplication::restoreOverrideCursor();
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to connect to remote MQTT broker"));
+        m_client.disconnect();        
+        return;
+    }
 
     // // Get server version
     // uint8_t major_ver;
@@ -672,19 +675,19 @@ CDlgConnSettingsMqtt::onTestConnection(void)
     //     strVersion = tr("Failed to get version from server");
     // }
 
-    // // Disconnect from remote host
-    // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
-    //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to disconnect from remote tcp/ip host"));        
-    //     return;
-    // }    
+    // Disconnect from remote host
+    if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
+        QApplication::restoreOverrideCursor();
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to disconnect from remote MQTT broker"));        
+        return;
+    }    
 
-    // QApplication::restoreOverrideCursor();
+    QApplication::restoreOverrideCursor();
 
-    // QString msg = tr("Connection test was successful");
-    // msg += "\n";
-    // msg += strVersion;
-    // QMessageBox::information(this, tr("vscpworks+"), msg );
+    QString msg = tr("Connection test was successful");
+    msg += "\n";
+    //msg += strVersion;
+    QMessageBox::information(this, tr("vscpworks+"), msg );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

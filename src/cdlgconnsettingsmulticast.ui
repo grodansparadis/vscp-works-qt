@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>547</width>
-    <height>151</height>
+    <width>520</width>
+    <height>281</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -41,10 +41,10 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>10</y>
      <width>501</width>
-     <height>71</height>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -59,7 +59,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
+     <widget class="QLineEdit" name="editDescription">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -79,16 +79,130 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_multicastIp">
+     <widget class="QLineEdit" name="editIp">
       <property name="toolTip">
-       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+       <string>Remote Multicast client address</string>
       </property>
       <property name="text">
        <string>224.0.23.158</string>
       </property>
      </widget>
     </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Encryption</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Key (hex)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QListWidget" name="listEncryption">
+      <property name="toolTip">
+       <string>Select encryption method</string>
+      </property>
+      <property name="currentRow">
+       <number>-1</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>No encryption</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES128</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES192</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES256</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Encryption selected from type byte</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editKey">
+      <property name="toolTip">
+       <string>Security key</string>
+      </property>
+     </widget>
+    </item>
    </layout>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>240</y>
+     <width>501</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+   </property>
+   <property name="centerButtons">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnSetFilter">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Filter</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>220</y>
+     <width>501</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnTestConnection">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>190</y>
+     <width>131</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test connection</string>
+   </property>
   </widget>
  </widget>
  <resources/>

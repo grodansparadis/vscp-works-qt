@@ -11,6 +11,16 @@ SOCKETCAN - dialog
 ==================
 
 
+UDP - dialog
+============
+
+TODO test connection needs to be implemented
+
+MULTICAST - dialog
+==================
+
+TODO test connection needs to be implemented
+
 GUID database
 =============
 TODO: GUID to name (database, DNS)

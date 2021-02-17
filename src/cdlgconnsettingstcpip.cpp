@@ -536,8 +536,6 @@ CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
                                         m_jsonConfig["guid-mask"].toString().toStdString());
     }
 
-
-
     // Interfaces
     if (m_jsonConfig["interfaces"].isArray()) {
         QJsonArray interfacesArray = m_jsonConfig["interfaces"].toArray();  
@@ -607,7 +605,7 @@ CDlgConnSettingsTcpip::onTestConnection(void)
                                                 getUser().toStdString().c_str(),
                                                 getPassword().toStdString().c_str() ) ) {
         QApplication::restoreOverrideCursor();                                                        
-        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip object"));        
+        QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip client"));        
         return;                                                
     }
 

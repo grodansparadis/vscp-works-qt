@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>547</width>
-    <height>246</height>
+    <height>281</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -22,9 +22,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>200</y>
-     <width>541</width>
+     <x>20</x>
+     <y>240</y>
+     <width>501</width>
      <height>32</height>
     </rect>
    </property>
@@ -32,10 +32,10 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
    <property name="centerButtons">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -59,7 +59,7 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
+     <widget class="QLineEdit" name="editDescription">
       <property name="toolTip">
        <string>Description for  connection used in connection table</string>
       </property>
@@ -79,9 +79,9 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_path">
+     <widget class="QLineEdit" name="editIp">
       <property name="toolTip">
-       <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
+       <string>Remote UDP client address</string>
       </property>
       <property name="text">
        <string/>
@@ -97,8 +97,11 @@
     </item>
     <item row="3" column="1">
      <widget class="QListWidget" name="listEncryption">
+      <property name="toolTip">
+       <string>Select encryption method</string>
+      </property>
       <property name="currentRow">
-       <number>0</number>
+       <number>-1</number>
       </property>
       <item>
        <property name="text">
@@ -120,10 +123,19 @@
         <string>AES256</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Encryption selected from type byte</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="lineEdit"/>
+     <widget class="QLineEdit" name="editKey">
+      <property name="toolTip">
+       <string>Security key</string>
+      </property>
+     </widget>
     </item>
     <item row="4" column="0">
      <widget class="QLabel" name="label_4">
@@ -141,7 +153,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QPushButton" name="btnFilter">
+  <widget class="QPushButton" name="btnSetFilter">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -152,6 +164,32 @@
    </property>
    <property name="text">
     <string>Filter</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>511</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnTestConnection">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>190</y>
+     <width>131</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test connection</string>
    </property>
   </widget>
  </widget>

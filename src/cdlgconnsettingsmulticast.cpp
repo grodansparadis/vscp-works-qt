@@ -41,6 +41,9 @@ CDlgConnSettingsMulticast::CDlgConnSettingsMulticast(QWidget *parent) :
     ui(new Ui::CDlgConnSettingsMulticast)
 {
     ui->setupUi(this);
+
+    setFocus();
+    ui->listEncryption->setCurrentRow(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +61,7 @@ CDlgConnSettingsMulticast::~CDlgConnSettingsMulticast()
 
 void CDlgConnSettingsMulticast::setInitialFocus(void)
 {
-    ui->m_description->setFocus();
+    ui->editDescription->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,7 +100,7 @@ CVscpClient::connType CDlgConnSettingsMulticast::getSelectedType(void) {
 
 QString CDlgConnSettingsMulticast::getName(void)
 {
-    return (ui->m_description->text()); 
+    return (ui->editDescription->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,7 +109,7 @@ QString CDlgConnSettingsMulticast::getName(void)
 
 void CDlgConnSettingsMulticast::setName(const QString& str)
 {
-    ui->m_description->setText(str);
+    ui->editDescription->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

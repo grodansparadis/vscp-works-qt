@@ -58,7 +58,7 @@ CDlgConnSettingsWs1::~CDlgConnSettingsWs1()
 
 void CDlgConnSettingsWs1::setInitialFocus(void)
 {
-    ui->m_description->setFocus();
+    ui->editDescription->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ CVscpClient::connType CDlgConnSettingsWs1::getSelectedType(void) {
 
 QString CDlgConnSettingsWs1::getName(void)
 {
-    return (ui->m_description->text()); 
+    return (ui->editDescription->text()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ QString CDlgConnSettingsWs1::getName(void)
 
 void CDlgConnSettingsWs1::setName(const QString& str)
 {
-    ui->m_description->setText(str);
+    ui->editDescription->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

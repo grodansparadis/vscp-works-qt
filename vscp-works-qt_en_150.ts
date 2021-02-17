@@ -32,77 +32,107 @@
     <name>CDlgConnSettingsCanal</name>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="164"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="171"/>
         <source>CANAL Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingscanal.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="165"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="172"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="67"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="166"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="64"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="174"/>
+        <source>Description for  connection used in connection table</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="71"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="176"/>
         <source>Path to driver :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="80"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="167"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="81"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="178"/>
+        <source>Path to Level I/CANAL driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="88"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="180"/>
         <source>Device configuration string :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="93"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="168"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="98"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="182"/>
+        <source>Semicolon seperated configuration string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="105"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="184"/>
         <source>Device flags :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="103"/>
-        <location filename="src/cdlgconnsettingscanal.ui" line="110"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="169"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="170"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="121"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="186"/>
+        <source>OPtions for CANAL interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="124"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="140"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="188"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="192"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="117"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="171"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="137"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="190"/>
+        <source>Datarate for CANAL interface (usually set in configuration string)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingscanal.ui" line="147"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="193"/>
         <source>Datarate :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="136"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="172"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="166"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="194"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="149"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="173"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="179"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="195"/>
         <source>Set...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="162"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="174"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="192"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="196"/>
         <source>Wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="178"/>
-        <location filename="src/cdlgconnsettingscanal.ui" line="207"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="175"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="177"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="208"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="237"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="197"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="199"/>
         <source>0x00000000</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.ui" line="191"/>
-        <location filename="build/ui_cdlgconnsettingscanal.h" line="176"/>
+        <location filename="src/cdlgconnsettingscanal.ui" line="221"/>
+        <location filename="build/ui_cdlgconnsettingscanal.h" line="198"/>
         <source>Filter wizard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -191,7 +221,7 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgconnsettingslocal.ui" line="87"/>
         <location filename="build/ui_cdlgconnsettingslocal.h" line="94"/>
-        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <source>Path to file containg VSCP events</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -199,82 +229,228 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsMqtt</name>
     <message>
         <location filename="src/cdlgconnsettingsmqtt.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="162"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="228"/>
         <source>MQTT Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="163"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="58"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="229"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmqtt.ui" line="71"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="165"/>
-        <source>Broker URL :</source>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="231"/>
+        <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmqtt.ui" line="81"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="166"/>
-        <source>localhost:1883</source>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="234"/>
+        <source>Broker URL :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="88"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="167"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="236"/>
+        <source>URL for MQTT broker </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="97"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="238"/>
+        <source>localhost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="104"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="239"/>
+        <source>Broker port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="123"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="235"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="241"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="265"/>
+        <source>Port to connect to on MQTT broker </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="126"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="243"/>
+        <source>1883</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="133"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="244"/>
         <source>Username :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="101"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="168"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="146"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="246"/>
+        <source>Username to connect to MQTT broker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="153"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="248"/>
         <source>Password :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="114"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="169"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="166"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="250"/>
+        <source>Password to connect to MQTT broker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="173"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="253"/>
+        <source>Enable extended security</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="176"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="255"/>
         <source>Extended security</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="121"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="170"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="183"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="256"/>
         <source>Subscribe :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="132"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="175"/>
-        <source>vscp/#</source>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="199"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="258"/>
+        <source>Subscriptions topics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="140"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="178"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="206"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="260"/>
         <source>Publish :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="162"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="179"/>
-        <source>Test</source>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="222"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="262"/>
+        <source>Publish topics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="175"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="180"/>
-        <source>SSL</source>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="238"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="268"/>
+        <source>Keepalive interval in milliseconds (zero disables)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="188"/>
-        <location filename="src/cdlgconnsettingsmqtt.ui" line="201"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="181"/>
-        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="182"/>
-        <source>Add</source>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="241"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="270"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="248"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="271"/>
+        <source>Keepalive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="270"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="273"/>
+        <source>Test connection to MQTT broker´</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="273"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="275"/>
+        <source>Test...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="286"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="277"/>
+        <source>Define TLS/SSL settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="289"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="279"/>
+        <source>TLS/SSL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="302"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="281"/>
+        <source>Add Publish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="305"/>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="321"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="283"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="287"/>
+        <source>Add...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.ui" line="318"/>
+        <location filename="build/ui_cdlgconnsettingsmqtt.h" line="285"/>
+        <source>Add Subscription</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="645"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="652"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="681"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="690"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="730"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="758"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="802"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="893"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="645"/>
+        <source>Failed to initialize MQTT client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="652"/>
+        <source>Failed to connect to remote MQTT broker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="681"/>
+        <source>Failed to disconnect from remote MQTT broker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="687"/>
+        <source>Connection test was successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="731"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="759"/>
+        <source>Subscription topic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="803"/>
+        <source>Are you sure the subscription topic should be deleted?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="894"/>
+        <source>Are you sure the publish topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -282,38 +458,86 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsMulticast</name>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="139"/>
         <source>Multicast Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="85"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="140"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="87"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="142"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="90"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="145"/>
         <source>Multicast ip</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="92"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="147"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsmulticast.ui" line="87"/>
-        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="149"/>
         <source>224.0.23.158</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="150"/>
+        <source>Encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="101"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="151"/>
+        <source>Key (hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="112"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="156"/>
+        <source>No encryption</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="117"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="158"/>
+        <source>AES128</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="122"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="160"/>
+        <source>AES192</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="127"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="162"/>
+        <source>AES256</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="166"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="165"/>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsmulticast.ui" line="192"/>
+        <location filename="build/ui_cdlgconnsettingsmulticast.h" line="166"/>
+        <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -481,32 +705,68 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsRest</name>
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsrest.h" line="84"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="126"/>
         <source>REST Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsrest.h" line="85"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="127"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingsrest.h" line="87"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="129"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingsrest.h" line="90"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="132"/>
         <source>url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsrest.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsrest.h" line="92"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="134"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="94"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="137"/>
+        <source>Username :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="104"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="138"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="111"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="139"/>
+        <source>Password :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="121"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="140"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="137"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="141"/>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrest.ui" line="163"/>
+        <location filename="build/ui_cdlgconnsettingsrest.h" line="142"/>
+        <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -514,143 +774,177 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsSocketCan</name>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="168"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="175"/>
         <source>Socketcan Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="169"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="176"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="171"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="178"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="174"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="181"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="84"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="114"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="134"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="176"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="181"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="186"/>
-        <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="183"/>
+        <source>Socketcan device name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="87"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="178"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="185"/>
         <source>vcan0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="179"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="186"/>
         <source>Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="117"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="183"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="104"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="188"/>
+        <source>Receive filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="123"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="191"/>
+        <source>Response timeout in milliseconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="126"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="193"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="124"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="184"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="133"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="194"/>
         <source>Response timeout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="137"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="188"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="149"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="196"/>
+        <source>Socketcan options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="152"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="198"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="144"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="189"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="159"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="199"/>
         <source>Flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="175"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="219"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="247"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="288"/>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="316"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="191"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="199"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="203"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="207"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="211"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="190"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="201"/>
         <source>Define incoming filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="178"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="193"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="193"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="203"/>
         <source>Add filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="191"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="195"/>
-        <source>Test connection to remote host</source>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="206"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="205"/>
+        <source>Test connection to socketcan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="194"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="197"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="209"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="207"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="222"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="201"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="234"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="209"/>
+        <source>Delete incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="237"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="211"/>
         <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="250"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="205"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="262"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="213"/>
+        <source>Edit incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="265"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="215"/>
         <source>Edit filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="291"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="209"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="303"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="217"/>
+        <source>Clone incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="306"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="219"/>
         <source>Clone filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.ui" line="319"/>
-        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="213"/>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="331"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="221"/>
+        <source>Set option flag bits</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.ui" line="334"/>
+        <location filename="build/ui_cdlgconnsettingssocketcan.h" line="223"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="320"/>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="356"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="402"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="483"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="363"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="383"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="417"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="460"/>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="489"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="496"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="512"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="518"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="525"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="321"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="403"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="418"/>
         <source>The filter need a description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -660,17 +954,37 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="481"/>
-        <source>Failed to connect to interface. [%s]</source>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="364"/>
+        <source>A filter must be selected from the list before you can delete it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="384"/>
+        <source>A filter must be selected from the list before you can edit it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="461"/>
+        <source>A filter must be selected from the list before you can set it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="490"/>
+        <source>A filter must be selected from the list before you can clone it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="510"/>
+        <source>Failed to connect to interface. [%1] rv=%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="519"/>
         <source>Successful connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="497"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="526"/>
         <source>Failed to disconnect from interface.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -679,164 +993,255 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsTcpip</name>
     <message>
         <location filename="src/cdlgconnsettingstcpip.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="164"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="228"/>
         <source>Tcp/ip Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingstcpip.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="165"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="229"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="167"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="67"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="231"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="170"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="77"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="234"/>
         <source>Host URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="172"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="90"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="236"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="87"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="174"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="93"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="238"/>
         <source>tcp://localhost</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="175"/>
-        <source>Username</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="104"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="177"/>
-        <source>Username to connect to remote host</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="107"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="179"/>
-        <source>admin</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="114"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="180"/>
-        <source>Password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="124"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="182"/>
-        <source>Password to connect to remote host</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="127"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="184"/>
-        <source>secret</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="134"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="185"/>
-        <source>Interface</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="144"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="187"/>
-        <source>Enable full level II communication (no Level I over Level II)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="147"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="189"/>
-        <source>Full Level II</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="154"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="191"/>
-        <source>Port on remote host to connect to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="157"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="193"/>
-        <source>9598</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="164"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="194"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="100"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="239"/>
         <source>Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="171"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="196"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="116"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="241"/>
+        <source>Port on remote host to connect to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="119"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="243"/>
+        <source>9598</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="126"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="245"/>
+        <source>Username to connect to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="129"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="247"/>
+        <source>admin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="136"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="249"/>
+        <source>Enable full level II communication (no Level I over Level II)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="139"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="251"/>
+        <source>Full Level II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="146"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="252"/>
+        <source>Username</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="159"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="254"/>
+        <source>Password to connect to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="162"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="256"/>
+        <source>secret</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="169"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="257"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="182"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="259"/>
         <source>Interface to use on remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="199"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="199"/>
-        <source>Define incoming filter</source>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="189"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="261"/>
+        <source>Interface</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="202"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="201"/>
-        <source>Set filter</source>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="208"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="263"/>
+        <source>Connection timeout in seconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="215"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="203"/>
-        <source>Test connection to remote host</source>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="211"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="265"/>
+        <source>15</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingstcpip.ui" line="218"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="205"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="266"/>
+        <source>Connect timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="237"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="268"/>
+        <source>Response timeout in milliseconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="240"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="270"/>
+        <source>2000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="247"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="271"/>
+        <source>Response timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="281"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="273"/>
+        <source>Define incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="284"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="275"/>
+        <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="297"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="277"/>
+        <source>Test connection to remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="300"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="279"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="231"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="207"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="313"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="281"/>
         <source>Get available interfaces from remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="234"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="209"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="316"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="283"/>
         <source>Get interfaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="259"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="211"/>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="341"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="285"/>
         <source>SSL/TLS settings for remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.ui" line="262"/>
-        <location filename="build/ui_cdlgconnsettingstcpip.h" line="213"/>
-        <source>SSL</source>
+        <location filename="src/cdlgconnsettingstcpip.ui" line="344"/>
+        <location filename="build/ui_cdlgconnsettingstcpip.h" line="287"/>
+        <source>SSL/TLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="610"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="617"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="646"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="655"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="673"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="682"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="734"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="742"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="747"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="610"/>
+        <source>Failed to initialize tcp/ip client</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="617"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="682"/>
+        <source>Failed to connect to remote tcp/ip host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="640"/>
+        <source>Failed to get version from server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="646"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="742"/>
+        <source>Failed to disconnect from remote tcp/ip host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="652"/>
+        <source>Connection test was successful</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="673"/>
+        <source>Failed to initialize tcp/ip object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="734"/>
+        <source>Failed to get interfaces from server</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="747"/>
+        <source>Interfaces fetched from remote server</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -844,74 +1249,80 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsUdp</name>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="130"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="140"/>
         <source>UDP Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="131"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="141"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="64"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="133"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="143"/>
         <source>Description for  connection used in connection table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="74"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="136"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="146"/>
         <source>IP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="138"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="148"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="141"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="151"/>
         <source>Encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="105"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="146"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="156"/>
         <source>No encryption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="110"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="148"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="158"/>
         <source>AES128</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="115"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="150"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="160"/>
         <source>AES192</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="120"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="152"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="162"/>
         <source>AES256</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="131"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="155"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="165"/>
         <source>Key (hex)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsudp.ui" line="154"/>
-        <location filename="build/ui_cdlgconnsettingsudp.h" line="156"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="166"/>
         <source>Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsudp.ui" line="180"/>
+        <location filename="build/ui_cdlgconnsettingsudp.h" line="167"/>
+        <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -919,61 +1330,61 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsWs1</name>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="121"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="128"/>
         <source>Websocket WS1 Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="122"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="129"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="67"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="123"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="130"/>
         <source>Host URL :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="77"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="124"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="131"/>
         <source>http://localhost:9598/ws1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="125"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="132"/>
         <source>Username :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="126"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="133"/>
         <source>admin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="101"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="127"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="134"/>
         <source>Password :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="111"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="128"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="135"/>
         <source>secret</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="139"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="129"/>
-        <source>Set filter</source>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="136"/>
+        <source>Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws1.ui" line="152"/>
-        <location filename="build/ui_cdlgconnsettingsws1.h" line="130"/>
+        <location filename="build/ui_cdlgconnsettingsws1.h" line="137"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -982,61 +1393,61 @@ and the flag bits for the. the driver.
     <name>CDlgConnSettingsWs2</name>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="20"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="121"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="128"/>
         <source>Websocket WS2 Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="54"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="122"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="129"/>
         <source>Description :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="67"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="123"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="130"/>
         <source>Host URL :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="77"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="124"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="131"/>
         <source>http://localhost:9598/ws2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="84"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="125"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="132"/>
         <source>Username :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="94"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="126"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="133"/>
         <source>admin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="101"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="127"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="134"/>
         <source>Password :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="111"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="128"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="135"/>
         <source>secret</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="139"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="129"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="136"/>
         <source>Set filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgconnsettingsws2.ui" line="152"/>
-        <location filename="build/ui_cdlgconnsettingsws2.h" line="130"/>
+        <location filename="build/ui_cdlgconnsettingsws2.h" line="137"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1203,144 +1614,214 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="95"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="341"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="85"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="342"/>
+        <source>VSCP Event Priorities</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="98"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="344"/>
         <source>VSCP Class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="118"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="342"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="111"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="346"/>
+        <source>VSCP Event Classes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="124"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="348"/>
         <source>VSCP Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="141"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="343"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="137"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="350"/>
+        <source>VSCP Event Types</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="150"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="352"/>
         <source>Node id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="176"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="344"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="163"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="354"/>
+        <source>VSCP Node ID&apos;s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="188"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="356"/>
         <source>Priority Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="189"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="215"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="248"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="274"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="307"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="333"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="366"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="392"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="346"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="351"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="356"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="361"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="366"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="371"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="376"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="381"/>
-        <source>Description for  connection used in connection table</source>
+        <location filename="src/cdlglevel1filterwizard.ui" line="201"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="358"/>
+        <source>VSCP event priority filter (0-7)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="195"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="221"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="254"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="280"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="313"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="339"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="372"/>
-        <location filename="src/cdlglevel1filterwizard.ui" line="398"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="348"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="353"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="358"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="363"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="368"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="373"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="378"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="383"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="207"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="233"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="266"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="292"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="325"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="351"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="384"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="410"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="360"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="365"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="370"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="375"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="380"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="385"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="390"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="395"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="202"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="349"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="214"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="361"/>
         <source>Priority Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="235"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="354"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="227"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="363"/>
+        <source>VSCP priority mask (0-7)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="247"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="366"/>
         <source>VSCP Class Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="261"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="359"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="260"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="368"/>
+        <source>VSCP event class filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="273"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="371"/>
         <source>VSCP Class Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="294"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="364"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="286"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="373"/>
+        <source>VSCP event class mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="306"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="376"/>
         <source>VSCP Type Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="320"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="369"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="319"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="378"/>
+        <source>VSCP event type filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="332"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="381"/>
         <source>VSCP Type Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="353"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="374"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="345"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="383"/>
+        <source>VSCP event type mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="365"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="386"/>
         <source>Node ID Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="379"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="379"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="378"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="388"/>
+        <source>Node id filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="391"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="391"/>
         <source>Node ID Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="428"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="384"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="404"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="393"/>
+        <source>Node id mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="440"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="397"/>
+        <source>Move data from the left side to the right side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="443"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="399"/>
         <source>&gt;&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="441"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="385"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="456"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="401"/>
+        <source>Move data from the right side to the left side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="459"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="403"/>
         <source>&lt;&lt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="487"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="386"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="504"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="410"/>
+        <source>Change numeric base for this dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel1filterwizard.ui" line="508"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="404"/>
         <source>HEX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="492"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="387"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="513"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="405"/>
         <source>DECIMAL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="497"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="388"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="518"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="406"/>
         <source>OCTAL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.ui" line="502"/>
-        <location filename="build/ui_cdlglevel1filterwizard.h" line="389"/>
+        <location filename="src/cdlglevel1filterwizard.ui" line="523"/>
+        <location filename="build/ui_cdlglevel1filterwizard.h" line="407"/>
         <source>BINARY</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1365,57 +1846,164 @@ and the flag bits for the. the driver.
     <name>CDlgLevel2Filter</name>
     <message>
         <location filename="src/cdlglevel2filter.ui" line="20"/>
-        <source>VSCP filter</source>
+        <location filename="build/ui_cdlglevel2filter.h" line="312"/>
+        <source>VSCP Level II Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlglevel2filter.ui" line="54"/>
-        <source>Description</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel2filter.ui" line="64"/>
-        <source>Description for  connection used in connection table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel2filter.ui" line="74"/>
-        <source>VSCP Class</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel2filter.ui" line="87"/>
-        <source>VSCP Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlglevel2filter.ui" line="100"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="313"/>
         <source>Priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.ui" line="113"/>
-        <source>Node id</source>
+        <location filename="src/cdlglevel2filter.ui" line="77"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="314"/>
+        <source>VSCP Class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.ui" line="123"/>
+        <location filename="src/cdlglevel2filter.ui" line="100"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="315"/>
+        <source>VSCP Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="135"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="316"/>
+        <source>Priority filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="148"/>
+        <location filename="src/cdlglevel2filter.ui" line="174"/>
+        <location filename="src/cdlglevel2filter.ui" line="207"/>
+        <location filename="src/cdlglevel2filter.ui" line="233"/>
+        <location filename="src/cdlglevel2filter.ui" line="266"/>
+        <location filename="src/cdlglevel2filter.ui" line="292"/>
+        <location filename="src/cdlglevel2filter.ui" line="325"/>
+        <location filename="src/cdlglevel2filter.ui" line="351"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="318"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="323"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="328"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="333"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="338"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="343"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="348"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="353"/>
         <source>Address to remote host. Prefix with stcp:// for SSL/TLS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.ui" line="126"/>
-        <source>3</source>
+        <location filename="src/cdlglevel2filter.ui" line="154"/>
+        <location filename="src/cdlglevel2filter.ui" line="180"/>
+        <location filename="src/cdlglevel2filter.ui" line="213"/>
+        <location filename="src/cdlglevel2filter.ui" line="239"/>
+        <location filename="src/cdlglevel2filter.ui" line="272"/>
+        <location filename="src/cdlglevel2filter.ui" line="298"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="320"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="325"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="330"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="335"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="340"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="345"/>
+        <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.ui" line="133"/>
-        <source>Invert</source>
+        <location filename="src/cdlglevel2filter.ui" line="161"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="321"/>
+        <source>Priority mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.ui" line="140"/>
-        <source>Hardcoded</source>
+        <location filename="src/cdlglevel2filter.ui" line="194"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="326"/>
+        <source>VSCP Class filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="220"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="331"/>
+        <source>VSCP Class mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="253"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="336"/>
+        <source>VSCP Type filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="279"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="341"/>
+        <source>VSCP Type mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="312"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="346"/>
+        <source>GUID filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="331"/>
+        <location filename="src/cdlglevel2filter.ui" line="357"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="350"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="355"/>
+        <source>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="338"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="351"/>
+        <source>GUID mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="393"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="356"/>
+        <source>&gt;&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="406"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="357"/>
+        <source>&lt;&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="426"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="358"/>
+        <source>HEX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="431"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="359"/>
+        <source>DECIMAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="436"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="360"/>
+        <source>OCTAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.ui" line="441"/>
+        <location filename="build/ui_cdlglevel2filter.h" line="361"/>
+        <source>BINARY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.cpp" line="868"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlglevel2filter.cpp" line="869"/>
+        <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1557,6 +2145,51 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgMqttPublish</name>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="14"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="91"/>
+        <source>MQTT Publish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="45"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="92"/>
+        <source>Topic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="55"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="93"/>
+        <source>qos</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="63"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="94"/>
+        <source>At most once (0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="68"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="95"/>
+        <source>At least once (1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="73"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="96"/>
+        <source>Exactly once (2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmqttpublish.ui" line="81"/>
+        <location filename="build/ui_cdlgmqttpublish.h" line="98"/>
+        <source>Retain</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgNewConnection</name>
     <message>
         <location filename="src/cdlgnewconnection.ui" line="14"/>
@@ -1596,58 +2229,76 @@ and the flag bits for the. the driver.
     <name>CDlgTLS</name>
     <message>
         <location filename="src/cdlgtls.ui" line="14"/>
-        <location filename="build/ui_cdlgtls.h" line="144"/>
-        <source>TLS Communication settings</source>
+        <location filename="build/ui_cdlgtls.h" line="150"/>
+        <source>SSL/TLS Communication settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="45"/>
-        <location filename="build/ui_cdlgtls.h" line="145"/>
+        <location filename="build/ui_cdlgtls.h" line="151"/>
         <source>CaFile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="55"/>
-        <location filename="build/ui_cdlgtls.h" line="146"/>
+        <location filename="build/ui_cdlgtls.h" line="152"/>
         <source>CaPath</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="65"/>
-        <location filename="build/ui_cdlgtls.h" line="147"/>
+        <location filename="build/ui_cdlgtls.h" line="153"/>
         <source>Cert File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="81"/>
-        <location filename="build/ui_cdlgtls.h" line="148"/>
+        <location filename="build/ui_cdlgtls.h" line="154"/>
         <source>Key File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="88"/>
-        <location filename="build/ui_cdlgtls.h" line="149"/>
+        <location filename="build/ui_cdlgtls.h" line="155"/>
         <source>Password key file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="95"/>
-        <location filename="build/ui_cdlgtls.h" line="150"/>
+        <location filename="build/ui_cdlgtls.h" line="156"/>
         <source>SSL/TLS verify peer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgtls.ui" line="111"/>
-        <location filename="src/cdlgtls.ui" line="124"/>
-        <location filename="src/cdlgtls.ui" line="137"/>
-        <location filename="src/cdlgtls.ui" line="150"/>
-        <location filename="src/cdlgtls.ui" line="163"/>
-        <location filename="build/ui_cdlgtls.h" line="151"/>
-        <location filename="build/ui_cdlgtls.h" line="152"/>
-        <location filename="build/ui_cdlgtls.h" line="153"/>
-        <location filename="build/ui_cdlgtls.h" line="154"/>
-        <location filename="build/ui_cdlgtls.h" line="155"/>
+        <location filename="src/cdlgtls.ui" line="102"/>
+        <location filename="build/ui_cdlgtls.h" line="157"/>
+        <source>SSL/TLS Enable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.ui" line="118"/>
+        <location filename="src/cdlgtls.ui" line="131"/>
+        <location filename="src/cdlgtls.ui" line="144"/>
+        <location filename="src/cdlgtls.ui" line="157"/>
+        <location filename="src/cdlgtls.ui" line="170"/>
+        <location filename="build/ui_cdlgtls.h" line="158"/>
+        <location filename="build/ui_cdlgtls.h" line="159"/>
+        <location filename="build/ui_cdlgtls.h" line="160"/>
+        <location filename="build/ui_cdlgtls.h" line="161"/>
+        <location filename="build/ui_cdlgtls.h" line="162"/>
         <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.cpp" line="218"/>
+        <location filename="src/cdlgtls.cpp" line="249"/>
+        <source>Certificates (*.ca *.crt);;All (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgtls.cpp" line="266"/>
+        <location filename="src/cdlgtls.cpp" line="283"/>
+        <source>Key-files (*.key);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2367,43 +3018,43 @@ and the flag bits for the. the driver.
         <location filename="src/mainwindow.cpp" line="272"/>
         <location filename="src/mainwindow.cpp" line="324"/>
         <location filename="src/mainwindow.cpp" line="387"/>
-        <location filename="src/mainwindow.cpp" line="869"/>
-        <location filename="src/mainwindow.cpp" line="1612"/>
+        <location filename="src/mainwindow.cpp" line="883"/>
         <location filename="src/mainwindow.cpp" line="1626"/>
-        <location filename="src/mainwindow.cpp" line="1663"/>
-        <location filename="src/mainwindow.cpp" line="1699"/>
-        <location filename="src/mainwindow.cpp" line="1708"/>
-        <location filename="src/mainwindow.cpp" line="1745"/>
-        <location filename="src/mainwindow.cpp" line="1781"/>
-        <location filename="src/mainwindow.cpp" line="1790"/>
-        <location filename="src/mainwindow.cpp" line="1828"/>
-        <location filename="src/mainwindow.cpp" line="1864"/>
-        <location filename="src/mainwindow.cpp" line="1873"/>
-        <location filename="src/mainwindow.cpp" line="1911"/>
-        <location filename="src/mainwindow.cpp" line="1947"/>
-        <location filename="src/mainwindow.cpp" line="1956"/>
-        <location filename="src/mainwindow.cpp" line="1994"/>
-        <location filename="src/mainwindow.cpp" line="2030"/>
-        <location filename="src/mainwindow.cpp" line="2039"/>
-        <location filename="src/mainwindow.cpp" line="2077"/>
-        <location filename="src/mainwindow.cpp" line="2113"/>
-        <location filename="src/mainwindow.cpp" line="2122"/>
-        <location filename="src/mainwindow.cpp" line="2160"/>
-        <location filename="src/mainwindow.cpp" line="2196"/>
-        <location filename="src/mainwindow.cpp" line="2205"/>
-        <location filename="src/mainwindow.cpp" line="2243"/>
-        <location filename="src/mainwindow.cpp" line="2279"/>
-        <location filename="src/mainwindow.cpp" line="2288"/>
-        <location filename="src/mainwindow.cpp" line="2326"/>
-        <location filename="src/mainwindow.cpp" line="2362"/>
-        <location filename="src/mainwindow.cpp" line="2371"/>
-        <location filename="src/mainwindow.cpp" line="2409"/>
-        <location filename="src/mainwindow.cpp" line="2445"/>
-        <location filename="src/mainwindow.cpp" line="2454"/>
-        <location filename="src/mainwindow.cpp" line="2492"/>
-        <location filename="src/mainwindow.cpp" line="2528"/>
-        <location filename="src/mainwindow.cpp" line="2537"/>
-        <location filename="src/mainwindow.cpp" line="2575"/>
+        <location filename="src/mainwindow.cpp" line="1640"/>
+        <location filename="src/mainwindow.cpp" line="1677"/>
+        <location filename="src/mainwindow.cpp" line="1713"/>
+        <location filename="src/mainwindow.cpp" line="1722"/>
+        <location filename="src/mainwindow.cpp" line="1759"/>
+        <location filename="src/mainwindow.cpp" line="1795"/>
+        <location filename="src/mainwindow.cpp" line="1804"/>
+        <location filename="src/mainwindow.cpp" line="1842"/>
+        <location filename="src/mainwindow.cpp" line="1878"/>
+        <location filename="src/mainwindow.cpp" line="1887"/>
+        <location filename="src/mainwindow.cpp" line="1925"/>
+        <location filename="src/mainwindow.cpp" line="1961"/>
+        <location filename="src/mainwindow.cpp" line="1970"/>
+        <location filename="src/mainwindow.cpp" line="2008"/>
+        <location filename="src/mainwindow.cpp" line="2044"/>
+        <location filename="src/mainwindow.cpp" line="2053"/>
+        <location filename="src/mainwindow.cpp" line="2091"/>
+        <location filename="src/mainwindow.cpp" line="2127"/>
+        <location filename="src/mainwindow.cpp" line="2136"/>
+        <location filename="src/mainwindow.cpp" line="2174"/>
+        <location filename="src/mainwindow.cpp" line="2210"/>
+        <location filename="src/mainwindow.cpp" line="2219"/>
+        <location filename="src/mainwindow.cpp" line="2257"/>
+        <location filename="src/mainwindow.cpp" line="2293"/>
+        <location filename="src/mainwindow.cpp" line="2302"/>
+        <location filename="src/mainwindow.cpp" line="2340"/>
+        <location filename="src/mainwindow.cpp" line="2376"/>
+        <location filename="src/mainwindow.cpp" line="2385"/>
+        <location filename="src/mainwindow.cpp" line="2423"/>
+        <location filename="src/mainwindow.cpp" line="2459"/>
+        <location filename="src/mainwindow.cpp" line="2468"/>
+        <location filename="src/mainwindow.cpp" line="2506"/>
+        <location filename="src/mainwindow.cpp" line="2542"/>
+        <location filename="src/mainwindow.cpp" line="2551"/>
+        <location filename="src/mainwindow.cpp" line="2589"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2423,242 +3074,242 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="865"/>
+        <location filename="src/mainwindow.cpp" line="879"/>
         <source>Are you sure that you want to delete [</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1207"/>
+        <location filename="src/mainwindow.cpp" line="1221"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1214"/>
+        <location filename="src/mainwindow.cpp" line="1228"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1235"/>
+        <location filename="src/mainwindow.cpp" line="1249"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1236"/>
+        <location filename="src/mainwindow.cpp" line="1250"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1239"/>
+        <location filename="src/mainwindow.cpp" line="1253"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1241"/>
+        <location filename="src/mainwindow.cpp" line="1255"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1271"/>
+        <location filename="src/mainwindow.cpp" line="1285"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1273"/>
+        <location filename="src/mainwindow.cpp" line="1287"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1279"/>
+        <location filename="src/mainwindow.cpp" line="1293"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1281"/>
+        <location filename="src/mainwindow.cpp" line="1295"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1287"/>
+        <location filename="src/mainwindow.cpp" line="1301"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1289"/>
+        <location filename="src/mainwindow.cpp" line="1303"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1295"/>
+        <location filename="src/mainwindow.cpp" line="1309"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1297"/>
+        <location filename="src/mainwindow.cpp" line="1311"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1303"/>
+        <location filename="src/mainwindow.cpp" line="1317"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1305"/>
+        <location filename="src/mainwindow.cpp" line="1319"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1313"/>
+        <location filename="src/mainwindow.cpp" line="1327"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1316"/>
+        <location filename="src/mainwindow.cpp" line="1330"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1318"/>
+        <location filename="src/mainwindow.cpp" line="1332"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1319"/>
+        <location filename="src/mainwindow.cpp" line="1333"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1323"/>
+        <location filename="src/mainwindow.cpp" line="1337"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1326"/>
+        <location filename="src/mainwindow.cpp" line="1340"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1333"/>
+        <location filename="src/mainwindow.cpp" line="1347"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1335"/>
+        <location filename="src/mainwindow.cpp" line="1349"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1342"/>
+        <location filename="src/mainwindow.cpp" line="1356"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1344"/>
+        <location filename="src/mainwindow.cpp" line="1358"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1354"/>
+        <location filename="src/mainwindow.cpp" line="1368"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1355"/>
+        <location filename="src/mainwindow.cpp" line="1369"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1356"/>
+        <location filename="src/mainwindow.cpp" line="1370"/>
         <source>Open settins...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1359"/>
+        <location filename="src/mainwindow.cpp" line="1373"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1360"/>
+        <location filename="src/mainwindow.cpp" line="1374"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1361"/>
+        <location filename="src/mainwindow.cpp" line="1375"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1363"/>
+        <location filename="src/mainwindow.cpp" line="1377"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1364"/>
+        <location filename="src/mainwindow.cpp" line="1378"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1380"/>
+        <location filename="src/mainwindow.cpp" line="1394"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1476"/>
+        <location filename="src/mainwindow.cpp" line="1490"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1477"/>
+        <location filename="src/mainwindow.cpp" line="1491"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1492"/>
+        <location filename="src/mainwindow.cpp" line="1506"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1613"/>
-        <location filename="src/mainwindow.cpp" line="1664"/>
-        <location filename="src/mainwindow.cpp" line="1700"/>
-        <location filename="src/mainwindow.cpp" line="1746"/>
-        <location filename="src/mainwindow.cpp" line="1782"/>
-        <location filename="src/mainwindow.cpp" line="1829"/>
-        <location filename="src/mainwindow.cpp" line="1865"/>
-        <location filename="src/mainwindow.cpp" line="1912"/>
-        <location filename="src/mainwindow.cpp" line="1948"/>
-        <location filename="src/mainwindow.cpp" line="1995"/>
-        <location filename="src/mainwindow.cpp" line="2031"/>
-        <location filename="src/mainwindow.cpp" line="2078"/>
-        <location filename="src/mainwindow.cpp" line="2114"/>
-        <location filename="src/mainwindow.cpp" line="2161"/>
-        <location filename="src/mainwindow.cpp" line="2197"/>
-        <location filename="src/mainwindow.cpp" line="2244"/>
-        <location filename="src/mainwindow.cpp" line="2280"/>
-        <location filename="src/mainwindow.cpp" line="2327"/>
-        <location filename="src/mainwindow.cpp" line="2363"/>
-        <location filename="src/mainwindow.cpp" line="2410"/>
-        <location filename="src/mainwindow.cpp" line="2446"/>
-        <location filename="src/mainwindow.cpp" line="2493"/>
-        <location filename="src/mainwindow.cpp" line="2529"/>
-        <location filename="src/mainwindow.cpp" line="2576"/>
+        <location filename="src/mainwindow.cpp" line="1627"/>
+        <location filename="src/mainwindow.cpp" line="1678"/>
+        <location filename="src/mainwindow.cpp" line="1714"/>
+        <location filename="src/mainwindow.cpp" line="1760"/>
+        <location filename="src/mainwindow.cpp" line="1796"/>
+        <location filename="src/mainwindow.cpp" line="1843"/>
+        <location filename="src/mainwindow.cpp" line="1879"/>
+        <location filename="src/mainwindow.cpp" line="1926"/>
+        <location filename="src/mainwindow.cpp" line="1962"/>
+        <location filename="src/mainwindow.cpp" line="2009"/>
+        <location filename="src/mainwindow.cpp" line="2045"/>
+        <location filename="src/mainwindow.cpp" line="2092"/>
+        <location filename="src/mainwindow.cpp" line="2128"/>
+        <location filename="src/mainwindow.cpp" line="2175"/>
+        <location filename="src/mainwindow.cpp" line="2211"/>
+        <location filename="src/mainwindow.cpp" line="2258"/>
+        <location filename="src/mainwindow.cpp" line="2294"/>
+        <location filename="src/mainwindow.cpp" line="2341"/>
+        <location filename="src/mainwindow.cpp" line="2377"/>
+        <location filename="src/mainwindow.cpp" line="2424"/>
+        <location filename="src/mainwindow.cpp" line="2460"/>
+        <location filename="src/mainwindow.cpp" line="2507"/>
+        <location filename="src/mainwindow.cpp" line="2543"/>
+        <location filename="src/mainwindow.cpp" line="2590"/>
         <source>A connection needs a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1627"/>
-        <location filename="src/mainwindow.cpp" line="1709"/>
-        <location filename="src/mainwindow.cpp" line="1791"/>
-        <location filename="src/mainwindow.cpp" line="1874"/>
-        <location filename="src/mainwindow.cpp" line="1957"/>
-        <location filename="src/mainwindow.cpp" line="2040"/>
-        <location filename="src/mainwindow.cpp" line="2123"/>
-        <location filename="src/mainwindow.cpp" line="2206"/>
-        <location filename="src/mainwindow.cpp" line="2289"/>
-        <location filename="src/mainwindow.cpp" line="2372"/>
-        <location filename="src/mainwindow.cpp" line="2455"/>
-        <location filename="src/mainwindow.cpp" line="2538"/>
+        <location filename="src/mainwindow.cpp" line="1641"/>
+        <location filename="src/mainwindow.cpp" line="1723"/>
+        <location filename="src/mainwindow.cpp" line="1805"/>
+        <location filename="src/mainwindow.cpp" line="1888"/>
+        <location filename="src/mainwindow.cpp" line="1971"/>
+        <location filename="src/mainwindow.cpp" line="2054"/>
+        <location filename="src/mainwindow.cpp" line="2137"/>
+        <location filename="src/mainwindow.cpp" line="2220"/>
+        <location filename="src/mainwindow.cpp" line="2303"/>
+        <location filename="src/mainwindow.cpp" line="2386"/>
+        <location filename="src/mainwindow.cpp" line="2469"/>
+        <location filename="src/mainwindow.cpp" line="2552"/>
         <source>Failed to add new connection.</source>
         <translation type="unfinished"></translation>
     </message>

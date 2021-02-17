@@ -168,8 +168,6 @@ public:
     QString getPwKeyFile(void);
     void setPwKeyFile(const QString& str);
 
-
-
     /*!
         Setters/getters for JSON config object
     */
