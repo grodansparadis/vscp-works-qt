@@ -41,6 +41,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QDesktopServices>
+#include <QMenu>
 
 // ----------------------------------------------------------------------------
 
@@ -63,7 +64,9 @@ SubscribeItem::~SubscribeItem()
 
 }
 
+
 // ----------------------------------------------------------------------------
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -89,7 +92,22 @@ PublishItem::~PublishItem()
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// setTopic
+//
+
+void PublishItem::setTopic(const QString& topic) 
+{ 
+    m_topic = topic; 
+    setText( vscp_str_format("%s - qos=%d retain=%s",
+                                topic.toStdString().c_str(),
+                                getQos(), 
+                                getRetain() ? "true" : "false" ).c_str() ); 
+};
+
+
 // ----------------------------------------------------------------------------
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -117,6 +135,18 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget *parent) :
 
     // Help button
     connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgConnSettingsMqtt::onGetHelp );
+
+    // Open pop up menu on right click on VSCP type listbox
+    connect(ui->listSubscribe,
+            &QListWidget::customContextMenuRequested,
+            this,
+            &CDlgConnSettingsMqtt::onSubscribeContextMenu);
+
+    // Open pop up menu on right click on VSCP type listbox
+    connect(ui->listPublish,
+            &QListWidget::customContextMenuRequested,
+            this,
+            &CDlgConnSettingsMqtt::onPublishContextMenu);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -560,11 +590,12 @@ void CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
             QJsonObject item = v.toObject();
             if (!item["topic"].isNull()) {
                 SubscribeItem *pitem = new SubscribeItem(item["topic"].toString());
-                ui->listSubscribe->addItem(pitem);
+                ui->listSubscribe->addItem(pitem);                
             }
 
         }
-        
+
+        ui->listSubscribe->sortItems(); 
     }
 
     // Publish
@@ -579,10 +610,12 @@ void CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
                                                         item["qos"].toInt(),
                                                         item["bretain"].toBool() );
                 ui->listPublish->addItem(pitem);
+                
             }
 
         }
-        
+
+        ui->listPublish->sortItems();
     }
 }
 
@@ -694,10 +727,11 @@ CDlgConnSettingsMqtt::onAddSubscription(void)
                                             tr("vscpworks+"),
                                             tr("Subscription topic:"), 
                                             QLineEdit::Normal,
-                                            "ho ho ho", 
+                                            "", 
                                             &ok);
     if (ok && !topic.isEmpty()) {
         ui->listSubscribe->addItem(new SubscribeItem(topic));
+        ui->listSubscribe->sortItems();
     }    
 }
 
@@ -708,7 +742,25 @@ CDlgConnSettingsMqtt::onAddSubscription(void)
 void 
 CDlgConnSettingsMqtt::onEditSubscription(void)
 {
+    bool ok;
 
+    // Get selected row
+    int row = ui->listSubscribe->currentRow();
+    if (-1 == row) return;
+
+    SubscribeItem *pitem = (SubscribeItem * )ui->listSubscribe->item(row);
+    if (nullptr == pitem) return;
+
+    QString topic = QInputDialog::getText(this, 
+                                            tr("vscpworks+"),
+                                            tr("Subscription topic:"), 
+                                            QLineEdit::Normal,
+                                            pitem->getTopic(), 
+                                            &ok);
+    if (ok && !topic.isEmpty()) {
+        pitem->setTopic(topic);
+        ui->listSubscribe->sortItems();
+    } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -718,7 +770,16 @@ CDlgConnSettingsMqtt::onEditSubscription(void)
 void 
 CDlgConnSettingsMqtt::onCloneSubscription(void)
 {
+    // Get selected row
+    int row = ui->listSubscribe->currentRow();
+    if (-1 == row) return;
 
+    SubscribeItem *pitem = (SubscribeItem * )ui->listSubscribe->item(row);
+    if (nullptr == pitem) return;
+
+    ui->listSubscribe->addItem(new SubscribeItem(pitem->getTopic()));
+
+    ui->listSubscribe->sortItems();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -727,8 +788,22 @@ CDlgConnSettingsMqtt::onCloneSubscription(void)
 
 void 
 CDlgConnSettingsMqtt::onDeleteSubscription(void)
-{
+{   
+    // Get selected row
+    int row = ui->listSubscribe->currentRow();
+    if (-1 == row) return;
 
+    SubscribeItem *pitem = (SubscribeItem * )ui->listSubscribe->item(row);
+    if (nullptr == pitem) return;
+
+    if ( QMessageBox::Yes == QMessageBox::question(this, tr("vscpworks+"), 
+                                                    tr("Are you sure the subscription topic should be deleted?"),
+                                                    QMessageBox::Yes|QMessageBox::No) ) {                
+        
+        ui->listSubscribe->takeItem(row);
+        //ui->listSubscribe->removeItemWidget();
+        delete pitem;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -746,6 +821,7 @@ CDlgConnSettingsMqtt::onAddPublish(void)
         ui->listPublish->addItem(new PublishItem(dlg.getTopic(),
                                                     dlg.getQos(),
                                                     dlg.getRetain()));
+        ui->listPublish->sortItems();                                                    
     }
 }
 
@@ -756,7 +832,25 @@ CDlgConnSettingsMqtt::onAddPublish(void)
 void 
 CDlgConnSettingsMqtt::onEditPublish(void)
 {
+    CDlgMqttPublish dlg(this);
 
+    // Get selected row
+    int row = ui->listPublish->currentRow();
+    if (-1 == row) return;
+
+    PublishItem *pitem = (PublishItem * )ui->listPublish->item(row);
+    if (nullptr == pitem) return;
+
+    dlg.setTopic(pitem->getTopic());
+    dlg.setQos(pitem->getQos());
+    dlg.setRetain(pitem->getRetain());
+
+    if ( QDialog::Accepted == dlg.exec() ) {
+        pitem->setQos(dlg.getQos());
+        pitem->setRetain(dlg.getRetain());
+        pitem->setTopic(dlg.getTopic());        
+        ui->listPublish->sortItems();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -766,7 +860,17 @@ CDlgConnSettingsMqtt::onEditPublish(void)
 void 
 CDlgConnSettingsMqtt::onClonePublish(void)
 {
+    // Get selected row
+    int row = ui->listPublish->currentRow();
+    if (-1 == row) return;
 
+    PublishItem *pitem = (PublishItem * )ui->listPublish->item(row);
+    if (nullptr == pitem) return;
+
+    ui->listPublish->addItem(
+      new PublishItem(pitem->getTopic(), pitem->getQos(), pitem->getRetain()));
+
+    ui->listPublish->sortItems();  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -776,5 +880,50 @@ CDlgConnSettingsMqtt::onClonePublish(void)
 void 
 CDlgConnSettingsMqtt::onDeletePublish(void)
 {
+    // Get selected row
+    int row = ui->listPublish->currentRow();
+    if (-1 == row) return;
 
+    PublishItem *pitem = (PublishItem * )ui->listPublish->item(row);
+    if (nullptr == pitem) return;
+
+    if ( QMessageBox::Yes == QMessageBox::question(this, tr("vscpworks+"), 
+                                                    tr("Are you sure the publish topic should be deleted?"),
+                                                    QMessageBox::Yes|QMessageBox::No) ) {                
+        
+        ui->listPublish->takeItem(row);
+        delete pitem;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSubscribeItemClicked
+//
+
+void CDlgConnSettingsMqtt::onSubscribeContextMenu(const QPoint& pos)
+{
+    QMenu *menu = new QMenu(this);
+
+    menu->addAction(QString("New subscription"), this, SLOT(onAddSubscription()));
+    menu->addAction(QString("Edit subscription"), this, SLOT(onEditSubscription()));
+    menu->addAction(QString("Clone subscription"), this, SLOT(onCloneSubscription()));
+    menu->addAction(QString("delete subscription"), this, SLOT(onDeleteSubscription()));
+
+    menu->popup(ui->listSubscribe->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onPublishItemClicked
+//
+
+void CDlgConnSettingsMqtt::onPublishContextMenu(const QPoint& pos)
+{
+    QMenu *menu = new QMenu(this);
+
+    menu->addAction(QString("New publishing"), this, SLOT(onAddPublish()));
+    menu->addAction(QString("Edit publishing"), this, SLOT(onEditPublish()));
+    menu->addAction(QString("Clone publishing"), this, SLOT(onClonePublish()));
+    menu->addAction(QString("delete publishing"), this, SLOT(onDeletePublish()));
+
+    menu->popup(ui->listPublish->viewport()->mapToGlobal(pos));
 }

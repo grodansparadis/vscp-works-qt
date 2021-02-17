@@ -29,6 +29,7 @@
 #ifndef CDLGCONNSETTINGSMQTT_H
 #define CDLGCONNSETTINGSMQTT_H
 
+#include "vscphelper.h"
 #include "vscp_client_mqtt.h"
 
 #include <QDialog>
@@ -45,7 +46,7 @@ public:
 
     /// Getters/setters for topic
     QString getTopic(void) { return m_topic; };
-    void setTopic(const QString& topic) { m_topic = topic; };
+    void setTopic(const QString& topic) { m_topic = topic; setText(topic); };
 
 private:
     // Subscribe topic
@@ -62,7 +63,7 @@ public:
 
     /// Getters/setters for topic
     QString getTopic(void) { return m_topic; };
-    void setTopic(const QString& topic) { m_topic = topic; };
+    void setTopic(const QString& topic);
 
     /// Getters/setters for qos
     int getQos(void) { return m_qos; };
@@ -253,6 +254,12 @@ public:
 
     /// Get help with settings
     void onGetHelp(void);
+
+    /// Subscription context menu
+    void onSubscribeContextMenu(const QPoint& pos);
+
+    /// Publish context menu
+    void onPublishContextMenu(const QPoint& pos);
 
 private:
 
