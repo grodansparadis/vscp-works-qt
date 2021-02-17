@@ -29,11 +29,16 @@
 #ifndef CDLGCONNSETTINGSRAWMQTT_H
 #define CDLGCONNSETTINGSRAWMQTT_H
 
-#include "vscp_client_rawmqtt.h"
+#include "vscphelper.h"
+#include "vscp_client_mqtt.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QJsonObject>
+
+
+// ----------------------------------------------------------------------------
+
 
 namespace Ui {
 class CDlgConnSettingsRawMqtt;
@@ -57,35 +62,174 @@ public:
     void setInitialFocus(void);
 
     /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
-
-    /*!
         Setters/getters for name/description
     */
     QString getName(void);
     void setName(const QString& str);
 
     /*!
+        Setters/getters for host/broker
+    */
+    QString getBroker(void);
+    void setBroker(const QString& str);
+
+    /*!
+        Setters/getters for port
+    */
+    short getPort(void);
+    void setPort(short port);
+
+    /*!
+        Setters/getters for user
+    */
+    QString getUser(void);
+    void setUser(const QString& str);
+
+    /*!
+        Setters/getters for password
+    */
+    QString getPassword(void);
+    void setPassword(const QString& str);
+    /*!
+        Setters/getters for connection timeout
+    */
+    uint32_t getConnectionTimeout(void);
+    void setConnectionTimeout(uint32_t timeout);
+
+    /*!
+        Setters/getters for response timeout
+    */
+    uint32_t getResponseTimeout(void);
+    void setResponseTimeout(uint32_t timeout);
+
+    /*!
+        Setters/getters for keepalive period
+    */
+    uint32_t getKeepAlive(void);
+    void setKeepAlive(uint32_t timeout);
+
+    /*!
+        Setters/getters for extended security
+    */
+    bool isExtendedSecurityEnabled(void);
+    void enableExtendedSecurity(bool bExtendedSecurity);
+
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isTLSEnabled(void);
+    void enableTLS(bool bTLS);
+
+    /*!
+        Setters/getters for TLS enable
+    */
+    bool isVerifyPeerEnabled(void);
+    void enableVerifyPeer(bool bverifypeer);
+
+    /*!
+        Setters/getters for TLS CA file
+    */
+    QString getCaFile(void);
+    void setCaFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS CA path
+    */
+    QString getCaPath(void);
+    void setCaPath(const QString& str);
+
+    /*!
+        Setters/getters for TLS Cert file
+    */
+    QString getCertFile(void);
+    void setCertFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS key file
+    */
+    QString getKeyFile(void);
+    void setKeyFile(const QString& str);
+
+    /*!
+        Setters/getters for TLS pw key file
+    */
+    QString getPwKeyFile(void);
+    void setPwKeyFile(const QString& str);
+
+    /*!
         Setters/getters for JSON config object
     */
     QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+    void setJson(const QJsonObject* pobj);
+
+ private slots:
+
+    /// Add subscription
+    void onAddSubscription(void);
+
+    /// Edit subscription
+    void onEditSubscription(void);
+
+    /// Clone subscription
+    void onCloneSubscription(void);
+
+    /// Delete subscription
+    void onDeleteSubscription(void);
+
+    /// Add publish
+    void onAddPublish(void);
+
+    /// Edit publish
+    void onEditPublish(void);
+
+    /// Clone publish
+    void onClonePublish(void);
+
+    /// Delete publish
+    void onDeletePublish(void);
+
+    /// Test connection button clicked
+    void onTestConnection(void);
+
+    /// TLS settings button clicked
+    void onTLSSettings(void);
+
+    /// Get help with settings
+    void onGetHelp(void);
+
+    /// Subscription context menu
+    void onSubscribeContextMenu(const QPoint& pos);
+
+    /// Publish context menu
+    void onPublishContextMenu(const QPoint& pos);
 
 private:
 
     Ui::CDlgConnSettingsRawMqtt *ui;
+
+    /// TLS flag (secure transport if enabled)
+    bool m_bTLS;
+
+    /*!
+        the server certificate will be verified and the connection 
+        aborted if the verification fails.
+    */
+    bool m_bVerifyPeer;
+
+    /// CA file
+    QString m_cafile;
+
+    /// Path to CA file (can hold filename also)
+    QString m_capath;
+
+    /// Path to CERT file
+    QString m_certfile;
+
+    /// Key file
+    QString m_keyfile;
+
+    /// Password keyfile
+    QString m_pwkeyfile;
 
     /*! 
         This variable holds the connection type that 
@@ -95,6 +239,9 @@ private:
 
     // JSON configuration object
     QJsonObject m_jsonConfig;
+
+    /// VSCP MQTT client
+    vscpClientMqtt m_client;
 };
 
 

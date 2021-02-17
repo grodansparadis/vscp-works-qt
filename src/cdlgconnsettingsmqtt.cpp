@@ -27,13 +27,12 @@
 //
 
 #include <vscphelper.h>
-
 #include "vscpworks.h"
 
 #include "cdlgconnsettingsmqtt.h"
 #include "ui_cdlgconnsettingsmqtt.h"
-#include "cdlgmqttpublish.h"
 
+#include "cdlgmqttpublish.h"
 #include "cdlgtls.h"
 
 #include <QDebug>

@@ -106,21 +106,6 @@ public:
     void setInitialFocus(void);
 
     /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
-
-    /*!
         Setters/getters for name/description
     */
     QString getName(void);
