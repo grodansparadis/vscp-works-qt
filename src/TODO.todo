@@ -1,4 +1,11 @@
 
+MQTT
+====
+Handel binary, json and xml content
+First character 0x00 and content len > 0  ==>  Binary   (UDP format)
+First non white space character "<" ==> xml
+First non white space character "{" ==> JSON
+
 LOCAL Dialog
 ============
 TODO  Add log file types
@@ -9,6 +16,7 @@ CANAL - dialog
 
 SOCKETCAN - dialog
 ==================
+
 
 
 UDP - dialog

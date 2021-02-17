@@ -82,19 +82,6 @@ public:
     */
     void setInitialFocus(void);
 
-    
-
-    /*!
-        Called when an item in the filter list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when ab item in the filter list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    
 
     /*!
         Called when the test connection is clicked
@@ -133,6 +120,10 @@ public:
     void setResponseTimout(uint32_t timeout);
 
  public slots:
+
+    void onClicked(QListWidgetItem* item);
+
+    void onDoubleClicked(QListWidgetItem* item);
 
     /*!
         Pop up menu for filter list

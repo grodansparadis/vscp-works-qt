@@ -29,11 +29,12 @@
 #ifndef CDLGCONNSETTINGSRAWCAN_H
 #define CDLGCONNSETTINGSRAWCAN_H
 
-#include "vscp_client_rawcan.h"
+#include "vscp_client_socketcan.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QJsonObject>
+#include <QList>
 
 namespace Ui {
 class CDlgConnSettingsRawCan;
@@ -51,25 +52,29 @@ public:
     explicit CDlgConnSettingsRawCan(QWidget *parent = nullptr);
     ~CDlgConnSettingsRawCan();
 
+    typedef struct filterlist {
+        QString m_name;
+        uint32_t m_filter;
+        uint32_t m_mask;
+        bool m_bInvert;
+    } filterlist;
+
     /*!
         Set inital focus to description
     */
     void setInitialFocus(void);
 
     /*!
-        Called when the connection list is clicked
+        Called when the test connection is clicked
     */
-    void onClicked(QListWidgetItem* item);
+    void onTestConnection(void);
 
     /*!
-        Called when the connection list is double clicked
+        Setters/getters for JSON config object
     */
-    void onDoubleClicked(QListWidgetItem* item);
+    QJsonObject getJson(void);
+    void setJson(const QJsonObject *pobj);
 
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
 
     /*!
         Setters/getters for name/description
@@ -78,24 +83,68 @@ public:
     void setName(const QString& str);
 
     /*!
-        Setters/getters for JSON config object
+        Setters/getters for device
     */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+    QString getDevice(void);
+    void setDevice(const QString& str);
+
+    /*!
+        Setters/getters for flags
+    */
+    uint32_t getFlags(void);
+    void setFlags(uint32_t flags);
+
+    /*!
+        Setters/getters for timeout
+    */
+    uint32_t getResponseTimeout(void);
+    void setResponseTimout(uint32_t timeout);
+
+ public slots:
+
+    void onClicked(QListWidgetItem* item);
+
+    void onDoubleClicked(QListWidgetItem* item);
+
+    /*!
+        Pop up menu for filter list
+    */
+    void showContextMenu(const QPoint& pos);
+
+    /*!
+        Called when the add filter button is clicked
+    */
+    void onAddFilter(void);
+
+    /*!
+        Called when the delete filter button is clicked
+    */
+    void onDeleteFilter(void);
+
+    /*!
+        Called when the delete filter button is clicked
+    */
+    void onEditFilter(void);
+
+    /*!
+        Called when the clone filter button is clicked
+    */
+    void onCloneFilter(void);
+
+    /*!
+        Called when the set filter button is clicked
+    */
+    void onSetFlags(void);
 
 private:
 
     Ui::CDlgConnSettingsRawCan *ui;
 
-
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
-
-    // JSON configuration object
+    /// JSON configuration object
     QJsonObject m_jsonConfig;
+
+    /// SocketCan client
+    vscpClientSocketCan m_clientSocketcan;
 };
 
 

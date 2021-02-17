@@ -197,7 +197,7 @@ QJsonObject CDlgConnSettingsRest::getJson(void)
 {
     std::string str;
 
-    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::WS1);
+    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::REST);
     m_jsonConfig["name"] = getName();
     m_jsonConfig["url"] = getUrl();
     m_jsonConfig["user"] = getUser();
