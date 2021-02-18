@@ -227,6 +227,7 @@ add_executable(vscp-works-qt
     vscp/src/common/vscpmd5.c
     vscp/src/common/fastpbkdf2.h
     vscp/src/common/fastpbkdf2.c    
+    install/vscp-works-qt.desktop
     ${TS_FILES}
   ) 
 
@@ -275,14 +276,10 @@ qt5_add_resources(src/vscpworks.qrc)
 
 include(GNUInstallDirs)
 
-
 install(TARGETS vscp-works-qt
-        CONFIGURATIONS Debug
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS vscp-works-qt
-        CONFIGURATIONS Release
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(TARGETS .${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
-        CONFIGURATIONS Debug
-        RESOURCE DESTINATION ${CMAKE_INSTALL_SHARESTATEDIR})        
+install(FILES ${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
+        DESTINATION /usr/local/share/vscpworks/) 
+
+       
