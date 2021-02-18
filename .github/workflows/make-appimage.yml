@@ -15,20 +15,16 @@ jobs:
     runs-on: ubuntu-16.04
 
     steps:
+    # https://github.com/actions/checkout  
     - uses: actions/checkout@v2
 
-    - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/build
-      
     - name: Checkout vscp repo
       uses: actions/checkout@v2
       with:
         repository: grodansparadis/vscp
         path: vscp
         ref: development
-        
+
 # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
     - name: Set QT repo
       run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
@@ -43,7 +39,7 @@ jobs:
       run: Source /opt/qt515/bin/qt515-env.sh
     
     - name: Update before installing packages
-      run: sudo apt-get update        
+      run: sudo apt-get update
 
     - name: Install libmosuitto-dev manually
       run: sudo apt install libmosquitto-dev
@@ -57,16 +53,19 @@ jobs:
     - name: Install gtest manually
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp *.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
 
-      # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
+    # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
     - name: Install qt5 components manually
       run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
+
+    # - name: Get submodules
+    #   run: git pull --recurse-submodules
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
       run: cmake -E make_directory ${{github.workspace}}/build
-      
-    - name: Configure CMake    
+
+    - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
@@ -76,15 +75,29 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
+    - name: Delete retired functionality folder
+      shell: bash
+      run: rm -rf vscp/src/vscp/common/retired_functionality
+
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      #run: ctest -C $BUILD_TYPE
+    -name: get appimage and make executable
+      run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" ; chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+
+    -name: 
+      run: ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/local/share/applications/vscpworks.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
+
+    - name: 
+    # - name: Run Test
+    #   run: /home/runner/work/github_actions_gtest_example/github_actions_gtest_example/build/test/github_actions_gtest_example.test  
+
+    # - name: Test
+    #   working-directory: ${{github.workspace}}/build
+    #   shell: bash
+    #   # Execute tests defined by the CMake configuration.  
+    #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+    #   run: ctest -C $BUILD_TYPE
