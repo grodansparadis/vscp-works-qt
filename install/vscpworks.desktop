@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=vscpworks
+GenericName=VSCP framework multiprotocol tool
+Comment=A collection of tools for VSCP setups
+Exec=vscpworks
+Icon=vscpworks
+Terminal=false
+Categories=Development;Electronics;IDE;
+MimeType=text/x-application;
+Keywords=embedded mqtt socketcan electronics;electronics;canbus;reverse engineering;
