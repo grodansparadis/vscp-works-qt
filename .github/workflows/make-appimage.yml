@@ -42,7 +42,8 @@ jobs:
 
     - name: Set the correct environment for QT 
       if: ${{ always() }}
-      run: source /opt/qt*/bin/qt*-env.sh
+      run: /opt/qt515/bin/qt515-env.sh
+      #run: source /opt/qt*/bin/qt*-env.sh
     
     - name: Update before installing packages
       run: sudo apt-get update
