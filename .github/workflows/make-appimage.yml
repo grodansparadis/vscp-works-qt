@@ -35,8 +35,8 @@ jobs:
     - name: Install QT
       run: sudo apt-get -y install qt515base qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev 
 
-    - name: Set the correct environment  
-      run: source /opt/qt515/bin/qt515-env.sh
+#   - name: Set the correct environment  
+#     run: source /opt/qt515/bin/qt515-env.sh
     
     - name: Update before installing packages
       run: sudo apt-get update
