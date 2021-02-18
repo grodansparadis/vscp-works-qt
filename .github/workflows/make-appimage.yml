@@ -38,7 +38,7 @@ jobs:
 
     # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
     - name: Install qt5 components manually
-      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
+      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev lib64qt5help-devel
 
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
