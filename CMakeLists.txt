@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(vscp-works-qt LANGUAGES CXX C)
 
+set (CMAKE_PREFIX_PATH "E:\\Qt\\Qt5.15.2\\msvc2019_64\\")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -14,7 +15,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-#find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
 find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
 
 find_package(OpenSSL REQUIRED)
