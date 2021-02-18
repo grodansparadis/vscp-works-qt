@@ -674,6 +674,24 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="212"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="208"/>
+        <source>Test connection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="237"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="210"/>
+        <source>Delete incoming filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgconnsettingsrawcan.ui" line="240"/>
+        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="212"/>
+        <source>Delete filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cdlgconnsettingsrawcan.ui" line="265"/>
         <location filename="build/ui_cdlgconnsettingsrawcan.h" line="214"/>
         <source>Edit incoming filter</source>
@@ -707,24 +725,6 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgconnsettingsrawcan.ui" line="337"/>
         <location filename="build/ui_cdlgconnsettingsrawcan.h" line="224"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingsrawcan.ui" line="212"/>
-        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="208"/>
-        <source>Test connection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingsrawcan.ui" line="237"/>
-        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="210"/>
-        <source>Delete incoming filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingsrawcan.ui" line="240"/>
-        <location filename="build/ui_cdlgconnsettingsrawcan.h" line="212"/>
-        <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -812,7 +812,6 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgconnsettingsrawmqtt.ui" line="81"/>
         <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="211"/>
         <source>localhost</source>
-        <oldsource>localhost:1883</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -878,6 +877,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="199"/>
+        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="229"/>
+        <source>Publish :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cdlgconnsettingsrawmqtt.ui" line="225"/>
         <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="230"/>
         <source>Test...</source>
@@ -901,12 +906,6 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgconnsettingsrawmqtt.ui" line="267"/>
         <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="236"/>
         <source>TLS/SSL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.ui" line="199"/>
-        <location filename="build/ui_cdlgconnsettingsrawmqtt.h" line="229"/>
-        <source>Publish :</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2189,18 +2188,18 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1195"/>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1253"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1196"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1254"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1196"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1197"/>
         <source>Nothing selected. Filter and mask will be set to zero.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1254"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1255"/>
         <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2360,12 +2359,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.cpp" line="886"/>
+        <location filename="src/cdlglevel2filter.cpp" line="887"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.cpp" line="887"/>
+        <location filename="src/cdlglevel2filter.cpp" line="888"/>
         <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2556,12 +2555,14 @@ and the flag bits for the. the driver.
     <name>CDlgNewConnection</name>
     <message>
         <location filename="src/cdlgnewconnection.ui" line="14"/>
+        <location filename="build/ui_cdlgnewconnection.h" line="55"/>
         <location filename="build/vscp-works-qt_autogen/include/ui_cdlgnewconnection.h" line="55"/>
         <source>Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgnewconnection.ui" line="55"/>
+        <location filename="build/ui_cdlgnewconnection.h" line="56"/>
         <location filename="build/vscp-works-qt_autogen/include/ui_cdlgnewconnection.h" line="56"/>
         <source>Select connection type</source>
         <translation type="unfinished"></translation>
@@ -3303,6 +3304,70 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="third-party/qcustomplot/examples/axis-tags/mainwindow.ui" line="14"/>
+        <source>Axis Tags Example</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/interactions/mainwindow.ui" line="14"/>
+        <source>QCustomPlot Interaction Example</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/interactions/mainwindow.ui" line="64"/>
+        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Select the axes&lt;/span&gt; to drag and zoom them individually.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Double click labels&lt;/span&gt; or legend items to set user specified strings.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Left click&lt;/span&gt; on graphs or legend to select graphs.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Right click&lt;/span&gt; for a popup menu to add/remove graphs and move the legend&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/plots/mainwindow.ui" line="14"/>
+        <source>QCustomPlot plot examples</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="14"/>
+        <source>QCustomPlot Scrollbar Axis Range Control Demo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="47"/>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="120"/>
+        <source>Insert Plot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="52"/>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="125"/>
+        <source>Save Document...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="14"/>
+        <source>QCustomPlot Document Insertion Demo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="45"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of plot&lt;br/&gt;in document:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="71"/>
+        <source>x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="97"/>
+        <source>Use current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/mainwindow.cpp" line="151"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
@@ -3676,70 +3741,6 @@ and the flag bits for the. the driver.
         <source>Failed to add new connection.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/axis-tags/mainwindow.ui" line="14"/>
-        <source>Axis Tags Example</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/interactions/mainwindow.ui" line="14"/>
-        <source>QCustomPlot Interaction Example</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/interactions/mainwindow.ui" line="64"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Select the axes&lt;/span&gt; to drag and zoom them individually.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Double click labels&lt;/span&gt; or legend items to set user specified strings.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Left click&lt;/span&gt; on graphs or legend to select graphs.&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Right click&lt;/span&gt; for a popup menu to add/remove graphs and move the legend&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/plots/mainwindow.ui" line="14"/>
-        <source>QCustomPlot plot examples</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="14"/>
-        <source>QCustomPlot Scrollbar Axis Range Control Demo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="47"/>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="120"/>
-        <source>Insert Plot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/scrollbar-axis-range-control/mainwindow.ui" line="52"/>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="125"/>
-        <source>Save Document...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="14"/>
-        <source>QCustomPlot Document Insertion Demo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="45"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of plot&lt;br/&gt;in document:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="71"/>
-        <source>x</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="third-party/qcustomplot/examples/text-document-integration/mainwindow.ui" line="97"/>
-        <source>Use current</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -3790,12 +3791,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="76"/>
+        <location filename="src/vscpworks.h" line="78"/>
         <source>https://www.vscp.org/events/version.js</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="77"/>
+        <location filename="src/vscpworks.h" line="79"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>

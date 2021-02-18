@@ -30,6 +30,7 @@
 #define CDLGLEVEL2FILTER_H
 
 #include <vscp.h>
+#include <vscpworks.h>
 
 #include <QDialog>
 #include <QListWidgetItem>

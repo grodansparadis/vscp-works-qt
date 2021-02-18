@@ -58,6 +58,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgconnsettingsrawcan.ui
     src/cdlgconnsettingsrawmqtt.ui
     src/cfrmsession.ui
+    src/cdlgnewconnection.ui
     src/cdlglevel1filter.ui
     src/cdlglevel1filterwizard.ui
     src/cdlglevel2filter.ui
@@ -73,7 +74,8 @@ add_executable(vscp-works-qt
     src/mainwindow.cpp
     src/mainwindow.h
     src/filedownloader.h
-    src/filedownloader.cpp    
+    src/filedownloader.cpp
+    build/ui_cdlgnewconnection.h
     src/cdlgnewconnection.h
     src/cdlgnewconnection.cpp
     build/ui_cdlgmainsettings.h

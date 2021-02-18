@@ -29,6 +29,8 @@
 #ifndef CDLGLEVEL1FILTERWIZARD_H
 #define CDLGLEVEL1FILTERWIZARD_H
 
+#include <vscpworks.h>
+
 #include <QDialog>
 #include <QListWidgetItem>
 
