@@ -85,8 +85,11 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
-    -name: get appimage and make executable
-      run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" ; chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    -name: get linuxdeployqt 
+      run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+      
+    -name: Make linuxdeployqt executable  
+      run: chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
     -name: 
       run: ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/local/share/applications/vscpworks.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
