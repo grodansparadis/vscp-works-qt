@@ -272,3 +272,17 @@ qt5_add_resources(src/vscpworks.qrc)
 
 #message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
 #message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
+
+include(GNUInstallDirs)
+
+
+install(TARGETS vscp-works-qt
+        CONFIGURATIONS Debug
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS vscp-works-qt
+        CONFIGURATIONS Release
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(TARGETS .${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
+        CONFIGURATIONS Debug
+        RESOURCE DESTINATION ${CMAKE_INSTALL_SHARESTATEDIR})        
