@@ -45,14 +45,12 @@ jobs:
 
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
-      #run: source /opt/qt*/bin/qt*-env.sh
     
-    # - name: test error recovery
-    #   if: ${{ always() }}
-    #   run: ls
+    - name: test error recovery
+       if: ${{ always() }}
+       run: ls
 
     - name: Update before installing packages
-      if: ${{ always() }}
       run: sudo apt-get update
 
     - name: Install libmosuitto-dev manually
