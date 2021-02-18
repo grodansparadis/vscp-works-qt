@@ -13,6 +13,7 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-16.04
+    continue-on-error: true
 
     steps:
     # https://github.com/actions/checkout  
@@ -25,7 +26,7 @@ jobs:
         path: vscp
         ref: development
 
-# https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
+    # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
     - name: Set QT repo
       run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
 
@@ -33,10 +34,13 @@ jobs:
       run: sudo apt-get update -qq
     
     - name: Install QT
-      run: sudo apt-get -y install qt515base qt515declarative qt515tools qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev 
+      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev 
 
-   - name: Set the correct environment  
-#     run: source /opt/qt515/bin/qt515-env.sh
+    # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
+    - name: Install qt5 components manually
+      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
+
+    - name: Set the correct environment for QT 
       run: source /opt/qt*/bin/qt*-env.sh
     
     - name: Update before installing packages
@@ -53,13 +57,6 @@ jobs:
 
     - name: Install gtest manually
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo cp *.a /usr/lib && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
-
-    # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    #- name: Install qt5 components manually
-    #  run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
-
-    # - name: Get submodules
-    #   run: git pull --recurse-submodules
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
