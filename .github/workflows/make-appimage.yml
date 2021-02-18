@@ -41,8 +41,8 @@ jobs:
       run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
 
     - name: Set the correct environment for QT 
-      run: source /opt/qt*/bin/qt*-env.sh
       if: ${{ always() }}
+      run: source /opt/qt*/bin/qt*-env.sh
     
     - name: Update before installing packages
       run: sudo apt-get update
