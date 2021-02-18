@@ -35,15 +35,15 @@ jobs:
     
     - name: Install qttools5-dev
       run: sudo apt-get -y install qttools5-dev
-      
+
+    - name: Test tools location
+      run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
+
     - name: Install QT
       run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev     
 
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
-    
-    - name: Update before installing packages
-      run: sudo apt-get update
 
     - name: Install libmosuitto-dev manually
       run: sudo apt install libmosquitto-dev
