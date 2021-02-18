@@ -36,19 +36,23 @@ jobs:
     - name: Install QT
       run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev 
 
+    - name: Install qttools5-dev
+      run: sudo apt-get -y install qttools5-dev
+
     # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    - name: Install qt5 components manually
-      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev lib64qt5help-devel
+    #- name: Install qt5 components manually
+    #  run: sudo apt-get -y install qttools5-dev qt5-default qtdeclarative5-dev
 
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
       #run: source /opt/qt*/bin/qt*-env.sh
     
-    - name: test error recovery
-      if: ${{ always() }}
-      run: ls
+    # - name: test error recovery
+    #   if: ${{ always() }}
+    #   run: ls
 
     - name: Update before installing packages
+      if: ${{ always() }}
       run: sudo apt-get update
 
     - name: Install libmosuitto-dev manually
