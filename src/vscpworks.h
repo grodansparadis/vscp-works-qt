@@ -62,6 +62,8 @@ class FileDownloader;
 */
 class vscpworks : public QApplication {
 
+    Q_OBJECT
+
  public:
     /*!
         Constructor
