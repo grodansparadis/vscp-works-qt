@@ -46,6 +46,7 @@ jobs:
     
     - name: test error recovery
       if: ${{ always() }}
+      run: ls -la *
 
     - name: Update before installing packages
       run: sudo apt-get update
