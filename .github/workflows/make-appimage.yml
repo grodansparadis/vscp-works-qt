@@ -38,7 +38,7 @@ jobs:
 
     # For build
     - name: Install qttools5-dev
-      run: sudo apt-get -y install qttools5-dev-tools libqt5serialport5 libqt5serialport5-dev 
+      run: sudo apt-get -y install qttools5-dev-tools qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
 
     - name: Test tools location
       run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
