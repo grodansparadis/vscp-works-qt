@@ -259,7 +259,8 @@ target_link_libraries(vscp-works-qt PRIVATE
     ${MOSQUITTO_LIBRARIES}
     ${EXPAT_LIBRARIES})
 
-#qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+# https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
 
 #message(" Qt5Widgets_INCLUDE_DIRS =${Qt5Widgets_INCLUDE_DIRS}     ")
