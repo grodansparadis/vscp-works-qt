@@ -86,7 +86,7 @@ jobs:
       run: chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
     - name: Run AppImage creator
-      run: ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/local/share/vscp-works-qt/vscpworks.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
+      run: ./linuxdeployqt-continuous-x86_64.AppImage /usr/local/share/vscp-works-qt/vscpworks.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
     
 
  
