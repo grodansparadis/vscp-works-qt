@@ -27,10 +27,14 @@ jobs:
 
     - name: Set QT repo
       run: sudo add-apt-repository ppa:beineri/opt-qt-5.14.1-xenial -y 
+
+    - name: Update apt  
       run: sudo apt-get update -qq
     
     - name: Install QT
       run: sudo apt-get -y install qt514base qt514connectivity qt514imageformats qt514serialport qt514serialbus qt514doc qt514tools libgl1-mesa-dev 
+
+    - name: Reset environment  
       run: source /opt/qt*/bin/qt*-env.sh
     
     - name: Update before installing packages
