@@ -31,25 +31,17 @@ jobs:
       run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
 
     - name: Update apt  
-      run: sudo apt-get update -qq
+      run: sudo apt-get update
     
-    - name: Install QT
-      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev 
-
     - name: Install qttools5-dev
       run: sudo apt-get -y install qttools5-dev
-
-    # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    #- name: Install qt5 components manually
-    #  run: sudo apt-get -y install qttools5-dev qt5-default qtdeclarative5-dev
+      
+    - name: Install QT
+      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev     
 
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
     
-    # - name: test error recovery
-    #    if: ${{ always() }}
-    #    run: ls
-
     - name: Update before installing packages
       run: sudo apt-get update
 
