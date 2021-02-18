@@ -34,12 +34,12 @@ jobs:
       run: sudo apt-get update
     
     - name: Install QT
-      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev     
+      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools qt515quickcontrols qt515quickcontrols2 libgl1-mesa-dev     
 
     # For build
     - name: Install qttools5-dev
       run: sudo apt-get -y install qttools5-dev-tools libqt5serialport5 libqt5serialport5-dev 
-      
+
     - name: Test tools location
       run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
 
