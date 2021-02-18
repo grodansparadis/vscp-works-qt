@@ -46,9 +46,9 @@ jobs:
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
     
-    - name: test error recovery
-       if: ${{ always() }}
-       run: ls
+    # - name: test error recovery
+    #    if: ${{ always() }}
+    #    run: ls
 
     - name: Update before installing packages
       run: sudo apt-get update
