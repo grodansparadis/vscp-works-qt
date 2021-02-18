@@ -85,7 +85,7 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
-    -name: get linuxdeployqt 
+    - name: get linuxdeployqt 
       run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
       
     -name: Make linuxdeployqt executable  
