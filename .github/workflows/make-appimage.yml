@@ -37,7 +37,7 @@ jobs:
       run: sudo apt-get -y install qttools5-dev
 
     - name: Test tools location
-      run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools/Qt5LinguistToolsConfig.cmake
+      run: ls /usr/lib/x86_64-linux-gnu/cmake/
 
     - name: Install QT
       run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev     
