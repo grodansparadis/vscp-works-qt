@@ -34,7 +34,7 @@ jobs:
       run: sudo apt-get update
     
     - name: Install qttools5-dev
-      run: sudo apt-get -y install qttools5-dev-tools qt5-default qtdeclarative5-dev
+      run: sudo apt-get -y install qttools5-dev-tools qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev 
 
     - name: Install QT
       run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools libgl1-mesa-dev     
