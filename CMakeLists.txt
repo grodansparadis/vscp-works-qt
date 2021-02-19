@@ -62,6 +62,11 @@ endif()
 #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
+if (WIN32)
+  find_package(dlfcn-win32 REQUIRED)
+  set(CMAKE_DL_LIBS dlfcn-win32::dl)
+endif () 
+
 # Set civetweb build flags
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET")
 string(FIND "${OPENSSL_VERSION}" "1.1." SSL_VER_POS)
@@ -290,7 +295,8 @@ target_link_libraries(vscp-works-qt PRIVATE
     OpenSSL::Crypto
     ${OPENSSL_LIBRARIES}
     ${MOSQUITTO_LIBRARIES}
-    ${EXPAT_LIBRARIES})
+    ${EXPAT_LIBRARIES}
+    ${CMAKE_DL_LIBS})
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})

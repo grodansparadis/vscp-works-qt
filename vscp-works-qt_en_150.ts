@@ -2556,14 +2556,12 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgnewconnection.ui" line="14"/>
         <location filename="build/ui_cdlgnewconnection.h" line="55"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgnewconnection.h" line="55"/>
         <source>Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgnewconnection.ui" line="55"/>
         <location filename="build/ui_cdlgnewconnection.h" line="56"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgnewconnection.h" line="56"/>
         <source>Select connection type</source>
         <translation type="unfinished"></translation>
     </message>
