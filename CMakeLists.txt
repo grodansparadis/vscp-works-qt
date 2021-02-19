@@ -63,8 +63,9 @@ endif()
 #SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 if (WIN32)
-  find_package(dlfcn-win32 REQUIRED)
-  set(CMAKE_DL_LIBS dlfcn-win32::dl)
+#  find_package(dlfcn-win32 REQUIRED)
+  set(DLFCN_INCLUDES "E:\\development\\dlfcn-win32\\src\\")
+  set(DLFCN__LIBS "E:\\development\\dlfcn-win32\\src\\")
 endif () 
 
 # Set civetweb build flags
@@ -279,7 +280,8 @@ include_directories( PUBLIC ./src ./build
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
-    ${EXPAT_INCLUDE_DIRS} )
+    ${EXPAT_INCLUDE_DIRS}
+    ${DLFCN_INCLUDES} )
 
 target_link_libraries(vscp-works-qt PRIVATE 
     Qt5::Widgets
@@ -296,7 +298,7 @@ target_link_libraries(vscp-works-qt PRIVATE
     ${OPENSSL_LIBRARIES}
     ${MOSQUITTO_LIBRARIES}
     ${EXPAT_LIBRARIES}
-    ${CMAKE_DL_LIBS})
+    ${DLFCN_LIBS})
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
