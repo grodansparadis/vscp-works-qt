@@ -23,3 +23,4 @@ expat                  - expat 2.2.9  (https://libexpat.github.io/)
 openssl                - Openssl-win64 1.1.1.j (http://slproweb.com/products/Win32OpenSSL.html)
 mqtt                   - paho C and c++ libraries
 dlfcn                  - dlfcn-win32  (https://github.com/dlfcn-win32/dlfcn-win32)
+syslog                 - http://syslog-win32.sourceforge.net/ https://sourceforge.net/projects/syslog-win32/

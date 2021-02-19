@@ -47,8 +47,8 @@ if (WIN32)
 # mosquitto has been replaced with Paho
 # https://github.com/eclipse/paho.mqtt.c
 # https://github.com/eclipse/paho.mqtt.cpp
-set(MOSQUITTO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
-set(MOSQUITTO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
+set(MOSQUITTO_LIBRARIES, "windows\\mosquitto\\lib\\")
+set(MOSQUITTO_INCLUDE_DIR, "windows\\mosquitto\\include\\")
 set(PAHO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
 set(PAHO_CPP_LIBRARIES, "C:\\mqtt\\paho-cpp\\lib\\")
 set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
@@ -270,6 +270,7 @@ add_executable(vscp-works-qt
 
 if (WIN32)
 set(LOCAL_WIN_INCLUDE "windows\\include\\")
+set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
 endif()  
 
 include_directories( PUBLIC ./src ./build
@@ -286,7 +287,8 @@ include_directories( PUBLIC ./src ./build
     ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
-    ${LOCAL_WIN_INCLUDE} )
+    ${LOCAL_WIN_INCLUDE}
+    ${LOCAL_SYSLOG_INCLUDE} )
 
 target_link_libraries(vscp-works-qt PRIVATE 
     Qt5::Widgets
