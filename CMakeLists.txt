@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(vscp-works-qt LANGUAGES CXX C)
 
-set (CMAKE_PREFIX_PATH "E:\\Qt\\Qt5.15.2\\msvc2019_64\\")
+set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -21,12 +21,41 @@ find_package(OpenSSL REQUIRED)
 
 set(TS_FILES vscp-works-qt_en_150.ts)
 
+if (WIN32)
+# Download expat
+# StartVisual studio command prompt
+# go to unpack folder/expat
+# md build
+# cd build
+# cmake ..
+# msbuild /m expat.sln
+# Build libs with expat.sln
+# include path: E:\libexpat-R_2_2_9\expat\lib
+# Lib Path: E:\libexpat-R_2_2_9\expat\build\Release
+# Lib: libexpat.lib
+set(EXPAT_INCLUDE_DIRS "E:\\libexpat-R_2_2_9\\expat\\lib")
+set(EXPAT_LIBRARIES "E:\\libexpat-R_2_2_9\\expat\\build\\Release\\libexpat.lib")
+message("EXPAT_INCLUDE_DIRS = ${EXPAT_INCLUDE_DIRS}")
+message("EXPAT_LIBRARIES = ${EXPAT_LIBRARIES}")
+else()
 include(FindEXPAT)
 find_package(EXPAT REQUIRED)
 include_directories(${EXPAT_INCLUDE_DIRS})
+endif()
 
-include(FindMosquitto REQUIRED)
-find_package(EXPAT REQUIRED)
+if (WIN32)
+# mosquitto has been replaced with Paho
+# https://github.com/eclipse/paho.mqtt.c
+# https://github.com/eclipse/paho.mqtt.cpp
+set(MOSQUITTO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
+set(MOSQUITTO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
+set(PAHO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
+set(PAHO_CPP_LIBRARIES, "C:\\mqtt\\paho-cpp\\lib\\")
+set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
+else()
+#include(FindMosquitto REQUIRED)
+endif()
+#find_package(EXPAT REQUIRED)
 
 # DELETE Check SLL version and set variable accordingly
 #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
