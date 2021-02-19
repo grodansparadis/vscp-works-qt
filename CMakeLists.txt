@@ -268,6 +268,10 @@ add_executable(vscp-works-qt
     ${TS_FILES}
   ) 
 
+if (WIN32)
+set(LOCAL_WIN_INCLUDE "windows\\include\\")
+endif()  
+
 include_directories( PUBLIC ./src ./build
     vscp/src/vscp/common/
     vscp/src/common
@@ -281,7 +285,8 @@ include_directories( PUBLIC ./src ./build
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
-    ${DLFCN_INCLUDES} )
+    ${DLFCN_INCLUDES}
+    ${LOCAL_WIN_INCLUDE} )
 
 target_link_libraries(vscp-works-qt PRIVATE 
     Qt5::Widgets
