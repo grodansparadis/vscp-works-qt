@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(vscp-works-qt LANGUAGES CXX C)
 
+
 set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -53,9 +54,10 @@ set(PAHO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
 set(PAHO_CPP_LIBRARIES, "C:\\mqtt\\paho-cpp\\lib\\")
 set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
 else()
-#include(FindMosquitto REQUIRED)
+include(FindMosquitto REQUIRED)
 endif()
-#find_package(EXPAT REQUIRED)
+
+find_package(EXPAT REQUIRED)
 
 # DELETE Check SLL version and set variable accordingly
 #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
