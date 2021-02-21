@@ -1,6 +1,6 @@
 # vscp-works-qt
 
-## !!!!! WARNING !!!!!!  This IS Work in progress
+## !!!!! WARNING !!!!!!!  This IS Work in progress
 This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far far far from a usable state. There is no documentation. No user setup information and no help.
 
 ## Build
