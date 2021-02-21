@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(vscp-works-qt LANGUAGES CXX C)
+project(vscp-works-qt LANGUAGES CXX)
 
-
+if (WIN32)
 set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
