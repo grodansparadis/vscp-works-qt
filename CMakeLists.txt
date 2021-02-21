@@ -1,6 +1,52 @@
+# CMakeLists.txt
+#
+# Build instructions for VSCP Works.
+#
+# Copyright (c) 2000-2021 Åke Hedman, Grodans Paradis AB
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
 cmake_minimum_required(VERSION 3.5)
 
-project(vscp-works-qt LANGUAGES CXX)
+project(vscp-works-qt LANGUAGES CXX C)
+
+## --- C++11 build flags ---
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Generate position-independent code (-fPIC on UNIX)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# --- System Libraries ---
+
+include(GNUInstallDirs)
+
+if(WIN32)
+	  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set(LIBS_SYSTEM ws2_32)
+elseif(UNIX)
+    set(LIBS_SYSTEM c stdc++)
+endif()
 
 if (WIN32)
 set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
@@ -19,6 +65,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
+
+#set (THREADS_PREFER_PTHREAD_FLAG ON)
+#find_package(Threads REQUIRED)
 
 find_package(OpenSSL REQUIRED)
 
@@ -324,7 +373,14 @@ qt5_add_resources(src/vscpworks.qrc)
 #message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
 #message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
 
-include(GNUInstallDirs)
+#include(GNUInstallDirs)
+if(WIN32)
+	  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set(LIBS_SYSTEM ws2_32)
+elseif(UNIX)
+    set(LIBS_SYSTEM c stdc++)
+endif()
 
 install(TARGETS vscp-works-qt
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
