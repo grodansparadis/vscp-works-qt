@@ -44,7 +44,7 @@ include_directories(${EXPAT_INCLUDE_DIRS})
 endif()
 
 if (WIN32)
-# mosquitto has been replaced with Paho _
+# mosquitto has been replaced with Paho
 # https://github.com/eclipse/paho.mqtt.c
 # https://github.com/eclipse/paho.mqtt.cpp
 set(MOSQUITTO_LIBRARIES, "windows\\mosquitto\\lib\\")
