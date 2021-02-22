@@ -634,9 +634,6 @@ CDlgConnSettingsMqtt::onTestConnection(void)
 
     // Initialize host connection
     if ( VSCP_ERROR_SUCCESS != m_client.init(getBroker().toStdString().c_str(),
-                                                getPort(),
-                                                "#",
-                                                "test",
                                                 "",
                                                 getUser().toStdString().c_str(),
                                                 getPassword().toStdString().c_str())) {

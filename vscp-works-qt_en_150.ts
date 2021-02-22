@@ -406,50 +406,50 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="644"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="651"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="680"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="689"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="729"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="757"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="801"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="892"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="641"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="648"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="677"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="686"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="726"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="754"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="798"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="889"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="644"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="641"/>
         <source>Failed to initialize MQTT client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="651"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="648"/>
         <source>Failed to connect to remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="680"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="677"/>
         <source>Failed to disconnect from remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="686"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="683"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="730"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="758"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="727"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="755"/>
         <source>Subscription topic:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="802"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="799"/>
         <source>Are you sure the subscription topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="893"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="890"/>
         <source>Are you sure the publish topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>

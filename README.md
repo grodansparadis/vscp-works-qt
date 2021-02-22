@@ -21,9 +21,19 @@ You need expat, mosquitto, openssl to build this project
 
 ```bash
   sudo apt install libexpat-dev
-  sudo apt install libmosquitto-dev
   sudo apt install lipopenssl-dev
+  sudo apt install libpaho-mqtt1.3  
 ```
+
+Paho version 1.3 or bigger should be used. Build manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
+
+```bash
+  cmake .. -DPAHO_WITH_SSL=TRUE
+```
+
+to enable needed SSL
+
+
 
 ### Clone this repository in a folder.
 ```bash

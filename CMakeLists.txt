@@ -27,6 +27,10 @@ cmake_minimum_required(VERSION 3.5)
 
 project(vscp-works-qt LANGUAGES CXX C)
 
+
+option(USE_SSL "Use SSL" TRUE)
+
+
 ## --- C++11 build flags ---
 
 set(CMAKE_CXX_STANDARD 11)
@@ -73,6 +77,7 @@ find_package(OpenSSL REQUIRED)
 
 set(TS_FILES vscp-works-qt_en_150.ts)
 
+# Expat C library
 if (WIN32)
 # Download expat
 # StartVisual studio command prompt
@@ -95,6 +100,7 @@ find_package(EXPAT REQUIRED)
 include_directories(${EXPAT_INCLUDE_DIRS})
 endif()
 
+# Mosquitto
 if (WIN32)
 # mosquitto has been replaced with Paho
 # https://github.com/eclipse/paho.mqtt.c
@@ -107,6 +113,10 @@ set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
 else()
 include(FindMosquitto REQUIRED)
 endif()
+
+# Paho c library
+include(FindPAHO REQUIRED)
+
 
 find_package(EXPAT REQUIRED)
 
@@ -326,7 +336,10 @@ set(LOCAL_WIN_INCLUDE "windows\\include\\")
 set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
 endif()  
 
-include_directories( PUBLIC ./src ./build
+include_directories( PUBLIC ./src 
+    ./build
+    third_party/mqtt
+    third_party/mqtt/clib
     vscp/src/vscp/common/
     vscp/src/common
     vscp/src/common/third_party
@@ -338,12 +351,13 @@ include_directories( PUBLIC ./src ./build
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
+    ${PAHO_INCLUDE_DIRS}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
     ${LOCAL_SYSLOG_INCLUDE} )
 
-target_link_libraries(vscp-works-qt PRIVATE 
+target_link_libraries(vscp-works-qt PRIVATE     
     Qt5::Widgets
     Qt5::Core 
     Qt5::Network
@@ -356,6 +370,7 @@ target_link_libraries(vscp-works-qt PRIVATE
     OpenSSL::SSL 
     OpenSSL::Crypto
     ${OPENSSL_LIBRARIES}
+    ${PAHO_LIBRARIES}
     ${MOSQUITTO_LIBRARIES}
     ${EXPAT_LIBRARIES}
     ${DLFCN_LIBS})
@@ -372,6 +387,9 @@ qt5_add_resources(src/vscpworks.qrc)
 
 #message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
 #message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
+
+message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
+
 
 #include(GNUInstallDirs)
 if(WIN32)
