@@ -164,6 +164,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgsocketcanflags.ui
     src/cdlgtls.ui
     src/cdlgmqttpublish.ui
+    src/cdlgmqttsubscribe.ui
 )
 
 add_executable(vscp-works-qt
@@ -207,6 +208,10 @@ add_executable(vscp-works-qt
     build/ui_cdlgmqttpublish.h
     src/cdlgmqttpublish.h
     src/cdlgmqttpublish.cpp
+
+    build/ui_cdlgmqttsubscribe.h
+    src/cdlgmqttsubscribe.h
+    src/cdlgmqttsubscribe.cpp
 
     build/ui_cdlgconnsettingsws1.h
     src/cdlgconnsettingsws1.h

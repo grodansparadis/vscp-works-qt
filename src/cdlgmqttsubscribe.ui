@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMqttPublish</class>
- <widget class="QDialog" name="CDlgMqttPublish">
+ <class>CDlgMqttSubscribe</class>
+ <widget class="QDialog" name="CDlgMqttSubscribe">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>174</height>
+    <width>440</width>
+    <height>129</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MQTT Publish</string>
+   <string>MQTT Subscribe</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>140</y>
-     <width>411</width>
+     <x>10</x>
+     <y>90</y>
+     <width>421</width>
      <height>32</height>
     </rect>
    </property>
@@ -28,19 +28,22 @@
    <property name="standardButtons">
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
+   <property name="centerButtons">
+    <bool>false</bool>
+   </property>
   </widget>
-  <widget class="QWidget" name="formLayoutWidget">
+  <widget class="QWidget" name="formLayoutWidget_2">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>9</y>
+     <y>10</y>
      <width>421</width>
-     <height>121</height>
+     <height>71</height>
     </rect>
    </property>
-   <layout class="QFormLayout" name="formLayout">
+   <layout class="QFormLayout" name="formLayout_2">
     <item row="0" column="0">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Topic</string>
       </property>
@@ -49,53 +52,13 @@
     <item row="0" column="1">
      <widget class="QLineEdit" name="editTopic"/>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>qos</string>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="1">
-     <widget class="QComboBox" name="comboQos">
+     <widget class="QComboBox" name="comboSubscribeFormat">
       <item>
        <property name="text">
-        <string>At most once (0)</string>
+        <string>Auto</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>At least once (1)</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Exactly once (2)</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Format</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-      <property name="buddy">
-       <cstring>editPassword</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QComboBox" name="comboPublishFormat">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
       <item>
        <property name="text">
         <string>JSON format</string>
@@ -118,10 +81,16 @@
       </item>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QCheckBox" name="chkRetain">
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_10">
       <property name="text">
-       <string>Retain</string>
+       <string>Format</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editPassword</cstring>
       </property>
      </widget>
     </item>
@@ -133,7 +102,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgMqttPublish</receiver>
+   <receiver>CDlgMqttSubscribe</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -149,7 +118,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgMqttPublish</receiver>
+   <receiver>CDlgMqttSubscribe</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

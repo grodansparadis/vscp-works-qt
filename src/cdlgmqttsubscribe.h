@@ -1,4 +1,4 @@
-// cdlgmqttpublish.h
+// cdlgmqttsubscribe.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,25 +26,26 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMQTTPUBLISH_H
-#define CDLGMQTTPUBLISH_H
+#ifndef CDLGMQTTSUBSCRIBE_H
+#define CDLGMQTTSUBSCRIBE_H
 
+#include <vscp.h>
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgMqttPublish;
+class CDlgMqttSubscribe;
 }
 
 
-class CDlgMqttPublish : public QDialog
+class CDlgMqttSubscribe : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgMqttPublish(QWidget *parent = nullptr);
-    ~CDlgMqttPublish();
+    explicit CDlgMqttSubscribe(QWidget *parent = nullptr);
+    ~CDlgMqttSubscribe();
     
 public:
 
@@ -52,23 +53,15 @@ public:
     void setTopic(const QString& topic);
     QString getTopic(void);
 
-    /// Setters/getters for qos
-    void setQos(int qos);
-    int getQos(void);
-
-    /// Setters/getters for retain
-    void setRetain(bool bRetain = true);
-    bool getRetain(void);
-
     /// Setters/getters for publish format
     void setFormat(enumMqttMsgFormat format);
     enumMqttMsgFormat getFormat(void);
 
 private:
 
-    Ui::CDlgMqttPublish *ui;
+    Ui::CDlgMqttSubscribe *ui;
 
 };
 
 
-#endif // CDLGMQTTPUBLISH_H
+#endif // CDLGMQTTSUBSCRIBE_H

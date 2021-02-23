@@ -1,4 +1,4 @@
-// cdlgmqttpublish.cpp
+// cdlgmqttsubscribe.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,10 +26,8 @@
 // SOFTWARE.
 //
 
-#include <vscp.h>
-
-#include "cdlgmqttpublish.h"
-#include "ui_cdlgmqttpublish.h"
+#include "cdlgmqttsubscribe.h"
+#include "ui_cdlgmqttsubscribe.h"
 
 #include <QMessageBox>
 
@@ -37,9 +35,9 @@
 // CTor
 //
 
-CDlgMqttPublish::CDlgMqttPublish(QWidget *parent) :
+CDlgMqttSubscribe::CDlgMqttSubscribe(QWidget *parent) :
         QDialog(parent),
-    ui(new Ui::CDlgMqttPublish)
+    ui(new Ui::CDlgMqttSubscribe)
 {
     ui->setupUi(this);
 
@@ -49,7 +47,7 @@ CDlgMqttPublish::CDlgMqttPublish(QWidget *parent) :
 // DTor
 //
 
-CDlgMqttPublish::~CDlgMqttPublish()
+CDlgMqttSubscribe::~CDlgMqttSubscribe()
 {
     delete ui;
 }
@@ -58,7 +56,7 @@ CDlgMqttPublish::~CDlgMqttPublish()
 // setTopic
 //
 
-void CDlgMqttPublish::setTopic(const QString& topic)
+void CDlgMqttSubscribe::setTopic(const QString& topic)
 {
     ui->editTopic->setText(topic);
 }
@@ -67,65 +65,30 @@ void CDlgMqttPublish::setTopic(const QString& topic)
 // getTopic
 //
 
-QString CDlgMqttPublish::getTopic(void)
+QString CDlgMqttSubscribe::getTopic(void)
 {
     return ui->editTopic->text();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// setQos
-//
-
-void CDlgMqttPublish::setQos(int qos)
-{
-    qos &= 0x03;
-    return ui->comboQos->setCurrentIndex(qos);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// getQos
-//
-
-int CDlgMqttPublish::getQos(void)
-{
-    return ui->comboQos->currentIndex();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// setRetain
-//
-
-void CDlgMqttPublish::setRetain(bool bRetain)
-{
-    ui->chkRetain->setChecked(bRetain);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// getRetain
-//
-
-bool CDlgMqttPublish::getRetain(void)
-{
-    return ui->chkRetain->isChecked();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setFormat
 //
 
-void CDlgMqttPublish::setFormat(enumMqttMsgFormat format)
+void CDlgMqttSubscribe::setFormat(enumMqttMsgFormat format)
 {
-    return ui->comboPublishFormat->setCurrentIndex(static_cast<int>(format));
+    return ui->comboSubscribeFormat->setCurrentIndex(static_cast<int>(format));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getFormat
 //
 
-enumMqttMsgFormat CDlgMqttPublish::getFormat(void)
+enumMqttMsgFormat CDlgMqttSubscribe::getFormat(void)
 {
-    return static_cast<enumMqttMsgFormat>(ui->comboPublishFormat->currentIndex());
+    return static_cast<enumMqttMsgFormat>(ui->comboSubscribeFormat->currentIndex());
 }
+
+
 
 
 

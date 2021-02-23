@@ -41,16 +41,26 @@
 class SubscribeItem : public QListWidgetItem {
 
 public:
-    SubscribeItem(const QString &topic);
+    SubscribeItem(const QString &topic, enumMqttMsgFormat fmt=autofmt);
     ~SubscribeItem();
 
     /// Getters/setters for topic
     QString getTopic(void) { return m_topic; };
     void setTopic(const QString& topic) { m_topic = topic; setText(topic); };
 
+    /// Getters/setters for format
+    enumMqttMsgFormat getFormat(void) { return m_format; };
+    int getFormatInt(void) { return static_cast<int>(m_format); };
+    void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
+    void setFormatFromInt(int fmt) { m_format = static_cast<enumMqttMsgFormat>(fmt); };
+
 private:
-    // Subscribe topic
+
+    /// Subscribe topic
     QString m_topic;
+
+    /// Subscribe format
+    enumMqttMsgFormat m_format;
 };
 
 // ----------------------------------------------------------------------------
@@ -58,7 +68,7 @@ private:
 class PublishItem : public QListWidgetItem {
 
 public:
-    PublishItem(const QString &topic, int qos=0, bool bretain=false);
+    PublishItem(const QString &topic, enumMqttMsgFormat fmt=jsonfmt, int qos=0, bool bretain=false);
     ~PublishItem();
 
     /// Getters/setters for topic
@@ -72,6 +82,12 @@ public:
     /// Getters/setters for retain
     bool getRetain(void) { return m_bRetain; };
     void setRetain(bool bretain) { m_bRetain = bretain; };
+
+    /// Getters/setters for format
+    enumMqttMsgFormat getFormat(void) { return m_format; };
+    int getFormatInt(void) { return static_cast<int>(m_format); };
+    void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
+    void setFormatFromInt(int fmt) { m_format = static_cast<enumMqttMsgFormat>(fmt); };
     
 private:
 
@@ -83,6 +99,9 @@ private:
 
     // Publish topic
     QString m_topic;
+
+    // Publishing format
+    enumMqttMsgFormat m_format;
 };
 
 // ----------------------------------------------------------------------------
@@ -120,8 +139,8 @@ public:
     /*!
         Setters/getters for port
     */
-    short getPort(void);
-    void setPort(short port);
+    QString getClientId(void);
+    void setClientId(const QString& clientid);
 
     /*!
         Setters/getters for user
@@ -151,6 +170,12 @@ public:
     */
     uint32_t getKeepAlive(void);
     void setKeepAlive(uint32_t timeout);
+
+    /*!
+        Setters/getters for clean session
+    */
+    bool isCleanSessionEnabled(void);
+    void enableCleanSession(bool bClearSession);
 
     /*!
         Setters/getters for extended security
