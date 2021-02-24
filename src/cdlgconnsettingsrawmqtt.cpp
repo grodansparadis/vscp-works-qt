@@ -53,11 +53,17 @@ CDlgConnSettingsRawMqtt::CDlgConnSettingsRawMqtt(QWidget* parent)
 {
     ui->setupUi(this);
 
+    // Generate unique client id
+    QString clientid;
+    int rVal = rand() % 100000;
+    clientid.setNum(rVal, 16);
+    clientid = "vscpworks-" + clientid;
+
     // Set defaults
     m_bTLS = false;
     // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
     // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
-    setBroker("localhost");
+    setBroker("tcp://localhost:1883");
     setPort(1883);
     setUser("admin");
     setPassword("secret");

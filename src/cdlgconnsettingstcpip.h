@@ -85,12 +85,6 @@ public:
     void setHost(const QString& str);
 
     /*!
-        Setters/getters for port
-    */
-    short getPort(void);
-    void setPort(short port);
-
-    /*!
         Setters/getters for user
     */
     QString getUser(void);
@@ -125,6 +119,12 @@ public:
     */
     bool getFullL2(void);
     void setFullL2(bool l2);
+
+    /*!
+        Setters/getters for Poll
+    */
+    bool getPoll(void);
+    void setPoll(bool bPoll);
 
     /*!
         Setters/getters for TLS enable

@@ -155,7 +155,6 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgconnsettingsrest.ui
     src/cdlgconnsettingsrawcan.ui
     src/cdlgconnsettingsrawmqtt.ui
-    src/cfrmsession.ui
     src/cdlgnewconnection.ui
     src/cdlglevel1filter.ui
     src/cdlglevel1filterwizard.ui
@@ -269,6 +268,10 @@ add_executable(vscp-works-qt
     src/vscpworks.cpp
     src/canalconfigwizard.h
     src/canalconfigwizard.cpp
+
+    src/eventlistmodel.h
+    src/eventlistmodel.cpp
+
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h

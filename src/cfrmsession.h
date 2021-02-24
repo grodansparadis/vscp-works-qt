@@ -28,7 +28,14 @@
 #ifndef CFRMSESSION_H
 #define CFRMSESSION_H
 
+#include <vscp.h>
+
+#include <vscp_client_base.h>
+
+#include <QObject>
 #include <QDialog>
+#include <QTableView>
+#include <QtSql>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -41,6 +48,7 @@ class QMenu;
 class QMenuBar;
 class QPushButton;
 class QTextEdit;
+class QTextBrowser;
 class QToolBar;
 class QVBoxLayout;
 class QAction;
@@ -48,15 +56,69 @@ class QTableWidget;
 class QToolBox;
 QT_END_NAMESPACE
 
-class CFrmSession : public QDialog
+
+
+class CVscpClientCallback : public QObject
 {
     Q_OBJECT
 
 public:
+    CVscpClientCallback() { m_value = 0; }
+
+    int value() const { return m_value; }
+
+public slots:
+    void eventReceived(vscpEvent *pev);
+
+signals:
+    void addRow(vscpEvent *pev, bool bReceive);
+
+private:
+    int m_value;
+};
+
+
+class CFrmSession : public QDialog
+{
+    Q_OBJECT
+
+ public:
     CFrmSession(QWidget *parent);
     ~CFrmSession();
 
-private:
+    // VSCP Class display format
+    // symbolic          - Just symbolic name
+    // numerical_in_base - VSCP class code in selected base
+    // numerical_hex_dex - VSCP class code in hex/dec
+    // Symbolic_hex_dec  - Symbolic name + VSCP class code 
+    enum class classDisplayFormat {symbolic, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+
+    // VSCP Type display format
+    // symbolic          - Just symbolic name
+    // numerical_in_base - VSCP type code in selected base
+    // numerical_hex_dex - VSCP type code in hex/dec
+    // Symbolic_hex_dec  - Symbolic name + VSCP type code 
+    enum class tyypeDisplayFormat {symbolic, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+
+    // VSCP GUID display format
+    // guid              - GUID
+    // symbolic          - Symbolic code if possible
+    // symbolic_guid     - Symbolic + GUID
+    // guid_symbolic     - GUID + symbolic
+    enum class guidDisplayFormat {guid, symbolic, symbolic_guid, guid_symbolic};
+
+    
+
+ public slots:
+
+    /*! 
+        Add an event to the receive list
+        @param ev Event to add
+        @param bReceive Set to true if this is a received event
+    */
+    void addRow(const vscpEvent& ev, bool bReceive);
+
+ private:
     void createMenu();
     void createHorizontalGroupBox();
     void createRxGroupBox();
@@ -70,20 +132,40 @@ private:
 
     enum { NumGridRows = 8, NumButtons = 4 };
 
+    /// The VSCP client type
+    CVscpClient::connType m_vscpConnType;
+
+    /// A pointer to a VSCP Client 
+    CVscpClient *m_vscpClient;
+
+    /// Event database
+    //QSqlDatabase m_evdb;
+    //QSqlTableModel *m_rxmodel;
+
     QMenuBar *m_menuBar;
+    
+    /// Toolbar
     QToolBar *m_toolBar;
+    
     QGroupBox *m_horizontalGroupBox;
     QGroupBox *m_gridGroupBox;
     QGroupBox *m_txGroupBox;
     QGroupBox *m_formGroupBox;
-    QTextEdit *m_infoArea;
-    QTextEdit *m_bigEditor;
+    QTextBrowser *m_infoArea;
+    QTextBrowser *m_bigEditor;
     QLabel *m_labels[NumGridRows];
     QLineEdit *m_lineEdits[NumGridRows];
     QPushButton *m_buttons[NumButtons];
     QDialogButtonBox *m_buttonBox;
 
+    /// Toolbar combo for actiive filter
+    QComboBox *m_filterComboBox;
+
+    /// Toolbar combo for numerical base
+    QComboBox *m_baseComboBox;      
+
     QTableWidget *m_rxTable;
+    //QTableView   *m_rxTable;
     QTableWidget *m_txTable;
 
     QMenu *m_fileMenu;

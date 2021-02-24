@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>394</height>
+    <height>386</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -90,57 +90,11 @@
        <string>Address to remote host. Prefix with stcp:// for SSL/TLS</string>
       </property>
       <property name="text">
-       <string>tcp://localhost</string>
+       <string>tcp://localhost:9598</string>
       </property>
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QLabel" name="portLabel">
-      <property name="text">
-       <string>Port</string>
-      </property>
-      <property name="buddy">
-       <cstring>editPort</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="editPort">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="toolTip">
-       <string>Port on remote host to connect to</string>
-      </property>
-      <property name="text">
-       <string>9598</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="editUser">
-      <property name="toolTip">
-       <string>Username to connect to remote host</string>
-      </property>
-      <property name="text">
-       <string>admin</string>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="1">
-     <widget class="QCheckBox" name="chkFullLevel2">
-      <property name="toolTip">
-       <string>Enable full level II communication (no Level I over Level II)</string>
-      </property>
-      <property name="text">
-       <string>Full Level II</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Username</string>
@@ -153,17 +107,17 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="editPassword">
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editUser">
       <property name="toolTip">
-       <string>Password to connect to remote host</string>
+       <string>Username to connect to remote host</string>
       </property>
       <property name="text">
-       <string>secret</string>
+       <string>admin</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Password</string>
@@ -176,14 +130,17 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QComboBox" name="comboInterface">
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editPassword">
       <property name="toolTip">
-       <string>Interface to use on remote host</string>
+       <string>Password to connect to remote host</string>
+      </property>
+      <property name="text">
+       <string>secret</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Interface</string>
@@ -196,7 +153,27 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="4" column="1">
+     <widget class="QComboBox" name="comboInterface">
+      <property name="toolTip">
+       <string>Interface to use on remote host</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Connect timeout</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editConnectTimeout</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
      <widget class="QLineEdit" name="editConnectTimeout">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -213,19 +190,19 @@
      </widget>
     </item>
     <item row="6" column="0">
-     <widget class="QLabel" name="label_6">
+     <widget class="QLabel" name="label_7">
       <property name="text">
-       <string>Connect timeout</string>
+       <string>Response timeout</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>editConnectTimeout</cstring>
+       <cstring>editResponseTimeout</cstring>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="6" column="1">
      <widget class="QLineEdit" name="editResponseTimeout">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -241,16 +218,23 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="label_7">
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="chkFullLevel2">
+      <property name="toolTip">
+       <string>Enable full level II communication (no Level I over Level II)</string>
+      </property>
       <property name="text">
-       <string>Response timeout</string>
+       <string>Full Level II</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QCheckBox" name="chkPoll">
+      <property name="toolTip">
+       <string>Polling may be needed if remote host is very rewource constraint</string>
       </property>
-      <property name="buddy">
-       <cstring>editResponseTimeout</cstring>
+      <property name="text">
+       <string>Use poll (slow)</string>
       </property>
      </widget>
     </item>
@@ -361,7 +345,6 @@
  <tabstops>
   <tabstop>editName</tabstop>
   <tabstop>editHost</tabstop>
-  <tabstop>editPort</tabstop>
   <tabstop>editUser</tabstop>
   <tabstop>editPassword</tabstop>
   <tabstop>comboInterface</tabstop>

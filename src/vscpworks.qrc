@@ -12,6 +12,9 @@
 
     <file alias="attachment.png">images/png/64x64/attachment.png</file>
 
+    <file alias="connect.png">images/linkconnected_87208.png</file>
+    <file alias="filter.png">images/Filter_icon-icons.com_52097.png</file>
+    
     <file>images/banner.png</file>
     <file>images/background.png</file>
     <file>images/watermark.png</file>

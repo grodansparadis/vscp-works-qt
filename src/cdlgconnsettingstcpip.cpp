@@ -53,8 +53,7 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget *parent) :
     m_bTLS = false;
     setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
     setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
-    setHost("localhost");
-    setPort(VSCP_DEFAULT_TCP_PORT);
+    setHost("tcp://localhost:9598");
     setUser("admin");
     setPassword("secret");
 
@@ -142,28 +141,6 @@ CDlgConnSettingsTcpip::setHost(const QString& str)
     ui->editHost->setText(str);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getPort
-//
-
-short 
-CDlgConnSettingsTcpip::getPort(void)
-{
-    short port = vscp_readStringValue(ui->editPort->text().toStdString());
-    return port; 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// setPort
-//
-
-void 
-CDlgConnSettingsTcpip::setPort(short port)
-{
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    QString str = pworks->decimalToStringInBase(port);
-    ui->editPort->setText(str);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // getUser
@@ -279,6 +256,26 @@ void
 CDlgConnSettingsTcpip::setFullL2(bool l2)
 {
     ui->chkFullLevel2->setChecked(l2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPoll
+//
+
+bool 
+CDlgConnSettingsTcpip::getPoll(void)
+{
+    return ui->chkPoll->isChecked(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPoll
+//
+
+void 
+CDlgConnSettingsTcpip::setPoll(bool bpoll)
+{
+    ui->chkPoll->setChecked(bpoll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -433,11 +430,11 @@ CDlgConnSettingsTcpip::getJson(void)
     m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
     m_jsonConfig["name"] = getName();
     m_jsonConfig["host"] = getHost();
-    m_jsonConfig["port"] = getPort();
     m_jsonConfig["user"] = getUser();
     m_jsonConfig["password"] = getPassword();
     m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
     m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
+    m_jsonConfig["bpoll"] = getPoll();
     m_jsonConfig["bfull-l2"] = getFullL2();
     m_jsonConfig["selected-interface"] = getInterface();
     
@@ -485,11 +482,11 @@ CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
 
     if (!m_jsonConfig["name"].isNull()) setName(m_jsonConfig["name"].toString());
     if (!m_jsonConfig["host"].isNull()) setHost(m_jsonConfig["host"].toString());
-    if (!m_jsonConfig["port"].isNull()) setPort((short)m_jsonConfig["port"].toInt());
     if (!m_jsonConfig["user"].isNull()) setUser(m_jsonConfig["user"].toString());
     if (!m_jsonConfig["password"].isNull()) setPassword(m_jsonConfig["password"].toString());   
     if (!m_jsonConfig["connection-timeout"].isNull()) setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt()); 
     if (!m_jsonConfig["response-timeout"].isNull()) setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());  
+    if (!m_jsonConfig["bpoll"].isNull()) setPoll((short)m_jsonConfig["bpoll"].toBool());
     if (!m_jsonConfig["bfull-l2"].isNull()) setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
     if (!m_jsonConfig["btls"].isNull()) enableTLS((short)m_jsonConfig["btls"].toBool());
 
@@ -601,7 +598,6 @@ CDlgConnSettingsTcpip::onTestConnection(void)
 
     // Initialize host connection
     if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                                getPort(),
                                                 getUser().toStdString().c_str(),
                                                 getPassword().toStdString().c_str() ) ) {
         QApplication::restoreOverrideCursor();                                                        
@@ -664,7 +660,6 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
 
     // Initialize host connection
     if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                                getPort(),
                                                 getUser().toStdString().c_str(),
                                                 getPassword().toStdString().c_str() ) ) {
         QApplication::restoreOverrideCursor();                                                        

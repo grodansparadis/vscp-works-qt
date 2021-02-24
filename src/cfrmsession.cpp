@@ -27,40 +27,35 @@
 //
 // tableWidget->resizeRowsToContents();
 
-#include <QtWidgets>
-#include <QSqlTableModel>
-#include <QTableView>
+
 #include "cfrmsession.h"
 
 #include <stdlib.h>
 
-///////////////////////////////////////////////////////////////////////////////
-// initializeModel
-//
+#include <QtWidgets>
+#include <QSqlTableModel>
+#include <QTableView>
+#include <QtSql>
 
-void initializeModel(QSqlTableModel *model)
-{
-    model->setTable("events");
-    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    model->select();
-
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Dir"));    // Direction
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("Class"));  // VSCP Class
-    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Type"));   // VSCP Type
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("GUID"));   // GUID + node-id
-}
 
 ///////////////////////////////////////////////////////////////////////////////
-// CTor
+// vscp_client_callback
 //
 
-QTableView *createView(QSqlTableModel *model, const QString &title = "VSCP Session")
+
+void CVscpClientCallback::eventReceived(vscpEvent *pev)
 {
-    QTableView *view = new QTableView;
-    view->setModel(model);
-    view->setWindowTitle(title);
-    return view;
+    vscpEvent ev;
+    emit addRow(&ev, true);
 }
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // DTor
@@ -68,7 +63,8 @@ QTableView *createView(QSqlTableModel *model, const QString &title = "VSCP Sessi
 
 CFrmSession::~CFrmSession()
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase( "QSQLITE" );
+    // Close the event database3
+    //m_evdb.close();
     //delete ui;
 }
 
@@ -80,6 +76,33 @@ CFrmSession::CFrmSession(QWidget *parent) :
     QDialog(parent)
 {
     //QVBoxLayout *mainLayout = new QVBoxLayout(this);
+
+    // Set up database
+    // https://wiki.qt.io/How_to_Store_and_Retrieve_Image_on_SQLite
+    // QString uuid = QUuid::createUuid().toString();
+    // uuid.remove('{');
+    // uuid.remove('}');
+    // QString eventdbname = "/tmp/vscpevents-" + uuid + ".sqlite3";
+    // QString dbName(eventdbname);
+    // QFile::remove( dbName ); // delete sqlite file if it exists from a previous run
+    // m_evdb = QSqlDatabase::addDatabase( "QSQLITE" );
+    // m_evdb.setDatabaseName( dbName );
+    // m_evdb.open();
+    // QSqlQuery query = QSqlQuery( m_evdb );
+    // query.exec("CREATE TABLE IF NOT EXISTS events ("
+	//             "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+	//             "head	INTEGER,"
+	//             "class	INTEGER,"
+	//             "type	INTEGER,"
+	//             "sizedata	INTEGER,"
+	//             "data	BLOB,"
+	//             "obid	INTEGER,"
+	//             "guid	BLOB,"
+	//             "datetime	TEXT);");
+
+    // No connection set yet
+    m_vscpConnType = CVscpClient::connType::NONE;
+    m_vscpClient = NULL;
 
     // Initial default size of window
     int nWidth = 1200;
@@ -103,9 +126,22 @@ CFrmSession::CFrmSession(QWidget *parent) :
     //createFormGroupBox();
     createTxGridGroup();    
 
-    m_bigEditor = new QTextEdit;
-    m_bigEditor->setPlainText(tr("<h1>Rubrik</h1>This <b>widget takes</b> up all the remaining space "
-                               "in the top-level layout ddddd."));
+    m_bigEditor = new QTextBrowser;
+    m_bigEditor->setPlainText(tr("<h1>RRRRRubrik</h1>This <b>widget takes</b> up all the remaining space "
+                               "in the top-level layout ddddd."
+                               "<h1>This is a test</h1> <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                                "This is a test <br>"
+                               "This is a test <br>"
+                               "Carpe Diem <br>"
+                               ));
 
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
@@ -127,7 +163,7 @@ CFrmSession::CFrmSession(QWidget *parent) :
     //mainLayout->addWidget(buttonBox);
     
     setLayout(mainLayout);
-    setWindowTitle(tr("Client Session"));
+    setWindowTitle(tr("VSCP Client Session"));        
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,9 +183,10 @@ void CFrmSession::createMenu()
     const QIcon loadIcon = QIcon::fromTheme("window-close");
     const QIcon saveIcon = QIcon::fromTheme("window-close");
 
-    const QIcon connectIcon = QIcon::fromTheme("call-start"); 
+    //const QIcon connectIcon = QIcon::fromTheme("call-start"); 
     const QIcon disconnectIcon = QIcon::fromTheme("call-stop"); 
-    const QIcon filterIcon = QIcon::fromTheme("edit-find");
+    //const QIcon filterIcon = QIcon::fromTheme("edit-find");
+    //const QIcon filterIcon = QIcon::fromTheme("edit-find");
     
     m_loadEventsAct = m_fileMenu->addAction(tr("Load VSCP events from file..."));
     m_saveEventsAct = m_fileMenu->addAction(tr("Save VSCP events to file..."));
@@ -162,16 +199,41 @@ void CFrmSession::createMenu()
     m_menuBar->addMenu(m_fileMenu);
 
     m_toolBar->addSeparator();
+
+    // Numerical base
+    m_baseComboBox = new QComboBox;
+    m_baseComboBox->addItem("Hex");
+    m_baseComboBox->addItem("Decimal");
+    m_baseComboBox->addItem("Octal");
+    m_baseComboBox->addItem("Binary");
+    m_toolBar->addWidget(m_baseComboBox);
+
+    m_toolBar->addSeparator();
     
     // Connect
+    QIcon connectIcon(":/connect.png");
     m_connectAct = m_toolBar->addAction(connectIcon, tr("Connect"), this, &CFrmSession::menu_connect);
     m_connectAct->setStatusTip(tr("Connect/disconnect from remote host"));
     m_connectAct->setCheckable(true);
 
+    m_toolBar->addSeparator();
+
     // Filter
+    QIcon filterIcon(":/filter.png");
     m_setFilterAct = m_toolBar->addAction(filterIcon, tr("Enable filter"), this, &CFrmSession::menu_filter);
     m_setFilterAct->setStatusTip(tr("Enable/disable filter"));
     m_setFilterAct->setCheckable(true);
+
+    m_filterComboBox = new QComboBox;
+    m_filterComboBox->addItem("This is the magnifićant Filter 1");
+    m_filterComboBox->addItem("Filter 2");
+    m_filterComboBox->addItem("Filter 3");
+    m_filterComboBox->addItem("Filter 4");
+    m_toolBar->addWidget(m_filterComboBox);
+
+    m_toolBar->addSeparator();
+
+    
 
     //toolBar->addAction(connectAct);
     
@@ -264,27 +326,107 @@ void CFrmSession::createRxGroupBox()
     //     layout->addWidget(labels[i], i + 1, 0);
     //     layout->addWidget(lineEdits[i], i + 1, 1);
     // }
-    QStringList headers(QString(tr("dir,class,type,guid")).split(','));
+    QStringList headers(QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
     m_rxTable = new QTableWidget;
+    m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     //QTableWidget::horizontalHeader().setStretchLastSection(true);
-    //m_rxTable->setRowCount(4);
+    m_rxTable->setRowCount(4);
     //m_rxTable->setVerticalHeaderLabels(headers);
-    m_rxTable->setColumnCount(4);
-    m_rxTable->setColumnWidth(0, 20);     // Dir
-    m_rxTable->setColumnWidth(1, 200);    // Class
-    m_rxTable->setColumnWidth(2, 200);    // Type
+    m_rxTable->setColumnCount(5);
+    m_rxTable->setColumnWidth(0, 10);       // Dir
+    m_rxTable->setColumnWidth(1, 200);      // Class
+    m_rxTable->setColumnWidth(2, 200);      // Type
+    m_rxTable->setColumnWidth(3, 50);       // Node id
+    m_rxTable->setColumnWidth(4, 50);       // GUID
     m_rxTable->horizontalHeader()->setStretchLastSection(true);
     m_rxTable->setHorizontalHeaderLabels(headers);
-    layout->addWidget(m_rxTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan
 
-    m_infoArea = new QTextEdit;
+    QTableWidgetItem *item = new QTableWidgetItem("ᐊ ᐅ"); // ➤ ➜ ➡ ➤
+    item->setTextAlignment(Qt::AlignHCenter);
+    //item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+    int row  = m_rxTable->rowCount();
+    m_rxTable->insertRow(row);
+    
+    //QTableWidgetItem *item = m_rxTable->item(1, 1);
+    item->setFlags(item->flags() &  ~Qt::ItemIsEditable);
+    item->setForeground(QBrush(QColor(0, 5, 180)));
+
+    m_rxTable->setItem( m_rxTable->rowCount()-1, 0, item);
+    //QTableWidgetItem *item; 
+
+    QTableWidgetItem *icon_item = new QTableWidgetItem;
+    const QIcon loadIcon = QIcon::fromTheme("window-close");
+    icon_item->setIcon(loadIcon);
+    m_rxTable->insertRow(row);
+    m_rxTable->setItem( m_rxTable->rowCount()-1, 1, icon_item);
+
+    // item = m_rxTable->item(row, 1);
+    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+    // item = m_rxTable->item(row, 2);
+    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+    // item = m_rxTable->item(row, 3);
+    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+
+    m_rxTable->setUpdatesEnabled(false);
+    for(int i =0; i<m_rxTable->rowCount(); i++) {               
+        m_rxTable->setRowHeight(i, 10); 
+    }
+    m_rxTable->setUpdatesEnabled(true);
+
+    // <---
+    //QSqlTableModel *
+    // m_rxmodel = new QSqlTableModel;
+    // m_rxmodel->setTable("events");
+    // m_rxmodel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    // m_rxmodel->select();
+    // m_rxmodel->setHeaderData(0, Qt::Horizontal, tr("class"));
+    // m_rxmodel->setHeaderData(1, Qt::Horizontal, tr("type"));
+
+    // m_rxTable->setModel(m_rxmodel);
+    // m_rxTable->hideColumn(0); // don't show the ID
+    
+    layout->addWidget(m_rxTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan 
+
+    m_rxTable->show(); 
+
+    m_infoArea = new QTextBrowser;
     m_infoArea->setAcceptRichText(true);
+    m_infoArea->setOpenLinks(true);
+    m_infoArea->setOpenExternalLinks(true); 
     QColor grey(Qt::red);
     m_infoArea->setTextBackgroundColor(grey);
-    m_infoArea->insertHtml(tr("<h1>Header</h1>This <b>widget takes</b> up all the remaining space "
-                               "in the top-level layout ddddd."));
-    layout->addWidget(m_infoArea, 0, 4, 1, 1);
+    m_infoArea->insertHtml(tr("<h3>VSCP Event</h3>"
+                               "<small><p style=\"color:#993399\">Received event</p></small>"
+                               "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
+                               "<b>Time: </b><span style=\"color:rgb(0, 0, 153);\">2021-09-12T12:10:29</span><br>"
+                               "<b>Timestamp: </b><span style=\" color:rgb(0, 0, 153);\">0x1213140f</span><br>"
+                               "<br>"
+                               "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
+                               "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
+                               "<br>"
+                               "<b>GUID: </b><small><span style=\"color:rgb(0, 102, 0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
+                               
+                               "<br><br>This <b>widget takes</b> up all the remaining space "
+                               "in the top-level layout ddddd."
+                               "in the top-level layout ddddd."
+                               "<h1>This is a test</h1> <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                               "This is a test <br>"
+                                "This is a test <br>"
+                               "This is a test <br>"
+                               "Carpe Diem <br>"
+                               ));
+                              
+    layout->addWidget(m_infoArea, 0, 4, 1, 2); //  fromRow, fromColumn, rowSpan, columnSpan
+    layout->setColumnMinimumWidth(4,350);
 
+    // 30 10
     layout->setColumnStretch(0, 30);
     layout->setColumnStretch(1, 10);
     m_gridGroupBox->setLayout(layout);
@@ -405,7 +547,24 @@ void CFrmSession::menu_connect()
 
 void CFrmSession::menu_filter()
 {
-
+    //insert into events (class,type) values (11,22);
+    //QSqlQuery query = QSqlQuery( m_evdb );
+    //query.exec("insert into events (class,type) values (11,22);");
+    // for (int i = 0; i<9999; i++) {
+    //     QSqlField field_idx("idx", QVariant::Int, "events");
+    //     field_idx.setAutoValue(true);
+    //     QSqlField field_class("class", QVariant::Int, "events");
+    //     field_class.setValue(10);
+    //     QSqlField field_type("type", QVariant::Int, "events");
+    //     field_type.setValue(i);
+    //     QSqlRecord rec;
+    //     rec.append(field_idx);
+    //     rec.append(field_class);
+    //     rec.append(field_type);
+    //     //tableModels->value((*registryMap)[type])
+    //     m_rxmodel->insertRecord(-1, rec);        
+    // }
+    // m_rxmodel->submitAll();
 }
 
 
@@ -418,6 +577,10 @@ void CFrmSession::transmitEvent()
     QMessageBox::about(this, tr("Test"), tr("Carpe Diem") );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// createFormGroupBox
+//
+
 void CFrmSession::createFormGroupBox()
 {
     m_formGroupBox = new QGroupBox(tr("Form layout"));
@@ -427,3 +590,13 @@ void CFrmSession::createFormGroupBox()
     layout->addRow(new QLabel(tr("Line 3:")), new QSpinBox);
     m_formGroupBox->setLayout(layout);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// addRow
+//
+
+void CFrmSession::addRow(const vscpEvent& ev, bool bReceive)
+{
+
+}
+

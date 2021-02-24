@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CFrmSession</class>
- <widget class="QDialog" name="CFrmSession">
+ <class>CFrmRawMqtt</class>
+ <widget class="QDialog" name="CFrmRawMqtt">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,23 +13,23 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QTableView" name="tableView">
+  <widget class="QTreeView" name="treeTopics">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>701</width>
+     <width>611</width>
      <height>431</height>
     </rect>
    </property>
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>9</horstretch>
+     <horstretch>4</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
   </widget>
-  <widget class="QListView" name="listView">
+  <widget class="QListView" name="listPublish">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -39,18 +39,18 @@
     </rect>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="textBrowser">
+  <widget class="QTextBrowser" name="content">
    <property name="geometry">
     <rect>
-     <x>720</x>
+     <x>630</x>
      <y>11</y>
-     <width>251</width>
+     <width>341</width>
      <height>431</height>
     </rect>
    </property>
    <property name="sizePolicy">
     <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-     <horstretch>0</horstretch>
+     <horstretch>2</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
