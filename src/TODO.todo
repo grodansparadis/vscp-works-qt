@@ -70,3 +70,11 @@ TODO Time between two events (Select one, hold pointer over other)
 TODO config: Connect automatically on open or manually.
 TODO config: Clear ask to delete events or not.
 TODO Define your own data rendering (Javascript/mustasch)
+
+GUID Known nodes Dialog
+=======================
+TODO Dialog with add/edit/delete of known GUID's.   CDlgGuid.ui
+
+Dialog log viewer
+=================
+TODO Dialog with log viewing/filtering   CDlgLog

@@ -965,6 +965,7 @@ void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
                 break;
 
             case static_cast<int>(CVscpClient::connType::TCPIP):
+
                 newSession();
                 break;
 
@@ -1009,7 +1010,6 @@ void MainWindow::onDoubleClicked(QTreeWidgetItem* item)
                 break;
                                                     
             default:
-                newSession();
                 break;    
         }
     }
@@ -1638,8 +1638,24 @@ void MainWindow::commitData(QSessionManager &manager)
 
 void MainWindow::newSession()
 {
-    CFrmSession *w = new CFrmSession(this);
-    w->show();
+    QList<QTreeWidgetItem *> itemList;
+    itemList = m_connTreeTable->selectedItems();
+    
+    foreach(QTreeWidgetItem *item, itemList) {
+
+        // Not intereste din top level items
+        if (NULL != item->parent()) {
+
+            // Get item
+            treeWidgetItemConn *itemConn = (treeWidgetItemConn *)item;
+
+            // Get the connection object  
+            QJsonObject *pconn = itemConn->getJson();
+
+            CFrmSession *w = new CFrmSession(this, pconn);
+            w->show();
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

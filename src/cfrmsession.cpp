@@ -27,6 +27,10 @@
 //
 // tableWidget->resizeRowsToContents();
 
+#include <vscp.h>
+#include <vscpworks.h>
+
+#include <vscp_client_tcp.h>
 
 #include "cfrmsession.h"
 
@@ -49,60 +53,110 @@ void CVscpClientCallback::eventReceived(vscpEvent *pev)
     emit addRow(&ev, true);
 }
 
+
 // ----------------------------------------------------------------------------
 
 
 
 
 
-
-
-///////////////////////////////////////////////////////////////////////////////
-// DTor
-//
-
-CFrmSession::~CFrmSession()
-{
-    // Close the event database3
-    //m_evdb.close();
-    //delete ui;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // CFrmSession
 //
 
-CFrmSession::CFrmSession(QWidget *parent) :
+CFrmSession::CFrmSession(QWidget *parent, QJsonObject *pconn) :
     QDialog(parent)
 {
-    //QVBoxLayout *mainLayout = new QVBoxLayout(this);
-
-    // Set up database
-    // https://wiki.qt.io/How_to_Store_and_Retrieve_Image_on_SQLite
-    // QString uuid = QUuid::createUuid().toString();
-    // uuid.remove('{');
-    // uuid.remove('}');
-    // QString eventdbname = "/tmp/vscpevents-" + uuid + ".sqlite3";
-    // QString dbName(eventdbname);
-    // QFile::remove( dbName ); // delete sqlite file if it exists from a previous run
-    // m_evdb = QSqlDatabase::addDatabase( "QSQLITE" );
-    // m_evdb.setDatabaseName( dbName );
-    // m_evdb.open();
-    // QSqlQuery query = QSqlQuery( m_evdb );
-    // query.exec("CREATE TABLE IF NOT EXISTS events ("
-	//             "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-	//             "head	INTEGER,"
-	//             "class	INTEGER,"
-	//             "type	INTEGER,"
-	//             "sizedata	INTEGER,"
-	//             "data	BLOB,"
-	//             "obid	INTEGER,"
-	//             "guid	BLOB,"
-	//             "datetime	TEXT);");
-
     // No connection set yet
     m_vscpConnType = CVscpClient::connType::NONE;
     m_vscpClient = NULL;
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+    pworks->log(pworks->LOG_LEVEL_DEBUG, "Session module opended");
+
+    if (nullptr == pconn) {
+        pworks->log(pworks->LOG_LEVEL_ERROR, "pconn is null");
+        QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Can't open session window - configuration data is missing"),
+                              QMessageBox::Ok );
+        return;
+    }
+
+    // Save session configuration 
+    m_connObject = *pconn;
+
+    // Must have a type
+    if (m_connObject["type"].isNull()) {
+        pworks->log(pworks->LOG_LEVEL_ERROR, "type is not define in JSON data");
+        QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Can't open session window - The connection type is unknown"),
+                              QMessageBox::Ok );
+        return;
+    }
+
+    m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+
+    switch (m_vscpConnType) {
+
+        case CVscpClient::connType::NONE:
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            break;
+
+        case CVscpClient::connType::TCPIP: 
+            m_vscpClient = new vscpClientTcp();
+            break;
+
+        case CVscpClient::connType::CANAL: 
+            break;
+
+        case CVscpClient::connType::SOCKETCAN:
+            break;
+
+        case CVscpClient::connType::WS1:
+            break;
+
+        case CVscpClient::connType::WS2: 
+            break;
+
+        case CVscpClient::connType::MQTT: 
+            break;
+
+        case CVscpClient::connType::UDP:
+            break;
+
+        case CVscpClient::connType::MULTICAST:
+            break;
+
+        case CVscpClient::connType::REST:
+            break;
+
+        case CVscpClient::connType::RS232: 
+            break;
+
+        case CVscpClient::connType::RS485: 
+            break;
+
+        case CVscpClient::connType::RAWCAN:
+            break;
+
+        case CVscpClient::connType::RAWMQTT:
+            break;
+    }
+
+    QString str; // = tr("VSCP Client Session - ");
+    str += pworks->getConnectionName(m_vscpConnType);
+    str += tr(" - ");
+    if (!m_connObject["name"].isNull()) {
+        str += m_connObject["name"].toString();
+    }
+    else {
+        str += tr("Unknown");
+    }
+    setWindowTitle(str); 
 
     // Initial default size of window
     int nWidth = 1200;
@@ -126,23 +180,6 @@ CFrmSession::CFrmSession(QWidget *parent) :
     //createFormGroupBox();
     createTxGridGroup();    
 
-    m_bigEditor = new QTextBrowser;
-    m_bigEditor->setPlainText(tr("<h1>RRRRRubrik</h1>This <b>widget takes</b> up all the remaining space "
-                               "in the top-level layout ddddd."
-                               "<h1>This is a test</h1> <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                                "This is a test <br>"
-                               "This is a test <br>"
-                               "Carpe Diem <br>"
-                               ));
-
     m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
                                      | QDialogButtonBox::Cancel);
 
@@ -163,7 +200,18 @@ CFrmSession::CFrmSession(QWidget *parent) :
     //mainLayout->addWidget(buttonBox);
     
     setLayout(mainLayout);
-    setWindowTitle(tr("VSCP Client Session"));        
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+CFrmSession::~CFrmSession()
+{
+    // Close the event database3
+    //m_evdb.close();
+    //delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

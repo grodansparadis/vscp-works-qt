@@ -32,6 +32,8 @@
 #include "version.h"
 #include "vscp_client_base.h"
 
+#include "cfrmsession.h"
+
 #include <QApplication>
 
 #include <QObject>
@@ -40,10 +42,11 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDateTime>
+#include <QSqlDatabase>
 
 #include <list>
 
-enum class numerical_base {HEX, DECIMAL, OCTAL, BINARY};
+
 
 // home folder is used for storage of program configuration
 // system folder holds databases etc
@@ -54,6 +57,8 @@ enum class numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 #define DEFAULT_HOME_FOLDER         "~/.vscpworks/"
 #define DEFAULT_VSCP_SYSTEM_FOLDER  "/var/lib/vscp/"
 #endif
+
+enum class numerical_base {HEX, DECIMAL, OCTAL, BINARY};
 
 class FileDownloader;
 
@@ -73,10 +78,15 @@ class vscpworks : public QApplication {
     /*!
         Destructor
     */
-    ~vscpworks();
+    ~vscpworks();    
 
     const QString URL_EVENT_VERSION = tr("https://www.vscp.org/events/version.js");
     const QString URL_EVENT_DATABASE = tr("https://www.vscp.org/events/vscp_events.sqlite3");
+
+    const int LOG_LEVEL_NONE = 0;
+    const int LOG_LEVEL_ERROR = 1;
+    const int LOG_LEVEL_INFO = 2;
+    const int LOG_LEVEL_DEBUG = 3;
 
     /*!
         Add connection
@@ -157,7 +167,24 @@ class vscpworks : public QApplication {
     */
     QString decimalToStringInBase(const QString& strvalue, int tobase = -1); 
 
+    /*!
+        Get connection name
+        @param type Connection code
+        @return String with connection descriptive name
+    */
+    QString getConnectionName(CVscpClient::connType type);
 
+    /*!
+        Create and open the VSCP Works database with tables and structure
+    */
+    bool openVscpWorksDatabase(void);
+
+    /*!
+        Log one message to the logging database
+        @param level Log level 0 is lowest
+        @param message to log
+    */
+    void log(int level, const QString& message);
 
     // ------------------------------------------------------------------------
     // Global Configuration information below
@@ -190,7 +217,44 @@ class vscpworks : public QApplication {
     /// Numerical base for all numericals in system
     numerical_base m_base;
 
-    // ---------------------------------------------------
+    /*! 
+        If true (default) ask before deleting or 
+        clearing data
+    */
+    bool m_bAskBeforeDelete;
+
+    /// The current log level  
+    int m_logLevel;
+
+    // ------------------------------------------------------------------------
+    // Session
+    // ------------------------------------------------------------------------
+
+    /*! 
+        Maximum number of events in a session receive list
+        -1 is no limit (default)
+    */
+    int m_session_maxEvents;
+
+    /// Autoconnect if true when new session window is opened
+    bool m_session_bAutoConnect;
+
+    /*! 
+        VSCP Class display format in receive list
+    */
+    CFrmSession::classDisplayFormat m_session_ClassDisplayFormat;
+
+    /*! 
+        VSCP Type display format in receive list
+    */
+    CFrmSession::typeDisplayFormat m_session_TypeDisplayFormat;
+
+    /*! 
+        VSCP GUID display format in receive list
+    */
+    CFrmSession::guidDisplayFormat m_session_GuidDisplayFormat;
+
+    // ------------------------------------------------------------------------
 
     /// URL for event database
     QUrl m_eventDbUrl;
@@ -223,6 +287,12 @@ class vscpworks : public QApplication {
 
     /// VSCP (class-id + token-id) -> token
     std::map<uint32_t, QString> mapVscpTypeToToken;
+
+    /// VSCP GUID to sumbolic GUID name
+    std::map<QString, QString> mapGuidToSymbolicName;
+
+    /// VSCP works database
+    QSqlDatabase m_worksdb;
 };
 
 

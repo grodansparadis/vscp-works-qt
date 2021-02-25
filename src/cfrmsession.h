@@ -83,7 +83,7 @@ class CFrmSession : public QDialog
     Q_OBJECT
 
  public:
-    CFrmSession(QWidget *parent);
+    CFrmSession(QWidget *parent, QJsonObject *pconn);
     ~CFrmSession();
 
     // VSCP Class display format
@@ -91,23 +91,22 @@ class CFrmSession : public QDialog
     // numerical_in_base - VSCP class code in selected base
     // numerical_hex_dex - VSCP class code in hex/dec
     // Symbolic_hex_dec  - Symbolic name + VSCP class code 
-    enum class classDisplayFormat {symbolic, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+    enum class classDisplayFormat {symbolic=0, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
 
     // VSCP Type display format
     // symbolic          - Just symbolic name
     // numerical_in_base - VSCP type code in selected base
     // numerical_hex_dex - VSCP type code in hex/dec
     // Symbolic_hex_dec  - Symbolic name + VSCP type code 
-    enum class tyypeDisplayFormat {symbolic, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+    enum class typeDisplayFormat {symbolic=0, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
 
     // VSCP GUID display format
     // guid              - GUID
     // symbolic          - Symbolic code if possible
     // symbolic_guid     - Symbolic + GUID
     // guid_symbolic     - GUID + symbolic
-    enum class guidDisplayFormat {guid, symbolic, symbolic_guid, guid_symbolic};
+    enum class guidDisplayFormat {guid=0, symbolic, symbolic_guid, guid_symbolic};
 
-    
 
  public slots:
 
@@ -134,6 +133,9 @@ class CFrmSession : public QDialog
 
     /// The VSCP client type
     CVscpClient::connType m_vscpConnType;
+
+    /// Configuration data for the session
+    QJsonObject m_connObject;
 
     /// A pointer to a VSCP Client 
     CVscpClient *m_vscpClient;

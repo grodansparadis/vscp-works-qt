@@ -58,7 +58,17 @@ using json = nlohmann::json;
 vscpworks::vscpworks(int &argc, char **argv) :
     QApplication(argc, argv)
 {        
-    m_base = numerical_base::HEX;   // Numerical base   
+    m_base = numerical_base::HEX;   // Numerical base 
+    m_bAskBeforeDelete = true;  
+    m_logLevel = LOG_LEVEL_NONE;    // No logging
+
+    m_session_maxEvents = -1;
+
+    m_session_ClassDisplayFormat = CFrmSession::classDisplayFormat::symbolic;
+    m_session_TypeDisplayFormat = CFrmSession::typeDisplayFormat::symbolic;
+    m_session_GuidDisplayFormat = CFrmSession::guidDisplayFormat::symbolic;
+
+    m_session_bAutoConnect = true;
 
     // QUuid uuid; 
     // uuid = QUuid::createUuid();
@@ -73,6 +83,7 @@ vscpworks::vscpworks(int &argc, char **argv) :
 vscpworks::~vscpworks()
 {
     writeSettings();
+    m_worksdb.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,6 +128,80 @@ QString vscpworks::decimalToStringInBase(const QString& strvalue, int tobase)
 {
     uint32_t value = vscp_readStringValue(strvalue.toStdString());
     return decimalToStringInBase(value, tobase);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getConnectionName
+//
+
+QString vscpworks::getConnectionName(CVscpClient::connType type)
+{
+    QString str = tr("Unknown type");
+
+    switch (type) {
+
+        case CVscpClient::connType::NONE: 
+            str = tr("No connection");
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            str = tr("VSCP local connection");
+            break;
+            
+        case CVscpClient::connType::TCPIP: 
+            str = tr("VSCP tcp/ip connection");
+            break;
+            
+        case CVscpClient::connType::CANAL: 
+            str = tr("VSCP CANAL/Level I connection");
+            break;
+            
+        case CVscpClient::connType::SOCKETCAN:
+            str = tr("VSCP socketcan connection");
+            break;
+            
+        case CVscpClient::connType::WS1: 
+            str = tr("VSCP websocket protocol 1 connection");
+            break;
+            
+        case CVscpClient::connType::WS2: 
+            str = tr("VSCP websocket protocol 2 connection");
+            break;
+            
+        case CVscpClient::connType::MQTT:
+            str = tr("VSCP MQTT connection"); 
+            break;
+            
+        case CVscpClient::connType::UDP:
+            str = tr("VSCP UDP connection"); 
+            break;
+            
+        case CVscpClient::connType::MULTICAST:
+            str = tr("VSCP multicast connection");
+            break;
+            
+        case CVscpClient::connType::REST:
+            str = tr("VSCP REST connection"); 
+            break;
+            
+        case CVscpClient::connType::RS232:
+            str = tr("VSCP RS-232 connection"); 
+            break;
+            
+        case CVscpClient::connType::RS485:
+            str = tr("VSCP RS-485 connection"); 
+            break;
+            
+        case CVscpClient::connType::RAWCAN:
+            str = tr("Raw CAN connection"); 
+            break;
+            
+        case CVscpClient::connType::RAWMQTT:
+            str = tr("Raw MQTT connection");
+            break;
+    }
+
+    return str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,6 +257,23 @@ void vscpworks::loadSettings(void)
     // ---------------------
     m_base = static_cast<numerical_base>(settings.value("numericBase", "0").toInt());
 
+    m_bAskBeforeDelete = settings.value("bAskBeforeDelete", true).toBool();
+
+    m_logLevel = settings.value("logLevel", LOG_LEVEL_NONE).toInt();
+
+    // * * * Session * * *
+
+    m_session_maxEvents = settings.value("maxSessionEvents", -1).toInt();
+
+    m_session_ClassDisplayFormat = static_cast<CFrmSession::classDisplayFormat>(settings.value("sessionClassDisplayFormat", 
+            static_cast<int>(CFrmSession::classDisplayFormat::symbolic)).toInt());
+    m_session_TypeDisplayFormat = static_cast<CFrmSession::typeDisplayFormat>(settings.value("sessionTypeDisplayFormat", 
+            static_cast<int>(CFrmSession::typeDisplayFormat::symbolic)).toInt());
+    m_session_GuidDisplayFormat = static_cast<CFrmSession::guidDisplayFormat>(settings.value("sessionGuidDisplayFormat", 
+            static_cast<int>(CFrmSession::guidDisplayFormat::guid)).toInt());
+
+    m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();           
+
     // VSCP event database last load date/time
     // ---------------------------------------
     m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
@@ -201,7 +303,19 @@ void vscpworks::writeSettings()
     settings.setValue("shareFolder", m_shareFolder);
     settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
     settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
+    settings.setValue("bAskBeforeDelete", m_bAskBeforeDelete);
+    settings.setValue("logLevel", m_logLevel);
     settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
+
+    // * * * Session * * *
+
+    settings.setValue("maxSessionEvents", m_session_maxEvents);
+
+    settings.setValue("sessionClassDisplayFormat", static_cast<int>(m_session_ClassDisplayFormat));
+    settings.setValue("sessionTypeDisplayFormat", static_cast<int>(m_session_TypeDisplayFormat));
+    settings.setValue("sessionGuidDisplayFormat", static_cast<int>(m_session_GuidDisplayFormat));
+
+    settings.setValue("sessionAutoConnect", m_session_bAutoConnect);
 
     writeConnections();
 
@@ -381,4 +495,76 @@ bool vscpworks::loadEventDb(void)
     }
 
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// createVscpWorksDatabase
+//
+
+bool vscpworks::openVscpWorksDatabase(void)
+{
+    // Set up database
+    QString eventdbname = m_shareFolder + "vscpworks.sqlite3";
+
+    // The database exists we are done
+    //if ( QFile::exists(eventdbname) ) return false;
+
+    QString dbName(eventdbname);
+    m_worksdb = QSqlDatabase::addDatabase( "QSQLITE" );
+    m_worksdb.setDatabaseName( dbName );
+    m_worksdb.open();
+
+    // Create GUID database if it does not exist
+    QSqlQuery query = QSqlQuery( m_worksdb );
+    if (!query.exec("CREATE TABLE IF NOT EXISTS guid ("
+                "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                "guid	TEXT,"
+                "name	TEXT,"
+                "description   TEXT);"
+            ) ) {
+        return false;
+    }
+
+    // Create GUID name index
+    if (!query.exec("CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)")) {
+
+    }
+
+    // Create log database if it does not exist
+    if (!query.exec("CREATE TABLE IF NOT EXISTS log ("
+                "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                "level INTEGER,"
+                "datetime TEXT,"
+                "message TEXT);"
+            ) ) {
+        return false;
+    }
+
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// log
+//
+
+void vscpworks::log(int level, const QString& message)
+{
+    // Log only messages 
+    if (level <= m_logLevel) {
+
+        QDateTime now = QDateTime::currentDateTime();
+
+        QString strQuery = "INSERT INTO log (level, datetime, message) values (";
+        strQuery +=  QString::number(level);
+        strQuery += ",";
+        strQuery += "'" + now.toString() + "'";
+        strQuery += ",";
+        strQuery += "'" +message + "'";
+        strQuery += ");";
+
+        QSqlQuery query = QSqlQuery( m_worksdb );
+        if (!query.exec(strQuery)) {
+            qDebug() << "Failed to insert log message";
+        }
+    }
 }

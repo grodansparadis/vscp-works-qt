@@ -98,6 +98,72 @@
           </item>
          </widget>
         </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="chkAskOnDelete">
+          <property name="toolTip">
+           <string>Connect to client when session is opened</string>
+          </property>
+          <property name="statusTip">
+           <string>Confirm needed when events are cleared etc</string>
+          </property>
+          <property name="text">
+           <string>Ask before delete/clear</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Log level</string>
+          </property>
+          <property name="buddy">
+           <cstring>comboNumberBase</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboLogLevel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>No logging</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Errors</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Information</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Debug</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -110,7 +176,7 @@
         <rect>
          <x>10</x>
          <y>10</y>
-         <width>411</width>
+         <width>442</width>
          <height>381</height>
         </rect>
        </property>
@@ -132,7 +198,7 @@
         <item row="1" column="1">
          <widget class="QLineEdit" name="editMaxSessionEvents">
           <property name="toolTip">
-           <string>MAx number of events that will be received. -1 no limit.</string>
+           <string>Max number of events that will be received. -1 no limit.</string>
           </property>
           <property name="text">
            <string>-1</string>
@@ -252,19 +318,6 @@
          </widget>
         </item>
         <item row="6" column="1">
-         <widget class="QCheckBox" name="chkAskOnDelete">
-          <property name="toolTip">
-           <string>Connect to client when session is opened</string>
-          </property>
-          <property name="statusTip">
-           <string>Confirm needed when events are cleared etc</string>
-          </property>
-          <property name="text">
-           <string>Ask on delete/clear</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>

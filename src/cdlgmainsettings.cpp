@@ -35,6 +35,8 @@
 #include "cdlgmainsettings.h"
 #include "ui_cdlgmainsettings.h"
 
+#include "cfrmsession.h"
+
 #include <QMessageBox>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,10 +54,38 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();    
 
+    // * * * General * * *
+
     // Numeric base
     //m_baseIndex = pworks->m_base;
     ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
     //onBaseChange(static_cast<int>(m_baseIndex));
+
+    // Ask befor delete/clear
+    ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);    
+
+    // Log level
+    ui->comboLogLevel->setCurrentIndex(pworks->m_logLevel);
+
+    // * * * Session Window tab * * *
+
+    // Max number of session events
+    ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
+
+    // Class display format
+    ui->comboClassDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_ClassDisplayFormat));
+
+    // Type display format
+    ui->comboTypeDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_TypeDisplayFormat));
+
+    // GUID display format
+    ui->comboGuidDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_GuidDisplayFormat));
+
+    // Automatic connect  
+    ui->chkAutomaticConnect->setChecked(pworks->m_session_bAutoConnect);
+    
+
+    // * * * Data tab * * *
 
     // Local storage folder
     ui->pathLocalStorage->setText(pworks->m_shareFolder);
@@ -102,15 +132,32 @@ CDlgMainSettings::~CDlgMainSettings()
 // accepted
 //
 
-void CDlgMainSettings::done(int r)
+void CDlgMainSettings::done(int rv)
 {
-    if (QDialog::Accepted == r) { // ok was pressed
+    if (QDialog::Accepted == rv) { // ok was pressed
         
         vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+        // General
         pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
+        pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();
+        pworks->m_logLevel = ui->comboLogLevel->currentIndex();
+
+        // Session window
+        pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
+        pworks->m_session_ClassDisplayFormat = 
+            static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
+        pworks->m_session_TypeDisplayFormat = 
+            static_cast<CFrmSession::typeDisplayFormat>(ui->comboTypeDisplayFormat->currentIndex());
+        pworks->m_session_GuidDisplayFormat = 
+            static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
+        pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
+
+        // Data
+
         pworks->writeSettings();
     }
-    QDialog::done(r);
+    QDialog::done(rv);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -35,6 +35,8 @@ int main(int argc, char *argv[])
         //mainWin.loadFile(parser.positionalArguments().first());
     }
 
+    app.openVscpWorksDatabase();
+
     mainWin.show(); 
     return app.exec();
 
