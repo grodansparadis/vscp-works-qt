@@ -1652,8 +1652,9 @@ void MainWindow::newSession()
             // Get the connection object  
             QJsonObject *pconn = itemConn->getJson();
 
-            CFrmSession *w = new CFrmSession(this, pconn);
+            CFrmSession *w = new CFrmSession(nullptr, pconn);
             w->setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+            w->setWindowFlags(Qt::Window);
             w->show();
             w->raise();
             // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows

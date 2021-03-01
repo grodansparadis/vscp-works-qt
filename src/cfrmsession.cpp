@@ -30,6 +30,8 @@
 #include <vscp.h>
 #include <vscpworks.h>
 
+#include <mustache.hpp>
+
 #include <vscp_client_tcp.h>
 
 #include "cfrmsession.h"
@@ -40,6 +42,8 @@
 #include <QTableView>
 #include <QtSql>
 #include <QtWidgets>
+
+using namespace kainjow::mustache;
 
 ///////////////////////////////////////////////////////////////////////////////
 // vscp_client_callback
@@ -150,7 +154,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     // Handle selections
     connect(m_rxTable->selectionModel(), 
                 SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-                SLOT(slotSelectionChange(const QItemSelection &, const QItemSelection &)));
+                SLOT(rxSelectionChange(const QItemSelection &, const QItemSelection &)));
 
     // Lay out things
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -935,10 +939,74 @@ CFrmSession::doDisconnectFromRemoteHost(void)
 // slotSelectionChange
 //
 
-void CFrmSession::slotSelectionChange(const QItemSelection &, const QItemSelection &)
+void CFrmSession::rxSelectionChange(const QItemSelection& selected, 
+                                    const QItemSelection& eselected)
 {
+    
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+    if (0 == selection.size()) {
 
+    }
+    else if (1 == selection.size()) {
+        std::string strVscpTemplate = "<h3>VSCP Event</h3>"
+            "<small><p style=\"color:#993399\">Received event</p></small>"
+            "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">{{VscpHead}}</span><br>"
+            "<b>UTC Time: </b><span style=\"color:rgb(0, 0, "
+            "153);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{VscpMinute}}:{{VscpSecond}}</span><br>"
+            "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
+            "153);\">{{VscpTimestamp}}</span><br>"
+            "<br>"
+            "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span "
+            "style=\"color:rgb(0, 102, 0);\"> {{VscpClass}}</span><br>"
+            "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span "
+            "style=\"color:rgb(0, 102, 0);\">{{VscpType}}</span><br>"
+            "<br>"
+            "<b>GUID: </b><small><span style=\"color:rgb(0, 102, "
+            "0);\">{{VscpGuid}}</span></small><br><br>"
+            "<b>Data: </b><small>"
+            "{{VscpData}}</small>";
+        
+        mustache templ{strVscpTemplate}; 
+        vscpEvent *pev = m_rxEvents[selection.first().row()];
+        std::string strVscpHead = vscp_str_format("0x%04X", pev->head);
+        std::string strVscpYear = vscp_str_format("%d", pev->year);
+        std::string strVscpMonth = vscp_str_format("%02d", pev->month);
+        std::string strVscpDay = vscp_str_format("%02d", pev->second);
+        std::string strVscpHour = vscp_str_format("%02d", pev->hour);
+        std::string strVscpMinute = vscp_str_format("%02d", pev->minute);
+        std::string strVscpSecond = vscp_str_format("%02d", pev->second);
+        std::string strVscpTimestamp = vscp_str_format("0x%04X", pev->timestamp);
+        std::string strVscpClass = vscp_str_format("0x%04X, %d", pev->vscp_class, pev->vscp_class);
+        std::string strVscpType = vscp_str_format("0x%04X, %d", pev->vscp_type, pev->vscp_type);
+        
+        std::string strVscpGuid;
+        vscp_writeGuidArrayToString(strVscpGuid, pev->GUID);
+
+        std::string strVscpData;
+        for (int i=0; i<pev->sizeData; i++) {
+            strVscpData += vscp_str_format("0x%02X ", pev->pdata[i]);
+            if (!((i+1)%4)) strVscpData += "<br>";
+        }
+
+        kainjow::mustache::data _data;
+        _data.set("VscpHead", strVscpHead);
+        _data.set("VscpYear", strVscpYear);
+        _data.set("VscpMonth", strVscpMonth);
+        _data.set("VscpDay", strVscpDay);
+        _data.set("VscpHour", strVscpHour);
+        _data.set("VscpMinute", strVscpMinute);
+        _data.set("VscpSecond", strVscpSecond);
+        _data.set("VscpTimestamp", strVscpTimestamp);
+        _data.set("VscpClass", strVscpClass);
+        _data.set("VscpType", strVscpType);
+        _data.set("VscpGuid", strVscpGuid);
+        _data.set("VscpData", strVscpData);
+        std::string output = templ.render(_data);
+        m_infoArea->setHtml(output.c_str());  
+    }
+    else {
+
+    }
 
 }
 
@@ -979,7 +1047,35 @@ CFrmSession::receiveRow(vscpEvent* pev)
 
 
     // * * * Class * * *
-    QTableWidgetItem* itemClass = new QTableWidgetItem(pworks->mapVscpClassToToken[pev->vscp_class]/*QString::number(ev.vscp_class)*/);
+    QString strClass;
+    switch (pworks->m_session_ClassDisplayFormat) {
+
+        case classDisplayFormat::numerical_in_base:
+            strClass = pworks->decimalToStringInBase(pev->vscp_class, m_baseComboBox->currentIndex());
+            //QString::number(pev->vscp_class);
+            break;
+
+        case classDisplayFormat::numerical_hex_dec:
+            strClass = pworks->decimalToStringInBase(pev->vscp_class, 0);
+            strClass += "/";
+            strClass += pworks->decimalToStringInBase(pev->vscp_class, 1);
+            break;
+
+        case classDisplayFormat::symbolic_hex_dec:
+            strClass = pworks->mapVscpClassToToken[pev->vscp_class];
+            strClass += " - ";
+            strClass += pworks->decimalToStringInBase(pev->vscp_class, 0);
+            strClass += "/";
+            strClass += pworks->decimalToStringInBase(pev->vscp_class, 1);
+            break;               
+    
+        case classDisplayFormat::symbolic:
+        default:
+            strClass = pworks->mapVscpClassToToken[pev->vscp_class];
+            break;
+    }
+
+    QTableWidgetItem* itemClass = new QTableWidgetItem(strClass);
     itemClass->setToolTip("This\nis\na\ntest");
     itemClass->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
     itemClass->setForeground(QBrush(QColor(0, 99, 0)));
@@ -987,32 +1083,108 @@ CFrmSession::receiveRow(vscpEvent* pev)
 
 
     // * * * Type * * *
-    QString type = pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) + pev->vscp_type];    
+    QString strTypeToken = pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) + pev->vscp_type];    
     if (pev->vscp_class>=1024) {
-        type = type.right(type.length()-11);    // Remove "VSCP2_TYPE_"
+        strTypeToken = strTypeToken.right(strTypeToken.length()-11);    // Remove "VSCP2_TYPE_"
     }
     else {
-        type = type.right(type.length()-10);    // Remove "VSCP_TYPE_"
+        strTypeToken = strTypeToken.right(strTypeToken.length()-10);    // Remove "VSCP_TYPE_"
     }
-    int posUnderscore = type.indexOf("_");
+    int posUnderscore = strTypeToken.indexOf("_");
     if (posUnderscore) posUnderscore++;
-    QTableWidgetItem* itemType = new QTableWidgetItem(type.right(type.length()-posUnderscore)/*QString::number(ev.vscp_type)*/);
+    QString strShortTypeToken = strTypeToken.right(strTypeToken.length()-posUnderscore);
+
+    QString strType;
+
+    switch (pworks->m_session_TypeDisplayFormat) {
+
+        case typeDisplayFormat::numerical_in_base:
+            strType = pworks->decimalToStringInBase(pev->vscp_type, m_baseComboBox->currentIndex());
+            break;
+
+        case typeDisplayFormat::numerical_hex_dec:
+            strType = pworks->decimalToStringInBase(pev->vscp_type, 0);
+            strType += "/";
+            strType += pworks->decimalToStringInBase(pev->vscp_type, 1);
+            break;
+
+        case typeDisplayFormat::symbolic_hex_dec:
+            if (pworks->m_session_bShowFullTypeToken) {
+                strType = pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) + pev->vscp_type]; 
+            }
+            else {
+                strType = strShortTypeToken;
+            }
+            strType += " - ";
+            strType += pworks->decimalToStringInBase(pev->vscp_type, 0);
+            strType += "/";
+            strType += pworks->decimalToStringInBase(pev->vscp_type, 1);
+            break;               
+    
+        case  typeDisplayFormat::symbolic:
+        default:
+            if (pworks->m_session_bShowFullTypeToken) {
+                strType = pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) + pev->vscp_type]; 
+            }
+            else {
+                strType = strShortTypeToken;
+            }
+            break;
+    }
+
+    QTableWidgetItem* itemType = new QTableWidgetItem(strType);
     itemType->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
     itemType->setForeground(QBrush(QColor(0, 5, 180)));
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
 
 
     // * * * Node id * * *
-    QTableWidgetItem* itemNodeId = new QTableWidgetItem(QString::number(((uint16_t)pev->GUID[14] << 8) + pev->GUID[15]));
+    QString strNodeId = 
+        pworks->decimalToStringInBase(((uint16_t)pev->GUID[14] << 8) + pev->GUID[15], 
+                                        m_baseComboBox->currentIndex());
+    QTableWidgetItem* itemNodeId = new QTableWidgetItem(strNodeId);
     itemNodeId->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
     itemNodeId->setTextAlignment(Qt::AlignCenter);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
 
 
     // * * * Guid * * *
-    std::string str;
-    vscp_writeGuidArrayToString(str, pev->GUID);
-    QTableWidgetItem* itemGuid = new QTableWidgetItem(str.c_str());
+    std::string strGuid;
+    vscp_writeGuidArrayToString(strGuid, pev->GUID);
+
+    QString guidSymbolicName = pworks->mapGuidToSymbolicName[strGuid.c_str()];
+
+    QString strGuidDisplay;
+    switch (pworks->m_session_GuidDisplayFormat) {
+
+        case guidDisplayFormat::symbolic:
+            if (guidSymbolicName.length()) {
+                strGuidDisplay = guidSymbolicName;
+            }
+            else {
+                strGuidDisplay = strGuid.c_str();
+            }
+            break;
+
+        case guidDisplayFormat::symbolic_guid:
+            strGuidDisplay = guidSymbolicName;
+            strGuidDisplay += " - ";
+            strGuidDisplay += strGuid.c_str();
+            break;
+
+        case guidDisplayFormat::guid_symbolic:
+            strGuidDisplay = strGuid.c_str();
+            strGuidDisplay += " - ";
+            strGuidDisplay += guidSymbolicName;
+            break;
+
+        case  guidDisplayFormat::guid:
+        default:
+            strGuidDisplay = strGuid.c_str();
+            break;    
+    }
+
+    QTableWidgetItem* itemGuid = new QTableWidgetItem(strGuidDisplay);
     itemGuid->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
 

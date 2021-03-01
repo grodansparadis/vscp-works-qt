@@ -2415,315 +2415,327 @@ and the flag bits for the. the driver.
     <name>CDlgMainSettings</name>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="20"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="350"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="356"/>
         <source>VSCP Level I Filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="39"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="352"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="358"/>
         <source>General settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="49"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="373"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="379"/>
         <source>General</source>
         <extracomment>General settings</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="64"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="354"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="360"/>
         <source>Numerical base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="81"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="355"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="361"/>
         <source>Hexadecimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="86"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="356"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="362"/>
         <source>Decimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="91"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="357"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="363"/>
         <source>Octal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="96"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="358"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="364"/>
         <source>Binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="104"/>
         <location filename="src/cdlgmainsettings.ui" line="313"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="361"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="407"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="367"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="413"/>
         <source>Connect to client when session is opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="107"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="364"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="370"/>
         <source>Confirm needed when events are cleared etc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="110"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="366"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="372"/>
         <source>Ask before delete/clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="117"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="367"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="373"/>
         <source>Log level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="134"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="368"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="374"/>
         <source>No logging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="139"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="369"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="375"/>
         <source>Errors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="144"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="370"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="376"/>
         <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="149"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="371"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="377"/>
         <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="172"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="410"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="420"/>
         <source>Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="194"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="374"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="380"/>
         <source>Max number of events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="201"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="376"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="382"/>
         <source>Max number of events that will be received. -1 no limit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="204"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="378"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="384"/>
         <source>-1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="211"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="379"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="385"/>
         <source>Class display format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="218"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="386"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="392"/>
         <source>Set how VSCP class data is displayed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="222"/>
         <location filename="src/cdlgmainsettings.ui" line="256"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="380"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="389"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="386"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="395"/>
         <source>Symbolic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="227"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="381"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="387"/>
         <source>Numerical in selected numerical base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="232"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="382"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="388"/>
         <source>Numerical hex/decimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="237"/>
         <location filename="src/cdlgmainsettings.ui" line="271"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="383"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="392"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="389"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="398"/>
         <source>Symbolic + hex/decimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="245"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="388"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="394"/>
         <source>Type display format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="252"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="395"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="401"/>
         <source>Set how VSCP type data is displayed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="261"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="390"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="396"/>
         <source>Numerical in selected base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="266"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="391"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="397"/>
         <source>Numerical hex/dec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="279"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="397"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="403"/>
         <source>GUID display format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="286"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="404"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="410"/>
         <source>Set how VSCP GUID data is displayed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="290"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="398"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="404"/>
         <source>GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="295"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="399"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="405"/>
         <source>Symbolic if possible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="300"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="400"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="406"/>
         <source>Symbolic + GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="305"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="401"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="407"/>
         <source>GUID + Symbolic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgmainsettings.ui" line="316"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="409"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="415"/>
         <source>Connect automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="338"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="424"/>
+        <location filename="src/cdlgmainsettings.ui" line="336"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="417"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show full type token (&amp;quot;VSCP_TYPE_&amp;quot; is not removed from front of token)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="339"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="419"/>
+        <source>Show full type token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="348"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="434"/>
         <source>Data</source>
         <extracomment>Database and similar settings</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="353"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="411"/>
+        <location filename="src/cdlgmainsettings.ui" line="363"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="421"/>
         <source>Path to local storgage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="363"/>
-        <location filename="src/cdlgmainsettings.ui" line="380"/>
-        <location filename="src/cdlgmainsettings.ui" line="397"/>
-        <location filename="src/cdlgmainsettings.ui" line="426"/>
-        <location filename="src/cdlgmainsettings.ui" line="443"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="412"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="414"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="416"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="418"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="420"/>
+        <location filename="src/cdlgmainsettings.ui" line="373"/>
+        <location filename="src/cdlgmainsettings.ui" line="390"/>
+        <location filename="src/cdlgmainsettings.ui" line="407"/>
+        <location filename="src/cdlgmainsettings.ui" line="436"/>
+        <location filename="src/cdlgmainsettings.ui" line="453"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="422"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="424"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="426"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="428"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="430"/>
         <source>Last download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="370"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="413"/>
+        <location filename="src/cdlgmainsettings.ui" line="380"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="423"/>
         <source>Path VSCP Home</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="387"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="415"/>
+        <location filename="src/cdlgmainsettings.ui" line="397"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="425"/>
         <source>Path config. folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="416"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="417"/>
+        <location filename="src/cdlgmainsettings.ui" line="426"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="427"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="433"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="419"/>
+        <location filename="src/cdlgmainsettings.ui" line="443"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="429"/>
         <source>Last db download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="465"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="421"/>
+        <location filename="src/cdlgmainsettings.ui" line="475"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="431"/>
         <source>VSCP Event Database</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="487"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="422"/>
+        <location filename="src/cdlgmainsettings.ui" line="497"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="432"/>
         <source>Download new</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="500"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="423"/>
+        <location filename="src/cdlgmainsettings.ui" line="510"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="433"/>
         <source>Reload db</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="194"/>
-        <location filename="src/cdlgmainsettings.cpp" line="201"/>
+        <location filename="src/cdlgmainsettings.cpp" line="199"/>
+        <location filename="src/cdlgmainsettings.cpp" line="206"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="195"/>
+        <location filename="src/cdlgmainsettings.cpp" line="200"/>
         <source>Unable to load events from VSCP event database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="202"/>
+        <location filename="src/cdlgmainsettings.cpp" line="207"/>
         <source>Events reloaded from event database.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2983,347 +2995,354 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="83"/>
-        <location filename="src/cfrmsession.cpp" line="98"/>
-        <location filename="src/cfrmsession.cpp" line="724"/>
-        <location filename="src/cfrmsession.cpp" line="738"/>
+        <location filename="src/cfrmsession.cpp" line="86"/>
+        <location filename="src/cfrmsession.cpp" line="101"/>
+        <location filename="src/cfrmsession.cpp" line="783"/>
+        <location filename="src/cfrmsession.cpp" line="819"/>
+        <location filename="src/cfrmsession.cpp" line="890"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="84"/>
+        <location filename="src/cfrmsession.cpp" line="87"/>
         <source>Can&apos;t open session window - configuration data is missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="99"/>
+        <location filename="src/cfrmsession.cpp" line="102"/>
         <source>Can&apos;t open session window - The connection type is unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="109"/>
+        <location filename="src/cfrmsession.cpp" line="112"/>
         <source> - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="114"/>
+        <location filename="src/cfrmsession.cpp" line="117"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="239"/>
+        <location filename="src/cfrmsession.cpp" line="255"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="253"/>
+        <location filename="src/cfrmsession.cpp" line="269"/>
         <source>Load VSCP events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="254"/>
+        <location filename="src/cfrmsession.cpp" line="270"/>
         <source>Save VSCP events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="256"/>
+        <location filename="src/cfrmsession.cpp" line="272"/>
         <source>Load transmission set from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="257"/>
+        <location filename="src/cfrmsession.cpp" line="273"/>
         <source>Save transmission set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="260"/>
-        <location filename="src/cfrmsession.cpp" line="263"/>
+        <location filename="src/cfrmsession.cpp" line="276"/>
+        <location filename="src/cfrmsession.cpp" line="279"/>
         <source>Close session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="282"/>
+        <location filename="src/cfrmsession.cpp" line="298"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="286"/>
+        <location filename="src/cfrmsession.cpp" line="302"/>
         <source>Connect/disconnect from remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="294"/>
+        <location filename="src/cfrmsession.cpp" line="310"/>
         <source>Enable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="297"/>
+        <location filename="src/cfrmsession.cpp" line="313"/>
         <source>Enable/disable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="310"/>
-        <location filename="src/cfrmsession.cpp" line="591"/>
+        <location filename="src/cfrmsession.cpp" line="333"/>
+        <source>Clear receive list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="345"/>
+        <location filename="src/cfrmsession.cpp" line="626"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="311"/>
+        <location filename="src/cfrmsession.cpp" line="346"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="312"/>
+        <location filename="src/cfrmsession.cpp" line="347"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="313"/>
+        <location filename="src/cfrmsession.cpp" line="348"/>
         <source>Paste before</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="314"/>
+        <location filename="src/cfrmsession.cpp" line="349"/>
         <source>Paste after</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="318"/>
+        <location filename="src/cfrmsession.cpp" line="353"/>
         <source>&amp;Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="319"/>
+        <location filename="src/cfrmsession.cpp" line="354"/>
         <source>Connect to host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="320"/>
+        <location filename="src/cfrmsession.cpp" line="355"/>
         <source>Disconnect from host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="323"/>
+        <location filename="src/cfrmsession.cpp" line="358"/>
         <source>Edit host settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="327"/>
+        <location filename="src/cfrmsession.cpp" line="362"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="328"/>
+        <location filename="src/cfrmsession.cpp" line="363"/>
         <source>Message flow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="329"/>
+        <location filename="src/cfrmsession.cpp" line="364"/>
         <source>Message count</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="331"/>
+        <location filename="src/cfrmsession.cpp" line="366"/>
         <source>Clear receive list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="333"/>
+        <location filename="src/cfrmsession.cpp" line="368"/>
         <source>Clear transmission list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="337"/>
+        <location filename="src/cfrmsession.cpp" line="372"/>
         <source>&amp;vscp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="338"/>
+        <location filename="src/cfrmsession.cpp" line="373"/>
         <source>Read register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="339"/>
+        <location filename="src/cfrmsession.cpp" line="374"/>
         <source>Write register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="340"/>
+        <location filename="src/cfrmsession.cpp" line="375"/>
         <source>Read (all) registers...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="341"/>
+        <location filename="src/cfrmsession.cpp" line="376"/>
         <source>Read GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="342"/>
+        <location filename="src/cfrmsession.cpp" line="377"/>
         <source>Read MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="343"/>
+        <location filename="src/cfrmsession.cpp" line="378"/>
         <source>Download MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="347"/>
+        <location filename="src/cfrmsession.cpp" line="382"/>
         <source>&amp;Setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="348"/>
+        <location filename="src/cfrmsession.cpp" line="383"/>
         <source>Set/define filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="349"/>
+        <location filename="src/cfrmsession.cpp" line="384"/>
         <source>Settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="353"/>
+        <location filename="src/cfrmsession.cpp" line="388"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="386"/>
+        <location filename="src/cfrmsession.cpp" line="421"/>
         <source>Horizontal layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="390"/>
+        <location filename="src/cfrmsession.cpp" line="425"/>
         <source>Button %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="403"/>
+        <location filename="src/cfrmsession.cpp" line="438"/>
         <source>Receive Events </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="414"/>
+        <location filename="src/cfrmsession.cpp" line="449"/>
         <source>Dir, VSCP Class, VSCP Type, id, GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="487"/>
+        <location filename="src/cfrmsession.cpp" line="522"/>
         <source>&lt;h3&gt;VSCP Event&lt;/h3&gt;&lt;small&gt;&lt;p style=&quot;color:#993399&quot;&gt;Received event&lt;/p&gt;&lt;/small&gt;&lt;b&gt;Head: &lt;/b&gt;&lt;span style=&quot;color:rgb(0, 0, 153);&quot;&gt;0x0100&lt;/span&gt;&lt;br&gt;&lt;b&gt;Time: &lt;/b&gt;&lt;span style=&quot;color:rgb(0, 0, 153);&quot;&gt;2021-09-12T12:10:29&lt;/span&gt;&lt;br&gt;&lt;b&gt;Timestamp: &lt;/b&gt;&lt;span style=&quot; color:rgb(0, 0, 153);&quot;&gt;0x1213140f&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Class: &lt;/b&gt;&lt;a href=&quot;https://www.vscp.org&quot;&gt;CLASS1_DATA&lt;/a&gt;&lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt; 0x000F, 15&lt;/span&gt;&lt;br&gt;&lt;b&gt;Type: &lt;/b&gt;&lt;a href=&quot;https://www.vscp.org&quot;&gt;IO-VALUE&lt;/a&gt; &lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt;0x0001, 1&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;GUID: &lt;/b&gt;&lt;small&gt;&lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt;FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF&lt;/span&gt;&lt;/small&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;This &lt;b&gt;widget takes&lt;/b&gt; up all the remaining space in the top-level layout ddddd.in the top-level layout ddddd.&lt;h1&gt;This is a test&lt;/h1&gt; &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;Carpe Diem &lt;br&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="540"/>
+        <location filename="src/cfrmsession.cpp" line="575"/>
         <source>Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="545"/>
+        <location filename="src/cfrmsession.cpp" line="580"/>
         <source>x,Name,Period,Count,Trigger,Event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="570"/>
+        <location filename="src/cfrmsession.cpp" line="605"/>
         <source>&amp;Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="572"/>
+        <location filename="src/cfrmsession.cpp" line="607"/>
         <source>Transmit selected event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="583"/>
+        <location filename="src/cfrmsession.cpp" line="618"/>
         <source>&amp;Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="585"/>
+        <location filename="src/cfrmsession.cpp" line="620"/>
         <source>Add transmit event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="593"/>
+        <location filename="src/cfrmsession.cpp" line="628"/>
         <source>Edit selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="599"/>
+        <location filename="src/cfrmsession.cpp" line="634"/>
         <source>&amp;Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="601"/>
+        <location filename="src/cfrmsession.cpp" line="636"/>
         <source>Delete selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="607"/>
+        <location filename="src/cfrmsession.cpp" line="642"/>
         <source>&amp;Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="609"/>
+        <location filename="src/cfrmsession.cpp" line="644"/>
         <source>Clone selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="617"/>
+        <location filename="src/cfrmsession.cpp" line="652"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="619"/>
+        <location filename="src/cfrmsession.cpp" line="654"/>
         <source>Save selected transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="625"/>
+        <location filename="src/cfrmsession.cpp" line="660"/>
         <source>&amp;Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="627"/>
+        <location filename="src/cfrmsession.cpp" line="662"/>
         <source>Load transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="690"/>
+        <location filename="src/cfrmsession.cpp" line="749"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="690"/>
+        <location filename="src/cfrmsession.cpp" line="749"/>
         <source>Carpe Diem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="700"/>
+        <location filename="src/cfrmsession.cpp" line="759"/>
         <source>Form layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="702"/>
+        <location filename="src/cfrmsession.cpp" line="761"/>
         <source>Line 1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="703"/>
+        <location filename="src/cfrmsession.cpp" line="762"/>
         <source>Line 2, long text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="704"/>
+        <location filename="src/cfrmsession.cpp" line="763"/>
         <source>Line 3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="725"/>
+        <location filename="src/cfrmsession.cpp" line="784"/>
+        <location filename="src/cfrmsession.cpp" line="820"/>
         <source>Failed to open a connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="739"/>
+        <location filename="src/cfrmsession.cpp" line="891"/>
         <source>Failed to disconnect the connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4083,102 +4102,102 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="139"/>
+        <location filename="src/vscpworks.cpp" line="146"/>
         <source>Unknown type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="144"/>
+        <location filename="src/vscpworks.cpp" line="151"/>
         <source>No connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="148"/>
+        <location filename="src/vscpworks.cpp" line="155"/>
         <source>VSCP local connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="152"/>
+        <location filename="src/vscpworks.cpp" line="159"/>
         <source>VSCP tcp/ip connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="156"/>
+        <location filename="src/vscpworks.cpp" line="163"/>
         <source>VSCP CANAL/Level I connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="160"/>
+        <location filename="src/vscpworks.cpp" line="167"/>
         <source>VSCP socketcan connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="164"/>
+        <location filename="src/vscpworks.cpp" line="171"/>
         <source>VSCP websocket protocol 1 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="168"/>
+        <location filename="src/vscpworks.cpp" line="175"/>
         <source>VSCP websocket protocol 2 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="172"/>
+        <location filename="src/vscpworks.cpp" line="179"/>
         <source>VSCP MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="176"/>
+        <location filename="src/vscpworks.cpp" line="183"/>
         <source>VSCP UDP connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="180"/>
+        <location filename="src/vscpworks.cpp" line="187"/>
         <source>VSCP multicast connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="184"/>
+        <location filename="src/vscpworks.cpp" line="191"/>
         <source>VSCP REST connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="188"/>
+        <location filename="src/vscpworks.cpp" line="195"/>
         <source>VSCP RS-232 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="192"/>
+        <location filename="src/vscpworks.cpp" line="199"/>
         <source>VSCP RS-485 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="196"/>
+        <location filename="src/vscpworks.cpp" line="203"/>
         <source>Raw CAN connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="200"/>
+        <location filename="src/vscpworks.cpp" line="207"/>
         <source>Raw MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="456"/>
+        <location filename="src/vscpworks.cpp" line="465"/>
         <source>The VSCP event database does not exist. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="465"/>
+        <location filename="src/vscpworks.cpp" line="474"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="83"/>
+        <location filename="src/vscpworks.h" line="87"/>
         <source>https://www.vscp.org/events/version.js</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="84"/>
+        <location filename="src/vscpworks.h" line="88"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>

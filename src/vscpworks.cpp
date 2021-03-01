@@ -69,6 +69,7 @@ vscpworks::vscpworks(int &argc, char **argv) :
     m_session_GuidDisplayFormat = CFrmSession::guidDisplayFormat::symbolic;
 
     m_session_bAutoConnect = true;
+    m_session_bShowFullTypeToken = false;
 
     // After the following it is possible to create and destroy event objects 
     // dynamically at run-time
@@ -278,7 +279,8 @@ void vscpworks::loadSettings(void)
     m_session_GuidDisplayFormat = static_cast<CFrmSession::guidDisplayFormat>(settings.value("sessionGuidDisplayFormat", 
             static_cast<int>(CFrmSession::guidDisplayFormat::guid)).toInt());
 
-    m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();           
+    m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();    
+    m_session_bShowFullTypeToken =  settings.value("sessionShowFullTypeToken", true).toBool();        
 
     // VSCP event database last load date/time
     // ---------------------------------------
@@ -322,6 +324,7 @@ void vscpworks::writeSettings()
     settings.setValue("sessionGuidDisplayFormat", static_cast<int>(m_session_GuidDisplayFormat));
 
     settings.setValue("sessionAutoConnect", m_session_bAutoConnect);
+    settings.setValue("sessionShowFullTypeToken", m_session_bShowFullTypeToken);
 
     writeConnections();
 

@@ -83,6 +83,9 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
     // Automatic connect  
     ui->chkAutomaticConnect->setChecked(pworks->m_session_bAutoConnect);
+
+    // VSCP type token format  
+    ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
     
 
     // * * * Data tab * * *
@@ -152,6 +155,8 @@ void CDlgMainSettings::done(int rv)
         pworks->m_session_GuidDisplayFormat = 
             static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
         pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
+        pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
+        
 
         // Data
 

@@ -166,7 +166,7 @@ class vscpworks : public QApplication {
         @param strvalue Integer on string form whish should be converted to 
         a number in the current base.
         @param tobase If set to -1 (default) the current base is used for
-            base, otherwise the set base will be used.
+            base, otherwise the set base will be used.   
         @return String representing number with prepended base prefix.
     */
     QString decimalToStringInBase(const QString& strvalue, int tobase = -1); 
@@ -242,6 +242,9 @@ class vscpworks : public QApplication {
 
     /// Autoconnect if true when new session window is opened
     bool m_session_bAutoConnect;
+
+    /// Show the full token for VSCP types
+    bool m_session_bShowFullTypeToken;
 
     /*! 
         VSCP Class display format in receive list

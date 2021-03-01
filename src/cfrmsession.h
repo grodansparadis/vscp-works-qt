@@ -143,9 +143,16 @@ class CFrmSession : public QDialog
     void connectToRemoteHost(bool checked);    
 
     /*!
-        Handle selections
-    */
-    void slotSelectionChange(const QItemSelection &, const QItemSelection &);
+        Selections has changed. 
+        We display info about selected item if one item is selected
+        and differential info if one then more item is selected.
+        - Timing between events
+        - Measurement difference if two or more measurements are selected with
+          same class/type/unint.        
+        @param selected Items has been selected 
+        @param deselected Items that has been selected
+    */ 
+    void rxSelectionChange(const QItemSelection &, const QItemSelection &);
 
  
  signals:
