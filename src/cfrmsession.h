@@ -36,6 +36,7 @@
 #include <QDialog>
 #include <QTableView>
 #include <QtSql>
+#include <QLCDNumber>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -58,24 +59,24 @@ QT_END_NAMESPACE
 
 
 
-class CVscpClientCallback : public QObject
-{
-    Q_OBJECT
+// class CVscpClientCallback : public QObject
+// {
+//     Q_OBJECT
 
-public:
-    CVscpClientCallback() { m_value = 0; }
+// public:
+//     CVscpClientCallback() { m_value = 0; }
 
-    int value() const { return m_value; }
+//     int value() const { return m_value; }
 
-public slots:
-    void eventReceived(vscpEvent *pev);
+// public slots:
+//     void eventReceived(vscpEvent *pev);
 
-signals:
-    void addRow(vscpEvent *pev, bool bReceive);
+// signals:
+//     void addRow(vscpEvent *pev, bool bReceive);
 
-private:
-    int m_value;
-};
+// private:
+//     int m_value;
+// };
 
 
 class CFrmSession : public QDialog
@@ -107,7 +108,25 @@ class CFrmSession : public QDialog
     // guid_symbolic     - GUID + symbolic
     enum class guidDisplayFormat {guid=0, symbolic, symbolic_guid, guid_symbolic};
 
+    /*!
+        This method is a middle man between the communication
+        callback and the session class. It add a VSCP event to the rc table
+        and to the receive event table.
+        @param pev Pointer to received event
+    */
+    void threadReceive(vscpEvent* pev);
 
+    /*!
+        Connect to remote host
+    */
+    void doConnectToRemoteHost(void);
+
+    /*!
+        Disconnect from remote host and update UI to 
+        indicate this
+    */
+    void doDisconnectFromRemoteHost(void);
+    
  public slots:
 
     /*! 
@@ -115,17 +134,35 @@ class CFrmSession : public QDialog
         @param ev Event to add
         @param bReceive Set to true if this is a received event
     */
-    void addRow(const vscpEvent& ev, bool bReceive);
+    void receiveRow(vscpEvent* pev);
+
+    /*!
+        Connect to remote host and update UI to 
+        indicate the result of the operation
+    */
+    void connectToRemoteHost(bool checked);    
+
+    /*!
+        Handle selections
+    */
+    void slotSelectionChange(const QItemSelection &, const QItemSelection &);
+
+ 
+ signals:
+    void dataReceived(vscpEvent* pev);
 
  private:
+
     void createMenu();
     void createHorizontalGroupBox();
     void createRxGroupBox();
     void createTxGridGroup();
     void createFormGroupBox();
 
+    // Toolbar
     void menu_connect();
     void menu_filter();
+    void menu_clear_rxlist();
 
     void transmitEvent();
 
@@ -140,10 +177,6 @@ class CFrmSession : public QDialog
     /// A pointer to a VSCP Client 
     CVscpClient *m_vscpClient;
 
-    /// Event database
-    //QSqlDatabase m_evdb;
-    //QSqlTableModel *m_rxmodel;
-
     QMenuBar *m_menuBar;
     
     /// Toolbar
@@ -154,7 +187,7 @@ class CFrmSession : public QDialog
     QGroupBox *m_txGroupBox;
     QGroupBox *m_formGroupBox;
     QTextBrowser *m_infoArea;
-    QTextBrowser *m_bigEditor;
+    //QTextBrowser *m_bigEditor;
     QLabel *m_labels[NumGridRows];
     QLineEdit *m_lineEdits[NumGridRows];
     QPushButton *m_buttons[NumButtons];
@@ -166,9 +199,26 @@ class CFrmSession : public QDialog
     /// Toolbar combo for numerical base
     QComboBox *m_baseComboBox;      
 
+    /// Count of received events
+    QLCDNumber *m_lcdNumber;
+
+    /// Clear RX list button
+    QPushButton *m_btnClearRcvList;
+    QAction *m_setClearRcvListActToolBar;
+
+    /// List for received events
     QTableWidget *m_rxTable;
-    //QTableView   *m_rxTable;
+
+    /// Mutex that protect the rx -lists
+    QMutex m_mutexRxList;
+
+    /// Queue that holds received events
+    std::deque<vscpEvent *> m_rxEvents;
+
+    /// List for transmittable events
     QTableWidget *m_txTable;
+
+    
 
     QMenu *m_fileMenu;
     QMenu *m_hostMenu;
@@ -188,8 +238,8 @@ class CFrmSession : public QDialog
     QAction *m_exitAct;
 
     // Host meny
-    QAction *m_connectAct;
-    QAction *m_disconnectAct;
+    QAction *m_connectAct;    
+    QAction *m_disconnectAct;    
     QAction *m_pauseAct;
     QAction *m_addHostAct;
     QAction *m_editHostAct;
@@ -219,6 +269,10 @@ class CFrmSession : public QDialog
     QAction *m_settingsAct;
 
     QToolBar *m_txToolBar;
+
+    // Toolbar actions
+    QAction *m_connectActToolBar;   
+    QAction *m_setFilterActToolBar;
 };
 
 #endif // CFRMSESSION_H

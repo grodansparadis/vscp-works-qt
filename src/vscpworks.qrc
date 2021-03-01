@@ -4,6 +4,7 @@
     <file alias="accept.png">images/png/128x128/accept.png</file>
     <file alias="add.png">images/png/128x128/add.png</file>
     <file alias="info.png">images/png/128x128/info.png</file>
+    <file alias="remove.png">images/png/128x128/remove.png</file>
 
     <file alias="process.png">images/png/128x128/process.png</file>
     <file alias="process_accept.png">images/png/128x128/process_accept.png</file>

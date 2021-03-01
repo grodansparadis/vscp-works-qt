@@ -29,6 +29,8 @@
 #ifndef VSCPWORKS_H
 #define VSCPWORKS_H
 
+#include <vscp.h>
+
 #include "version.h"
 #include "vscp_client_base.h"
 
@@ -46,7 +48,9 @@
 
 #include <list>
 
-
+// Register to be used for signals
+Q_DECLARE_METATYPE(vscpEvent)
+Q_DECLARE_METATYPE(vscpEventEx)
 
 // home folder is used for storage of program configuration
 // system folder holds databases etc

@@ -484,7 +484,7 @@ void MainWindow::addLoadedConnections(void)
 
                         // pClient->setName((it->second)["name"].toString().toStdString());
                         // pClient->setPath((it->second)["path"].toString().toStdString());
-                        // pClient->fromJSON(QJsonDocument(it->second).toJson(QJsonDocument::Compact).toStdString());
+                        // pClient->initFromJson(QJsonDocument(it->second).getConfigAsJson(QJsonDocument::Compact).toStdString());
 
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_local, it.value());
@@ -1653,7 +1653,11 @@ void MainWindow::newSession()
             QJsonObject *pconn = itemConn->getJson();
 
             CFrmSession *w = new CFrmSession(this, pconn);
+            w->setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
             w->show();
+            w->raise();
+            // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+            w->activateWindow();
         }
     }
 }
@@ -1711,7 +1715,7 @@ restart:
 
         // pClient->setName(strName.toStdString());
         // pClient->setPath(dlg.getPath().toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
 
         // Add connection to connection tree
         addChildItemToConnectionTree(m_topitem_local, conn);
@@ -1795,7 +1799,7 @@ restart:
         // vscpClientCanal *pClient = new vscpClientCanal();
         
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         // pClient->init(dlg.getPath().toStdString(), dlg.getConfig().toStdString(), dlg.getFlags() );
 
         // Add connection to connection tree
@@ -1880,7 +1884,7 @@ restart:
         // vscpClientTcp *pClient = new vscpClientTcp();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -1966,7 +1970,7 @@ restart:
         // vscpClientSocketCan *pClient = new vscpClientSocketCan();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2053,7 +2057,7 @@ restart:
         // vscpClientMqtt *pClient = new vscpClientMqtt();
         // pClient->setName(strName.toStdString());
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2140,7 +2144,7 @@ restart:
         // vscpClientWs1 *pClient = new vscpClientWs1();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2227,7 +2231,7 @@ restart:
         // vscpClientWs2 *pClient = new vscpClientWs2();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2315,7 +2319,7 @@ restart:
         // vscpClientUdp *pClient = new vscpClientUdp();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2402,7 +2406,7 @@ restart:
         // vscpClientMulticast *pClient = new vscpClientMulticast();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2488,7 +2492,7 @@ restart:
         // vscpClientRest *pClient = new vscpClientRest();
 
         // pClient->setName(strName.toStdString());
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
 
@@ -2573,7 +2577,7 @@ restart:
         // Create a new local communication object
         // vscpClientRawCan *pClient = new vscpClientRawCan();
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);
@@ -2659,7 +2663,7 @@ restart:
         // Create a new local communication object
         // vscpClientRawMqtt *pClient = new vscpClientRawMqtt();
 
-        // pClient->fromJSON(QJsonDocument(dlg.getJson()).toJson(QJsonDocument::Compact).toStdString());
+        // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
         // pClient->setName(strName.toStdString());
         //pClient->setPath(dlg.getPath());
         //m_mapConn.push_back(pClient);

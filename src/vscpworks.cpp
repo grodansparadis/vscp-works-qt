@@ -70,10 +70,16 @@ vscpworks::vscpworks(int &argc, char **argv) :
 
     m_session_bAutoConnect = true;
 
+    // After the following it is possible to create and destroy event objects 
+    // dynamically at run-time
+    int idEvent = qRegisterMetaType<vscpEvent>();
+    int idEventEx = qRegisterMetaType<vscpEventEx>();
+
     // QUuid uuid; 
     // uuid = QUuid::createUuid();
     // qDebug() << QUuid::createUuid().toString();
     // qDebug() << "\n";
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////

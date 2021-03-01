@@ -36,116 +36,76 @@
 
 #include <stdlib.h>
 
-#include <QtWidgets>
 #include <QSqlTableModel>
 #include <QTableView>
 #include <QtSql>
-
+#include <QtWidgets>
 
 ///////////////////////////////////////////////////////////////////////////////
 // vscp_client_callback
 //
 
+// void CVscpClientCallback::eventReceived(vscpEvent *pev)
+// {
+//     vscpEvent ev;
+//     //emit CFrmSession::receiveRow(pev, true);
+// }
 
-void CVscpClientCallback::eventReceived(vscpEvent *pev)
+static void
+eventReceived(vscpEvent* pev, void* pobj)
 {
-    vscpEvent ev;
-    emit addRow(&ev, true);
+    vscpEvent *pevnew = new vscpEvent;
+    pevnew->sizeData = 0;
+    pevnew->pdata = nullptr;
+    vscp_copyEvent(pevnew,pev);
+
+    CFrmSession* pSession = (CFrmSession*)pobj;
+    pSession->threadReceive(pevnew);
 }
 
-
 // ----------------------------------------------------------------------------
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // CFrmSession
 //
 
-CFrmSession::CFrmSession(QWidget *parent, QJsonObject *pconn) :
-    QDialog(parent)
+CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
+  : QDialog(parent)
 {
     // No connection set yet
     m_vscpConnType = CVscpClient::connType::NONE;
-    m_vscpClient = NULL;
+    m_vscpClient   = NULL;
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    pworks->log(pworks->LOG_LEVEL_DEBUG, "Session module opended");
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    pworks->log(pworks->LOG_LEVEL_DEBUG, "Session: Session module opended");
 
     if (nullptr == pconn) {
-        pworks->log(pworks->LOG_LEVEL_ERROR, "pconn is null");
-        QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Can't open session window - configuration data is missing"),
-                              QMessageBox::Ok );
+        pworks->log(pworks->LOG_LEVEL_ERROR, "Session: pconn is null");
+        QMessageBox::information(
+          this,
+          tr("vscpworks+"),
+          tr("Can't open session window - configuration data is missing"),
+          QMessageBox::Ok);
         return;
     }
 
-    // Save session configuration 
+    // Save session configuration
     m_connObject = *pconn;
 
     // Must have a type
     if (m_connObject["type"].isNull()) {
-        pworks->log(pworks->LOG_LEVEL_ERROR, "type is not define in JSON data");
-        QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Can't open session window - The connection type is unknown"),
-                              QMessageBox::Ok );
+        pworks->log(pworks->LOG_LEVEL_ERROR,
+                    "Session: Type is not define in JSON data");
+        QMessageBox::information(
+          this,
+          tr("vscpworks+"),
+          tr("Can't open session window - The connection type is unknown"),
+          QMessageBox::Ok);
         return;
     }
 
-    m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
-
-    switch (m_vscpConnType) {
-
-        case CVscpClient::connType::NONE:
-            break;
-
-        case CVscpClient::connType::LOCAL:
-            break;
-
-        case CVscpClient::connType::TCPIP: 
-            m_vscpClient = new vscpClientTcp();
-            break;
-
-        case CVscpClient::connType::CANAL: 
-            break;
-
-        case CVscpClient::connType::SOCKETCAN:
-            break;
-
-        case CVscpClient::connType::WS1:
-            break;
-
-        case CVscpClient::connType::WS2: 
-            break;
-
-        case CVscpClient::connType::MQTT: 
-            break;
-
-        case CVscpClient::connType::UDP:
-            break;
-
-        case CVscpClient::connType::MULTICAST:
-            break;
-
-        case CVscpClient::connType::REST:
-            break;
-
-        case CVscpClient::connType::RS232: 
-            break;
-
-        case CVscpClient::connType::RS485: 
-            break;
-
-        case CVscpClient::connType::RAWCAN:
-            break;
-
-        case CVscpClient::connType::RAWMQTT:
-            break;
-    }
+    m_vscpConnType =
+      static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
 
     QString str; // = tr("VSCP Client Session - ");
     str += pworks->getConnectionName(m_vscpConnType);
@@ -156,16 +116,17 @@ CFrmSession::CFrmSession(QWidget *parent, QJsonObject *pconn) :
     else {
         str += tr("Unknown");
     }
-    setWindowTitle(str); 
+    setWindowTitle(str);
 
     // Initial default size of window
-    int nWidth = 1200;
+    int nWidth  = 1200;
     int nHeight = 800;
 
     if (parent != NULL) {
-        setGeometry(parent->x() + parent->width()/2 - nWidth/2,
-                    parent->y() + parent->height()/2 - nHeight/2,
-                    nWidth, nHeight);
+        setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
+                    parent->y() + parent->height() / 2 - nHeight / 2,
+                    nWidth,
+                    nHeight);
     }
     else {
         resize(nWidth, nHeight);
@@ -177,48 +138,116 @@ CFrmSession::CFrmSession(QWidget *parent, QJsonObject *pconn) :
     createMenu();
     createHorizontalGroupBox();
     createRxGroupBox();
-    //createFormGroupBox();
-    createTxGridGroup();    
+    // createFormGroupBox();
+    createTxGridGroup();
 
-    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
-                                     | QDialogButtonBox::Cancel);
+    m_buttonBox =
+      new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
+    // Handle selections
+    connect(m_rxTable->selectionModel(), 
+                SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+                SLOT(slotSelectionChange(const QItemSelection &, const QItemSelection &)));
+
     // Lay out things
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setMenuBar(m_menuBar);
     mainLayout->addWidget(m_toolBar);
-    //mainLayout->addWidget(horizontalGroupBox);
-    mainLayout->addWidget(m_gridGroupBox,6);
-    mainLayout->addWidget(m_txGroupBox,3);
-    
-    //mainLayout->addWidget(formGroupBox);
-    //mainLayout->addWidget(bigEditor);
-    //mainLayout->addStretch(80);
-    //mainLayout->addWidget(buttonBox);
-    
+    // mainLayout->addWidget(horizontalGroupBox);
+    mainLayout->addWidget(m_gridGroupBox, 6);
+    mainLayout->addWidget(m_txGroupBox, 3);
+
+    // mainLayout->addWidget(formGroupBox);
+    // mainLayout->addWidget(bigEditor);
+    // mainLayout->addStretch(80);
+    // mainLayout->addWidget(buttonBox);
+
     setLayout(mainLayout);
 
+    qDebug() << connect( this, &CFrmSession::dataReceived,
+                 this, &CFrmSession::receiveRow,
+                 Qt::ConnectionType::QueuedConnection );
+
+    QJsonDocument doc(m_connObject);
+    QString strJson(doc.toJson(QJsonDocument::Compact));
+
+    switch (m_vscpConnType) {
+
+        case CVscpClient::connType::NONE:
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            break;
+
+        case CVscpClient::connType::TCPIP:
+            m_vscpClient = new vscpClientTcp();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
+            break;
+
+        case CVscpClient::connType::CANAL:
+            break;
+
+        case CVscpClient::connType::SOCKETCAN:
+            break;
+
+        case CVscpClient::connType::WS1:
+            break;
+
+        case CVscpClient::connType::WS2:
+            break;
+
+        case CVscpClient::connType::MQTT:
+            break;
+
+        case CVscpClient::connType::UDP:
+            break;
+
+        case CVscpClient::connType::MULTICAST:
+            break;
+
+        case CVscpClient::connType::REST:
+            break;
+
+        case CVscpClient::connType::RS232:
+            break;
+
+        case CVscpClient::connType::RS485:
+            break;
+
+        case CVscpClient::connType::RAWCAN:
+            break;
+
+        case CVscpClient::connType::RAWMQTT:
+            break;
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // DTor
 //
 
-CFrmSession::~CFrmSession()
+CFrmSession::~CFrmSession() 
 {
-    // Close the event database3
-    //m_evdb.close();
-    //delete ui;
+    // Remove receive events
+    while (m_rxEvents.size()) {
+        vscpEvent *pev = m_rxEvents.front();
+        m_rxEvents.pop_front();
+        vscp_deleteEvent(pev);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // createMenu
 //
 
-void CFrmSession::createMenu()
+void
+CFrmSession::createMenu()
 {
     m_menuBar = new QMenuBar;
 
@@ -226,24 +255,29 @@ void CFrmSession::createMenu()
     m_fileMenu = new QMenu(tr("&File"), this);
 
     // Icons
-    const QIcon windowCloseIcon = QIcon::fromTheme("window-close"); 
+    const QIcon windowCloseIcon = QIcon::fromTheme("window-close");
 
     const QIcon loadIcon = QIcon::fromTheme("window-close");
     const QIcon saveIcon = QIcon::fromTheme("window-close");
 
-    //const QIcon connectIcon = QIcon::fromTheme("call-start"); 
-    const QIcon disconnectIcon = QIcon::fromTheme("call-stop"); 
-    //const QIcon filterIcon = QIcon::fromTheme("edit-find");
-    //const QIcon filterIcon = QIcon::fromTheme("edit-find");
-    
-    m_loadEventsAct = m_fileMenu->addAction(tr("Load VSCP events from file..."));
+    // const QIcon connectIcon = QIcon::fromTheme("call-start");
+    const QIcon disconnectIcon = QIcon::fromTheme("call-stop");
+    // const QIcon filterIcon = QIcon::fromTheme("edit-find");
+    // const QIcon filterIcon = QIcon::fromTheme("edit-find");
+
+    m_loadEventsAct =
+      m_fileMenu->addAction(tr("Load VSCP events from file..."));
     m_saveEventsAct = m_fileMenu->addAction(tr("Save VSCP events to file..."));
-    m_loadTxAct = m_fileMenu->addAction(tr("Load transmission set from file..."));
+    m_loadTxAct =
+      m_fileMenu->addAction(tr("Load transmission set from file..."));
     m_saveTxAct = m_fileMenu->addAction(tr("Save transmission set to file"));
-    
-    m_exitAct = m_fileMenu->addAction(windowCloseIcon, tr("Close session window"), this, &QWidget::close);
+
+    m_exitAct = m_fileMenu->addAction(windowCloseIcon,
+                                      tr("Close session window"),
+                                      this,
+                                      &QWidget::close);
     m_exitAct->setStatusTip(tr("Close session window"));
-    
+
     m_menuBar->addMenu(m_fileMenu);
 
     m_toolBar->addSeparator();
@@ -257,20 +291,27 @@ void CFrmSession::createMenu()
     m_toolBar->addWidget(m_baseComboBox);
 
     m_toolBar->addSeparator();
-    
+
     // Connect
     QIcon connectIcon(":/connect.png");
-    m_connectAct = m_toolBar->addAction(connectIcon, tr("Connect"), this, &CFrmSession::menu_connect);
-    m_connectAct->setStatusTip(tr("Connect/disconnect from remote host"));
-    m_connectAct->setCheckable(true);
+    m_connectActToolBar = m_toolBar->addAction(connectIcon,
+                                               tr("Connect"),
+                                               this,
+                                               &CFrmSession::menu_connect);
+    m_connectActToolBar->setStatusTip(
+      tr("Connect/disconnect from remote host"));
+    m_connectActToolBar->setCheckable(true);
 
     m_toolBar->addSeparator();
 
     // Filter
     QIcon filterIcon(":/filter.png");
-    m_setFilterAct = m_toolBar->addAction(filterIcon, tr("Enable filter"), this, &CFrmSession::menu_filter);
-    m_setFilterAct->setStatusTip(tr("Enable/disable filter"));
-    m_setFilterAct->setCheckable(true);
+    m_setFilterActToolBar = m_toolBar->addAction(filterIcon,
+                                                 tr("Enable filter"),
+                                                 this,
+                                                 &CFrmSession::menu_filter);
+    m_setFilterActToolBar->setStatusTip(tr("Enable/disable filter"));
+    m_setFilterActToolBar->setCheckable(true);
 
     m_filterComboBox = new QComboBox;
     m_filterComboBox->addItem("This is the magnifićant Filter 1");
@@ -281,50 +322,66 @@ void CFrmSession::createMenu()
 
     m_toolBar->addSeparator();
 
-    
+    m_lcdNumber = new QLCDNumber;
+    m_lcdNumber->setDigitCount(7);
+    m_lcdNumber->setSegmentStyle(QLCDNumber::Filled);
+    m_toolBar->addWidget(m_lcdNumber);
 
-    //toolBar->addAction(connectAct);
-    
+    // Clear 
+     QIcon clearIcon(":/remove.png");
+    m_setClearRcvListActToolBar = m_toolBar->addAction(clearIcon,
+                                                 tr("Clear receive list"),
+                                                 this,
+                                                 &CFrmSession::menu_clear_rxlist);
+    // m_btnClearRcvList = new QPushButton;
+    // m_btnClearRcvList->setText("Clear");
+    // m_toolBar->addWidget(m_btnClearRcvList);
+
+    m_toolBar->addSeparator();
+
+    // ------------------------------------------------------------------------
+
     // Edit menu
-    m_editMenu = new QMenu(tr("&Edit"), this);
-    m_cutAct = m_editMenu->addAction(tr("Cut"));
-    m_copyAct = m_editMenu->addAction(tr("Copy"));
+    m_editMenu       = new QMenu(tr("&Edit"), this);
+    m_cutAct         = m_editMenu->addAction(tr("Cut"));
+    m_copyAct        = m_editMenu->addAction(tr("Copy"));
     m_pasteBeforeAct = m_editMenu->addAction(tr("Paste before"));
-    m_pasteAfterAct = m_editMenu->addAction(tr("Paste after"));
+    m_pasteAfterAct  = m_editMenu->addAction(tr("Paste after"));
     m_menuBar->addMenu(m_editMenu);
 
     // Host menu
-    m_hostMenu = new QMenu(tr("&Host"), this);
-    m_connectAct = m_hostMenu->addAction(tr("Connect to host..."));
+    m_hostMenu      = new QMenu(tr("&Host"), this);
+    m_connectAct    = m_hostMenu->addAction(tr("Connect to host..."));
     m_disconnectAct = m_hostMenu->addAction(tr("Disconnect from host..."));
-    m_pauseAct = m_hostMenu->addAction(tr("Pause host"));
-    m_addHostAct = m_hostMenu->addAction(tr("Add host..."));
+    // m_pauseAct = m_hostMenu->addAction(tr("Pause host"));
+    // m_addHostAct = m_hostMenu->addAction(tr("Add host..."));
     m_editHostAct = m_hostMenu->addAction(tr("Edit host settings..."));
     m_menuBar->addMenu(m_hostMenu);
 
     // View menu
-    m_viewMenu = new QMenu(tr("&View"), this);
+    m_viewMenu       = new QMenu(tr("&View"), this);
     m_viewMessageAct = m_viewMenu->addAction(tr("Message flow"));
-    m_viewCountAct = m_viewMenu->addAction(tr("Message count"));
+    m_viewCountAct   = m_viewMenu->addAction(tr("Message count"));
     m_viewMenu->addSeparator();
     m_viewClrRxListAct = m_viewMenu->addAction(tr("Clear receive list..."));
-    m_viewClrTxListAct = m_viewMenu->addAction(tr("Clear transmission list..."));
+    m_viewClrTxListAct =
+      m_viewMenu->addAction(tr("Clear transmission list..."));
     m_menuBar->addMenu(m_viewMenu);
 
     // VSCP menu
-    m_vscpMenu = new QMenu(tr("&vscp"), this);
-    m_readRegAct = m_vscpMenu->addAction(tr("Read register..."));
-    m_writeRegAct = m_vscpMenu->addAction(tr("Write register..."));
+    m_vscpMenu      = new QMenu(tr("&vscp"), this);
+    m_readRegAct    = m_vscpMenu->addAction(tr("Read register..."));
+    m_writeRegAct   = m_vscpMenu->addAction(tr("Write register..."));
     m_readAllRegAct = m_vscpMenu->addAction(tr("Read (all) registers..."));
-    m_readGuidAct = m_vscpMenu->addAction(tr("Read GUID"));
-    m_readMdfAct = m_vscpMenu->addAction(tr("Read MDF..."));
-    m_loadMdfAct = m_vscpMenu->addAction(tr("Download MDF..."));
+    m_readGuidAct   = m_vscpMenu->addAction(tr("Read GUID"));
+    m_readMdfAct    = m_vscpMenu->addAction(tr("Read MDF..."));
+    m_loadMdfAct    = m_vscpMenu->addAction(tr("Download MDF..."));
     m_menuBar->addMenu(m_vscpMenu);
 
     // Settings menu
     m_settingsMenu = new QMenu(tr("&Setting"), this);
     m_setFilterAct = m_settingsMenu->addAction(tr("Set/define filter..."));
-    m_settingsAct = m_settingsMenu->addAction(tr("Settings..."));
+    m_settingsAct  = m_settingsMenu->addAction(tr("Settings..."));
     m_menuBar->addMenu(m_settingsMenu);
 
     // Tools menu
@@ -333,23 +390,36 @@ void CFrmSession::createMenu()
 
     connect(m_exitAct, &QAction::triggered, this, &QDialog::accept);
 
-// #ifndef QT_NO_CLIPBOARD
-//     cutAct->setEnabled(false);
+    // connect(m_connectAct, SIGNAL(triggered(bool)), this,
+    // SLOT(connectToRemoteHost(bool))); // &QAction::
+    connect(m_connectActToolBar,
+            SIGNAL(triggered(bool)),
+            this,
+            SLOT(connectToRemoteHost(bool)));
+    connect(m_disconnectAct,
+            SIGNAL(toggled(bool)),
+            this,
+            SLOT(connectToRemoteHost(bool)));
 
-//     copyAct->setEnabled(false);
-//     connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-//     connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
-// #endif // !QT_NO_CLIPBOARD
+    // #ifndef QT_NO_CLIPBOARD
+    //     cutAct->setEnabled(false);
+
+    //     copyAct->setEnabled(false);
+    //     connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct,
+    //     &QAction::setEnabled); connect(textEdit,
+    //     &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+    // #endif // !QT_NO_CLIPBOARD
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // createHorizontalGroupBox
 //
 
-void CFrmSession::createHorizontalGroupBox()
+void
+CFrmSession::createHorizontalGroupBox()
 {
     m_horizontalGroupBox = new QGroupBox(tr("Horizontal layout"));
-    QHBoxLayout *layout = new QHBoxLayout;
+    QHBoxLayout* layout  = new QHBoxLayout;
 
     for (int i = 0; i < NumButtons; ++i) {
         m_buttons[i] = new QPushButton(tr("Button %1").arg(i + 1));
@@ -362,11 +432,12 @@ void CFrmSession::createHorizontalGroupBox()
 // createRxGridGroup
 //
 
-void CFrmSession::createRxGroupBox()
+void
+CFrmSession::createRxGroupBox()
 {
-    m_gridGroupBox = new QGroupBox(tr("Receive Events "));
-    QGridLayout *layout = new QGridLayout;
-    layout->setContentsMargins(1,1,1,1);
+    m_gridGroupBox      = new QGroupBox(tr("Receive Events "));
+    QGridLayout* layout = new QGridLayout;
+    layout->setContentsMargins(1, 1, 1, 1);
 
     // for (int i = 0; i < NumGridRows; ++i) {
     //     labels[i] = new QLabel(tr("Line %1:").arg(i + 1));
@@ -374,39 +445,40 @@ void CFrmSession::createRxGroupBox()
     //     layout->addWidget(labels[i], i + 1, 0);
     //     layout->addWidget(lineEdits[i], i + 1, 1);
     // }
-    QStringList headers(QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
+    QStringList headers(
+      QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
     m_rxTable = new QTableWidget;
     m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    //QTableWidget::horizontalHeader().setStretchLastSection(true);
-    m_rxTable->setRowCount(4);
-    //m_rxTable->setVerticalHeaderLabels(headers);
+    // QTableWidget::horizontalHeader().setStretchLastSection(true);
+    //m_rxTable->setRowCount(4);
+    // m_rxTable->setVerticalHeaderLabels(headers);
     m_rxTable->setColumnCount(5);
-    m_rxTable->setColumnWidth(0, 10);       // Dir
-    m_rxTable->setColumnWidth(1, 200);      // Class
-    m_rxTable->setColumnWidth(2, 200);      // Type
-    m_rxTable->setColumnWidth(3, 50);       // Node id
-    m_rxTable->setColumnWidth(4, 50);       // GUID
+    m_rxTable->setColumnWidth(0, 10);  // Dir
+    m_rxTable->setColumnWidth(1, 200); // Class
+    m_rxTable->setColumnWidth(2, 200); // Type
+    m_rxTable->setColumnWidth(3, 50);  // Node id
+    m_rxTable->setColumnWidth(4, 50);  // GUID
     m_rxTable->horizontalHeader()->setStretchLastSection(true);
     m_rxTable->setHorizontalHeaderLabels(headers);
 
-    QTableWidgetItem *item = new QTableWidgetItem("ᐊ ᐅ"); // ➤ ➜ ➡ ➤
-    item->setTextAlignment(Qt::AlignHCenter);
-    //item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-    int row  = m_rxTable->rowCount();
-    m_rxTable->insertRow(row);
-    
-    //QTableWidgetItem *item = m_rxTable->item(1, 1);
-    item->setFlags(item->flags() &  ~Qt::ItemIsEditable);
-    item->setForeground(QBrush(QColor(0, 5, 180)));
+    // QTableWidgetItem* item = new QTableWidgetItem("ᐊ ᐅ"); // ➤ ➜ ➡ ➤
+    // item->setTextAlignment(Qt::AlignHCenter);
+    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+    // int row = m_rxTable->rowCount();
+    // m_rxTable->insertRow(row);
 
-    m_rxTable->setItem( m_rxTable->rowCount()-1, 0, item);
-    //QTableWidgetItem *item; 
+    // QTableWidgetItem *item = m_rxTable->item(1, 1);
+    // item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    // item->setForeground(QBrush(QColor(0, 5, 180)));
 
-    QTableWidgetItem *icon_item = new QTableWidgetItem;
-    const QIcon loadIcon = QIcon::fromTheme("window-close");
-    icon_item->setIcon(loadIcon);
-    m_rxTable->insertRow(row);
-    m_rxTable->setItem( m_rxTable->rowCount()-1, 1, icon_item);
+    // m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, item);
+    // QTableWidgetItem *item;
+
+    // QTableWidgetItem* icon_item = new QTableWidgetItem;
+    // const QIcon loadIcon        = QIcon::fromTheme("window-close");
+    // icon_item->setIcon(loadIcon);
+    // m_rxTable->insertRow(row);
+    // m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, icon_item);
 
     // item = m_rxTable->item(row, 1);
     // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
@@ -415,14 +487,14 @@ void CFrmSession::createRxGroupBox()
     // item = m_rxTable->item(row, 3);
     // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
 
-    m_rxTable->setUpdatesEnabled(false);
-    for(int i =0; i<m_rxTable->rowCount(); i++) {               
-        m_rxTable->setRowHeight(i, 10); 
-    }
-    m_rxTable->setUpdatesEnabled(true);
+    // m_rxTable->setUpdatesEnabled(false);
+    // for (int i = 0; i < m_rxTable->rowCount(); i++) {
+    //     m_rxTable->setRowHeight(i, 10);
+    // }
+    // m_rxTable->setUpdatesEnabled(true);
 
     // <---
-    //QSqlTableModel *
+    // QSqlTableModel *
     // m_rxmodel = new QSqlTableModel;
     // m_rxmodel->setTable("events");
     // m_rxmodel->setEditStrategy(QSqlTableModel::OnManualSubmit);
@@ -432,47 +504,60 @@ void CFrmSession::createRxGroupBox()
 
     // m_rxTable->setModel(m_rxmodel);
     // m_rxTable->hideColumn(0); // don't show the ID
-    
-    layout->addWidget(m_rxTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan 
 
-    m_rxTable->show(); 
+    layout->addWidget(m_rxTable,
+                      0,
+                      0,
+                      1,
+                      4); //  fromRow, fromColumn, rowSpan, columnSpan
+
+    m_rxTable->show();
 
     m_infoArea = new QTextBrowser;
     m_infoArea->setAcceptRichText(true);
     m_infoArea->setOpenLinks(true);
-    m_infoArea->setOpenExternalLinks(true); 
+    m_infoArea->setOpenExternalLinks(true);
     QColor grey(Qt::red);
     m_infoArea->setTextBackgroundColor(grey);
-    m_infoArea->insertHtml(tr("<h3>VSCP Event</h3>"
-                               "<small><p style=\"color:#993399\">Received event</p></small>"
-                               "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
-                               "<b>Time: </b><span style=\"color:rgb(0, 0, 153);\">2021-09-12T12:10:29</span><br>"
-                               "<b>Timestamp: </b><span style=\" color:rgb(0, 0, 153);\">0x1213140f</span><br>"
-                               "<br>"
-                               "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
-                               "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
-                               "<br>"
-                               "<b>GUID: </b><small><span style=\"color:rgb(0, 102, 0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
-                               
-                               "<br><br>This <b>widget takes</b> up all the remaining space "
-                               "in the top-level layout ddddd."
-                               "in the top-level layout ddddd."
-                               "<h1>This is a test</h1> <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                               "This is a test <br>"
-                                "This is a test <br>"
-                               "This is a test <br>"
-                               "Carpe Diem <br>"
-                               ));
-                              
-    layout->addWidget(m_infoArea, 0, 4, 1, 2); //  fromRow, fromColumn, rowSpan, columnSpan
-    layout->setColumnMinimumWidth(4,350);
+    m_infoArea->insertHtml(tr(
+      "<h3>VSCP Event</h3>"
+      "<small><p style=\"color:#993399\">Received event</p></small>"
+      "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
+      "<b>Time: </b><span style=\"color:rgb(0, 0, "
+      "153);\">2021-09-12T12:10:29</span><br>"
+      "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
+      "153);\">0x1213140f</span><br>"
+      "<br>"
+      "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span "
+      "style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
+      "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span "
+      "style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
+      "<br>"
+      "<b>GUID: </b><small><span style=\"color:rgb(0, 102, "
+      "0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
+
+      "<br><br>This <b>widget takes</b> up all the remaining space "
+      "in the top-level layout ddddd."
+      "in the top-level layout ddddd."
+      "<h1>This is a test</h1> <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "This is a test <br>"
+      "Carpe Diem <br>"));
+
+    layout->addWidget(m_infoArea,
+                      0,
+                      4,
+                      1,
+                      2); //  fromRow, fromColumn, rowSpan, columnSpan
+    layout->setColumnMinimumWidth(4, 350);
 
     // 30 10
     layout->setColumnStretch(0, 30);
@@ -484,40 +569,53 @@ void CFrmSession::createRxGroupBox()
 // createTxGridGroup
 //
 
-void CFrmSession::createTxGridGroup()
+void
+CFrmSession::createTxGridGroup()
 {
-    m_txGroupBox = new QGroupBox(tr("Transmit"));
-    QGridLayout *layout = new QGridLayout;
-    layout->setContentsMargins(1,1,1,1);
+    m_txGroupBox        = new QGroupBox(tr("Transmit"));
+    QGridLayout* layout = new QGridLayout;
+    layout->setContentsMargins(1, 1, 1, 1);
 
-    QStringList headers(QString(tr("x,Name,Period,Count,Trigger,Event")).split(','));
+    QStringList headers(
+      QString(tr("x,Name,Period,Count,Trigger,Event")).split(','));
     m_txTable = new QTableWidget;
     m_txTable->setColumnCount(6);
-    m_txTable->setColumnWidth(0, 20);     // x
-    m_txTable->setColumnWidth(1, 300);    // Name
-    m_txTable->setColumnWidth(2, 80);     // Period
-    m_txTable->setColumnWidth(3, 80);     // Count
-    m_txTable->setColumnWidth(4, 80);     // Trigger
-    m_txTable->setColumnWidth(5, 50);     // Event
+    m_txTable->setColumnWidth(0, 20);  // x
+    m_txTable->setColumnWidth(1, 300); // Name
+    m_txTable->setColumnWidth(2, 80);  // Period
+    m_txTable->setColumnWidth(3, 80);  // Count
+    m_txTable->setColumnWidth(4, 80);  // Trigger
+    m_txTable->setColumnWidth(5, 50);  // Event
     m_txTable->horizontalHeader()->setStretchLastSection(true);
     m_txTable->setHorizontalHeaderLabels(headers);
-    layout->addWidget(m_txTable, 0, 0, 1, 4); //  fromRow, fromColumn, rowSpan, columnSpan
+    layout->addWidget(m_txTable,
+                      0,
+                      0,
+                      1,
+                      4); //  fromRow, fromColumn, rowSpan, columnSpan
 
     // Transmit/Add/Clone/Delete/Edit/Save/Load
     m_txToolBar = new QToolBar;
     m_txToolBar->setOrientation(Qt::Vertical);
 
     // Transmit
-    const QIcon newIcon = QIcon::fromTheme("edit-undo"); //QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
-    QAction *transmitAct = new QAction(newIcon, tr("&Transmit"), this);
+    const QIcon newIcon =
+      QIcon::fromTheme("edit-undo"); // QIcon::fromTheme("document-new",
+                                     // QIcon(":/images/new.png"));
+    QAction* transmitAct = new QAction(newIcon, tr("&Transmit"), this);
     transmitAct->setShortcuts(QKeySequence::New);
     transmitAct->setStatusTip(tr("Transmit selected event(s)"));
-    connect(transmitAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(transmitAct,
+            &QAction::triggered,
+            this,
+            &CFrmSession::transmitEvent);
     m_txToolBar->addAction(transmitAct);
 
     // Add tx row
-    const QIcon addIcon = QIcon::fromTheme("document-new"); // QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
-    QAction *addAct = new QAction(addIcon, tr("&Add"), this);
+    const QIcon addIcon =
+      QIcon::fromTheme("document-new"); // QIcon::fromTheme("document-new",
+                                        // QIcon(":/images/new.png"));
+    QAction* addAct = new QAction(addIcon, tr("&Add"), this);
     addAct->setShortcuts(QKeySequence::New);
     addAct->setStatusTip(tr("Add transmit event"));
     connect(addAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -525,7 +623,7 @@ void CFrmSession::createTxGridGroup()
 
     // Edit tx row
     const QIcon editIcon = QIcon::fromTheme("format-justify-center");
-    QAction *editAct = new QAction(editIcon, tr("&Edit"), this);
+    QAction* editAct     = new QAction(editIcon, tr("&Edit"), this);
     editAct->setShortcuts(QKeySequence::New);
     editAct->setStatusTip(tr("Edit selected event"));
     connect(editAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -533,7 +631,7 @@ void CFrmSession::createTxGridGroup()
 
     // Delete tx row
     const QIcon deleteIcon = QIcon::fromTheme("edit-delete");
-    QAction *deleteAct = new QAction(deleteIcon, tr("&Delete"), this);
+    QAction* deleteAct     = new QAction(deleteIcon, tr("&Delete"), this);
     deleteAct->setShortcuts(QKeySequence::New);
     deleteAct->setStatusTip(tr("Delete selected event"));
     connect(deleteAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -541,7 +639,7 @@ void CFrmSession::createTxGridGroup()
 
     // Clone tx row
     const QIcon cloneIcon = QIcon::fromTheme("edit-copy");
-    QAction *cloneAct = new QAction(cloneIcon, tr("&Clone"), this);
+    QAction* cloneAct     = new QAction(cloneIcon, tr("&Clone"), this);
     cloneAct->setShortcuts(QKeySequence::New);
     cloneAct->setStatusTip(tr("Clone selected event"));
     connect(cloneAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -551,7 +649,7 @@ void CFrmSession::createTxGridGroup()
 
     // Save tx rows
     const QIcon saveIcon = QIcon::fromTheme("document-save");
-    QAction *saveAct = new QAction(saveIcon, tr("&Save"), this);
+    QAction* saveAct     = new QAction(saveIcon, tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::New);
     saveAct->setStatusTip(tr("Save selected transmit event(s)"));
     connect(saveAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -559,7 +657,7 @@ void CFrmSession::createTxGridGroup()
 
     // Load tx rows
     const QIcon loadIcon = QIcon::fromTheme("document-open");
-    QAction *loadAct = new QAction(loadIcon, tr("&Load"), this);
+    QAction* loadAct     = new QAction(loadIcon, tr("&Load"), this);
     loadAct->setShortcuts(QKeySequence::New);
     loadAct->setStatusTip(tr("Load transmit event(s)"));
     connect(loadAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
@@ -576,10 +674,11 @@ void CFrmSession::createTxGridGroup()
 // menu_connect
 //
 
-void CFrmSession::menu_connect()
+void
+CFrmSession::menu_connect()
 {
-    const QIcon connectIcon = QIcon::fromTheme("call-start"); 
-    const QIcon disconnectIcon = QIcon::fromTheme("call-stop"); 
+    const QIcon connectIcon    = QIcon::fromTheme("call-start");
+    const QIcon disconnectIcon = QIcon::fromTheme("call-stop");
     // if ( m_connectAct->isChecked()) {
     //     m_connectAct->setIcon(connectIcon);
     // }
@@ -593,11 +692,12 @@ void CFrmSession::menu_connect()
 // menu_filter
 //
 
-void CFrmSession::menu_filter()
+void
+CFrmSession::menu_filter()
 {
-    //insert into events (class,type) values (11,22);
-    //QSqlQuery query = QSqlQuery( m_evdb );
-    //query.exec("insert into events (class,type) values (11,22);");
+    // insert into events (class,type) values (11,22);
+    // QSqlQuery query = QSqlQuery( m_evdb );
+    // query.exec("insert into events (class,type) values (11,22);");
     // for (int i = 0; i<9999; i++) {
     //     QSqlField field_idx("idx", QVariant::Int, "events");
     //     field_idx.setAutoValue(true);
@@ -610,29 +710,54 @@ void CFrmSession::menu_filter()
     //     rec.append(field_class);
     //     rec.append(field_type);
     //     //tableModels->value((*registryMap)[type])
-    //     m_rxmodel->insertRecord(-1, rec);        
+    //     m_rxmodel->insertRecord(-1, rec);
     // }
     // m_rxmodel->submitAll();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// menu_clear_rxlist
+//
+
+void
+CFrmSession::menu_clear_rxlist()
+{
+    m_mutexRxList.lock();
+    
+    // Clear rx list
+    while (m_rxTable->rowCount()) {
+        m_rxTable->removeRow(0);
+    }
+
+    // Remove receive events
+    while (m_rxEvents.size()) {
+        vscpEvent *pev = m_rxEvents.front();
+        m_rxEvents.pop_front();
+        vscp_deleteEvent(pev);
+    }
+
+    m_mutexRxList.unlock();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // transmitEvent
 //
 
-void CFrmSession::transmitEvent()
+void
+CFrmSession::transmitEvent()
 {
-    QMessageBox::about(this, tr("Test"), tr("Carpe Diem") );
+    QMessageBox::about(this, tr("Test"), tr("Carpe Diem"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // createFormGroupBox
 //
 
-void CFrmSession::createFormGroupBox()
+void
+CFrmSession::createFormGroupBox()
 {
-    m_formGroupBox = new QGroupBox(tr("Form layout"));
-    QFormLayout *layout = new QFormLayout;
+    m_formGroupBox      = new QGroupBox(tr("Form layout"));
+    QFormLayout* layout = new QFormLayout;
     layout->addRow(new QLabel(tr("Line 1:")), new QLineEdit);
     layout->addRow(new QLabel(tr("Line 2, long text:")), new QComboBox);
     layout->addRow(new QLabel(tr("Line 3:")), new QSpinBox);
@@ -640,11 +765,276 @@ void CFrmSession::createFormGroupBox()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// addRow
+// connectToHost
 //
 
-void CFrmSession::addRow(const vscpEvent& ev, bool bReceive)
+void
+CFrmSession::connectToRemoteHost(bool checked)
 {
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    if (checked) {
+        if (pworks->m_session_bAutoConnect) {
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to connect to remote client");
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to open a connection to the remote host"),
+                  QMessageBox::Ok);
+            }
+            else {
+            }
+        }
+    }
+    else {
+        doDisconnectFromRemoteHost();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// doConnectToRemoteHost
+//
+
+void
+CFrmSession::doConnectToRemoteHost(void)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    switch (m_vscpConnType) {
+
+        case CVscpClient::connType::NONE:
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            break;
+
+        case CVscpClient::connType::TCPIP:
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to connect to remote client");
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to open a connection to the remote host"),
+                  QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful connect to remote client");
+            }
+            break;
+
+        case CVscpClient::connType::CANAL:
+            break;
+
+        case CVscpClient::connType::SOCKETCAN:
+            break;
+
+        case CVscpClient::connType::WS1:
+            break;
+
+        case CVscpClient::connType::WS2:
+            break;
+
+        case CVscpClient::connType::MQTT:
+            break;
+
+        case CVscpClient::connType::UDP:
+            break;
+
+        case CVscpClient::connType::MULTICAST:
+            break;
+
+        case CVscpClient::connType::REST:
+            break;
+
+        case CVscpClient::connType::RS232:
+            break;
+
+        case CVscpClient::connType::RS485:
+            break;
+
+        case CVscpClient::connType::RAWCAN:
+            break;
+
+        case CVscpClient::connType::RAWMQTT:
+            break;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// doDisconnectFromRemoteHost
+//
+
+void
+CFrmSession::doDisconnectFromRemoteHost(void)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    switch (m_vscpConnType) {
+
+        case CVscpClient::connType::NONE:
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            break;
+
+        case CVscpClient::connType::TCPIP:
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to disconnect remote client");
+                QMessageBox::information(
+                this,
+                tr("vscpworks+"),
+                tr("Failed to disconnect the connection to the remote host"),
+                QMessageBox::Ok);
+            }
+            break;
+
+        case CVscpClient::connType::CANAL:
+            break;
+
+        case CVscpClient::connType::SOCKETCAN:
+            break;
+
+        case CVscpClient::connType::WS1:
+            break;
+
+        case CVscpClient::connType::WS2:
+            break;
+
+        case CVscpClient::connType::MQTT:
+            break;
+
+        case CVscpClient::connType::UDP:
+            break;
+
+        case CVscpClient::connType::MULTICAST:
+            break;
+
+        case CVscpClient::connType::REST:
+            break;
+
+        case CVscpClient::connType::RS232:
+            break;
+
+        case CVscpClient::connType::RS485:
+            break;
+
+        case CVscpClient::connType::RAWCAN:
+            break;
+
+        case CVscpClient::connType::RAWMQTT:
+            break;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// slotSelectionChange
+//
+
+void CFrmSession::slotSelectionChange(const QItemSelection &, const QItemSelection &)
+{
+    QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+
 
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// receiveRow
+//
+
+void
+CFrmSession::receiveRow(vscpEvent* pev)
+{
+    m_mutexRxList.lock();
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    int row = m_rxTable->rowCount();
+    m_rxTable->insertRow(row);
+
+    // Save event
+    m_rxEvents.push_back(pev);
+
+    // * * * Direction * * *
+    QTableWidgetItem* itemDir = new QTableWidgetItem("ᐅ"); // ➤ ➜ ➡ ➤ ᐊ
+    itemDir->setTextAlignment(Qt::AlignCenter);
+
+    // Not editable
+    itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+
+    // Bluish
+    itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+
+    // Add
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
+
+    // If one or more rows are selected don't autoscroll
+    if (!m_rxTable->selectedItems().size()) {
+        m_rxTable->scrollToItem(itemDir);
+    }
+
+
+    // * * * Class * * *
+    QTableWidgetItem* itemClass = new QTableWidgetItem(pworks->mapVscpClassToToken[pev->vscp_class]/*QString::number(ev.vscp_class)*/);
+    itemClass->setToolTip("This\nis\na\ntest");
+    itemClass->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+    itemClass->setForeground(QBrush(QColor(0, 99, 0)));
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+
+
+    // * * * Type * * *
+    QString type = pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) + pev->vscp_type];    
+    if (pev->vscp_class>=1024) {
+        type = type.right(type.length()-11);    // Remove "VSCP2_TYPE_"
+    }
+    else {
+        type = type.right(type.length()-10);    // Remove "VSCP_TYPE_"
+    }
+    int posUnderscore = type.indexOf("_");
+    if (posUnderscore) posUnderscore++;
+    QTableWidgetItem* itemType = new QTableWidgetItem(type.right(type.length()-posUnderscore)/*QString::number(ev.vscp_type)*/);
+    itemType->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+    itemType->setForeground(QBrush(QColor(0, 5, 180)));
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+
+
+    // * * * Node id * * *
+    QTableWidgetItem* itemNodeId = new QTableWidgetItem(QString::number(((uint16_t)pev->GUID[14] << 8) + pev->GUID[15]));
+    itemNodeId->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+    itemNodeId->setTextAlignment(Qt::AlignCenter);
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+
+
+    // * * * Guid * * *
+    std::string str;
+    vscp_writeGuidArrayToString(str, pev->GUID);
+    QTableWidgetItem* itemGuid = new QTableWidgetItem(str.c_str());
+    itemGuid->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
+
+    m_rxTable->setUpdatesEnabled(false);
+    for (int i = 0; i < m_rxTable->rowCount(); i++) {
+        m_rxTable->setRowHeight(i, 10);
+    }
+    m_rxTable->setUpdatesEnabled(true);
+
+    // Display number of items
+    m_lcdNumber->display(m_rxTable->rowCount());
+
+    m_mutexRxList.unlock();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// threadReceive
+//
+
+void
+CFrmSession::threadReceive(vscpEvent* pev)
+{   
+    emit dataReceived(pev);
+}
