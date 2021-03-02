@@ -5,6 +5,7 @@
     <file alias="add.png">images/png/128x128/add.png</file>
     <file alias="info.png">images/png/128x128/info.png</file>
     <file alias="remove.png">images/png/128x128/remove.png</file>
+    
 
     <file alias="process.png">images/png/128x128/process.png</file>
     <file alias="process_accept.png">images/png/128x128/process_accept.png</file>
@@ -15,6 +16,10 @@
 
     <file alias="connect.png">images/linkconnected_87208.png</file>
     <file alias="filter.png">images/Filter_icon-icons.com_52097.png</file>
+    <!-- https://www.iconsdb.com/red-icons/check-mark-3-icon.html -->
+    <file alias="high-importance.png">images/high-importance-128.png</file>
+    <file alias="check-mark-red.png">images/check-mark-3-128.png</file>
+    <file alias="comment.png">images/comment-square-128.png</file>
     
     <file>images/banner.png</file>
     <file>images/background.png</file>

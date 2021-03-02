@@ -138,7 +138,7 @@ class CFrmSession : public QDialog
         receive event rows
     */
     void fillReceiveEventDiff(void);
-    
+
     
  public slots:
 
@@ -167,7 +167,46 @@ class CFrmSession : public QDialog
     */ 
     void rxSelectionChange(const QItemSelection &, const QItemSelection &);
 
-    
+    /*!
+        Show context menu for rx table
+        @param pos Position where right click took place
+    */
+    void showRxContextMenu(const QPoint& pos);
+
+    /*!
+        Cell in rx table has been clicked
+        @param row Row that has been clicked
+        @param column Column that has been clicked.
+    */
+    void rxCellClicked(int row, int column);
+
+    // RX Context
+
+    void menu_clear_rxlist();
+
+    void clrAllRxSelections(void);
+
+    void setGuid(void);
+
+    void addEventNote(void);
+
+    void removeEventNote(void);
+
+    void setVscpRowMark(void);
+
+    void unsetVscpRowMark(void);
+
+    void setVscpClassMark(void);
+
+    void unsetVscpClassMark(void);
+
+    void setVscpTypeMark(void);
+
+    void unsetVscpTypeMark(void);
+
+    void saveRxToFile(void);
+
+    void loadRxFromFile(void);
 
  
  signals:
@@ -184,7 +223,6 @@ class CFrmSession : public QDialog
     // Toolbar
     void menu_connect();
     void menu_filter();
-    void menu_clear_rxlist();
 
     void transmitEvent();
 
@@ -238,7 +276,10 @@ class CFrmSession : public QDialog
     std::deque<vscpEvent *> m_rxEvents;
 
     /// VSCP (class-id + token-id) -> received count
-    std::map<uint32_t, uint32_t> m_mapEventToCount;
+    std::map<uint32_t, uint32_t> m_mapEventToCount ;
+
+    /// row -> comment
+    std::map<int, QString> m_mapEventComment;
 
     /// List for transmittable events
     QTableWidget *m_txTable;
