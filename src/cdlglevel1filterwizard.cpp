@@ -314,8 +314,8 @@ CDlgLevel1FilterWizard::fillVscpClasses(void)
 
     int i = 0;
     std::map<uint16_t, QString>::iterator it;
-    for (it = pworks->mapVscpClassToToken.begin();
-         it != pworks->mapVscpClassToToken.end();
+    for (it = pworks->m_mapVscpClassToToken.begin();
+         it != pworks->m_mapVscpClassToToken.end();
          ++it) {
 
         uint16_t classId   = it->first;
@@ -355,8 +355,8 @@ CDlgLevel1FilterWizard::fillVscpTypes(void)
 
     int i = 0;
     std::map<uint32_t, QString>::iterator it;
-    for (it = pworks->mapVscpTypeToToken.begin();
-         it != pworks->mapVscpTypeToToken.end();
+    for (it = pworks->m_mapVscpTypeToToken.begin();
+         it != pworks->m_mapVscpTypeToToken.end();
          ++it) {
 
         uint16_t classId  = (it->first >> 16) & 0xffff;
@@ -728,8 +728,8 @@ CDlgLevel1FilterWizard::doVscpClassSelections(void)
 
     //qDebug() << "-------------------------------------------------------";
     std::map<uint16_t, QString>::iterator it;
-    for (it = pworks->mapVscpClassToToken.begin();
-         it != pworks->mapVscpClassToToken.end();
+    for (it = pworks->m_mapVscpClassToToken.begin();
+         it != pworks->m_mapVscpClassToToken.end();
          ++it) {
 
         uint16_t classId = it->first;
@@ -772,8 +772,8 @@ CDlgLevel1FilterWizard::doVscpTypeSelections(void)
 
     //qDebug() << "-------------------------------------------------------";
     std::map<uint16_t, QString>::iterator itClass;
-    for (itClass = pworks->mapVscpClassToToken.begin();
-         itClass != pworks->mapVscpClassToToken.end();
+    for (itClass = pworks->m_mapVscpClassToToken.begin();
+         itClass != pworks->m_mapVscpClassToToken.end();
          ++itClass) {
 
         uint16_t classId = itClass->first;
@@ -788,8 +788,8 @@ CDlgLevel1FilterWizard::doVscpTypeSelections(void)
             //          << " map =" << m_classToIndexMap[classId] << " !";
 
             std::map<uint32_t, QString>::iterator itType;
-            for (itType = pworks->mapVscpTypeToToken.begin();
-                    itType != pworks->mapVscpTypeToToken.end();
+            for (itType = pworks->m_mapVscpTypeToToken.begin();
+                    itType != pworks->m_mapVscpTypeToToken.end();
                     ++itType) {
 
                 uint32_t typeId     = itType->first;

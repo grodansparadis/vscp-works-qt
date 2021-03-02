@@ -34,6 +34,8 @@
 #include "vscpworks.h"
 #include "filedownloader.h"
 
+#include <mustache.hpp>
+
 #include <QDebug>
 #include <QMessageBox>
 #include <QSettings>
@@ -50,6 +52,7 @@
 
 // for convenience
 using json = nlohmann::json;
+using namespace kainjow::mustache;
 
 ///////////////////////////////////////////////////////////////////////////////
 // vscpworks
@@ -483,7 +486,7 @@ bool vscpworks::loadEventDb(void)
             QString className = queryClass.value(1).toString();
             QString classToken = queryClass.value(2).toString();
             //qDebug() << classid << " - " << className << " - " << classToken;
-            mapVscpClassToToken[classid] = classToken;
+            m_mapVscpClassToToken[classid] = classToken;
 
             QString sqlTypeQuery = QString("SELECT * FROM vscp_type WHERE link_to_class=%1").arg(classid);
             QSqlQuery queryType(sqlTypeQuery);
@@ -495,7 +498,7 @@ bool vscpworks::loadEventDb(void)
                 uint32_t combined = ((classid << 16) + typeId);
                 //qDebug() << typeIdx << " - " << typeId << " - " <<  typeToken  << " " << combined;
                 //qDebug() << (combined & 0xffff) << (combined >> 16); 
-                mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] = typeToken;
+                m_mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] = typeToken;
                 // qDebug() << mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] << " " << (((uint32_t)classid << 16) + typeId) << " " << classid;
                 // qDebug() << " OK";
             }
@@ -576,4 +579,53 @@ void vscpworks::log(int level, const QString& message)
             qDebug() << "Failed to insert log message";
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getShortTypeToken
+//
+
+QString vscpworks::getShortTypeToken(uint16_t vscpClass, uint16_t vscpType)
+{
+    // * * * Type * * *
+    QString strTypeToken = m_mapVscpTypeToToken[((uint32_t)vscpClass << 16) + vscpType];    
+    if (vscpClass >= 1024) {
+        strTypeToken = strTypeToken.right(strTypeToken.length()-11);    // Remove "VSCP2_TYPE_"
+    }
+    else {
+        strTypeToken = strTypeToken.right(strTypeToken.length()-10);    // Remove "VSCP_TYPE_"
+    }
+    int posUnderscore = strTypeToken.indexOf("_");
+    if (posUnderscore) posUnderscore++;
+    return strTypeToken.right(strTypeToken.length()-posUnderscore);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getHelpUrlForClass
+//
+
+QString vscpworks::getHelpUrlForClass(uint16_t vscpClass)
+{
+    // https://grodansparadis.github.io/vscp-doc-spec/#/./class1.protocol
+    mustache templ{"https://grodansparadis.github.io/vscp-doc-spec/#/./{{vscp-class-token}}"};
+    
+    kainjow::mustache::data _data;
+    _data.set("vscp-class-token", m_mapVscpClassToToken[vscpClass].toLower().toStdString());
+    return templ.render(_data).c_str();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getHelpUrlForType
+//
+
+QString vscpworks::getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType)
+{
+    // https://grodansparadis.github.io/vscp-doc-spec/#/./class1.measurement?id=type6
+    std::string strTemp = getHelpUrlForClass(vscpClass).toStdString();
+    strTemp += "?id=type{{vscp-type-id}}";
+    mustache templ{strTemp};
+
+    kainjow::mustache::data _data;
+    _data.set("vscp-type-id", QString::number(vscpType).toStdString());
+    return templ.render(_data).c_str();
 }

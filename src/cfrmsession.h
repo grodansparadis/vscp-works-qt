@@ -126,6 +126,19 @@ class CFrmSession : public QDialog
         indicate this
     */
     void doDisconnectFromRemoteHost(void);
+
+    /*!
+        Fill Event receive count.
+        This data is field if no selection is active.
+    */
+    void fillReceiveEventCount(void);
+
+    /*!
+        Fill difference information between several selected
+        receive event rows
+    */
+    void fillReceiveEventDiff(void);
+    
     
  public slots:
 
@@ -153,6 +166,8 @@ class CFrmSession : public QDialog
         @param deselected Items that has been selected
     */ 
     void rxSelectionChange(const QItemSelection &, const QItemSelection &);
+
+    
 
  
  signals:
@@ -222,10 +237,11 @@ class CFrmSession : public QDialog
     /// Queue that holds received events
     std::deque<vscpEvent *> m_rxEvents;
 
+    /// VSCP (class-id + token-id) -> received count
+    std::map<uint32_t, uint32_t> m_mapEventToCount;
+
     /// List for transmittable events
     QTableWidget *m_txTable;
-
-    
 
     QMenu *m_fileMenu;
     QMenu *m_hostMenu;

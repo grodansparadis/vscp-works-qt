@@ -190,6 +190,30 @@ class vscpworks : public QApplication {
     */
     void log(int level, const QString& message);
 
+    /*!
+        Get short token from class/type. That is a token on the form
+        "TEMPERATURE" instead of "CLASS1_TYPE_MEASUREMENT_TEMPERATURE"
+        @param vscpClass A valid VSCP class token
+        @param vscpType A valid VSCP type token for the class.
+        @return A string contining the token
+    */
+    QString getShortTypeToken(uint16_t vscpClass, uint16_t vscpType);
+
+    /*!
+        Get URL for specification page that have info about this class
+        @param vscpClass VSCP class to get help URL for
+        @return URL to help page
+    */
+    QString getHelpUrlForClass(uint16_t vscpClass);
+
+    /*!
+        Get URL for specification page section that have info about this class/type
+        @param vscpClass VSCP class to get help URL for
+        @param vscpType VSCP type to get help URL for
+        @return URL to help page
+    */
+    QString getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType);
+
     // ------------------------------------------------------------------------
     // Global Configuration information below
     //   This info is read from a configuration file 
@@ -290,13 +314,13 @@ class vscpworks : public QApplication {
     QMap<QString,QJsonObject> m_mapConn;
 
     /// VSCP classes (class-id) -> token
-    std::map<uint16_t, QString> mapVscpClassToToken;
+    std::map<uint16_t, QString> m_mapVscpClassToToken;
 
     /// VSCP (class-id + token-id) -> token
-    std::map<uint32_t, QString> mapVscpTypeToToken;
+    std::map<uint32_t, QString> m_mapVscpTypeToToken;
 
     /// VSCP GUID to sumbolic GUID name
-    std::map<QString, QString> mapGuidToSymbolicName;
+    std::map<QString, QString> m_mapGuidToSymbolicName;    
 
     /// VSCP works database
     QSqlDatabase m_worksdb;
