@@ -47,6 +47,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QUuid>
+#include <QTextDocument>
 
 #include <nlohmann/json.hpp>
 
@@ -83,7 +84,17 @@ vscpworks::vscpworks(int &argc, char **argv) :
     // uuid = QUuid::createUuid();
     // qDebug() << QUuid::createUuid().toString();
     // qDebug() << "\n";
+
+    QString strVaribles = "crc8:        function() { return (e.vscpData[0]); }"\
+                 "time_epoch:  function() { return (e.vscpData[1]&lt;&lt;24 +"\
+   				 "                                  e.vscpData[2]&lt;&lt;16 +"\
+   				 "                                  e.vscpData[3]&lt;&lt;8 +"\
+   				 "                                  e.vscpData[4]); }";
+
+    qDebug() << strVaribles;
+
     
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -457,8 +468,8 @@ bool vscpworks::removeConnection(const QString& uuid, bool bSave )
 
 bool vscpworks::loadEventDb(void)
 {
-    QSqlDatabase evdb;
-    evdb = QSqlDatabase::addDatabase("QSQLITE");
+    //QSqlDatabase evdb;
+    m_evdb = QSqlDatabase::addDatabase("QSQLITE", "vscpevents");
     QString dbpath = m_shareFolder;
     dbpath += "vscp_events.sqlite3";
     qDebug() << "db = " << dbpath;
@@ -470,16 +481,16 @@ bool vscpworks::loadEventDb(void)
         return false;
     }
 
-    evdb.setDatabaseName(dbpath);
+    m_evdb.setDatabaseName(dbpath);
 
-    if (!evdb.open()) {
+    if (!m_evdb.open()) {
         //qDebug() << Database.lastError().text();
         QString err = QString(tr("The VSCP event database could not be opened. Is it available? [%s]")).arg(dbpath);
         syslog(LOG_ERR, "%s", err.toStdString().c_str());
         return false;
     }
     else {
-        QSqlQuery queryClass("SELECT * FROM vscp_class order by class");
+        QSqlQuery queryClass("SELECT * FROM vscp_class order by class", m_evdb);
 
         while (queryClass.next()) {
             uint16_t classid = queryClass.value(0).toUInt();
@@ -489,7 +500,7 @@ bool vscpworks::loadEventDb(void)
             m_mapVscpClassToToken[classid] = classToken;
 
             QString sqlTypeQuery = QString("SELECT * FROM vscp_type WHERE link_to_class=%1").arg(classid);
-            QSqlQuery queryType(sqlTypeQuery);
+            QSqlQuery queryType(sqlTypeQuery, m_evdb);
             //qDebug() << sqlTypeQuery;
             while (queryType.next()) {
                 uint typeIdx = queryType.value(0).toUInt();
@@ -506,7 +517,52 @@ bool vscpworks::loadEventDb(void)
 
     }
 
+    qDebug() << m_evdb.lastError();
+
+    // QStringList lst = getVscpRenderData(0,8);
+    // qDebug() << "Variables = " << lst[0];
+    // qDebug() << "Templates = " << lst[1];
+    qDebug() << QT_VERSION;
+
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getVscpRenderData
+//
+
+QStringList vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type)
+{
+    QStringList strList;
+    QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3";
+    qDebug() << strQuery << " - " << strQuery.arg(type).arg(vscpClass).arg(vscpType);
+
+    //QSqlQuery query(strQuery.arg(type).arg(vscpClass).arg(vscpType), m_evdb);
+    QSqlQuery query(m_evdb);
+    query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
+    qDebug() << query.numRowsAffected() << m_evdb.lastError();
+    while (query.next()) {
+        QString vscpVariables = query.value(4).toString();
+        if (vscpVariables.startsWith("BASE64:", Qt::CaseInsensitive)) {
+            vscpVariables = vscpVariables.right(vscpVariables.length()-7);
+            vscpVariables = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);            
+        }
+
+        qDebug() << vscpVariables;
+        qDebug() << "---------------------------------------------";
+        vscpVariables.replace("\"","&quote;").replace("&quote;","'").replace("&amp;","&").replace("&gt;",">").replace("&lt;","<");
+        qDebug() << vscpVariables;
+        QString vscpTemplate = query.value(5).toString();
+        if (vscpTemplate.startsWith("BASE64:", Qt::CaseInsensitive)) {
+            vscpTemplate = vscpTemplate.right(vscpTemplate.length()-7);
+            vscpTemplate = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);            
+        }
+        vscpTemplate.replace("&","&amp;").replace(">","&gt;").replace("<","&lt;");
+        qDebug() << vscpTemplate;
+        strList << vscpVariables << vscpTemplate;
+    }
+
+    return strList;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -522,8 +578,8 @@ bool vscpworks::openVscpWorksDatabase(void)
     //if ( QFile::exists(eventdbname) ) return false;
 
     QString dbName(eventdbname);
-    m_worksdb = QSqlDatabase::addDatabase( "QSQLITE" );
-    m_worksdb.setDatabaseName( dbName );
+    m_worksdb = QSqlDatabase::addDatabase("QSQLITE", "vscpworks");
+    m_worksdb.setDatabaseName( dbName);
     m_worksdb.open();
 
     // Create GUID database if it does not exist

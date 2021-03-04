@@ -33,9 +33,11 @@
 #include <QMessageBox>
 #include <QJSEngine>
 
-
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
+// #include <QCanBusDevice>
+// #include <QCanBusFactory>
+// #include <QCanBusFrame>
 
 #include "vscpworks.h"
 #include "filedownloader.h"
@@ -114,21 +116,27 @@ MainWindow::MainWindow()
     // Open pop up menu on right click
     connect(m_connTreeTable, &QTreeWidget::customContextMenuRequested, this, &MainWindow::showConnectionContextMenu);
     
-
+    // TODO
     // if (QCanBus::instance()->plugins().contains(QStringLiteral("socketcan"))) {
     //     // plugin available
     // }
 
-    /*
+   
     QJSEngine myEngine;
-    QJSValue three = myEngine.evaluate("1 + 2 + Math.PI");
+    QJSValue three = myEngine.evaluate("(1 + 2 + Math.PI);");
+    qDebug() << tr("Int Value = ") << three.toInt();
+    qDebug() << tr("Value = ") << three.toNumber();
+    QJSValue fun = myEngine.evaluate("(function(a,b) { var e = {}; e.data = [0,1,2,3,4,5]; switch (e.data[2]) { case 0: return 100; break; case 1: return 222; break; case 2: return 333; break; }; })");
+    QJSValueList args;
+    args << 1 << 2;
+    QJSValue threeAgain = fun.call(args);
+    qDebug() << threeAgain.toInt();
 
-    QString str;
-    QTextStream(&str) << tr("Value = ") << three.toInt();
-    QMessageBox msgBox;
-    msgBox.setText(str);
-    msgBox.exec();
-    */
+    qDebug() << "end";
+    // QJSEngine engine; if (1) { return 2; } else { return 3 };
+
+
+  
 
     setCentralWidget(m_connTreeTable);  // table widget
     createActions();

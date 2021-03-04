@@ -1033,7 +1033,13 @@ CFrmSession::addEventNote(void)
         QList<QModelIndex>::iterator it;
         for (it = selection.begin(); it != selection.end(); it++) {
             m_rxTable->item(it->row(), 0)->setIcon(icon);
-            m_mapEventComment[it->row()] = text;
+            m_mapEventComment[it->row()] = text;            
+        }
+
+        // Cludge to display comment directly
+        if (1 == selection.size()) {
+            m_rxTable->clearSelection();
+            m_rxTable->selectRow(selection.first().row());
         }
     }
 }
@@ -1196,6 +1202,54 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected,
 
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     // QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
+
+    QStringList lst = pworks->getVscpRenderData(0,12);
+    if (lst.size() >= 2)
+    qDebug() << "Variables = " << lst[0];
+    qDebug() << "Templates = " << lst[1];
+
+    mustache templVar{ lst[0].toStdString() };
+    kainjow::mustache::data _dataVar;
+    _dataVar.set("newline", "\r\n");
+    _dataVar.set("quote", "\"");
+    QString outputVar = templVar.render(_dataVar).c_str();
+    qDebug() << outputVar;
+
+    QStringList strlst = outputVar.split("\n");
+    qDebug() << strlst.size();
+
+    QString name;
+    QString func;
+    foreach (QString str, strlst) {
+        //qDebug() << str.trimmed();
+        str = str.trimmed();
+        if (str.contains("function()")) {
+            // We have a function  "id: function() {....}
+            // can be one line or multiline 
+            int posFunc = str.indexOf("function()");
+            int posColon = str.indexOf(":");
+            name = str.left(posColon);
+            func = str.right(str.length()-posFunc);
+        }
+        else {
+            func += str + "\n";
+        }
+
+        // When {} pairs are equal in func we are done
+        int cnt = 0;
+        foreach(QChar c, func) {
+            if('{' == c) {
+                cnt++;
+            }
+            if('}' == c) {
+                cnt--;
+            }
+        }
+
+        if (!cnt) {
+            qDebug() << "------->" << func;
+        }
+    }
 
     if (0 == selection.size()) {
         fillReceiveEventCount();

@@ -142,6 +142,18 @@ class vscpworks : public QApplication {
     bool loadEventDb(void);
 
     /*!
+        Get render variables and template for a class/type pair
+        @param vscpClass The VSCP class to get variables/template for
+        @param vscpType The VSCP type to get variables/template for
+        @param type Environment to get variables/template for, Default is "vscpworks"
+        @return A string list with the variables string at pos 0 and
+                the template in pos 1
+    */
+    QStringList getVscpRenderData(uint16_t vscpClass, 
+                                    uint16_t vscpType, 
+                                    QString type="vscpworks");
+
+    /*!
         Convert integer number to selected base. 
         The resulting string  representation of the number have 
         - No prefix if decimal
@@ -324,6 +336,9 @@ class vscpworks : public QApplication {
 
     /// VSCP works database
     QSqlDatabase m_worksdb;
+
+    /// Event database
+    QSqlDatabase m_evdb;
 };
 
 

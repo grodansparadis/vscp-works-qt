@@ -10,6 +10,7 @@ If you still want to build this project
 ```bash
   sudo apt install qttools5-dev
   sudo apt install qt5-default
+  sudo apt install libqt5serialbus5-dev
   sudo apt install qtdeclarative5-dev
   sudo apt install libqt5serialport5
   sudo apt install libqt5serialport5-dev

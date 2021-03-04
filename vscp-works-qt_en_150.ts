@@ -2990,360 +2990,446 @@ and the flag bits for the. the driver.
 <context>
     <name>CFrmSession</name>
     <message>
-        <location filename="build/ui_cfrmsession.h" line="75"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="86"/>
-        <location filename="src/cfrmsession.cpp" line="101"/>
-        <location filename="src/cfrmsession.cpp" line="783"/>
-        <location filename="src/cfrmsession.cpp" line="819"/>
-        <location filename="src/cfrmsession.cpp" line="890"/>
+        <location filename="src/cfrmsession.cpp" line="90"/>
+        <location filename="src/cfrmsession.cpp" line="105"/>
+        <location filename="src/cfrmsession.cpp" line="814"/>
+        <location filename="src/cfrmsession.cpp" line="850"/>
+        <location filename="src/cfrmsession.cpp" line="921"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="87"/>
+        <location filename="src/cfrmsession.cpp" line="91"/>
         <source>Can&apos;t open session window - configuration data is missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="102"/>
+        <location filename="src/cfrmsession.cpp" line="106"/>
         <source>Can&apos;t open session window - The connection type is unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="112"/>
+        <location filename="src/cfrmsession.cpp" line="116"/>
         <source> - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="117"/>
+        <location filename="src/cfrmsession.cpp" line="121"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="255"/>
+        <location filename="src/cfrmsession.cpp" line="274"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="269"/>
+        <location filename="src/cfrmsession.cpp" line="288"/>
         <source>Load VSCP events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="270"/>
+        <location filename="src/cfrmsession.cpp" line="289"/>
         <source>Save VSCP events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="272"/>
+        <location filename="src/cfrmsession.cpp" line="291"/>
         <source>Load transmission set from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="273"/>
+        <location filename="src/cfrmsession.cpp" line="292"/>
         <source>Save transmission set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="276"/>
-        <location filename="src/cfrmsession.cpp" line="279"/>
+        <location filename="src/cfrmsession.cpp" line="295"/>
+        <location filename="src/cfrmsession.cpp" line="298"/>
         <source>Close session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="298"/>
+        <location filename="src/cfrmsession.cpp" line="317"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="302"/>
+        <location filename="src/cfrmsession.cpp" line="321"/>
         <source>Connect/disconnect from remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="310"/>
+        <location filename="src/cfrmsession.cpp" line="329"/>
         <source>Enable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="313"/>
+        <location filename="src/cfrmsession.cpp" line="332"/>
         <source>Enable/disable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="333"/>
+        <location filename="src/cfrmsession.cpp" line="353"/>
+        <location filename="src/cfrmsession.cpp" line="975"/>
         <source>Clear receive list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="345"/>
-        <location filename="src/cfrmsession.cpp" line="626"/>
+        <location filename="src/cfrmsession.cpp" line="365"/>
+        <location filename="src/cfrmsession.cpp" line="645"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="346"/>
+        <location filename="src/cfrmsession.cpp" line="366"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="347"/>
+        <location filename="src/cfrmsession.cpp" line="367"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="348"/>
+        <location filename="src/cfrmsession.cpp" line="368"/>
         <source>Paste before</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="349"/>
+        <location filename="src/cfrmsession.cpp" line="369"/>
         <source>Paste after</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="353"/>
+        <location filename="src/cfrmsession.cpp" line="373"/>
         <source>&amp;Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="354"/>
+        <location filename="src/cfrmsession.cpp" line="374"/>
         <source>Connect to host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="355"/>
+        <location filename="src/cfrmsession.cpp" line="375"/>
         <source>Disconnect from host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="358"/>
+        <location filename="src/cfrmsession.cpp" line="378"/>
         <source>Edit host settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="362"/>
+        <location filename="src/cfrmsession.cpp" line="382"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="363"/>
+        <location filename="src/cfrmsession.cpp" line="383"/>
         <source>Message flow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="364"/>
+        <location filename="src/cfrmsession.cpp" line="384"/>
         <source>Message count</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="366"/>
+        <location filename="src/cfrmsession.cpp" line="386"/>
         <source>Clear receive list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="368"/>
+        <location filename="src/cfrmsession.cpp" line="388"/>
         <source>Clear transmission list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="372"/>
+        <location filename="src/cfrmsession.cpp" line="392"/>
         <source>&amp;vscp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="373"/>
+        <location filename="src/cfrmsession.cpp" line="393"/>
         <source>Read register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="374"/>
+        <location filename="src/cfrmsession.cpp" line="394"/>
         <source>Write register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="375"/>
+        <location filename="src/cfrmsession.cpp" line="395"/>
         <source>Read (all) registers...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="376"/>
+        <location filename="src/cfrmsession.cpp" line="396"/>
         <source>Read GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="377"/>
+        <location filename="src/cfrmsession.cpp" line="397"/>
         <source>Read MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="378"/>
+        <location filename="src/cfrmsession.cpp" line="398"/>
         <source>Download MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="382"/>
+        <location filename="src/cfrmsession.cpp" line="402"/>
         <source>&amp;Setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="383"/>
+        <location filename="src/cfrmsession.cpp" line="403"/>
         <source>Set/define filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="384"/>
+        <location filename="src/cfrmsession.cpp" line="404"/>
         <source>Settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="388"/>
+        <location filename="src/cfrmsession.cpp" line="408"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="421"/>
+        <location filename="src/cfrmsession.cpp" line="441"/>
         <source>Horizontal layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="425"/>
+        <location filename="src/cfrmsession.cpp" line="445"/>
         <source>Button %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="438"/>
+        <location filename="src/cfrmsession.cpp" line="458"/>
         <source>Receive Events </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="449"/>
+        <location filename="src/cfrmsession.cpp" line="469"/>
         <source>Dir, VSCP Class, VSCP Type, id, GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="522"/>
+        <location filename="src/cfrmsession.cpp" line="541"/>
         <source>&lt;h3&gt;VSCP Event&lt;/h3&gt;&lt;small&gt;&lt;p style=&quot;color:#993399&quot;&gt;Received event&lt;/p&gt;&lt;/small&gt;&lt;b&gt;Head: &lt;/b&gt;&lt;span style=&quot;color:rgb(0, 0, 153);&quot;&gt;0x0100&lt;/span&gt;&lt;br&gt;&lt;b&gt;Time: &lt;/b&gt;&lt;span style=&quot;color:rgb(0, 0, 153);&quot;&gt;2021-09-12T12:10:29&lt;/span&gt;&lt;br&gt;&lt;b&gt;Timestamp: &lt;/b&gt;&lt;span style=&quot; color:rgb(0, 0, 153);&quot;&gt;0x1213140f&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Class: &lt;/b&gt;&lt;a href=&quot;https://www.vscp.org&quot;&gt;CLASS1_DATA&lt;/a&gt;&lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt; 0x000F, 15&lt;/span&gt;&lt;br&gt;&lt;b&gt;Type: &lt;/b&gt;&lt;a href=&quot;https://www.vscp.org&quot;&gt;IO-VALUE&lt;/a&gt; &lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt;0x0001, 1&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;GUID: &lt;/b&gt;&lt;small&gt;&lt;span style=&quot;color:rgb(0, 102, 0);&quot;&gt;FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF&lt;/span&gt;&lt;/small&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;This &lt;b&gt;widget takes&lt;/b&gt; up all the remaining space in the top-level layout ddddd.in the top-level layout ddddd.&lt;h1&gt;This is a test&lt;/h1&gt; &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;This is a test &lt;br&gt;Carpe Diem &lt;br&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="575"/>
+        <location filename="src/cfrmsession.cpp" line="594"/>
         <source>Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="580"/>
+        <location filename="src/cfrmsession.cpp" line="599"/>
         <source>x,Name,Period,Count,Trigger,Event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="605"/>
+        <location filename="src/cfrmsession.cpp" line="624"/>
         <source>&amp;Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="607"/>
+        <location filename="src/cfrmsession.cpp" line="626"/>
         <source>Transmit selected event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="618"/>
+        <location filename="src/cfrmsession.cpp" line="637"/>
         <source>&amp;Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="620"/>
+        <location filename="src/cfrmsession.cpp" line="639"/>
         <source>Add transmit event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="628"/>
+        <location filename="src/cfrmsession.cpp" line="647"/>
         <source>Edit selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="634"/>
+        <location filename="src/cfrmsession.cpp" line="653"/>
         <source>&amp;Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="636"/>
+        <location filename="src/cfrmsession.cpp" line="655"/>
         <source>Delete selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="642"/>
+        <location filename="src/cfrmsession.cpp" line="661"/>
         <source>&amp;Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="644"/>
+        <location filename="src/cfrmsession.cpp" line="663"/>
         <source>Clone selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="652"/>
+        <location filename="src/cfrmsession.cpp" line="671"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="654"/>
+        <location filename="src/cfrmsession.cpp" line="673"/>
         <source>Save selected transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="660"/>
+        <location filename="src/cfrmsession.cpp" line="679"/>
         <source>&amp;Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="662"/>
+        <location filename="src/cfrmsession.cpp" line="681"/>
         <source>Load transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="749"/>
+        <location filename="src/cfrmsession.cpp" line="780"/>
         <source>Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="749"/>
+        <location filename="src/cfrmsession.cpp" line="780"/>
         <source>Carpe Diem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="759"/>
+        <location filename="src/cfrmsession.cpp" line="790"/>
         <source>Form layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="761"/>
+        <location filename="src/cfrmsession.cpp" line="792"/>
         <source>Line 1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="762"/>
+        <location filename="src/cfrmsession.cpp" line="793"/>
         <source>Line 2, long text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="763"/>
+        <location filename="src/cfrmsession.cpp" line="794"/>
         <source>Line 3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="784"/>
-        <location filename="src/cfrmsession.cpp" line="820"/>
+        <location filename="src/cfrmsession.cpp" line="815"/>
+        <location filename="src/cfrmsession.cpp" line="851"/>
         <source>Failed to open a connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="891"/>
+        <location filename="src/cfrmsession.cpp" line="922"/>
         <source>Failed to disconnect the connection to the remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="973"/>
+        <source>Clear selections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="977"/>
+        <source>Save events to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="978"/>
+        <source>Save marked event rows to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="979"/>
+        <source>Save marked class event rows to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="980"/>
+        <source>Save marked type event rows to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="981"/>
+        <source>Load events from file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="983"/>
+        <source>Set/edit GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="984"/>
+        <source>Add comment...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="985"/>
+        <source>Remove comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="987"/>
+        <source>Mark row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="988"/>
+        <source>Unmark row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="989"/>
+        <source>Mark VSCP class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="990"/>
+        <source>Unmark VSCP class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="991"/>
+        <source>Mark VSCP type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="992"/>
+        <source>Unmark VSCP type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1027"/>
+        <source>QInputDialog::getText()</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1028"/>
+        <source>Comment:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1543"/>
+        <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3712,376 +3798,386 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="151"/>
+        <location filename="src/mainwindow.cpp" line="127"/>
+        <source>Int Value = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="128"/>
+        <source>Value = </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="156"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="152"/>
+        <location filename="src/mainwindow.cpp" line="157"/>
         <source>VSCP Remote Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="167"/>
+        <location filename="src/mainwindow.cpp" line="172"/>
         <source>Local Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="170"/>
+        <location filename="src/mainwindow.cpp" line="175"/>
         <source>Holds local connections. Typically logfile and debug content containing VSCP events.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="177"/>
+        <location filename="src/mainwindow.cpp" line="182"/>
         <source>CANAL Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="187"/>
+        <location filename="src/mainwindow.cpp" line="192"/>
         <source>Socketcan Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="197"/>
+        <location filename="src/mainwindow.cpp" line="202"/>
         <source>TCP/IP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="207"/>
+        <location filename="src/mainwindow.cpp" line="212"/>
         <source>MQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="217"/>
+        <location filename="src/mainwindow.cpp" line="222"/>
         <source>WS1 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="227"/>
+        <location filename="src/mainwindow.cpp" line="232"/>
         <source>WS2 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="237"/>
+        <location filename="src/mainwindow.cpp" line="242"/>
         <source>UDP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="247"/>
+        <location filename="src/mainwindow.cpp" line="252"/>
         <source>Multicast Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="257"/>
+        <location filename="src/mainwindow.cpp" line="262"/>
         <source>REST Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="267"/>
+        <location filename="src/mainwindow.cpp" line="272"/>
         <source>RAWCAN Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="277"/>
+        <location filename="src/mainwindow.cpp" line="282"/>
         <source>RAWMQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="307"/>
-        <location filename="src/mainwindow.cpp" line="359"/>
-        <location filename="src/mainwindow.cpp" line="422"/>
-        <location filename="src/mainwindow.cpp" line="931"/>
-        <location filename="src/mainwindow.cpp" line="1694"/>
-        <location filename="src/mainwindow.cpp" line="1708"/>
-        <location filename="src/mainwindow.cpp" line="1746"/>
-        <location filename="src/mainwindow.cpp" line="1784"/>
-        <location filename="src/mainwindow.cpp" line="1793"/>
-        <location filename="src/mainwindow.cpp" line="1831"/>
-        <location filename="src/mainwindow.cpp" line="1869"/>
-        <location filename="src/mainwindow.cpp" line="1878"/>
-        <location filename="src/mainwindow.cpp" line="1917"/>
-        <location filename="src/mainwindow.cpp" line="1955"/>
-        <location filename="src/mainwindow.cpp" line="1964"/>
-        <location filename="src/mainwindow.cpp" line="2004"/>
-        <location filename="src/mainwindow.cpp" line="2042"/>
-        <location filename="src/mainwindow.cpp" line="2051"/>
-        <location filename="src/mainwindow.cpp" line="2091"/>
-        <location filename="src/mainwindow.cpp" line="2129"/>
-        <location filename="src/mainwindow.cpp" line="2138"/>
-        <location filename="src/mainwindow.cpp" line="2178"/>
-        <location filename="src/mainwindow.cpp" line="2216"/>
-        <location filename="src/mainwindow.cpp" line="2225"/>
-        <location filename="src/mainwindow.cpp" line="2265"/>
-        <location filename="src/mainwindow.cpp" line="2304"/>
-        <location filename="src/mainwindow.cpp" line="2313"/>
-        <location filename="src/mainwindow.cpp" line="2353"/>
-        <location filename="src/mainwindow.cpp" line="2391"/>
-        <location filename="src/mainwindow.cpp" line="2400"/>
-        <location filename="src/mainwindow.cpp" line="2439"/>
-        <location filename="src/mainwindow.cpp" line="2477"/>
-        <location filename="src/mainwindow.cpp" line="2486"/>
-        <location filename="src/mainwindow.cpp" line="2525"/>
-        <location filename="src/mainwindow.cpp" line="2563"/>
-        <location filename="src/mainwindow.cpp" line="2572"/>
-        <location filename="src/mainwindow.cpp" line="2611"/>
-        <location filename="src/mainwindow.cpp" line="2649"/>
-        <location filename="src/mainwindow.cpp" line="2658"/>
-        <location filename="src/mainwindow.cpp" line="2697"/>
+        <location filename="src/mainwindow.cpp" line="312"/>
+        <location filename="src/mainwindow.cpp" line="364"/>
+        <location filename="src/mainwindow.cpp" line="427"/>
+        <location filename="src/mainwindow.cpp" line="936"/>
+        <location filename="src/mainwindow.cpp" line="1700"/>
+        <location filename="src/mainwindow.cpp" line="1714"/>
+        <location filename="src/mainwindow.cpp" line="1752"/>
+        <location filename="src/mainwindow.cpp" line="1790"/>
+        <location filename="src/mainwindow.cpp" line="1799"/>
+        <location filename="src/mainwindow.cpp" line="1837"/>
+        <location filename="src/mainwindow.cpp" line="1875"/>
+        <location filename="src/mainwindow.cpp" line="1884"/>
+        <location filename="src/mainwindow.cpp" line="1923"/>
+        <location filename="src/mainwindow.cpp" line="1961"/>
+        <location filename="src/mainwindow.cpp" line="1970"/>
+        <location filename="src/mainwindow.cpp" line="2010"/>
+        <location filename="src/mainwindow.cpp" line="2048"/>
+        <location filename="src/mainwindow.cpp" line="2057"/>
+        <location filename="src/mainwindow.cpp" line="2097"/>
+        <location filename="src/mainwindow.cpp" line="2135"/>
+        <location filename="src/mainwindow.cpp" line="2144"/>
+        <location filename="src/mainwindow.cpp" line="2184"/>
+        <location filename="src/mainwindow.cpp" line="2222"/>
+        <location filename="src/mainwindow.cpp" line="2231"/>
+        <location filename="src/mainwindow.cpp" line="2271"/>
+        <location filename="src/mainwindow.cpp" line="2310"/>
+        <location filename="src/mainwindow.cpp" line="2319"/>
+        <location filename="src/mainwindow.cpp" line="2359"/>
+        <location filename="src/mainwindow.cpp" line="2397"/>
+        <location filename="src/mainwindow.cpp" line="2406"/>
+        <location filename="src/mainwindow.cpp" line="2445"/>
+        <location filename="src/mainwindow.cpp" line="2483"/>
+        <location filename="src/mainwindow.cpp" line="2492"/>
+        <location filename="src/mainwindow.cpp" line="2531"/>
+        <location filename="src/mainwindow.cpp" line="2569"/>
+        <location filename="src/mainwindow.cpp" line="2578"/>
+        <location filename="src/mainwindow.cpp" line="2617"/>
+        <location filename="src/mainwindow.cpp" line="2655"/>
+        <location filename="src/mainwindow.cpp" line="2664"/>
+        <location filename="src/mainwindow.cpp" line="2703"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="308"/>
+        <location filename="src/mainwindow.cpp" line="313"/>
         <source>Failed to load remote event data. Will not be used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="360"/>
+        <location filename="src/mainwindow.cpp" line="365"/>
         <source>Unable to get version for remote VSCP event data. Will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="423"/>
+        <location filename="src/mainwindow.cpp" line="428"/>
         <source>A new VSCP event database has been downloaded. Restart your application to use the new database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="927"/>
+        <location filename="src/mainwindow.cpp" line="932"/>
         <source>Are you sure that you want to delete [</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1269"/>
+        <location filename="src/mainwindow.cpp" line="1274"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1276"/>
+        <location filename="src/mainwindow.cpp" line="1281"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1297"/>
+        <location filename="src/mainwindow.cpp" line="1302"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1298"/>
+        <location filename="src/mainwindow.cpp" line="1303"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1301"/>
+        <location filename="src/mainwindow.cpp" line="1306"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1303"/>
+        <location filename="src/mainwindow.cpp" line="1308"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1333"/>
+        <location filename="src/mainwindow.cpp" line="1338"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1335"/>
+        <location filename="src/mainwindow.cpp" line="1340"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1341"/>
+        <location filename="src/mainwindow.cpp" line="1346"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1343"/>
+        <location filename="src/mainwindow.cpp" line="1348"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1349"/>
+        <location filename="src/mainwindow.cpp" line="1354"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1351"/>
+        <location filename="src/mainwindow.cpp" line="1356"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1357"/>
+        <location filename="src/mainwindow.cpp" line="1362"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1359"/>
+        <location filename="src/mainwindow.cpp" line="1364"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1365"/>
+        <location filename="src/mainwindow.cpp" line="1370"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1367"/>
+        <location filename="src/mainwindow.cpp" line="1372"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1375"/>
+        <location filename="src/mainwindow.cpp" line="1380"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1378"/>
+        <location filename="src/mainwindow.cpp" line="1383"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1380"/>
+        <location filename="src/mainwindow.cpp" line="1385"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1381"/>
+        <location filename="src/mainwindow.cpp" line="1386"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1385"/>
+        <location filename="src/mainwindow.cpp" line="1390"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1388"/>
+        <location filename="src/mainwindow.cpp" line="1393"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1395"/>
+        <location filename="src/mainwindow.cpp" line="1400"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1397"/>
+        <location filename="src/mainwindow.cpp" line="1402"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1404"/>
+        <location filename="src/mainwindow.cpp" line="1409"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1406"/>
+        <location filename="src/mainwindow.cpp" line="1411"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1416"/>
+        <location filename="src/mainwindow.cpp" line="1421"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1417"/>
+        <location filename="src/mainwindow.cpp" line="1422"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1418"/>
+        <location filename="src/mainwindow.cpp" line="1423"/>
         <source>Open settins...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1421"/>
+        <location filename="src/mainwindow.cpp" line="1426"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1422"/>
+        <location filename="src/mainwindow.cpp" line="1427"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1423"/>
+        <location filename="src/mainwindow.cpp" line="1428"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1425"/>
+        <location filename="src/mainwindow.cpp" line="1430"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1426"/>
+        <location filename="src/mainwindow.cpp" line="1431"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1442"/>
+        <location filename="src/mainwindow.cpp" line="1447"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1538"/>
+        <location filename="src/mainwindow.cpp" line="1543"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1539"/>
+        <location filename="src/mainwindow.cpp" line="1544"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1554"/>
+        <location filename="src/mainwindow.cpp" line="1559"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1695"/>
-        <location filename="src/mainwindow.cpp" line="1747"/>
-        <location filename="src/mainwindow.cpp" line="1785"/>
-        <location filename="src/mainwindow.cpp" line="1832"/>
-        <location filename="src/mainwindow.cpp" line="1870"/>
-        <location filename="src/mainwindow.cpp" line="1918"/>
-        <location filename="src/mainwindow.cpp" line="1956"/>
-        <location filename="src/mainwindow.cpp" line="2005"/>
-        <location filename="src/mainwindow.cpp" line="2043"/>
-        <location filename="src/mainwindow.cpp" line="2092"/>
-        <location filename="src/mainwindow.cpp" line="2130"/>
-        <location filename="src/mainwindow.cpp" line="2179"/>
-        <location filename="src/mainwindow.cpp" line="2217"/>
-        <location filename="src/mainwindow.cpp" line="2266"/>
-        <location filename="src/mainwindow.cpp" line="2305"/>
-        <location filename="src/mainwindow.cpp" line="2354"/>
-        <location filename="src/mainwindow.cpp" line="2392"/>
-        <location filename="src/mainwindow.cpp" line="2440"/>
-        <location filename="src/mainwindow.cpp" line="2478"/>
-        <location filename="src/mainwindow.cpp" line="2526"/>
-        <location filename="src/mainwindow.cpp" line="2564"/>
-        <location filename="src/mainwindow.cpp" line="2612"/>
-        <location filename="src/mainwindow.cpp" line="2650"/>
-        <location filename="src/mainwindow.cpp" line="2698"/>
+        <location filename="src/mainwindow.cpp" line="1701"/>
+        <location filename="src/mainwindow.cpp" line="1753"/>
+        <location filename="src/mainwindow.cpp" line="1791"/>
+        <location filename="src/mainwindow.cpp" line="1838"/>
+        <location filename="src/mainwindow.cpp" line="1876"/>
+        <location filename="src/mainwindow.cpp" line="1924"/>
+        <location filename="src/mainwindow.cpp" line="1962"/>
+        <location filename="src/mainwindow.cpp" line="2011"/>
+        <location filename="src/mainwindow.cpp" line="2049"/>
+        <location filename="src/mainwindow.cpp" line="2098"/>
+        <location filename="src/mainwindow.cpp" line="2136"/>
+        <location filename="src/mainwindow.cpp" line="2185"/>
+        <location filename="src/mainwindow.cpp" line="2223"/>
+        <location filename="src/mainwindow.cpp" line="2272"/>
+        <location filename="src/mainwindow.cpp" line="2311"/>
+        <location filename="src/mainwindow.cpp" line="2360"/>
+        <location filename="src/mainwindow.cpp" line="2398"/>
+        <location filename="src/mainwindow.cpp" line="2446"/>
+        <location filename="src/mainwindow.cpp" line="2484"/>
+        <location filename="src/mainwindow.cpp" line="2532"/>
+        <location filename="src/mainwindow.cpp" line="2570"/>
+        <location filename="src/mainwindow.cpp" line="2618"/>
+        <location filename="src/mainwindow.cpp" line="2656"/>
+        <location filename="src/mainwindow.cpp" line="2704"/>
         <source>A connection needs a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1709"/>
-        <location filename="src/mainwindow.cpp" line="1794"/>
-        <location filename="src/mainwindow.cpp" line="1879"/>
-        <location filename="src/mainwindow.cpp" line="1965"/>
-        <location filename="src/mainwindow.cpp" line="2052"/>
-        <location filename="src/mainwindow.cpp" line="2139"/>
-        <location filename="src/mainwindow.cpp" line="2226"/>
-        <location filename="src/mainwindow.cpp" line="2314"/>
-        <location filename="src/mainwindow.cpp" line="2401"/>
-        <location filename="src/mainwindow.cpp" line="2487"/>
-        <location filename="src/mainwindow.cpp" line="2573"/>
-        <location filename="src/mainwindow.cpp" line="2659"/>
+        <location filename="src/mainwindow.cpp" line="1715"/>
+        <location filename="src/mainwindow.cpp" line="1800"/>
+        <location filename="src/mainwindow.cpp" line="1885"/>
+        <location filename="src/mainwindow.cpp" line="1971"/>
+        <location filename="src/mainwindow.cpp" line="2058"/>
+        <location filename="src/mainwindow.cpp" line="2145"/>
+        <location filename="src/mainwindow.cpp" line="2232"/>
+        <location filename="src/mainwindow.cpp" line="2320"/>
+        <location filename="src/mainwindow.cpp" line="2407"/>
+        <location filename="src/mainwindow.cpp" line="2493"/>
+        <location filename="src/mainwindow.cpp" line="2579"/>
+        <location filename="src/mainwindow.cpp" line="2665"/>
         <source>Failed to add new connection.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4102,92 +4198,92 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="146"/>
+        <location filename="src/vscpworks.cpp" line="150"/>
         <source>Unknown type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="151"/>
+        <location filename="src/vscpworks.cpp" line="155"/>
         <source>No connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="155"/>
+        <location filename="src/vscpworks.cpp" line="159"/>
         <source>VSCP local connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="159"/>
+        <location filename="src/vscpworks.cpp" line="163"/>
         <source>VSCP tcp/ip connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="163"/>
+        <location filename="src/vscpworks.cpp" line="167"/>
         <source>VSCP CANAL/Level I connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="167"/>
+        <location filename="src/vscpworks.cpp" line="171"/>
         <source>VSCP socketcan connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="171"/>
+        <location filename="src/vscpworks.cpp" line="175"/>
         <source>VSCP websocket protocol 1 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="175"/>
+        <location filename="src/vscpworks.cpp" line="179"/>
         <source>VSCP websocket protocol 2 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="179"/>
+        <location filename="src/vscpworks.cpp" line="183"/>
         <source>VSCP MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="183"/>
+        <location filename="src/vscpworks.cpp" line="187"/>
         <source>VSCP UDP connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="187"/>
+        <location filename="src/vscpworks.cpp" line="191"/>
         <source>VSCP multicast connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="191"/>
+        <location filename="src/vscpworks.cpp" line="195"/>
         <source>VSCP REST connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="195"/>
+        <location filename="src/vscpworks.cpp" line="199"/>
         <source>VSCP RS-232 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="199"/>
+        <location filename="src/vscpworks.cpp" line="203"/>
         <source>VSCP RS-485 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="203"/>
+        <location filename="src/vscpworks.cpp" line="207"/>
         <source>Raw CAN connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="207"/>
+        <location filename="src/vscpworks.cpp" line="211"/>
         <source>Raw MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="465"/>
+        <location filename="src/vscpworks.cpp" line="469"/>
         <source>The VSCP event database does not exist. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="474"/>
+        <location filename="src/vscpworks.cpp" line="478"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>

@@ -240,7 +240,7 @@ add_executable(vscp-works-qt
     src/cdlgconnsettingsrest.h
     src/cdlgconnsettingsrest.cpp
 
-    build/ui_cfrmsession.h
+#    build/ui_cfrmsession.h
     
     src/cdlglevel1filter.h
     src/cdlglevel1filter.cpp
@@ -370,7 +370,8 @@ target_link_libraries(vscp-works-qt PRIVATE
     Qt5::Core 
     Qt5::Network
     Qt5::Quick 
-    Qt5::Sql 
+    Qt5::Sql
+#    SerialBus
     Qt5::SerialPort
     m
     dl
