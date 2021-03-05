@@ -27,7 +27,7 @@
 //
 
 #include "cdlgtls.h"
-#include "ui_cdlgtls.h"
+#include "../ui/ui_cdlgtls.h"
 
 #include <QMessageBox>
 #include <QFileDialog>

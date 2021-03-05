@@ -46,6 +46,7 @@
 #include "cfrmsession.h"
 #include "vscp_client_base.h"
 #include "cdlgmainsettings.h"
+#include "cdlgknownguid.h"
 #include "cdlgnewconnection.h"
 #include "cdlgconnsettingslocal.h"
 #include "cdlgconnsettingscanal.h"
@@ -126,7 +127,10 @@ MainWindow::MainWindow()
     QJSValue three = myEngine.evaluate("(1 + 2 + Math.PI);");
     qDebug() << tr("Int Value = ") << three.toInt();
     qDebug() << tr("Value = ") << three.toNumber();
-    QJSValue fun = myEngine.evaluate("(function(a,b) { var e = {}; e.data = [0,1,2,3,4,5]; switch (e.data[2]) { case 0: return 100; break; case 1: return 222; break; case 2: return 333; break; }; })");
+    myEngine.evaluate("var e = {};e.data = [11,22,33];");
+    myEngine.evaluate("var ttt=77;");
+    //QJSValue fun = myEngine.evaluate("(function(a,b) { var e = {}; e.data = [0,1,2,3,4,5]; switch (e.data[2]) { case 0: return 100; break; case 1: return 222; break; case 2: return 333; break; }; })");
+    QJSValue fun = myEngine.evaluate("(function(a,b) { return e.data[2]; })");
     QJSValueList args;
     args << 1 << 2;
     QJSValue threeAgain = fun.call(args);
@@ -1422,13 +1426,14 @@ void MainWindow::createActions()
 #endif // !QT_NO_CLIPBOARD
 
     QMenu *toolsMenu = menuBar()->addMenu(tr("&Tools"));
-    QAction *aboutAct = toolsMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
-    aboutAct->setStatusTip(tr("Open settins..."));
-
+    QAction *settingsAct = toolsMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
+    settingsAct->setStatusTip(tr("Open settins..."));
+    QAction *knownGuidAct = toolsMenu->addAction(tr("&Known GUID's"), this, &MainWindow::knownGuids);
+    knownGuidAct->setStatusTip(tr("Edit/Add known GUID's..."));
 
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction *settingsAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
-    aboutAct->setStatusTip(tr("Show the application's About box"));
+    QAction *helpAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
+    helpAct->setStatusTip(tr("Show the application's About box"));
 
     QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
@@ -1682,6 +1687,16 @@ void MainWindow::showMainsettings(void)
 
     //CFrmSession *w = new CFrmSession(this);
     //w->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showMainsettings
+//
+
+void MainWindow::knownGuids(void)
+{
+    CDlgKnownGuid *dlg = new CDlgKnownGuid(this);
+    dlg->show();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

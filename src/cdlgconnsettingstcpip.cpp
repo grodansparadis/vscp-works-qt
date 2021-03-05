@@ -29,7 +29,7 @@
 #include "vscpworks.h"
 
 #include "cdlgconnsettingstcpip.h"
-#include "ui_cdlgconnsettingstcpip.h"
+#include "../ui/ui_cdlgconnsettingstcpip.h"
 
 #include "cdlglevel2filter.h"
 #include "cdlgtls.h"

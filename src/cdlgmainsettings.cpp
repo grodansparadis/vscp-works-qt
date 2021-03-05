@@ -33,7 +33,7 @@
 
 #include "mainwindow.h"
 #include "cdlgmainsettings.h"
-#include "ui_cdlgmainsettings.h"
+#include "../ui/ui_cdlgmainsettings.h"
 
 #include "cfrmsession.h"
 

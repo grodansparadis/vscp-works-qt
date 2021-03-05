@@ -1,4 +1,4 @@
-// cdlgmainsettings.h
+// cdlgknownguid.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,18 +26,18 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMAINSETTINGS_H
-#define CDLGMAINSETTINGS_H
+#ifndef CDLGKNOWNGUID_H
+#define CDLGKNOWNGUID_H
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgMainSettings;
+class CDlgKnownGuid;
 }
 
 
-class CDlgMainSettings : public QDialog
+class CDlgKnownGuid : public QDialog
 {
     Q_OBJECT
 
@@ -45,8 +45,8 @@ public:
     
 
 public:
-    explicit CDlgMainSettings(QWidget *parent = nullptr);
-    ~CDlgMainSettings();
+    explicit CDlgKnownGuid(QWidget *parent = nullptr);
+    ~CDlgKnownGuid();
 
     /*!
         set Initial focus
@@ -54,25 +54,36 @@ public:
     void setInitialFocus(void);
 
 public slots:
-    /*!
-        Numerical base changed -recalc
-    */
-    void onBaseChange(int index);
-
-    /// Download VSCP event db
-    void onDownloadEventDb(void);
-
-    /// Reload VSCP event db
-    void onReLoadEventDb(void);
     
     /// Dialog return
-    void done(int r);    
+    void done(int r);   
+
+    /// Handler for search button
+    void btnSearch(void); 
+
+    /// Handler for add button
+    void btnAdd(void); 
+
+    /// Handler for edit button
+    void btnEdit(void); 
+
+    /// Handler for clone button
+    void btnClone(void); 
+
+    /// Handler for delete button
+    void btnDelete(void); 
+
+    /// Handler for load button
+    void btnLoad(void); 
+
+    /// Handler for save button
+    void btnSave(void); 
 
 private:
 
-    Ui::CDlgMainSettings *ui;
+    Ui::CDlgKnownGuid *ui;
 
 };
 
 
-#endif // CDLGMAINSETTINGS_H
+#endif // CDLGKNOWNGUID_H

@@ -37,7 +37,7 @@
 #include "cfrmsession.h"
 
 #include <QApplication>
-
+#include <QMutex>
 #include <QObject>
 #include <QByteArray>
 #include <QNetworkAccessManager>
@@ -45,6 +45,7 @@
 #include <QNetworkReply>
 #include <QDateTime>
 #include <QSqlDatabase>
+#include <QJSValue>
 
 #include <list>
 
@@ -142,16 +143,18 @@ class vscpworks : public QApplication {
     bool loadEventDb(void);
 
     /*!
-        Get render variables and template for a class/type pair
-        @param vscpClass The VSCP class to get variables/template for
-        @param vscpType The VSCP type to get variables/template for
-        @param type Environment to get variables/template for, Default is "vscpworks"
-        @return A string list with the variables string at pos 0 and
-                the template in pos 1
+        Loading data from the vscpworks database GUID table into memory
+        @return true on success
     */
-    QStringList getVscpRenderData(uint16_t vscpClass, 
-                                    uint16_t vscpType, 
-                                    QString type="vscpworks");
+    bool loadGuidDb(void);
+
+    /*!
+        Add GUID with symbolic name
+        @param name GUID symbolic name of GUID to add
+        @param guid GUID to add
+        @return True on success, false on failure
+    */
+    bool addGuid(QString name, QString guid);
 
     /*!
         Convert integer number to selected base. 
@@ -226,6 +229,64 @@ class vscpworks : public QApplication {
     */
     QString getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType);
 
+    /*!
+        Replace mustache special character variable data with
+        proper values
+        @param str String that should have tags replaces
+        @return Handled string
+    */
+    std::string replaceVscpRenderVariables(const std::string& str);
+
+    /*!
+        Get VSCP data conversion function definitions and there names
+        @param map A map that will get name/func pairs
+        @param strVariable String that holds variable definitions
+        @return True on success, false on failure
+    */
+    bool getVscpRenderFunctions(std::map<std::string,std::string>& map, 
+                                    std::string& strVariables);
+
+    /*!
+        Fill the render template with data from a supplied map. 
+        The map holds pairs like
+
+            lbl-start,    '<b>'
+            lbl-end,      '</b>'
+            val-start,    '<span style="color:rgb(0, 0, 153):">'
+            val-end,      '</span>'
+            newline,      '<br>'
+            crc8,         '12345'
+            ....
+
+        @param map A map holding variables and value pairs
+        @param strTemplate This is the template to use
+        @return A string generated from the supplied template and variables
+    */
+    std::string renderVscpDataTemplate(std::map<std::string,std::string>& map, 
+                                        std::string& strTemplate);
+
+    /*!
+        Get render variables and template for a class/type pair
+        @param vscpClass The VSCP class to get variables/template for
+        @param vscpType The VSCP type to get variables/template for
+        @param type Environment to get variables/template for, Default is "vscpworks"
+        @return A string list with the variables string at pos 0 and
+                the template in pos 1
+    */
+    QStringList getVscpRenderData(uint16_t vscpClass, 
+                                    uint16_t vscpType, 
+                                    QString type="vscpworks");
+
+    /*!
+        Define global JavaScript object of a VSCP event for further
+        processing by other evaluations
+        @param engine Active Qt JavaScript engine
+        @param pev VSCP Event to fill in
+        @return True on success, false on failure
+    */
+    bool addVscpEventToJsRenderFunction(QJSEngine& engine, 
+                                            vscpEvent* pev); 
+
     // ------------------------------------------------------------------------
     // Global Configuration information below
     //   This info is read from a configuration file 
@@ -233,7 +294,7 @@ class vscpworks : public QApplication {
     //   file should be placed in the home folder. 
     // ------------------------------------------------------------------------
 
-    // ----------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /// Folder used for configuration
     /// Linux: ~/.configure/VSCP/(vscpworks+.conf)
@@ -325,11 +386,17 @@ class vscpworks : public QApplication {
     /// List with defined connections uuid,conf-obj
     QMap<QString,QJsonObject> m_mapConn;
 
+    /// Mutex protecting vscpClass/vscpType maps
+    QMutex m_mutexVscpEventsMaps;
+
     /// VSCP classes (class-id) -> token
     std::map<uint16_t, QString> m_mapVscpClassToToken;
 
     /// VSCP (class-id + token-id) -> token
     std::map<uint32_t, QString> m_mapVscpTypeToToken;
+
+    /// Mutex protecting GUID maps
+    QMutex m_mutexGuidMaps;
 
     /// VSCP GUID to sumbolic GUID name
     std::map<QString, QString> m_mapGuidToSymbolicName;    

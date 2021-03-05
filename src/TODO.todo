@@ -40,35 +40,10 @@ Session window
 ==============
 TODO Colormarking from filter. Match set filter/icon.
 TODO Set filter from recived event.
-TODO config: Symbolic name instead of GUID 
-                FORMATS:
-                --------
-                GUID    
-                Symbolic name (if specified)
-                Symbolic name - GUID
-                GUID - Symbolic name
-TODO config: class field
-                FORMATS:
-                class symbolic
-                class in selected base
-                class in decimal and hex
-                class in dec/hex + symbolic 
-                symbolic + class in dec/hex
-TODO config: type field
-                FORMATS:
-                type symbolic
-                type in selected base
-                type in decimal and hex
-                type in dec/hex + symbolic 
-                symbolic + type in dec/hex     
 TODO Undefined events should be possible to display info for as user defined evenst                           
-TODO Config: Maximum number of events
 TODO Received event cloned to transmit
 TODO Received event cloned to filter and !filter
 TODO Toolbar: connect | filter active | filter combo | base combo
-TODO Time between two events (Select one, hold pointer over other)
-TODO config: Connect automatically on open or manually.
-TODO config: Clear ask to delete events or not.
 TODO Define your own data rendering (Javascript/mustasch)
 
 GUID Known nodes Dialog

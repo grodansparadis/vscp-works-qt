@@ -42,6 +42,7 @@
 #include <QTableView>
 #include <QtSql>
 #include <QtWidgets>
+#include <QJSEngine>
 
 using namespace kainjow::mustache;
 
@@ -1203,15 +1204,72 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected,
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     // QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
 
-    QStringList lst = pworks->getVscpRenderData(0,12);
-    if (lst.size() >= 2)
-    qDebug() << "Variables = " << lst[0];
-    qDebug() << "Templates = " << lst[1];
+    // ------------------------------------------------------------------------
+
+    /* QStringList lst = pworks->getVscpRenderData(0,12);
+    if (lst.size() >= 2) {
+        qDebug() << "Variables = " << lst[0];
+        qDebug() << "Templates = " << lst[1];
+    }
+
+
+    QJSEngine myEngine;
+    {
+        std::string str;
+        std::string strEvaluate;
+        vscpEvent* pev = m_rxEvents[selection.first().row()];
+
+        strEvaluate = "var e = {};e.vscpData = [";
+        vscp_writeDataToString(str, pev);
+        strEvaluate += str.c_str();
+        strEvaluate += "];e.sizeData=";
+        strEvaluate += vscp_str_format("%d",pev->sizeData);
+        strEvaluate += ";e.guid = [";
+        vscp_writeGuidArrayToString(str, pev->GUID, true);
+        strEvaluate += str;
+        strEvaluate += "];e.vscpHead=";
+        strEvaluate += vscp_str_format("%d",pev->head);
+        strEvaluate += ";e.vscpCrc=";
+        strEvaluate += vscp_str_format("%d",pev->crc);
+        strEvaluate += ";e.vscpObid=";
+        strEvaluate += vscp_str_format("%lu",pev->obid);
+        strEvaluate += ";e.vscpTimeStamp=";
+        strEvaluate += vscp_str_format("%lu",pev->timestamp);
+        strEvaluate += ";e.vscpClass=";
+        strEvaluate += vscp_str_format("%d",pev->vscp_class);
+        strEvaluate += ";e.vscpType=";
+        strEvaluate += vscp_str_format("%d",pev->vscp_type);
+        strEvaluate += ";e.vscpYear=";
+        strEvaluate += vscp_str_format("%d",pev->year);
+        strEvaluate += ";e.vscpMonth=";
+        strEvaluate += vscp_str_format("%d",pev->month);
+        strEvaluate += ";e.vscpDay=";
+        strEvaluate += vscp_str_format("%d",pev->day);
+        strEvaluate += ";e.vscpHour=";
+        strEvaluate += vscp_str_format("%d",pev->hour);
+        strEvaluate += ";e.vscpMinute=";
+        strEvaluate += vscp_str_format("%d",pev->minute);
+        strEvaluate += ";e.vscpSecond=";
+        strEvaluate += vscp_str_format("%d",pev->second);
+        strEvaluate += ";";
+
+        qDebug() << strEvaluate.c_str();
+
+        //myEngine.evaluate("var e = {};e.data = [11,22,33];");
+        QJSValue result = myEngine.evaluate(strEvaluate.c_str());
+        qDebug() << result.isError();
+
+
+    }
+
+    QJSValue result = myEngine.evaluate("e.vscpData[1];");
+    qDebug() << result.toInt() << result.toString();
 
     mustache templVar{ lst[0].toStdString() };
     kainjow::mustache::data _dataVar;
     _dataVar.set("newline", "\r\n");
     _dataVar.set("quote", "\"");
+    _dataVar.set("quote", "'");
     QString outputVar = templVar.render(_dataVar).c_str();
     qDebug() << outputVar;
 
@@ -1249,7 +1307,9 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected,
         if (!cnt) {
             qDebug() << "------->" << func;
         }
-    }
+    } */
+
+    // ------------------------------------------------------------------------
 
     if (0 == selection.size()) {
         fillReceiveEventCount();

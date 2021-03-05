@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgGuid</class>
- <widget class="QDialog" name="CDlgGuid">
+ <class>CDlgKnownGuid</class>
+ <widget class="QDialog" name="CDlgKnownGuid">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -114,13 +114,39 @@
     <string>Search</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="btnLoad">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>200</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnSave">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>230</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save...</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgGuid</receiver>
+   <receiver>CDlgKnownGuid</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -136,7 +162,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgGuid</receiver>
+   <receiver>CDlgKnownGuid</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

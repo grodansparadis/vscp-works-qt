@@ -27,7 +27,7 @@
 //
 
 #include "cdlgmqttsubscribe.h"
-#include "ui_cdlgmqttsubscribe.h"
+#include "../ui/ui_cdlgmqttsubscribe.h"
 
 #include <QMessageBox>
 

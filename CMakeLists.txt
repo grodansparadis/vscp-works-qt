@@ -141,29 +141,32 @@ set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 endif()
 
 # set(UI )
-qt5_wrap_ui(UI src/mainwindow.ui
-    src/cdlgmainsettings.ui
-    src/cdlgconnsettingslocal.ui
-    src/cdlgconnsettingscanal.ui
-    src/cdlgconnsettingstcpip.ui
-    src/cdlgconnsettingssocketcan.ui
-    src/cdlgconnsettingsmqtt.ui
-    src/cdlgconnsettingsws1.ui
-    src/cdlgconnsettingsws2.ui
-    src/cdlgconnsettingsudp.ui
-    src/cdlgconnsettingsmulticast.ui
-    src/cdlgconnsettingsrest.ui
-    src/cdlgconnsettingsrawcan.ui
-    src/cdlgconnsettingsrawmqtt.ui
-    src/cdlgnewconnection.ui
-    src/cdlglevel1filter.ui
-    src/cdlglevel1filterwizard.ui
-    src/cdlglevel2filter.ui
-    src/cdlgcanfilter.ui
-    src/cdlgsocketcanflags.ui
-    src/cdlgtls.ui
-    src/cdlgmqttpublish.ui
-    src/cdlgmqttsubscribe.ui
+qt5_wrap_ui(UI ui/mainwindow.ui
+    ui/cdlgmainsettings.ui
+    ui/cdlgconnsettingslocal.ui
+    ui/cdlgconnsettingscanal.ui
+    ui/cdlgconnsettingstcpip.ui
+    ui/cdlgconnsettingssocketcan.ui
+    ui/cdlgconnsettingsmqtt.ui
+    ui/cdlgconnsettingsws1.ui
+    ui/cdlgconnsettingsws2.ui
+    ui/cdlgconnsettingsudp.ui
+    ui/cdlgconnsettingsmulticast.ui
+    ui/cdlgconnsettingsrest.ui
+    ui/cdlgconnsettingsrawcan.ui
+    ui/cdlgconnsettingsrawmqtt.ui
+    ui/cdlgnewconnection.ui
+    ui/cdlglevel1filter.ui
+    ui/cdlglevel1filterwizard.ui
+    ui/cdlglevel2filter.ui
+    ui/cdlgcanfilter.ui
+    ui/cdlgsocketcanflags.ui
+    ui/cdlgtls.ui
+    ui/cdlgmqttpublish.ui
+    ui/cdlgmqttsubscribe.ui
+    ui/cdlgknownguid.ui
+    ui/cdlgcanfilter.ui
+    ui/cdlgtls.ui
 )
 
 add_executable(vscp-works-qt
@@ -240,6 +243,10 @@ add_executable(vscp-works-qt
     src/cdlgconnsettingsrest.h
     src/cdlgconnsettingsrest.cpp
 
+    build/ui_cdlgknownguid.h
+    src/cdlgknownguid.h
+    src/cdlgknownguid.cpp
+
 #    build/ui_cfrmsession.h
     
     src/cdlglevel1filter.h
@@ -255,12 +262,10 @@ add_executable(vscp-works-qt
     build/ui_cdlglevel2filter.h
 
     src/cdlgcanfilter.h
-    src/cdlgcanfilter.cpp
-    src/cdlgcanfilter.ui
+    src/cdlgcanfilter.cpp    
 
     src/cdlgtls.h
-    src/cdlgtls.cpp
-    src/cdlgtls.ui
+    src/cdlgtls.cpp    
 
     src/cfrmsession.h
     src/cfrmsession.cpp
@@ -346,6 +351,7 @@ endif()
 
 include_directories( PUBLIC ./src 
     ./build
+    ./ui
     third_party/mqtt
     third_party/mqtt/clib
     vscp/src/vscp/common/
@@ -388,14 +394,14 @@ target_link_libraries(vscp-works-qt PRIVATE
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
 
-#message(" Qt5Widgets_INCLUDE_DIRS =${Qt5Widgets_INCLUDE_DIRS}     ")
-#message(" Qt5Widgets_LIBRARIES =${Qt5Widgets_LIBRARIES}   ")
+message(" Qt5Widgets_INCLUDE_DIRS =${Qt5Widgets_INCLUDE_DIRS}     ")
+message(" Qt5Widgets_LIBRARIES =${Qt5Widgets_LIBRARIES}   ")
 
-#message(" Qt5Core_INCLUDE_DIRS =${Qt5Core_INCLUDE_DIRS}   ")
-#message(" Qt5Core_LIBRARIES =${Qt5Core_LIBRARIES}         ")
+message(" Qt5Core_INCLUDE_DIRS =${Qt5Core_INCLUDE_DIRS}   ")
+message(" Qt5Core_LIBRARIES =${Qt5Core_LIBRARIES}         ")
 
-#message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
-#message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
+message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
+message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
 
 message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
 

@@ -27,7 +27,7 @@
 //
 
 #include "cdlgcanfilter.h"
-#include "ui_cdlgcanfilter.h"
+#include "../ui/ui_cdlgcanfilter.h"
 
 #include <QMessageBox>
 

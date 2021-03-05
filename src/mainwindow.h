@@ -121,6 +121,7 @@ private slots:
     void newSession();
 
     void showMainsettings(void);
+    void knownGuids(void);
 
     void editConnectionItem(void);
     void cloneConnectionItem(void);

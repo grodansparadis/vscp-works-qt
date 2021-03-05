@@ -34,7 +34,7 @@
 #include "vscpworks.h"
 
 #include "cdlgconnsettingssocketcan.h"
-#include "ui_cdlgconnsettingssocketcan.h"
+#include "../ui/ui_cdlgconnsettingssocketcan.h"
 
 #include <QMessageBox>
 #include <QJsonArray>
