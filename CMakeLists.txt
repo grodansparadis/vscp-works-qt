@@ -141,32 +141,31 @@ set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
 endif()
 
 # set(UI )
-qt5_wrap_ui(UI ui/mainwindow.ui
-    ui/cdlgmainsettings.ui
-    ui/cdlgconnsettingslocal.ui
-    ui/cdlgconnsettingscanal.ui
-    ui/cdlgconnsettingstcpip.ui
-    ui/cdlgconnsettingssocketcan.ui
-    ui/cdlgconnsettingsmqtt.ui
-    ui/cdlgconnsettingsws1.ui
-    ui/cdlgconnsettingsws2.ui
-    ui/cdlgconnsettingsudp.ui
-    ui/cdlgconnsettingsmulticast.ui
-    ui/cdlgconnsettingsrest.ui
-    ui/cdlgconnsettingsrawcan.ui
-    ui/cdlgconnsettingsrawmqtt.ui
-    ui/cdlgnewconnection.ui
-    ui/cdlglevel1filter.ui
-    ui/cdlglevel1filterwizard.ui
-    ui/cdlglevel2filter.ui
-    ui/cdlgcanfilter.ui
-    ui/cdlgsocketcanflags.ui
-    ui/cdlgtls.ui
-    ui/cdlgmqttpublish.ui
-    ui/cdlgmqttsubscribe.ui
-    ui/cdlgknownguid.ui
-    ui/cdlgcanfilter.ui
-    ui/cdlgtls.ui
+qt5_wrap_ui(UI src/mainwindow.ui    
+    src/cdlgmainsettings.ui
+    src/cdlgconnsettingslocal.ui
+    src/cdlgconnsettingscanal.ui
+    src/cdlgconnsettingstcpip.ui
+    src/cdlgconnsettingssocketcan.ui
+    src/cdlgconnsettingsmqtt.ui
+    src/cdlgconnsettingsws1.ui
+    src/cdlgconnsettingsws2.ui
+    src/cdlgconnsettingsudp.ui
+    src/cdlgconnsettingsmulticast.ui
+    src/cdlgconnsettingsrest.ui
+    src/cdlgconnsettingsrawcan.ui
+    src/cdlgconnsettingsrawmqtt.ui
+    src/cdlgnewconnection.ui
+    src/cdlglevel1filter.ui
+    src/cdlglevel1filterwizard.ui
+    src/cdlglevel2filter.ui
+    src/cdlgsocketcanflags.ui
+    src/cdlgmqttpublish.ui
+    src/cdlgmqttsubscribe.ui
+    src/cdlgknownguid.ui
+    src/cdlgcanfilter.ui
+    src/cdlgtls.ui
+    src/cdlglog.ui
 )
 
 add_executable(vscp-works-qt
@@ -246,8 +245,6 @@ add_executable(vscp-works-qt
     build/ui_cdlgknownguid.h
     src/cdlgknownguid.h
     src/cdlgknownguid.cpp
-
-#    build/ui_cfrmsession.h
     
     src/cdlglevel1filter.h
     src/cdlglevel1filter.cpp
@@ -257,15 +254,18 @@ add_executable(vscp-works-qt
     src/cdlglevel1filterwizard.cpp
     build/ui_cdlglevel1filterwizard.h
 
+    src/cdlglevel2filter.ui
     src/cdlglevel2filter.h
     src/cdlglevel2filter.cpp
     build/ui_cdlglevel2filter.h
 
+    src/cdlgcanfilter.ui
     src/cdlgcanfilter.h
-    src/cdlgcanfilter.cpp    
+    src/cdlgcanfilter.cpp
 
+    src/cdlgtls.ui
     src/cdlgtls.h
-    src/cdlgtls.cpp    
+    src/cdlgtls.cpp  
 
     src/cfrmsession.h
     src/cfrmsession.cpp

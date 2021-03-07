@@ -27,7 +27,7 @@
 //
 
 #include "cdlgsocketcanflags.h"
-#include "../ui/ui_cdlgsocketcanflags.h"
+#include "ui_cdlgsocketcanflags.h"
 
 #include <QMessageBox>
 

@@ -32,7 +32,7 @@
 #include "vscpworks.h"
 
 #include "cdlgconnsettingsws2.h"
-#include "../ui/ui_cdlgconnsettingsws2.h"
+#include "ui_cdlgconnsettingsws2.h"
 
 #include "cdlglevel2filter.h"
 

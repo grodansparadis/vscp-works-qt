@@ -30,7 +30,7 @@
 #include <vscphelper.h>
 
 #include "cdlgconnsettingsmqtt.h"
-#include "../ui/ui_cdlgconnsettingsmqtt.h"
+#include "ui_cdlgconnsettingsmqtt.h"
 
 #include "cdlgmqttpublish.h"
 #include "cdlgmqttsubscribe.h"

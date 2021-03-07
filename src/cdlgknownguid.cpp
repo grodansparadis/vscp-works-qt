@@ -33,7 +33,7 @@
 
 #include "mainwindow.h"
 #include "cdlgknownguid.h"
-#include "../ui/ui_cdlgknownguid.h"
+#include "ui_cdlgknownguid.h"
 
 #include "cfrmsession.h"
 
@@ -49,6 +49,8 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
     connect(ui->btnSearch, &QPushButton::clicked, this, &CDlgKnownGuid::btnSearch);
     connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgKnownGuid::btnAdd); 
     connect(ui->btnEdit, &QPushButton::clicked, this, &CDlgKnownGuid::btnEdit); 
@@ -56,22 +58,67 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
     connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgKnownGuid::btnDelete);  
     connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
     connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
-
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();    
-
+  
 
     // Max number of session events
     //ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
-
-    
 
     //connect(ui->btnDownLoadNewEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onDownloadEventDb);
     //connect(ui->btnReLoadEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onReLoadEventDb ); 
     
 
     // Hook to row double clicked
-    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );           
-    
+    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );
+
+    QStringList headers(
+      QString(tr("GUID, Name")).split(','));
+    ui->listGuid->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
+    ui->listGuid->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listGuid->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    ui->listGuid->setColumnCount(2);
+    ui->listGuid->setColumnWidth(0, 350);  // GUID
+    ui->listGuid->setColumnWidth(1, 200);  // Name
+    ui->listGuid->horizontalHeader()->setStretchLastSection(true);
+    ui->listGuid->setHorizontalHeaderLabels(headers);
+
+    // Fill in GUID's
+     
+    pworks->m_mutexGuidMaps.lock();
+
+    QSqlQuery queryClass("SELECT * FROM guid order by name", pworks->m_worksdb);
+
+    while (queryClass.next()) {
+        QString guid = queryClass.value(1).toString();
+        QString name = queryClass.value(2).toString();
+
+        int row = ui->listGuid->rowCount();
+        ui->listGuid->insertRow(row);
+
+        // * * * GUID
+        QTableWidgetItem* itemGuid = new QTableWidgetItem(guid);
+
+        // Not editable
+        itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
+
+        ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
+
+        // * * * Name
+        QTableWidgetItem* itemName = new QTableWidgetItem(name);
+
+        // Not editable
+        itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
+
+        ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
+    }
+
+    ui->listGuid->setUpdatesEnabled(false);
+    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
+        ui->listGuid->setRowHeight(i, 10);
+    }
+    ui->listGuid->setUpdatesEnabled(true);
+
+    pworks->m_mutexGuidMaps.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,7 +154,95 @@ void CDlgKnownGuid::done(int rv)
 
 void  CDlgKnownGuid::btnSearch(void)
 {
-    int i = 8;
+    /*!
+        Search for GUID if ":" is in search term other wise search for name
+        which must start with a letter.
+    */    
+    int searchType = ui->comboSearchType->currentIndex();  // 0-exact, 1=start, 2=contains
+
+    
+    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
+    if (-1 == currentRow) {
+        currentRow = 0; // First row
+    }
+    else {
+        currentRow++;   // Row after the selected one
+    }
+
+    QString strsearch = ui->editSearch->text();
+
+    for (int i=currentRow; i < ui->listGuid->rowCount(); i++) {
+        
+        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
+        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
+        
+        // GUID exact match
+        if (0 == searchType) {
+            if (itemGuid->text() == ui->editSearch->text()) {
+                //itemGuid->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            }   
+        }
+        // GUID starts with
+        else if (1 == searchType) {
+            if (itemGuid->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+                //itemGuid->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            }
+        }
+        // GUID contains
+        else if (2 == searchType) {
+            if (itemGuid->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+                itemGuid->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            }
+        }
+        // Name Exact match
+        else if (3 == searchType) {
+            if (itemName->text() == ui->editSearch->text()) {
+                //itemName->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            } 
+        }
+        // Name starts with
+        else if (4 == searchType) {
+            if (itemName->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+                //itemName->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            }
+        }
+        // Name contains
+        else if (5 == searchType) {
+            if (itemName->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+                //itemName->setSelected(true); 
+                ui->listGuid->selectRow(i);
+                break;
+            }
+            else {
+                ui->listGuid->clearSelection();
+            }
+        }
+    } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////

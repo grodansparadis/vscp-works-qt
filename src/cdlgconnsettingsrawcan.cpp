@@ -35,7 +35,7 @@
 
 #include "cdlgconnsettingssocketcan.h"
 #include "cdlgconnsettingsrawcan.h"
-#include "../ui/ui_cdlgconnsettingsrawcan.h"
+#include "ui_cdlgconnsettingsrawcan.h"
 
 #include <QMessageBox>
 #include <QJsonArray>

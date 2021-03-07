@@ -29,7 +29,7 @@
 #include <vscp.h>
 
 #include "cdlgmqttpublish.h"
-#include "../ui/ui_cdlgmqttpublish.h"
+#include "ui_cdlgmqttpublish.h"
 
 #include <QMessageBox>
 

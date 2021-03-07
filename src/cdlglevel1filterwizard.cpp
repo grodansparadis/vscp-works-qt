@@ -32,7 +32,7 @@
 #include "vscpworks.h"
 
 #include "cdlglevel1filterwizard.h"
-#include "../ui/ui_cdlglevel1filterwizard.h"
+#include "ui_cdlglevel1filterwizard.h"
 
 #include <QMessageBox>
 #include <QMenu>

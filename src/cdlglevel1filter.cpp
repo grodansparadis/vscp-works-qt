@@ -34,7 +34,7 @@
 #include "cdlglevel1filterwizard.h"
 
 #include "cdlglevel1filter.h"
-#include "../ui/ui_cdlglevel1filter.h"
+#include "ui_cdlglevel1filter.h"
 
 #include <QMessageBox>
 #include <QDebug>

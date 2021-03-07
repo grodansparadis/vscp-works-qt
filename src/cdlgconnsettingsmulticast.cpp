@@ -32,7 +32,7 @@
 #include "vscpworks.h"
 
 #include "cdlgconnsettingsmulticast.h"
-#include "../ui/ui_cdlgconnsettingsmulticast.h"
+#include "ui_cdlgconnsettingsmulticast.h"
 
 #include "cdlglevel2filter.h"
 

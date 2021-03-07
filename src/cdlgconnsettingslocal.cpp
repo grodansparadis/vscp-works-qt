@@ -28,7 +28,7 @@
 
 
 #include "cdlgconnsettingslocal.h"
-#include "../ui/ui_cdlgconnsettingslocal.h"
+#include "ui_cdlgconnsettingslocal.h"
 
 #include <QMessageBox>
 

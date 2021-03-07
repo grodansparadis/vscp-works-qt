@@ -28,7 +28,7 @@
 
 
 #include "cdlgconnsettingscanal.h"
-#include "../ui/ui_cdlgconnsettingscanal.h"
+#include "ui_cdlgconnsettingscanal.h"
 
 #include "cdlglevel1filter.h"
 

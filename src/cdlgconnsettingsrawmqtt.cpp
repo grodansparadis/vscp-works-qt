@@ -31,7 +31,7 @@
 
 #include "cdlgconnsettingsmqtt.h"
 #include "cdlgconnsettingsrawmqtt.h"
-#include "../ui/ui_cdlgconnsettingsrawmqtt.h"
+#include "ui_cdlgconnsettingsrawmqtt.h"
 
 #include "cdlgmqttpublish.h"
 #include "cdlgtls.h"
