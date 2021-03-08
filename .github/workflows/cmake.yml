@@ -30,6 +30,9 @@ jobs:
 
     - name: Install libmosuitto-dev manually
       run: sudo apt install libmosquitto-dev
+    
+    - name: Install libpaho-mqtt-dev manually
+      run: sudo apt install libpaho-mqtt-dev
 
     - name: Install libexpat-dev manually
       run: sudo apt install libexpat-dev
