@@ -34,6 +34,7 @@
 
 #include <vscp_client_tcp.h>
 
+#include "cdlgknownguid.h"
 #include "cfrmsession.h"
 
 #include <stdlib.h>
@@ -1013,7 +1014,28 @@ CFrmSession::clrAllRxSelections(void)
 void
 CFrmSession::setGuid(void)
 {
+    std::string guid;
+    std::string name;
+    CDlgKnownGuid *dlg = new CDlgKnownGuid();
 
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator it;
+    for (it = selection.begin(); it != selection.end(); it++) {
+        //m_rxTable->item(it->row(), 0)->setIcon(icon);
+        //m_mapEventComment[it->row()] = text;
+        pworks->m_mutexGuidMaps.lock();
+        vscp_writeGuidArrayToString(guid, m_rxEvents[it->row()]->GUID);
+        pworks->m_mutexGuidMaps.unlock();
+        if (!dlg->selectByGuid(guid.c_str())) {
+            dlg->setAddGuid(guid.c_str());
+            dlg->btnAdd();
+        }
+        
+        dlg->show();
+    }
+    
 }
 
 

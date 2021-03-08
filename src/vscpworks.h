@@ -398,14 +398,18 @@ class vscpworks : public QApplication {
     /// Mutex protecting GUID maps
     QMutex m_mutexGuidMaps;
 
-    /// VSCP GUID to sumbolic GUID name
-    std::map<QString, QString> m_mapGuidToSymbolicName;    
+    /// VSCP GUID to symbolic GUID name
+    std::map<QString, QString> m_mapGuidToSymbolicName;
+
+    /// VSCP GUID discovery guid/date + client-info (discoverer)
+    std::map<QString, QString> m_mapGuidToDiscovery;
 
     /// VSCP works database
     QSqlDatabase m_worksdb;
 
     /// Event database
     QSqlDatabase m_evdb;
+    
 };
 
 

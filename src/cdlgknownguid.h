@@ -30,7 +30,7 @@
 #define CDLGKNOWNGUID_H
 
 #include <QDialog>
-#include <QListWidgetItem>
+#include <QTableWidgetItem>
 
 namespace Ui {
 class CDlgKnownGuid;
@@ -52,6 +52,45 @@ public:
         set Initial focus
     */
     void setInitialFocus(void);
+
+    /*!
+        Insert one GUID element into table
+        @param guid The GUID for the row
+        @param name The symbolic name for the GUID
+    */
+    void insertGuidItem(QString guid, QString name);
+
+    /*!
+        An item in the list has been clicked
+        @param item The clicked item
+    */
+    void listItemClicked(QTableWidgetItem *item);
+
+    /*!
+        An item in the list has been double clicked
+        @param item The double clicked item
+    */
+    void listItemDoubleClicked(QTableWidgetItem *item);
+
+    /*!
+        Show context menu
+    */
+    void showContextMenu(const QPoint& pos);
+
+    /*!
+        Select row that holds the supplied GUID
+        @param guid GUID to search for among known GUID's
+        @return true if supplied guid found and row is selected
+                otherwise false.
+    */
+    bool selectByGuid(const QString& guid);
+
+    /*!
+        Set GUID that will be used next time add is calles/pressed
+        @param guid GUID to show in new known node window
+    */
+    void setAddGuid(const QString& guid) 
+                { m_addGuid = guid; };
 
 public slots:
     
@@ -82,6 +121,9 @@ public slots:
 private:
 
     Ui::CDlgKnownGuid *ui;
+
+    /// GUID to use as default for add
+    QString m_addGuid;
 
 };
 

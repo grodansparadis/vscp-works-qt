@@ -163,6 +163,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmqttpublish.ui
     src/cdlgmqttsubscribe.ui
     src/cdlgknownguid.ui
+    src/cdlgeditguid.ui
     src/cdlgcanfilter.ui
     src/cdlgtls.ui
     src/cdlglog.ui
@@ -276,6 +277,10 @@ add_executable(vscp-works-qt
 
     src/eventlistmodel.h
     src/eventlistmodel.cpp
+
+    src/cdlgeditguid.ui
+    src/cdlgeditguid.h
+    src/cdlgeditguid.cpp
 
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h

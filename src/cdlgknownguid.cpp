@@ -27,6 +27,7 @@
 //
 
 #include <vscp.h>
+#include <guid.h>
 #include <vscphelper.h>
 
 #include "vscpworks.h"
@@ -35,9 +36,10 @@
 #include "cdlgknownguid.h"
 #include "ui_cdlgknownguid.h"
 
-#include "cfrmsession.h"
+#include "cdlgeditguid.h"
 
 #include <QMessageBox>
+#include <QMenu>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -49,7 +51,19 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->btnSave->setVisible(false);
+    ui->btnLoad->setVisible(false); 
+
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    connect(ui->listGuid, &QTableWidget::itemClicked, this, &CDlgKnownGuid::listItemClicked);
+    connect(ui->listGuid, &QTableWidget::itemDoubleClicked, this, &CDlgKnownGuid::listItemDoubleClicked);
+
+    // Open pop up menu on right click on VSCP type listbox
+    connect(ui->listGuid,
+            &QTableWidget::customContextMenuRequested,
+            this,
+            &CDlgKnownGuid::showContextMenu);
 
     connect(ui->btnSearch, &QPushButton::clicked, this, &CDlgKnownGuid::btnSearch);
     connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgKnownGuid::btnAdd); 
@@ -58,7 +72,6 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
     connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgKnownGuid::btnDelete);  
     connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
     connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
-  
 
     // Max number of session events
     //ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
@@ -69,6 +82,8 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 
     // Hook to row double clicked
     //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );
+
+    ui->textDescription->acceptRichText();
 
     QStringList headers(
       QString(tr("GUID, Name")).split(','));
@@ -92,31 +107,9 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
         QString guid = queryClass.value(1).toString();
         QString name = queryClass.value(2).toString();
 
-        int row = ui->listGuid->rowCount();
-        ui->listGuid->insertRow(row);
+        insertGuidItem(guid, name);
 
-        // * * * GUID
-        QTableWidgetItem* itemGuid = new QTableWidgetItem(guid);
-
-        // Not editable
-        itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
-
-        ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
-
-        // * * * Name
-        QTableWidgetItem* itemName = new QTableWidgetItem(name);
-
-        // Not editable
-        itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
-
-        ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
     }
-
-    ui->listGuid->setUpdatesEnabled(false);
-    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
-        ui->listGuid->setRowHeight(i, 10);
-    }
-    ui->listGuid->setUpdatesEnabled(true);
 
     pworks->m_mutexGuidMaps.unlock();
 }
@@ -129,6 +122,136 @@ CDlgKnownGuid::~CDlgKnownGuid()
 {
     delete ui;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// insertGuidItem
+//
+
+void CDlgKnownGuid::insertGuidItem(QString guid, QString name) 
+{
+    int row = ui->listGuid->rowCount();
+    ui->listGuid->insertRow(row);
+
+    // * * * GUID
+    QTableWidgetItem* itemGuid = new QTableWidgetItem(guid);
+
+    // Not editable
+    itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
+
+    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
+
+    // * * * Name
+    QTableWidgetItem* itemName = new QTableWidgetItem(name);
+
+    // Not editable
+    itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
+
+    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
+
+    // Make all rows equal length
+    ui->listGuid->setUpdatesEnabled(false);
+    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
+        ui->listGuid->setRowHeight(i, 10);
+    }
+    ui->listGuid->setUpdatesEnabled(true);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// listItemClicked
+//
+
+void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
+    if (-1 == currentRow) {
+        currentRow = 0; // First row
+    }
+
+    QTableWidgetItem *itemGuid = ui->listGuid->item(currentRow, 0);
+    QString strguid = itemGuid->text(); 
+    
+    // Search db record for description
+    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMaps.lock();
+    qDebug() << strQuery.arg(strguid);
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    if (QSqlError::NoError != query.lastError().type()) {
+        QMessageBox::information(this,
+                            tr("vscpworks+"),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->log(pworks->LOG_LEVEL_ERROR,
+                        tr("Unable to find record in database. Err =") + 
+                        query.lastError().text());
+        pworks->m_mutexGuidMaps.unlock();                
+        return;                            
+    }
+
+    if (query.next()) {
+        ui->textDescription->setMarkdown(query.value(3).toString());
+    }
+
+    pworks->m_mutexGuidMaps.unlock(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// listItemDoubleClicked
+//
+
+void CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem *item)
+{
+    btnEdit();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showContextMenu
+//
+
+void CDlgKnownGuid::showContextMenu(const QPoint& pos)
+{
+    QMenu *menu = new QMenu(this);
+
+    menu->addAction(QString(tr("Add...")), this, SLOT(btnAdd()));
+    menu->addAction(QString(tr("Edit...")), this, SLOT(btnEdit()));
+    menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone())); 
+    menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete())); 
+    menu->addSeparator();
+    menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
+    menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
+
+    menu->popup(ui->listGuid->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// selectByGuid
+//
+
+bool CDlgKnownGuid::selectByGuid(const QString& guid)
+{
+    for (int i=0; i < ui->listGuid->rowCount(); i++) {
+        
+        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
+        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
+        
+        if (itemGuid->text() == guid) {
+            ui->listGuid->selectRow(i);
+            return true;
+        }
+        else {
+            ui->listGuid->clearSelection();
+        }   
+    }
+
+    return false;
+}
+
+    
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
@@ -246,39 +369,339 @@ void  CDlgKnownGuid::btnSearch(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// btnSearch
+// btnAdd
 //
 
 void  CDlgKnownGuid::btnAdd(void)
 {
-    int i = 8;
+    CDlgEditGuid dlg;
+    dlg.setWindowTitle(tr("Add new known GUID")); 
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    dlg.setGuid(m_addGuid);
+    m_addGuid = "";
+
+again:    
+    if (QDialog::Accepted == dlg.exec()) {
+
+        QString strguid = dlg.getGuid();
+        strguid = strguid.trimmed();
+
+        // Validate length
+        if (47 != strguid.length()) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Invalid GUID. Length is wrong."),
+                              QMessageBox::Ok ); 
+            goto again;                               
+        }
+
+        // Validate format
+        int cntColon = 0;
+        for (int i=0; i<strguid.length(); i++) {
+            if (':' == strguid[i]) cntColon++;
+        }
+
+        // Validate # of colons
+        if (15 != cntColon) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
+                              QMessageBox::Ok ); 
+            goto again;                               
+        }
+
+        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
+
+        pworks->m_mutexGuidMaps.lock();
+        QSqlQuery query(strQuery
+                        .arg(strguid)
+                        .arg(dlg.getName())
+                        .arg(dlg.getDescription()), 
+                        pworks->m_worksdb);
+        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+        if (QSqlError::NoError != query.lastError().type()) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->log(pworks->LOG_LEVEL_ERROR,
+                            tr("Unable to save GUID into database (duplicate?). Err =") + 
+                            query.lastError().text());
+            pworks->m_mutexGuidMaps.unlock();                
+            goto again;                            
+        }
+
+        // Add to the internal table
+        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
+        pworks->m_mutexGuidMaps.unlock();
+
+        // Add to dialog List
+        insertGuidItem(strguid, dlg.getName());
+        ui->textDescription->setMarkdown(dlg.getDescription());
+        ui->listGuid->sortItems(0, Qt::AscendingOrder);
+
+        // Select added item
+        for (int i=0; i < ui->listGuid->rowCount(); i++) {
+        
+            QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
+        
+            if (itemGuid->text() == strguid) {
+                ui->listGuid->selectRow(i);
+                break;;
+            }
+
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// btnSearch
+// btnEdit
 //
 
 void  CDlgKnownGuid::btnEdit(void)
 {
-    int i = 8;
+    CDlgEditGuid dlg;
+    dlg.setWindowTitle(tr("Edit known GUID"));
+    dlg.setEditMode();
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    int row = ui->listGuid->currentRow();
+    if (-1 == row) {
+        QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("No row is selected"),
+                              QMessageBox::Ok );
+        return;
+    }
+    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
+    QString strguid = itemGuid->text();
+    strguid = strguid.trimmed();
+
+    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMaps.lock();
+    qDebug() << strQuery.arg(strguid);
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    if (QSqlError::NoError != query.lastError().type()) {
+        QMessageBox::information(this,
+                            tr("vscpworks+"),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->log(pworks->LOG_LEVEL_ERROR,
+                        tr("Unable to find record in database. Err =") + 
+                        query.lastError().text());
+        pworks->m_mutexGuidMaps.unlock();                
+        return;                            
+    }
+
+    if (query.next()) {
+        dlg.setGuid(query.value(1).toString());
+        dlg.setName(query.value(2).toString());
+        dlg.setDescription(query.value(3).toString());
+    }
+
+    pworks->m_mutexGuidMaps.unlock();
+
+again:    
+    if (QDialog::Accepted == dlg.exec()) {
+
+        QString strname = dlg.getName();
+        QString strdescription = dlg.getDescription();
+
+        QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
+        qDebug() << strQuery.arg(strname)
+                            .arg(strdescription)
+                            .arg(strguid);
+        pworks->m_mutexGuidMaps.lock();
+        QSqlQuery query(strQuery
+                            .arg(strname)
+                            .arg(strdescription)
+                            .arg(strguid), 
+                            pworks->m_worksdb);
+        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+        if (QSqlError::NoError != query.lastError().type()) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->log(pworks->LOG_LEVEL_ERROR,
+                            tr("Unable to save edited GUID into database. Err =") + 
+                            query.lastError().text());
+            pworks->m_mutexGuidMaps.unlock();                
+            goto again;                            
+        }
+
+        // Add to the internal table
+        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
+        pworks->m_mutexGuidMaps.unlock();
+
+        // Add to dialog List
+        QTableWidgetItem * itemName = ui->listGuid->item(row, 1);
+        itemName->setText(dlg.getName());
+        ui->textDescription->setMarkdown(dlg.getDescription());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// btnSearch
+// btnClone
 //
 
 void  CDlgKnownGuid::btnClone(void)
 {
-    int i = 8;
+    CDlgEditGuid dlg;
+    dlg.setWindowTitle(tr("Clone GUID")); 
+
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    int row = ui->listGuid->currentRow();
+    if (-1 == row) {
+        QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("No row is selected"),
+                              QMessageBox::Ok );
+        return;
+    }
+    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
+    QString strguid = itemGuid->text();
+    strguid = strguid.trimmed();
+
+    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMaps.lock();
+    qDebug() << strQuery.arg(strguid);
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    if (QSqlError::NoError != query.lastError().type()) {
+        QMessageBox::information(this,
+                            tr("vscpworks+"),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->log(pworks->LOG_LEVEL_ERROR,
+                        tr("Unable to find record in database. Err =") + 
+                        query.lastError().text());
+        pworks->m_mutexGuidMaps.unlock();                
+        return;                            
+    }
+
+    if (query.next()) {
+        dlg.setGuid(query.value(1).toString());
+        dlg.setName(query.value(2).toString());
+        dlg.setDescription(query.value(3).toString());
+    }
+
+    pworks->m_mutexGuidMaps.unlock();
+
+again:    
+    if (QDialog::Accepted == dlg.exec()) {
+
+        QString strguid = dlg.getGuid();
+        strguid = strguid.trimmed();
+
+        // Validate length
+        if (47 != strguid.length()) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Invalid GUID. Length is wrong."),
+                              QMessageBox::Ok ); 
+            goto again;                               
+        }
+
+        // Validate format
+        int cntColon = 0;
+        for (int i=0; i<strguid.length(); i++) {
+            if (':' == strguid[i]) cntColon++;
+        }
+
+        // Validate # of colons
+        if (15 != cntColon) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
+                              QMessageBox::Ok ); 
+            goto again;                               
+        }
+
+        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
+
+        pworks->m_mutexGuidMaps.lock();
+        QSqlQuery query(strQuery
+                        .arg(strguid)
+                        .arg(dlg.getName())
+                        .arg(dlg.getDescription()), 
+                        pworks->m_worksdb);
+        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+        if (QSqlError::NoError != query.lastError().type()) {
+            QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->log(pworks->LOG_LEVEL_ERROR,
+                            tr("Unable to save GUID into database (duplicate?). Err =") + 
+                            query.lastError().text());
+            pworks->m_mutexGuidMaps.unlock();                
+            goto again;                            
+        }
+
+        // Add to the internal table
+        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
+        pworks->m_mutexGuidMaps.unlock();
+
+        // Add to dialog List
+        insertGuidItem(strguid, dlg.getName());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// btnSearch
+// btnDelete
 //
 
 void  CDlgKnownGuid::btnDelete(void)
 {
-    int i = 8;
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    int row = ui->listGuid->currentRow();
+    if (-1 == row) {
+        QMessageBox::information(this, 
+                              tr("vscpworks+"),
+                              tr("No row is selected"),
+                              QMessageBox::Ok );
+        return;
+    }
+    QTableWidgetItem * item = ui->listGuid->item(row, 0);
+    QString strguid = item->text();
+    strguid = strguid.trimmed();
+
+    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMaps.lock();
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+    if (QSqlError::NoError != query.lastError().type()) {
+        QMessageBox::information(this, 
+                            tr("vscpworks+"),
+                            tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );    
+        pworks->log(pworks->LOG_LEVEL_ERROR,
+                        tr("Unable to delete GUID. Err =") + 
+                        query.lastError().text());                                          
+    }
+    else {
+
+        // Delete row
+        ui->listGuid->removeRow(row);
+
+        // Delete from internal table
+        pworks->m_mapGuidToSymbolicName.erase(strguid);
+        // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
+        // if (std::map::end != it) {
+             
+        // }
+    }
+
+    pworks->m_mutexGuidMaps.unlock();                        
 }
 
 ///////////////////////////////////////////////////////////////////////////////

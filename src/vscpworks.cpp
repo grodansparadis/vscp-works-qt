@@ -568,7 +568,7 @@ bool vscpworks::openVscpWorksDatabase(void)
     QSqlQuery query = QSqlQuery( m_worksdb );
     if (!query.exec("CREATE TABLE IF NOT EXISTS guid ("
                 "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-                "guid	TEXT,"
+                "guid	TEXT UNIQUE,"
                 "name	TEXT,"
                 "description   TEXT);"
             ) ) {

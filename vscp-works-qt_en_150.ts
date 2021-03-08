@@ -28,21 +28,25 @@
     <name>CDlgCanFilter</name>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="14"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="90"/>
         <source>Id and Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="45"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="91"/>
         <source>Id</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="62"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="92"/>
         <source>Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="88"/>
+        <location filename="build/ui_cdlgcanfilter.h" line="93"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 0-7&lt;/span&gt; is node-id&lt;br/&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 8-15&lt;/span&gt; is VSCP type&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bits 16-24&lt;/span&gt; is VSCP Class (9-bits)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit 25&lt;/span&gt; is hardcoded flag&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit 26-28&lt;/span&gt; is priority (0 is lowest)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1833,50 +1837,97 @@ and the flag bits for the. the driver.
     <name>CDlgKnownGuid</name>
     <message>
         <location filename="src/cdlgknownguid.ui" line="14"/>
-        <location filename="build/ui_cdlgknownguid.h" line="83"/>
+        <location filename="build/ui_cdlgknownguid.h" line="106"/>
         <source>GUID - Known nodes </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="52"/>
-        <location filename="build/ui_cdlgknownguid.h" line="84"/>
+        <location filename="src/cdlgknownguid.ui" line="55"/>
+        <location filename="build/ui_cdlgknownguid.h" line="107"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="65"/>
-        <location filename="build/ui_cdlgknownguid.h" line="85"/>
+        <location filename="src/cdlgknownguid.ui" line="68"/>
+        <location filename="build/ui_cdlgknownguid.h" line="108"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="78"/>
-        <location filename="build/ui_cdlgknownguid.h" line="86"/>
+        <location filename="src/cdlgknownguid.ui" line="81"/>
+        <location filename="build/ui_cdlgknownguid.h" line="109"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="91"/>
-        <location filename="build/ui_cdlgknownguid.h" line="87"/>
+        <location filename="src/cdlgknownguid.ui" line="94"/>
+        <location filename="build/ui_cdlgknownguid.h" line="110"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="114"/>
-        <location filename="build/ui_cdlgknownguid.h" line="88"/>
+        <location filename="src/cdlgknownguid.ui" line="117"/>
+        <location filename="build/ui_cdlgknownguid.h" line="111"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="127"/>
-        <location filename="build/ui_cdlgknownguid.h" line="89"/>
+        <location filename="src/cdlgknownguid.ui" line="130"/>
+        <location filename="build/ui_cdlgknownguid.h" line="112"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.ui" line="140"/>
-        <location filename="build/ui_cdlgknownguid.h" line="90"/>
+        <location filename="src/cdlgknownguid.ui" line="143"/>
+        <location filename="build/ui_cdlgknownguid.h" line="113"/>
         <source>Save...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="166"/>
+        <location filename="build/ui_cdlgknownguid.h" line="114"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="180"/>
+        <location filename="build/ui_cdlgknownguid.h" line="115"/>
+        <source>GUID equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="185"/>
+        <location filename="build/ui_cdlgknownguid.h" line="116"/>
+        <source>GUID starts with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="190"/>
+        <location filename="build/ui_cdlgknownguid.h" line="117"/>
+        <source>GUID contains</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="195"/>
+        <location filename="build/ui_cdlgknownguid.h" line="118"/>
+        <source>Name equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="200"/>
+        <location filename="build/ui_cdlgknownguid.h" line="119"/>
+        <source>Name start swith</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.ui" line="205"/>
+        <location filename="build/ui_cdlgknownguid.h" line="120"/>
+        <source>Name contains</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.cpp" line="74"/>
+        <source>GUID, Name</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2438,12 +2489,12 @@ and the flag bits for the. the driver.
 <context>
     <name>CDlgLog</name>
     <message>
-        <location filename="src/cdlgLog.ui" line="14"/>
+        <location filename="src/cdlglog.ui" line="14"/>
         <source>GUID - Known nodes </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgLog.ui" line="52"/>
+        <location filename="src/cdlglog.ui" line="52"/>
         <source>Clear...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2943,41 +2994,49 @@ and the flag bits for the. the driver.
     <name>CDlgTLS</name>
     <message>
         <location filename="src/cdlgtls.ui" line="14"/>
+        <location filename="build/ui_cdlgtls.h" line="150"/>
         <source>SSL/TLS Communication settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="45"/>
+        <location filename="build/ui_cdlgtls.h" line="151"/>
         <source>CaFile</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="55"/>
+        <location filename="build/ui_cdlgtls.h" line="152"/>
         <source>CaPath</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="65"/>
+        <location filename="build/ui_cdlgtls.h" line="153"/>
         <source>Cert File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="81"/>
+        <location filename="build/ui_cdlgtls.h" line="154"/>
         <source>Key File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="88"/>
+        <location filename="build/ui_cdlgtls.h" line="155"/>
         <source>Password key file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="95"/>
+        <location filename="build/ui_cdlgtls.h" line="156"/>
         <source>SSL/TLS verify peer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgtls.ui" line="102"/>
+        <location filename="build/ui_cdlgtls.h" line="157"/>
         <source>SSL/TLS Enable</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2987,6 +3046,11 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgtls.ui" line="144"/>
         <location filename="src/cdlgtls.ui" line="157"/>
         <location filename="src/cdlgtls.ui" line="170"/>
+        <location filename="build/ui_cdlgtls.h" line="158"/>
+        <location filename="build/ui_cdlgtls.h" line="159"/>
+        <location filename="build/ui_cdlgtls.h" line="160"/>
+        <location filename="build/ui_cdlgtls.h" line="161"/>
+        <location filename="build/ui_cdlgtls.h" line="162"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>

@@ -1695,7 +1695,7 @@ void MainWindow::showMainsettings(void)
 
 void MainWindow::knownGuids(void)
 {
-    CDlgKnownGuid *dlg = new CDlgKnownGuid(this);
+    CDlgKnownGuid *dlg = new CDlgKnownGuid();
     dlg->show();
 }
 
