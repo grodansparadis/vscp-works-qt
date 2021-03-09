@@ -106,7 +106,7 @@ jobs:
 
     - name: Copy install files
       shell: bash
-      run: sudo mkdir /usr/local/share/vscp-works-qt/ && sudo cp install/* /usr/local/share/vscp-works-qt/
+      run: sudo chmod a+x install.sh && sudo ./install.sh
 
     - name: Fetch linuxdeployqt 
       run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
