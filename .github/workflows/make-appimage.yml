@@ -106,7 +106,7 @@ jobs:
 
     - name: Copy install files
       shell: bash
-      run: sudo chmod a+x install.sh && sudo ./install.sh
+      run: sudo chmod a+x install.sh && ./install.sh
 
     - name: Fetch linuxdeployqt 
       run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
