@@ -25,12 +25,11 @@ jobs:
         path: vscp
         ref: development
 
-    - name: Checkout paho repo
+    - name: Checkout eclipse paho repo
       uses: actions/checkout@v2
       with:
         repository: eclipse/paho.mqtt.c
         path: paho
-        ref: main
 
     - name: Update before installing packages
       run: sudo apt-get update
