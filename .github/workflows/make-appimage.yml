@@ -64,9 +64,6 @@ jobs:
     - name: Set the correct environment for QT       
       run: /opt/qt515/bin/qt515-env.sh
 
-    - name: Install libmosuitto-dev manually
-      run: sudo apt install libmosquitto-dev
-
     - name: Install libexpat-dev manually
       run: sudo apt install libexpat-dev
 
@@ -100,6 +97,10 @@ jobs:
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
+
+    - name: Copy install files
+      shell: bash
+      run: sudo mkdir /usr/local/share/vscp-works-qt/ && sudo cp install/* /usr/local/share/vscp-works-qt/
 
     - name: Fetch linuxdeployqt 
       run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
