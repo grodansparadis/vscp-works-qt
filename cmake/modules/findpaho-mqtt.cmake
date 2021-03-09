@@ -42,7 +42,7 @@ FIND_LIBRARY(paho-mqtt_LIBRARY NAMES ${paho-mqtt_NAMES}
   PATHS
   /usr/lib/x86_64-linux-gnu
   /usr/local/lib
-  PATH_SUFFIXES lib lib64
+  PATH_SUFFIXES so a
   DOC "paho-mqtt - Library"
 )
 endif()
