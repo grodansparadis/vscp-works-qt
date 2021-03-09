@@ -3,7 +3,7 @@
 CURDIR=`pwd`
 APPDIR="$(dirname -- "$(readlink -f -- "${0}")" )"
 
-//cd "$APPDIR"
+#cd "$APPDIR"
 
 # Set absolute path work around
 //sed -e "s,FULLPATH,$PWD,g" install/vscp-works-qt.desktop > vscp-works-qt.desktop.temp
