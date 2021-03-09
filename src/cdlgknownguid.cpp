@@ -182,7 +182,11 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
     }
 
     if (query.next()) {
+#if QT_VERSION >= 0x050E00    
         ui->textDescription->setMarkdown(query.value(3).toString());
+#else
+        ui->textDescription->setText(query.value(3).toString());
+#endif 
     }
 
     pworks->m_mutexGuidMaps.unlock(); 
@@ -428,7 +432,12 @@ again:
 
         // Add to dialog List
         insertGuidItem(strguid, dlg.getName());
+        
+#if QT_VERSION >= 0x050E00    
         ui->textDescription->setMarkdown(dlg.getDescription());
+#else
+        ui->textDescription->setText(dlg.getDescription());
+#endif 
         ui->listGuid->sortItems(0, Qt::AscendingOrder);
 
         // Select added item
@@ -530,8 +539,12 @@ again:
 
         // Add to dialog List
         QTableWidgetItem * itemName = ui->listGuid->item(row, 1);
-        itemName->setText(dlg.getName());
+        itemName->setText(dlg.getName());        
+#if QT_VERSION >= 0x050E00    
         ui->textDescription->setMarkdown(dlg.getDescription());
+#else
+        ui->textDescription->setText(dlg.getDescription());
+#endif
     }
 }
 

@@ -148,7 +148,11 @@ QString CDlgEditGuid::getDescription(void)
 
 void CDlgEditGuid::setDescription(const QString& str)
 {
+#if QT_VERSION >= 0x050E00    
     ui->editDescription->setMarkdown(str);
+#else
+    ui->editDescription->setText(str);
+#endif    
 }
 
 

@@ -100,25 +100,19 @@ find_package(EXPAT REQUIRED)
 include_directories(${EXPAT_INCLUDE_DIRS})
 endif()
 
-# Mosquitto
+# Mosquitto - Paho c library
 if (WIN32)
 # mosquitto has been replaced with Paho
 # https://github.com/eclipse/paho.mqtt.c
 # https://github.com/eclipse/paho.mqtt.cpp
-set(MOSQUITTO_LIBRARIES, "windows\\mosquitto\\lib\\")
-set(MOSQUITTO_INCLUDE_DIR, "windows\\mosquitto\\include\\")
 set(PAHO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
 set(PAHO_CPP_LIBRARIES, "C:\\mqtt\\paho-cpp\\lib\\")
 set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
 else()
-include(FindMosquitto REQUIRED)
+include(findpaho-mqtt)
+find_package(paho-mqtt REQUIRED)
 endif()
 
-# Paho c library
-#include(FindPAHO REQUIRED)
-
-# Expat library
-find_package(EXPAT REQUIRED)
 
 # DELETE Check SLL version and set variable accordingly
 #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
