@@ -24,7 +24,11 @@ endif()
 
 include_directories(${paho-mqtt_INCLUDE_DIR})
 
-SET(paho-mqtt_NAMES libpaho-mqtt3as.lib libpaho-mqtt3cs.lib)
+if (WIN32)
+SET(paho-mqtt_NAMES paho-mqtt3as.lib paho-mqtt3cs.lib)
+else()
+SET(paho-mqtt_NAMES libpaho-mqtt3as.so libpaho-mqtt3cs.so)
+endif()
 
 if (WIN32)
 FIND_LIBRARY(paho-mqtt_LIBRARY NAMES ${paho-mqtt_NAMES}
