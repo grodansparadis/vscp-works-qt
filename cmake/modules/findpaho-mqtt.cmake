@@ -9,6 +9,7 @@
 # To find and use catch
 find_path(paho-mqtt_INCLUDE_DIR MQTTAsync.h
   PATHS
+  /usr/local/include/
   c:/devel/vcpkg/installed/x64-windows/include
   DOC "paho-mqtt - Headers"
 )
@@ -19,6 +20,7 @@ SET(paho-mqtt_NAMES paho-mqtt3as.lib paho-mqtt3cs.lib)
 
 FIND_LIBRARY(paho-mqtt_LIBRARY NAMES ${paho-mqtt_NAMES}
   PATHS
+  /usr/local/lib/
   c:/devel/vcpkg/installed/x64-windows/lib
   PATH_SUFFIXES lib lib64
   DOC "paho-mqtt - Library"
