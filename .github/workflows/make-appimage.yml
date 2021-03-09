@@ -62,7 +62,7 @@ jobs:
     #   run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
 
     - name: Set the correct environment for QT       
-      run: source /opt/qt515/bin/qt515-env.sh && ls /opt/qt515/bin/
+      run: source /opt/qt515/bin/qt515-env.sh && ls /opt/qt515/bin/ && qmake CONFIG+=release PREFIX=/usr
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -87,23 +87,34 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE
+      run: cmake --build . --config $BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
 
     - name: Install
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Install files
-      run: sudo make install
+      run: sudo make install DESTDIR=AppDir
+    
+    - name: Build AppImage
+        uses: AppImageCrafters/build-appimage-action@master
+        env:
+          UPDATE_INFO: gh-releases-zsync|AppImageCrafters|vscp-works-qt|latest|*x86_64.AppImage.zsync
+        with:
+          recipe: AppImageBuilder.yml
+    
+    - uses: actions/upload-artifact@v2
+        with:
+          name: AppImage
 
-    - name: Copy install files
-      shell: bash
-      run: sudo chmod a+x install.sh && ./install.sh
+    # - name: Copy install files
+    #   shell: bash
+    #   run: sudo chmod a+x install.sh && ./install.sh
 
-    - name: Fetch linuxdeployqt 
-      run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+    # - name: Fetch linuxdeployqt 
+    #   run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
       
-    - name: Make linuxdeployqt executable  
-      run: chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    # - name: Make linuxdeployqt executable  
+    #   run: chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
-    - name: Run AppImage creator
-      run: ./linuxdeployqt-continuous-x86_64.AppImage install/vscp-works-qt.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
+    # - name: Run AppImage creator
+    #   run: ./linuxdeployqt-continuous-x86_64.AppImage install/vscp-works-qt.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus
