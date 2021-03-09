@@ -115,9 +115,9 @@ include(FindMosquitto REQUIRED)
 endif()
 
 # Paho c library
-include(FindPAHO REQUIRED)
+#include(FindPAHO REQUIRED)
 
-
+# Expat library
 find_package(EXPAT REQUIRED)
 
 # DELETE Check SLL version and set variable accordingly
