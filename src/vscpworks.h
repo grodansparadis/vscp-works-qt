@@ -31,8 +31,9 @@
 
 #include <vscp.h>
 
-#include "version.h"
-#include "vscp_client_base.h"
+#include <version.h>
+#include <vscp_client_base.h>
+#include <vscpunit.h>
 
 #include "cfrmsession.h"
 
@@ -228,6 +229,15 @@ class vscpworks : public QApplication {
         @return URL to help page
     */
     QString getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType);
+
+    /*!
+        Get unit information info from database for a specific event
+        @param vscpClass VSCP Class to lookup unit for
+        @param vscpClass VSCP TYpe to lookup unit for
+        @param unit The VSCP specific unit code to look up
+        @return Returns a CVscpUnit with unit data filled in. Defaults to zero.
+    */
+    CVscpUnit getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit=0);
 
     /*!
         Replace mustache special character variable data with

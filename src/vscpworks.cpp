@@ -556,9 +556,6 @@ bool vscpworks::openVscpWorksDatabase(void)
     // Set up database
     QString eventdbname = m_shareFolder + "vscpworks.sqlite3";
 
-    // The database exists we are done
-    //if ( QFile::exists(eventdbname) ) return false;
-
     QString dbName(eventdbname);
     m_worksdb = QSqlDatabase::addDatabase("QSQLITE", "vscpworks");
     m_worksdb.setDatabaseName( dbName);
@@ -572,12 +569,25 @@ bool vscpworks::openVscpWorksDatabase(void)
                 "name	TEXT,"
                 "description   TEXT);"
             ) ) {
+        qDebug() << query.lastError();  
         return false;
     }
 
     // Create GUID name index
     if (!query.exec("CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)")) {
+        qDebug() << query.lastError();  
+        return false;
+    }
 
+    if (!query.exec("CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
+                "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                "\"link_to_guid\"	INTEGER, "
+                "\"sensorindex\"	INTEGER, "
+                "\"name\"	        TEXT, "
+                "\"description\"	TEXT );"
+            ) ) {
+        qDebug() << query.lastError();        
+        return false;
     }
 
     // Create log table if it does not exist
@@ -587,6 +597,7 @@ bool vscpworks::openVscpWorksDatabase(void)
                 "datetime TEXT,"
                 "message TEXT);"
             ) ) {
+        qDebug() << query.lastError();          
         return false;
     }
 
@@ -696,6 +707,36 @@ QString vscpworks::getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getUnitInfo
+//
+
+CVscpUnit vscpworks::getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit)
+{
+    CVscpUnit u(unit);
+
+    u.m_vscp_class = vscpClass;
+    u.m_vscp_type = vscpType;
+
+    QString strQuery = "SELECT * FROM vscp_unit WHERE nunit='%1' AND link_to_class=%2 AND link_to_type=%3;";
+    qDebug() << strQuery << " - " << strQuery.arg(unit).arg(vscpClass).arg(vscpType);
+
+    QSqlQuery query(m_evdb);
+    query.exec(strQuery.arg(unit).arg(vscpClass).arg(vscpType));
+
+    while (query.next()) {
+        u.m_unit = query.value(3).toInt();
+        u.m_name = query.value(4).toString().toStdString();
+        u.m_description = query.value(5).toString().toStdString();
+        u.m_conversion0 = query.value(6).toString().toStdString();
+        u.m_conversion = query.value(7).toString().toStdString();
+        u.m_symbol_ascii = query.value(8).toString().toStdString();
+        u.m_symbol_utf8= query.value(9).toString().toStdString();
+    }
+
+    return u;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // addVscpEventToJsRenderFunction
 //
 
@@ -773,13 +814,18 @@ std::string vscpworks::replaceVscpRenderVariables(const std::string& str)
 QStringList vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type)
 {
     QStringList strList;
-    QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3";
+    QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;";
     qDebug() << strQuery << " - " << strQuery.arg(type).arg(vscpClass).arg(vscpType);
 
     //QSqlQuery query(strQuery.arg(type).arg(vscpClass).arg(vscpType), m_evdb);
     QSqlQuery query(m_evdb);
     query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
     qDebug() << query.numRowsAffected() << m_evdb.lastError();
+    // Try if there is a general render definition if none
+    // is defined for the event
+    if (0 == query.numRowsAffected()) {
+        query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));    
+    }
     while (query.next()) {
 
         // * * * VARIABLES * * *

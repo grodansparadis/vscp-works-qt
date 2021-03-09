@@ -46,6 +46,8 @@ TODO Received event cloned to transmit
 TODO Received event cloned to filter and !filter
 TODO Toolbar: connect | filter active | filter combo | base combo
 TODO Define your own data rendering (Javascript/mustasch)
+TODO Custom data rendering for any event from db.
+TODO Config device from session window.
 
 GUID Known nodes Dialog
 =======================

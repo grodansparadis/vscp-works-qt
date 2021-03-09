@@ -95,13 +95,15 @@ jobs:
       # Install files
       run: sudo make install DESTDIR=AppDir
     
+    # https://github.com/marketplace/actions/build-appimage  
     - name: Build AppImage
-        uses: AppImageCrafters/build-appimage-action@master
+      uses: AppImageCrafters/build-appimage-action@master
         env:
           UPDATE_INFO: gh-releases-zsync|AppImageCrafters|vscp-works-qt|latest|*x86_64.AppImage.zsync
         with:
           recipe: AppImageBuilder.yml
-    
+
+    # https://github.com/probonopd/uploadtool
     - uses: actions/upload-artifact@v2
         with:
           name: AppImage

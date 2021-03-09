@@ -321,6 +321,8 @@ add_executable(vscp-works-qt
     vscp/src/vscp/common/vscp_client_rawmqtt.cpp
     vscp/src/vscp/common/vscp_bootloader.h
     vscp/src/vscp/common/vscp_bootloader.cpp
+    vscp/src/vscp/common/vscpunit.h
+    vscp/src/vscp/common/vscpunit.cpp
     vscp/src/common/third_party/mustache.hpp
     vscp/src/common/third_party/civetweb-1.13/include/civetweb.h
     vscp/src/common/third_party/civetweb-1.13/src/civetweb.c

@@ -46,8 +46,8 @@
 //
 
 CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgKnownGuid)
+        QDialog(parent),
+        ui(new Ui::CDlgKnownGuid)
 {
     ui->setupUi(this);
 
