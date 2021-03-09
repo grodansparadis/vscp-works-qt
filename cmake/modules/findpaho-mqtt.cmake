@@ -13,18 +13,18 @@ find_path(paho-mqtt_INCLUDE_DIR MQTTAsync.h
   c:/devel/vcpkg/installed/x64-windows/include
   DOC "paho-mqtt - Headers"
 )
-else ()
+else()
 find_path(paho-mqtt_INCLUDE_DIR MQTTAsync.h
   PATHS
   /usr/include
   /usr/local/include/
   DOC "paho-mqtt - Headers"
 )
-endif ()
+endif()
 
 include_directories(${paho-mqtt_INCLUDE_DIR})
 
-SET(paho-mqtt_NAMES paho-mqtt3as.lib paho-mqtt3cs.lib)
+SET(paho-mqtt_NAMES libpaho-mqtt3as.lib libpaho-mqtt3cs.lib)
 
 if (WIN32)
 FIND_LIBRARY(paho-mqtt_LIBRARY NAMES ${paho-mqtt_NAMES}

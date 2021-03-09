@@ -129,7 +129,7 @@ if (WIN32)
 #  find_package(dlfcn-win32 REQUIRED)
   set(DLFCN_INCLUDES "E:\\development\\dlfcn-win32\\src\\")
   set(DLFCN__LIBS "E:\\development\\dlfcn-win32\\src\\")
-endif () 
+endif() 
 
 # Set civetweb build flags
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET")
