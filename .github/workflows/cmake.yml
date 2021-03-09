@@ -25,17 +25,24 @@ jobs:
         path: vscp
         ref: development
 
+    - name: Checkout paho repo
+      uses: actions/checkout@v2
+      with:
+        repository: eclipse/paho.mqtt.c
+        path: paho
+        ref: main
+
     - name: Update before installing packages
       run: sudo apt-get update
 
     - name: Install libmosuitto-dev manually
-      run: sudo apt install libmosquitto-dev
+      run: sudo apt-get install libmosquitto-dev
     
-    - name: Install libpaho-mqtt-dev manually
-      run: sudo apt install libpaho-mqtt-dev
+#    - name: Install libpaho-mqtt-dev manually
+#      run: sudo apt-get install libpaho-mqtt-dev
 
     - name: Install libexpat-dev manually
-      run: sudo apt install libexpat-dev
+      run: sudo apt-get install libexpat-dev
 
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev

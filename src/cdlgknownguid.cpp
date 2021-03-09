@@ -73,16 +73,6 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
     connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
     connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
 
-    // Max number of session events
-    //ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
-
-    //connect(ui->btnDownLoadNewEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onDownloadEventDb);
-    //connect(ui->btnReLoadEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onReLoadEventDb ); 
-    
-
-    // Hook to row double clicked
-    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );
-
     ui->textDescription->acceptRichText();
 
     QStringList headers(
@@ -108,7 +98,6 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
         QString name = queryClass.value(2).toString();
 
         insertGuidItem(guid, name);
-
     }
 
     pworks->m_mutexGuidMaps.unlock();

@@ -54,3 +54,8 @@ TODO Dialog with add/edit/delete of known GUID's.   CDlgGuid.ui
 Dialog log viewer
 =================
 TODO Dialog with log viewing/filtering   CDlgLog
+
+
+FUTURE
+======
+https://github.com/mguentner/cannelloni
