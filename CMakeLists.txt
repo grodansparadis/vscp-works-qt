@@ -109,10 +109,9 @@ set(PAHO_LIBRARIES, "C:\\mqtt\\paho-c\\lib\\")
 set(PAHO_CPP_LIBRARIES, "C:\\mqtt\\paho-cpp\\lib\\")
 set(PAHO_INCLUDE_DIR, "C:\\mqtt\\paho-c\\include\\")
 else()
-include(findpaho-mqtt)
+include(Findpaho-mqtt)
 find_package(paho-mqtt REQUIRED)
 endif()
-
 
 # DELETE Check SLL version and set variable accordingly
 #set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DOPENSSL_API_1_1")
@@ -363,7 +362,6 @@ include_directories( PUBLIC ./src
     ${Qt5Network_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${MOSQUITTO_INCLUDE_DIR}
     ${PAHO_INCLUDE_DIRS}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
@@ -385,7 +383,6 @@ target_link_libraries(vscp-works-qt PRIVATE
     OpenSSL::Crypto
     ${OPENSSL_LIBRARIES}
     ${PAHO_LIBRARIES}
-    ${MOSQUITTO_LIBRARIES}
     ${EXPAT_LIBRARIES}
     ${DLFCN_LIBS})
 
@@ -402,6 +399,7 @@ message(" Qt5Core_LIBRARIES =${Qt5Core_LIBRARIES}         ")
 message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
 message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
 
+message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}")
 message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
 
 
