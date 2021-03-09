@@ -31,6 +31,9 @@ jobs:
         repository: eclipse/paho.mqtt.c
         path: paho
 
+    - name: Install paho manually
+      run: cd paho && mkdir build && cd build && sudo cmake .. && sudo make install
+
     - name: Update before installing packages
       run: sudo apt-get update
 
