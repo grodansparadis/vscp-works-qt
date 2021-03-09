@@ -139,7 +139,11 @@ void CDlgEditGuid::setName(const QString& str)
 
 QString CDlgEditGuid::getDescription(void)
 {
-    return (ui->editDescription->toMarkdown()); // toPlainText());
+#if QT_VERSION >= 0x050E00     
+    return (ui->editDescription->toMarkdown());
+#else
+    return (ui->editDescription->toPlainText());
+#endif    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
