@@ -56,8 +56,8 @@ jobs:
     
     # For build
     - name: Install qt5-qmake-bin
-       run: sudo apt-get -y install qt5-qmake-bin
-
+      run: sudo apt-get -y install qt5-qmake-bin
+    
     # - name: Test tools location
     #   run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
 
