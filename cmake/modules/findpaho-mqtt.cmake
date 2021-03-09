@@ -27,7 +27,7 @@ include_directories(${paho-mqtt_INCLUDE_DIR})
 if (WIN32)
 SET(paho-mqtt_NAMES paho-mqtt3as.lib paho-mqtt3cs.lib)
 else()
-SET(paho-mqtt_NAMES libpaho-mqtt3as.so libpaho-mqtt3cs.so)
+SET(paho-mqtt_NAMES paho-mqtt3as paho-mqtt3cs)
 endif()
 
 if (WIN32)
