@@ -1844,250 +1844,285 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgEditSensorIndex</name>
+    <message>
+        <location filename="src/cdlgeditsensorindex.ui" line="26"/>
+        <location filename="build/ui_cdlgeditsensorindex.h" line="106"/>
+        <source>Edit known node</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsensorindex.ui" line="60"/>
+        <location filename="build/ui_cdlgeditsensorindex.h" line="107"/>
+        <source>Sensor index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsensorindex.ui" line="73"/>
+        <location filename="build/ui_cdlgeditsensorindex.h" line="108"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsensorindex.ui" line="86"/>
+        <location filename="build/ui_cdlgeditsensorindex.h" line="109"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgKnownGuid</name>
     <message>
         <location filename="src/cdlgknownguid.ui" line="23"/>
-        <location filename="build/ui_cdlgknownguid.h" line="116"/>
+        <location filename="build/ui_cdlgknownguid.h" line="120"/>
         <source>GUID - Known nodes </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="67"/>
-        <location filename="build/ui_cdlgknownguid.h" line="117"/>
-        <location filename="src/cdlgknownguid.cpp" line="212"/>
+        <location filename="build/ui_cdlgknownguid.h" line="121"/>
+        <location filename="src/cdlgknownguid.cpp" line="214"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="80"/>
-        <location filename="build/ui_cdlgknownguid.h" line="118"/>
-        <location filename="src/cdlgknownguid.cpp" line="213"/>
+        <location filename="build/ui_cdlgknownguid.h" line="122"/>
+        <location filename="src/cdlgknownguid.cpp" line="215"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="93"/>
-        <location filename="build/ui_cdlgknownguid.h" line="119"/>
+        <location filename="build/ui_cdlgknownguid.h" line="123"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="106"/>
-        <location filename="build/ui_cdlgknownguid.h" line="120"/>
+        <location filename="build/ui_cdlgknownguid.h" line="124"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="129"/>
-        <location filename="build/ui_cdlgknownguid.h" line="121"/>
+        <location filename="build/ui_cdlgknownguid.h" line="125"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="145"/>
-        <location filename="build/ui_cdlgknownguid.h" line="122"/>
+        <location filename="build/ui_cdlgknownguid.h" line="126"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="161"/>
-        <location filename="build/ui_cdlgknownguid.h" line="123"/>
+        <location filename="build/ui_cdlgknownguid.h" line="127"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="187"/>
-        <location filename="build/ui_cdlgknownguid.h" line="124"/>
+        <location filename="build/ui_cdlgknownguid.h" line="128"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="201"/>
-        <location filename="build/ui_cdlgknownguid.h" line="125"/>
+        <location filename="build/ui_cdlgknownguid.h" line="129"/>
         <source>GUID equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="206"/>
-        <location filename="build/ui_cdlgknownguid.h" line="126"/>
+        <location filename="build/ui_cdlgknownguid.h" line="130"/>
         <source>GUID starts with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="211"/>
-        <location filename="build/ui_cdlgknownguid.h" line="127"/>
+        <location filename="build/ui_cdlgknownguid.h" line="131"/>
         <source>GUID contains</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="216"/>
-        <location filename="build/ui_cdlgknownguid.h" line="128"/>
+        <location filename="build/ui_cdlgknownguid.h" line="132"/>
         <source>Name equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="221"/>
-        <location filename="build/ui_cdlgknownguid.h" line="129"/>
+        <location filename="build/ui_cdlgknownguid.h" line="133"/>
         <source>Name start swith</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="226"/>
-        <location filename="build/ui_cdlgknownguid.h" line="130"/>
+        <location filename="build/ui_cdlgknownguid.h" line="134"/>
         <source>Name contains</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="79"/>
+        <location filename="src/cdlgknownguid.ui" line="240"/>
+        <location filename="build/ui_cdlgknownguid.h" line="136"/>
+        <source>Sensor...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgknownguid.cpp" line="81"/>
         <source>GUID, Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="166"/>
-        <location filename="src/cdlgknownguid.cpp" line="481"/>
-        <location filename="src/cdlgknownguid.cpp" line="574"/>
+        <location filename="src/cdlgknownguid.cpp" line="168"/>
+        <location filename="src/cdlgknownguid.cpp" line="483"/>
+        <location filename="src/cdlgknownguid.cpp" line="576"/>
         <source>SELECT * FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="174"/>
-        <location filename="src/cdlgknownguid.cpp" line="387"/>
-        <location filename="src/cdlgknownguid.cpp" line="402"/>
-        <location filename="src/cdlgknownguid.cpp" line="419"/>
-        <location filename="src/cdlgknownguid.cpp" line="472"/>
-        <location filename="src/cdlgknownguid.cpp" line="489"/>
-        <location filename="src/cdlgknownguid.cpp" line="526"/>
-        <location filename="src/cdlgknownguid.cpp" line="565"/>
-        <location filename="src/cdlgknownguid.cpp" line="582"/>
-        <location filename="src/cdlgknownguid.cpp" line="609"/>
-        <location filename="src/cdlgknownguid.cpp" line="624"/>
-        <location filename="src/cdlgknownguid.cpp" line="641"/>
-        <location filename="src/cdlgknownguid.cpp" line="671"/>
-        <location filename="src/cdlgknownguid.cpp" line="686"/>
+        <location filename="src/cdlgknownguid.cpp" line="176"/>
+        <location filename="src/cdlgknownguid.cpp" line="389"/>
+        <location filename="src/cdlgknownguid.cpp" line="404"/>
+        <location filename="src/cdlgknownguid.cpp" line="421"/>
+        <location filename="src/cdlgknownguid.cpp" line="474"/>
+        <location filename="src/cdlgknownguid.cpp" line="491"/>
+        <location filename="src/cdlgknownguid.cpp" line="528"/>
+        <location filename="src/cdlgknownguid.cpp" line="567"/>
+        <location filename="src/cdlgknownguid.cpp" line="584"/>
+        <location filename="src/cdlgknownguid.cpp" line="611"/>
+        <location filename="src/cdlgknownguid.cpp" line="626"/>
+        <location filename="src/cdlgknownguid.cpp" line="643"/>
+        <location filename="src/cdlgknownguid.cpp" line="673"/>
+        <location filename="src/cdlgknownguid.cpp" line="688"/>
+        <location filename="src/cdlgknownguid.cpp" line="726"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="175"/>
-        <location filename="src/cdlgknownguid.cpp" line="490"/>
-        <location filename="src/cdlgknownguid.cpp" line="583"/>
+        <location filename="src/cdlgknownguid.cpp" line="177"/>
+        <location filename="src/cdlgknownguid.cpp" line="492"/>
+        <location filename="src/cdlgknownguid.cpp" line="585"/>
         <source>Unable to find record in database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="178"/>
-        <location filename="src/cdlgknownguid.cpp" line="493"/>
-        <location filename="src/cdlgknownguid.cpp" line="586"/>
+        <location filename="src/cdlgknownguid.cpp" line="180"/>
+        <location filename="src/cdlgknownguid.cpp" line="495"/>
+        <location filename="src/cdlgknownguid.cpp" line="588"/>
         <source>Unable to find record in database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="214"/>
+        <location filename="src/cdlgknownguid.cpp" line="216"/>
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="215"/>
+        <location filename="src/cdlgknownguid.cpp" line="217"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="217"/>
+        <location filename="src/cdlgknownguid.cpp" line="219"/>
         <source>Load from file file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="218"/>
+        <location filename="src/cdlgknownguid.cpp" line="220"/>
         <source>Save to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="371"/>
+        <location filename="src/cdlgknownguid.cpp" line="373"/>
         <source>Add new known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="388"/>
-        <location filename="src/cdlgknownguid.cpp" line="610"/>
+        <location filename="src/cdlgknownguid.cpp" line="390"/>
+        <location filename="src/cdlgknownguid.cpp" line="612"/>
         <source>Invalid GUID. Length is wrong.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="403"/>
-        <location filename="src/cdlgknownguid.cpp" line="625"/>
+        <location filename="src/cdlgknownguid.cpp" line="405"/>
+        <location filename="src/cdlgknownguid.cpp" line="627"/>
         <source>Invalid GUID. Format is wrong. Should be like &apos;FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="408"/>
-        <location filename="src/cdlgknownguid.cpp" line="630"/>
+        <location filename="src/cdlgknownguid.cpp" line="410"/>
+        <location filename="src/cdlgknownguid.cpp" line="632"/>
         <source>INSERT INTO guid (guid, name, description) VALUES (&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;);</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="420"/>
-        <location filename="src/cdlgknownguid.cpp" line="642"/>
+        <location filename="src/cdlgknownguid.cpp" line="422"/>
+        <location filename="src/cdlgknownguid.cpp" line="644"/>
         <source>Unable to save GUID into database (duplicate?).
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="423"/>
-        <location filename="src/cdlgknownguid.cpp" line="645"/>
+        <location filename="src/cdlgknownguid.cpp" line="425"/>
+        <location filename="src/cdlgknownguid.cpp" line="647"/>
         <source>Unable to save GUID into database (duplicate?). Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="464"/>
+        <location filename="src/cdlgknownguid.cpp" line="466"/>
         <source>Edit known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="473"/>
-        <location filename="src/cdlgknownguid.cpp" line="566"/>
-        <location filename="src/cdlgknownguid.cpp" line="672"/>
-        <source>No row is selected</source>
+        <location filename="src/cdlgknownguid.cpp" line="475"/>
+        <location filename="src/cdlgknownguid.cpp" line="568"/>
+        <location filename="src/cdlgknownguid.cpp" line="674"/>
+        <location filename="src/cdlgknownguid.cpp" line="727"/>
+        <source>No GUID is selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="513"/>
+        <location filename="src/cdlgknownguid.cpp" line="515"/>
         <source>UPDATE guid SET name=&apos;%1&apos;, description=&apos;%2&apos; WHERE guid=&apos;%3&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="527"/>
+        <location filename="src/cdlgknownguid.cpp" line="529"/>
         <source>Unable to save edited GUID into database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="530"/>
+        <location filename="src/cdlgknownguid.cpp" line="532"/>
         <source>Unable to save edited GUID into database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="558"/>
+        <location filename="src/cdlgknownguid.cpp" line="560"/>
         <source>Clone GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="680"/>
+        <location filename="src/cdlgknownguid.cpp" line="682"/>
         <source>DELETE FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="687"/>
+        <location filename="src/cdlgknownguid.cpp" line="689"/>
         <source>Unable to delete GUID.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="690"/>
+        <location filename="src/cdlgknownguid.cpp" line="692"/>
         <source>Unable to delete GUID. Err =</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3131,6 +3166,231 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgSensorIndex</name>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="23"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="111"/>
+        <source>Sensorindex - Known sensors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="70"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="src/cdlgsensorindex.cpp" line="212"/>
+        <source>Add...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="83"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="src/cdlgsensorindex.cpp" line="213"/>
+        <source>Edit...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="96"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="114"/>
+        <source>Clone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="109"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="115"/>
+        <source>Delete...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="125"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="116"/>
+        <source>Load...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="141"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="117"/>
+        <source>Save...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="167"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="118"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="180"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="119"/>
+        <source>Sensors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="197"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="120"/>
+        <source>GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.ui" line="210"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="121"/>
+        <source>name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="78"/>
+        <source>Sensor index, Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="166"/>
+        <location filename="src/cdlgsensorindex.cpp" line="514"/>
+        <location filename="src/cdlgsensorindex.cpp" line="607"/>
+        <source>SELECT * FROM guid WHERE guid=&apos;%1&apos;;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="174"/>
+        <location filename="src/cdlgsensorindex.cpp" line="420"/>
+        <location filename="src/cdlgsensorindex.cpp" line="435"/>
+        <location filename="src/cdlgsensorindex.cpp" line="452"/>
+        <location filename="src/cdlgsensorindex.cpp" line="505"/>
+        <location filename="src/cdlgsensorindex.cpp" line="522"/>
+        <location filename="src/cdlgsensorindex.cpp" line="559"/>
+        <location filename="src/cdlgsensorindex.cpp" line="598"/>
+        <location filename="src/cdlgsensorindex.cpp" line="615"/>
+        <location filename="src/cdlgsensorindex.cpp" line="642"/>
+        <location filename="src/cdlgsensorindex.cpp" line="657"/>
+        <location filename="src/cdlgsensorindex.cpp" line="674"/>
+        <location filename="src/cdlgsensorindex.cpp" line="704"/>
+        <location filename="src/cdlgsensorindex.cpp" line="719"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="175"/>
+        <location filename="src/cdlgsensorindex.cpp" line="523"/>
+        <location filename="src/cdlgsensorindex.cpp" line="616"/>
+        <source>Unable to find record in database.
+
+ Error =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="178"/>
+        <location filename="src/cdlgsensorindex.cpp" line="526"/>
+        <location filename="src/cdlgsensorindex.cpp" line="619"/>
+        <source>Unable to find record in database. Err =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="214"/>
+        <source>Clone...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="215"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="217"/>
+        <source>Load from file file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="218"/>
+        <source>Save to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="404"/>
+        <source>Add new known GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="421"/>
+        <location filename="src/cdlgsensorindex.cpp" line="643"/>
+        <source>Invalid GUID. Length is wrong.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="436"/>
+        <location filename="src/cdlgsensorindex.cpp" line="658"/>
+        <source>Invalid GUID. Format is wrong. Should be like &apos;FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="441"/>
+        <location filename="src/cdlgsensorindex.cpp" line="663"/>
+        <source>INSERT INTO guid (guid, name, description) VALUES (&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;);</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="453"/>
+        <location filename="src/cdlgsensorindex.cpp" line="675"/>
+        <source>Unable to save GUID into database (duplicate?).
+
+ Error =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="456"/>
+        <location filename="src/cdlgsensorindex.cpp" line="678"/>
+        <source>Unable to save GUID into database (duplicate?). Err =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="497"/>
+        <source>Edit known GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="506"/>
+        <location filename="src/cdlgsensorindex.cpp" line="599"/>
+        <location filename="src/cdlgsensorindex.cpp" line="705"/>
+        <source>No row is selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="546"/>
+        <source>UPDATE guid SET name=&apos;%1&apos;, description=&apos;%2&apos; WHERE guid=&apos;%3&apos;;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="560"/>
+        <source>Unable to save edited GUID into database.
+
+ Error =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="563"/>
+        <source>Unable to save edited GUID into database. Err =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="591"/>
+        <source>Clone GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="713"/>
+        <source>DELETE FROM guid WHERE guid=&apos;%1&apos;;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="720"/>
+        <source>Unable to delete GUID.
+
+ Error =</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsensorindex.cpp" line="723"/>
+        <source>Unable to delete GUID. Err =</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgSocketCanFlags</name>
     <message>
         <location filename="src/cdlgsocketcanflags.ui" line="14"/>
@@ -3677,7 +3937,7 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1668"/>
+        <location filename="src/cfrmsession.cpp" line="1878"/>
         <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4547,17 +4807,17 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="637"/>
+        <location filename="src/vscpworks.cpp" line="648"/>
         <source>Failed to insert GUID into database %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="88"/>
+        <location filename="src/vscpworks.h" line="89"/>
         <source>https://www.vscp.org/events/version.js</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.h" line="89"/>
+        <location filename="src/vscpworks.h" line="90"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>

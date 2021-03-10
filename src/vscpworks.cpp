@@ -582,7 +582,7 @@ bool vscpworks::openVscpWorksDatabase(void)
     if (!query.exec("CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
                 "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
                 "\"link_to_guid\"	INTEGER, "
-                "\"sensorindex\"	INTEGER, "
+                "\"sensor\"	        INTEGER, "
                 "\"name\"	        TEXT, "
                 "\"description\"	TEXT );"
             ) ) {
@@ -613,7 +613,7 @@ bool vscpworks::openVscpWorksDatabase(void)
 
 bool vscpworks::loadGuidDb(void)
 {
-    m_mutexGuidMaps.lock();
+    m_mutexGuidMap.lock();
 
     QSqlQuery queryClass("SELECT * FROM guid order by name", m_worksdb);
 
@@ -623,7 +623,7 @@ bool vscpworks::loadGuidDb(void)
         m_mapGuidToSymbolicName[guid] = name;
     }
 
-    m_mutexGuidMaps.unlock();
+    m_mutexGuidMap.unlock();
     return true;    
 }
 
@@ -633,12 +633,12 @@ bool vscpworks::loadGuidDb(void)
 
 bool vscpworks::addGuid(QString guid, QString name)
 {
-    m_mutexGuidMaps.lock();
+    m_mutexGuidMap.lock();
 
     // If the GUID symbolic name already exist we
     // are OK and done
     if (0 != m_mapGuidToSymbolicName[guid].length()) {
-        m_mutexGuidMaps.unlock();
+        m_mutexGuidMap.unlock();
         return true;
     }
 
@@ -653,7 +653,7 @@ bool vscpworks::addGuid(QString guid, QString name)
     // Add to loaded
     m_mapGuidToSymbolicName[guid] = name;
 
-    m_mutexGuidMaps.unlock();
+    m_mutexGuidMap.unlock();
     return true;
 }
 

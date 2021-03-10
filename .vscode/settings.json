@@ -88,8 +88,12 @@
         "**/node_modules/**": true
     },
     "cSpell.words": [
+        "c",
         "display",
+        "dlg",
         "guid",
+        "index",
+        "sensor",
         "str"
     ]
 }

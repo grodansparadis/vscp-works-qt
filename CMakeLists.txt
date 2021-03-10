@@ -160,6 +160,8 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgcanfilter.ui
     src/cdlgtls.ui
     src/cdlglog.ui
+    str/cdlgsensorindex.ui
+    src/cdlgeditsensorindex.ui
 )
 
 add_executable(vscp-works-qt
@@ -274,6 +276,14 @@ add_executable(vscp-works-qt
     src/cdlgeditguid.ui
     src/cdlgeditguid.h
     src/cdlgeditguid.cpp
+
+    src/cdlgsensorindex.ui
+    src/cdlgsensorindex.h
+    src/cdlgsensorindex.cpp
+
+    src/cdlgeditsensorindex.ui
+    src/cdlgeditsensorindex.h
+    src/cdlgeditsensorindex.cpp
 
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h

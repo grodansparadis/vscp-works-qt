@@ -1,4 +1,4 @@
-// cdlgknownguid.h
+// cdlgsensorindex.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,18 +26,18 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGKNOWNGUID_H
-#define CDLGKNOWNGUID_H
+#ifndef CDLGSENSORINDEX_H
+#define CDLGSENSORINDEX_H
 
 #include <QDialog>
 #include <QTableWidgetItem>
 
 namespace Ui {
-class CDlgKnownGuid;
+class CDlgSensorIndex;
 }
 
 
-class CDlgKnownGuid : public QDialog
+class CDlgSensorIndex : public QDialog
 {
     Q_OBJECT
 
@@ -45,8 +45,8 @@ public:
     
 
 public:
-    explicit CDlgKnownGuid(QWidget *parent = nullptr);
-    ~CDlgKnownGuid();
+    explicit CDlgSensorIndex(QWidget *parent = nullptr);
+    ~CDlgSensorIndex();
 
     /*!
         set Initial focus
@@ -55,10 +55,10 @@ public:
 
     /*!
         Insert one GUID element into table
-        @param guid The GUID for the row
+        @param sensorindex The sensor index for the row
         @param name The symbolic name for the GUID
     */
-    void insertGuidItem(QString guid, QString name);
+    void insertSensorIndexItem(QString sensorindex, QString name);
 
     /*!
         An item in the list has been clicked
@@ -83,7 +83,7 @@ public:
         @return true if supplied guid found and row is selected
                 otherwise false.
     */
-    bool selectByGuid(const QString& guid);
+    bool selectBySensorIndex(const QString& sensorindex);
 
     /*!
         Set GUID that will be used next time add is calles/pressed
@@ -91,6 +91,26 @@ public:
     */
     void setAddGuid(const QString& guid) 
                 { m_addGuid = guid; };
+
+    /*!
+        Set GUID label value
+    */
+    void setGuid(const QString& strguid );
+
+    /*!
+        Get GUID label value
+    */
+   QString getGuid(void);
+
+   /*!
+        Set GUID name label value
+    */
+    void setGuidName(const QString& strguid );
+
+    /*!
+        Get GUID name label value
+    */
+   QString getGuidName(void);
 
 public slots:
     
@@ -112,9 +132,6 @@ public slots:
     /// Handler for delete button
     void btnDelete(void); 
 
-    /// Open sensor index dialog
-    void btnSensorIndex(void);
-
     /// Handler for load button
     void btnLoad(void); 
 
@@ -123,7 +140,7 @@ public slots:
 
 private:
 
-    Ui::CDlgKnownGuid *ui;
+    Ui::CDlgSensorIndex *ui;
 
     /// GUID to use as default for add
     QString m_addGuid;
@@ -131,4 +148,4 @@ private:
 };
 
 
-#endif // CDLGKNOWNGUID_H
+#endif // CDLGSENSORINDEX_H

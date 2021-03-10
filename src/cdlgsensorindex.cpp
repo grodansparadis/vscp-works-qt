@@ -1,4 +1,4 @@
-// cdlgknownguid.cpp
+// cdlgsensorindex.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -33,9 +33,8 @@
 #include "vscpworks.h"
 
 #include "mainwindow.h"
-#include "cdlgknownguid.h"
-#include "ui_cdlgknownguid.h"
 #include "cdlgsensorindex.h"
+#include "ui_cdlgsensorindex.h"
 
 #include "cdlgeditguid.h"
 
@@ -46,9 +45,9 @@
 // CTor
 //
 
-CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
+CDlgSensorIndex::CDlgSensorIndex(QWidget *parent) :
         QDialog(parent),
-        ui(new Ui::CDlgKnownGuid)
+        ui(new Ui::CDlgSensorIndex)
 {
     ui->setupUi(this);
 
@@ -57,49 +56,48 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    connect(ui->listGuid, &QTableWidget::itemClicked, this, &CDlgKnownGuid::listItemClicked);
-    connect(ui->listGuid, &QTableWidget::itemDoubleClicked, this, &CDlgKnownGuid::listItemDoubleClicked);
+    connect(ui->listSensors, &QTableWidget::itemClicked, this, &CDlgSensorIndex::listItemClicked);
+    connect(ui->listSensors, &QTableWidget::itemDoubleClicked, this, &CDlgSensorIndex::listItemDoubleClicked);
 
     // Open pop up menu on right click on VSCP type listbox
-    connect(ui->listGuid,
+    connect(ui->listSensors,
             &QTableWidget::customContextMenuRequested,
             this,
-            &CDlgKnownGuid::showContextMenu);
+            &CDlgSensorIndex::showContextMenu);
 
-    connect(ui->btnSearch, &QPushButton::clicked, this, &CDlgKnownGuid::btnSearch);
-    connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgKnownGuid::btnAdd); 
-    connect(ui->btnEdit, &QPushButton::clicked, this, &CDlgKnownGuid::btnEdit); 
-    connect(ui->btnClone, &QPushButton::clicked, this, &CDlgKnownGuid::btnClone); 
-    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgKnownGuid::btnDelete);
-    connect(ui->btnSensorIndex, &QPushButton::clicked, this, &CDlgKnownGuid::btnSensorIndex);  
-    connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
-    connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
+    connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgSensorIndex::btnAdd); 
+    connect(ui->btnEdit, &QPushButton::clicked, this, &CDlgSensorIndex::btnEdit); 
+    connect(ui->btnClone, &QPushButton::clicked, this, &CDlgSensorIndex::btnClone); 
+    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSensorIndex::btnDelete);  
+    connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgSensorIndex::btnLoad);
+    connect(ui->btnSave, &QPushButton::clicked, this, &CDlgSensorIndex::btnSave);
 
     ui->textDescription->acceptRichText();
 
     QStringList headers(
-      QString(tr("GUID, Name")).split(','));
-    ui->listGuid->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
-    ui->listGuid->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->listGuid->setSelectionMode(QAbstractItemView::SingleSelection);
+      QString(tr("Sensor, Name")).split(','));
+    ui->listSensors->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
+    ui->listSensors->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listSensors->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    ui->listGuid->setColumnCount(2);
-    ui->listGuid->setColumnWidth(0, 350);  // GUID
-    ui->listGuid->setColumnWidth(1, 200);  // Name
-    ui->listGuid->horizontalHeader()->setStretchLastSection(true);
-    ui->listGuid->setHorizontalHeaderLabels(headers);
+    ui->listSensors->setColumnCount(2);
+    ui->listSensors->setColumnWidth(0, 100);     // Sensor index
+    ui->listSensors->setColumnWidth(1, 200);    // Name
+    ui->listSensors->horizontalHeader()->setStretchLastSection(true);
+    ui->listSensors->setHorizontalHeaderLabels(headers);
 
     // Fill in GUID's
      
-    pworks->m_mutexGuidMap.lock();
+    pworks->m_mutexGuidMap.lock(); // 
 
-    QSqlQuery query("SELECT * FROM guid order by name", pworks->m_worksdb);
+    QString strQuery = "SELECT * FROM sensorindex  WHERE link_to_guid = %1 ORDER BY sensor;"; 
+    QSqlQuery query(strQuery.arg(/*ui->lblGuid->text()*/1), pworks->m_worksdb);
 
     while (query.next()) {
-        QString guid = query.value(1).toString();
-        QString name = query.value(2).toString();
+        QString sensor = query.value(2).toString();
+        QString name = query.value(3).toString();
 
-        insertGuidItem(guid, name);
+        insertSensorIndexItem(sensor, name);
     }
 
     pworks->m_mutexGuidMap.unlock();
@@ -109,28 +107,28 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 // DTor
 //
 
-CDlgKnownGuid::~CDlgKnownGuid()
+CDlgSensorIndex::~CDlgSensorIndex()
 {
     delete ui;
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// insertGuidItem
+// insertSensorIndexItem
 //
 
-void CDlgKnownGuid::insertGuidItem(QString guid, QString name) 
+void CDlgSensorIndex::insertSensorIndexItem(QString sensorindex, QString name) 
 {
-    int row = ui->listGuid->rowCount();
-    ui->listGuid->insertRow(row);
+    int row = ui->listSensors->rowCount();
+    ui->listSensors->insertRow(row);
 
-    // * * * GUID
-    QTableWidgetItem* itemGuid = new QTableWidgetItem(guid);
+    // * * * Sensor index
+    QTableWidgetItem* itemGuid = new QTableWidgetItem(sensorindex);
 
     // Not editable
     itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
 
-    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
+    ui->listSensors->setItem(ui->listSensors->rowCount() - 1, 0, itemGuid);
 
     // * * * Name
     QTableWidgetItem* itemName = new QTableWidgetItem(name);
@@ -138,34 +136,34 @@ void CDlgKnownGuid::insertGuidItem(QString guid, QString name)
     // Not editable
     itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
 
-    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
+    ui->listSensors->setItem(ui->listSensors->rowCount() - 1, 1, itemName);
 
     // Make all rows equal height
-    ui->listGuid->setUpdatesEnabled(false);
-    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
-        ui->listGuid->setRowHeight(i, 10);
+    ui->listSensors->setUpdatesEnabled(false);
+    for (int i = 0; i < ui->listSensors->rowCount(); i++) {
+        ui->listSensors->setRowHeight(i, 10);
     }
-    ui->listGuid->setUpdatesEnabled(true);
+    ui->listSensors->setUpdatesEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // listItemClicked
 //
 
-void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
+void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
+    int currentRow = ui->listSensors->selectionModel()->currentIndex().row();
     if (-1 == currentRow) {
         currentRow = 0; // First row
     }
 
-    QTableWidgetItem *itemGuid = ui->listGuid->item(currentRow, 0);
-    QString strguid = itemGuid->text(); 
+    QTableWidgetItem *itemSensorIndex = ui->listSensors->item(currentRow, 0);
+    QString strguid = itemSensorIndex->text(); 
     
     // Search db record for description
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor='%1';");
     pworks->m_mutexGuidMap.lock();
     qDebug() << strQuery.arg(strguid);
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
@@ -198,7 +196,7 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
 // listItemDoubleClicked
 //
 
-void CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem *item)
+void CDlgSensorIndex::listItemDoubleClicked(QTableWidgetItem *item)
 {
     btnEdit();
 }
@@ -207,7 +205,7 @@ void CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem *item)
 // showContextMenu
 //
 
-void CDlgKnownGuid::showContextMenu(const QPoint& pos)
+void CDlgSensorIndex::showContextMenu(const QPoint& pos)
 {
     QMenu *menu = new QMenu(this);
 
@@ -219,40 +217,73 @@ void CDlgKnownGuid::showContextMenu(const QPoint& pos)
     // menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
     // menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
 
-    menu->popup(ui->listGuid->viewport()->mapToGlobal(pos));
+    menu->popup(ui->listSensors->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// selectByGuid
+// selectBySensorIndex
 //
 
-bool CDlgKnownGuid::selectByGuid(const QString& guid)
+bool CDlgSensorIndex::selectBySensorIndex(const QString& sensorindex)
 {
-    for (int i=0; i < ui->listGuid->rowCount(); i++) {
+    for (int i=0; i < ui->listSensors->rowCount(); i++) {
         
-        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
-        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
+        QTableWidgetItem * itemSensorIndex = ui->listSensors->item(i,0);
+        QTableWidgetItem * itemName = ui->listSensors->item(i,1);
         
-        if (itemGuid->text() == guid) {
-            ui->listGuid->selectRow(i);
+        if (itemSensorIndex->text() == sensorindex) {
+            ui->listSensors->selectRow(i);
             return true;
         }
         else {
-            ui->listGuid->clearSelection();
+            ui->listSensors->clearSelection();
         }   
     }
 
     return false;
 }
 
-    
+///////////////////////////////////////////////////////////////////////////////
+// setGuid
+//
 
+void CDlgSensorIndex::setGuid(const QString& strguid )
+{
+    ui->lblGuid->setText(strguid);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getGuidName
+//
+
+QString CDlgSensorIndex::getGuidName(void)
+{
+    return ui->lblGuidName->text();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setGuidName
+//
+
+void CDlgSensorIndex::setGuidName(const QString& strguid )
+{
+    ui->lblGuidName->setText(strguid);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getGuid
+//
+
+QString CDlgSensorIndex::getGuid(void)
+{
+    return ui->lblGuid->text();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
 //
 
-void CDlgKnownGuid::done(int rv)
+void CDlgSensorIndex::done(int rv)
 {
     if (QDialog::Accepted == rv) { // ok was pressed
         
@@ -270,104 +301,104 @@ void CDlgKnownGuid::done(int rv)
 // btnSearch
 //
 
-void  CDlgKnownGuid::btnSearch(void)
+void CDlgSensorIndex::btnSearch(void)
 {
     /*!
         Search for GUID if ":" is in search term other wise search for name
         which must start with a letter.
     */    
-    int searchType = ui->comboSearchType->currentIndex();  // 0-exact, 1=start, 2=contains
+    // int searchType = ui->comboSearchType->currentIndex();  // 0-exact, 1=start, 2=contains
 
     
-    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
-    if (-1 == currentRow) {
-        currentRow = 0; // First row
-    }
-    else {
-        currentRow++;   // Row after the selected one
-    }
+    // int currentRow = ui->listSensors->selectionModel()->currentIndex().row();
+    // if (-1 == currentRow) {
+    //     currentRow = 0; // First row
+    // }
+    // else {
+    //     currentRow++;   // Row after the selected one
+    // }
 
-    QString strsearch = ui->editSearch->text();
+    // QString strsearch = ui->editSearch->text();
 
-    for (int i=currentRow; i < ui->listGuid->rowCount(); i++) {
+    // for (int i=currentRow; i < ui->listSensors->rowCount(); i++) {
         
-        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
-        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
+    //     QTableWidgetItem * itemGuid = ui->listSensors->item(i,0);
+    //     QTableWidgetItem * itemName = ui->listSensors->item(i,1);
         
-        // GUID exact match
-        if (0 == searchType) {
-            if (itemGuid->text() == ui->editSearch->text()) {
-                //itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }   
-        }
-        // GUID starts with
-        else if (1 == searchType) {
-            if (itemGuid->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // GUID contains
-        else if (2 == searchType) {
-            if (itemGuid->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // Name Exact match
-        else if (3 == searchType) {
-            if (itemName->text() == ui->editSearch->text()) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            } 
-        }
-        // Name starts with
-        else if (4 == searchType) {
-            if (itemName->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // Name contains
-        else if (5 == searchType) {
-            if (itemName->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-    } 
+    //     // GUID exact match
+    //     if (0 == searchType) {
+    //         if (itemGuid->text() == ui->editSearch->text()) {
+    //             //itemGuid->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         }   
+    //     }
+    //     // GUID starts with
+    //     else if (1 == searchType) {
+    //         if (itemGuid->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+    //             //itemGuid->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         }
+    //     }
+    //     // GUID contains
+    //     else if (2 == searchType) {
+    //         if (itemGuid->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+    //             itemGuid->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         }
+    //     }
+    //     // Name Exact match
+    //     else if (3 == searchType) {
+    //         if (itemName->text() == ui->editSearch->text()) {
+    //             //itemName->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         } 
+    //     }
+    //     // Name starts with
+    //     else if (4 == searchType) {
+    //         if (itemName->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+    //             //itemName->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         }
+    //     }
+    //     // Name contains
+    //     else if (5 == searchType) {
+    //         if (itemName->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+    //             //itemName->setSelected(true); 
+    //             ui->listSensors->selectRow(i);
+    //             break;
+    //         }
+    //         else {
+    //             ui->listSensors->clearSelection();
+    //         }
+    //     }
+    // } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnAdd
 //
 
-void  CDlgKnownGuid::btnAdd(void)
+void CDlgSensorIndex::btnAdd(void)
 {
     CDlgEditGuid dlg;
     dlg.setWindowTitle(tr("Add new known GUID")); 
@@ -433,22 +464,22 @@ again:
         pworks->m_mutexGuidMap.unlock();
 
         // Add to dialog List
-        insertGuidItem(strguid, dlg.getName());
+        insertSensorIndexItem(strguid, dlg.getName());
         
 #if QT_VERSION >= 0x050E00    
         ui->textDescription->setMarkdown(dlg.getDescription());
 #else
         ui->textDescription->setText(dlg.getDescription());
 #endif 
-        ui->listGuid->sortItems(0, Qt::AscendingOrder);
+        ui->listSensors->sortItems(0, Qt::AscendingOrder);
 
         // Select added item
-        for (int i=0; i < ui->listGuid->rowCount(); i++) {
+        for (int i=0; i < ui->listSensors->rowCount(); i++) {
         
-            QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
+            QTableWidgetItem * itemGuid = ui->listSensors->item(i,0);
         
             if (itemGuid->text() == strguid) {
-                ui->listGuid->selectRow(i);
+                ui->listSensors->selectRow(i);
                 break;;
             }
 
@@ -460,7 +491,7 @@ again:
 // btnEdit
 //
 
-void  CDlgKnownGuid::btnEdit(void)
+void CDlgSensorIndex::btnEdit(void)
 {
     CDlgEditGuid dlg;
     dlg.setWindowTitle(tr("Edit known GUID"));
@@ -468,15 +499,15 @@ void  CDlgKnownGuid::btnEdit(void)
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
+    int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No GUID is selected"),
+                              tr("No row is selected"),
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
+    QTableWidgetItem * itemGuid = ui->listSensors->item(row, 0);
     QString strguid = itemGuid->text();
     strguid = strguid.trimmed();
 
@@ -540,7 +571,7 @@ again:
         pworks->m_mutexGuidMap.unlock();
 
         // Add to dialog List
-        QTableWidgetItem * itemName = ui->listGuid->item(row, 1);
+        QTableWidgetItem * itemName = ui->listSensors->item(row, 1);
         itemName->setText(dlg.getName());        
 #if QT_VERSION >= 0x050E00    
         ui->textDescription->setMarkdown(dlg.getDescription());
@@ -554,22 +585,22 @@ again:
 // btnClone
 //
 
-void  CDlgKnownGuid::btnClone(void)
+void CDlgSensorIndex::btnClone(void)
 {
     CDlgEditGuid dlg;
     dlg.setWindowTitle(tr("Clone GUID")); 
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
+    int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No GUID is selected"),
+                              tr("No row is selected"),
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
+    QTableWidgetItem * itemGuid = ui->listSensors->item(row, 0);
     QString strguid = itemGuid->text();
     strguid = strguid.trimmed();
 
@@ -655,7 +686,7 @@ again:
         pworks->m_mutexGuidMap.unlock();
 
         // Add to dialog List
-        insertGuidItem(strguid, dlg.getName());
+        insertSensorIndexItem(strguid, dlg.getName());
     }
 }
 
@@ -663,19 +694,19 @@ again:
 // btnDelete
 //
 
-void  CDlgKnownGuid::btnDelete(void)
+void CDlgSensorIndex::btnDelete(void)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
+    int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No GUID is selected"),
+                              tr("No row is selected"),
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * item = ui->listGuid->item(row, 0);
+    QTableWidgetItem * item = ui->listSensors->item(row, 0);
     QString strguid = item->text();
     strguid = strguid.trimmed();
 
@@ -695,7 +726,7 @@ void  CDlgKnownGuid::btnDelete(void)
     else {
 
         // Delete row
-        ui->listGuid->removeRow(row);
+        ui->listSensors->removeRow(row);
 
         // Delete from internal table
         pworks->m_mapGuidToSymbolicName.erase(strguid);
@@ -708,46 +739,11 @@ void  CDlgKnownGuid::btnDelete(void)
     pworks->m_mutexGuidMap.unlock();                        
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// btnSensorIndex
-//
-
-void  CDlgKnownGuid::btnSensorIndex(void)
-{
-    CDlgSensorIndex dlg;
-
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-
-    // Must be a selected GUID
-    int row = ui->listGuid->currentRow();
-    if (-1 == row) {
-        QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("No GUID is selected"),
-                              QMessageBox::Ok );
-        return;
-    }
-
-    QTableWidgetItem * item = ui->listGuid->item(row, 0);
-    QString strguid = item->text();
-    strguid = strguid.trimmed();
-    dlg.setGuid(strguid);
-
-    item = ui->listGuid->item(row, 1);
-    QString strname = item->text();
-    dlg.setGuidName(strname);
-    
-    if (QDialog::Accepted == dlg.exec()) {
-    
-    }
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // btnLoad
 //
 
-void  CDlgKnownGuid::btnLoad(void)
+void CDlgSensorIndex::btnLoad(void)
 {
     int i = 8;
 }
@@ -756,7 +752,7 @@ void  CDlgKnownGuid::btnLoad(void)
 // btnSave
 //
 
-void  CDlgKnownGuid::btnSave(void)
+void CDlgSensorIndex::btnSave(void)
 {
     int i = 8;
 }

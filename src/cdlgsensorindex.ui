@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgKnownGuid</class>
- <widget class="QDialog" name="CDlgKnownGuid">
+ <class>CDlgSensorIndex</class>
+ <widget class="QDialog" name="CDlgSensorIndex">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>840</width>
-    <height>638</height>
+    <height>587</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <enum>Qt::CustomContextMenu</enum>
   </property>
   <property name="windowTitle">
-   <string>GUID - Known nodes </string>
+   <string>Sensorindex - Known sensors</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -29,8 +29,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>600</y>
-     <width>721</width>
+     <y>550</y>
+     <width>821</width>
      <height>32</height>
     </rect>
    </property>
@@ -41,14 +41,17 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTableWidget" name="listGuid">
+  <widget class="QTableWidget" name="listSensors">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>50</y>
+     <y>60</y>
      <width>721</width>
-     <height>271</height>
+     <height>211</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="sortingEnabled">
     <bool>true</bool>
@@ -58,7 +61,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>90</y>
+     <y>80</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -71,7 +74,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>120</y>
+     <y>110</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -84,7 +87,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>150</y>
+     <y>140</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -97,36 +100,13 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>180</y>
+     <y>170</y>
      <width>89</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
     <string>Delete...</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="editSearch">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>10</y>
-     <width>301</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnSearch">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>10</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Search</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnLoad">
@@ -136,7 +116,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>210</y>
+     <y>220</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -152,7 +132,7 @@
    <property name="geometry">
     <rect>
      <x>740</x>
-     <y>240</y>
+     <y>250</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -165,7 +145,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>350</y>
+     <y>300</y>
      <width>721</width>
      <height>241</height>
     </rect>
@@ -177,8 +157,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>330</y>
+     <x>20</x>
+     <y>280</y>
      <width>91</width>
      <height>17</height>
     </rect>
@@ -187,57 +167,37 @@
     <string>Description</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboSearchType">
+  <widget class="QLabel" name="lblGuid">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>10</y>
-     <width>211</width>
-     <height>25</height>
+     <width>711</width>
+     <height>20</height>
     </rect>
    </property>
-   <item>
-    <property name="text">
-     <string>GUID equal to</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>GUID starts with</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>GUID contains</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name equal to</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name start swith</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name contains</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QPushButton" name="btnSensorIndex">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>50</y>
-     <width>89</width>
-     <height>21</height>
-    </rect>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(78, 154, 6);
+font: 75 15pt &quot;Verdana&quot;;</string>
    </property>
    <property name="text">
-    <string>Sensors...</string>
+    <string>GUID</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblGuidName">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>30</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(193, 125, 17);</string>
+   </property>
+   <property name="text">
+    <string>name</string>
    </property>
   </widget>
  </widget>
@@ -246,7 +206,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgKnownGuid</receiver>
+   <receiver>CDlgSensorIndex</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -262,7 +222,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgKnownGuid</receiver>
+   <receiver>CDlgSensorIndex</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

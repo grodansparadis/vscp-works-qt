@@ -1025,9 +1025,9 @@ CFrmSession::setGuid(void)
     for (it = selection.begin(); it != selection.end(); it++) {
         //m_rxTable->item(it->row(), 0)->setIcon(icon);
         //m_mapEventComment[it->row()] = text;
-        pworks->m_mutexGuidMaps.lock();
+        pworks->m_mutexGuidMap.lock();
         vscp_writeGuidArrayToString(guid, m_rxEvents[it->row()]->GUID);
-        pworks->m_mutexGuidMaps.unlock();
+        pworks->m_mutexGuidMap.unlock();
         if (!dlg->selectByGuid(guid.c_str())) {
             dlg->setAddGuid(guid.c_str());
             dlg->btnAdd();
@@ -1581,9 +1581,9 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected,
         std::string strVscpGuid;
         vscp_writeGuidArrayToString(strVscpGuid, pev->GUID);
 
-        pworks->m_mutexGuidMaps.lock();
+        pworks->m_mutexGuidMap.lock();
         std::string strVscpGuidSymbolic = pworks->m_mapGuidToSymbolicName[strVscpGuid.c_str()].toStdString();
-        pworks->m_mutexGuidMaps.unlock();
+        pworks->m_mutexGuidMap.unlock();
 
         std::string strVscpData = "<small>";
         for (int i = 0; i < pev->sizeData; i++) {

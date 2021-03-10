@@ -406,13 +406,19 @@ class vscpworks : public QApplication {
     std::map<uint32_t, QString> m_mapVscpTypeToToken;
 
     /// Mutex protecting GUID maps
-    QMutex m_mutexGuidMaps;
+    QMutex m_mutexGuidMap;
 
     /// VSCP GUID to symbolic GUID name
     std::map<QString, QString> m_mapGuidToSymbolicName;
 
     /// VSCP GUID discovery guid/date + client-info (discoverer)
     std::map<QString, QString> m_mapGuidToDiscovery;
+
+    /// Mutex protecting Sensor Index maps
+    QMutex m_mutexSensorIndexMap;
+
+    /// Sensor index to symbolic sensor name
+    std::map<QString, QString> m_mapSensorIndexToSymbolicName;
 
     /// VSCP works database
     QSqlDatabase m_worksdb;
