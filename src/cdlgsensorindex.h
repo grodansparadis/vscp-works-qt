@@ -45,7 +45,7 @@ public:
     
 
 public:
-    explicit CDlgSensorIndex(QWidget *parent = nullptr);
+    explicit CDlgSensorIndex(QWidget *parent = nullptr, int link_to_guid=-1);
     ~CDlgSensorIndex();
 
     /*!
@@ -145,6 +145,8 @@ private:
     /// GUID to use as default for add
     QString m_addGuid;
 
+    /// Link to the GUID this sensor belongs to
+    int m_link_to_guid;
 };
 
 

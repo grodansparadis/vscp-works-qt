@@ -147,7 +147,13 @@ class vscpworks : public QApplication {
         Loading data from the vscpworks database GUID table into memory
         @return true on success
     */
-    bool loadGuidDb(void);
+    bool loadGuidTable(void);
+
+    /*!
+        Loading data from the vscpworks database sensorindex table into memory
+        @return true on success
+    */
+    bool loadSensorTable(void);
 
     /*!
         Add GUID with symbolic name
@@ -156,6 +162,13 @@ class vscpworks : public QApplication {
         @return True on success, false on failure
     */
     bool addGuid(QString name, QString guid);
+
+    /*!
+        Get index for GUID record
+        @param guid GUID on string form
+        @return index or -1 if error.
+    */
+    int getIdxForGuidRecord(const QString& guid);
 
     /*!
         Convert integer number to selected base. 
@@ -417,8 +430,11 @@ class vscpworks : public QApplication {
     /// Mutex protecting Sensor Index maps
     QMutex m_mutexSensorIndexMap;
 
-    /// Sensor index to symbolic sensor name
-    std::map<QString, QString> m_mapSensorIndexToSymbolicName;
+    /*! 
+        Sensor index to symbolic sensor name
+        (link_to_guid << 8) + sensor
+    */
+    std::map<int, QString> m_mapSensorIndexToSymbolicName;
 
     /// VSCP works database
     QSqlDatabase m_worksdb;

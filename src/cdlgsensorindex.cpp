@@ -36,7 +36,7 @@
 #include "cdlgsensorindex.h"
 #include "ui_cdlgsensorindex.h"
 
-#include "cdlgeditguid.h"
+#include "cdlgeditsensorindex.h"
 
 #include <QMessageBox>
 #include <QMenu>
@@ -45,11 +45,16 @@
 // CTor
 //
 
-CDlgSensorIndex::CDlgSensorIndex(QWidget *parent) :
+CDlgSensorIndex::CDlgSensorIndex(QWidget *parent, int link_to_guid) :
         QDialog(parent),
         ui(new Ui::CDlgSensorIndex)
 {
     ui->setupUi(this);
+
+    ui->listSensors->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->listSensors->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    m_link_to_guid = link_to_guid;
 
     ui->btnSave->setVisible(false);
     ui->btnLoad->setVisible(false); 
@@ -81,17 +86,17 @@ CDlgSensorIndex::CDlgSensorIndex(QWidget *parent) :
     ui->listSensors->setSelectionMode(QAbstractItemView::SingleSelection);
 
     ui->listSensors->setColumnCount(2);
-    ui->listSensors->setColumnWidth(0, 100);     // Sensor index
+    ui->listSensors->setColumnWidth(0, 100);    // Sensor index
     ui->listSensors->setColumnWidth(1, 200);    // Name
     ui->listSensors->horizontalHeader()->setStretchLastSection(true);
     ui->listSensors->setHorizontalHeaderLabels(headers);
 
     // Fill in GUID's
      
-    pworks->m_mutexGuidMap.lock(); // 
+    pworks->m_mutexSensorIndexMap.lock(); 
 
     QString strQuery = "SELECT * FROM sensorindex  WHERE link_to_guid = %1 ORDER BY sensor;"; 
-    QSqlQuery query(strQuery.arg(/*ui->lblGuid->text()*/1), pworks->m_worksdb);
+    QSqlQuery query(strQuery.arg(m_link_to_guid), pworks->m_worksdb);
 
     while (query.next()) {
         QString sensor = query.value(2).toString();
@@ -100,7 +105,7 @@ CDlgSensorIndex::CDlgSensorIndex(QWidget *parent) :
         insertSensorIndexItem(sensor, name);
     }
 
-    pworks->m_mutexGuidMap.unlock();
+    pworks->m_mutexSensorIndexMap.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,16 +164,15 @@ void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
         currentRow = 0; // First row
     }
 
-    QTableWidgetItem *itemSensorIndex = ui->listSensors->item(currentRow, 0);
-    QString strguid = itemSensorIndex->text(); 
+    QTableWidgetItem *itemSensor = ui->listSensors->item(currentRow, 0);
+    QString strsensor = itemSensor->text(); 
     
     // Search db record for description
-    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor='%1';");
-    pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
+    pworks->m_mutexSensorIndexMap.lock();
+    QSqlQuery query(strQuery.arg(strsensor.toInt()).arg(m_link_to_guid), pworks->m_worksdb);
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -177,19 +181,19 @@ void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
                         query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
+        pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
 
     if (query.next()) {
 #if QT_VERSION >= 0x050E00    
-        ui->textDescription->setMarkdown(query.value(3).toString());
+        ui->textDescription->setMarkdown(query.value(4).toString());
 #else
         ui->textDescription->setText(query.value(3).toString());
 #endif 
     }
 
-    pworks->m_mutexGuidMap.unlock(); 
+    pworks->m_mutexSensorIndexMap.unlock(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -400,87 +404,62 @@ void CDlgSensorIndex::btnSearch(void)
 
 void CDlgSensorIndex::btnAdd(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Add new known GUID")); 
+    CDlgEditSensorIndex dlg;
+    dlg.setWindowTitle(tr("Add new sensor")); 
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    dlg.setGuid(m_addGuid);
-    m_addGuid = "";
+    //dlg.setGuid(m_addGuid);
+    //m_addGuid = "";
 
 again:    
     if (QDialog::Accepted == dlg.exec()) {
 
-        QString strguid = dlg.getGuid();
-        strguid = strguid.trimmed();
+        QString strQuery = tr("INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, '%3', '%4');");
 
-        // Validate length
-        if (47 != strguid.length()) {
-            QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Invalid GUID. Length is wrong."),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        // Validate format
-        int cntColon = 0;
-        for (int i=0; i<strguid.length(); i++) {
-            if (':' == strguid[i]) cntColon++;
-        }
-
-        // Validate # of colons
-        if (15 != cntColon) {
-            QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
-        pworks->m_mutexGuidMap.lock();
+        pworks->m_mutexSensorIndexMap.lock();
         QSqlQuery query(strQuery
-                        .arg(strguid)
+                        .arg(m_link_to_guid)
+                        .arg(dlg.getSensor())
                         .arg(dlg.getName())
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+        
+        // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save GUID into database (duplicate?). Err =") + 
                             query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
+            pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
 
         // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
+        pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
+
+        pworks->m_mutexSensorIndexMap.unlock();
 
         // Add to dialog List
-        insertSensorIndexItem(strguid, dlg.getName());
+        insertSensorIndexItem(QString::number(dlg.getSensor()), dlg.getName());
         
-#if QT_VERSION >= 0x050E00    
-        ui->textDescription->setMarkdown(dlg.getDescription());
-#else
-        ui->textDescription->setText(dlg.getDescription());
-#endif 
         ui->listSensors->sortItems(0, Qt::AscendingOrder);
+        ui->listSensors->clearSelection();
 
         // Select added item
         for (int i=0; i < ui->listSensors->rowCount(); i++) {
-        
-            QTableWidgetItem * itemGuid = ui->listSensors->item(i,0);
-        
-            if (itemGuid->text() == strguid) {
+            QTableWidgetItem * itemSensor = ui->listSensors->item(i, 0);
+            if (itemSensor->text() == QString::number(dlg.getSensor())) {
                 ui->listSensors->selectRow(i);
-                break;;
+                #if QT_VERSION >= 0x050E00    
+                    ui->textDescription->setMarkdown(dlg.getDescription());
+                #else
+                    ui->textDescription->setText(dlg.getDescription());
+                #endif
+                break;
             }
 
         }
@@ -493,8 +472,8 @@ again:
 
 void CDlgSensorIndex::btnEdit(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Edit known GUID"));
+    CDlgEditSensorIndex dlg;
+    dlg.setWindowTitle(tr("Edit sensor"));
     dlg.setEditMode();
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
@@ -503,20 +482,19 @@ void CDlgSensorIndex::btnEdit(void)
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No row is selected"),
+                              tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * itemGuid = ui->listSensors->item(row, 0);
-    QString strguid = itemGuid->text();
-    strguid = strguid.trimmed();
 
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
-    pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    QTableWidgetItem * itemSensor = ui->listSensors->item(row, 0);
+    QString strsensor = itemSensor->text();
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
+    pworks->m_mutexSensorIndexMap.lock();
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
+
+    // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -525,35 +503,34 @@ void CDlgSensorIndex::btnEdit(void)
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
                         query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
+        pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
 
     if (query.next()) {
-        dlg.setGuid(query.value(1).toString());
-        dlg.setName(query.value(2).toString());
-        dlg.setDescription(query.value(3).toString());
+        dlg.setSensor(query.value(2).toInt());
+        dlg.setName(query.value(3).toString());
+        dlg.setDescription(query.value(4).toString());
     }
 
-    pworks->m_mutexGuidMap.unlock();
+    pworks->m_mutexSensorIndexMap.unlock();
 
 again:    
     if (QDialog::Accepted == dlg.exec()) {
 
         QString strname = dlg.getName();
-        QString strdescription = dlg.getDescription();
+        QString strdescription = dlg.getDescription();        
 
-        QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
-        qDebug() << strQuery.arg(strname)
-                            .arg(strdescription)
-                            .arg(strguid);
-        pworks->m_mutexGuidMap.lock();
+        QString strQuery = tr("UPDATE sensorindex SET name='%1', description='%2' WHERE sensor='%3' AND link_to_guid=%4;");
+        pworks->m_mutexSensorIndexMap.lock();
         QSqlQuery query(strQuery
                             .arg(strname)
                             .arg(strdescription)
-                            .arg(strguid), 
+                            .arg(strsensor)
+                            .arg(m_link_to_guid), 
                             pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+
+        // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -562,13 +539,14 @@ again:
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save edited GUID into database. Err =") + 
                             query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
+            pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
 
-        // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
+        // Add to the in memory table
+        pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
+
+        pworks->m_mutexSensorIndexMap.unlock();
 
         // Add to dialog List
         QTableWidgetItem * itemName = ui->listSensors->item(row, 1);
@@ -587,8 +565,8 @@ again:
 
 void CDlgSensorIndex::btnClone(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Clone GUID")); 
+    CDlgEditSensorIndex dlg;
+    dlg.setWindowTitle(tr("Clone sensor")); 
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
@@ -596,20 +574,19 @@ void CDlgSensorIndex::btnClone(void)
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No row is selected"),
+                              tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * itemGuid = ui->listSensors->item(row, 0);
-    QString strguid = itemGuid->text();
-    strguid = strguid.trimmed();
 
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
-    pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    QTableWidgetItem * itemSensor = ui->listSensors->item(row, 0);
+    QString strsensor = itemSensor->text();
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
+    pworks->m_mutexSensorIndexMap.lock();
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
+
+    // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -618,75 +595,70 @@ void CDlgSensorIndex::btnClone(void)
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
                         query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
+        pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
 
     if (query.next()) {
-        dlg.setGuid(query.value(1).toString());
-        dlg.setName(query.value(2).toString());
-        dlg.setDescription(query.value(3).toString());
+        //dlg.setSensor(query.value(2).toInt());
+        dlg.setName(query.value(3).toString());
+        dlg.setDescription(query.value(4).toString());
     }
 
-    pworks->m_mutexGuidMap.unlock();
+    pworks->m_mutexSensorIndexMap.unlock();
 
 again:    
     if (QDialog::Accepted == dlg.exec()) {
 
-        QString strguid = dlg.getGuid();
-        strguid = strguid.trimmed();
+        QString strQuery = tr("INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, '%3', '%4');");
 
-        // Validate length
-        if (47 != strguid.length()) {
-            QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Invalid GUID. Length is wrong."),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        // Validate format
-        int cntColon = 0;
-        for (int i=0; i<strguid.length(); i++) {
-            if (':' == strguid[i]) cntColon++;
-        }
-
-        // Validate # of colons
-        if (15 != cntColon) {
-            QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
-        pworks->m_mutexGuidMap.lock();
+        pworks->m_mutexSensorIndexMap.lock();
         QSqlQuery query(strQuery
-                        .arg(strguid)
+                        .arg(m_link_to_guid)
+                        .arg(dlg.getSensor())
                         .arg(dlg.getName())
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
+                       
+        // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save GUID into database (duplicate?). Err =") + 
                             query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
+            pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
 
-        // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
+        // Add to the in memory table
+        pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
+
+        pworks->m_mutexSensorIndexMap.unlock();
 
         // Add to dialog List
-        insertSensorIndexItem(strguid, dlg.getName());
+        insertSensorIndexItem(QString::number(dlg.getSensor()), dlg.getName());
+        
+        ui->listSensors->sortItems(0, Qt::AscendingOrder);
+        ui->listSensors->clearSelection();
+
+        // Select added item
+        for (int i=0; i < ui->listSensors->rowCount(); i++) {
+            QTableWidgetItem * itemSensor = ui->listSensors->item(i,0);
+        
+            if (itemSensor->text() == QString::number(dlg.getSensor())) {
+                ui->listSensors->selectRow(i);
+                #if QT_VERSION >= 0x050E00    
+                    ui->textDescription->setMarkdown(dlg.getDescription());
+                #else
+                    ui->textDescription->setText(dlg.getDescription());
+                #endif
+                break;;
+            }
+
+        }
     }
 }
 
@@ -702,25 +674,25 @@ void CDlgSensorIndex::btnDelete(void)
     if (-1 == row) {
         QMessageBox::information(this, 
                               tr("vscpworks+"),
-                              tr("No row is selected"),
+                              tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
     }
     QTableWidgetItem * item = ui->listSensors->item(row, 0);
-    QString strguid = item->text();
-    strguid = strguid.trimmed();
+    QString strsensor = item->text();
 
-    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
-    pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    QString strQuery = tr("DELETE FROM sensorindex WHERE sensor='%1' AND link_to_guid=%2;");
+    pworks->m_mutexSensorIndexMap.lock();
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
 
+    // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this, 
                             tr("vscpworks+"),
-                            tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                            tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );    
         pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to delete GUID. Err =") + 
+                        tr("Unable to delete sensor. Err =") + 
                         query.lastError().text());                                          
     }
     else {
@@ -728,15 +700,11 @@ void CDlgSensorIndex::btnDelete(void)
         // Delete row
         ui->listSensors->removeRow(row);
 
-        // Delete from internal table
-        pworks->m_mapGuidToSymbolicName.erase(strguid);
-        // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
-        // if (std::map::end != it) {
-             
-        // }
+        // Delete from in memory table
+        pworks->m_mapSensorIndexToSymbolicName.erase((m_link_to_guid << 8) + strsensor.toInt());
     }
 
-    pworks->m_mutexGuidMap.unlock();                        
+    pworks->m_mutexSensorIndexMap.unlock();                        
 }
 
 ///////////////////////////////////////////////////////////////////////////////

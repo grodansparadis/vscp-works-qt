@@ -86,13 +86,13 @@ vscpworks::vscpworks(int &argc, char **argv) :
     // qDebug() << QUuid::createUuid().toString();
     // qDebug() << "\n";
 
-    QString strVaribles = "crc8:        function() { return (e.vscpData[0]); }"\
-                 "time_epoch:  function() { return (e.vscpData[1]&lt;&lt;24 +"\
-   				 "                                  e.vscpData[2]&lt;&lt;16 +"\
-   				 "                                  e.vscpData[3]&lt;&lt;8 +"\
-   				 "                                  e.vscpData[4]); }";
+    // QString strVariables = "crc8:        function() { return (e.vscpData[0]); }"\
+    //              "time_epoch:  function() { return (e.vscpData[1]&lt;&lt;24 +"\
+   	// 			 "                                  e.vscpData[2]&lt;&lt;16 +"\
+   	// 			 "                                  e.vscpData[3]&lt;&lt;8 +"\
+   	// 			 "                                  e.vscpData[4]); }";
 
-    qDebug() << strVaribles;
+    // qDebug() << strVariables;
 
     
 
@@ -246,7 +246,6 @@ void vscpworks::loadSettings(void)
         path += QCoreApplication::applicationName();
         path += "/";
         m_configFolder = settings.value("configFolder", path).toString();
-        qDebug() << "Config folder = " << path;        
     }
 
     // Share folder
@@ -255,11 +254,8 @@ void vscpworks::loadSettings(void)
     // Windows: 
     {
         QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        path += "/";
-        // path += QCoreApplication::organizationName();
-        // path += "/";        
+        path += "/";      
         m_shareFolder = settings.value("shareFolder", path).toString();
-        qDebug() << "" << path;
         // If folder does not exist, create it
         QDir dir(path);
         if (!dir.exists())  {
@@ -300,7 +296,6 @@ void vscpworks::loadSettings(void)
     // VSCP event database last load date/time
     // ---------------------------------------
     m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
-    qDebug() << m_lastEventDbLoadDateTime;
     
     // * * *  Read in defined connections  * * *
     
@@ -343,36 +338,6 @@ void vscpworks::writeSettings()
 
     writeConnections();
 
-    // TODO TEST remove
-    QJsonObject j1
-    {
-        {"p1", 1},
-        {"p1", 2}
-    };
-
-    QJsonObject j2
-    {
-        {"p1", 2},
-        {"p1", 3}
-    };
-
-    QJsonArray aaa;
-    aaa.push_back(1);
-    aaa.push_back(2);
-    aaa.push_back(3);
-
-    QJsonObject jj
-    {
-        {"property1", 1},
-        {"property2", 2},
-        {"property3", "teststring"},
-        {"property4", aaa },
-    };
-    // {"property4", [{"p1":1,"p2":2},{"p1":3,"p2":4}]}
-    qDebug() << jj["property4"];
-
-    settings.setValue("test", jj);
-
 }
 
 
@@ -413,18 +378,11 @@ void vscpworks::writeConnections(void)
 bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 {
     QString uuid = QUuid::createUuid().toString();
-    qDebug() << "uuid = " << uuid;
     conn["uuid"] = uuid;
     //conn.remove("uuid");
 
     // Add configuration item to map
     m_mapConn[uuid] = conn; 
-
-    // QMap<QString,QJsonObject>::iterator it;
-    // it = m_mapConn.find(uuid);
-    // if ( m_mapConn.end() != it ) {
-    //     qDebug() << it.key() << " " << it.value() << "<-----";
-    // }
 
     // Save settings if requested to do so
     if (bSave) writeConnections();
@@ -438,14 +396,11 @@ bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 
 bool vscpworks::removeConnection(const QString& uuid, bool bSave )
 {
-    qDebug() << uuid;
-
     QMap<QString,QJsonObject>::iterator it;
     // for (it = m_mapConn.begin(); it != m_mapConn.end(); ++it){ 
     //     qDebug() << it.key() << " " << it.value();
     // } 
 
-    //qDebug() << uuid;
     int n = m_mapConn.remove(uuid);
 
     // it = m_mapConn.find(uuid);
@@ -548,7 +503,7 @@ void vscpworks::log(int level, const QString& message)
 
                                        
 ///////////////////////////////////////////////////////////////////////////////
-// createVscpWorksDatabase
+// openVscpWorksDatabase
 //
 
 bool vscpworks::openVscpWorksDatabase(void)
@@ -590,6 +545,12 @@ bool vscpworks::openVscpWorksDatabase(void)
         return false;
     }
 
+    // Create sensor link + idx unique  index
+    if (!query.exec("CREATE UNIQUE INDEX IF NOT EXISTS \"idxSensors\" ON \"sensorindex\" (\"link_to_guid\" ASC, \"sensor\" ASC)")) {
+        qDebug() << query.lastError();  
+        return false;
+    }
+
     // Create log table if it does not exist
     if (!query.exec("CREATE TABLE IF NOT EXISTS log ("
                 "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
@@ -602,28 +563,60 @@ bool vscpworks::openVscpWorksDatabase(void)
     }
 
     // Load known GUID's to memory
-    loadGuidDb();
+    loadGuidTable();
+
+    // Load known sensors to memory
+    loadSensorTable();
 
     return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// loadGuidDb
+// loadGuidTable
 //
 
-bool vscpworks::loadGuidDb(void)
+bool vscpworks::loadGuidTable(void)
 {
     m_mutexGuidMap.lock();
 
-    QSqlQuery queryClass("SELECT * FROM guid order by name", m_worksdb);
+    QSqlQuery query("SELECT * FROM guid order by name", m_worksdb);
+    if (QSqlError::NoError != query.lastError().type()) {
+        m_mutexGuidMap.unlock();
+        return false;
+    }
 
-    while (queryClass.next()) {
-        QString guid = queryClass.value(1).toString();
-        QString name = queryClass.value(2).toString();        
+    while (query.next()) {
+        QString guid = query.value(1).toString();
+        QString name = query.value(2).toString();        
         m_mapGuidToSymbolicName[guid] = name;
     }
 
     m_mutexGuidMap.unlock();
+    return true;    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadSensorTable
+//
+
+bool vscpworks::loadSensorTable(void)
+{
+    m_mutexSensorIndexMap.lock();
+
+    QSqlQuery query("SELECT * FROM sensorindex order by sensor", m_worksdb);
+    if (QSqlError::NoError != query.lastError().type()) {
+        m_mutexSensorIndexMap.unlock();
+        return false;
+    }
+
+    while (query.next()) {
+        int link_to_guid = query.value(1).toInt();
+        int sensor = query.value(2).toInt();
+        QString name = query.value(3).toString();        
+        m_mapSensorIndexToSymbolicName[(link_to_guid << 8) + sensor] = name;
+    }
+
+    m_mutexSensorIndexMap.unlock();
     return true;    
 }
 
@@ -645,7 +638,9 @@ bool vscpworks::addGuid(QString guid, QString name)
     QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
     QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_worksdb);
     if (queryClass.lastError().isValid()) {
-        log(LOG_LEVEL_ERROR, tr("Failed to insert GUID into database %s").arg(queryClass.lastError().text().toStdString().c_str()));
+        log(LOG_LEVEL_ERROR, 
+                tr("Failed to insert GUID into database %s")
+                    .arg(queryClass.lastError().text().toStdString().c_str()));
         qDebug() << queryClass.lastError();
         return false;
     }
@@ -655,6 +650,32 @@ bool vscpworks::addGuid(QString guid, QString name)
 
     m_mutexGuidMap.unlock();
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getIdxForGuidRecord
+//
+
+int vscpworks::getIdxForGuidRecord(const QString& guid)
+{
+    int index;
+
+    m_mutexGuidMap.lock();
+
+    QString strInsert = "SELECT * FROM guid WHERE guid='%1';";
+
+    QSqlQuery query(strInsert.arg(guid), m_worksdb);
+    if (query.lastError().isValid()) {
+        m_mutexGuidMap.unlock();
+        return -1;        
+    }
+
+    if (query.next()) {
+        index = query.value(0).toInt();
+    }
+
+    m_mutexGuidMap.unlock();
+    return index;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -718,7 +739,6 @@ CVscpUnit vscpworks::getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t 
     u.m_vscp_type = vscpType;
 
     QString strQuery = "SELECT * FROM vscp_unit WHERE nunit='%1' AND link_to_class=%2 AND link_to_type=%3;";
-    qDebug() << strQuery << " - " << strQuery.arg(unit).arg(vscpClass).arg(vscpType);
 
     QSqlQuery query(m_evdb);
     query.exec(strQuery.arg(unit).arg(vscpClass).arg(vscpType));
@@ -782,9 +802,6 @@ bool vscpworks::addVscpEventToJsRenderFunction(QJSEngine& engine, vscpEvent* pev
     strEvaluate += vscp_str_format("%d",pev->second);
     strEvaluate += ";";
 
-    qDebug() << strEvaluate.c_str();
-
-    //qDebug() << result.isError();
     result = engine.evaluate(strEvaluate.c_str());
     return result.isError();
 }
@@ -815,12 +832,10 @@ QStringList vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, 
 {
     QStringList strList;
     QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;";
-    qDebug() << strQuery << " - " << strQuery.arg(type).arg(vscpClass).arg(vscpType);
 
     //QSqlQuery query(strQuery.arg(type).arg(vscpClass).arg(vscpType), m_evdb);
     QSqlQuery query(m_evdb);
     query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
-    qDebug() << query.numRowsAffected() << m_evdb.lastError();
     // Try if there is a general render definition if none
     // is defined for the event
     if (0 == query.numRowsAffected()) {
@@ -864,15 +879,12 @@ bool vscpworks::getVscpRenderFunctions(std::map<std::string,std::string>& map,
     //QStringList strlst = QString(strVariables.c_str())::split("\n");
     std::deque<std::string> strlst;
     vscp_split(strlst, strVariables, "\n");
-    //qDebug() << strlst.size();
 
     std::string name;
     std::string func;
     size_t posFunc;
     size_t posColon;
     foreach (std::string str, strlst) {
-        //qDebug() << str.trimmed();
-        //str = str.trimmed();
         vscp_trim(str);
         if (std::string::npos != (posFunc = str.find("function()"))) {
             // We have a function  "id: function() {....}
@@ -899,7 +911,6 @@ bool vscpworks::getVscpRenderFunctions(std::map<std::string,std::string>& map,
         }
 
         if (!cnt) {
-            //qDebug() << "------->" << func.c_str();
             map[name] = func;
         }
     }

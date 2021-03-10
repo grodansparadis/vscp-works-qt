@@ -1,30 +1,30 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
 <qresource>
-    <file alias="accept.png">images/png/128x128/accept.png</file>
-    <file alias="add.png">images/png/128x128/add.png</file>
-    <file alias="info.png">images/png/128x128/info.png</file>
-    <file alias="remove.png">images/png/128x128/remove.png</file>
+    <file alias="accept.png">../images/png/128x128/accept.png</file>
+    <file alias="add.png">../images/png/128x128/add.png</file>
+    <file alias="info.png">../images/png/128x128/info.png</file>
+    <file alias="remove.png">../images/png/128x128/remove.png</file>
     
 
-    <file alias="process.png">images/png/128x128/process.png</file>
-    <file alias="process_accept.png">images/png/128x128/process_accept.png</file>
-    <file alias="process_add.png">images/png/128x128/process_add.png</file>
-    <file alias="process_remove.png">images/png/128x128/process_remove.png</file>
+    <file alias="process.png">../images/png/128x128/process.png</file>
+    <file alias="process_accept.png">../images/png/128x128/process_accept.png</file>
+    <file alias="process_add.png">../images/png/128x128/process_add.png</file>
+    <file alias="process_remove.png">../images/png/128x128/process_remove.png</file>
 
-    <file alias="attachment.png">images/png/64x64/attachment.png</file>
+    <file alias="attachment.png">../images/png/64x64/attachment.png</file>
 
-    <file alias="connect.png">images/linkconnected_87208.png</file>
-    <file alias="filter.png">images/Filter_icon-icons.com_52097.png</file>
+    <file alias="connect.png">../images/linkconnected_87208.png</file>
+    <file alias="filter.png">../images/Filter_icon-icons.com_52097.png</file>
     <!-- https://www.iconsdb.com/red-icons/check-mark-3-icon.html -->
-    <file alias="high-importance.png">images/high-importance-128.png</file>
-    <file alias="check-mark-red.png">images/check-mark-3-128.png</file>
-    <file alias="comment.png">images/comment-square-128.png</file>
+    <file alias="high-importance.png">../images/high-importance-128.png</file>
+    <file alias="check-mark-red.png">../images/check-mark-3-128.png</file>
+    <file alias="comment.png">../images/comment-square-128.png</file>
     
-    <file>images/banner.png</file>
-    <file>images/background.png</file>
-    <file>images/watermark.png</file>
-    <file>images/watermark-canal.png</file>
+    <file>../images/banner.png</file>
+    <file>../images/background.png</file>
+    <file>../images/watermark.png</file>
+    <file>../images/watermark-canal.png</file>
 
 </qresource>
 </RCC>

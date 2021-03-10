@@ -69,8 +69,8 @@ public:
     /*!
         GUID getter/setters
     */
-    void setSensorIndex(uint8_t sensorindex);
-    uint8_t getSensorIndex(void);
+    void setSensor(uint8_t sensorindex);
+    uint8_t getSensor(void);
 
     /*!
         Name getter/setters

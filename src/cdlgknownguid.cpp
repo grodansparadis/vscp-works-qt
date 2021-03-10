@@ -167,10 +167,8 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
     // Search db record for description
     QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
     pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -215,7 +213,9 @@ void CDlgKnownGuid::showContextMenu(const QPoint& pos)
     menu->addAction(QString(tr("Edit...")), this, SLOT(btnEdit()));
     menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone())); 
     menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete())); 
-    // menu->addSeparator();
+    menu->addSeparator();
+    menu->addAction(QString(tr("Sensor...")), this, SLOT(btnSensorIndex())); 
+
     // menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
     // menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
 
@@ -415,7 +415,6 @@ again:
                         .arg(dlg.getName())
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -445,7 +444,7 @@ again:
         // Select added item
         for (int i=0; i < ui->listGuid->rowCount(); i++) {
         
-            QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
+            QTableWidgetItem * itemGuid = ui->listGuid->item(i, 0);
         
             if (itemGuid->text() == strguid) {
                 ui->listGuid->selectRow(i);
@@ -482,10 +481,8 @@ void  CDlgKnownGuid::btnEdit(void)
 
     QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
     pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -513,16 +510,12 @@ again:
         QString strdescription = dlg.getDescription();
 
         QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
-        qDebug() << strQuery.arg(strname)
-                            .arg(strdescription)
-                            .arg(strguid);
         pworks->m_mutexGuidMap.lock();
         QSqlQuery query(strQuery
                             .arg(strname)
                             .arg(strdescription)
                             .arg(strguid), 
                             pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -575,10 +568,8 @@ void  CDlgKnownGuid::btnClone(void)
 
     QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
     pworks->m_mutexGuidMap.lock();
-    qDebug() << strQuery.arg(strguid);
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
     if (QSqlError::NoError != query.lastError().type()) {
         QMessageBox::information(this,
                             tr("vscpworks+"),
@@ -637,7 +628,6 @@ again:
                         .arg(dlg.getName())
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
-        qDebug() << "SqLite error:" << query.lastError().text() << ", SqLite error code:" << query.lastError().type();                        
         if (QSqlError::NoError != query.lastError().type()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -715,8 +705,6 @@ void  CDlgKnownGuid::btnDelete(void)
 
 void  CDlgKnownGuid::btnSensorIndex(void)
 {
-    CDlgSensorIndex dlg;
-
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
     // Must be a selected GUID
@@ -731,11 +719,14 @@ void  CDlgKnownGuid::btnSensorIndex(void)
 
     QTableWidgetItem * item = ui->listGuid->item(row, 0);
     QString strguid = item->text();
-    strguid = strguid.trimmed();
-    dlg.setGuid(strguid);
+    strguid = strguid.trimmed();    
 
     item = ui->listGuid->item(row, 1);
-    QString strname = item->text();
+    QString strname = item->text();    
+
+    CDlgSensorIndex dlg(nullptr, pworks->getIdxForGuidRecord(strguid));
+    
+    dlg.setGuid(strguid);
     dlg.setGuidName(strname);
     
     if (QDialog::Accepted == dlg.exec()) {

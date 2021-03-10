@@ -83,24 +83,27 @@ void CDlgEditSensorIndex::setEditMode(void)
 }
 
 
+
 // ----------------------------------------------------------------------------
 //                             Getters & Setters
 // ----------------------------------------------------------------------------
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
-// getGuid
+// getSensor
 //
 
-uint8_t CDlgEditSensorIndex::getSensorIndex(void)
+uint8_t CDlgEditSensorIndex::getSensor(void)
 {
     return (ui->editSensorIndex->text().toInt()); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setGuid
+// setSensor
 //
 
-void CDlgEditSensorIndex::setSensorIndex(uint8_t sensorindex)
+void CDlgEditSensorIndex::setSensor(uint8_t sensorindex)
 {
     ui->editSensorIndex->setText(QString::number(sensorindex));
 }
@@ -143,7 +146,8 @@ QString CDlgEditSensorIndex::getDescription(void)
 void CDlgEditSensorIndex::setDescription(const QString& str)
 {
 #if QT_VERSION >= 0x050E00    
-    ui->editDescription->setMarkdown(str);
+    //ui->editDescription->setMarkdown(str);
+    ui->editDescription->setText(str);
 #else
     ui->editDescription->setText(str);
 #endif    

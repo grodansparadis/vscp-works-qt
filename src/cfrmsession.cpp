@@ -472,6 +472,7 @@ CFrmSession::createRxGroupBox()
     m_rxTable = new QTableWidget;
     m_rxTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
     m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_rxTable->setAlternatingRowColors(true);
 
     m_rxTable->setColumnCount(5);
     m_rxTable->setColumnWidth(0, 10);  // Dir
@@ -600,6 +601,7 @@ CFrmSession::createTxGridGroup()
     QStringList headers(
       QString(tr("x,Name,Period,Count,Trigger,Event")).split(','));
     m_txTable = new QTableWidget;
+    m_txTable->setAlternatingRowColors(true);
     m_txTable->setColumnCount(6);
     m_txTable->setColumnWidth(0, 20);  // x
     m_txTable->setColumnWidth(1, 300); // Name
