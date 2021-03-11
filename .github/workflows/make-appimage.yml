@@ -12,8 +12,9 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-16.04
-    continue-on-error: true
+    #runs-on: ubuntu-16.04
+    runs-on: ubuntu-latest
+    #continue-on-error: true
 
     steps:
     # https://github.com/actions/checkout  
@@ -42,21 +43,21 @@ jobs:
       run: sudo apt-get install libssl-dev
 
     # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
-    - name: Set QT repo
-      run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
+    #- name: Set QT repo
+    #  run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
 
-    - name: Update apt  
-      run: sudo apt-get update
+    #- name: Update apt  
+    #  run: sudo apt-get update
     
-    - name: Install QT
-      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools qt515quickcontrols qt515quickcontrols2 libgl1-mesa-dev     
+    #- name: Install QT
+    #  run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools qt515quickcontrols qt515quickcontrols2 libgl1-mesa-dev     
     
     - name: Install paho manually
       run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
     
-    # For build
-    # - name: Install qt5-qmake-bin
-    #   run: sudo apt-get -y install qt5-qmake-bin
+    # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
+    - name: Install qt5 components manually
+      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev
     
     # - name: Test tools location
     #   run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
