@@ -63,7 +63,7 @@ jobs:
     #   run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
 
     - name: Set the correct environment for QT       
-      run: source /opt/qt515/bin/qt515-env.sh 
+      run: ls /opt/ && ls /opt/qt515/ && source /opt/qt515/bin/qt515-env.sh 
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
