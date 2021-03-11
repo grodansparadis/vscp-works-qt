@@ -71,10 +71,6 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
-    - name: Delete retired functionality folder
-      shell: bash
-      run: rm -rf vscp/src/vscp/common/retired_functionality
-
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash

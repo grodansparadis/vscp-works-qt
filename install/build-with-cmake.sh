@@ -25,7 +25,7 @@ chmod +x linuxdeploy*.AppImage
 # make sure Qt plugin finds QML sources so it can deploy the imported files
 export QML_SOURCES_PATHS=../src
 
-# Prepare conten tnot installed by cmake
+# Prepare content not installed by cmake
 cp ../install/AppRun AppDir
 chmod a+x AppDir/AppRun
 cp ../install/vscp-works-qt.desktop AppDir

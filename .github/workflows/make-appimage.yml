@@ -79,10 +79,6 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
-    - name: Delete retired functionality folder
-      shell: bash
-      run: rm -rf vscp/src/vscp/common/retired_functionality
-
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
@@ -95,13 +91,55 @@ jobs:
       # Install files
       run: sudo make install DESTDIR=AppDir
     
+    - name: get linuxdeploy
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Install files
+      run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+    
+    - name: get qt plugin
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Install files
+      run: wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+  
+    - name: Make appimage files executable
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Install files
+      run: chmod +x linuxdeploy*.AppImage
+
+    - name: Make appimage files executable
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # make sure Qt plugin finds QML sources so it can deploy the imported files
+      run: export QML_SOURCES_PATHS=${{github.workspace}}/src
+
+    - name: prepare AppRun
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Prepare content not installed by cmake (AppRun)
+      run: cp ../install/AppRun AppDir && chmod a+x AppDir/AppRun
+    
+    - name: prepare desktop/icon
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Prepare content not installed by cmake (desktop/icon)
+      run: cp ../install/vscp-works-qt.desktop AppDir && cp ../icons/vscpworks.png AppDir
+  
+    - name: build appimage
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
+      run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
+
     # https://github.com/marketplace/actions/build-appimage  
-    - name: Build AppImage
-      uses: AppImageCrafters/build-appimage-action@master
-        env:
-          UPDATE_INFO: gh-releases-zsync|AppImageCrafters|vscp-works-qt|latest|*x86_64.AppImage.zsync
-        with:
-          recipe: AppImageBuilder.yml
+    # - name: Build AppImage
+    #   uses: AppImageCrafters/build-appimage-action@master
+    #     env:
+    #       UPDATE_INFO: gh-releases-zsync|AppImageCrafters|vscp-works-qt|latest|*x86_64.AppImage.zsync
+    #     with:
+    #       recipe: AppImageBuilder.yml
 
     # https://github.com/probonopd/uploadtool
     - uses: actions/upload-artifact@v2
