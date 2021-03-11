@@ -99,7 +99,7 @@ jobs:
       # Install files
       run: |
         make install DESTDIR=AppDir
-        ldd build/vscp-works-qt
+        ldd AppDir/usr/bin/vscp-works-qt
     
     - name: get linuxdeploy
       working-directory: ${{github.workspace}}/build
