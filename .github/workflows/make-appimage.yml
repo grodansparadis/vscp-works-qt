@@ -83,7 +83,8 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
+      #run: cmake --build . --config $BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
+      run: cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
     - name: Install
       working-directory: ${{github.workspace}}/build
