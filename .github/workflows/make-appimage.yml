@@ -134,6 +134,11 @@ jobs:
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: vscp-works-qt
+        path: build/
+
     # https://github.com/marketplace/actions/build-appimage  
     # - name: Build AppImage
     #   uses: AppImageCrafters/build-appimage-action@master
