@@ -99,6 +99,14 @@ jobs:
       # Install files
       run: |
         make install DESTDIR=AppDir
+        cp /opt/qt515/lib/libQt5Widgets.so.5 AppDir/usr/lib
+        cp /opt/qt515/lib/libQt5Sql.so.5 AppDir/usr/lib
+        cp /opt/qt515/lib/libQt5Gui.so.5 AppDir/usr/lib
+        cp /opt/qt515/lib/libQt5Qml.so.5 AppDir/usr/lib
+        cp /opt/qt515/lib/libQt5Network.so.5 AppDir/usr/lib
+        cp /opt/qt515/lib/libQt5Core.so.5 AppDir/usr/lib
+        cp /usr/lib/x86_64-linux-gnu/libpaho-mqtt3cs.so.1 AppDir/usr/lib
+        cp /usr/lib/x86_64-linux-gnu/libexpat.so.1 AppDir/usr/lib
         ldd AppDir/usr/bin/vscp-works-qt
     
     - name: get linuxdeploy
