@@ -96,7 +96,7 @@ jobs:
     - name: Install
       working-directory: ${{github.workspace}}/build
       shell: bash
-      # Install files
+      # Install files cp $(ldconfig -p | grep libpaho-mqtt3cs.so.1 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
       run: |
         make install DESTDIR=AppDir
         mkdir -p ./AppDir/Qt/libs/
@@ -105,8 +105,7 @@ jobs:
         cp $(ldconfig -p | grep libQt5Gui.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
         cp $(ldconfig -p | grep libQt5Qml.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
         cp $(ldconfig -p | grep libQt5Network.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
-        cp $(ldconfig -p | grep libQt5Core.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
-        cp $(ldconfig -p | grep libpaho-mqtt3cs.so.1 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Core.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/        
         ldd AppDir/usr/bin/vscp-works-qt
     
     - name: get linuxdeploy
