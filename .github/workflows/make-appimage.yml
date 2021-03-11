@@ -99,6 +99,7 @@ jobs:
       # Install files
       run: |
         make install DESTDIR=AppDir
+        mkdir -p ./AppDir/Qt/libs/
         cp $(ldconfig -p | grep libQt5Widgets.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
         cp $(ldconfig -p | grep libQt5Sql.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
         cp $(ldconfig -p | grep libQt5Gui.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
@@ -126,11 +127,11 @@ jobs:
       # Install files
       run: chmod +x linuxdeploy*.AppImage
 
-    - name: export path
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      # make sure Qt plugin finds QML sources so it can deploy the imported files
-      run: export QML_SOURCES_PATHS=${{github.workspace}}/src
+    # - name: export path
+    #   working-directory: ${{github.workspace}}/build
+    #   shell: bash
+    #   # make sure Qt plugin finds QML sources so it can deploy the imported files
+    #   run: export QML_SOURCES_PATHS=${{github.workspace}}/src
 
     - name: prepare AppRun
       working-directory: ${{github.workspace}}/build
