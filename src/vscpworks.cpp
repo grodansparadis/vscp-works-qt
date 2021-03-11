@@ -313,11 +313,11 @@ void vscpworks::loadSettings(void)
                 addConnection(conn);      
             }
             else {
-                qDebug() << "Document is not an object" << endl;
+                qDebug() << "Document is not an object";
             }
         } 
         else {
-            qDebug() << "Invalid JSON...\n" << endl;
+            qDebug() << "Invalid JSON...\n";
         }
         
     }
@@ -382,7 +382,7 @@ void vscpworks::writeConnections(void)
         settings.setArrayIndex(i++);        
         QJsonDocument doc(it.value());
         QString strJson(doc.toJson(QJsonDocument::Compact));
-        qDebug() << it.key() << ": " << it.value() << ":" << strJson << Qt::endl;
+        qDebug() << it.key() << ": " << it.value() << ":" << strJson;
         settings.setValue("connection", strJson);
         it++;
     }
