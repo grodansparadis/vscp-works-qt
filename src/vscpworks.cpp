@@ -80,6 +80,7 @@ vscpworks::vscpworks(int &argc, char **argv) :
     // dynamically at run-time
     int idEvent = qRegisterMetaType<vscpEvent>();
     int idEventEx = qRegisterMetaType<vscpEventEx>();
+    qDebug() << "idEvent = " << idEvent << "idEventEx = " << idEventEx;
 
     // QUuid uuid; 
     // uuid = QUuid::createUuid();
@@ -302,8 +303,23 @@ void vscpworks::loadSettings(void)
     int size = settings.beginReadArray("hosts");
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
-        QJsonObject conn = settings.value("connection").toJsonObject();
-        addConnection(conn);
+        QString strJson = settings.value("connection").toString();
+        //QJsonObject conn = settings.value("connection").toJsonObject();
+        QJsonObject conn;
+        QJsonDocument doc = QJsonDocument::fromJson(strJson.toUtf8());
+        if (!doc.isNull()) {
+            if (doc.isObject()) {
+                conn = doc.object();  
+                addConnection(conn);      
+            }
+            else {
+                qDebug() << "Document is not an object" << endl;
+            }
+        } 
+        else {
+            qDebug() << "Invalid JSON...\n" << endl;
+        }
+        
     }
     settings.endArray(); 
 }
@@ -360,12 +376,14 @@ void vscpworks::writeConnections(void)
     // Connections
     settings.beginWriteArray("hosts");
     int i = 0;    
-    //for (QMap<QString,QJsonObject>::iterator it = m_mapConn.begin(); it != m_mapConn.end(); ++it){    
+   
     QMap<QString,QJsonObject>::const_iterator it = m_mapConn.constBegin();
     while (it != m_mapConn.constEnd()) {    
-        settings.setArrayIndex(i);
-        settings.setValue("connection", it.value());
-        i++;
+        settings.setArrayIndex(i++);        
+        QJsonDocument doc(it.value());
+        QString strJson(doc.toJson(QJsonDocument::Compact));
+        qDebug() << it.key() << ": " << it.value() << ":" << strJson << Qt::endl;
+        settings.setValue("connection", strJson);
         it++;
     }
     settings.endArray();

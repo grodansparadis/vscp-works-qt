@@ -1,4 +1,4 @@
-name: AppImage
+name: AppImage_1604
 
 on: [push]
 
@@ -12,8 +12,9 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
-    #continue-on-error: true
+    runs-on: ubuntu-16.04
+    #runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
     # https://github.com/actions/checkout  
@@ -41,13 +42,35 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
+    # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
+    - name: Set QT repo
+      run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
+
+    - name: Update apt  
+      run: sudo apt-get update
+    
+    - name: Install QT
+      run: sudo apt-get -y install qt515base qt515declarative qt515connectivity qt515imageformats qt515serialport qt515serialbus qt515doc qt515tools qt515quickcontrols qt515quickcontrols2 libgl1-mesa-dev     
+    
     - name: Install paho manually
       run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
     
     # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    - name: Install qt5 components manually
-      run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev
+    #- name: Install qt5 components manually
+    #  run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5serialport5 libqt5serialport5-dev
     
+    # - name: Test tools location
+    #   run: ls /usr/lib/x86_64-linux-gnu/cmake/Qt5LinguistTools
+
+    - name: Set the correct environment for QT       
+    #  run: source /opt/qt515/bin/qt515-env.sh && ls /opt/qt515
+      run: |
+        export QTDIR=/opt/qt515
+        export PATH=/opt/qt515/bin:$PATH
+        export LD_LIBRARY_PATH=/opt/qt515/lib:$LD_LIBRARY_PATH
+        export PKG_CONFIG_PATH=/opt/qt515/lib/pkgconfig:$PKG_CONFIG_PATH
+    #    export $QMAKE=/opt/qt515/bin/qmake
+
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
@@ -61,15 +84,31 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
+      #run: cmake --build . --config $BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
+      run: cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+
+    - name: Install
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      # Install files
       run: |
-        make -j$(nproc)
         make install DESTDIR=AppDir
+        mkdir -p ./AppDir/Qt/libs/
+        echo $(ldconfig -p | grep libQt5Sql.so.5 | head -n1 | tr ' ' '\n' | grep /)
+        cp $(ldconfig -p | grep libQt5Widgets.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Sql.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Gui.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Qml.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Network.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libQt5Core.so.5 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        cp $(ldconfig -p | grep libpaho-mqtt3cs.so.1 | head -n1 | tr ' ' '\n' | grep /) ./AppDir/Qt/libs/
+        ldd AppDir/usr/bin/vscp-works-qt
     
     - name: get linuxdeploy
       working-directory: ${{github.workspace}}/build
@@ -89,15 +128,17 @@ jobs:
       # Install files
       run: chmod +x linuxdeploy*.AppImage
 
+    # - name: export path
+    #   working-directory: ${{github.workspace}}/build
+    #   shell: bash
+    #   # make sure Qt plugin finds QML sources so it can deploy the imported files
+    #   run: export QML_SOURCES_PATHS=${{github.workspace}}/src
+
     - name: prepare AppRun
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
-      run: |
-        cp ../install/AppRun AppDir
-        chmod a+x AppDir/AppRun
-        cp ../install/vscp-works-qt.desktop AppDir
-        cp ../icons/vscpworks.png AppDir
+      run: cp ../install/AppRun ./AppDir/ && chmod a+x ./AppDir/AppRun
     
     - name: prepare desktop/icon
       working-directory: ${{github.workspace}}/build
@@ -114,4 +155,30 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: vscp-works-qt
-        path: ${{github.workspace}}/build/vscpworks*.AppImage
+        path: ${{github.workspace}}/build/*.AppImage
+
+    # https://github.com/marketplace/actions/build-appimage  
+    # - name: Build AppImage
+    #   uses: AppImageCrafters/build-appimage-action@master
+    #     env:
+    #       UPDATE_INFO: gh-releases-zsync|AppImageCrafters|vscp-works-qt|latest|*x86_64.AppImage.zsync
+    #     with:
+    #       recipe: AppImageBuilder.yml
+
+    # https://github.com/probonopd/uploadtool
+    # - uses: actions/upload-artifact@v2
+    #     with:
+    #       name: AppImage
+
+    # - name: Copy install files
+    #   shell: bash
+    #   run: sudo chmod a+x install.sh && ./install.sh
+
+    # - name: Fetch linuxdeployqt 
+    #   run: wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+      
+    # - name: Make linuxdeployqt executable  
+    #   run: chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+
+    # - name: Run AppImage creator
+    #   run: ./linuxdeployqt-continuous-x86_64.AppImage install/vscp-works-qt.desktop -appimage -extra-plugins=iconengines,platformthemes/libqgtk3.so,canbus

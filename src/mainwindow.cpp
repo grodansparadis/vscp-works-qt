@@ -172,8 +172,8 @@ MainWindow::MainWindow()
     const QIcon iconTest(":process_accept.png");
 
     // Set font for top-items
-    QFont font("" , 12 , QFont::Bold );
-	QBrush b (Qt::darkGreen);
+    QFont font("" , 10 , QFont::Bold );
+	QBrush b (Qt::darkYellow);
     
     // Local
     QStringList strlist_local(QString(tr("Local Connections")).split(','));
