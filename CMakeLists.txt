@@ -428,6 +428,10 @@ install(TARGETS vscp-works-qt
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(FILES ${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
-        DESTINATION /usr/local/share/vscpworks/) 
+        DESTINATION ${INSTALL_PATH}/share/applications/) 
 
-       
+# icons
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/share/icons/) 
+
+# Event database etc
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/vscp-works-qt/) 

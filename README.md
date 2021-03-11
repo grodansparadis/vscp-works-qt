@@ -41,6 +41,20 @@ to enable needed SSL
   git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
 ```  
 
+### Temporary step while development branch of VSCP is used
+```
+cd vscp-works-qt
+cd vscp
+git pull origin development
+cd ..
+```
+
+May need
+
+```
+git pull origin development --allow-unrelated-histories 
+```
+
 ### Go to the build folder and make the project
 ```bash
   cd vscp-works-qt
