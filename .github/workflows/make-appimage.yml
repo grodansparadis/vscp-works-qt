@@ -65,7 +65,6 @@ jobs:
     - name: Set the correct environment for QT       
     #  run: source /opt/qt515/bin/qt515-env.sh && ls /opt/qt515
       run: |
-        ls /opt/qt515/lib/
         export QTDIR=/opt/qt515
         export PATH=/opt/qt515/bin:$PATH
         export LD_LIBRARY_PATH=/opt/qt515/lib:$LD_LIBRARY_PATH
