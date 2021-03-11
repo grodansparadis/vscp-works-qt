@@ -120,7 +120,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
-      run: cp ../install/AppRun AppDir && chmod +x AppDir/AppRun
+      run: cp ../install/AppRun AppDir/ && chmod +x AppDir/AppRun
     
     - name: prepare desktop/icon
       working-directory: ${{github.workspace}}/build
@@ -137,7 +137,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: vscp-works-qt
-        path: build/
+        path: build/*.AppImage
 
     # https://github.com/marketplace/actions/build-appimage  
     # - name: Build AppImage
