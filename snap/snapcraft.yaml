@@ -1,0 +1,38 @@
+name: vscp-works-qt # you probably want to 'snapcraft register <name>'
+base: core18        # the base snap is the execution environment for this snap
+version: '0.1'      # just for humans, typically '1.2+git' or '1.3.2'
+summary: The VSCP Works Toolbox # 79 char long summary
+description: |
+  VSCP works is a general toolbox for VSCP (the Very Simple Control Protocol)
+  with multiple functionality built in such as logging, configuration, discovery,  
+  and boot loading and other functions to handle intelligent remote IoT nodes.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps:
+  vscp-works-qt:
+    command: bin/vscp-works-qt
+
+parts:
+  vscp-works-qt:
+    # See 'snapcraft plugins'
+    plugin: cmake
+    source: .
+    stage-packages:
+      - qttools5-dev
+      - qt5-default
+      - libqt5widgets5
+      - qtdeclarative5-dev
+      - libqt5xml5
+      - libqt5network5
+      - libqt5sql5
+      - libqt5websockets5-dev
+      - libqt5sql5-sqlite
+      - libqt5serialport5
+      - libqt5serialport5-dev
+      - libexpat-dev
+      - lipopenssl-dev
+      - libpaho-mqtt1.3 
+
+    

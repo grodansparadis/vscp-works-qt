@@ -299,12 +299,13 @@ void vscpworks::loadSettings(void)
     m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
     
     // * * *  Read in defined connections  * * *
+    // Note!!! Se notes in save
     
     int size = settings.beginReadArray("hosts");
     for (int i = 0; i < size; ++i) {
         settings.setArrayIndex(i);
         QString strJson = settings.value("connection").toString();
-        //QJsonObject conn = settings.value("connection").toJsonObject();
+ 
         QJsonObject conn;
         QJsonDocument doc = QJsonDocument::fromJson(strJson.toUtf8());
         if (!doc.isNull()) {
@@ -313,11 +314,11 @@ void vscpworks::loadSettings(void)
                 addConnection(conn);      
             }
             else {
-                qDebug() << "Document is not an object";
+                qDebug() << "Connection document is not an object";
             }
         } 
         else {
-            qDebug() << "Invalid JSON...\n";
+            qDebug() << "Invalid JSON for connection object\n";
         }
         
     }
@@ -377,12 +378,17 @@ void vscpworks::writeConnections(void)
     settings.beginWriteArray("hosts");
     int i = 0;    
    
+    /*
+        Note!
+        We need to convert QJsonObject into string due to a bug
+        that prevent saving/loading in some cases.
+    */
     QMap<QString,QJsonObject>::const_iterator it = m_mapConn.constBegin();
     while (it != m_mapConn.constEnd()) {    
         settings.setArrayIndex(i++);        
         QJsonDocument doc(it.value());
         QString strJson(doc.toJson(QJsonDocument::Compact));
-        qDebug() << it.key() << ": " << it.value() << ":" << strJson;
+        //qDebug() << it.key() << ": " << it.value() << ":" << strJson;
         settings.setValue("connection", strJson);
         it++;
     }
