@@ -25,6 +25,12 @@ chmod +x linuxdeploy*.AppImage
 # make sure Qt plugin finds QML sources so it can deploy the imported files
 export QML_SOURCES_PATHS=../src
 
+# Prepare conten tnot installed by cmake
+cp ../install/AppRun AppDir
+chmod a+x AppDir/AppRun
+cp ../install/vscp-works-qt.desktop AppDir
+cp ../icons/vscpworks.png AppDir
+
 # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
