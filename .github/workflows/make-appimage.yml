@@ -120,7 +120,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
-      run: cp ../install/AppRun AppDir/ && chmod +x AppDir/AppRun
+      run: cp ../install/AppRun AppDir/ && sudo chmod a+x AppDir/AppRun
     
     - name: prepare desktop/icon
       working-directory: ${{github.workspace}}/build
