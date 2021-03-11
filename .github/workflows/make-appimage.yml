@@ -69,7 +69,7 @@ jobs:
         export PATH=/opt/qt515/bin:$PATH
         export LD_LIBRARY_PATH=/opt/qt515/lib:$LD_LIBRARY_PATH
         export PKG_CONFIG_PATH=/opt/qt515/lib/pkgconfig:$PKG_CONFIG_PATH
-        export $QMAKE=/opt/qt515/bin/qmake
+    #    export $QMAKE=/opt/qt515/bin/qmake
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
