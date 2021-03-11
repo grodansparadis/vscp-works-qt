@@ -67,7 +67,9 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+      run: |
+        make -j$(nproc)
+        make install DESTDIR=AppDir
     
     - name: get linuxdeploy
       working-directory: ${{github.workspace}}/build
