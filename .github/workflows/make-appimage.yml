@@ -142,9 +142,9 @@ jobs:
     #       recipe: AppImageBuilder.yml
 
     # https://github.com/probonopd/uploadtool
-    - uses: actions/upload-artifact@v2
-        with:
-          name: AppImage
+    # - uses: actions/upload-artifact@v2
+    #     with:
+    #       name: AppImage
 
     # - name: Copy install files
     #   shell: bash
