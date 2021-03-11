@@ -90,7 +90,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Install files
-      run: sudo make install DESTDIR=AppDir
+      run: make install DESTDIR=AppDir
     
     - name: get linuxdeploy
       working-directory: ${{github.workspace}}/build
@@ -110,7 +110,7 @@ jobs:
       # Install files
       run: chmod +x linuxdeploy*.AppImage
 
-    - name: Make appimage files executable
+    - name: export path
       working-directory: ${{github.workspace}}/build
       shell: bash
       # make sure Qt plugin finds QML sources so it can deploy the imported files
@@ -120,13 +120,13 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
-      run: cp ../install/AppRun AppDir/ && sudo chmod a+x AppDir/AppRun
+      run: cp ../install/AppRun ./AppDir/ && chmod a+x ./AppDir/AppRun
     
     - name: prepare desktop/icon
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (desktop/icon)
-      run: cp ../install/vscp-works-qt.desktop AppDir && cp ../icons/vscpworks.png AppDir
+      run: cp ../install/vscp-works-qt.desktop ./AppDir/  && cp ../icons/vscpworks.png ./AppDir/ 
   
     - name: build appimage
       working-directory: ${{github.workspace}}/build
