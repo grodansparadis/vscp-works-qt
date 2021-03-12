@@ -1684,9 +1684,6 @@ void MainWindow::showMainsettings(void)
 {
     CDlgMainSettings *dlg = new CDlgMainSettings(this);
     dlg->show();
-
-    //CFrmSession *w = new CFrmSession(this);
-    //w->show();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

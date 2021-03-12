@@ -22,7 +22,7 @@ You need expat, mosquitto, openssl to build this project
 
 ```bash
   sudo apt install libexpat-dev
-  sudo apt install lipopenssl-dev
+  sudo apt install libssl-dev
   sudo apt install libpaho-mqtt1.3  
 ```
 

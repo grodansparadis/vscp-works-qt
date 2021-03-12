@@ -11,6 +11,7 @@
     <file alias="process_accept.png">../images/png/128x128/process_accept.png</file>
     <file alias="process_add.png">../images/png/128x128/process_add.png</file>
     <file alias="process_remove.png">../images/png/128x128/process_remove.png</file>
+    <file alias="down.png">../images/png/128x128/down.png</file>
 
     <file alias="attachment.png">../images/png/64x64/attachment.png</file>
 

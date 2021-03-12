@@ -150,6 +150,14 @@ class CFrmSession : public QDialog
     void receiveRow(vscpEvent* pev);
 
     /*!
+        Update the current row info.
+        This method is the same as 'receiveRow' except that 
+        it collect the event itself from the selected row information
+    */
+    void
+    updateCurrentRow(void);
+
+    /*!
         Connect to remote host and update UI to 
         indicate the result of the operation
     */
@@ -182,34 +190,55 @@ class CFrmSession : public QDialog
 
     // RX Context
 
+    /// Clear RX list
     void menu_clear_rxlist();
 
+    /// Unselect all RX list
+    void menu_unselect_all_rxlist();
+
+    /// Open settings dialog
+    void menu_open_main_settings(void);
+
+    /// Clear all selections
     void clrAllRxSelections(void);
 
+    /// Define a GUID for selected row
     void setGuid(void);
 
+    /// Add a note for selected row(s)
     void addEventNote(void);
 
+    /// Remove note on selected row(s)
     void removeEventNote(void);
 
+    /// Add mark to selected row
     void setVscpRowMark(void);
 
+    /// Remove mark for selected row
     void unsetVscpRowMark(void);
 
+    /// Add mark to selected row(s) class
     void setVscpClassMark(void);
 
+    /// Remove mark from selected row(s) class
     void unsetVscpClassMark(void);
 
+    /// Add mark to selected row(s) type
     void setVscpTypeMark(void);
 
+    /// Remove mark from selected row(s) type
     void unsetVscpTypeMark(void);
 
+    /// Save RX table to file (selected parts or not)
     void saveRxToFile(void);
 
+    /// Load RX data from file
     void loadRxFromFile(void);
 
  
  signals:
+
+    /// Data received from callback
     void dataReceived(vscpEvent* pev);
 
  private:
@@ -263,8 +292,12 @@ class CFrmSession : public QDialog
     QLCDNumber *m_lcdNumber;
 
     /// Clear RX list button
-    QPushButton *m_btnClearRcvList;
+    //QPushButton *m_btnClearRcvList;
     QAction *m_setClearRcvListActToolBar;
+
+    /// Unselect all RX items
+    QAction *m_setUnselectAllActToolBar;
+
 
     /// List for received events
     QTableWidget *m_rxTable;

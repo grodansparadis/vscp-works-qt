@@ -4698,97 +4698,97 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="161"/>
+        <location filename="src/vscpworks.cpp" line="162"/>
         <source>Unknown type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="166"/>
+        <location filename="src/vscpworks.cpp" line="167"/>
         <source>No connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="170"/>
+        <location filename="src/vscpworks.cpp" line="171"/>
         <source>VSCP local connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="174"/>
+        <location filename="src/vscpworks.cpp" line="175"/>
         <source>VSCP tcp/ip connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="178"/>
+        <location filename="src/vscpworks.cpp" line="179"/>
         <source>VSCP CANAL/Level I connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="182"/>
+        <location filename="src/vscpworks.cpp" line="183"/>
         <source>VSCP socketcan connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="186"/>
+        <location filename="src/vscpworks.cpp" line="187"/>
         <source>VSCP websocket protocol 1 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="190"/>
+        <location filename="src/vscpworks.cpp" line="191"/>
         <source>VSCP websocket protocol 2 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="194"/>
+        <location filename="src/vscpworks.cpp" line="195"/>
         <source>VSCP MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="198"/>
+        <location filename="src/vscpworks.cpp" line="199"/>
         <source>VSCP UDP connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="202"/>
+        <location filename="src/vscpworks.cpp" line="203"/>
         <source>VSCP multicast connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="206"/>
+        <location filename="src/vscpworks.cpp" line="207"/>
         <source>VSCP REST connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="210"/>
+        <location filename="src/vscpworks.cpp" line="211"/>
         <source>VSCP RS-232 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="214"/>
+        <location filename="src/vscpworks.cpp" line="215"/>
         <source>VSCP RS-485 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="218"/>
+        <location filename="src/vscpworks.cpp" line="219"/>
         <source>Raw CAN connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="222"/>
+        <location filename="src/vscpworks.cpp" line="223"/>
         <source>Raw MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="435"/>
+        <location filename="src/vscpworks.cpp" line="459"/>
         <source>The VSCP event database does not exist. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="444"/>
+        <location filename="src/vscpworks.cpp" line="468"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="642"/>
+        <location filename="src/vscpworks.cpp" line="666"/>
         <source>Failed to insert GUID into database %s</source>
         <translation type="unfinished"></translation>
     </message>

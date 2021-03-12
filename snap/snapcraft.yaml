@@ -15,10 +15,32 @@ apps:
     command: bin/vscp-works-qt
 
 parts:
+  paho:
+    plugin: cmake
+    source: https://github.com/eclipse/paho.mqtt.c.git
+    build-packages:
+      - git
+      - gcc
   vscp-works-qt:
     # See 'snapcraft plugins'
     plugin: cmake
     source: .
+    build-packages:
+      - git
+      - gcc
+      - qttools5-dev
+      - qt5-default
+      - libqt5widgets5
+      - qtdeclarative5-dev
+      - libqt5xml5
+      - libqt5network5
+      - libqt5sql5
+      - libqt5websockets5-dev
+      - libqt5sql5-sqlite
+      - libqt5serialport5
+      - libqt5serialport5-dev
+      - libexpat-dev
+      - libssl-dev
     stage-packages:
       - qttools5-dev
       - qt5-default
@@ -32,7 +54,8 @@ parts:
       - libqt5serialport5
       - libqt5serialport5-dev
       - libexpat-dev
-      - lipopenssl-dev
-      - libpaho-mqtt1.3 
+      - libssl-dev       
+    after:
+      - paho
 
     

@@ -307,8 +307,7 @@ class vscpworks : public QApplication {
         @param pev VSCP Event to fill in
         @return True on success, false on failure
     */
-    bool addVscpEventToJsRenderFunction(QJSEngine& engine, 
-                                            vscpEvent* pev); 
+    bool addVscpEventToJsRenderFunction(QJSEngine& engine, vscpEvent* pev); 
 
     // ------------------------------------------------------------------------
     // Global Configuration information below
