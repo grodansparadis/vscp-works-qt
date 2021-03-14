@@ -1272,6 +1272,14 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected, const QItemSelect
     }
 }
 
+#define MAX_RENDER_FUNCTIONS    30
+
+struct renderFunc {
+	QString name;
+	QString func;
+	QString value;
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // fillRxStatusInfo
 //
@@ -1310,13 +1318,12 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         "0);\">{{VscpGuid}}</span></small><br><span style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></span><br><br>"
         "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
         "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
+        "<small>{{{vscpRenderData}}}</small>"
         "{{{VscpComment}}}"
         ;
 
     // Set event render template
     mustache templ{ strVscpTemplate };
-
-    
 
     // --------------------------------------------------------------------
 
@@ -1338,6 +1345,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
 
     // Variables - If any defined
+    std::list<renderFunc *> m_renderFuncs;
     if (renderEventVariables.length()) {
 
         // Define the event in the JavaScript domain
@@ -1401,19 +1409,16 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         QString name;
         QString func;
         foreach (QString str, strlstFunc) {
-            //qDebug() << str.trimmed();
+            qDebug() << str.trimmed();
             str = str.trimmed();
-            if (str.contains("function()")) {
-                // We have a function  "id: function() {....}
-                // can be one line or multiline 
-                int posFunc = str.indexOf("function()");
-                int posColon = str.indexOf(":");
-                name = str.left(posColon);
-                func = str.right(str.length()-posFunc);
-            }
-            else {
-                func += str + "\n";
-            }
+            if (!str.length()) break;
+            if (!str.contains("function()")) break;
+            // We have a function  "id: function() {....}
+            // can be one line or multiline 
+            int posFunc = str.indexOf("function()");
+            int posColon = str.indexOf(":");
+            name = str.left(posColon);
+            func = str.right(str.length()-posFunc);
 
             // When {} pairs are equal in func we are done
             int cnt = 0;
@@ -1427,7 +1432,17 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
             }
 
             if (!cnt) {
-                qDebug() << "------->" << func;
+                struct renderFunc *prf = new struct renderFunc;
+                if (nullptr != prf) {
+                    prf->name = name;
+                    qDebug() << "------->" << func;
+                    prf->func = func = "(" + func + ")";
+                    QJSValue fun = myEngine.evaluate(func);
+                    QJSValue result = fun.call();
+                    prf->value = result.toString().trimmed();
+                    qDebug() << result.toInt() << " " << result.toString().trimmed() + " " << result.isError();
+                    m_renderFuncs.push_back(prf);
+                }
             }
         }
     }  // Variables
@@ -1450,10 +1465,23 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         _data.set("greaterthan", "&gt;");  
         _data.set("nbrspace", "&nbsp;");     // Non breaking space
         _data.set("newline", "<br>");
-        _data.set("lbl-start", "<b>");       // Label start (for "label: value"  renderings)
-        _data.set("lbl-end", "</b>");        // Label end (for "label: value"  renderings)
-        _data.set("val-start", "<b>");       // Value start (for "label: value"  renderings)
-        _data.set("val-end", "</b>");        // Value end (for "label: value"  renderings)
+        _data.set("lbl-start", "<small><b>");       // Label start (for "label: value"  renderings)
+        _data.set("lbl-end", "</b></small>");        // Label end (for "label: value"  renderings)
+        _data.set("val-start", "<span style=\"color:#666699\">"); // Value start (for "label: value"  renderings)
+        _data.set("val-end", "</span>");        // Value end (for "label: value"  renderings)
+
+        // Set data from embedded function calculations std::list<renderFunc *> m_renderFuncs;
+        //for (std::list<struct renderFunc *>::iterator it = m_renderFuncs.begin(); it != m_renderFuncs.end(); ++it){
+        while (m_renderFuncs.size()) {    
+            struct renderFunc *prf = m_renderFuncs.front();
+            // Render
+            _data.set(prf->name.toStdString(), prf->value.toStdString());
+            qDebug() << prf->name << " - " << prf->value;
+            // Remove from list
+            m_renderFuncs.pop_front();
+            // Unallocate
+            delete prf;
+        }
 
         if (vscp_isMeasurement(pev)) {
             CVscpUnit u = pworks->getUnitInfo(pev->vscp_class, pev->vscp_type, vscp_getMeasurementUnit(pev));
@@ -1545,31 +1573,31 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
     strVscpData += "</small><br>";
 
-    // If event is an measurement        
-    if (vscp_isMeasurement(pev)) {
-        strVscpMeasurement = "<b>Measurement:</b><p>";
-        QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
-        if (qsl.size()) {
-            strVscpMeasurement = strRenderedData;
-        }
-        else {
-            strVscpMeasurement += "Error: No definitions found in db";
-        }
+    // // If event is an measurement        
+    // if (vscp_isMeasurement(pev)) {
+    //     strVscpMeasurement = "<b>Measurement:</b><p>";
+    //     QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+    //     if (qsl.size()) {
+    //         strVscpMeasurement = strRenderedData;
+    //     }
+    //     else {
+    //         strVscpMeasurement += "Error: No definitions found in db";
+    //     }
 
-        strVscpMeasurement += "</p>";
+    //     strVscpMeasurement += "</p>";
 
-        pworks->m_mutexSensorIndexMap.lock();
-        std::string strSensorIndexSymbolic = 
-            pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
-                                                            vscp_getMeasurementSensorIndex(pev)].toStdString();
-        pworks->m_mutexSensorIndexMap.unlock();
+    //     pworks->m_mutexSensorIndexMap.lock();
+    //     std::string strSensorIndexSymbolic = 
+    //         pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
+    //                                                         vscp_getMeasurementSensorIndex(pev)].toStdString();
+    //     pworks->m_mutexSensorIndexMap.unlock();
 
-        if (strSensorIndexSymbolic.length()) {
-            strVscpGuidSymbolic += " - ";
-            strVscpGuidSymbolic += strSensorIndexSymbolic;    
-        }
+    //     if (strSensorIndexSymbolic.length()) {
+    //         strVscpGuidSymbolic += " - ";
+    //         strVscpGuidSymbolic += strSensorIndexSymbolic;    
+    //     }
 
-    } // is measurement
+    // } // is measurement
 
     std::string strVscpComment = m_mapEventComment[selectedRow].toStdString();
     if (strVscpComment.length()) {
@@ -1594,6 +1622,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("VscpGuid", strVscpGuid);
     _data.set("VscpGuidSymbolic", strVscpGuidSymbolic);
     _data.set("VscpData", strVscpData);
+    _data.set("vscpRenderData", strRenderedData);
     _data.set("VscpClassToken", itemClass->text().toStdString());
     _data.set("VscpTypeToken", itemType->text().toStdString());
     _data.set("VscpClassHelpUrl",
@@ -1601,7 +1630,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("VscpTypeHelpUrl",
                 pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type)
                 .toStdString());
-    _data.set("VscpMeasurement", strVscpMeasurement);                    
+    //_data.set("VscpMeasurement", strVscpMeasurement);                    
     _data.set("VscpComment", strVscpComment);                    
 
     std::string output = templ.render(_data);

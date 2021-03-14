@@ -856,16 +856,23 @@ QStringList vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, 
 {
     QStringList strList;
     QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;";
+    qDebug() << strQuery.arg(type).arg(vscpClass).arg(vscpType);
 
-    //QSqlQuery query(strQuery.arg(type).arg(vscpClass).arg(vscpType), m_evdb);
     QSqlQuery query(m_evdb);
     query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
     // Try if there is a general render definition if none
     // is defined for the event
-    if (0 == query.numRowsAffected()) {
-        query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));    
+    qDebug() << query.size(); 
+    qDebug() << query.numRowsAffected();
+    if (query.next()) {
+        query.first();
     }
-    while (query.next()) {
+    else {
+        // Definition for all events of class
+        query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
+        query.first();
+    }
+    do {
 
         // * * * VARIABLES * * *
         QString vscpVariables = query.value(4).toString();
@@ -888,7 +895,7 @@ QStringList vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, 
         vscpTemplate.replace("\"","&quote;").replace("&quote;","'").replace("&amp;","&").replace("&gt;",">").replace("&lt;","<");
         qDebug() << vscpTemplate;
         strList << vscpVariables << vscpTemplate;
-    }
+    } while (query.next());
 
     return strList;
 }
