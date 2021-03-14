@@ -177,14 +177,8 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->setMenuBar(m_menuBar);
     mainLayout->addWidget(m_toolBar);
-    // mainLayout->addWidget(horizontalGroupBox);
     mainLayout->addWidget(m_gridGroupBox, 6);
     mainLayout->addWidget(m_txGroupBox, 3);
-
-    // mainLayout->addWidget(formGroupBox);
-    // mainLayout->addWidget(bigEditor);
-    // mainLayout->addStretch(80);
-    // mainLayout->addWidget(buttonBox);
 
     setLayout(mainLayout);
 
@@ -807,6 +801,7 @@ CFrmSession::menu_open_main_settings(void)
     CDlgMainSettings *dlg = new CDlgMainSettings(this);
     dlg->exec();
     // Update row in case info changed
+    updateAllRows();
     updateCurrentRow(); 
 }
 
@@ -1075,7 +1070,7 @@ CFrmSession::setGuid(void)
     }
     
     // Update row in case info changed
-    updateCurrentRow(); 
+    updateAllRows(); 
 }
 
 
@@ -1258,28 +1253,98 @@ CFrmSession::rxCellClicked(int row, int column)
 //
 
 void
-CFrmSession::rxSelectionChange(const QItemSelection& selected,
-                               const QItemSelection& eselected)
+CFrmSession::rxSelectionChange(const QItemSelection& selected, const QItemSelection& eselected)
 {
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
-    // QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
 
     // ------------------------------------------------------------------------
 
-    /* QStringList lst = pworks->getVscpRenderData(0,12);
-    if (lst.size() >= 2) {
+    if (0 == selection.size()) {
+        fillReceiveEventCount();
+    }
+    else if (1 == selection.size()) {
+        fillRxStatusInfo(selection.first().row());
+    }
+    else {
+        fillReceiveEventDiff();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillRxStatusInfo
+//
+
+void
+CFrmSession::fillRxStatusInfo(int selectedRow)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    vscpEvent* pev = m_rxEvents[selectedRow];
+    if ( nullptr == pev) return;
+
+    std::string strVscpTemplate =
+        "<h3>VSCP Event</h3>"
+        "<small><p style=\"color:#993399\">Received event</p></small>"
+        "<b><a href=\"https://grodansparadis.github.io/vscp-doc-spec/#/./vscphead\">Head</>: </b><span style=\"color:rgb(0, 0, "
+        "153);\">{{VscpHead}}</span><br><span style=\"color:#666699\">{{VscpHeadBits}}</span><br>"
+        "<b>OBID: </b><span style=\"color:rgb(0, 0, "
+        "153);\">{{VscpObid}}</span><br>"
+        "<b>CRC: </b><span style=\"color:rgb(0, 0, "
+        "153);\">{{VscpCrc}}</span><br><br>"
+        "<b>UTC Time: </b><span style=\"color:rgb(0, 0, "
+        "153);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
+        "VscpMinute}}:{{VscpSecond}}</span><br>"
+        "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
+        "153);\">{{VscpTimestamp}}</span><br>"
+        "<br>"
+        "<b>Class: </b><a "
+        "href=\"{{VscpClassHelpUrl}}\">{{VscpClassToken}}</a><span "
+        "style=\"color:rgb(0, 102, 0);\"> {{VscpClass}}</span><br>"
+        "<b>Type: </b><a href=\"{{VscpTypeHelpUrl}}\">{{VscpTypeToken}}</a> "
+        "<span "
+        "style=\"color:rgb(0, 102, 0);\">{{VscpType}}</span><br>"
+        "<br>"
+        "<b>GUID: </b><br><small><span style=\"color:rgb(0, 102, "
+        "0);\">{{VscpGuid}}</span></small><br><span style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></span><br><br>"
+        "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
+        "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
+        "{{{VscpComment}}}"
+        ;
+
+    // Set event render template
+    mustache templ{ strVscpTemplate };
+
+    
+
+    // --------------------------------------------------------------------
+
+    QString renderEventVariables;
+    QString renderEventTemplate;
+    QStringList lst = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+    if (1 == lst.size()) {
+        qDebug() << "Templates = " << lst[0];
+        renderEventTemplate = lst[0];
+    }
+    else if (lst.size() >= 2) {
+        
         qDebug() << "Variables = " << lst[0];
+        renderEventVariables = lst[0];
+
         qDebug() << "Templates = " << lst[1];
+        renderEventTemplate = lst[1];
+
     }
 
+    // Variables - If any defined
+    if (renderEventVariables.length()) {
 
-    QJSEngine myEngine;
-    {
+        // Define the event in the JavaScript domain
+        QJSEngine myEngine;
+
         std::string str;
         std::string strEvaluate;
-        vscpEvent* pev = m_rxEvents[selection.first().row()];
 
         strEvaluate = "var e = {};e.vscpData = [";
         vscp_writeDataToString(str, pev);
@@ -1321,392 +1386,227 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected,
         QJSValue result = myEngine.evaluate(strEvaluate.c_str());
         qDebug() << result.isError();
 
+        mustache templVar{ renderEventVariables.toStdString() };
+        qDebug() << renderEventVariables;
+        kainjow::mustache::data _dataVar;
+        _dataVar.set("newline", "\r\n");
+        _dataVar.set("quote", "\"");
+        _dataVar.set("singlequote", "'");
+        QString outputVar = templVar.render(_dataVar).c_str();
+        qDebug() << outputVar;
 
-    }
+        QStringList strlstFunc = outputVar.split("\n");
+        qDebug() << strlstFunc.size();
 
-    QJSValue result = myEngine.evaluate("e.vscpData[1];");
-    qDebug() << result.toInt() << result.toString();
-
-    // Variables
-    mustache templVar{ lst[0].toStdString() };
-    kainjow::mustache::data _dataVar;
-    _dataVar.set("newline", "\r\n");
-    _dataVar.set("quote", "\"");
-    _dataVar.set("quote", "'");
-    QString outputVar = templVar.render(_dataVar).c_str();
-    qDebug() << outputVar;
-
-    QStringList strlst = outputVar.split("\n");
-    qDebug() << strlst.size();
-
-    QString name;
-    QString func;
-    foreach (QString str, strlst) {
-        //qDebug() << str.trimmed();
-        str = str.trimmed();
-        if (str.contains("function()")) {
-            // We have a function  "id: function() {....}
-            // can be one line or multiline 
-            int posFunc = str.indexOf("function()");
-            int posColon = str.indexOf(":");
-            name = str.left(posColon);
-            func = str.right(str.length()-posFunc);
-        }
-        else {
-            func += str + "\n";
-        }
-
-        // When {} pairs are equal in func we are done
-        int cnt = 0;
-        foreach(QChar c, func) {
-            if('{' == c) {
-                cnt++;
-            }
-            if('}' == c) {
-                cnt--;
-            }
-        }
-
-        if (!cnt) {
-            qDebug() << "------->" << func;
-        }
-    } */
-
-    // ------------------------------------------------------------------------
-
-    if (0 == selection.size()) {
-        fillReceiveEventCount();
-    }
-    else if (1 == selection.size()) {
-        std::string strVscpTemplate =
-          "<h3>VSCP Event</h3>"
-          "<small><p style=\"color:#993399\">Received event</p></small>"
-          "<b><a href=\"https://grodansparadis.github.io/vscp-doc-spec/#/./vscphead\">Head</>: </b><span style=\"color:rgb(0, 0, "
-          "153);\">{{VscpHead}}</span><br><span style=\"color:#666699\">{{VscpHeadBits}}</span><br>"
-          "<b>OBID: </b><span style=\"color:rgb(0, 0, "
-          "153);\">{{VscpObid}}</span><br>"
-          "<b>CRC: </b><span style=\"color:rgb(0, 0, "
-          "153);\">{{VscpCrc}}</span><br><br>"
-          "<b>UTC Time: </b><span style=\"color:rgb(0, 0, "
-          "153);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
-          "VscpMinute}}:{{VscpSecond}}</span><br>"
-          "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
-          "153);\">{{VscpTimestamp}}</span><br>"
-          "<br>"
-          "<b>Class: </b><a "
-          "href=\"{{VscpClassHelpUrl}}\">{{VscpClassToken}}</a><span "
-          "style=\"color:rgb(0, 102, 0);\"> {{VscpClass}}</span><br>"
-          "<b>Type: </b><a href=\"{{VscpTypeHelpUrl}}\">{{VscpTypeToken}}</a> "
-          "<span "
-          "style=\"color:rgb(0, 102, 0);\">{{VscpType}}</span><br>"
-          "<br>"
-          "<b>GUID: </b><br><small><span style=\"color:rgb(0, 102, "
-          "0);\">{{VscpGuid}}</span></small><br><span style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></span><br><br>"
-          "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
-          "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
-          "{{{VscpComment}}}"
-          ;
-
-        // Set event render template
-        mustache templ{ strVscpTemplate };
-
-        // Get event
-        vscpEvent* pev = m_rxEvents[selection.first().row()];
-
-        // --------------------------------------------------------------------
-
-        QString renderEventVariables;
-        QString renderEventTemplate;
-        QStringList lst = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
-        if (1 == lst.size()) {
-            qDebug() << "Templates = " << lst[0];
-            renderEventTemplate = lst[0];
-        }
-        else if (lst.size() >= 2) {
-            
-            qDebug() << "Variables = " << lst[0];
-            renderEventVariables = lst[0];
-
-            qDebug() << "Templates = " << lst[1];
-            renderEventTemplate = lst[1];
-
-        }
-
-        // Variables - If any defined
-        if (renderEventVariables.length()) {
-
-            // Define the event in the JavaScript domain
-            QJSEngine myEngine;
- 
-            std::string str;
-            std::string strEvaluate;
-            vscpEvent* pev = m_rxEvents[selection.first().row()];
-
-            strEvaluate = "var e = {};e.vscpData = [";
-            vscp_writeDataToString(str, pev);
-            strEvaluate += str.c_str();
-            strEvaluate += "];e.sizeData=";
-            strEvaluate += vscp_str_format("%d",pev->sizeData);
-            strEvaluate += ";e.guid = [";
-            vscp_writeGuidArrayToString(str, pev->GUID, true);
-            strEvaluate += str;
-            strEvaluate += "];e.vscpHead=";
-            strEvaluate += vscp_str_format("%d",pev->head);
-            strEvaluate += ";e.vscpCrc=";
-            strEvaluate += vscp_str_format("%d",pev->crc);
-            strEvaluate += ";e.vscpObid=";
-            strEvaluate += vscp_str_format("%lu",pev->obid);
-            strEvaluate += ";e.vscpTimeStamp=";
-            strEvaluate += vscp_str_format("%lu",pev->timestamp);
-            strEvaluate += ";e.vscpClass=";
-            strEvaluate += vscp_str_format("%d",pev->vscp_class);
-            strEvaluate += ";e.vscpType=";
-            strEvaluate += vscp_str_format("%d",pev->vscp_type);
-            strEvaluate += ";e.vscpYear=";
-            strEvaluate += vscp_str_format("%d",pev->year);
-            strEvaluate += ";e.vscpMonth=";
-            strEvaluate += vscp_str_format("%d",pev->month);
-            strEvaluate += ";e.vscpDay=";
-            strEvaluate += vscp_str_format("%d",pev->day);
-            strEvaluate += ";e.vscpHour=";
-            strEvaluate += vscp_str_format("%d",pev->hour);
-            strEvaluate += ";e.vscpMinute=";
-            strEvaluate += vscp_str_format("%d",pev->minute);
-            strEvaluate += ";e.vscpSecond=";
-            strEvaluate += vscp_str_format("%d",pev->second);
-            strEvaluate += ";";
-
-            qDebug() << strEvaluate.c_str();
-
-            //myEngine.evaluate("var e = {};e.data = [11,22,33];");
-            QJSValue result = myEngine.evaluate(strEvaluate.c_str());
-            qDebug() << result.isError();
-
-            mustache templVar{ renderEventVariables.toStdString() };
-            qDebug() << renderEventVariables;
-            kainjow::mustache::data _dataVar;
-            _dataVar.set("newline", "\r\n");
-            _dataVar.set("quote", "\"");
-            _dataVar.set("singlequote", "'");
-            QString outputVar = templVar.render(_dataVar).c_str();
-            qDebug() << outputVar;
-
-            QStringList strlstFunc = outputVar.split("\n");
-            qDebug() << strlstFunc.size();
-
-            QString name;
-            QString func;
-            foreach (QString str, strlstFunc) {
-                //qDebug() << str.trimmed();
-                str = str.trimmed();
-                if (str.contains("function()")) {
-                    // We have a function  "id: function() {....}
-                    // can be one line or multiline 
-                    int posFunc = str.indexOf("function()");
-                    int posColon = str.indexOf(":");
-                    name = str.left(posColon);
-                    func = str.right(str.length()-posFunc);
-                }
-                else {
-                    func += str + "\n";
-                }
-
-                // When {} pairs are equal in func we are done
-                int cnt = 0;
-                foreach(QChar c, func) {
-                    if('{' == c) {
-                        cnt++;
-                    }
-                    if('}' == c) {
-                        cnt--;
-                    }
-                }
-
-                if (!cnt) {
-                    qDebug() << "------->" << func;
-                }
-            }
-        }  // Variables
-
-        // Template - If any defined
-        std::string strRenderedData;
-        std::string strVscpMeasurement;
-        if (renderEventTemplate.length()) {
-            
-            //renderEventTemplate = "<small>{{{lbl-start}}}Unit: {{{lbl-end}}} = {{{unitstr}}} [{{{unit}}}] {{{newline}}} {{{lbl-start}}}Sensorindex: {{{lbl-end}}} = {{{sensorindex}}}{{{newline}}} {{{lbl-start}}}Value: {{{lbl-end}}} = {{{val}}}{{{symbol}}} - [{{{datacodingstr}}}] {{{newline}}}</small>";
-
-            mustache templVar{ renderEventTemplate.toStdString() };
-            qDebug() << "renderEventTemplate = " <<  renderEventTemplate;
-
-            kainjow::mustache::data _data;
-            _data.set("quote", "&quot;");
-            _data.set("singlequote", "'");
-            _data.set("ampersand", "&amp;");
-            _data.set("lessthan", "&lt;");
-            _data.set("greaterthan", "&gt;");  
-            _data.set("nbrspace", "&nbsp;");     // Non breaking space
-            _data.set("newline", "<br>");
-            _data.set("lbl-start", "<b>");       // Label start (for "label: value"  renderings)
-            _data.set("lbl-end", "</b>");        // Label end (for "label: value"  renderings)
-            _data.set("val-start", "<b>");       // Value start (for "label: value"  renderings)
-            _data.set("val-end", "</b>");        // Value end (for "label: value"  renderings)
-
-            if (vscp_isMeasurement(pev)) {
-                CVscpUnit u = pworks->getUnitInfo(pev->vscp_class, pev->vscp_type, vscp_getMeasurementUnit(pev));
-                int datacoding;
-                _data.set("datacoding", vscp_str_format("0x%02X", (datacoding = vscp_getMeasurementDataCoding(pev)) ));
-                switch ((datacoding >> 5) & 7) {
-                    case 0:
-                        _data.set("datacodingstr", "Bits");
-                        break;
-                    case 1:
-                        _data.set("datacodingstr", "Byte");
-                        break;
-                    case 2:
-                        _data.set("datacodingstr", "String");
-                        break;
-                    case 3:
-                        _data.set("datacodingstr", "Integer");
-                        break;
-                    case 4:
-                        _data.set("datacodingstr", "Norm-integer");
-                        break;
-                    case 5:
-                        _data.set("datacodingstr", "Float");
-                        break;
-                    case 6:
-                        _data.set("datacodingstr", "Double");
-                        break;
-                    case 7:
-                        _data.set("datacodingstr", "Reserved");
-                        break;                            
-                }
-                _data.set("unitstr", u.m_name);
-                _data.set("unit", vscp_str_format("%d", u.m_unit));
-                _data.set("sensorindex", vscp_str_format("%d", vscp_getMeasurementSensorIndex(pev)));
-                double val;
-                vscp_getMeasurementAsDouble(&val, pev);
-                std::string strValue = vscp_str_format("%f", val);
-                _data.set("val", strValue);
-                _data.set("symbol", u.m_symbol_utf8);
-                
-            }
-
-            strRenderedData = templVar.render(_data);
-            qDebug() << strRenderedData.c_str();
-
-        }
-        
-        // --------------------------------------------------------------------
-
-        
-        QTableWidgetItem* itemClass = m_rxTable->item(selection.first().row(), 1);
-        QTableWidgetItem* itemType = m_rxTable->item(selection.first().row(), 2);
-
-        std::string strVscpHead   = vscp_str_format("0x%04X", pev->head);
-        std::string strVscpHeadBits = vscp_str_format("\n[ri=%d ",pev->head & 7);
-        strVscpHeadBits += vscp_str_format("!c=%s ",(pev->head & 0x0004) ? "true" : "false");
-        strVscpHeadBits += vscp_str_format("h=%s ",(pev->head & 0x0010) ? "true" : "false");
-        strVscpHeadBits += vscp_str_format("p=%d ",((pev->head >> 5) & 3));
-        strVscpHeadBits += vscp_str_format("g=%d ",((pev->head >> 8) & 3));
-        strVscpHeadBits += vscp_str_format("d=%s ",(pev->head & 0x8000) ? "true" : "false");
-        strVscpHeadBits += " ]";
-        std::string strVscpObId   = vscp_str_format("0x%08X", pev->obid);
-        std::string strVscpCrc   = vscp_str_format("0x%04X", pev->crc);
-        std::string strVscpYear   = vscp_str_format("%d", pev->year);
-        std::string strVscpMonth  = vscp_str_format("%02d", pev->month);
-        std::string strVscpDay    = vscp_str_format("%02d", pev->second);
-        std::string strVscpHour   = vscp_str_format("%02d", pev->hour);
-        std::string strVscpMinute = vscp_str_format("%02d", pev->minute);
-        std::string strVscpSecond = vscp_str_format("%02d", pev->second);
-        std::string strVscpTimestamp =
-          vscp_str_format("0x%08X", pev->timestamp);
-        std::string strVscpClass =
-          vscp_str_format("0x%04X, %d", pev->vscp_class, pev->vscp_class);
-        std::string strVscpType =
-          vscp_str_format("0x%04X, %d", pev->vscp_type, pev->vscp_type);
-
-        std::string strVscpGuid;
-        vscp_writeGuidArrayToString(strVscpGuid, pev->GUID);
-
-        pworks->m_mutexGuidMap.lock();
-        std::string strVscpGuidSymbolic = pworks->m_mapGuidToSymbolicName[strVscpGuid.c_str()].toStdString();
-        pworks->m_mutexGuidMap.unlock();
-
-        std::string strVscpData = "<small>";
-        for (int i = 0; i < pev->sizeData; i++) {
-            strVscpData += vscp_str_format("0x%02X ", pev->pdata[i]);
-            if (!((i + 1) % 8))
-                strVscpData += "</small><br><small>";
-        }
-        strVscpData += "</small><br>";
-
-        // If event is an measurement        
-        if (vscp_isMeasurement(pev)) {
-            strVscpMeasurement = "<b>Measurement:</b><p>";
-            QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
-            if (qsl.size()) {
-                strVscpMeasurement = strRenderedData;
+        QString name;
+        QString func;
+        foreach (QString str, strlstFunc) {
+            //qDebug() << str.trimmed();
+            str = str.trimmed();
+            if (str.contains("function()")) {
+                // We have a function  "id: function() {....}
+                // can be one line or multiline 
+                int posFunc = str.indexOf("function()");
+                int posColon = str.indexOf(":");
+                name = str.left(posColon);
+                func = str.right(str.length()-posFunc);
             }
             else {
-                strVscpMeasurement += "Error: No definitions found in db";
+                func += str + "\n";
             }
 
-            strVscpMeasurement += "</p>";
-
-            pworks->m_mutexSensorIndexMap.lock();
-            std::string strSensorIndexSymbolic = 
-                pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
-                                                                vscp_getMeasurementSensorIndex(pev)].toStdString();
-            pworks->m_mutexSensorIndexMap.unlock();
-
-            if (strSensorIndexSymbolic.length()) {
-                strVscpGuidSymbolic += " - ";
-                strVscpGuidSymbolic += strSensorIndexSymbolic;    
+            // When {} pairs are equal in func we are done
+            int cnt = 0;
+            foreach(QChar c, func) {
+                if('{' == c) {
+                    cnt++;
+                }
+                if('}' == c) {
+                    cnt--;
+                }
             }
 
-        } // is measurement
-
-        std::string strVscpComment = m_mapEventComment[selection.first().row()].toStdString();
-        if (strVscpComment.length()) {
-            strVscpComment = "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" + strVscpComment;
-            strVscpComment += "</p>";            
+            if (!cnt) {
+                qDebug() << "------->" << func;
+            }
         }
+    }  // Variables
+
+    // Template - If any defined
+    std::string strRenderedData;
+    std::string strVscpMeasurement;
+    if (renderEventTemplate.length()) {
+        
+        //renderEventTemplate = "<small>{{{lbl-start}}}Unit: {{{lbl-end}}} = {{{unitstr}}} [{{{unit}}}] {{{newline}}} {{{lbl-start}}}Sensorindex: {{{lbl-end}}} = {{{sensorindex}}}{{{newline}}} {{{lbl-start}}}Value: {{{lbl-end}}} = {{{val}}}{{{symbol}}} - [{{{datacodingstr}}}] {{{newline}}}</small>";
+
+        mustache templVar{ renderEventTemplate.toStdString() };
+        qDebug() << "renderEventTemplate = " <<  renderEventTemplate;
 
         kainjow::mustache::data _data;
-        _data.set("VscpHead", strVscpHead);
-        _data.set("VscpHeadBits",strVscpHeadBits);
-        _data.set("VscpObid", strVscpObId);
-        _data.set("VscpCrc", strVscpCrc);
-        _data.set("VscpYear", strVscpYear);
-        _data.set("VscpMonth", strVscpMonth);
-        _data.set("VscpDay", strVscpDay);
-        _data.set("VscpHour", strVscpHour);
-        _data.set("VscpMinute", strVscpMinute);
-        _data.set("VscpSecond", strVscpSecond);
-        _data.set("VscpTimestamp", strVscpTimestamp);
-        _data.set("VscpClass", strVscpClass);
-        _data.set("VscpType", strVscpType);
-        _data.set("VscpGuid", strVscpGuid);
-        _data.set("VscpGuidSymbolic", strVscpGuidSymbolic);
-        _data.set("VscpData", strVscpData);
-        _data.set("VscpClassToken", itemClass->text().toStdString());
-        _data.set("VscpTypeToken", itemType->text().toStdString());
-        _data.set("VscpClassHelpUrl",
-                  pworks->getHelpUrlForClass(pev->vscp_class).toStdString());
-        _data.set("VscpTypeHelpUrl",
-                  pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type)
-                    .toStdString());
-        _data.set("VscpMeasurement", strVscpMeasurement);                    
-        _data.set("VscpComment", strVscpComment);                    
+        _data.set("quote", "&quot;");
+        _data.set("singlequote", "'");
+        _data.set("ampersand", "&amp;");
+        _data.set("lessthan", "&lt;");
+        _data.set("greaterthan", "&gt;");  
+        _data.set("nbrspace", "&nbsp;");     // Non breaking space
+        _data.set("newline", "<br>");
+        _data.set("lbl-start", "<b>");       // Label start (for "label: value"  renderings)
+        _data.set("lbl-end", "</b>");        // Label end (for "label: value"  renderings)
+        _data.set("val-start", "<b>");       // Value start (for "label: value"  renderings)
+        _data.set("val-end", "</b>");        // Value end (for "label: value"  renderings)
 
-        std::string output = templ.render(_data);
-        qDebug() << output.c_str();
-        m_infoArea->setHtml(output.c_str());
+        if (vscp_isMeasurement(pev)) {
+            CVscpUnit u = pworks->getUnitInfo(pev->vscp_class, pev->vscp_type, vscp_getMeasurementUnit(pev));
+            int datacoding;
+            _data.set("datacoding", vscp_str_format("0x%02X", (datacoding = vscp_getMeasurementDataCoding(pev)) ));
+            switch ((datacoding >> 5) & 7) {
+                case 0:
+                    _data.set("datacodingstr", "Bits");
+                    break;
+                case 1:
+                    _data.set("datacodingstr", "Byte");
+                    break;
+                case 2:
+                    _data.set("datacodingstr", "String");
+                    break;
+                case 3:
+                    _data.set("datacodingstr", "Integer");
+                    break;
+                case 4:
+                    _data.set("datacodingstr", "Norm-integer");
+                    break;
+                case 5:
+                    _data.set("datacodingstr", "Float");
+                    break;
+                case 6:
+                    _data.set("datacodingstr", "Double");
+                    break;
+                case 7:
+                    _data.set("datacodingstr", "Reserved");
+                    break;                            
+            }
+            _data.set("unitstr", u.m_name);
+            _data.set("unit", vscp_str_format("%d", u.m_unit));
+            _data.set("sensorindex", vscp_str_format("%d", vscp_getMeasurementSensorIndex(pev)));
+            double val;
+            vscp_getMeasurementAsDouble(&val, pev);
+            std::string strValue = vscp_str_format("%f", val);
+            _data.set("val", strValue);
+            _data.set("symbol", u.m_symbol_utf8);
+            
+        }
+
+        strRenderedData = templVar.render(_data);
+        qDebug() << strRenderedData.c_str();
+
     }
-    else {
-        fillReceiveEventDiff();
+    
+    // --------------------------------------------------------------------
+
+
+    QTableWidgetItem* itemClass = m_rxTable->item(selectedRow, 1);
+    QTableWidgetItem* itemType = m_rxTable->item(selectedRow, 2);
+
+    std::string strVscpHead   = vscp_str_format("0x%04X", pev->head);
+    std::string strVscpHeadBits = vscp_str_format("\n[ri=%d ",pev->head & 7);
+    strVscpHeadBits += vscp_str_format("!c=%s ",(pev->head & 0x0004) ? "true" : "false");
+    strVscpHeadBits += vscp_str_format("h=%s ",(pev->head & 0x0010) ? "true" : "false");
+    strVscpHeadBits += vscp_str_format("p=%d ",((pev->head >> 5) & 3));
+    strVscpHeadBits += vscp_str_format("g=%d ",((pev->head >> 8) & 3));
+    strVscpHeadBits += vscp_str_format("d=%s ",(pev->head & 0x8000) ? "true" : "false");
+    strVscpHeadBits += " ]";
+    std::string strVscpObId   = vscp_str_format("0x%08X", pev->obid);
+    std::string strVscpCrc   = vscp_str_format("0x%04X", pev->crc);
+    std::string strVscpYear   = vscp_str_format("%d", pev->year);
+    std::string strVscpMonth  = vscp_str_format("%02d", pev->month);
+    std::string strVscpDay    = vscp_str_format("%02d", pev->second);
+    std::string strVscpHour   = vscp_str_format("%02d", pev->hour);
+    std::string strVscpMinute = vscp_str_format("%02d", pev->minute);
+    std::string strVscpSecond = vscp_str_format("%02d", pev->second);
+    std::string strVscpTimestamp =
+        vscp_str_format("0x%08X", pev->timestamp);
+    std::string strVscpClass =
+        vscp_str_format("0x%04X, %d", pev->vscp_class, pev->vscp_class);
+    std::string strVscpType =
+        vscp_str_format("0x%04X, %d", pev->vscp_type, pev->vscp_type);
+
+    std::string strVscpGuid;
+    vscp_writeGuidArrayToString(strVscpGuid, pev->GUID);
+
+    pworks->m_mutexGuidMap.lock();
+    std::string strVscpGuidSymbolic = pworks->m_mapGuidToSymbolicName[strVscpGuid.c_str()].toStdString();
+    pworks->m_mutexGuidMap.unlock();
+
+    std::string strVscpData = "<small>";
+    for (int i = 0; i < pev->sizeData; i++) {
+        strVscpData += vscp_str_format("0x%02X ", pev->pdata[i]);
+        if (!((i + 1) % 8))
+            strVscpData += "</small><br><small>";
     }
+    strVscpData += "</small><br>";
+
+    // If event is an measurement        
+    if (vscp_isMeasurement(pev)) {
+        strVscpMeasurement = "<b>Measurement:</b><p>";
+        QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+        if (qsl.size()) {
+            strVscpMeasurement = strRenderedData;
+        }
+        else {
+            strVscpMeasurement += "Error: No definitions found in db";
+        }
+
+        strVscpMeasurement += "</p>";
+
+        pworks->m_mutexSensorIndexMap.lock();
+        std::string strSensorIndexSymbolic = 
+            pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
+                                                            vscp_getMeasurementSensorIndex(pev)].toStdString();
+        pworks->m_mutexSensorIndexMap.unlock();
+
+        if (strSensorIndexSymbolic.length()) {
+            strVscpGuidSymbolic += " - ";
+            strVscpGuidSymbolic += strSensorIndexSymbolic;    
+        }
+
+    } // is measurement
+
+    std::string strVscpComment = m_mapEventComment[selectedRow].toStdString();
+    if (strVscpComment.length()) {
+        strVscpComment = "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" + strVscpComment;
+        strVscpComment += "</p>";            
+    }
+
+    kainjow::mustache::data _data;
+    _data.set("VscpHead", strVscpHead);
+    _data.set("VscpHeadBits",strVscpHeadBits);
+    _data.set("VscpObid", strVscpObId);
+    _data.set("VscpCrc", strVscpCrc);
+    _data.set("VscpYear", strVscpYear);
+    _data.set("VscpMonth", strVscpMonth);
+    _data.set("VscpDay", strVscpDay);
+    _data.set("VscpHour", strVscpHour);
+    _data.set("VscpMinute", strVscpMinute);
+    _data.set("VscpSecond", strVscpSecond);
+    _data.set("VscpTimestamp", strVscpTimestamp);
+    _data.set("VscpClass", strVscpClass);
+    _data.set("VscpType", strVscpType);
+    _data.set("VscpGuid", strVscpGuid);
+    _data.set("VscpGuidSymbolic", strVscpGuidSymbolic);
+    _data.set("VscpData", strVscpData);
+    _data.set("VscpClassToken", itemClass->text().toStdString());
+    _data.set("VscpTypeToken", itemType->text().toStdString());
+    _data.set("VscpClassHelpUrl",
+                pworks->getHelpUrlForClass(pev->vscp_class).toStdString());
+    _data.set("VscpTypeHelpUrl",
+                pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type)
+                .toStdString());
+    _data.set("VscpMeasurement", strVscpMeasurement);                    
+    _data.set("VscpComment", strVscpComment);                    
+
+    std::string output = templ.render(_data);
+    qDebug() << output.c_str();
+    m_infoArea->setHtml(output.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1717,49 +1617,62 @@ void
 CFrmSession::updateCurrentRow(void)
 {
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
-    // Get event
-    vscpEvent* pev = m_rxEvents[selection.first().row()];    
-    receiveRow(pev);
-    //TODO    Update info on row
+    // Must be a slected row to update 
+    if (!selection.size()) return;
+    
+    // Update GUID info on row
+    QTableWidgetItem* itemGuid = m_rxTable->item(selection.first().row(), rxrow_guid);
+    setGuidInfoForRow(itemGuid, m_rxEvents[selection.first().row()]);
+
+    // Update RX status
+    fillRxStatusInfo(selection.first().row());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// receiveRow
+// updateAllRows
 //
 
 void
-CFrmSession::receiveRow(vscpEvent* pev)
+CFrmSession::updateAllRows(void)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
     m_mutexRxList.lock();
+    // for (int i = 0; i < m_rxEvents.size(); i++) {
+    //     std::cout << m_rxEvents[i] <<  " ";
+    // }
+    m_rxTable->setUpdatesEnabled(false);
+    for (int i = 0; i < m_rxTable->rowCount(); i++) {
+        // Update Class info on row
+        QTableWidgetItem* itemVscpClass = m_rxTable->item(i, rxrow_class);
+        setClassInfoForRow(itemVscpClass, m_rxEvents[i]);
 
-    int row = m_rxTable->rowCount();
-    m_rxTable->insertRow(row);
+        // Update Type info on row
+        QTableWidgetItem* itemVscpType = m_rxTable->item(i, rxrow_type);
+        setTypeInfoForRow(itemVscpType, m_rxEvents[i]);
 
-    // Save event
-    m_rxEvents.push_back(pev);
+        // Update node id info on row
+        QTableWidgetItem* itemNodeId = m_rxTable->item(i, rxrow_nodeid);
+        setNodeIdInfoForRow(itemNodeId, m_rxEvents[i]);
 
-    // * * * Direction * * *
-    QTableWidgetItem* itemDir = new QTableWidgetItem("ᐅ"); // ➤ ➜ ➡ ➤ ᐊ
-    itemDir->setTextAlignment(Qt::AlignCenter);
-
-    // Not editable
-    itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
-
-    // Bluish
-    itemDir->setForeground(QBrush(QColor(0, 5, 180)));
-
-    // Add
-    m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
-
-    // If one or more rows are selected don't autoscroll
-    if (!m_rxTable->selectedItems().size()) {
-        m_rxTable->scrollToItem(itemDir);
+        // Update GUID info on row
+        QTableWidgetItem* itemGuid = m_rxTable->item(i, rxrow_guid);
+        setGuidInfoForRow(itemGuid, m_rxEvents[i]);
     }
+    m_rxTable->setUpdatesEnabled(true);
+    m_mutexRxList.unlock();
 
-    // * * * Class * * *
+    updateCurrentRow();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setClassInfoForRow
+//
+
+void 
+CFrmSession:: setClassInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+{
     QString strClass;
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    
     switch (pworks->m_session_ClassDisplayFormat) {
 
         case classDisplayFormat::numerical_in_base:
@@ -1789,34 +1702,29 @@ CFrmSession::receiveRow(vscpEvent* pev)
             break;
     }
 
-    QTableWidgetItem* itemClass = new QTableWidgetItem(strClass);
-    itemClass->setToolTip(vscp_str_format("%s\n0x%04X %d",
+    item->setText(strClass);
+
+    // Tooltip
+    item->setToolTip(vscp_str_format("%s\n0x%04X %d",
                                             pworks->m_mapVscpClassToToken[pev->vscp_class].toStdString().c_str(),
                                             pev->vscp_class, 
                                             pev->vscp_class).c_str());
-    itemClass->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
-    itemClass->setForeground(QBrush(QColor(0, 99, 0)));
-    m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setForeground(QBrush(QColor(0, 99, 0)));
+}
 
-    // * * * Type * * *
-    // QString strTypeToken =
-    // pworks->mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
-    // pev->vscp_type]; if (pev->vscp_class>=1024) {
-    //     strTypeToken = strTypeToken.right(strTypeToken.length()-11);    //
-    //     Remove "VSCP2_TYPE_"
-    // }
-    // else {
-    //     strTypeToken = strTypeToken.right(strTypeToken.length()-10);    //
-    //     Remove "VSCP_TYPE_"
-    // }
-    // int posUnderscore = strTypeToken.indexOf("_");
-    // if (posUnderscore) posUnderscore++;
-    // QString strShortTypeToken =
-    // strTypeToken.right(strTypeToken.length()-posUnderscore);
+///////////////////////////////////////////////////////////////////////////////
+// setTypeInfoForRow
+//
+
+void 
+CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QString strType;
+
     QString strShortTypeToken =
         pworks->getShortTypeToken(pev->vscp_class, pev->vscp_type);
-
-    QString strType;
 
     switch (pworks->m_session_TypeDisplayFormat) {
 
@@ -1860,30 +1768,50 @@ CFrmSession::receiveRow(vscpEvent* pev)
             break;
     }
 
-    QTableWidgetItem* itemType = new QTableWidgetItem(strType);
-    itemType->setToolTip(vscp_str_format("%s\n0x%04X %d",
+    item->setText(strType);
+
+    // Tooltip
+    item->setToolTip(vscp_str_format("%s\n0x%04X %d",
                                             pworks->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
                                              pev->vscp_type].toStdString().c_str(),
                                             pev->vscp_type, 
                                             pev->vscp_type).c_str());
-    itemType->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
-    itemType->setForeground(QBrush(QColor(0, 5, 180)));
-    m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setForeground(QBrush(QColor(0, 5, 180)));
+}
 
-    // * * * Node id * * *
+///////////////////////////////////////////////////////////////////////////////
+// setNodeIdInfoForRow
+//
+
+void 
+CFrmSession:: setNodeIdInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
     QString strNodeId = pworks->decimalToStringInBase(
       ((uint16_t)pev->GUID[14] << 8) + pev->GUID[15],
       m_baseComboBox->currentIndex());
-    QTableWidgetItem* itemNodeId = new QTableWidgetItem(strNodeId);
-    itemNodeId->setToolTip(vscp_str_format("GUID[14]=0x%02X GUID[15]=0x%02X", 
+    
+    item->setText(strNodeId);
+
+    // Tooltip
+    item->setToolTip(vscp_str_format("GUID[14]=0x%02X GUID[15]=0x%02X", 
                                             pev->GUID[14], 
                                             pev->GUID[15]).c_str());
-    itemNodeId->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
-    itemNodeId->setTextAlignment(Qt::AlignCenter);
-    m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setTextAlignment(Qt::AlignCenter);
+}
 
-    // * * * Guid * * *
+///////////////////////////////////////////////////////////////////////////////
+// setGuidInfoForRow
+//
+
+void 
+CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+{
     std::string strGuid;
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     vscp_writeGuidArrayToString(strGuid, pev->GUID);
 
     pworks->m_mutexGuidMap.lock();
@@ -1938,25 +1866,84 @@ CFrmSession::receiveRow(vscpEvent* pev)
             break;
     }
 
-    QTableWidgetItem* itemGuid = new QTableWidgetItem(strGuidDisplay);
+    item->setText(strGuidDisplay);
+    
+    // Tooltip
     if (strSensorIndexSymbolic.length()) {
-        itemGuid->setToolTip(vscp_str_format("%s - %s\n%s", 
+        item->setToolTip(vscp_str_format("%s - %s\n%s", 
                                                 guidSymbolicName.toStdString().c_str(), 
                                                 strSensorIndexSymbolic.toStdString().c_str(),
                                                 strGuid.c_str()).c_str());
     }
     else {
         if (guidSymbolicName.length()) {
-            itemGuid->setToolTip(vscp_str_format("%s\n%s", 
+            item->setToolTip(vscp_str_format("%s\n%s", 
                                                     guidSymbolicName.toStdString().c_str(), 
                                                     strGuid.c_str()).c_str());        
         }
         else {
-            itemGuid->setToolTip(vscp_str_format("%s", 
+            item->setToolTip(vscp_str_format("%s", 
                                                     strGuid.c_str()).c_str());  
         }
     }
-    itemGuid->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// receiveRow
+//
+
+void
+CFrmSession::receiveRow(vscpEvent* pev)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    m_mutexRxList.lock();
+
+    int row = m_rxTable->rowCount();
+    m_rxTable->insertRow(row);
+
+    // Save event
+    m_rxEvents.push_back(pev);
+
+    // * * * Direction * * *
+    QTableWidgetItem* itemDir = new QTableWidgetItem("ᐅ"); // ➤ ➜ ➡ ➤ ᐊ
+    itemDir->setTextAlignment(Qt::AlignCenter);
+
+    // Not editable
+    itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+
+    // Bluish
+    itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+
+    // Add
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
+
+    // If one or more rows are selected don't autoscroll
+    if (!m_rxTable->selectedItems().size()) {
+        m_rxTable->scrollToItem(itemDir);
+    }
+
+    // * * * Class * * *
+    QTableWidgetItem* itemClass = new QTableWidgetItem();
+    setClassInfoForRow(itemClass, pev);
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+
+
+    // * * * Type * * *
+    QTableWidgetItem* itemType = new QTableWidgetItem();
+    setTypeInfoForRow(itemType, pev);
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+
+    // * * * Node id * * *
+    QTableWidgetItem* itemNodeId = new QTableWidgetItem();
+    setNodeIdInfoForRow(itemNodeId, pev);
+    m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+
+    // * * * Guid * * *
+    QTableWidgetItem* itemGuid = new QTableWidgetItem();
+    setGuidInfoForRow(itemGuid, pev);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
 
     m_rxTable->setUpdatesEnabled(false);

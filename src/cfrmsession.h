@@ -53,6 +53,7 @@ class QTextBrowser;
 class QToolBar;
 class QVBoxLayout;
 class QAction;
+class QTableWidgetItem;
 class QTableWidget;
 class QToolBox;
 QT_END_NAMESPACE
@@ -86,6 +87,12 @@ class CFrmSession : public QDialog
  public:
     CFrmSession(QWidget *parent, QJsonObject *pconn);
     ~CFrmSession();
+
+    const int rxrow_dir = 0;
+    const int rxrow_class = 1;
+    const int rxrow_type = 2;
+    const int rxrow_nodeid = 3;
+    const int rxrow_guid = 4;
 
     // VSCP Class display format
     // symbolic          - Just symbolic name
@@ -139,6 +146,40 @@ class CFrmSession : public QDialog
     */
     void fillReceiveEventDiff(void);
 
+    /*!
+        Fill in info in RX status window
+        @param pev Event to fill in info for.
+    */
+    void fillRxStatusInfo(int selectedRow);
+
+    /*!
+        Update VSCP class info for row
+        @param item Pointer to QTableWidgetItem for row
+        @param pev Pointer to event for which information should be filled in
+    */
+    void setClassInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
+
+    /*!
+        Update VSCP type info for row
+        @param item Pointer to QTableWidgetItem for row
+        @param pev Pointer to event for which information should be filled in
+    */
+    void setTypeInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
+
+    /*!
+        Update node id info for row
+        @param item Pointer to QTableWidgetItem for row
+        @param pev Pointer to event for which information should be filled in
+    */
+    void setNodeIdInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
+
+    /*!
+        Update GUID info for row
+        @param item Pointer to QTableWidgetItem for row
+        @param pev Pointer to event for which information should be filled in
+    */
+    void setGuidInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
+
     
  public slots:
 
@@ -151,11 +192,15 @@ class CFrmSession : public QDialog
 
     /*!
         Update the current row info.
-        This method is the same as 'receiveRow' except that 
-        it collect the event itself from the selected row information
     */
     void
     updateCurrentRow(void);
+
+    /*!
+        Update row info for all rows.
+    */
+    void
+    updateAllRows(void);
 
     /*!
         Connect to remote host and update UI to 
