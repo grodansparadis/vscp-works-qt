@@ -1016,6 +1016,7 @@ void CFrmSession::showRxContextMenu(const QPoint& pos)
     menu->addAction(QString(tr("Load events from file...")), this, SLOT(loadRxFromFile()));
     menu->addSeparator();
     menu->addAction(QString(tr("Set/edit GUID (sensor)")), this, SLOT(setGuid()));
+    menu->addSeparator();
     menu->addAction(QString(tr("Add comment...")), this, SLOT(addEventNote())); 
     menu->addAction(QString(tr("Remove comment")), this, SLOT(removeEventNote()));
     menu->addSeparator(); 
@@ -1318,11 +1319,10 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         "0);\">{{VscpGuid}}</span></small><br><span style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></span><br><br>"
         "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
         "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
-        "<small>{{{vscpRenderData}}}</small>"
         "{{{VscpComment}}}"
         ;
 
-    // Set event render template
+    // Set event render template 
     mustache templ{ strVscpTemplate };
 
     // --------------------------------------------------------------------
@@ -1573,32 +1573,34 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
     strVscpData += "</small><br>";
 
-    // // If event is an measurement        
-    // if (vscp_isMeasurement(pev)) {
-    //     strVscpMeasurement = "<b>Measurement:</b><p>";
-    //     QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
-    //     if (qsl.size()) {
-    //         strVscpMeasurement = strRenderedData;
-    //     }
-    //     else {
-    //         strVscpMeasurement += "Error: No definitions found in db";
-    //     }
+    // If event is an measurement        
+    if (vscp_isMeasurement(pev)) {
+        strVscpMeasurement = "<b>Measurement:</b><p>";
+        QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+        if (qsl.size()) {
+            strVscpMeasurement = strRenderedData;
+        }
+        else {
+            strVscpMeasurement += "Error: No definitions found in db";
+        }
 
-    //     strVscpMeasurement += "</p>";
+        strVscpMeasurement += "</p>";
 
-    //     pworks->m_mutexSensorIndexMap.lock();
-    //     std::string strSensorIndexSymbolic = 
-    //         pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
-    //                                                         vscp_getMeasurementSensorIndex(pev)].toStdString();
-    //     pworks->m_mutexSensorIndexMap.unlock();
+    } // is measurement
 
-    //     if (strSensorIndexSymbolic.length()) {
-    //         strVscpGuidSymbolic += " - ";
-    //         strVscpGuidSymbolic += strSensorIndexSymbolic;    
-    //     }
+    // Add sensorindex symbolic id (if any)
+    pworks->m_mutexSensorIndexMap.lock();
+    std::string strSensorIndexSymbolic = 
+        pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
+                                                        vscp_getMeasurementSensorIndex(pev)].toStdString();
+    pworks->m_mutexSensorIndexMap.unlock();
 
-    // } // is measurement
+    if (strSensorIndexSymbolic.length()) {
+        strVscpGuidSymbolic += " - ";
+        strVscpGuidSymbolic += strSensorIndexSymbolic;    
+    }
 
+    // Add comment (if any)
     std::string strVscpComment = m_mapEventComment[selectedRow].toStdString();
     if (strVscpComment.length()) {
         strVscpComment = "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" + strVscpComment;
@@ -1622,7 +1624,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("VscpGuid", strVscpGuid);
     _data.set("VscpGuidSymbolic", strVscpGuidSymbolic);
     _data.set("VscpData", strVscpData);
-    _data.set("vscpRenderData", strRenderedData);
+    //_data.set("vscpRenderData", strRenderedData);
     _data.set("VscpClassToken", itemClass->text().toStdString());
     _data.set("VscpTypeToken", itemType->text().toStdString());
     _data.set("VscpClassHelpUrl",
@@ -1630,7 +1632,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("VscpTypeHelpUrl",
                 pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type)
                 .toStdString());
-    //_data.set("VscpMeasurement", strVscpMeasurement);                    
+    _data.set("VscpMeasurement", strVscpMeasurement);                    
     _data.set("VscpComment", strVscpComment);                    
 
     std::string output = templ.render(_data);
@@ -1850,7 +1852,7 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
     pworks->m_mutexSensorIndexMap.lock();
     QString strSensorIndexSymbolic = 
     pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strGuid.c_str()) << 8) + 
-                                                    vscp_getMeasurementSensorIndex(pev)];
+                                                vscp_getMeasurementSensorIndex(pev)];
     pworks->m_mutexSensorIndexMap.unlock();
 
     QString strGuidDisplay;
@@ -1864,7 +1866,7 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
                 strGuidDisplay = strGuid.c_str();
             }
             if (strSensorIndexSymbolic.length()) {
-                guidSymbolicName += " - ";
+                if (strSensorIndexSymbolic.length()) guidSymbolicName += " - ";
                 guidSymbolicName += strSensorIndexSymbolic;    
             }
             break;
@@ -1875,7 +1877,7 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
                 guidSymbolicName += strSensorIndexSymbolic;    
             }
             strGuidDisplay = guidSymbolicName;
-            strGuidDisplay += " - ";
+            if (strGuidDisplay.length()) strGuidDisplay += " - ";
             strGuidDisplay += strGuid.c_str();
             break;
 
@@ -1885,7 +1887,7 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
                 guidSymbolicName += strSensorIndexSymbolic;    
             }
             strGuidDisplay = strGuid.c_str();
-            strGuidDisplay += " - ";
+            if (strGuidDisplay.length()) strGuidDisplay += " - ";
             strGuidDisplay += guidSymbolicName;
             break;
 
@@ -1900,19 +1902,19 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
     // Tooltip
     if (strSensorIndexSymbolic.length()) {
         item->setToolTip(vscp_str_format("%s - %s\n%s", 
-                                                guidSymbolicName.toStdString().c_str(), 
-                                                strSensorIndexSymbolic.toStdString().c_str(),
-                                                strGuid.c_str()).c_str());
+                                            guidSymbolicName.toStdString().c_str(), 
+                                            strSensorIndexSymbolic.toStdString().c_str(),
+                                            strGuid.c_str()).c_str());
     }
     else {
         if (guidSymbolicName.length()) {
             item->setToolTip(vscp_str_format("%s\n%s", 
-                                                    guidSymbolicName.toStdString().c_str(), 
-                                                    strGuid.c_str()).c_str());        
+                                                guidSymbolicName.toStdString().c_str(), 
+                                                strGuid.c_str()).c_str());        
         }
         else {
             item->setToolTip(vscp_str_format("%s", 
-                                                    strGuid.c_str()).c_str());  
+                                                strGuid.c_str()).c_str());  
         }
     }
 
@@ -1958,7 +1960,6 @@ CFrmSession::receiveRow(vscpEvent* pev)
     QTableWidgetItem* itemClass = new QTableWidgetItem();
     setClassInfoForRow(itemClass, pev);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
-
 
     // * * * Type * * *
     QTableWidgetItem* itemType = new QTableWidgetItem();
