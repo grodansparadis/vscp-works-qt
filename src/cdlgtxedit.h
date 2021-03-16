@@ -47,6 +47,29 @@ public:
     ~CDlgTxEdit();
 
 public:
+
+    /*!
+        Set initial focus to name field
+    */
+    void setInitialFocus(void);
+
+    /*!
+        Fill the VSCP class combobox with 
+        VSCP classes.
+        @param vscpClass VSCP class to select. Defaults
+                to zero for the first item.
+    */
+    void fillVscpClass(uint16_t vscpclass = 0);
+
+    /*!
+        Fill the VSCP type combobox with 
+        VSCP types.
+        @param vscpClass Class o fill types for
+        @param vscpType VSCP type to select. defaults to
+                zero for the firsts item.
+    */
+    void fillVscpType(uint16_t vscpclass, uint16_t vscpType = 0);
+
     /*!
         Setters/getters for TX activate
     */
@@ -97,7 +120,11 @@ public:
     void setPeriod(uint32_t period);
 
 private slots:
-
+    /*!
+        User changed VSCP class in combo
+        @param index New selected index
+    */
+    void currentVscpClassIndexChanged(int index);
 
 private:
 

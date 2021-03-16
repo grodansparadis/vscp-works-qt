@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
+    <width>642</width>
     <height>470</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>430</y>
-     <width>511</width>
+     <width>621</width>
      <height>32</height>
     </rect>
    </property>
@@ -37,7 +37,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>511</width>
+     <width>621</width>
      <height>391</height>
     </rect>
    </property>
@@ -169,6 +169,49 @@
       <property name="toolTip">
        <string>VSCP Event priority</string>
       </property>
+      <property name="currentIndex">
+       <number>4</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>0 - Highest</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>1 - High</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>2 - Normal high</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>3 - Normal</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>4 - Normal</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5 - Normal low</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>6 - Low</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>7 - Lowest</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="6" column="0">
@@ -185,6 +228,9 @@
      <widget class="QLineEdit" name="editGuid">
       <property name="toolTip">
        <string>VSCP TX Event GUID</string>
+      </property>
+      <property name="text">
+       <string>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</string>
       </property>
      </widget>
     </item>
@@ -247,7 +293,7 @@
     <rect>
      <x>10</x>
      <y>410</y>
-     <width>511</width>
+     <width>621</width>
      <height>16</height>
     </rect>
    </property>

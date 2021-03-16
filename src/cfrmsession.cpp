@@ -40,14 +40,31 @@
 #include "cfrmsession.h"
 
 #include "cdlgmainsettings.h"
+#include "cdlgtxedit.h"
 
+#include <QJSEngine>
 #include <QSqlTableModel>
 #include <QTableView>
+#include <QTableWidgetItem>
 #include <QtSql>
 #include <QtWidgets>
-#include <QJSEngine>
 
 using namespace kainjow::mustache;
+
+// ----------------------------------------------------------------------------
+
+CTxWidgetItem::CTxWidgetItem(const QString& text)
+  : QTableWidgetItem(text, QTableWidgetItem::UserType)
+{
+    int i = 88;
+}
+
+CTxWidgetItem::~CTxWidgetItem()
+{
+    int i = 99;
+}
+
+// ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
 // vscp_client_callback
@@ -156,16 +173,15 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     // Handle clicks
-    connect(
-      m_rxTable,
-      SIGNAL(cellClicked(int, int)),
-      SLOT(rxCellClicked(int, int)));
+    connect(m_rxTable,
+            SIGNAL(cellClicked(int, int)),
+            SLOT(rxCellClicked(int, int)));
 
     // Open pop up menu on right click on VSCP type listbox
     connect(m_rxTable,
             &QTableWidget::customContextMenuRequested,
             this,
-            &CFrmSession::showRxContextMenu);  
+            &CFrmSession::showRxContextMenu);
 
     // Handle selections
     connect(
@@ -251,12 +267,19 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
 
 CFrmSession::~CFrmSession()
 {
+    // Make sure we are disconnected
+    doDisconnectFromRemoteHost();
+
     // Remove receive events
     while (m_rxEvents.size()) {
         vscpEvent* pev = m_rxEvents.front();
         m_rxEvents.pop_front();
         vscp_deleteEvent(pev);
     }
+
+    // This should neo be needed
+    // m_txTable->clear();
+    // m_txTable->setRowCount(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -292,7 +315,7 @@ CFrmSession::createMenu()
     m_exitAct = m_fileMenu->addAction(windowCloseIcon,
                                       tr("Close session window"),
                                       this,
-                                      &QWidget::close);
+                                      &CFrmSession::close);
     m_exitAct->setStatusTip(tr("Close session window"));
 
     m_menuBar->addMenu(m_fileMenu);
@@ -365,7 +388,7 @@ CFrmSession::createMenu()
                            this,
                            &CFrmSession::menu_unselect_all_rxlist);
 
-    m_toolBar->addSeparator();                           
+    m_toolBar->addSeparator();
 
     // ------------------------------------------------------------------------
 
@@ -411,7 +434,10 @@ CFrmSession::createMenu()
     m_setFilterAct = m_settingsMenu->addAction(tr("Set/define filter..."));
     m_settingsAct  = m_settingsMenu->addAction(tr("Settings..."));
     m_menuBar->addMenu(m_settingsMenu);
-    connect(m_settingsAct, &QAction::triggered, this, &CFrmSession::menu_open_main_settings);
+    connect(m_settingsAct,
+            &QAction::triggered,
+            this,
+            &CFrmSession::menu_open_main_settings);
 
     // Tools menu
     m_toolsMenu = new QMenu(tr("&Tools"), this);
@@ -439,6 +465,16 @@ CFrmSession::createMenu()
     //     &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
     // #endif // !QT_NO_CLIPBOARD
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// close
+//
+
+// void CFrmSession::close()
+// {
+//     //accept();
+//     close();
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 // createHorizontalGroupBox
@@ -477,7 +513,8 @@ CFrmSession::createRxGroupBox()
     QStringList headers(
       QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
     m_rxTable = new QTableWidget;
-    m_rxTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
+    m_rxTable->setContextMenuPolicy(
+      Qt::CustomContextMenu); // Enable context menu
     m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_rxTable->setAlternatingRowColors(true);
 
@@ -548,38 +585,38 @@ CFrmSession::createRxGroupBox()
     m_infoArea->setOpenExternalLinks(true);
     QColor grey(Qt::red);
     m_infoArea->setTextBackgroundColor(grey);
-    m_infoArea->insertHtml(tr(
-      "<h3>VSCP Event</h3>"
-      "<small><p style=\"color:#993399\">Received event</p></small>"
-      "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
-      "<b>Time: </b><span style=\"color:rgb(0, 0, "
-      "153);\">2021-09-12T12:10:29</span><br>"
-      "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
-      "153);\">0x1213140f</span><br>"
-      "<br>"
-      "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span "
-      "style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
-      "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span "
-      "style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
-      "<br>"
-      "<b>GUID: </b><small><span style=\"color:rgb(0, 102, "
-      "0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
+    // m_infoArea->insertHtml(tr(
+    //   "<h3>VSCP Event</h3>"
+    //   "<small><p style=\"color:#993399\">Received event</p></small>"
+    //   "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
+    //   "<b>Time: </b><span style=\"color:rgb(0, 0, "
+    //   "153);\">2021-09-12T12:10:29</span><br>"
+    //   "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
+    //   "153);\">0x1213140f</span><br>"
+    //   "<br>"
+    //   "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span "
+    //   "style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
+    //   "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span "
+    //   "style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
+    //   "<br>"
+    //   "<b>GUID: </b><small><span style=\"color:rgb(0, 102, "
+    //   "0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
 
-      "<br><br>This <b>widget takes</b> up all the remaining space "
-      "in the top-level layout ddddd."
-      "in the top-level layout ddddd."
-      "<h1>This is a test</h1> <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "This is a test <br>"
-      "Carpe Diem <br>"));
+    //   "<br><br>This <b>widget takes</b> up all the remaining space "
+    //   "in the top-level layout ddddd."
+    //   "in the top-level layout ddddd."
+    //   "<h1>This is a test</h1> <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "This is a test <br>"
+    //   "Carpe Diem <br>"));
 
     layout->addWidget(m_infoArea,
                       0,
@@ -605,17 +642,18 @@ CFrmSession::createTxGridGroup()
     QGridLayout* layout = new QGridLayout;
     layout->setContentsMargins(1, 1, 1, 1);
 
-    QStringList headers(
-      QString(tr("x,Name,Period,Count,Trigger,Event")).split(','));
+    QStringList headers(QString(tr("x,Name,Period,Count,Event")).split(','));
     m_txTable = new QTableWidget;
+    m_txTable->setContextMenuPolicy(
+      Qt::CustomContextMenu); // Enable context menu
+    m_txTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_txTable->setAlternatingRowColors(true);
-    m_txTable->setColumnCount(6);
-    m_txTable->setColumnWidth(0, 20);  // x
-    m_txTable->setColumnWidth(1, 300); // Name
-    m_txTable->setColumnWidth(2, 80);  // Period
-    m_txTable->setColumnWidth(3, 80);  // Count
-    m_txTable->setColumnWidth(4, 80);  // Trigger
-    m_txTable->setColumnWidth(5, 50);  // Event
+    m_txTable->setColumnCount(5);
+    m_txTable->setColumnWidth(txrow_enable, 80); // x
+    m_txTable->setColumnWidth(txrow_name, 200);  // Name
+    m_txTable->setColumnWidth(txrow_period, 80); // Period
+    m_txTable->setColumnWidth(txrow_count, 80);  // Count
+    m_txTable->setColumnWidth(txrow_event, 50);  // Event
     m_txTable->horizontalHeader()->setStretchLastSection(true);
     m_txTable->setHorizontalHeaderLabels(headers);
     layout->addWidget(m_txTable,
@@ -635,10 +673,7 @@ CFrmSession::createTxGridGroup()
     QAction* transmitAct = new QAction(newIcon, tr("&Transmit"), this);
     transmitAct->setShortcuts(QKeySequence::New);
     transmitAct->setStatusTip(tr("Transmit selected event(s)"));
-    connect(transmitAct,
-            &QAction::triggered,
-            this,
-            &CFrmSession::transmitEvent);
+    connect(transmitAct, &QAction::triggered, this, &CFrmSession::sendTxEvent);
     m_txToolBar->addAction(transmitAct);
 
     // Add tx row
@@ -648,7 +683,7 @@ CFrmSession::createTxGridGroup()
     QAction* addAct = new QAction(addIcon, tr("&Add"), this);
     addAct->setShortcuts(QKeySequence::New);
     addAct->setStatusTip(tr("Add transmit event"));
-    connect(addAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(addAct, &QAction::triggered, this, &CFrmSession::addTxEvent);
     m_txToolBar->addAction(addAct);
 
     // Edit tx row
@@ -656,24 +691,24 @@ CFrmSession::createTxGridGroup()
     QAction* editAct     = new QAction(editIcon, tr("&Edit"), this);
     editAct->setShortcuts(QKeySequence::New);
     editAct->setStatusTip(tr("Edit selected event"));
-    connect(editAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(editAct, &QAction::triggered, this, &CFrmSession::editTxEvent);
     m_txToolBar->addAction(editAct);
-
-    // Delete tx row
-    const QIcon deleteIcon = QIcon::fromTheme("edit-delete");
-    QAction* deleteAct     = new QAction(deleteIcon, tr("&Delete"), this);
-    deleteAct->setShortcuts(QKeySequence::New);
-    deleteAct->setStatusTip(tr("Delete selected event"));
-    connect(deleteAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
-    m_txToolBar->addAction(deleteAct);
 
     // Clone tx row
     const QIcon cloneIcon = QIcon::fromTheme("edit-copy");
     QAction* cloneAct     = new QAction(cloneIcon, tr("&Clone"), this);
     cloneAct->setShortcuts(QKeySequence::New);
     cloneAct->setStatusTip(tr("Clone selected event"));
-    connect(cloneAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(cloneAct, &QAction::triggered, this, &CFrmSession::cloneTxEvent);
     m_txToolBar->addAction(cloneAct);
+
+    // Delete tx row
+    const QIcon deleteIcon = QIcon::fromTheme("edit-delete");
+    QAction* deleteAct     = new QAction(deleteIcon, tr("&Delete"), this);
+    deleteAct->setShortcuts(QKeySequence::New);
+    deleteAct->setStatusTip(tr("Delete selected event"));
+    connect(deleteAct, &QAction::triggered, this, &CFrmSession::deleteTxEvent);
+    m_txToolBar->addAction(deleteAct);
 
     m_txToolBar->addSeparator();
 
@@ -682,7 +717,7 @@ CFrmSession::createTxGridGroup()
     QAction* saveAct     = new QAction(saveIcon, tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::New);
     saveAct->setStatusTip(tr("Save selected transmit event(s)"));
-    connect(saveAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(saveAct, &QAction::triggered, this, &CFrmSession::saveTxEvents);
     m_txToolBar->addAction(saveAct);
 
     // Load tx rows
@@ -690,7 +725,7 @@ CFrmSession::createTxGridGroup()
     QAction* loadAct     = new QAction(loadIcon, tr("&Load"), this);
     loadAct->setShortcuts(QKeySequence::New);
     loadAct->setStatusTip(tr("Load transmit event(s)"));
-    connect(loadAct, &QAction::triggered, this, &CFrmSession::transmitEvent);
+    connect(loadAct, &QAction::triggered, this, &CFrmSession::loadTxEvents);
     m_txToolBar->addAction(loadAct);
 
     layout->addWidget(m_txToolBar, 0, 4, 1, 1);
@@ -754,7 +789,7 @@ CFrmSession::menu_clear_rxlist(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    m_rxTable->setCurrentCell(-1,-1);   // unselect all
+    m_rxTable->setCurrentCell(-1, -1); // unselect all
 
     m_mutexRxList.lock();
 
@@ -788,7 +823,7 @@ CFrmSession::menu_clear_rxlist(void)
 void
 CFrmSession::menu_unselect_all_rxlist(void)
 {
-    m_rxTable->clearSelection();    
+    m_rxTable->clearSelection();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -798,21 +833,204 @@ CFrmSession::menu_unselect_all_rxlist(void)
 void
 CFrmSession::menu_open_main_settings(void)
 {
-    CDlgMainSettings *dlg = new CDlgMainSettings(this);
+    CDlgMainSettings* dlg = new CDlgMainSettings(this);
     dlg->exec();
     // Update row in case info changed
     updateAllRows();
-    updateCurrentRow(); 
+    updateCurrentRow();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// transmitEvent
+// sendTxEvent
 //
 
 void
-CFrmSession::transmitEvent()
+CFrmSession::sendTxEvent()
 {
     QMessageBox::about(this, tr("Test"), tr("Carpe Diem"));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addTxEvent
+//
+
+void
+CFrmSession::addTxEvent()
+{
+    QTableWidgetItem* item;
+    CDlgTxEdit dlg;
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        int row = m_txTable->rowCount();
+        m_txTable->insertRow(row);
+
+        // Enable
+        item = new QTableWidgetItem;
+        if (nullptr == item)
+            return;
+        // item->setFlags(item->flags() & Qt::ItemIsUserCheckable);
+        item->setText("Enable");
+        item->setCheckState(Qt::Checked); // Qt::Unchecked
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_enable, item);
+
+        // Name
+        item = new QTableWidgetItem;
+        if (nullptr == item)
+            return;
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setText(dlg.getName());
+        // Bluish
+        item->setForeground(QBrush(QColor(0, 5, 180)));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
+
+        // Period
+        item = new QTableWidgetItem;
+        if (nullptr == item)
+            return;
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setTextAlignment(Qt::AlignHCenter);
+        item->setText(QString::number(dlg.getPeriod()));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_count, item);
+
+        // Count
+        item = new QTableWidgetItem;
+        if (nullptr == item)
+            return;
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setTextAlignment(Qt::AlignHCenter);
+        item->setText(QString::number(dlg.getCount()));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_period, item);
+
+        // Event
+        CTxWidgetItem* itemEvent = new CTxWidgetItem("Test");
+        if (nullptr == itemEvent)
+            return;
+
+        itemEvent->m_tx.setEnable(dlg.getActive());
+        itemEvent->m_tx.setName(dlg.getName());
+        itemEvent->m_tx.setCount(dlg.getCount());
+        itemEvent->m_tx.setPeriod(dlg.getPeriod());
+
+        // Allocate new Event
+        if (!itemEvent->m_tx.newEvent()) {
+            delete itemEvent;
+            return;
+        }
+
+        vscpEvent* pev = itemEvent->m_tx.getEvent();
+
+        pev->vscp_class = dlg.getVscpClass();
+        pev->vscp_type  = dlg.getVscpType();
+
+        QString strGuid = dlg.getGuid();
+        cguid guid(strGuid.toStdString());
+        memcpy(pev->GUID, guid.getGUID(), 16);
+
+        pev->head = dlg.getPriority() << 5;
+
+        vscp_setEventDataFromString(pev, dlg.getData().toStdString());
+        qDebug() << QString::number(pev->sizeData);
+        for (int i = 0; i < pev->sizeData; i++) {
+            qDebug() << QString::number(pev->pdata[i]);
+        }
+
+        itemEvent->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        itemEvent->setTextAlignment(Qt::AlignLeft);
+        QString strEvent = getClassInfo(itemEvent->m_tx.getEvent());
+        strEvent += "→";
+        strEvent += getTypeInfo(itemEvent->m_tx.getEvent());
+        strEvent += ": ";
+        std::string str;
+        vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
+        strEvent += str.c_str();
+        itemEvent->setText(strEvent);
+        itemEvent->setForeground(QBrush(QColor(0, 99, 0)));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemEvent);
+
+        m_txTable->setUpdatesEnabled(false);
+        for (int i = 0; i < m_txTable->rowCount(); i++) {
+            m_txTable->setRowHeight(i, 10);
+        }
+        m_txTable->setUpdatesEnabled(true);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editTxEvent
+//
+
+void
+CFrmSession::editTxEvent()
+{
+    std::string str;
+    CDlgTxEdit dlg;
+
+    QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator it;
+    for (it = selection.begin(); it != selection.end(); it++) {
+
+        CTxWidgetItem* itemEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);
+        vscpEvent* pev = itemEvent->m_tx.getEvent();
+
+        dlg.setActive(itemEvent->m_tx.getEnable());
+        dlg.setName(itemEvent->m_tx.getName());
+        dlg.setCount(itemEvent->m_tx.getCount());
+        dlg.setPeriod(itemEvent->m_tx.getPeriod());
+
+        dlg.setVscpClassType(pev->vscp_class, pev->vscp_type);
+        cguid guid(pev->GUID);
+        dlg.setGuid(guid.getAsString().c_str());
+
+        vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
+        dlg.setData(str.c_str());
+
+        dlg.setPriority((pev->head >> 5) & 7);
+
+        if (QDialog::Accepted == dlg.exec()) {
+
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// cloneTxEvent
+//
+
+void
+CFrmSession::cloneTxEvent()
+{
+    QMessageBox::about(this, tr("Clone TX Event"), tr("Carpe Diem  ddd"));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// deleteTxEvent
+//
+
+void
+CFrmSession::deleteTxEvent()
+{
+    QMessageBox::about(this, tr("Delete TX Event"), tr("Carpe Diem  ddd"));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadTxEvents
+//
+
+void
+CFrmSession::loadTxEvents()
+{
+    QMessageBox::about(this, tr("Load TX Events"), tr("Carpe Diem  ddd"));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveTxEvents
+//
+
+void
+CFrmSession::saveTxEvents()
+{
+    QMessageBox::about(this, tr("Save TX Events"), tr("Carpe Diem  ddd"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1001,31 +1219,58 @@ CFrmSession::doDisconnectFromRemoteHost(void)
 // showRxContextMenu
 //
 
-void CFrmSession::showRxContextMenu(const QPoint& pos)
+void
+CFrmSession::showRxContextMenu(const QPoint& pos)
 {
-    QMenu *menu = new QMenu(this);
+    QMenu* menu = new QMenu(this);
 
-    menu->addAction(QString(tr("Clear selections")), this, SLOT(clrAllRxSelections()));
+    menu->addAction(QString(tr("Clear selections")),
+                    this,
+                    SLOT(clrAllRxSelections()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Clear receive list")), this, SLOT(menu_clear_rxlist()));    
+    menu->addAction(QString(tr("Clear receive list")),
+                    this,
+                    SLOT(menu_clear_rxlist()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Save events to file...")), this, SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked event rows to file...")), this, SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked class event rows to file...")), this, SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked type event rows to file...")), this, SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Load events from file...")), this, SLOT(loadRxFromFile()));
+    menu->addAction(QString(tr("Save events to file...")),
+                    this,
+                    SLOT(saveRxToFile()));
+    menu->addAction(QString(tr("Save marked event rows to file...")),
+                    this,
+                    SLOT(saveRxToFile()));
+    menu->addAction(QString(tr("Save marked class event rows to file...")),
+                    this,
+                    SLOT(saveRxToFile()));
+    menu->addAction(QString(tr("Save marked type event rows to file...")),
+                    this,
+                    SLOT(saveRxToFile()));
+    menu->addAction(QString(tr("Load events from file...")),
+                    this,
+                    SLOT(loadRxFromFile()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Set/edit GUID (sensor)")), this, SLOT(setGuid()));
+    menu->addAction(QString(tr("Set/edit GUID (sensor)")),
+                    this,
+                    SLOT(setGuid()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Add comment...")), this, SLOT(addEventNote())); 
-    menu->addAction(QString(tr("Remove comment")), this, SLOT(removeEventNote()));
-    menu->addSeparator(); 
+    menu->addAction(QString(tr("Add comment...")), this, SLOT(addEventNote()));
+    menu->addAction(QString(tr("Remove comment")),
+                    this,
+                    SLOT(removeEventNote()));
+    menu->addSeparator();
     menu->addAction(QString(tr("Mark row")), this, SLOT(setVscpRowMark()));
     menu->addAction(QString(tr("Unmark row")), this, SLOT(unsetVscpRowMark()));
-    menu->addAction(QString(tr("Mark VSCP class")), this, SLOT(setVscpClassMark()));
-    menu->addAction(QString(tr("Unmark VSCP class")), this, SLOT(unsetVscpClassMark()));
-    menu->addAction(QString(tr("Mark VSCP type")), this, SLOT(setVscpTypeMark()));
-    menu->addAction(QString(tr("Unmark VSCP type")), this, SLOT(unsetVscpTypeMark()));
+    menu->addAction(QString(tr("Mark VSCP class")),
+                    this,
+                    SLOT(setVscpClassMark()));
+    menu->addAction(QString(tr("Unmark VSCP class")),
+                    this,
+                    SLOT(unsetVscpClassMark()));
+    menu->addAction(QString(tr("Mark VSCP type")),
+                    this,
+                    SLOT(setVscpTypeMark()));
+    menu->addAction(QString(tr("Unmark VSCP type")),
+                    this,
+                    SLOT(unsetVscpTypeMark()));
 
     menu->popup(m_rxTable->viewport()->mapToGlobal(pos));
 }
@@ -1037,9 +1282,8 @@ void CFrmSession::showRxContextMenu(const QPoint& pos)
 void
 CFrmSession::clrAllRxSelections(void)
 {
-    m_rxTable->setCurrentCell(-1,-1);
+    m_rxTable->setCurrentCell(-1, -1);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // setGuid
@@ -1050,15 +1294,15 @@ CFrmSession::setGuid(void)
 {
     std::string guid;
     std::string name;
-    CDlgKnownGuid *dlg = new CDlgKnownGuid();
+    CDlgKnownGuid* dlg = new CDlgKnownGuid();
 
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
-        //m_rxTable->item(it->row(), 0)->setIcon(icon);
-        //m_mapEventComment[it->row()] = text;
+        // m_rxTable->item(it->row(), 0)->setIcon(icon);
+        // m_mapEventComment[it->row()] = text;
         pworks->m_mutexGuidMap.lock();
         vscp_writeGuidArrayToString(guid, m_rxEvents[it->row()]->GUID);
         pworks->m_mutexGuidMap.unlock();
@@ -1066,14 +1310,13 @@ CFrmSession::setGuid(void)
             dlg->setAddGuid(guid.c_str());
             dlg->btnAdd();
         }
-        
+
         dlg->exec();
     }
-    
-    // Update row in case info changed
-    updateAllRows(); 
-}
 
+    // Update row in case info changed
+    updateAllRows();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // addEventNote
@@ -1083,16 +1326,19 @@ void
 CFrmSession::addEventNote(void)
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
-                                         tr("Comment:"), QLineEdit::Normal,
-                                         "", &ok);
+    QString text = QInputDialog::getText(this,
+                                         tr("QInputDialog::getText()"),
+                                         tr("Comment:"),
+                                         QLineEdit::Normal,
+                                         "",
+                                         &ok);
     if (ok && !text.isEmpty()) {
         QIcon icon(":/comment.png");
         QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
         QList<QModelIndex>::iterator it;
         for (it = selection.begin(); it != selection.end(); it++) {
             m_rxTable->item(it->row(), 0)->setIcon(icon);
-            m_mapEventComment[it->row()] = text;            
+            m_mapEventComment[it->row()] = text;
         }
 
         // Cludge to display comment directly
@@ -1102,7 +1348,6 @@ CFrmSession::addEventNote(void)
         }
     }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // removeEventNote
@@ -1118,11 +1363,9 @@ CFrmSession::removeEventNote(void)
         m_rxTable->item(it->row(), 0)->setIcon(icon);
         std::map<int, QString>::iterator itmap;
         itmap = m_mapEventComment.find(it->row());
-        m_mapEventComment.erase(itmap); 
+        m_mapEventComment.erase(itmap);
     }
-
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // setVscpRowMark
@@ -1131,10 +1374,10 @@ CFrmSession::removeEventNote(void)
 void
 CFrmSession::setVscpRowMark(void)
 {
-    QList<QTableWidgetItem *> sellist = m_rxTable->selectedItems();
-    QList<QTableWidgetItem *>::iterator it;
+    QList<QTableWidgetItem*> sellist = m_rxTable->selectedItems();
+    QList<QTableWidgetItem*>::iterator it;
     for (it = sellist.begin(); it != sellist.end(); it++) {
-        (*it)->setBackground(Qt::cyan);        
+        (*it)->setBackground(Qt::cyan);
     }
 }
 
@@ -1145,8 +1388,8 @@ CFrmSession::setVscpRowMark(void)
 void
 CFrmSession::unsetVscpRowMark(void)
 {
-    QList<QTableWidgetItem *> sellist = m_rxTable->selectedItems();
-    QList<QTableWidgetItem *>::iterator it;
+    QList<QTableWidgetItem*> sellist = m_rxTable->selectedItems();
+    QList<QTableWidgetItem*>::iterator it;
     for (it = sellist.begin(); it != sellist.end(); it++) {
         (*it)->setBackground(Qt::white);
     }
@@ -1179,7 +1422,7 @@ CFrmSession::unsetVscpClassMark(void)
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
         m_rxTable->item(it->row(), 1)->setIcon(icon);
-    }  
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1194,7 +1437,7 @@ CFrmSession::setVscpTypeMark(void)
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
         m_rxTable->item(it->row(), 2)->setIcon(icon);
-    }    
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1229,7 +1472,6 @@ CFrmSession::saveRxToFile(void)
 void
 CFrmSession::loadRxFromFile(void)
 {
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1239,8 +1481,8 @@ CFrmSession::loadRxFromFile(void)
 void
 CFrmSession::rxCellClicked(int row, int column)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance(); 
-    QTableWidgetItem* item = m_rxTable->item(row, column);   
+    vscpworks* pworks      = (vscpworks*)QCoreApplication::instance();
+    QTableWidgetItem* item = m_rxTable->item(row, column);
     if (item->isSelected()) {
         qDebug() << "Selected";
     }
@@ -1254,7 +1496,8 @@ CFrmSession::rxCellClicked(int row, int column)
 //
 
 void
-CFrmSession::rxSelectionChange(const QItemSelection& selected, const QItemSelection& eselected)
+CFrmSession::rxSelectionChange(const QItemSelection& selected,
+                               const QItemSelection& eselected)
 {
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -1273,12 +1516,12 @@ CFrmSession::rxSelectionChange(const QItemSelection& selected, const QItemSelect
     }
 }
 
-#define MAX_RENDER_FUNCTIONS    30
+#define MAX_RENDER_FUNCTIONS 30
 
 struct renderFunc {
-	QString name;
-	QString func;
-	QString value;
+    QString name;
+    QString func;
+    QString value;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1291,61 +1534,66 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     vscpEvent* pev = m_rxEvents[selectedRow];
-    if ( nullptr == pev) return;
+    if (nullptr == pev)
+        return;
 
     std::string strVscpTemplate =
-        "<h3>VSCP Event</h3>"
-        "<small><p style=\"color:#993399\">Received event</p></small>"
-        "<b><a href=\"https://grodansparadis.github.io/vscp-doc-spec/#/./vscphead\">Head</>: </b><span style=\"color:rgb(0, 0, "
-        "153);\">{{VscpHead}}</span><br><span style=\"color:#666699\">{{VscpHeadBits}}</span><br>"
-        "<b>OBID: </b><span style=\"color:rgb(0, 0, "
-        "153);\">{{VscpObid}}</span><br>"
-        "<b>CRC: </b><span style=\"color:rgb(0, 0, "
-        "153);\">{{VscpCrc}}</span><br><br>"
-        "<b>UTC Time: </b><span style=\"color:rgb(0, 0, "
-        "153);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
-        "VscpMinute}}:{{VscpSecond}}</span><br>"
-        "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
-        "153);\">{{VscpTimestamp}}</span><br>"
-        "<br>"
-        "<b>Class: </b><a "
-        "href=\"{{VscpClassHelpUrl}}\">{{VscpClassToken}}</a><span "
-        "style=\"color:rgb(0, 102, 0);\"> {{VscpClass}}</span><br>"
-        "<b>Type: </b><a href=\"{{VscpTypeHelpUrl}}\">{{VscpTypeToken}}</a> "
-        "<span "
-        "style=\"color:rgb(0, 102, 0);\">{{VscpType}}</span><br>"
-        "<br>"
-        "<b>GUID: </b><br><small><span style=\"color:rgb(0, 102, "
-        "0);\">{{VscpGuid}}</span></small><br><span style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></span><br><br>"
-        "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
-        "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
-        "{{{VscpComment}}}"
-        ;
+      "<h3>VSCP Event</h3>"
+      "<small><p style=\"color:#993399\">Received event</p></small>"
+      "<b><a "
+      "href=\"https://grodansparadis.github.io/vscp-doc-spec/#/./"
+      "vscphead\">Head</>: </b><span style=\"color:rgb(0, 0, "
+      "153);\">{{VscpHead}}</span><br><span "
+      "style=\"color:#666699\">{{VscpHeadBits}}</span><br>"
+      "<b>OBID: </b><span style=\"color:rgb(0, 0, "
+      "153);\">{{VscpObid}}</span><br>"
+      "<b>CRC: </b><span style=\"color:rgb(0, 0, "
+      "153);\">{{VscpCrc}}</span><br><br>"
+      "<b>UTC Time: </b><span style=\"color:rgb(0, 0, "
+      "153);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
+      "VscpMinute}}:{{VscpSecond}}</span><br>"
+      "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
+      "153);\">{{VscpTimestamp}}</span><br>"
+      "<br>"
+      "<b>Class: </b><a "
+      "href=\"{{VscpClassHelpUrl}}\">{{VscpClassToken}}</a><span "
+      "style=\"color:rgb(0, 102, 0);\"> {{VscpClass}}</span><br>"
+      "<b>Type: </b><a href=\"{{VscpTypeHelpUrl}}\">{{VscpTypeToken}}</a> "
+      "<span "
+      "style=\"color:rgb(0, 102, 0);\">{{VscpType}}</span><br>"
+      "<br>"
+      "<b>GUID: </b><br><small><span style=\"color:rgb(0, 102, "
+      "0);\">{{VscpGuid}}</span></small><br><span "
+      "style=\"color:#666699\"><small>{{VscpGuidSymbolic}}</small></"
+      "span><br><br>"
+      "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
+      "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
+      "{{{VscpComment}}}";
 
-    // Set event render template 
+    // Set event render template
     mustache templ{ strVscpTemplate };
 
     // --------------------------------------------------------------------
 
     QString renderEventVariables;
     QString renderEventTemplate;
-    QStringList lst = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+    QStringList lst =
+      pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
     if (1 == lst.size()) {
         qDebug() << "Templates = " << lst[0];
         renderEventTemplate = lst[0];
     }
     else if (lst.size() >= 2) {
-        
+
         qDebug() << "Variables = " << lst[0];
         renderEventVariables = lst[0];
 
         qDebug() << "Templates = " << lst[1];
         renderEventTemplate = lst[1];
-
     }
 
     // Variables - If any defined
-    std::list<renderFunc *> m_renderFuncs;
+    std::list<renderFunc*> m_renderFuncs;
     if (renderEventVariables.length()) {
 
         // Define the event in the JavaScript domain
@@ -1358,39 +1606,39 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         vscp_writeDataToString(str, pev);
         strEvaluate += str.c_str();
         strEvaluate += "];e.sizeData=";
-        strEvaluate += vscp_str_format("%d",pev->sizeData);
+        strEvaluate += vscp_str_format("%d", pev->sizeData);
         strEvaluate += ";e.guid = [";
         vscp_writeGuidArrayToString(str, pev->GUID, true);
         strEvaluate += str;
         strEvaluate += "];e.vscpHead=";
-        strEvaluate += vscp_str_format("%d",pev->head);
+        strEvaluate += vscp_str_format("%d", pev->head);
         strEvaluate += ";e.vscpCrc=";
-        strEvaluate += vscp_str_format("%d",pev->crc);
+        strEvaluate += vscp_str_format("%d", pev->crc);
         strEvaluate += ";e.vscpObid=";
-        strEvaluate += vscp_str_format("%lu",pev->obid);
+        strEvaluate += vscp_str_format("%lu", pev->obid);
         strEvaluate += ";e.vscpTimeStamp=";
-        strEvaluate += vscp_str_format("%lu",pev->timestamp);
+        strEvaluate += vscp_str_format("%lu", pev->timestamp);
         strEvaluate += ";e.vscpClass=";
-        strEvaluate += vscp_str_format("%d",pev->vscp_class);
+        strEvaluate += vscp_str_format("%d", pev->vscp_class);
         strEvaluate += ";e.vscpType=";
-        strEvaluate += vscp_str_format("%d",pev->vscp_type);
+        strEvaluate += vscp_str_format("%d", pev->vscp_type);
         strEvaluate += ";e.vscpYear=";
-        strEvaluate += vscp_str_format("%d",pev->year);
+        strEvaluate += vscp_str_format("%d", pev->year);
         strEvaluate += ";e.vscpMonth=";
-        strEvaluate += vscp_str_format("%d",pev->month);
+        strEvaluate += vscp_str_format("%d", pev->month);
         strEvaluate += ";e.vscpDay=";
-        strEvaluate += vscp_str_format("%d",pev->day);
+        strEvaluate += vscp_str_format("%d", pev->day);
         strEvaluate += ";e.vscpHour=";
-        strEvaluate += vscp_str_format("%d",pev->hour);
+        strEvaluate += vscp_str_format("%d", pev->hour);
         strEvaluate += ";e.vscpMinute=";
-        strEvaluate += vscp_str_format("%d",pev->minute);
+        strEvaluate += vscp_str_format("%d", pev->minute);
         strEvaluate += ";e.vscpSecond=";
-        strEvaluate += vscp_str_format("%d",pev->second);
+        strEvaluate += vscp_str_format("%d", pev->second);
         strEvaluate += ";";
 
         qDebug() << strEvaluate.c_str();
 
-        //myEngine.evaluate("var e = {};e.data = [11,22,33];");
+        // myEngine.evaluate("var e = {};e.data = [11,22,33];");
         QJSValue result = myEngine.evaluate(strEvaluate.c_str());
         qDebug() << result.isError();
 
@@ -1411,69 +1659,80 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         foreach (QString str, strlstFunc) {
             qDebug() << str.trimmed();
             str = str.trimmed();
-            if (!str.length()) break;
-            if (!str.contains("function()")) break;
+            if (!str.length())
+                break;
+            if (!str.contains("function()"))
+                break;
             // We have a function  "id: function() {....}
-            // can be one line or multiline 
-            int posFunc = str.indexOf("function()");
+            // can be one line or multiline
+            int posFunc  = str.indexOf("function()");
             int posColon = str.indexOf(":");
-            name = str.left(posColon);
-            func = str.right(str.length()-posFunc);
+            name         = str.left(posColon);
+            func         = str.right(str.length() - posFunc);
 
             // When {} pairs are equal in func we are done
             int cnt = 0;
-            foreach(QChar c, func) {
-                if('{' == c) {
+            foreach (QChar c, func) {
+                if ('{' == c) {
                     cnt++;
                 }
-                if('}' == c) {
+                if ('}' == c) {
                     cnt--;
                 }
             }
 
             if (!cnt) {
-                struct renderFunc *prf = new struct renderFunc;
+                struct renderFunc* prf = new struct renderFunc;
                 if (nullptr != prf) {
                     prf->name = name;
-                    qDebug() << "------->" << func;
                     prf->func = func = "(" + func + ")";
-                    QJSValue fun = myEngine.evaluate(func);
-                    QJSValue result = fun.call();
-                    prf->value = result.toString().trimmed();
-                    qDebug() << result.toInt() << " " << result.toString().trimmed() + " " << result.isError();
+                    QJSValue fun     = myEngine.evaluate(func);
+                    QJSValue result  = fun.call();
+                    prf->value       = result.toString().trimmed();
                     m_renderFuncs.push_back(prf);
                 }
             }
         }
-    }  // Variables
+    } // Variables
 
     // Template - If any defined
     std::string strRenderedData;
     std::string strVscpMeasurement;
     if (renderEventTemplate.length()) {
-        
-        //renderEventTemplate = "<small>{{{lbl-start}}}Unit: {{{lbl-end}}} = {{{unitstr}}} [{{{unit}}}] {{{newline}}} {{{lbl-start}}}Sensorindex: {{{lbl-end}}} = {{{sensorindex}}}{{{newline}}} {{{lbl-start}}}Value: {{{lbl-end}}} = {{{val}}}{{{symbol}}} - [{{{datacodingstr}}}] {{{newline}}}</small>";
+
+        // renderEventTemplate = "<small>{{{lbl-start}}}Unit: {{{lbl-end}}} =
+        // {{{unitstr}}} [{{{unit}}}] {{{newline}}} {{{lbl-start}}}Sensorindex:
+        // {{{lbl-end}}} = {{{sensorindex}}}{{{newline}}} {{{lbl-start}}}Value:
+        // {{{lbl-end}}} = {{{val}}}{{{symbol}}} - [{{{datacodingstr}}}]
+        // {{{newline}}}</small>";
 
         mustache templVar{ renderEventTemplate.toStdString() };
-        qDebug() << "renderEventTemplate = " <<  renderEventTemplate;
+        qDebug() << "renderEventTemplate = " << renderEventTemplate;
 
         kainjow::mustache::data _data;
         _data.set("quote", "&quot;");
         _data.set("singlequote", "'");
         _data.set("ampersand", "&amp;");
         _data.set("lessthan", "&lt;");
-        _data.set("greaterthan", "&gt;");  
-        _data.set("nbrspace", "&nbsp;");     // Non breaking space
+        _data.set("greaterthan", "&gt;");
+        _data.set("nbrspace", "&nbsp;"); // Non breaking space
         _data.set("newline", "<br>");
-        _data.set("lbl-start", "<small><b>");       // Label start (for "label: value"  renderings)
-        _data.set("lbl-end", "</b></small>");        // Label end (for "label: value"  renderings)
-        _data.set("val-start", "<span style=\"color:#666699\">"); // Value start (for "label: value"  renderings)
-        _data.set("val-end", "</span>");        // Value end (for "label: value"  renderings)
+        _data.set("lbl-start",
+                  "<small><b>"); // Label start (for "label: value"  renderings)
+        _data.set("lbl-end",
+                  "</b></small>"); // Label end (for "label: value"  renderings)
+        _data.set("val-start",
+                  "<span style=\"color:#666699\">"); // Value start (for "label:
+                                                     // value"  renderings)
+        _data.set("val-end",
+                  "</span>"); // Value end (for "label: value"  renderings)
 
-        // Set data from embedded function calculations std::list<renderFunc *> m_renderFuncs;
-        //for (std::list<struct renderFunc *>::iterator it = m_renderFuncs.begin(); it != m_renderFuncs.end(); ++it){
-        while (m_renderFuncs.size()) {    
-            struct renderFunc *prf = m_renderFuncs.front();
+        // Set data from embedded function calculations std::list<renderFunc *>
+        // m_renderFuncs;
+        // for (std::list<struct renderFunc *>::iterator it =
+        // m_renderFuncs.begin(); it != m_renderFuncs.end(); ++it){
+        while (m_renderFuncs.size()) {
+            struct renderFunc* prf = m_renderFuncs.front();
             // Render
             _data.set(prf->name.toStdString(), prf->value.toStdString());
             qDebug() << prf->name << " - " << prf->value;
@@ -1484,9 +1743,14 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         }
 
         if (vscp_isMeasurement(pev)) {
-            CVscpUnit u = pworks->getUnitInfo(pev->vscp_class, pev->vscp_type, vscp_getMeasurementUnit(pev));
+            CVscpUnit u = pworks->getUnitInfo(pev->vscp_class,
+                                              pev->vscp_type,
+                                              vscp_getMeasurementUnit(pev));
             int datacoding;
-            _data.set("datacoding", vscp_str_format("0x%02X", (datacoding = vscp_getMeasurementDataCoding(pev)) ));
+            _data.set("datacoding",
+                      vscp_str_format(
+                        "0x%02X",
+                        (datacoding = vscp_getMeasurementDataCoding(pev))));
             switch ((datacoding >> 5) & 7) {
                 case 0:
                     _data.set("datacodingstr", "Bits");
@@ -1511,58 +1775,60 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
                     break;
                 case 7:
                     _data.set("datacodingstr", "Reserved");
-                    break;                            
+                    break;
             }
             _data.set("unitstr", u.m_name);
             _data.set("unit", vscp_str_format("%d", u.m_unit));
-            _data.set("sensorindex", vscp_str_format("%d", vscp_getMeasurementSensorIndex(pev)));
+            _data.set(
+              "sensorindex",
+              vscp_str_format("%d", vscp_getMeasurementSensorIndex(pev)));
             double val;
             vscp_getMeasurementAsDouble(&val, pev);
             std::string strValue = vscp_str_format("%f", val);
             _data.set("val", strValue);
             _data.set("symbol", u.m_symbol_utf8);
-            
         }
 
         strRenderedData = templVar.render(_data);
         qDebug() << strRenderedData.c_str();
-
     }
-    
+
     // --------------------------------------------------------------------
 
-
     QTableWidgetItem* itemClass = m_rxTable->item(selectedRow, 1);
-    QTableWidgetItem* itemType = m_rxTable->item(selectedRow, 2);
+    QTableWidgetItem* itemType  = m_rxTable->item(selectedRow, 2);
 
-    std::string strVscpHead   = vscp_str_format("0x%04X", pev->head);
-    std::string strVscpHeadBits = vscp_str_format("\n[ri=%d ",pev->head & 7);
-    strVscpHeadBits += vscp_str_format("!c=%s ",(pev->head & 0x0004) ? "true" : "false");
-    strVscpHeadBits += vscp_str_format("h=%s ",(pev->head & 0x0010) ? "true" : "false");
-    strVscpHeadBits += vscp_str_format("p=%d ",((pev->head >> 5) & 3));
-    strVscpHeadBits += vscp_str_format("g=%d ",((pev->head >> 8) & 3));
-    strVscpHeadBits += vscp_str_format("d=%s ",(pev->head & 0x8000) ? "true" : "false");
+    std::string strVscpHead     = vscp_str_format("0x%04X", pev->head);
+    std::string strVscpHeadBits = vscp_str_format("\n[ri=%d ", pev->head & 7);
+    strVscpHeadBits +=
+      vscp_str_format("!c=%s ", (pev->head & 0x0004) ? "true" : "false");
+    strVscpHeadBits +=
+      vscp_str_format("h=%s ", (pev->head & 0x0010) ? "true" : "false");
+    strVscpHeadBits += vscp_str_format("p=%d ", ((pev->head >> 5) & 3));
+    strVscpHeadBits += vscp_str_format("g=%d ", ((pev->head >> 8) & 3));
+    strVscpHeadBits +=
+      vscp_str_format("d=%s ", (pev->head & 0x8000) ? "true" : "false");
     strVscpHeadBits += " ]";
-    std::string strVscpObId   = vscp_str_format("0x%08X", pev->obid);
-    std::string strVscpCrc   = vscp_str_format("0x%04X", pev->crc);
-    std::string strVscpYear   = vscp_str_format("%d", pev->year);
-    std::string strVscpMonth  = vscp_str_format("%02d", pev->month);
-    std::string strVscpDay    = vscp_str_format("%02d", pev->second);
-    std::string strVscpHour   = vscp_str_format("%02d", pev->hour);
-    std::string strVscpMinute = vscp_str_format("%02d", pev->minute);
-    std::string strVscpSecond = vscp_str_format("%02d", pev->second);
-    std::string strVscpTimestamp =
-        vscp_str_format("0x%08X", pev->timestamp);
+    std::string strVscpObId      = vscp_str_format("0x%08X", pev->obid);
+    std::string strVscpCrc       = vscp_str_format("0x%04X", pev->crc);
+    std::string strVscpYear      = vscp_str_format("%d", pev->year);
+    std::string strVscpMonth     = vscp_str_format("%02d", pev->month);
+    std::string strVscpDay       = vscp_str_format("%02d", pev->second);
+    std::string strVscpHour      = vscp_str_format("%02d", pev->hour);
+    std::string strVscpMinute    = vscp_str_format("%02d", pev->minute);
+    std::string strVscpSecond    = vscp_str_format("%02d", pev->second);
+    std::string strVscpTimestamp = vscp_str_format("0x%08X", pev->timestamp);
     std::string strVscpClass =
-        vscp_str_format("0x%04X, %d", pev->vscp_class, pev->vscp_class);
+      vscp_str_format("0x%04X, %d", pev->vscp_class, pev->vscp_class);
     std::string strVscpType =
-        vscp_str_format("0x%04X, %d", pev->vscp_type, pev->vscp_type);
+      vscp_str_format("0x%04X, %d", pev->vscp_type, pev->vscp_type);
 
     std::string strVscpGuid;
     vscp_writeGuidArrayToString(strVscpGuid, pev->GUID);
 
     pworks->m_mutexGuidMap.lock();
-    std::string strVscpGuidSymbolic = pworks->m_mapGuidToSymbolicName[strVscpGuid.c_str()].toStdString();
+    std::string strVscpGuidSymbolic =
+      pworks->m_mapGuidToSymbolicName[strVscpGuid.c_str()].toStdString();
     pworks->m_mutexGuidMap.unlock();
 
     std::string strVscpData = "<small>";
@@ -1573,10 +1839,13 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
     strVscpData += "</small><br>";
 
-    // If event is an measurement        
+    strVscpMeasurement = strRenderedData;
+
+    // If event is an measurement
     if (vscp_isMeasurement(pev)) {
         strVscpMeasurement = "<b>Measurement:</b><p>";
-        QStringList qsl = pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
+        QStringList qsl =
+          pworks->getVscpRenderData(pev->vscp_class, pev->vscp_type);
         if (qsl.size()) {
             strVscpMeasurement = strRenderedData;
         }
@@ -1585,31 +1854,35 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         }
 
         strVscpMeasurement += "</p>";
-
-    } // is measurement
+    }
 
     // Add sensorindex symbolic id (if any)
     pworks->m_mutexSensorIndexMap.lock();
-    std::string strSensorIndexSymbolic = 
-        pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) + 
-                                                        vscp_getMeasurementSensorIndex(pev)].toStdString();
+    std::string strSensorIndexSymbolic =
+      pworks
+        ->m_mapSensorIndexToSymbolicName
+          [(pworks->getIdxForGuidRecord(strVscpGuid.c_str()) << 8) +
+           vscp_getMeasurementSensorIndex(pev)]
+        .toStdString();
     pworks->m_mutexSensorIndexMap.unlock();
 
     if (strSensorIndexSymbolic.length()) {
         strVscpGuidSymbolic += " - ";
-        strVscpGuidSymbolic += strSensorIndexSymbolic;    
+        strVscpGuidSymbolic += strSensorIndexSymbolic;
     }
 
     // Add comment (if any)
     std::string strVscpComment = m_mapEventComment[selectedRow].toStdString();
     if (strVscpComment.length()) {
-        strVscpComment = "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" + strVscpComment;
-        strVscpComment += "</p>";            
+        strVscpComment =
+          "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" +
+          strVscpComment;
+        strVscpComment += "</p>";
     }
 
     kainjow::mustache::data _data;
     _data.set("VscpHead", strVscpHead);
-    _data.set("VscpHeadBits",strVscpHeadBits);
+    _data.set("VscpHeadBits", strVscpHeadBits);
     _data.set("VscpObid", strVscpObId);
     _data.set("VscpCrc", strVscpCrc);
     _data.set("VscpYear", strVscpYear);
@@ -1628,12 +1901,13 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("VscpClassToken", itemClass->text().toStdString());
     _data.set("VscpTypeToken", itemType->text().toStdString());
     _data.set("VscpClassHelpUrl",
-                pworks->getHelpUrlForClass(pev->vscp_class).toStdString());
-    _data.set("VscpTypeHelpUrl",
-                pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type)
-                .toStdString());
-    _data.set("VscpMeasurement", strVscpMeasurement);                    
-    _data.set("VscpComment", strVscpComment);                    
+              pworks->getHelpUrlForClass(pev->vscp_class).toStdString());
+    _data.set(
+      "VscpTypeHelpUrl",
+      pworks->getHelpUrlForType(pev->vscp_class, pev->vscp_type).toStdString());
+    _data.set("renderData", strRenderedData);
+    _data.set("VscpMeasurement", strVscpMeasurement);
+    _data.set("VscpComment", strVscpComment);
 
     std::string output = templ.render(_data);
     qDebug() << output.c_str();
@@ -1648,11 +1922,13 @@ void
 CFrmSession::updateCurrentRow(void)
 {
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
-    // Must be a slected row to update 
-    if (!selection.size()) return;
-    
+    // Must be a slected row to update
+    if (!selection.size())
+        return;
+
     // Update GUID info on row
-    QTableWidgetItem* itemGuid = m_rxTable->item(selection.first().row(), rxrow_guid);
+    QTableWidgetItem* itemGuid =
+      m_rxTable->item(selection.first().row(), rxrow_guid);
     setGuidInfoForRow(itemGuid, m_rxEvents[selection.first().row()]);
 
     // Update RX status
@@ -1695,22 +1971,21 @@ CFrmSession::updateAllRows(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setClassInfoForRow
+// getClassInfo
 //
 
-void 
-CFrmSession:: setClassInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+QString
+CFrmSession::getClassInfo(const vscpEvent* pev)
 {
     QString strClass;
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    
+
     switch (pworks->m_session_ClassDisplayFormat) {
 
         case classDisplayFormat::numerical_in_base:
             strClass =
               pworks->decimalToStringInBase(pev->vscp_class,
                                             m_baseComboBox->currentIndex());
-            // QString::number(pev->vscp_class);
             break;
 
         case classDisplayFormat::numerical_hex_dec:
@@ -1733,29 +2008,45 @@ CFrmSession:: setClassInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
             break;
     }
 
+    return strClass;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setClassInfoForRow
+//
+
+void
+CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+{
+    QString strClass  = getClassInfo(pev);
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
     item->setText(strClass);
 
     // Tooltip
-    item->setToolTip(vscp_str_format("%s\n0x%04X %d",
-                                            pworks->m_mapVscpClassToToken[pev->vscp_class].toStdString().c_str(),
-                                            pev->vscp_class, 
-                                            pev->vscp_class).c_str());
+    item->setToolTip(
+      vscp_str_format(
+        "%s\n0x%04X %d",
+        pworks->m_mapVscpClassToToken[pev->vscp_class].toStdString().c_str(),
+        pev->vscp_class,
+        pev->vscp_class)
+        .c_str());
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     item->setForeground(QBrush(QColor(0, 99, 0)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setTypeInfoForRow
+// getTypeInfo
 //
 
-void 
-CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+QString
+CFrmSession::getTypeInfo(const vscpEvent* pev)
 {
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QString strType;
 
     QString strShortTypeToken =
-        pworks->getShortTypeToken(pev->vscp_class, pev->vscp_type);
+      pworks->getShortTypeToken(pev->vscp_class, pev->vscp_type);
 
     switch (pworks->m_session_TypeDisplayFormat) {
 
@@ -1774,8 +2065,9 @@ CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
         case typeDisplayFormat::symbolic_hex_dec:
             if (pworks->m_session_bShowFullTypeToken) {
                 strType =
-                  pworks->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
-                                                pev->vscp_type];
+                  pworks
+                    ->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
+                                           pev->vscp_type];
             }
             else {
                 strType = strShortTypeToken;
@@ -1790,8 +2082,9 @@ CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
         default:
             if (pworks->m_session_bShowFullTypeToken) {
                 strType =
-                  pworks->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
-                                                pev->vscp_type];
+                  pworks
+                    ->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
+                                           pev->vscp_type];
             }
             else {
                 strType = strShortTypeToken;
@@ -1799,14 +2092,33 @@ CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
             break;
     }
 
+    return strType;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setTypeInfoForRow
+//
+
+void
+CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+{
+    QString strType   = getTypeInfo(pev);
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
     item->setText(strType);
 
     // Tooltip
-    item->setToolTip(vscp_str_format("%s\n0x%04X %d",
-                                            pworks->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
-                                             pev->vscp_type].toStdString().c_str(),
-                                            pev->vscp_type, 
-                                            pev->vscp_type).c_str());
+    item->setToolTip(
+      vscp_str_format(
+        "%s\n0x%04X %d",
+        pworks
+          ->m_mapVscpTypeToToken[((uint32_t)pev->vscp_class << 16) +
+                                 pev->vscp_type]
+          .toStdString()
+          .c_str(),
+        pev->vscp_type,
+        pev->vscp_type)
+        .c_str());
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     item->setForeground(QBrush(QColor(0, 5, 180)));
 }
@@ -1815,21 +2127,22 @@ CFrmSession:: setTypeInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
 // setNodeIdInfoForRow
 //
 
-void 
-CFrmSession:: setNodeIdInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+void
+CFrmSession::setNodeIdInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 {
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     QString strNodeId = pworks->decimalToStringInBase(
       ((uint16_t)pev->GUID[14] << 8) + pev->GUID[15],
       m_baseComboBox->currentIndex());
-    
+
     item->setText(strNodeId);
 
     // Tooltip
-    item->setToolTip(vscp_str_format("GUID[14]=0x%02X GUID[15]=0x%02X", 
-                                            pev->GUID[14], 
-                                            pev->GUID[15]).c_str());
+    item->setToolTip(vscp_str_format("GUID[14]=0x%02X GUID[15]=0x%02X",
+                                     pev->GUID[14],
+                                     pev->GUID[15])
+                       .c_str());
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     item->setTextAlignment(Qt::AlignCenter);
 }
@@ -1838,8 +2151,8 @@ CFrmSession:: setNodeIdInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
 // setGuidInfoForRow
 //
 
-void 
-CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
+void
+CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 {
     std::string strGuid;
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -1850,15 +2163,16 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
     pworks->m_mutexGuidMap.unlock();
 
     pworks->m_mutexSensorIndexMap.lock();
-    QString strSensorIndexSymbolic = 
-    pworks->m_mapSensorIndexToSymbolicName[(pworks->getIdxForGuidRecord(strGuid.c_str()) << 8) + 
-                                                vscp_getMeasurementSensorIndex(pev)];
+    QString strSensorIndexSymbolic =
+      pworks->m_mapSensorIndexToSymbolicName
+        [(pworks->getIdxForGuidRecord(strGuid.c_str()) << 8) +
+         vscp_getMeasurementSensorIndex(pev)];
     pworks->m_mutexSensorIndexMap.unlock();
 
     QString strGuidDisplay;
     switch (pworks->m_session_GuidDisplayFormat) {
 
-        case guidDisplayFormat::symbolic:            
+        case guidDisplayFormat::symbolic:
             if (guidSymbolicName.length()) {
                 strGuidDisplay = guidSymbolicName;
             }
@@ -1866,28 +2180,31 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
                 strGuidDisplay = strGuid.c_str();
             }
             if (strSensorIndexSymbolic.length()) {
-                if (strSensorIndexSymbolic.length()) guidSymbolicName += " - ";
-                guidSymbolicName += strSensorIndexSymbolic;    
+                if (strSensorIndexSymbolic.length())
+                    guidSymbolicName += " - ";
+                guidSymbolicName += strSensorIndexSymbolic;
             }
             break;
 
         case guidDisplayFormat::symbolic_guid:
             if (strSensorIndexSymbolic.length()) {
                 guidSymbolicName += " - ";
-                guidSymbolicName += strSensorIndexSymbolic;    
+                guidSymbolicName += strSensorIndexSymbolic;
             }
             strGuidDisplay = guidSymbolicName;
-            if (strGuidDisplay.length()) strGuidDisplay += " - ";
+            if (strGuidDisplay.length())
+                strGuidDisplay += " - ";
             strGuidDisplay += strGuid.c_str();
             break;
 
         case guidDisplayFormat::guid_symbolic:
             if (strSensorIndexSymbolic.length()) {
                 guidSymbolicName += " - ";
-                guidSymbolicName += strSensorIndexSymbolic;    
+                guidSymbolicName += strSensorIndexSymbolic;
             }
             strGuidDisplay = strGuid.c_str();
-            if (strGuidDisplay.length()) strGuidDisplay += " - ";
+            if (strGuidDisplay.length())
+                strGuidDisplay += " - ";
             strGuidDisplay += guidSymbolicName;
             break;
 
@@ -1898,23 +2215,26 @@ CFrmSession:: setGuidInfoForRow(QTableWidgetItem*item, const vscpEvent *pev)
     }
 
     item->setText(strGuidDisplay);
-    
+
     // Tooltip
     if (strSensorIndexSymbolic.length()) {
-        item->setToolTip(vscp_str_format("%s - %s\n%s", 
-                                            guidSymbolicName.toStdString().c_str(), 
-                                            strSensorIndexSymbolic.toStdString().c_str(),
-                                            strGuid.c_str()).c_str());
+        item->setToolTip(
+          vscp_str_format("%s - %s\n%s",
+                          guidSymbolicName.toStdString().c_str(),
+                          strSensorIndexSymbolic.toStdString().c_str(),
+                          strGuid.c_str())
+            .c_str());
     }
     else {
         if (guidSymbolicName.length()) {
-            item->setToolTip(vscp_str_format("%s\n%s", 
-                                                guidSymbolicName.toStdString().c_str(), 
-                                                strGuid.c_str()).c_str());        
+            item->setToolTip(
+              vscp_str_format("%s\n%s",
+                              guidSymbolicName.toStdString().c_str(),
+                              strGuid.c_str())
+                .c_str());
         }
         else {
-            item->setToolTip(vscp_str_format("%s", 
-                                                strGuid.c_str()).c_str());  
+            item->setToolTip(vscp_str_format("%s", strGuid.c_str()).c_str());
         }
     }
 
@@ -1986,8 +2306,11 @@ CFrmSession::receiveRow(vscpEvent* pev)
     m_lcdNumber->display(m_rxTable->rowCount());
 
     // Count events
-    uint32_t cnt = m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] + 1;
-    m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] = cnt;
+    uint32_t cnt =
+      m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] +
+      1;
+    m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] =
+      cnt;
 
     m_mutexRxList.unlock();
 
@@ -2002,9 +2325,9 @@ CFrmSession::receiveRow(vscpEvent* pev)
 void
 CFrmSession::fillReceiveEventCount()
 {
-    // * * * Info area event count compilation * * *   
+    // * * * Info area event count compilation * * *
 
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance(); 
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     // QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
@@ -2012,16 +2335,19 @@ CFrmSession::fillReceiveEventCount()
     if (0 == selection.size()) {
 
         m_mutexRxList.lock();
-        
+
         std::map<uint32_t, uint32_t>::iterator it;
         QString strOut = tr("<h3>VSCP Event count</h3>");
-        for (it = m_mapEventToCount.begin(); it != m_mapEventToCount.end(); it++) {
+        for (it = m_mapEventToCount.begin(); it != m_mapEventToCount.end();
+             it++) {
             strOut += "<small><span style=\"color:rgb(0, 0, 153);\">";
-            strOut += pworks->m_mapVscpClassToToken[it->first >> 16];   // class token
+            strOut +=
+              pworks->m_mapVscpClassToToken[it->first >> 16]; // class token
             strOut += "/";
-            strOut += pworks->getShortTypeToken( it->first >> 16, it->first & 0xffff);
+            strOut +=
+              pworks->getShortTypeToken(it->first >> 16, it->first & 0xffff);
             strOut += "</span></small> = ";
-            strOut += QString::number(it->second);     // count 
+            strOut += QString::number(it->second); // count
             strOut += "<br>";
         }
         strOut += "";
@@ -2040,33 +2366,35 @@ CFrmSession::fillReceiveEventDiff()
 {
     QString strOut;
     uint32_t lastTimestamp = 0;
-    uint32_t diff = 0;   
+    uint32_t diff          = 0;
 
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance(); 
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
-    //QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
+    // QList<QListWidgetItem *> sellist = m_rxTable->selectedItems();
 
     if (selection.size() > 1) {
 
         m_mutexRxList.lock();
 
-        mustache templ{ "<b>UTC Time: </b><span style=\"color:rgb(0xc0, 0xc0, "
-          "0xc0);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
-          "VscpMinute}}:{{VscpSecond}}</span><br>" };
+        mustache templ{
+            "<b>UTC Time: </b><span style=\"color:rgb(0xc0, 0xc0, "
+            "0xc0);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
+            "VscpMinute}}:{{VscpSecond}}</span><br>"
+        };
 
-        std::map<int,vscpEvent *> mapRowEvent;
+        std::map<int, vscpEvent*> mapRowEvent;
 
         QList<QModelIndex>::iterator it;
         for (it = selection.begin(); it != selection.end(); it++) {
-            //QTableWidgetItem* itemClass = m_rxTable->item(it->row(), 1);            
+            // QTableWidgetItem* itemClass = m_rxTable->item(it->row(), 1);
             mapRowEvent[it->row()] = m_rxEvents[it->row()];
         }
 
-        std::map<int,vscpEvent *>::iterator itmap;
-        for (itmap = mapRowEvent.begin(); itmap != mapRowEvent.end(); itmap++) { 
+        std::map<int, vscpEvent*>::iterator itmap;
+        for (itmap = mapRowEvent.begin(); itmap != mapRowEvent.end(); itmap++) {
 
-            vscpEvent *pev = itmap->second;
+            vscpEvent* pev = itmap->second;
 
             kainjow::mustache::data _data;
             _data.set("VscpYear", vscp_str_format("%d", pev->year));
@@ -2078,18 +2406,21 @@ CFrmSession::fillReceiveEventDiff()
             std::string strDate = templ.render(_data);
 
             strOut += "<span style=\"color:rgb(0, 0, 153);\">";
-            strOut += pworks->m_mapVscpClassToToken[pev->vscp_class];   // class token
+            strOut +=
+              pworks->m_mapVscpClassToToken[pev->vscp_class]; // class token
             strOut += "/";
-            strOut += pworks->getShortTypeToken( pev->vscp_class, pev->vscp_type);
+            strOut +=
+              pworks->getShortTypeToken(pev->vscp_class, pev->vscp_type);
             strOut += "</span><br>";
             strOut += strDate.c_str();
-            strOut += "<b>Timestamp</b> = "; 
-            strOut += QString::number(pev->timestamp); 
+            strOut += "<b>Timestamp</b> = ";
+            strOut += QString::number(pev->timestamp);
             strOut += "  µS<br><b>Diff</b> = ";
-            diff = pev->timestamp-lastTimestamp;
+            diff = pev->timestamp - lastTimestamp;
             strOut += QString::number(diff);
             strOut += " µS ";
-            strOut += vscp_str_format("(%.3f seconds)", (double)diff/1000000).c_str();
+            strOut +=
+              vscp_str_format("(%.3f seconds)", (double)diff / 1000000).c_str();
             strOut += "<br><br>";
             lastTimestamp = pev->timestamp;
         }

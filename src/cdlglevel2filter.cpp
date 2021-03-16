@@ -298,8 +298,8 @@ CDlgLevel2Filter::fillVscpClasses(void)
             vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
             .c_str();
         QListWidgetItem *item = new QListWidgetItem(listItem, ui->listClass);
-        QVariant val(classId);
-        item->setData(Qt::UserRole, val);
+        //QVariant val(classId);
+        item->setData(Qt::UserRole, classId);
         ui->listClass->addItem(item);
         // m_classToIndexVector.push_back(classId);
         // qDebug() << i << " " << classId;
@@ -342,16 +342,14 @@ CDlgLevel2Filter::fillVscpTypes(void)
             vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
             .c_str();
         QListWidgetItem *item = new QListWidgetItem(listItem, ui->listType);
-        QVariant val(it->first);
-        qDebug() << ((it->first >> 16) & 0xffff);
-        item->setData(Qt::UserRole, val);    
+        //QVariant val(it->first);
+        item->setData(Qt::UserRole, typeId);    
         ui->listType->addItem(item);
         // m_classToIndexVector.push_back(classId);
         // qDebug() << i << " " << classId << " " << typeId;
         m_typeToIndexMap[it->first] = i;
         i++;
     }
-
 }
 
 // ----------------------------------------------------------------------------

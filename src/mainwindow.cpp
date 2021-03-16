@@ -90,7 +90,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, const QJsonObje
 
 treeWidgetItemConn::~treeWidgetItemConn()
 {
-
+    
 }
 
 
@@ -1666,6 +1666,7 @@ void MainWindow::newSession()
             QJsonObject *pconn = itemConn->getJson();
 
             CFrmSession *w = new CFrmSession(nullptr, pconn);
+            w->setAttribute(Qt::WA_DeleteOnClose);  // Make window close on exit
             w->setWindowState( (windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
             w->setWindowFlags(Qt::Window);
             w->show();

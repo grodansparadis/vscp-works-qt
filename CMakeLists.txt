@@ -290,6 +290,9 @@ add_executable(vscp-works-qt
     src/cdlgtxedit.h
     src/cdlgtxedit.cpp
 
+    src/ctxevent.h
+    src/ctxevent.cpp
+
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h
     vscp/src/vscp/common/vscpremotetcpif.h

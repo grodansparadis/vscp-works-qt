@@ -32,9 +32,12 @@
 
 #include <vscp_client_base.h>
 
+#include "ctxevent.h"
+
 #include <QObject>
 #include <QDialog>
 #include <QTableView>
+#include <QTableWidgetItem>
 #include <QtSql>
 #include <QLCDNumber>
 
@@ -79,6 +82,31 @@ QT_END_NAMESPACE
 //     int m_value;
 // };
 
+// ----------------------------------------------------------------------------
+
+/*!
+    Class that represent a row in the TX list
+*/
+class CTxWidgetItem : public QTableWidgetItem
+{
+
+ public:
+    CTxWidgetItem(const QString& text);
+    virtual ~CTxWidgetItem();
+
+    CTxEvent m_tx;   
+};
+
+
+
+
+// ----------------------------------------------------------------------------
+
+
+
+/*!
+    The session window
+*/
 
 class CFrmSession : public QDialog
 {
@@ -86,13 +114,21 @@ class CFrmSession : public QDialog
 
  public:
     CFrmSession(QWidget *parent, QJsonObject *pconn);
-    ~CFrmSession();
+    virtual ~CFrmSession();
 
+    // Column positions in RX table
     const int rxrow_dir = 0;
     const int rxrow_class = 1;
     const int rxrow_type = 2;
     const int rxrow_nodeid = 3;
     const int rxrow_guid = 4;
+
+    // Column positions in TX table
+    const int txrow_enable = 0;
+    const int txrow_name = 1;
+    const int txrow_period = 2;
+    const int txrow_count = 3;
+    const int txrow_event = 4;
 
     // VSCP Class display format
     // symbolic          - Just symbolic name
@@ -114,6 +150,8 @@ class CFrmSession : public QDialog
     // symbolic_guid     - Symbolic + GUID
     // guid_symbolic     - GUID + symbolic
     enum class guidDisplayFormat {guid=0, symbolic, symbolic_guid, guid_symbolic};
+
+    //void close(void);
 
     /*!
         This method is a middle man between the communication
@@ -153,11 +191,25 @@ class CFrmSession : public QDialog
     void fillRxStatusInfo(int selectedRow);
 
     /*!
+        Get class info string as of settings
+        @param pev VSCP Event
+        @param Formatted string for VSCVP class.
+    */
+    QString getClassInfo(const vscpEvent *pev);
+
+    /*!
         Update VSCP class info for row
         @param item Pointer to QTableWidgetItem for row
         @param pev Pointer to event for which information should be filled in
     */
     void setClassInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
+
+    /*!
+        Get type info string as of settings
+        @param pev VSCP Event
+        @param Formatted string for VSCVP class.
+    */
+    QString getTypeInfo(const vscpEvent *pev);
 
     /*!
         Update VSCP type info for row
@@ -280,6 +332,26 @@ class CFrmSession : public QDialog
     /// Load RX data from file
     void loadRxFromFile(void);
 
+    /// Send selected TX event
+    void sendTxEvent();
+
+    /// Add new Tx event
+    void addTxEvent();
+
+    /// Edit Tx event
+    void editTxEvent();
+
+    /// Delete Tx event
+    void deleteTxEvent();
+
+    /// clone Tx event
+    void cloneTxEvent();
+
+    /// Load Tx events
+    void loadTxEvents();
+
+    /// Save Tx events
+    void saveTxEvents();
  
  signals:
 
@@ -297,8 +369,6 @@ class CFrmSession : public QDialog
     // Toolbar
     void menu_connect();
     void menu_filter();
-
-    void transmitEvent();
 
     enum { NumGridRows = 8, NumButtons = 4 };
 
@@ -321,7 +391,7 @@ class CFrmSession : public QDialog
     QGroupBox *m_txGroupBox;
     QGroupBox *m_formGroupBox;
     QTextBrowser *m_infoArea;
-    //QTextBrowser *m_bigEditor;
+
     QLabel *m_labels[NumGridRows];
     QLineEdit *m_lineEdits[NumGridRows];
     QPushButton *m_buttons[NumButtons];

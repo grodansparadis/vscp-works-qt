@@ -26,6 +26,11 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
 #include "cdlgtxedit.h"
 #include "ui_cdlgtxedit.h"
 
@@ -46,7 +51,14 @@ CDlgTxEdit::CDlgTxEdit(QWidget *parent) :
     // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgTLS::onSetCaPath ); 
     // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgTLS::onSetCertFile ); 
     // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetPwKeyFile );   
+    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetPwKeyFile ); 
+
+    connect(ui->comboClass, QOverload<int>::of(&QComboBox::currentIndexChanged), 
+                this, &CDlgTxEdit::currentVscpClassIndexChanged );
+
+    fillVscpClass(0);
+
+    setInitialFocus();  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,6 +69,108 @@ CDlgTxEdit::~CDlgTxEdit()
 {
     delete ui;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// setInitialFocus
+//
+
+void CDlgTxEdit::setInitialFocus(void)
+{
+    ui->editName->setFocus();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillVscpClass
+//
+
+void CDlgTxEdit::fillVscpClass(uint16_t vscpclass)
+{
+    int selidx;
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    // Clear all items
+    ui->comboType->clear();
+
+    std::map<uint16_t, QString>::iterator it;
+    for (it = pworks->m_mapVscpClassToToken.begin();
+         it != pworks->m_mapVscpClassToToken.end();
+         ++it) {
+
+        uint16_t classId   = it->first;
+        QString classToken = it->second;
+
+        QString listItem =
+            vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
+        listItem +=
+            vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
+            .c_str();
+        ui->comboClass->addItem(listItem, classId);
+
+        // Save index for requested sel
+        if (classId == vscpclass) {
+            selidx = ui->comboClass->count()-1;
+        }
+
+    }    
+
+    // Select the requested item
+    ui->comboClass->setCurrentIndex(selidx);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillVscpType
+//
+
+void CDlgTxEdit::fillVscpType(uint16_t vscpclass, uint16_t vscptype)
+{
+    int selidx;
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    // Clear all items
+    ui->comboType->clear();
+
+    std::map<uint32_t, QString>::iterator it;
+    for (it = pworks->m_mapVscpTypeToToken.begin();
+         it != pworks->m_mapVscpTypeToToken.end();
+         ++it) {
+
+        uint16_t classId  = (it->first >> 16) & 0xffff;
+        uint16_t typeId   = it->first & 0xfff;
+        QString typeToken = it->second;
+
+        if ((classId == vscpclass)) {
+            QString listItem =
+                vscp_str_format(
+                "%s ",
+                typeToken.toStdString().c_str())
+                .c_str();
+            // while (listItem.length() < 30) listItem += " ";
+            listItem +=
+                vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
+                .c_str();
+            ui->comboType->addItem(listItem, typeId);
+            
+            // Save index for requested sel
+            if (typeId == vscptype) {
+                selidx = ui->comboType->count()-1;
+            }
+        }
+    }
+
+    // Select the requested item
+    ui->comboType->setCurrentIndex(selidx);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// currentVscpClassIndexChanged
+//
+
+void CDlgTxEdit::currentVscpClassIndexChanged(int index)
+{
+    int selected = ui->comboClass->currentIndex();
+    fillVscpType(ui->comboClass->itemData(selected).toInt(), 0);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // getActive
@@ -85,7 +199,7 @@ CDlgTxEdit::setActive(bool bActive)
 QString 
 CDlgTxEdit::getName(void)
 {
-    return ui->editName->text(); 
+    return ui->editName->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,7 +239,8 @@ CDlgTxEdit::setCount(uint8_t cnt)
 uint16_t 
 CDlgTxEdit::getVscpClass(void)
 {
-    return ui->comboClass->currentIndex(); 
+    int selected = ui->comboClass->currentIndex();
+    return ui->comboClass->itemData(selected).toInt(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -135,7 +250,8 @@ CDlgTxEdit::getVscpClass(void)
 uint16_t 
 CDlgTxEdit::getVscpType(void)
 {
-    return ui->comboType->currentIndex(); 
+    int selected = ui->comboType->currentIndex();
+    return ui->comboType->itemData(selected).toInt(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,8 +261,21 @@ CDlgTxEdit::getVscpType(void)
 void 
 CDlgTxEdit::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
 {
-    ui->comboClass->setCurrentIndex(vscpClass); // TODO
-    ui->comboType->setCurrentIndex(vscpClass); // TODO
+    // Select requested VSCP Class item
+    for (int i=0; i<ui->comboClass->count(); i++ ) {
+        if (vscpClass = ui->comboClass->itemData(i).toInt()) {
+            ui->comboClass->setCurrentIndex(i);
+            break;
+        }        
+    }
+
+    // Select requested VSCP Type item
+    for (int i=0; i<ui->comboType->count(); i++ ) {
+        if (vscpType = ui->comboType->itemData(i).toInt()) {
+            ui->comboType->setCurrentIndex(i);
+            break;
+        }        
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,7 +325,7 @@ CDlgTxEdit::setGuid(const QString& guid)
 QString 
 CDlgTxEdit::getData(void)
 {
-    return ui->textData->toPlainText(); 
+    return ui->textData->toPlainText().simplified(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
