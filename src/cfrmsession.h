@@ -232,6 +232,20 @@ class CFrmSession : public QDialog
     */
     void setGuidInfoForRow(QTableWidgetItem *item, const vscpEvent *pev);
 
+    /*!
+        Add a new row to the TX list
+        @param bEnable Boolean that set the item active or inactive
+        @param name Name for the TX row
+        @param count Number of events to send on activation
+        @param period Period in milliseconds for active event
+        @param event VSCP Event on stgring form that is sent on activation
+        @return True on Success. False on failure
+    */
+    bool addTxRow(bool bEnable, 
+                    const QString& name, 
+                    uint8_t count, 
+                    uint32_t period, 
+                    const QString& event);
     
  public slots:
 
@@ -285,6 +299,25 @@ class CFrmSession : public QDialog
     */
     void rxCellClicked(int row, int column);
 
+    /*!
+        Item changed in TX table
+        @param item Pointer to Changed table item
+    */
+    void txItemChanged(QTableWidgetItem *item);
+
+    /*!
+        Item changed in TX table
+        @param row Doubleclicked row
+        @param column Doubleclicked column
+    */
+    void txRowDoubleClicked(int row, int column);
+
+    /*!
+        Show context menu for tx table
+        @param pos Position where right click took place
+    */
+    void showTxContextMenu(const QPoint& pos);
+
     // RX Context
 
     /// Clear RX list
@@ -333,25 +366,36 @@ class CFrmSession : public QDialog
     void loadRxFromFile(void);
 
     /// Send selected TX event
-    void sendTxEvent();
+    void sendTxEvent(void);
 
     /// Add new Tx event
-    void addTxEvent();
+    void addTxEvent(void);
 
     /// Edit Tx event
-    void editTxEvent();
+    void editTxEvent(void);
 
     /// Delete Tx event
-    void deleteTxEvent();
+    void deleteTxEvent(void);
 
     /// clone Tx event
-    void cloneTxEvent();
+    void cloneTxEvent(void);
+
+    /// Clear TX selections
+    void clrSelectionsTxEvent(void);
 
     /// Load Tx events
-    void loadTxEvents();
+    void loadTxEvents(const QString& path="");
+    void loadTxEventsAct(void) { loadTxEvents(); };
+
+    /// Load TX events on start
+    void loadTxOnStart(void);
 
     /// Save Tx events
-    void saveTxEvents();
+    void saveTxEvents(const QString& path="");
+    void saveTxEventsAct(void) { saveTxEvents(); };
+
+    /// Save TX events on save
+    void saveTxOnExit(void);
  
  signals:
 
@@ -407,7 +451,6 @@ class CFrmSession : public QDialog
     QLCDNumber *m_lcdNumber;
 
     /// Clear RX list button
-    //QPushButton *m_btnClearRcvList;
     QAction *m_setClearRcvListActToolBar;
 
     /// Unselect all RX items

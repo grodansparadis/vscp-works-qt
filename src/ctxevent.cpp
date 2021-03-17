@@ -7,6 +7,8 @@
 // Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
+// "First they ignore you, then they laugh at you, then they fight you, then you win”
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights

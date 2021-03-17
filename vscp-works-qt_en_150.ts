@@ -3182,63 +3182,63 @@ and the flag bits for the. the driver.
     <name>CDlgSensorIndex</name>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="23"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="110"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="110"/>
         <source>Sensorindex - Known sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="76"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="111"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="111"/>
         <location filename="src/cdlgsensorindex.cpp" line="216"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="89"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="112"/>
         <location filename="src/cdlgsensorindex.cpp" line="217"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="102"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="113"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="115"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="114"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="114"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="131"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="115"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="115"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="147"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="116"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="116"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="173"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="117"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="117"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="190"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="118"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="118"/>
         <source>GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="206"/>
-        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="119"/>
+        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="119"/>
         <source>name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3653,9 +3653,12 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cfrmsession.cpp" line="111"/>
         <location filename="src/cfrmsession.cpp" line="126"/>
-        <location filename="src/cfrmsession.cpp" line="1067"/>
-        <location filename="src/cfrmsession.cpp" line="1103"/>
-        <location filename="src/cfrmsession.cpp" line="1174"/>
+        <location filename="src/cfrmsession.cpp" line="1054"/>
+        <location filename="src/cfrmsession.cpp" line="1148"/>
+        <location filename="src/cfrmsession.cpp" line="1173"/>
+        <location filename="src/cfrmsession.cpp" line="1231"/>
+        <location filename="src/cfrmsession.cpp" line="1267"/>
+        <location filename="src/cfrmsession.cpp" line="1338"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3680,444 +3683,470 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="295"/>
+        <location filename="src/cfrmsession.cpp" line="314"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="309"/>
+        <location filename="src/cfrmsession.cpp" line="328"/>
         <source>Load VSCP events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="310"/>
+        <location filename="src/cfrmsession.cpp" line="329"/>
         <source>Save VSCP events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="312"/>
+        <location filename="src/cfrmsession.cpp" line="331"/>
         <source>Load transmission set from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="313"/>
+        <location filename="src/cfrmsession.cpp" line="332"/>
         <source>Save transmission set to file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="316"/>
-        <location filename="src/cfrmsession.cpp" line="319"/>
+        <location filename="src/cfrmsession.cpp" line="335"/>
+        <location filename="src/cfrmsession.cpp" line="338"/>
         <source>Close session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="338"/>
+        <location filename="src/cfrmsession.cpp" line="357"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="342"/>
+        <location filename="src/cfrmsession.cpp" line="361"/>
         <source>Connect/disconnect from remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="350"/>
+        <location filename="src/cfrmsession.cpp" line="369"/>
         <source>Enable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="353"/>
+        <location filename="src/cfrmsession.cpp" line="372"/>
         <source>Enable/disable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="374"/>
-        <location filename="src/cfrmsession.cpp" line="1231"/>
+        <location filename="src/cfrmsession.cpp" line="393"/>
+        <location filename="src/cfrmsession.cpp" line="1395"/>
         <source>Clear receive list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="387"/>
+        <location filename="src/cfrmsession.cpp" line="406"/>
         <source>Unselect all RX rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="396"/>
-        <location filename="src/cfrmsession.cpp" line="691"/>
+        <location filename="src/cfrmsession.cpp" line="415"/>
+        <location filename="src/cfrmsession.cpp" line="710"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="397"/>
+        <location filename="src/cfrmsession.cpp" line="416"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="398"/>
+        <location filename="src/cfrmsession.cpp" line="417"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="399"/>
+        <location filename="src/cfrmsession.cpp" line="418"/>
         <source>Paste before</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="400"/>
+        <location filename="src/cfrmsession.cpp" line="419"/>
         <source>Paste after</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="404"/>
+        <location filename="src/cfrmsession.cpp" line="423"/>
         <source>&amp;Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="405"/>
+        <location filename="src/cfrmsession.cpp" line="424"/>
         <source>Connect to host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="406"/>
+        <location filename="src/cfrmsession.cpp" line="425"/>
         <source>Disconnect from host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="409"/>
+        <location filename="src/cfrmsession.cpp" line="428"/>
         <source>Edit host settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="413"/>
+        <location filename="src/cfrmsession.cpp" line="432"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="414"/>
+        <location filename="src/cfrmsession.cpp" line="433"/>
         <source>Message flow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="415"/>
+        <location filename="src/cfrmsession.cpp" line="434"/>
         <source>Message count</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="417"/>
+        <location filename="src/cfrmsession.cpp" line="436"/>
         <source>Clear receive list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="419"/>
+        <location filename="src/cfrmsession.cpp" line="438"/>
         <source>Clear transmission list...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="423"/>
+        <location filename="src/cfrmsession.cpp" line="442"/>
         <source>&amp;vscp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="424"/>
+        <location filename="src/cfrmsession.cpp" line="443"/>
         <source>Read register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="425"/>
+        <location filename="src/cfrmsession.cpp" line="444"/>
         <source>Write register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="426"/>
+        <location filename="src/cfrmsession.cpp" line="445"/>
         <source>Read (all) registers...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="427"/>
+        <location filename="src/cfrmsession.cpp" line="446"/>
         <source>Read GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="428"/>
+        <location filename="src/cfrmsession.cpp" line="447"/>
         <source>Read MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="429"/>
+        <location filename="src/cfrmsession.cpp" line="448"/>
         <source>Download MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="433"/>
+        <location filename="src/cfrmsession.cpp" line="452"/>
         <source>&amp;Setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="434"/>
+        <location filename="src/cfrmsession.cpp" line="453"/>
         <source>Set/define filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="435"/>
+        <location filename="src/cfrmsession.cpp" line="454"/>
         <source>Settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="443"/>
+        <location filename="src/cfrmsession.cpp" line="462"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="486"/>
+        <location filename="src/cfrmsession.cpp" line="505"/>
         <source>Horizontal layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="490"/>
+        <location filename="src/cfrmsession.cpp" line="509"/>
         <source>Button %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="503"/>
+        <location filename="src/cfrmsession.cpp" line="522"/>
         <source>Receive Events </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="514"/>
+        <location filename="src/cfrmsession.cpp" line="533"/>
         <source>Dir, VSCP Class, VSCP Type, id, GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1251"/>
-        <source>Set/edit GUID (sensor)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="641"/>
+        <location filename="src/cfrmsession.cpp" line="660"/>
         <source>Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="673"/>
-        <source>&amp;Transmit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="675"/>
-        <source>Transmit selected event(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="683"/>
-        <source>&amp;Add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="685"/>
-        <source>Add transmit event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="693"/>
-        <source>Edit selected event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="707"/>
-        <source>&amp;Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="709"/>
-        <source>Delete selected event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="699"/>
-        <source>&amp;Clone</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="645"/>
+        <location filename="src/cfrmsession.cpp" line="664"/>
         <source>x,Name,Period,Count,Event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="701"/>
+        <location filename="src/cfrmsession.cpp" line="692"/>
+        <source>&amp;Transmit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="694"/>
+        <source>Transmit selected event(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="702"/>
+        <source>&amp;Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="704"/>
+        <source>Add transmit event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="712"/>
+        <source>Edit selected event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="718"/>
+        <source>&amp;Clone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="720"/>
         <source>Clone selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="717"/>
+        <location filename="src/cfrmsession.cpp" line="726"/>
+        <source>&amp;Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="728"/>
+        <source>Delete selected event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="736"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="719"/>
+        <location filename="src/cfrmsession.cpp" line="738"/>
         <source>Save selected transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="725"/>
+        <location filename="src/cfrmsession.cpp" line="744"/>
         <source>&amp;Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="727"/>
+        <location filename="src/cfrmsession.cpp" line="746"/>
         <source>Load transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="850"/>
-        <source>Test</source>
+        <location filename="src/cfrmsession.cpp" line="869"/>
+        <source>Item changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="850"/>
+        <location filename="src/cfrmsession.cpp" line="869"/>
+        <location filename="src/cfrmsession.cpp" line="926"/>
         <source>Carpe Diem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1003"/>
-        <source>Clone TX Event</source>
+        <location filename="src/cfrmsession.cpp" line="891"/>
+        <source>Send event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1003"/>
-        <location filename="src/cfrmsession.cpp" line="1013"/>
-        <location filename="src/cfrmsession.cpp" line="1023"/>
-        <location filename="src/cfrmsession.cpp" line="1033"/>
-        <source>Carpe Diem  ddd</source>
+        <location filename="src/cfrmsession.cpp" line="897"/>
+        <source>Add transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1013"/>
-        <source>Delete TX Event</source>
+        <location filename="src/cfrmsession.cpp" line="901"/>
+        <source>Edit selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1023"/>
+        <location filename="src/cfrmsession.cpp" line="905"/>
+        <source>Clone selected transmission row...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="909"/>
+        <source>Delete selected transmission row...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="926"/>
+        <source>Send Event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1055"/>
+        <location filename="src/cfrmsession.cpp" line="1149"/>
+        <location filename="src/cfrmsession.cpp" line="1174"/>
+        <source>You must select a transmission row</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1187"/>
         <source>Load TX Events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1033"/>
+        <location filename="src/cfrmsession.cpp" line="1187"/>
+        <location filename="src/cfrmsession.cpp" line="1197"/>
+        <source>Carpe Diem  ddd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1197"/>
         <source>Save TX Events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1043"/>
+        <location filename="src/cfrmsession.cpp" line="1207"/>
         <source>Form layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1045"/>
+        <location filename="src/cfrmsession.cpp" line="1209"/>
         <source>Line 1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1046"/>
+        <location filename="src/cfrmsession.cpp" line="1210"/>
         <source>Line 2, long text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1047"/>
+        <location filename="src/cfrmsession.cpp" line="1211"/>
         <source>Line 3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1068"/>
-        <location filename="src/cfrmsession.cpp" line="1104"/>
+        <location filename="src/cfrmsession.cpp" line="1232"/>
+        <location filename="src/cfrmsession.cpp" line="1268"/>
         <source>Failed to open a connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1175"/>
+        <location filename="src/cfrmsession.cpp" line="1339"/>
         <source>Failed to disconnect the connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1227"/>
+        <location filename="src/cfrmsession.cpp" line="1391"/>
         <source>Clear selections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1235"/>
+        <location filename="src/cfrmsession.cpp" line="1399"/>
         <source>Save events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1238"/>
+        <location filename="src/cfrmsession.cpp" line="1402"/>
         <source>Save marked event rows to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1241"/>
+        <location filename="src/cfrmsession.cpp" line="1405"/>
         <source>Save marked class event rows to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1244"/>
+        <location filename="src/cfrmsession.cpp" line="1408"/>
         <source>Save marked type event rows to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1247"/>
+        <location filename="src/cfrmsession.cpp" line="1411"/>
         <source>Load events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1255"/>
+        <location filename="src/cfrmsession.cpp" line="1415"/>
+        <source>Set/edit GUID (sensor)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1419"/>
         <source>Add comment...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1256"/>
+        <location filename="src/cfrmsession.cpp" line="1420"/>
         <source>Remove comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1260"/>
+        <location filename="src/cfrmsession.cpp" line="1424"/>
         <source>Mark row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1261"/>
+        <location filename="src/cfrmsession.cpp" line="1425"/>
         <source>Unmark row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1262"/>
+        <location filename="src/cfrmsession.cpp" line="1426"/>
         <source>Mark VSCP class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1265"/>
+        <location filename="src/cfrmsession.cpp" line="1429"/>
         <source>Unmark VSCP class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1268"/>
+        <location filename="src/cfrmsession.cpp" line="1432"/>
         <source>Mark VSCP type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1271"/>
+        <location filename="src/cfrmsession.cpp" line="1435"/>
         <source>Unmark VSCP type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1330"/>
+        <location filename="src/cfrmsession.cpp" line="1494"/>
         <source>QInputDialog::getText()</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1331"/>
+        <location filename="src/cfrmsession.cpp" line="1495"/>
         <source>Comment:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2340"/>
+        <location filename="src/cfrmsession.cpp" line="2504"/>
         <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>

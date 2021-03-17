@@ -262,6 +262,10 @@ void vscpworks::loadSettings(void)
         if (!dir.exists())  {
             dir.mkpath(".");
         }
+        // Make a folder for  receive sets
+        dir.mkpath("./rxsets");
+        // Make a folder for transmission sets
+        dir.mkpath("./txsets");
     }
 
     // VSCP Home folder

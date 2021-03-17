@@ -173,21 +173,21 @@ void CDlgTxEdit::currentVscpClassIndexChanged(int index)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// getActive
+// geEnable
 //
 
 bool 
-CDlgTxEdit::getActive(void)
+CDlgTxEdit::getEnable(void)
 {
     return ui->chkActive->isChecked(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setActive
+// setEnable
 //
 
 void 
-CDlgTxEdit::setActive(bool bActive)
+CDlgTxEdit::setEnable(bool bActive)
 {
     return ui->chkActive->setChecked(bActive);
 }
@@ -263,7 +263,7 @@ CDlgTxEdit::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
 {
     // Select requested VSCP Class item
     for (int i=0; i<ui->comboClass->count(); i++ ) {
-        if (vscpClass = ui->comboClass->itemData(i).toInt()) {
+        if (vscpClass == ui->comboClass->itemData(i).toInt()) {
             ui->comboClass->setCurrentIndex(i);
             break;
         }        
@@ -271,7 +271,7 @@ CDlgTxEdit::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
 
     // Select requested VSCP Type item
     for (int i=0; i<ui->comboType->count(); i++ ) {
-        if (vscpType = ui->comboType->itemData(i).toInt()) {
+        if (vscpType == ui->comboType->itemData(i).toInt()) {
             ui->comboType->setCurrentIndex(i);
             break;
         }        

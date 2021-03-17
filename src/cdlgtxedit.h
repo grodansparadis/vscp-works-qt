@@ -73,8 +73,8 @@ public:
     /*!
         Setters/getters for TX activate
     */
-    bool getActive(void);
-    void setActive(bool bActive);
+    bool getEnable(void);
+    void setEnable(bool bActive);
 
     /*!
         Setters/getters for name

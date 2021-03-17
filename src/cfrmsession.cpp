@@ -48,6 +48,9 @@
 #include <QTableWidgetItem>
 #include <QtSql>
 #include <QtWidgets>
+#include <QXmlStreamReader>
+#include <QFile>
+#include <QStandardPaths>
 
 using namespace kainjow::mustache;
 
@@ -56,12 +59,12 @@ using namespace kainjow::mustache;
 CTxWidgetItem::CTxWidgetItem(const QString& text)
   : QTableWidgetItem(text, QTableWidgetItem::UserType)
 {
-    int i = 88;
+    ;
 }
 
 CTxWidgetItem::~CTxWidgetItem()
 {
-    int i = 99;
+    ;
 }
 
 // ----------------------------------------------------------------------------
@@ -259,6 +262,28 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         case CVscpClient::connType::RAWMQTT:
             break;
     }
+
+    // TX Table signales
+
+    connect(
+      m_txTable->selectionModel(),
+      SIGNAL(QTableWidget::itemChanged(QTableWidgetItem *item)),
+      SLOT(txItemChanged(QTableWidgetItem *item)));
+
+    connect(
+      m_txTable,
+      &QTableWidget::cellDoubleClicked,
+      this,
+      &CFrmSession::txRowDoubleClicked ); 
+
+    // Open pop up menu on right click on VSCP type listbox
+    connect(m_txTable,
+            &QTableWidget::customContextMenuRequested,
+            this,
+            &CFrmSession::showTxContextMenu);  
+
+    // Load events from last session
+    loadTxOnStart();            
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -267,6 +292,9 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
 
 CFrmSession::~CFrmSession()
 {
+    // Autosave TX data
+    saveTxOnExit();
+
     // Make sure we are disconnected
     doDisconnectFromRemoteHost();
 
@@ -717,7 +745,7 @@ CFrmSession::createTxGridGroup()
     QAction* saveAct     = new QAction(saveIcon, tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::New);
     saveAct->setStatusTip(tr("Save selected transmit event(s)"));
-    connect(saveAct, &QAction::triggered, this, &CFrmSession::saveTxEvents);
+    connect(saveAct, &QAction::triggered, this, &CFrmSession::saveTxEventsAct);
     m_txToolBar->addAction(saveAct);
 
     // Load tx rows
@@ -725,7 +753,7 @@ CFrmSession::createTxGridGroup()
     QAction* loadAct     = new QAction(loadIcon, tr("&Load"), this);
     loadAct->setShortcuts(QKeySequence::New);
     loadAct->setStatusTip(tr("Load transmit event(s)"));
-    connect(loadAct, &QAction::triggered, this, &CFrmSession::loadTxEvents);
+    connect(loadAct, &QAction::triggered, this, &CFrmSession::loadTxEventsAct);
     m_txToolBar->addAction(loadAct);
 
     layout->addWidget(m_txToolBar, 0, 4, 1, 1);
@@ -841,13 +869,184 @@ CFrmSession::menu_open_main_settings(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// txItemChanged
+//
+
+void
+CFrmSession::txItemChanged(QTableWidgetItem *item)
+{
+    QMessageBox::about(this, tr("Item changed"), tr("Carpe Diem"));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// txRowDoubleClicked
+//
+
+void
+CFrmSession::txRowDoubleClicked(int row, int column)
+{
+    sendTxEvent();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showTxContextMenu
+//
+
+void
+CFrmSession::showTxContextMenu(const QPoint& pos)
+{
+    QMenu* menu = new QMenu(this);
+
+    menu->addAction(QString(tr("Send event")),
+                    this,
+                    SLOT(sendTxEvent()));
+
+    menu->addSeparator();
+
+    menu->addAction(QString(tr("Add transmission row...")),
+                    this,
+                    SLOT(addTxEvent()));
+ 
+    menu->addAction(QString(tr("Edit selected transmission row...")),
+                    this,
+                    SLOT(editTxEvent()));
+    
+    menu->addAction(QString(tr("Clone selected transmission row...")),
+                    this,
+                    SLOT(cloneTxEvent()));
+
+    menu->addAction(QString(tr("Delete selected transmission row...")),
+                    this,
+                    SLOT(deleteTxEvent()));
+
+    menu->addSeparator();
+
+    menu->addAction(QString(tr("Save transmission rows...")),
+                    this,
+                    SLOT(saveTxEvents())); 
+
+    menu->addAction(QString(tr("Load transmission rows...")),
+                    this,
+                    SLOT(loadTxEvents()));
+    
+    menu->addSeparator();
+    
+    menu->addAction(QString(tr("Clear selections...")),
+                    this,
+                    SLOT(clrSelectionsTxEvent()));
+
+    menu->popup(m_txTable->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addTxRow
+//
+
+bool CFrmSession::addTxRow(bool bEnable, 
+                            const QString& name, 
+                            uint8_t count, 
+                            uint32_t period, 
+                            const QString& event)
+{
+    QTableWidgetItem* item;
+    
+    int row = m_txTable->rowCount();
+    m_txTable->insertRow(row);
+
+    // Enable
+    item = new QTableWidgetItem;
+    if (nullptr == item) {
+        return false;
+    }
+    
+    item->setText("Enable");
+    item->setCheckState(bEnable ? Qt::Checked : Qt::Unchecked);
+    m_txTable->setItem(m_txTable->rowCount() - 1, txrow_enable, item);
+
+    // Name
+    item = new QTableWidgetItem;
+    if (nullptr == item) {
+        return false;
+    }
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setText(name);
+    // Bluish
+    item->setForeground(QBrush(QColor(0, 5, 180)));
+    m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
+
+    // Period
+    item = new QTableWidgetItem;
+    if (nullptr == item) {
+        return false;
+    }
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setTextAlignment(Qt::AlignHCenter);
+    item->setText(QString::number(period));
+    m_txTable->setItem(m_txTable->rowCount() - 1, txrow_count, item);
+
+    // Count
+    if (!count) count = 1;  // Minvalue
+    item = new QTableWidgetItem;
+    if (nullptr == item) {
+        return false;
+    }
+    item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    item->setTextAlignment(Qt::AlignHCenter);
+    item->setText(QString::number(count));
+    m_txTable->setItem(m_txTable->rowCount() - 1, txrow_period, item);
+
+    // Event
+    CTxWidgetItem* itemEvent = new CTxWidgetItem("Test");
+    if (nullptr == itemEvent) {
+        return false;
+    }
+
+    itemEvent->m_tx.setEnable(bEnable);
+    itemEvent->m_tx.setName(name);
+    itemEvent->m_tx.setCount(count);
+    itemEvent->m_tx.setPeriod(period);
+
+    // Allocate new Event
+    if (!itemEvent->m_tx.newEvent()) {
+        delete itemEvent;
+        return false;
+    }
+
+    vscpEvent* pev = itemEvent->m_tx.getEvent();
+    if (!vscp_convertStringToEvent(pev, event.toStdString())) {
+        delete itemEvent;
+        return false;
+    }
+
+    itemEvent->setFlags(item->flags() & ~Qt::ItemIsEditable);
+    itemEvent->setTextAlignment(Qt::AlignLeft);
+    QString strEvent = getClassInfo(itemEvent->m_tx.getEvent());
+    strEvent += "→";
+    strEvent += getTypeInfo(itemEvent->m_tx.getEvent());
+    strEvent += ": ";
+    std::string str;
+    vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
+    strEvent += str.c_str();
+    itemEvent->setText(strEvent);
+    itemEvent->setForeground(QBrush(QColor(0, 99, 0)));
+    m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemEvent);
+
+    m_txTable->setUpdatesEnabled(false);
+    for (int i = 0; i < m_txTable->rowCount(); i++) {
+        m_txTable->setRowHeight(i, 10);
+    }
+    m_txTable->setUpdatesEnabled(true);
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // sendTxEvent
 //
 
 void
-CFrmSession::sendTxEvent()
+CFrmSession::sendTxEvent(void)
 {
-    QMessageBox::about(this, tr("Test"), tr("Carpe Diem"));
+    QMessageBox::about(this, tr("Send Event"), tr("Carpe Diem"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -855,7 +1054,7 @@ CFrmSession::sendTxEvent()
 //
 
 void
-CFrmSession::addTxEvent()
+CFrmSession::addTxEvent(void)
 {
     QTableWidgetItem* item;
     CDlgTxEdit dlg;
@@ -867,17 +1066,19 @@ CFrmSession::addTxEvent()
 
         // Enable
         item = new QTableWidgetItem;
-        if (nullptr == item)
+        if (nullptr == item) {
             return;
-        // item->setFlags(item->flags() & Qt::ItemIsUserCheckable);
+        }
+        
         item->setText("Enable");
-        item->setCheckState(Qt::Checked); // Qt::Unchecked
+        item->setCheckState(dlg.getEnable() ? Qt::Checked : Qt::Unchecked);
         m_txTable->setItem(m_txTable->rowCount() - 1, txrow_enable, item);
 
         // Name
         item = new QTableWidgetItem;
-        if (nullptr == item)
+        if (nullptr == item) {
             return;
+        }
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         item->setText(dlg.getName());
         // Bluish
@@ -886,8 +1087,9 @@ CFrmSession::addTxEvent()
 
         // Period
         item = new QTableWidgetItem;
-        if (nullptr == item)
+        if (nullptr == item) {
             return;
+        }
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         item->setTextAlignment(Qt::AlignHCenter);
         item->setText(QString::number(dlg.getPeriod()));
@@ -895,8 +1097,9 @@ CFrmSession::addTxEvent()
 
         // Count
         item = new QTableWidgetItem;
-        if (nullptr == item)
+        if (nullptr == item) {
             return;
+        }
         item->setFlags(item->flags() & ~Qt::ItemIsEditable);
         item->setTextAlignment(Qt::AlignHCenter);
         item->setText(QString::number(dlg.getCount()));
@@ -904,10 +1107,11 @@ CFrmSession::addTxEvent()
 
         // Event
         CTxWidgetItem* itemEvent = new CTxWidgetItem("Test");
-        if (nullptr == itemEvent)
+        if (nullptr == itemEvent) {
             return;
+        }
 
-        itemEvent->m_tx.setEnable(dlg.getActive());
+        itemEvent->m_tx.setEnable(dlg.getEnable());
         itemEvent->m_tx.setName(dlg.getName());
         itemEvent->m_tx.setCount(dlg.getCount());
         itemEvent->m_tx.setPeriod(dlg.getPeriod());
@@ -961,19 +1165,28 @@ CFrmSession::addTxEvent()
 //
 
 void
-CFrmSession::editTxEvent()
+CFrmSession::editTxEvent(void)
 {
     std::string str;
     CDlgTxEdit dlg;
 
     QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+
+    if (!selection.size()) {
+        QMessageBox::information(this,
+                                tr("vscpworks+"),
+                                tr("You must select a transmission row"),
+                                QMessageBox::Ok);
+        return;
+    }
+
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
 
-        CTxWidgetItem* itemEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);
+        CTxWidgetItem* itemEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);        
         vscpEvent* pev = itemEvent->m_tx.getEvent();
 
-        dlg.setActive(itemEvent->m_tx.getEnable());
+        dlg.setEnable(itemEvent->m_tx.getEnable());
         dlg.setName(itemEvent->m_tx.getName());
         dlg.setCount(itemEvent->m_tx.getCount());
         dlg.setPeriod(itemEvent->m_tx.getPeriod());
@@ -989,6 +1202,57 @@ CFrmSession::editTxEvent()
 
         if (QDialog::Accepted == dlg.exec()) {
 
+            QTableWidgetItem *item;
+
+            // Enable
+            itemEvent->m_tx.setEnable(dlg.getEnable());
+            item = m_txTable->item(it->row(), txrow_enable);
+            item->setCheckState(dlg.getEnable() ? Qt::Checked : Qt::Unchecked); 
+            
+            // Name
+            itemEvent->m_tx.setName(dlg.getName());
+            item = m_txTable->item(it->row(), txrow_name);
+            item->setText(dlg.getName());
+
+            // Count
+            itemEvent->m_tx.setCount(dlg.getCount());
+            item = m_txTable->item(it->row(), txrow_count);
+            item->setText(QString::number(dlg.getCount()));
+
+            // Period
+            itemEvent->m_tx.setPeriod(dlg.getPeriod());
+            item = m_txTable->item(it->row(), txrow_period);
+            item->setText(QString::number(dlg.getPeriod()));         
+
+            pev->vscp_class = dlg.getVscpClass();
+            pev->vscp_type  = dlg.getVscpType();
+
+            QString strGuid = dlg.getGuid();
+            cguid guid(strGuid.toStdString());
+            memcpy(pev->GUID, guid.getGUID(), 16);
+
+            pev->head = dlg.getPriority() << 5;
+
+            // Delete old data (if any)
+            if (nullptr != pev->pdata) {
+                delete [] pev->pdata;
+                pev->sizeData = 0;
+                pev->pdata = 0;
+            }
+
+            // Get data
+            vscp_setEventDataFromString(pev, dlg.getData().toStdString());
+
+            // Update TX table line
+            QString strEvent = getClassInfo(itemEvent->m_tx.getEvent());
+            strEvent += "→";
+            strEvent += getTypeInfo(itemEvent->m_tx.getEvent());
+            strEvent += ": ";
+            std::string str;
+            vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
+            strEvent += str.c_str();
+            itemEvent->setText(strEvent);
+
         }
     }
 }
@@ -998,9 +1262,118 @@ CFrmSession::editTxEvent()
 //
 
 void
-CFrmSession::cloneTxEvent()
+CFrmSession::cloneTxEvent(void)
 {
-    QMessageBox::about(this, tr("Clone TX Event"), tr("Carpe Diem  ddd"));
+    vscpEvent* pev;
+    QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+
+    if (!selection.size()) {
+        QMessageBox::information(this,
+                                tr("vscpworks+"),
+                                tr("You must select a transmission row"),
+                                QMessageBox::Ok);
+        return;
+    }
+
+    QList<QModelIndex>::iterator it;
+    for (it = selection.begin(); it != selection.end(); it++) {
+
+        QTableWidgetItem *item;
+        CTxWidgetItem* itemSourceEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);
+        if (nullptr == itemSourceEvent) {
+            return;
+        }
+        CTxWidgetItem* itemTargetEvent = new CTxWidgetItem("Test");
+        if (nullptr == itemTargetEvent) {
+            return;
+        }
+
+        itemTargetEvent->m_tx.newEvent();
+
+        // Copy in event
+        vscp_copyEvent(itemTargetEvent->m_tx.getEvent(), itemSourceEvent->m_tx.getEvent());
+
+        // Save data
+        //vscpEvent* pevSource = itemSourceEvent->m_tx.getEvent();
+        bool bEnable = itemSourceEvent->m_tx.getEnable();
+        QString name = itemSourceEvent->m_tx.getName();
+        name += tr("_copy");
+        uint8_t count = itemSourceEvent->m_tx.getCount();
+        uint32_t period = itemSourceEvent->m_tx.getPeriod();
+
+        // Add new row
+        int row = m_txTable->rowCount();
+        m_txTable->insertRow(row);
+
+        // Enable
+        item = new QTableWidgetItem;
+        if (nullptr == item) {
+            return;
+        }
+        
+        item->setText("Enable");
+        item->setCheckState(bEnable ? Qt::Checked : Qt::Unchecked);
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_enable, item);
+
+        // Name
+        item = new QTableWidgetItem;
+        if (nullptr == item) {
+            return;
+        }
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setText(name);
+        // Bluish
+        item->setForeground(QBrush(QColor(0, 5, 180)));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
+
+        // Period
+        item = new QTableWidgetItem;
+        if (nullptr == item) {
+            return;
+        }
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setTextAlignment(Qt::AlignHCenter);
+        item->setText(QString::number(period));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_count, item);
+
+        // Count
+        item = new QTableWidgetItem;
+        if (nullptr == item) {
+            return;
+        }
+        item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        item->setTextAlignment(Qt::AlignHCenter);
+        item->setText(QString::number(count));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_period, item);
+
+        // Event
+        
+        itemTargetEvent->m_tx.setEnable(bEnable);
+        itemTargetEvent->m_tx.setName(name);
+        itemTargetEvent->m_tx.setCount(count);
+        itemTargetEvent->m_tx.setPeriod(period);
+
+        pev = itemTargetEvent->m_tx.getEvent();
+
+        itemTargetEvent->setFlags(item->flags() & ~Qt::ItemIsEditable);
+        itemTargetEvent->setTextAlignment(Qt::AlignLeft);
+        QString strEvent = getClassInfo(pev);
+        strEvent += "→";
+        strEvent += getTypeInfo(pev);
+        strEvent += ": ";
+        std::string str;
+        vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
+        strEvent += str.c_str();
+        itemTargetEvent->setText(strEvent);
+        itemTargetEvent->setForeground(QBrush(QColor(0, 99, 0)));
+        m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemTargetEvent);
+
+        m_txTable->setUpdatesEnabled(false);
+        for (int i = 0; i < m_txTable->rowCount(); i++) {
+            m_txTable->setRowHeight(i, 10);
+        }
+        m_txTable->setUpdatesEnabled(true);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1008,9 +1381,32 @@ CFrmSession::cloneTxEvent()
 //
 
 void
-CFrmSession::deleteTxEvent()
+CFrmSession::deleteTxEvent(void)
 {
-    QMessageBox::about(this, tr("Delete TX Event"), tr("Carpe Diem  ddd"));
+    QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+
+    if (!selection.size()) {
+        QMessageBox::information(this,
+                                tr("vscpworks+"),
+                                tr("You must select a transmission row"),
+                                QMessageBox::Ok);
+        return;
+    }
+
+    QList<QModelIndex>::iterator it;
+    for (it = selection.begin(); it != selection.end(); it++) {
+        m_txTable->removeRow(it->row());
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// clrSelectionsTxEvent
+//
+
+void
+CFrmSession::clrSelectionsTxEvent(void)
+{
+    m_txTable->setCurrentCell(-1, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1018,9 +1414,107 @@ CFrmSession::deleteTxEvent()
 //
 
 void
-CFrmSession::loadTxEvents()
+CFrmSession::loadTxEvents(const QString& path)
 {
-    QMessageBox::about(this, tr("Load TX Events"), tr("Carpe Diem  ddd"));
+    QString fileName = path;
+    QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+
+    if (!path.length()) {
+        QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        initialPath += "/txsets/txset.xml";
+        qDebug() << initialPath;                                                    
+        fileName = QFileDialog::getOpenFileName(this,
+                                    tr("File to load transmition events from"),  
+                                    initialPath, 
+                                    tr("TX files (*.xml *.*)"));
+    }
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)){
+        qDebug() << "Cannot read file" << file.errorString();
+        return;
+    }
+
+    QXmlStreamReader reader(&file);
+
+    if (reader.readNextStartElement()) {
+        if (reader.name() == "txrows"){
+            qDebug() << reader.name();
+            while(reader.readNextStartElement()){
+                
+                bool bEnable = false;
+                QString name = tr("no name");
+                uint8_t count = 1;
+                uint32_t period = 0;
+                QString event;
+
+                if (reader.name() == "row"){
+
+                    // enable
+                    if (reader.attributes().hasAttribute("enable")) {
+                        QString enable =
+                            reader.attributes().value("enable").toString();  
+                        if (enable.contains("true", Qt::CaseInsensitive)) bEnable = true;                            
+                    }
+
+                    // name
+                    if (reader.attributes().hasAttribute("name")) {
+                        name =
+                            reader.attributes().value("name").toString();  
+                    }
+
+                    // count
+                    if (reader.attributes().hasAttribute("count")) {
+                        count =
+                            reader.attributes().value("count").toUInt();
+                    }
+
+                    // period
+                    if (reader.attributes().hasAttribute("period")) {
+                        period =
+                            reader.attributes().value("period").toUInt();    
+                    }
+
+                    // event
+                    if (reader.attributes().hasAttribute("event")) {
+                        event =
+                            reader.attributes().value("event").toString();  
+                    }
+                   
+                }
+
+                qDebug() << bEnable;
+                qDebug() << name;
+                qDebug() << count;
+                qDebug() << period;
+                qDebug() << event;
+                addTxRow(bEnable, name, count, period, event);
+                
+                reader.skipCurrentElement();
+                
+            }
+        }
+        else
+            reader.raiseError(QObject::tr("Incorrect file"));
+    }
+
+    file.close();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadTxOnStart
+//
+
+void CFrmSession::loadTxOnStart(void)
+{
+    //  QStandardPaths::AppLocalDataLocation
+    QString loadPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    loadPath += "/txevents_";
+    loadPath += m_connObject["uuid"].toString();
+    loadPath += ".xml";
+    qDebug() << loadPath; 
+
+    loadTxEvents(loadPath);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1028,9 +1522,112 @@ CFrmSession::loadTxEvents()
 //
 
 void
-CFrmSession::saveTxEvents()
+CFrmSession::saveTxEvents(const QString& path)
 {
-    QMessageBox::about(this, tr("Save TX Events"), tr("Carpe Diem  ddd"));
+    QString fileName = path;
+    vscpEvent* pev;
+    QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
+
+    if (!path.length()) {
+        QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        initialPath += "/txsets/txset.xml";
+        qDebug() << initialPath;                                                    
+        fileName = QFileDialog::getSaveFileName(this,
+                                    tr("File to save transmition events to"),  
+                                    initialPath, 
+                                    tr("TX files (*.xml *.*)"));
+    }
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+
+        // We're going to streaming text to the file
+        QXmlStreamWriter stream(&file);
+
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+        stream.writeStartElement("txrows");
+
+        if (selection.size()) {
+
+            // Save selected items
+            QList<QModelIndex>::iterator it;
+            for (it = selection.begin(); it != selection.end(); it++) {
+                CTxWidgetItem* itemSourceEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);
+
+                stream.writeStartElement("row");
+                stream.writeAttribute("enable", 
+                                        itemSourceEvent->m_tx.getEnable() ? "true" : "false");
+                stream.writeAttribute("name", 
+                                        itemSourceEvent->m_tx.getName());
+                stream.writeAttribute("count", 
+                                        QString::number(itemSourceEvent->m_tx.getCount()));
+                stream.writeAttribute("period", 
+                                        QString::number(itemSourceEvent->m_tx.getPeriod()));
+                std::string str;                                            
+                vscp_convertEventToString(str, itemSourceEvent->m_tx.getEvent());
+                stream.writeAttribute("event", str.c_str());                                                                                                                                    
+                //stream.writeTextElement("test", "This is a test");
+                
+                stream.writeEndElement(); // row
+
+            }
+        }
+        else {
+
+            // save all
+            for (int i=0; i<m_txTable->rowCount(); i++) {
+                CTxWidgetItem* itemSourceEvent = (CTxWidgetItem *)m_txTable->item(i, txrow_event);
+                                
+                    stream.writeStartElement("row");
+                    stream.writeAttribute("enable", 
+                                            itemSourceEvent->m_tx.getEnable() ? "true" : "false");
+                    stream.writeAttribute("name", 
+                                            itemSourceEvent->m_tx.getName());
+                    stream.writeAttribute("count", 
+                                            QString::number(itemSourceEvent->m_tx.getCount()));
+                    stream.writeAttribute("period", 
+                                            QString::number(itemSourceEvent->m_tx.getPeriod()));
+                    std::string str;                                            
+                    vscp_convertEventToString(str, itemSourceEvent->m_tx.getEvent());
+                    stream.writeAttribute("event", str.c_str());                                                                                                                                    
+                    //stream.writeTextElement("test", "This is a test");
+
+                    stream.writeEndElement(); // row
+                    
+                    
+            }
+        }
+
+        stream.writeEndElement(); // txrows
+
+        stream.writeEndDocument();
+        file.close(); 
+
+    }
+    else {
+        // Failed to open file
+    }
+
+       
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveTxOnExit
+//
+
+void CFrmSession::saveTxOnExit(void)
+{
+    //  QStandardPaths::AppLocalDataLocation
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    savePath += "/txevents_";
+    savePath += m_connObject["uuid"].toString();
+    savePath += ".xml";
+    qDebug() << savePath; 
+
+    saveTxEvents(savePath);
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
