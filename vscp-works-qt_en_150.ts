@@ -4121,11 +4121,6 @@ and the flag bits for the. the driver.
         <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="build/ui_cfrmsession.h" line="75"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>CanalConfigWizard</name>
