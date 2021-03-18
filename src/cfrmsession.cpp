@@ -164,6 +164,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     m_toolBar = new QToolBar();
 
     createMenu();
+    createToolbar();
     createHorizontalGroupBox();
     createRxGroupBox();
     // createFormGroupBox();
@@ -319,27 +320,46 @@ CFrmSession::createMenu()
 {
     m_menuBar = new QMenuBar;
 
-    // File menu
+    // * * * File menu * * *
+
     m_fileMenu = new QMenu(tr("&File"), this);
 
     // Icons
     const QIcon windowCloseIcon = QIcon::fromTheme("window-close");
 
-    const QIcon loadIcon = QIcon::fromTheme("window-close");
-    const QIcon saveIcon = QIcon::fromTheme("window-close");
+    const QIcon loadIcon = QIcon::fromTheme("file-open");
+    const QIcon saveIcon = QIcon::fromTheme("file-save");
 
     // const QIcon connectIcon = QIcon::fromTheme("call-start");
     const QIcon disconnectIcon = QIcon::fromTheme("call-stop");
     // const QIcon filterIcon = QIcon::fromTheme("edit-find");
-    // const QIcon filterIcon = QIcon::fromTheme("edit-find");
+    const QIcon saveIcon2 = QIcon::fromTheme("file-save");
+
+    // * * *  menu * * *
 
     m_loadEventsAct =
-      m_fileMenu->addAction(tr("Load VSCP events from file..."));
-    m_saveEventsAct = m_fileMenu->addAction(tr("Save VSCP events to file..."));
-    m_loadTxAct =
-      m_fileMenu->addAction(tr("Load transmission set from file..."));
-    m_saveTxAct = m_fileMenu->addAction(tr("Save transmission set to file"));
+      m_fileMenu->addAction(QIcon::fromTheme("document-open"),
+                                tr("Load RX rows from file..."),
+                                this,
+                                &CFrmSession::loadRxFromFile);
+    
+    m_saveEventsAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
+                                tr("Write RX rows to file..."),
+                                this,
+                                &CFrmSession::saveRxToFile);                               
 
+    m_loadTxAct =
+      m_fileMenu->addAction(QIcon::fromTheme("document-open"),
+                                tr("Load TX rows from file..."),
+                                this,
+                                &CFrmSession::loadTxEventsAct);
+    
+    m_saveTxAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
+                                tr("Write TX rows to file..."),
+                                this,
+                                &CFrmSession::saveTxEventsAct);
+
+    
     m_exitAct = m_fileMenu->addAction(windowCloseIcon,
                                       tr("Close session window"),
                                       this,
@@ -348,6 +368,125 @@ CFrmSession::createMenu()
 
     m_menuBar->addMenu(m_fileMenu);
 
+
+    // * * * Edit menu * * *
+
+
+    m_editMenu       = new QMenu(tr("&Edit"), this);
+    m_copyRxAct      = m_editMenu->addAction(tr("Copy RX event to clipboard"));
+    m_copyTxAct      = m_editMenu->addAction(tr("Copy TX event to clipboard"));
+    m_copyRxToTxAct  = m_editMenu->addAction(tr("Copy RX event to TX"));
+    m_editMenu->addSeparator();
+
+    m_clrRxSelectionsAct = m_editMenu->addAction(tr("Clear RX selections"),
+                                                this,
+                                                &CFrmSession::menu_unselect_all_rxlist);
+    m_clrRxSelectionsAct->setShortcut(QKeySequence(tr("Alt+U")));
+    m_clrRxSelectionsAct->setStatusTip(tr("Clear selections in RX list"));                                                
+
+    m_clrRxListAct = m_editMenu->addAction(tr("Clear RX list"),
+                                                this,
+                                                &CFrmSession::menu_clear_rxlist);
+    m_clrRxListAct->setShortcut(QKeySequence(tr("Ctrl+N")));
+    m_clrRxListAct->setStatusTip(tr("Clear RX list")); 
+
+    m_clrTxListAct = m_editMenu->addAction(tr("Clear TX list"),
+                                                this,
+                                                &CFrmSession::menu_clear_txlist);
+    m_clrTxListAct->setShortcut(QKeySequence(tr("Alt+2")));
+    m_clrTxListAct->setStatusTip(tr("Clear TX list")); 
+
+    m_editMenu->addSeparator();
+
+    m_toggleRxRowMarkAct    = m_editMenu->addAction(tr("Toggle RX row mark"),
+                                                        this,
+                                                        &CFrmSession::setVscpRowMark);
+    m_toggleRxRowMarkAct->setShortcut(QKeySequence(tr("Alt+M")));
+    m_toggleRxRowMarkAct->setStatusTip(tr("Mark the receive row with special background color")); 
+
+    m_toggleRxClassMarkAct  = m_editMenu->addAction(tr("Toggle RX Class mark"),
+                                                        this,
+                                                        &CFrmSession::setVscpClassMark);
+    m_toggleRxClassMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_C));
+    m_toggleRxClassMarkAct->setStatusTip(tr("Mark the receive row with special background color"));
+
+    m_toggleRxTypeMarkAct   = m_editMenu->addAction(tr("Toggle RX Type mark"),
+                                                        this,
+                                                        &CFrmSession::setVscpTypeMark);
+    m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+    m_toggleRxTypeMarkAct->setStatusTip(tr("Mark the receive row with special background color"));
+
+    m_addExCommentAct       = m_editMenu->addAction(tr("Add/Edit RX comment"),
+                                                        this,
+                                                        &CFrmSession::addEventNote);
+    m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+    m_toggleRxTypeMarkAct->setStatusTip(tr("Add a comment to selected RX row(s)"));                                                        
+
+    m_deleteRxCommentAct    = m_editMenu->addAction(tr("Remove RX comment"),
+                                                        this,
+                                                        &CFrmSession::removeEventNote);
+    m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+    m_toggleRxTypeMarkAct->setStatusTip(tr("Remove a comment from selected RX row(s)")); 
+
+    m_menuBar->addMenu(m_editMenu);
+
+    // * * * Host menu * * *
+
+    m_hostMenu      = new QMenu(tr("&Host"), this);
+    m_connectAct    = m_hostMenu->addAction(tr("Connect to host..."));
+    m_disconnectAct = m_hostMenu->addAction(tr("Disconnect from host..."));
+    // m_pauseAct = m_hostMenu->addAction(tr("Pause host"));
+    // m_addHostAct = m_hostMenu->addAction(tr("Add host..."));
+    m_editHostAct = m_hostMenu->addAction(tr("Edit host settings..."));
+    m_menuBar->addMenu(m_hostMenu);
+    
+    // * * * VSCP menu * * *
+    m_vscpMenu      = new QMenu(tr("&VSCP"), this);
+    m_readRegAct    = m_vscpMenu->addAction(tr("Read register..."));
+    m_writeRegAct   = m_vscpMenu->addAction(tr("Write register..."));
+    m_readAllRegAct = m_vscpMenu->addAction(tr("Read (all) registers..."));
+    m_readGuidAct   = m_vscpMenu->addAction(tr("Read GUID"));
+    m_readMdfAct    = m_vscpMenu->addAction(tr("Read MDF..."));
+    m_loadMdfAct    = m_vscpMenu->addAction(tr("Download MDF..."));
+    m_menuBar->addMenu(m_vscpMenu);
+
+    // * * * Settings menu * * *
+    m_settingsMenu = new QMenu(tr("&Setting"), this);
+    m_setFilterAct = m_settingsMenu->addAction(tr("Set/define filter..."));
+    m_settingsAct  = m_settingsMenu->addAction(tr("Settings..."));
+    m_menuBar->addMenu(m_settingsMenu);
+    connect(m_settingsAct,
+            &QAction::triggered,
+            this,
+            &CFrmSession::menu_open_main_settings);
+
+    // * * * Tools menu * * *
+    m_toolsMenu = new QMenu(tr("&Tools"), this);
+    m_menuBar->addMenu(m_toolsMenu);
+
+    // Connections
+
+    connect(m_exitAct, &QAction::triggered, this, &QDialog::accept);
+
+    
+
+    // #ifndef QT_NO_CLIPBOARD
+    //     cutAct->setEnabled(false);
+
+    //     copyAct->setEnabled(false);
+    //     connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct,
+    //     &QAction::setEnabled); connect(textEdit,
+    //     &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
+    // #endif // !QT_NO_CLIPBOARD
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// createToolbar
+//
+
+void
+CFrmSession::createToolbar()
+{
     m_toolBar->addSeparator();
 
     // Numerical base
@@ -418,91 +557,19 @@ CFrmSession::createMenu()
 
     m_toolBar->addSeparator();
 
-    // ------------------------------------------------------------------------
+    // Connections
 
-    // Edit menu
-    m_editMenu       = new QMenu(tr("&Edit"), this);
-    m_cutAct         = m_editMenu->addAction(tr("Cut"));
-    m_copyAct        = m_editMenu->addAction(tr("Copy"));
-    m_pasteBeforeAct = m_editMenu->addAction(tr("Paste before"));
-    m_pasteAfterAct  = m_editMenu->addAction(tr("Paste after"));
-    m_menuBar->addMenu(m_editMenu);
-
-    // Host menu
-    m_hostMenu      = new QMenu(tr("&Host"), this);
-    m_connectAct    = m_hostMenu->addAction(tr("Connect to host..."));
-    m_disconnectAct = m_hostMenu->addAction(tr("Disconnect from host..."));
-    // m_pauseAct = m_hostMenu->addAction(tr("Pause host"));
-    // m_addHostAct = m_hostMenu->addAction(tr("Add host..."));
-    m_editHostAct = m_hostMenu->addAction(tr("Edit host settings..."));
-    m_menuBar->addMenu(m_hostMenu);
-
-    // View menu
-    m_viewMenu       = new QMenu(tr("&View"), this);
-    m_viewMessageAct = m_viewMenu->addAction(tr("Message flow"));
-    m_viewCountAct   = m_viewMenu->addAction(tr("Message count"));
-    m_viewMenu->addSeparator();
-    m_viewClrRxListAct = m_viewMenu->addAction(tr("Clear receive list..."));
-    m_viewClrTxListAct =
-      m_viewMenu->addAction(tr("Clear transmission list..."));
-    m_menuBar->addMenu(m_viewMenu);
-
-    // VSCP menu
-    m_vscpMenu      = new QMenu(tr("&vscp"), this);
-    m_readRegAct    = m_vscpMenu->addAction(tr("Read register..."));
-    m_writeRegAct   = m_vscpMenu->addAction(tr("Write register..."));
-    m_readAllRegAct = m_vscpMenu->addAction(tr("Read (all) registers..."));
-    m_readGuidAct   = m_vscpMenu->addAction(tr("Read GUID"));
-    m_readMdfAct    = m_vscpMenu->addAction(tr("Read MDF..."));
-    m_loadMdfAct    = m_vscpMenu->addAction(tr("Download MDF..."));
-    m_menuBar->addMenu(m_vscpMenu);
-
-    // Settings menu
-    m_settingsMenu = new QMenu(tr("&Setting"), this);
-    m_setFilterAct = m_settingsMenu->addAction(tr("Set/define filter..."));
-    m_settingsAct  = m_settingsMenu->addAction(tr("Settings..."));
-    m_menuBar->addMenu(m_settingsMenu);
-    connect(m_settingsAct,
-            &QAction::triggered,
-            this,
-            &CFrmSession::menu_open_main_settings);
-
-    // Tools menu
-    m_toolsMenu = new QMenu(tr("&Tools"), this);
-    m_menuBar->addMenu(m_toolsMenu);
-
-    connect(m_exitAct, &QAction::triggered, this, &QDialog::accept);
-
-    // connect(m_connectAct, SIGNAL(triggered(bool)), this,
-    // SLOT(connectToRemoteHost(bool))); // &QAction::
     connect(m_connectActToolBar,
             SIGNAL(triggered(bool)),
             this,
             SLOT(connectToRemoteHost(bool)));
+
     connect(m_disconnectAct,
             SIGNAL(toggled(bool)),
             this,
             SLOT(connectToRemoteHost(bool)));
 
-    // #ifndef QT_NO_CLIPBOARD
-    //     cutAct->setEnabled(false);
-
-    //     copyAct->setEnabled(false);
-    //     connect(textEdit, &QPlainTextEdit::copyAvailable, cutAct,
-    //     &QAction::setEnabled); connect(textEdit,
-    //     &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
-    // #endif // !QT_NO_CLIPBOARD
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// close
-//
-
-// void CFrmSession::close()
-// {
-//     //accept();
-//     close();
-// }
 
 ///////////////////////////////////////////////////////////////////////////////
 // createHorizontalGroupBox
@@ -532,12 +599,6 @@ CFrmSession::createRxGroupBox()
     QGridLayout* layout = new QGridLayout;
     layout->setContentsMargins(1, 1, 1, 1);
 
-    // for (int i = 0; i < NumGridRows; ++i) {
-    //     labels[i] = new QLabel(tr("Line %1:").arg(i + 1));
-    //     lineEdits[i] = new QLineEdit;
-    //     layout->addWidget(labels[i], i + 1, 0);
-    //     layout->addWidget(lineEdits[i], i + 1, 1);
-    // }
     QStringList headers(
       QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
     m_rxTable = new QTableWidget;
@@ -555,50 +616,6 @@ CFrmSession::createRxGroupBox()
     m_rxTable->horizontalHeader()->setStretchLastSection(true);
     m_rxTable->setHorizontalHeaderLabels(headers);
 
-    // QTableWidgetItem* item = new QTableWidgetItem("ᐊ ᐅ"); // ➤ ➜ ➡ ➤
-    // item->setTextAlignment(Qt::AlignHCenter);
-    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-    // int row = m_rxTable->rowCount();
-    // m_rxTable->insertRow(row);
-
-    // QTableWidgetItem *item = m_rxTable->item(1, 1);
-    // item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-    // item->setForeground(QBrush(QColor(0, 5, 180)));
-
-    // m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, item);
-    // QTableWidgetItem *item;
-
-    // QTableWidgetItem* icon_item = new QTableWidgetItem;
-    // const QIcon loadIcon        = QIcon::fromTheme("window-close");
-    // icon_item->setIcon(loadIcon);
-    // m_rxTable->insertRow(row);
-    // m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, icon_item);
-
-    // item = m_rxTable->item(row, 1);
-    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-    // item = m_rxTable->item(row, 2);
-    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-    // item = m_rxTable->item(row, 3);
-    // item->setFlags(item->flags() ^ Qt::ItemIsEditable);
-
-    // m_rxTable->setUpdatesEnabled(false);
-    // for (int i = 0; i < m_rxTable->rowCount(); i++) {
-    //     m_rxTable->setRowHeight(i, 10);
-    // }
-    // m_rxTable->setUpdatesEnabled(true);
-
-    // <---
-    // QSqlTableModel *
-    // m_rxmodel = new QSqlTableModel;
-    // m_rxmodel->setTable("events");
-    // m_rxmodel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    // m_rxmodel->select();
-    // m_rxmodel->setHeaderData(0, Qt::Horizontal, tr("class"));
-    // m_rxmodel->setHeaderData(1, Qt::Horizontal, tr("type"));
-
-    // m_rxTable->setModel(m_rxmodel);
-    // m_rxTable->hideColumn(0); // don't show the ID
-
     layout->addWidget(m_rxTable,
                       0,
                       0,
@@ -613,38 +630,6 @@ CFrmSession::createRxGroupBox()
     m_infoArea->setOpenExternalLinks(true);
     QColor grey(Qt::red);
     m_infoArea->setTextBackgroundColor(grey);
-    // m_infoArea->insertHtml(tr(
-    //   "<h3>VSCP Event</h3>"
-    //   "<small><p style=\"color:#993399\">Received event</p></small>"
-    //   "<b>Head: </b><span style=\"color:rgb(0, 0, 153);\">0x0100</span><br>"
-    //   "<b>Time: </b><span style=\"color:rgb(0, 0, "
-    //   "153);\">2021-09-12T12:10:29</span><br>"
-    //   "<b>Timestamp: </b><span style=\" color:rgb(0, 0, "
-    //   "153);\">0x1213140f</span><br>"
-    //   "<br>"
-    //   "<b>Class: </b><a href=\"https://www.vscp.org\">CLASS1_DATA</a><span "
-    //   "style=\"color:rgb(0, 102, 0);\"> 0x000F, 15</span><br>"
-    //   "<b>Type: </b><a href=\"https://www.vscp.org\">IO-VALUE</a> <span "
-    //   "style=\"color:rgb(0, 102, 0);\">0x0001, 1</span><br>"
-    //   "<br>"
-    //   "<b>GUID: </b><small><span style=\"color:rgb(0, 102, "
-    //   "0);\">FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF:FF</span></small><br>"
-
-    //   "<br><br>This <b>widget takes</b> up all the remaining space "
-    //   "in the top-level layout ddddd."
-    //   "in the top-level layout ddddd."
-    //   "<h1>This is a test</h1> <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "This is a test <br>"
-    //   "Carpe Diem <br>"));
 
     layout->addWidget(m_infoArea,
                       0,
@@ -715,7 +700,7 @@ CFrmSession::createTxGridGroup()
     m_txToolBar->addAction(addAct);
 
     // Edit tx row
-    const QIcon editIcon = QIcon::fromTheme("format-justify-center");
+    const QIcon editIcon = QIcon::fromTheme("accessories-text-editor");
     QAction* editAct     = new QAction(editIcon, tr("&Edit"), this);
     editAct->setShortcuts(QKeySequence::New);
     editAct->setStatusTip(tr("Edit selected event"));
@@ -834,10 +819,10 @@ CFrmSession::menu_clear_rxlist(void)
     }
 
     // Clear the event counter
-    m_mapEventToCount.clear();
+    m_mapRxEventToCount.clear();
 
     // Erase all comments
-    m_mapEventComment.clear();
+    m_mapRxEventComment.clear();
 
     m_mutexRxList.unlock();
 
@@ -1040,13 +1025,96 @@ bool CFrmSession::addTxRow(bool bEnable,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// menu_clear_txlist
+//
+
+void
+CFrmSession::menu_clear_txlist(void)
+{
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    m_txTable->setCurrentCell(-1, -1); // unselect all
+
+    m_mutexTxList.lock();
+
+    // Clear TX list
+    while (m_txTable->rowCount()) {
+        m_txTable->removeRow(0);
+    }
+
+    m_mutexTxList.unlock();
+
+    QApplication::restoreOverrideCursor();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // sendTxEvent
 //
 
 void
 CFrmSession::sendTxEvent(void)
 {
-    QMessageBox::about(this, tr("Send Event"), tr("Carpe Diem"));
+    vscpEvent ev;
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    switch (m_vscpConnType) {
+
+        case CVscpClient::connType::NONE:
+            break;
+
+        case CVscpClient::connType::LOCAL:
+            break;
+
+        case CVscpClient::connType::TCPIP:
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->send(ev)) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to send event");
+                // QMessageBox::information(
+                //   this,
+                //   tr("vscpworks+"),
+                //   tr("Failed to disconnect the connection to the remote host"),
+                //   QMessageBox::Ok);
+            }
+            break;
+
+        case CVscpClient::connType::CANAL:
+            break;
+
+        case CVscpClient::connType::SOCKETCAN:
+            break;
+
+        case CVscpClient::connType::WS1:
+            break;
+
+        case CVscpClient::connType::WS2:
+            break;
+
+        case CVscpClient::connType::MQTT:
+            break;
+
+        case CVscpClient::connType::UDP:
+            break;
+
+        case CVscpClient::connType::MULTICAST:
+            break;
+
+        case CVscpClient::connType::REST:
+            break;
+
+        case CVscpClient::connType::RS232:
+            break;
+
+        case CVscpClient::connType::RS485:
+            break;
+
+        case CVscpClient::connType::RAWCAN:
+            break;
+
+        case CVscpClient::connType::RAWMQTT:
+            break;
+    }
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1414,17 +1482,18 @@ CFrmSession::clrSelectionsTxEvent(void)
 //
 
 void
-CFrmSession::loadTxEvents(const QString& path)
+CFrmSession::loadTxEvents(const QString& path )
 {
     QString fileName = path;
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
 
     if (!path.length()) {
-        QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        initialPath += "/txsets/txset.xml";
-        qDebug() << initialPath;                                                    
+        //QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        QString initialPath = pworks->m_shareFolder + "/txsets/txset.xml";
         fileName = QFileDialog::getOpenFileName(this,
-                                    tr("File to load transmition events from"),  
+                                    tr("File to load transmitt events from"),  
                                     initialPath, 
                                     tr("TX files (*.xml *.*)"));
     }
@@ -1472,7 +1541,7 @@ CFrmSession::loadTxEvents(const QString& path)
                     // period
                     if (reader.attributes().hasAttribute("period")) {
                         period =
-                            reader.attributes().value("period").toUInt();    
+                            reader.attributes().value("period").toULong();    
                     }
 
                     // event
@@ -1510,8 +1579,8 @@ void CFrmSession::loadTxOnStart(void)
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     //  QStandardPaths::AppLocalDataLocation
-    QString loadPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    loadPath += "/cache/txevents_";
+    //QString loadPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString loadPath = pworks->m_shareFolder + "/cache/txevents_";
     loadPath += m_connObject["uuid"].toString();
     loadPath += ".xml";
     qDebug() << loadPath; 
@@ -1530,12 +1599,12 @@ CFrmSession::saveTxEvents(const QString& path)
 {
     QString fileName = path;
     vscpEvent* pev;
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
 
     if (!path.length()) {
-        QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        initialPath += "/txsets/txset.xml";
-        qDebug() << initialPath;                                                    
+        QString initialPath = pworks->m_shareFolder + "/txsets/txset.xml";                                                    
         fileName = QFileDialog::getSaveFileName(this,
                                     tr("File to save transmition events to"),  
                                     initialPath, 
@@ -1584,23 +1653,20 @@ CFrmSession::saveTxEvents(const QString& path)
             for (int i=0; i<m_txTable->rowCount(); i++) {
                 CTxWidgetItem* itemSourceEvent = (CTxWidgetItem *)m_txTable->item(i, txrow_event);
                                 
-                    stream.writeStartElement("row");
-                    stream.writeAttribute("enable", 
-                                            itemSourceEvent->m_tx.getEnable() ? "true" : "false");
-                    stream.writeAttribute("name", 
-                                            itemSourceEvent->m_tx.getName());
-                    stream.writeAttribute("count", 
-                                            QString::number(itemSourceEvent->m_tx.getCount()));
-                    stream.writeAttribute("period", 
-                                            QString::number(itemSourceEvent->m_tx.getPeriod()));
-                    std::string str;                                            
-                    vscp_convertEventToString(str, itemSourceEvent->m_tx.getEvent());
-                    stream.writeAttribute("event", str.c_str());                                                                                                                                    
-                    //stream.writeTextElement("test", "This is a test");
+                stream.writeStartElement("row");
+                stream.writeAttribute("enable", 
+                                        itemSourceEvent->m_tx.getEnable() ? "true" : "false");
+                stream.writeAttribute("name", 
+                                        itemSourceEvent->m_tx.getName());
+                stream.writeAttribute("count", 
+                                        QString::number(itemSourceEvent->m_tx.getCount()));
+                stream.writeAttribute("period", 
+                                        QString::number(itemSourceEvent->m_tx.getPeriod()));
+                std::string str;                                            
+                vscp_convertEventToString(str, itemSourceEvent->m_tx.getEvent());
+                stream.writeAttribute("event", str.c_str());
 
-                    stream.writeEndElement(); // row
-                    
-                    
+                stream.writeEndElement(); // row                                        
             }
         }
 
@@ -1625,9 +1691,11 @@ void CFrmSession::saveTxOnExit(void)
 {
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+    m_txTable->setCurrentCell(-1, -1); // unselect all
+
     //  QStandardPaths::AppLocalDataLocation
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    savePath += "/cache/txevents_";
+    //QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString savePath = pworks->m_shareFolder + "/cache/txevents_";
     savePath += m_connObject["uuid"].toString();
     savePath += ".xml";
     qDebug() << savePath; 
@@ -1837,18 +1905,12 @@ CFrmSession::showRxContextMenu(const QPoint& pos)
                     this,
                     SLOT(menu_clear_rxlist()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Save events to file...")),
+    menu->addAction(QString(tr("Write events to file...")),
                     this,
                     SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked event rows to file...")),
+    menu->addAction(QString(tr("Write marked events to file...")),
                     this,
-                    SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked class event rows to file...")),
-                    this,
-                    SLOT(saveRxToFile()));
-    menu->addAction(QString(tr("Save marked type event rows to file...")),
-                    this,
-                    SLOT(saveRxToFile()));
+                    SLOT(saveMarkRxToFile()));
     menu->addAction(QString(tr("Load events from file...")),
                     this,
                     SLOT(loadRxFromFile()));
@@ -1857,25 +1919,18 @@ CFrmSession::showRxContextMenu(const QPoint& pos)
                     this,
                     SLOT(setGuid()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Add comment...")), this, SLOT(addEventNote()));
+    menu->addAction(QString(tr("Add/Edit comment...")), this, SLOT(addEventNote()));
     menu->addAction(QString(tr("Remove comment")),
                     this,
                     SLOT(removeEventNote()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Mark row")), this, SLOT(setVscpRowMark()));
-    menu->addAction(QString(tr("Unmark row")), this, SLOT(unsetVscpRowMark()));
-    menu->addAction(QString(tr("Mark VSCP class")),
+    menu->addAction(QString(tr("Toggle row mark")), this, SLOT(setVscpRowMark()));
+    menu->addAction(QString(tr("Toggle VSCP class mark")),
                     this,
                     SLOT(setVscpClassMark()));
-    menu->addAction(QString(tr("Unmark VSCP class")),
-                    this,
-                    SLOT(unsetVscpClassMark()));
-    menu->addAction(QString(tr("Mark VSCP type")),
+    menu->addAction(QString(tr("Toggle VSCP type mark")),
                     this,
                     SLOT(setVscpTypeMark()));
-    menu->addAction(QString(tr("Unmark VSCP type")),
-                    this,
-                    SLOT(unsetVscpTypeMark()));
 
     menu->popup(m_rxTable->viewport()->mapToGlobal(pos));
 }
@@ -1931,19 +1986,21 @@ void
 CFrmSession::addEventNote(void)
 {
     bool ok;
-    QString text = QInputDialog::getText(this,
-                                         tr("QInputDialog::getText()"),
-                                         tr("Comment:"),
-                                         QLineEdit::Normal,
-                                         "",
-                                         &ok);
-    if (ok && !text.isEmpty()) {
-        QIcon icon(":/comment.png");
-        QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
-        QList<QModelIndex>::iterator it;
-        for (it = selection.begin(); it != selection.end(); it++) {
+
+    QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+    QList<QModelIndex>::iterator it;
+    for (it = selection.begin(); it != selection.end(); it++) {
+        QString comment = m_mapRxEventComment[it->row()];
+        QString text = QInputDialog::getText(this,
+                                            tr("Add comment"),
+                                            tr("Comment:"),
+                                            QLineEdit::Normal,
+                                            comment,
+                                            &ok);
+        if (ok && !text.isEmpty()) {
+            QIcon icon(":/comment.png");    
             m_rxTable->item(it->row(), 0)->setIcon(icon);
-            m_mapEventComment[it->row()] = text;
+            m_mapRxEventComment[it->row()] = text;
         }
 
         // Cludge to display comment directly
@@ -1967,8 +2024,8 @@ CFrmSession::removeEventNote(void)
     for (it = selection.begin(); it != selection.end(); it++) {
         m_rxTable->item(it->row(), 0)->setIcon(icon);
         std::map<int, QString>::iterator itmap;
-        itmap = m_mapEventComment.find(it->row());
-        m_mapEventComment.erase(itmap);
+        itmap = m_mapRxEventComment.find(it->row());
+        m_mapRxEventComment.erase(itmap);
     }
 }
 
@@ -1982,7 +2039,12 @@ CFrmSession::setVscpRowMark(void)
     QList<QTableWidgetItem*> sellist = m_rxTable->selectedItems();
     QList<QTableWidgetItem*>::iterator it;
     for (it = sellist.begin(); it != sellist.end(); it++) {
-        (*it)->setBackground(Qt::cyan);
+        if (QBrush(Qt::cyan) == (*it)->background()) {
+            (*it)->setBackground(Qt::white);
+        }
+        else {
+            (*it)->setBackground(Qt::cyan);
+        }
     }
 }
 
@@ -2011,7 +2073,12 @@ CFrmSession::setVscpClassMark(void)
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
-        m_rxTable->item(it->row(), 1)->setIcon(icon);
+        if (!m_rxTable->item(it->row(), 1)->icon().cacheKey()) {
+            m_rxTable->item(it->row(), 1)->setIcon(icon);
+        }
+        else {
+            m_rxTable->item(it->row(), 1)->setIcon(QIcon());
+        }
     }
 }
 
@@ -2041,7 +2108,12 @@ CFrmSession::setVscpTypeMark(void)
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
-        m_rxTable->item(it->row(), 2)->setIcon(icon);
+        if (!m_rxTable->item(it->row(), 2)->icon().cacheKey()) {
+            m_rxTable->item(it->row(), 2)->setIcon(icon);
+        }
+        else {
+            m_rxTable->item(it->row(), 2)->setIcon(QIcon());
+        }
     }
 }
 
@@ -2061,13 +2133,212 @@ CFrmSession::unsetVscpTypeMark(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// saveMarkRxToFile
+//
+
+void
+CFrmSession::saveMarkRxToFile(void)
+{
+    QString fileName;
+    vscpEvent* pev;
+
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    QString initialPath = pworks->m_shareFolder + "/rxsets/rxset.xml";
+    qDebug() << initialPath;                                                    
+    fileName = QFileDialog::getSaveFileName(this,
+                                tr("File to save receive events to"),  
+                                initialPath, 
+                                tr("RX files (*.xml *.*)"));
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+
+        // We're going to streaming text to the file
+        QXmlStreamWriter stream(&file);
+
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+        stream.writeStartElement("rxrows");
+
+        for (int i = 0; i < m_rxTable->rowCount(); i++) {
+
+            QTableWidgetItem* itemDir = m_rxTable->item(i, rxrow_dir);
+            if (QBrush(Qt::cyan) == itemDir->background()) {
+                
+                stream.writeStartElement("row");
+
+                stream.writeAttribute("mark-row",
+                                        (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+
+                QTableWidgetItem* itemClass  =  m_rxTable->item(i, rxrow_class);
+                stream.writeAttribute("mark-class", 
+                                        (itemClass->icon().cacheKey()) ? "true" : "false");
+
+                QTableWidgetItem* itemType = m_rxTable->item(i, rxrow_type);                                        
+                stream.writeAttribute("mark-type", 
+                                        (itemType->icon().cacheKey()) ? "true" : "false");
+
+                QString strVscpComment = m_mapRxEventComment[i];
+                stream.writeAttribute("comment", strVscpComment);
+
+                std::string str;         
+                vscpEvent* pev = m_rxEvents[i];
+                if (nullptr != pev) {                                  
+                    vscp_convertEventToString(str, pev);
+                    stream.writeAttribute("event", str.c_str());                                                                                                                                    
+                }
+                
+                stream.writeEndElement(); // row    
+
+            }
+
+        }
+
+        stream.writeEndElement(); // txrows
+        stream.writeEndDocument();
+
+        file.close(); 
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // saveRxToFile
 //
 
 void
 CFrmSession::saveRxToFile(void)
 {
-    int i = 8;
+    QString fileName;
+    vscpEvent* pev;
+
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+
+    QString initialPath = pworks->m_shareFolder + "/rxsets/rxset.xml";
+    qDebug() << initialPath;                                                    
+    fileName = QFileDialog::getSaveFileName(this,
+                                tr("File to save receive events to"),  
+                                initialPath, 
+                                tr("RX files (*.xml *.*)"));
+
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+
+        // We're going to streaming text to the file
+        QXmlStreamWriter stream(&file);
+
+        stream.setAutoFormatting(true);
+        stream.writeStartDocument();
+
+        stream.writeStartElement("rxrows");
+
+        if (selection.size()) {
+
+            // Save selected items
+            QList<QModelIndex>::iterator it;
+            for (it = selection.begin(); it != selection.end(); it++) {
+
+                stream.writeStartElement("row");
+
+                QTableWidgetItem* itemDir = m_rxTable->item(it->row(), rxrow_dir);
+
+                uint32_t flags = itemDir->data(Qt::UserRole).toULongLong();
+                stream.writeAttribute("flags", QString::number(flags));
+
+                // Background color
+                int r,g,b,a;
+                QColor bc = itemDir->background().color();                
+                bc.getRgb(&r, &g, &b, &a);
+                uint32_t rgba = (((uint32_t)r) << 24) + (((uint32_t)g) << 16) + (((uint32_t)b) << 8) + a;
+                stream.writeAttribute("rgba",QString::number(rgba));
+                // stream.writeAttribute("r", QString::number(itemDir->background().color().red()));
+                // stream.writeAttribute("g", QString::number(itemDir->background().color().green()));
+                // stream.writeAttribute("b", QString::number(itemDir->background().color().blue()));
+                // stream.writeAttribute("a", QString::number(itemDir->background().color().alpha()));
+                
+                stream.writeAttribute("mark-row",
+                                        (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+
+                QTableWidgetItem* itemClass  =  m_rxTable->item(it->row(), rxrow_class);
+                stream.writeAttribute("mark-class", 
+                                        (itemClass->icon().cacheKey()) ? "true" : "false");
+
+                qDebug() << itemClass->icon().cacheKey();
+                QTableWidgetItem* itemType = m_rxTable->item(it->row(), rxrow_type);                                        
+                stream.writeAttribute("mark-type", 
+                                        (itemType->icon().cacheKey()) ? "true" : "false");
+
+                QString strVscpComment = m_mapRxEventComment[it->row()];
+                stream.writeAttribute("comment", strVscpComment);
+
+                std::string str;         
+                vscpEvent* pev = m_rxEvents[it->row()];
+                if (nullptr != pev) {                                  
+                    vscp_convertEventToString(str, pev);
+                    stream.writeAttribute("event", str.c_str());                                                                                                                                    
+                }
+                
+                stream.writeEndElement(); // row
+
+            }
+        }
+        else {
+
+            // save all
+            for (int i = 0; i < m_rxTable->rowCount(); i++) {
+
+                stream.writeStartElement("row");
+
+                QTableWidgetItem* itemDir = m_rxTable->item(i, rxrow_dir);
+
+                uint32_t flags = itemDir->data(Qt::UserRole).toULongLong();
+                stream.writeAttribute("flags", QString::number(flags));
+
+                // Background color
+                int r,g,b,a;
+                QColor bc = itemDir->background().color();
+                bc.getRgb(&r, &g, &b, &a);
+                uint32_t rgba = (((uint32_t)r) << 24) + (((uint32_t)g) << 16) + (((uint32_t)b) << 8) + a;
+                stream.writeAttribute("rgba",QString::number(rgba));
+
+                stream.writeAttribute("mark-row",
+                                        (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+
+                QTableWidgetItem* itemClass  =  m_rxTable->item(i, rxrow_class);
+                stream.writeAttribute("mark-class", 
+                                        (itemClass->icon().cacheKey()) ? "true" : "false");
+
+                QTableWidgetItem* itemType = m_rxTable->item(i, rxrow_type);                                        
+                stream.writeAttribute("mark-type", 
+                                        (itemType->icon().cacheKey()) ? "true" : "false");
+
+                QString strVscpComment = m_mapRxEventComment[i];
+                stream.writeAttribute("comment", strVscpComment);
+
+                std::string str;         
+                vscpEvent* pev = m_rxEvents[i];
+                if (nullptr != pev) {                                  
+                    vscp_convertEventToString(str, pev);
+                    stream.writeAttribute("event", str.c_str());                                                                                                                                    
+                }
+                
+                stream.writeEndElement(); // row
+
+            } 
+        }
+
+        stream.writeEndElement(); // txrows
+
+        stream.writeEndDocument();
+        file.close(); 
+
+    }
+    else {
+        // Failed to open file
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2077,6 +2348,184 @@ CFrmSession::saveRxToFile(void)
 void
 CFrmSession::loadRxFromFile(void)
 {
+    QString fileName;
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    //QString initialPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString initialPath = pworks->m_shareFolder + "/rxsets/rxset.xml";
+    fileName = QFileDialog::getOpenFileName(this,
+                                tr("File to load receive events from"),  
+                                initialPath, 
+                                tr("RX files (*.xml *.*)"));
+
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)){
+        qDebug() << "Cannot read file" << file.errorString();
+        return;
+    }
+
+    QXmlStreamReader reader(&file);
+
+    if (reader.readNextStartElement()) {
+        if (reader.name() == "rxrows"){
+            qDebug() << reader.name();
+            while(reader.readNextStartElement()){
+                
+                uint32_t flags = 0;
+                bool bMarkRow = false;
+                bool bMarkClass = false;
+                bool bMarkType = false;
+                uint32_t rgba = 0;
+                QString comment = tr("");
+                QString event;
+
+                if (reader.name() == "row"){
+
+                    // flags
+                    if (reader.attributes().hasAttribute("flags")) {
+                        flags = reader.attributes().value("flags").toULong();                              
+                    }
+
+                    // rgba
+                    if (reader.attributes().hasAttribute("rgba")) {
+                        QString str =
+                            reader.attributes().value("rgba").toString(); 
+                        qDebug() << str;
+                        rgba = vscp_readStringValue(str.toStdString());                                
+                    }
+
+                    // mark-row
+                    if (reader.attributes().hasAttribute("mark-row")) {
+                        QString enable =
+                            reader.attributes().value("mark-row").toString();  
+                        if (enable.contains("true", Qt::CaseInsensitive)) bMarkRow = true;                            
+                    }
+
+                    // mark-class
+                    if (reader.attributes().hasAttribute("mark-class")) {
+                        QString enable =
+                            reader.attributes().value("mark-class").toString();  
+                        if (enable.contains("true", Qt::CaseInsensitive)) bMarkClass = true;                            
+                    }
+
+                    // mark-type
+                    if (reader.attributes().hasAttribute("mark-type")) {
+                        QString enable =
+                            reader.attributes().value("mark-type").toString();  
+                        if (enable.contains("true", Qt::CaseInsensitive)) bMarkType = true;                            
+                    }
+
+                    // comment
+                    if (reader.attributes().hasAttribute("comment")) {
+                        comment =
+                            reader.attributes().value("comment").toString();  
+                    }
+
+                    // event
+                    if (reader.attributes().hasAttribute("event")) {
+                        event =
+                            reader.attributes().value("event").toString();  
+                    }
+                   
+                }
+
+                qDebug() << bMarkRow;
+                qDebug() << bMarkClass;
+                qDebug() << bMarkType;
+                qDebug() << comment;
+                qDebug() << event;
+
+                vscpEvent *pev;
+                vscp_newEvent(&pev);
+                vscp_convertStringToEvent(pev, event.toStdString());
+        
+                m_mutexRxList.lock();
+
+                int row = m_rxTable->rowCount();
+                m_rxTable->insertRow(row);
+
+                // Save event   
+                m_rxEvents.push_back(pev);
+
+                QColor bc(  (rgba >> 24) & 0xff,
+                            (rgba >> 16) & 0xff,
+                            (rgba >> 8) & 0xff,
+                             rgba & 0xff);
+
+                // * * * Direction * * *
+                QTableWidgetItem* itemDir = 
+                    new QTableWidgetItem((flags & RX_ROW_FLAG_TX ) ? "◀" : "ᐅ"); // ➤ ➜ ➡ ➤ ᐅ ᐊ
+                itemDir->setTextAlignment(Qt::AlignCenter);
+                //itemDir->setBackground(QBrush(bc));
+
+                itemDir->setData(rxrow_role_flags, flags);
+
+                // Not editable
+                itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+
+                // Bluish
+                itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+
+                // Add
+                m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
+
+                // If one or more rows are selected don't autoscroll
+                if (!m_rxTable->selectedItems().size()) {
+                    m_rxTable->scrollToItem(itemDir);
+                }
+
+                // * * * Class * * *
+                QTableWidgetItem* itemClass = new QTableWidgetItem();
+                //itemClass->setBackground(QBrush(bc));
+                setClassInfoForRow(itemClass, pev);
+                m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+
+                // * * * Type * * *
+                QTableWidgetItem* itemType = new QTableWidgetItem();
+                setTypeInfoForRow(itemType, pev);
+                m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+
+                // * * * Node id * * *
+                QTableWidgetItem* itemNodeId = new QTableWidgetItem();
+                setNodeIdInfoForRow(itemNodeId, pev);
+                m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+
+                // * * * Guid * * *
+                QTableWidgetItem* itemGuid = new QTableWidgetItem();
+                setGuidInfoForRow(itemGuid, pev);
+                m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
+
+                m_rxTable->setUpdatesEnabled(false);
+                for (int i = 0; i < m_rxTable->rowCount(); i++) {
+                    m_rxTable->setRowHeight(i, 10);
+                }
+                m_rxTable->setUpdatesEnabled(true);
+
+                // Display number of items
+                m_lcdNumber->display(m_rxTable->rowCount());
+
+                // Count events
+                uint32_t cnt =
+                m_mapRxEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] +
+                1;
+                m_mapRxEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] =
+                cnt;
+
+                m_mutexRxList.unlock();
+
+                // Fill unselected info
+                fillReceiveEventCount();
+
+                
+                reader.skipCurrentElement();
+                
+            }
+        }
+        else
+            reader.raiseError(QObject::tr("Incorrect file"));
+    }
+
+    file.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2086,7 +2535,7 @@ CFrmSession::loadRxFromFile(void)
 void
 CFrmSession::rxCellClicked(int row, int column)
 {
-    vscpworks* pworks      = (vscpworks*)QCoreApplication::instance();
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QTableWidgetItem* item = m_rxTable->item(row, column);
     if (item->isSelected()) {
         qDebug() << "Selected";
@@ -2139,8 +2588,9 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     vscpEvent* pev = m_rxEvents[selectedRow];
-    if (nullptr == pev)
+    if (nullptr == pev) {
         return;
+    }
 
     std::string strVscpTemplate =
       "<h3>VSCP Event</h3>"
@@ -2477,7 +2927,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
 
     // Add comment (if any)
-    std::string strVscpComment = m_mapEventComment[selectedRow].toStdString();
+    std::string strVscpComment = m_mapRxEventComment[selectedRow].toStdString();
     if (strVscpComment.length()) {
         strVscpComment =
           "<hr><b>Comment:</b><p style=\"color:rgb(0x80, 0x80, 0x80);\">" +
@@ -2870,6 +3320,10 @@ CFrmSession::receiveRow(vscpEvent* pev)
     // Not editable
     itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
 
+    // Reset TX flag if set
+    uint32_t flags = itemDir->data(rxrow_role_flags).toULongLong();
+    itemDir->setData(rxrow_role_flags, flags & ~RX_ROW_FLAG_TX );
+
     // Bluish
     itemDir->setForeground(QBrush(QColor(0, 5, 180)));
 
@@ -2912,9 +3366,9 @@ CFrmSession::receiveRow(vscpEvent* pev)
 
     // Count events
     uint32_t cnt =
-      m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] +
+      m_mapRxEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] +
       1;
-    m_mapEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] =
+    m_mapRxEventToCount[((uint32_t)(pev->vscp_class) << 16) + pev->vscp_type] =
       cnt;
 
     m_mutexRxList.unlock();
@@ -2943,7 +3397,7 @@ CFrmSession::fillReceiveEventCount()
 
         std::map<uint32_t, uint32_t>::iterator it;
         QString strOut = tr("<h3>VSCP Event count</h3>");
-        for (it = m_mapEventToCount.begin(); it != m_mapEventToCount.end();
+        for (it = m_mapRxEventToCount.begin(); it != m_mapRxEventToCount.end();
              it++) {
             strOut += "<small><span style=\"color:rgb(0, 0, 153);\">";
             strOut +=

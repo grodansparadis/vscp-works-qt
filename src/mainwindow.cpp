@@ -123,20 +123,20 @@ MainWindow::MainWindow()
     // }
 
    
-    QJSEngine myEngine;
-    QJSValue three = myEngine.evaluate("(1 + 2 + Math.PI);");
-    qDebug() << tr("Int Value = ") << three.toInt();
-    qDebug() << tr("Value = ") << three.toNumber();
-    myEngine.evaluate("var e = {};e.data = [11,22,33];");
-    myEngine.evaluate("var ttt=77;");
-    //QJSValue fun = myEngine.evaluate("(function(a,b) { var e = {}; e.data = [0,1,2,3,4,5]; switch (e.data[2]) { case 0: return 100; break; case 1: return 222; break; case 2: return 333; break; }; })");
-    QJSValue fun = myEngine.evaluate("(function(a,b) { return e.data[2]; })");
-    QJSValueList args;
-    args << 1 << 2;
-    QJSValue threeAgain = fun.call(args);
-    qDebug() << threeAgain.toInt();
+    // QJSEngine myEngine;
+    // QJSValue three = myEngine.evaluate("(1 + 2 + Math.PI);");
+    // qDebug() << tr("Int Value = ") << three.toInt();
+    // qDebug() << tr("Value = ") << three.toNumber();
+    // myEngine.evaluate("var e = {};e.data = [11,22,33];");
+    // myEngine.evaluate("var ttt=77;");
+    // //QJSValue fun = myEngine.evaluate("(function(a,b) { var e = {}; e.data = [0,1,2,3,4,5]; switch (e.data[2]) { case 0: return 100; break; case 1: return 222; break; case 2: return 333; break; }; })");
+    // QJSValue fun = myEngine.evaluate("(function(a,b) { return e.data[2]; })");
+    // QJSValueList args;
+    // args << 1 << 2;
+    // QJSValue threeAgain = fun.call(args);
+    // qDebug() << threeAgain.toInt();
 
-    qDebug() << "end";
+    // qDebug() << "end";
     // QJSEngine engine; if (1) { return 2; } else { return 3 };
 
 

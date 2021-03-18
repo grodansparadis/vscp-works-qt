@@ -130,6 +130,15 @@ class CFrmSession : public QDialog
     const int txrow_count = 3;
     const int txrow_event = 4;
 
+    const int rxrow_role_flags = Qt::UserRole;  
+
+    const int txrow_role_flags = Qt::UserRole;
+
+    const uint32_t RX_ROW_FLAG_TX = 0x00000001;         // Transmit row
+    const uint32_t RX_ROW_MARKED = 0x00000002;          // Marked row
+    const uint32_t RX_ROW_MAREKED_CLASS = 0x00000004;   // Transmit row
+    const uint32_t RX_ROW_MARKED_TYPE = 0x00000008;     // Transmit row
+
     // VSCP Class display format
     // symbolic          - Just symbolic name
     // numerical_in_base - VSCP class code in selected base
@@ -359,11 +368,19 @@ class CFrmSession : public QDialog
     /// Remove mark from selected row(s) type
     void unsetVscpTypeMark(void);
 
+    /// Save Marked events to file
+    void saveMarkRxToFile(void);
+
     /// Save RX table to file (selected parts or not)
     void saveRxToFile(void);
 
     /// Load RX data from file
     void loadRxFromFile(void);
+
+    // TX Context
+
+    /// Clear the TX list
+    void menu_clear_txlist();
 
     /// Send selected TX event
     void sendTxEvent(void);
@@ -405,6 +422,7 @@ class CFrmSession : public QDialog
  private:
 
     void createMenu();
+    void createToolbar();
     void createHorizontalGroupBox();
     void createRxGroupBox();
     void createTxGridGroup();
@@ -467,10 +485,16 @@ class CFrmSession : public QDialog
     std::deque<vscpEvent *> m_rxEvents;
 
     /// VSCP (class-id + token-id) -> received count
-    std::map<uint32_t, uint32_t> m_mapEventToCount ;
+    std::map<uint32_t, uint32_t> m_mapRxEventToCount;
 
     /// row -> comment
-    std::map<int, QString> m_mapEventComment;
+    std::map<int, QString> m_mapRxEventComment;
+
+    /// row -> row-flags
+    std::map<int, uint32_t> m_mapRxEventFlags;
+
+    /// Mutex that protect the TX list
+    QMutex m_mutexTxList;
 
     /// List for transmittable events
     QTableWidget *m_txTable;
@@ -500,16 +524,17 @@ class CFrmSession : public QDialog
     QAction *m_editHostAct;
 
     // Edit menu
-    QAction *m_cutAct;
-    QAction *m_copyAct;
-    QAction *m_pasteBeforeAct;
-    QAction *m_pasteAfterAct;
-
-    // View menu
-    QAction *m_viewMessageAct;
-    QAction *m_viewCountAct;
-    QAction *m_viewClrRxListAct;
-    QAction *m_viewClrTxListAct;
+    QAction *m_copyRxAct;
+    QAction *m_copyTxAct;
+    QAction *m_copyRxToTxAct;
+    QAction *m_clrRxSelectionsAct;
+    QAction *m_clrRxListAct;
+    QAction *m_clrTxListAct;
+    QAction *m_toggleRxRowMarkAct;
+    QAction *m_toggleRxClassMarkAct;
+    QAction *m_toggleRxTypeMarkAct;
+    QAction *m_addExCommentAct;
+    QAction *m_deleteRxCommentAct;
 
     // VSCP menu
     QAction *m_readRegAct;
