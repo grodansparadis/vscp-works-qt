@@ -61,7 +61,7 @@ using namespace kainjow::mustache;
 //
 
 vscpworks::vscpworks(int &argc, char **argv) :
-    QApplication(argc, argv)
+        QApplication(argc, argv)
 {        
     m_base = numerical_base::HEX;   // Numerical base 
     m_bAskBeforeDelete = true;  
@@ -75,28 +75,12 @@ vscpworks::vscpworks(int &argc, char **argv) :
 
     m_session_bAutoConnect = true;
     m_session_bShowFullTypeToken = false;
+    m_session_bAutoSaveTxRows = true;
 
     // After the following it is possible to create and destroy event objects 
     // dynamically at run-time
     int idEvent = qRegisterMetaType<vscpEvent>();
     int idEventEx = qRegisterMetaType<vscpEventEx>();
-    qDebug() << "idEvent = " << idEvent << "idEventEx = " << idEventEx;
-
-    // QUuid uuid; 
-    // uuid = QUuid::createUuid();
-    // qDebug() << QUuid::createUuid().toString();
-    // qDebug() << "\n";
-
-    // QString strVariables = "crc8:        function() { return (e.vscpData[0]); }"\
-    //              "time_epoch:  function() { return (e.vscpData[1]&lt;&lt;24 +"\
-   	// 			 "                                  e.vscpData[2]&lt;&lt;16 +"\
-   	// 			 "                                  e.vscpData[3]&lt;&lt;8 +"\
-   	// 			 "                                  e.vscpData[4]); }";
-
-    // qDebug() << strVariables;
-
-    
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -266,6 +250,8 @@ void vscpworks::loadSettings(void)
         dir.mkpath("./rxsets");
         // Make a folder for transmission sets
         dir.mkpath("./txsets");
+        // Make a folder for autosaved/loaded data
+        dir.mkpath("./cache");
     }
 
     // VSCP Home folder
@@ -296,7 +282,8 @@ void vscpworks::loadSettings(void)
             static_cast<int>(CFrmSession::guidDisplayFormat::guid)).toInt());
 
     m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();    
-    m_session_bShowFullTypeToken =  settings.value("sessionShowFullTypeToken", true).toBool();        
+    m_session_bShowFullTypeToken =  settings.value("sessionShowFullTypeToken", true).toBool(); 
+    m_session_bAutoSaveTxRows =  settings.value("sessionAutoSaveTxRows", true).toBool();       
 
     // VSCP event database last load date/time
     // ---------------------------------------
@@ -356,6 +343,7 @@ void vscpworks::writeSettings()
 
     settings.setValue("sessionAutoConnect", m_session_bAutoConnect);
     settings.setValue("sessionShowFullTypeToken", m_session_bShowFullTypeToken);
+    settings.setValue("sessionAutoSaveTxRows", m_session_bAutoSaveTxRows);
 
     writeConnections();
 
@@ -407,7 +395,6 @@ bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 {
     if (!conn["uuid"].toString().trimmed().length()) {
         conn["uuid"] = QUuid::createUuid().toString();
-        //conn.remove("uuid");
     }
 
     // Add configuration item to map
@@ -426,20 +413,7 @@ bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 bool vscpworks::removeConnection(const QString& uuid, bool bSave )
 {
     QMap<QString,QJsonObject>::iterator it;
-    // for (it = m_mapConn.begin(); it != m_mapConn.end(); ++it){ 
-    //     qDebug() << it.key() << " " << it.value();
-    // } 
-
     int n = m_mapConn.remove(uuid);
-
-    // it = m_mapConn.find(uuid);
-    // if ( m_mapConn.end() != it ) {
-        
-    //     qDebug() << it.value() << "second";
-        
-    //     // Remove configuration from map
-    //     it = m_mapConn.erase(it);
-    // }
 
     // Save settings if requested to do so
     if (bSave) writeConnections();

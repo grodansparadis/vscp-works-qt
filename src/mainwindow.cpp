@@ -90,7 +90,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem *topItem, const QJsonObje
 
 treeWidgetItemConn::~treeWidgetItemConn()
 {
-    
+       
 }
 
 
@@ -321,6 +321,31 @@ MainWindow::MainWindow()
                                     QMessageBox::Ok );
     }
 
+    //m_connTreeTable->selectionModel()->select(1, QItemSelectionModel::Select | QItemSelectionModel::Rows); 
+    //m_connTreeTable->setCurrentIndex(QModelIndex())
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+MainWindow::~MainWindow()
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+    QList<QTreeWidgetItem *> itemList;
+    itemList = m_connTreeTable->selectedItems();
+    
+    foreach(QTreeWidgetItem *item, itemList) {
+
+        // Not intereste din top level items
+        if (NULL != item->parent()) {
+
+            // Get item
+            treeWidgetItemConn *itemConn = (treeWidgetItemConn *)item;
+        }
+    } 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -379,9 +404,6 @@ void MainWindow::checkRemoteEventDbVersion()
 
         QString dd(j["generated"].get<std::string>().c_str());
         pworks->m_lastEventDbServerDateTime = QDateTime::fromString(dd, Qt::ISODateWithMs);
-        // qDebug() << dt;
-        // qDebug() << pworks->m_lastEventDbLoadDateTime;
-        // qDebug() << dt.toTime_t() << " " << pworks->m_lastEventDbLoadDateTime.toTime_t();
 
         QString path = pworks->m_shareFolder;
         path += "vscp_events.sqlite3";
@@ -427,30 +449,15 @@ void MainWindow::downloadedEventDb()
 
     QFile::copy("/tmp/vscp_events.sqlite3", path);    
 
-    //pworks->m_lastEventDbLoadDateTime = QDateTime::currentDateTime();
     pworks->m_lastEventDbLoadDateTime = pworks->m_lastEventDbServerDateTime;
     pworks->writeSettings();
+    pworks->loadEventDb();
     QMessageBox::information(this, 
                                 tr("vscpworks+"),
-                                tr("A new VSCP event database has been downloaded. Restart your application to use the new database."),
+                                tr("A new VSCP event database has automatically been downloaded."),
                                 QMessageBox::Ok );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// addChildItemToConnectionTree
-//
-
-// void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem, std::string name) 
-// {
-//     QStringList strlstname(QString(name.c_str()).split(',')); 
-//     // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip, strlist_test); 
-//     QTreeWidgetItem *childitem = new QTreeWidgetItem(topitem, strlstname, 1000 + 1);
-//     const QIcon icon = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-//     childitem->setIcon(0, icon);
-//     //item_test->setToolTip(0, "This is just a test connection from a snowy country named Sweden.");
-//     // m_connTreeTable->addTopLevelItem(item_test);
-//     topitem->addChild(childitem);
-// }
 
 ///////////////////////////////////////////////////////////////////////////////
 // addChildItemToConnectionTree
@@ -462,11 +469,10 @@ void MainWindow::addChildItemToConnectionTree(QTreeWidgetItem *topitem,
     // Check pointers
     assert(nullptr != topitem);
 
-    //QJsonObject conn = m_mapConn[(*pconn)["uuid"]];
     treeWidgetItemConn *childitem = new treeWidgetItemConn(topitem, conn);
     m_connTreeTable->clearSelection();
     topitem->addChild(childitem);
-    childitem->setSelected(true);    
+    //childitem->setSelected(true);    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -477,11 +483,6 @@ void MainWindow::addLoadedConnections(void)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    //m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-    //m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
-
-
-    //for (QMap<QString,QJsonObject>::iterator it = pworks->m_mapConn.begin(); it != pworks->m_mapConn.end(); ++it){ 
     QMap<QString,QJsonObject>::const_iterator it = pworks->m_mapConn.constBegin();
     while (it != pworks->m_mapConn.constEnd()) {
 
@@ -491,19 +492,9 @@ void MainWindow::addLoadedConnections(void)
 
                 case CVscpClient::connType::LOCAL:
                     {
-                        // Create a new local communication object
-                        // vscpClientLocal *pClient = new vscpClientLocal();
-
-                        // pClient->setName((it->second)["name"].toString().toStdString());
-                        // pClient->setPath((it->second)["path"].toString().toStdString());
-                        // pClient->initFromJson(QJsonDocument(it->second).getConfigAsJson(QJsonDocument::Compact).toStdString());
-
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_local, it.value());
-
                         m_topitem_local->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -511,10 +502,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_tcpip, it.value());
-
                         m_topitem_tcpip->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -522,10 +510,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_canal, it.value());
-
                         m_topitem_canal->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -533,10 +518,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_socketcan, it.value());
-
                         m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -544,10 +526,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_ws1, it.value());
-
                         m_topitem_ws1->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -555,10 +534,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_ws2, it.value());
-
                         m_topitem_ws2->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -566,10 +542,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_mqtt, it.value());
-
                         m_topitem_mqtt->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -577,10 +550,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_udp, it.value());
-
                         m_topitem_udp->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -588,10 +558,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_multicast, it.value());
-
                         m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -599,10 +566,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_rest, it.value());
-
                         m_topitem_rest->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -610,10 +574,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_rawcan, it.value());
-
                         m_topitem_rawcan->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
 
@@ -621,10 +582,7 @@ void MainWindow::addLoadedConnections(void)
                     {
                         // Add connection to connection tree
                         addChildItemToConnectionTree(m_topitem_rawmqtt, it.value());
-
                         m_topitem_rawmqtt->sortChildren(0, Qt::AscendingOrder);
-                        // m_connTreeTable->sortByColumn(0, Qt::AscendingOrder); // column/order to sort by
-                        // m_connTreeTable->setSortingEnabled(true);             // should cause sort on add
                     }
                     break;
                                                         

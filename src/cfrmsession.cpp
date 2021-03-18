@@ -1507,14 +1507,18 @@ CFrmSession::loadTxEvents(const QString& path)
 
 void CFrmSession::loadTxOnStart(void)
 {
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
     //  QStandardPaths::AppLocalDataLocation
     QString loadPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    loadPath += "/txevents_";
+    loadPath += "/cache/txevents_";
     loadPath += m_connObject["uuid"].toString();
     loadPath += ".xml";
     qDebug() << loadPath; 
 
-    loadTxEvents(loadPath);
+    if (pworks->m_session_bAutoSaveTxRows) {
+        loadTxEvents(loadPath);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1619,14 +1623,18 @@ CFrmSession::saveTxEvents(const QString& path)
 
 void CFrmSession::saveTxOnExit(void)
 {
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
     //  QStandardPaths::AppLocalDataLocation
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    savePath += "/txevents_";
+    savePath += "/cache/txevents_";
     savePath += m_connObject["uuid"].toString();
     savePath += ".xml";
     qDebug() << savePath; 
 
-    saveTxEvents(savePath);
+    if (pworks->m_session_bAutoSaveTxRows) {
+        saveTxEvents(savePath);
+    }
 
 }
 

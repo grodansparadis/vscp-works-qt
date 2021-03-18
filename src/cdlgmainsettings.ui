@@ -76,6 +76,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set general numerical base&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
             <string>Hexadecimal</string>
@@ -101,7 +104,7 @@
         <item row="1" column="1">
          <widget class="QCheckBox" name="chkAskOnDelete">
           <property name="toolTip">
-           <string>Connect to client when session is opened</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="statusTip">
            <string>Confirm needed when events are cleared etc</string>
@@ -128,6 +131,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set log level&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <item>
            <property name="text">
@@ -198,7 +204,7 @@
         <item row="1" column="1">
          <widget class="QLineEdit" name="editMaxSessionEvents">
           <property name="toolTip">
-           <string>Max number of events that will be received. -1 no limit.</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max number of events that will be received. Set to -1 for no limit.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>-1</string>
@@ -215,7 +221,7 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="comboClassDisplayFormat">
           <property name="toolTip">
-           <string>Set how VSCP class data is displayed</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP class data is displayed in&lt;span style=&quot; color:#cc0000;&quot;&gt; rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <item>
            <property name="text">
@@ -249,7 +255,7 @@
         <item row="3" column="1">
          <widget class="QComboBox" name="comboTypeDisplayFormat">
           <property name="toolTip">
-           <string>Set how VSCP type data is displayed</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP type data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <item>
            <property name="text">
@@ -283,7 +289,7 @@
         <item row="4" column="1">
          <widget class="QComboBox" name="comboGuidDisplayFormat">
           <property name="toolTip">
-           <string>Set how VSCP GUID data is displayed</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP GUID data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <item>
            <property name="text">
@@ -310,24 +316,27 @@
         <item row="5" column="1">
          <widget class="QCheckBox" name="chkAutomaticConnect">
           <property name="toolTip">
-           <string>Connect to client when session is opened</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically connect to remote host when session window is opended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Connect automatically</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
         <item row="6" column="1">
          <widget class="QCheckBox" name="chkShowFullToken">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show full type token (&amp;quot;VSCP_TYPE_&amp;quot; is not removed from front of token)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show full type token (&lt;span style=&quot; color:#3465a4;&quot;&gt;&amp;quot;VSCP_TYPE_&amp;quot;&lt;/span&gt; is not removed from front of token)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Show full type token</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="1">
+        <item row="8" column="1">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -339,6 +348,19 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="7" column="1">
+         <widget class="QCheckBox" name="chkAutoSaveTxRows">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tx &lt;span style=&quot; color:#000000;&quot;&gt;rows&lt;/span&gt; from &lt;span style=&quot; font-weight:600;&quot;&gt;last session&lt;/span&gt; loads when session opens and rows are saved when session closes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Autosave/autoload tx rows</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -366,6 +388,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="pathLocalStorage">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the main folder for files used by VSCP works. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(193, 125, 17);</string>
           </property>
@@ -383,6 +408,9 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="pathVscpHome">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the location for general VSCP files&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(193, 125, 17);</string>
           </property>
@@ -400,6 +428,9 @@
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="pathConfigFile">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the folder for VSCP Works  configuration data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(193, 125, 17);</string>
           </property>
@@ -429,6 +460,9 @@
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="pathVscpEventDb">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the path to the VSCP events database.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(193, 125, 17);</string>
           </property>
@@ -446,6 +480,9 @@
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="lastDownload">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Last time the VSCP event database was downloaded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="styleSheet">
            <string notr="true">color: rgb(193, 125, 17);</string>
           </property>
@@ -493,6 +530,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download the latest version of the VSCP event database from the server&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Download new</string>
           </property>
@@ -505,6 +545,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Read in data from downloaded VSCP event database to memory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Reload db</string>

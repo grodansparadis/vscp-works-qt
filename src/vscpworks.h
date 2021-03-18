@@ -365,6 +365,9 @@ class vscpworks : public QApplication {
     /// Show the full token for VSCP types
     bool m_session_bShowFullTypeToken;
 
+    /// TX Rows autosaved/autoloaded on session start/end
+    bool m_session_bAutoSaveTxRows;
+
     /*! 
         VSCP Class display format in receive list
     */
