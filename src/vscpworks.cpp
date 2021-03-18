@@ -405,12 +405,13 @@ void vscpworks::writeConnections(void)
 
 bool vscpworks::addConnection(QJsonObject& conn, bool bSave )
 {
-    QString uuid = QUuid::createUuid().toString();
-    conn["uuid"] = uuid;
-    //conn.remove("uuid");
+    if (!conn["uuid"].toString().trimmed().length()) {
+        conn["uuid"] = QUuid::createUuid().toString();
+        //conn.remove("uuid");
+    }
 
     // Add configuration item to map
-    m_mapConn[uuid] = conn; 
+    m_mapConn[conn["uuid"].toString().trimmed()] = conn; 
 
     // Save settings if requested to do so
     if (bSave) writeConnections();
