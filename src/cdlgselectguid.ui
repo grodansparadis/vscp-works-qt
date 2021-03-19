@@ -1,0 +1,1001 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDlgSelectGuid</class>
+ <widget class="QDialog" name="CDlgSelectGuid">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>498</width>
+    <height>656</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Select GUID</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>620</y>
+     <width>481</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>464</width>
+     <height>508</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>GUID[15]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare15</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QSpinBox" name="spinBoxBox15">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QSpinBox" name="spinBoxBox14"/>
+    </item>
+    <item row="8" column="1">
+     <widget class="QComboBox" name="comboCompare7">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="comboCompare10">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="comboCompare12">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QComboBox" name="comboCompare8">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_11">
+      <property name="text">
+       <string>GUID[5]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare5</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>GUID[9]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare9</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="1">
+     <widget class="QComboBox" name="comboCompare2">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="15" column="1">
+     <widget class="QComboBox" name="comboCompare0">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QSpinBox" name="spinBoxBox10"/>
+    </item>
+    <item row="10" column="2">
+     <widget class="QSpinBox" name="spinBoxBox5"/>
+    </item>
+    <item row="9" column="2">
+     <widget class="QSpinBox" name="spinBoxBox6"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QComboBox" name="comboCompare11">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QComboBox" name="comboCompare9">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>GUID[7]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare7</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QComboBox" name="comboCompare3">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="15" column="2">
+     <widget class="QSpinBox" name="spinBoxBox0"/>
+    </item>
+    <item row="12" column="2">
+     <widget class="QSpinBox" name="spinBoxBox3"/>
+    </item>
+    <item row="11" column="1">
+     <widget class="QComboBox" name="comboCompare4">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QComboBox" name="comboCompare13">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QComboBox" name="comboCompare6">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <widget class="QLabel" name="label_12">
+      <property name="text">
+       <string>GUID[4]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare4</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="13" column="0">
+     <widget class="QLabel" name="label_14">
+      <property name="text">
+       <string>GUID[2]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare2</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QSpinBox" name="spinBoxBox13"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>GUID[10]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare10</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <widget class="QSpinBox" name="spinBoxBox9"/>
+    </item>
+    <item row="15" column="0">
+     <widget class="QLabel" name="label_16">
+      <property name="text">
+       <string>GUID[0]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare0</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>GUID[6]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare6</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="1">
+     <widget class="QComboBox" name="comboCompare1">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QComboBox" name="comboCompare15">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>GUID[13]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare13</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="spinBoxBox11"/>
+    </item>
+    <item row="8" column="2">
+     <widget class="QSpinBox" name="spinBoxBox7"/>
+    </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="spinBoxBox12"/>
+    </item>
+    <item row="7" column="2">
+     <widget class="QSpinBox" name="spinBoxBox8"/>
+    </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="label_13">
+      <property name="text">
+       <string>GUID[3]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare3</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0">
+     <widget class="QLabel" name="label_15">
+      <property name="text">
+       <string>GUID[1]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare1</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>GUID[11]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare11</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QComboBox" name="comboCompare14">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="11" column="2">
+     <widget class="QSpinBox" name="spinBoxBox4"/>
+    </item>
+    <item row="13" column="2">
+     <widget class="QSpinBox" name="spinBoxBox2"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>GUID[14]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare14</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>GUID[12]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare12</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="2">
+     <widget class="QSpinBox" name="spinBoxBox1"/>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>GUID[8]</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompare8</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QComboBox" name="comboCompare5">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>540</y>
+     <width>341</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnFillIn">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>540</y>
+     <width>51</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>--&gt;</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnFetch">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>580</y>
+     <width>191</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fetch known node GUID</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>comboCompare15</tabstop>
+  <tabstop>spinBoxBox15</tabstop>
+  <tabstop>comboCompare14</tabstop>
+  <tabstop>spinBoxBox14</tabstop>
+  <tabstop>comboCompare13</tabstop>
+  <tabstop>spinBoxBox13</tabstop>
+  <tabstop>comboCompare12</tabstop>
+  <tabstop>spinBoxBox12</tabstop>
+  <tabstop>comboCompare11</tabstop>
+  <tabstop>spinBoxBox11</tabstop>
+  <tabstop>comboCompare10</tabstop>
+  <tabstop>spinBoxBox10</tabstop>
+  <tabstop>comboCompare9</tabstop>
+  <tabstop>spinBoxBox9</tabstop>
+  <tabstop>comboCompare8</tabstop>
+  <tabstop>spinBoxBox8</tabstop>
+  <tabstop>comboCompare7</tabstop>
+  <tabstop>spinBoxBox7</tabstop>
+  <tabstop>comboCompare6</tabstop>
+  <tabstop>spinBoxBox6</tabstop>
+  <tabstop>comboCompare5</tabstop>
+  <tabstop>spinBoxBox5</tabstop>
+  <tabstop>comboCompare4</tabstop>
+  <tabstop>spinBoxBox4</tabstop>
+  <tabstop>comboCompare3</tabstop>
+  <tabstop>spinBoxBox3</tabstop>
+  <tabstop>comboCompare2</tabstop>
+  <tabstop>spinBoxBox2</tabstop>
+  <tabstop>comboCompare1</tabstop>
+  <tabstop>spinBoxBox1</tabstop>
+  <tabstop>comboCompare0</tabstop>
+  <tabstop>spinBoxBox0</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>btnFillIn</tabstop>
+  <tabstop>btnFetch</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgSelectGuid</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>634</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgSelectGuid</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>640</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -164,6 +164,20 @@ qt5_wrap_ui(UI src/mainwindow.ui
     str/cdlgsensorindex.ui
     src/cdlgeditsensorindex.ui
     src/cdlgtxedit.ui
+    src/cdlgsessionfilter.ui
+    src/cdlgeditsessionfilter.ui
+    src/cdlgselectclass.ui
+    src/cdlgselectguid.ui
+    src/cdlgselectobid.ui
+    src/cdlgselectdata.ui
+    src/cdlgselectmeasurementvalue.ui
+    src/cdlgselectpriority.ui
+    src/cdlgselectmeasurementvalue.ui
+    src/cdlgselecttimestamp.ui
+    src/cdlgselectunit.ui
+    src/cdlgselectsensorindex.ui
+    src/cdlgselectdatacoding.ui
+    src/cdlgselectdate.ui
 )
 
 add_executable(vscp-works-qt
@@ -293,6 +307,58 @@ add_executable(vscp-works-qt
 
     src/ctxevent.h
     src/ctxevent.cpp
+
+    src/cdlgsessionfilter.ui
+    src/cdlgsessionfilter.h
+    src/cdlgsessionfilter.cpp
+
+    src/cdlgeditsessionfilter.ui
+    src/cdlgeditsessionfilter.h
+    src/cdlgeditsessionfilter.cpp
+
+    src/cdlgselectclass.ui
+    src/cdlgselectclass.h
+    src/cdlgselectclass.cpp
+
+    src/cdlgselectguid.ui
+    src/cdlgselectguid.h
+    src/cdlgselectguid.cpp
+
+    src/cdlgselectobid.ui
+    src/cdlgselectobid.h
+    src/cdlgselectobid.cpp
+
+    src/cdlgselectdata.ui
+    src/cdlgselectdata.h
+    src/cdlgselectdata.cpp
+
+    src/cdlgselectdatacoding.ui
+    src/cdlgselectdatacoding.h
+    src/cdlgselectdatacoding.cpp
+
+    src/cdlgselectmeasurementvalue.ui
+    src/cdlgselectmeasurementvalue.h
+    src/cdlgselectmeasurementvalue.cpp
+
+    src/cdlgselectpriority.ui
+    src/cdlgselectpriority.h
+    src/cdlgselectpriority.cpp
+
+    src/cdlgselecttimestamp.ui
+    src/cdlgselecttimestamp.h
+    src/cdlgselecttimestamp.cpp
+
+    src/cdlgselectunit.ui
+    src/cdlgselectunit.h
+    src/cdlgselectunit.cpp
+
+    src/cdlgselectsensorindex.ui
+    src/cdlgselectsensorindex.h
+    src/cdlgselectsensorindex.cpp
+
+    src/cdlgselectdate.ui
+    src/cdlgselectdate.h
+    src/cdlgselectdate.cpp
 
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h

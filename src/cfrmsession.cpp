@@ -37,6 +37,7 @@
 #include <vscp_client_tcp.h>
 
 #include "cdlgknownguid.h"
+#include "cdlgsessionfilter.h"
 #include "cfrmsession.h"
 
 #include "cdlgmainsettings.h"
@@ -521,6 +522,7 @@ CFrmSession::createToolbar()
     m_toolBar->addSeparator();
 
     // Filter
+    // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
     QIcon filterIcon(":/filter.png");
     m_setFilterActToolBar = m_toolBar->addAction(filterIcon,
                                                  tr("Enable filter"),
@@ -535,6 +537,12 @@ CFrmSession::createToolbar()
     m_filterComboBox->addItem("Filter 3");
     m_filterComboBox->addItem("Filter 4");
     m_toolBar->addWidget(m_filterComboBox);
+
+    // Filter handling preferences-other
+    m_connectActToolBar = m_toolBar->addAction(QIcon::fromTheme("document-open-recent"),
+                                               tr("Filters..."),
+                                               this,
+                                               &CFrmSession::menu_filter);
 
     m_toolBar->addSeparator();
 
@@ -800,6 +808,10 @@ CFrmSession::menu_filter()
     //     m_rxmodel->insertRecord(-1, rec);
     // }
     // m_rxmodel->submitAll();
+    CDlgSessionFilter dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

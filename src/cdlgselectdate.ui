@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dlgSelectDate</class>
+ <widget class="QDialog" name="dlgSelectDate">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>467</width>
+    <height>265</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Select data</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>230</y>
+     <width>451</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>464</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Minute</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareMinute</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxYear">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QComboBox" name="comboCompareYear">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Hour</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareHour</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Year</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareYear</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QComboBox" name="comboCompareMinute">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxMonth"/>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="comboCompareSecond">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxHour"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxDay"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Second</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareSecond</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Day</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareDay</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxMinute"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Month</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareMonth</cstring>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="comboCompareHour">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QComboBox" name="comboCompareMonth">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QComboBox" name="comboCompareDay">
+      <item>
+       <property name="text">
+        <string>Don't care</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Not qual to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater then or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Less then or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QSpinBox" name="spinBoxBoxSecond"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>530</y>
+     <width>341</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnFillIn">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>530</y>
+     <width>51</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>--&gt;</string>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>comboCompareYear</tabstop>
+  <tabstop>spinBoxBoxYear</tabstop>
+  <tabstop>comboCompareMonth</tabstop>
+  <tabstop>spinBoxBoxMonth</tabstop>
+  <tabstop>comboCompareDay</tabstop>
+  <tabstop>spinBoxBoxDay</tabstop>
+  <tabstop>comboCompareHour</tabstop>
+  <tabstop>spinBoxBoxHour</tabstop>
+  <tabstop>comboCompareMinute</tabstop>
+  <tabstop>spinBoxBoxMinute</tabstop>
+  <tabstop>comboCompareSecond</tabstop>
+  <tabstop>spinBoxBoxSecond</tabstop>
+  <tabstop>btnFillIn</tabstop>
+  <tabstop>lineEdit</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>dlgSelectDate</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>dlgSelectDate</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
