@@ -54,6 +54,18 @@ public:
     void setInitialFocus(void);
 
     /*!
+        Show information page for the currently  selected
+        VSCP class
+    */
+    void showVscpClassInfo();
+
+    /*!
+        Show information page for the currently selected
+        VSCP type
+    */
+    void showVscpTypeInfo();
+
+    /*!
         Fill the VSCP class combobox with 
         VSCP classes.
         @param vscpClass VSCP class to select. Defaults

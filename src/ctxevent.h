@@ -46,6 +46,8 @@ class CTxEvent : public QObject
     CTxEvent();
     ~CTxEvent();
 
+    
+
     // Enable setters/getters
     void setEnable(bool bEnable) { m_bEnable = bEnable; };
     bool getEnable(void) { return m_bEnable; };

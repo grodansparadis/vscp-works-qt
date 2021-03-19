@@ -31,6 +31,10 @@
 #include <vscp.h>
 #include <vscphelper.h>
 
+#include "vscpworks.h"
+
+#include <QDesktopServices>
+
 #include "ctxevent.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,6 +47,8 @@ CTxEvent::CTxEvent()
     m_count = 1;
     m_period = 0;
     m_pev = nullptr;    
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,3 +78,6 @@ bool CTxEvent::newEvent(void)
     if (!vscp_newEvent(&m_pev)) return false;
     return true;
 }
+
+
+

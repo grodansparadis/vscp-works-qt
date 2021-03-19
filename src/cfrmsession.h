@@ -134,6 +134,7 @@ class CFrmSession : public QDialog
 
     const int txrow_role_flags = Qt::UserRole;
 
+    const uint32_t RX_ROW_FLAG_RX = 0x00000000;         // Receive row
     const uint32_t RX_ROW_FLAG_TX = 0x00000001;         // Transmit row
     const uint32_t RX_ROW_MARKED = 0x00000002;          // Marked row
     const uint32_t RX_ROW_MAREKED_CLASS = 0x00000004;   // Transmit row
@@ -259,11 +260,18 @@ class CFrmSession : public QDialog
  public slots:
 
     /*! 
-        Add an event to the receive list
+        Add a RX event to the receive list
         @param ev Event to add
         @param bReceive Set to true if this is a received event
     */
-    void receiveRow(vscpEvent* pev);
+    void receiveRxRow(vscpEvent* pev);
+
+    /*! 
+        Add a TX event to the receive list
+        @param ev Event to add
+        @param bReceive Set to true if this is a received event
+    */
+    void receiveTxRow(vscpEvent* pev);
 
     /*!
         Update the current row info.
@@ -377,6 +385,12 @@ class CFrmSession : public QDialog
     /// Load RX data from file
     void loadRxFromFile(void);
 
+    /// Copy RX event to clipboard
+    void copyRxToClipboard(void);
+
+    /// Copy RX event to TX
+    void copyRxToTx(void);
+
     // TX Context
 
     /// Clear the TX list
@@ -413,6 +427,9 @@ class CFrmSession : public QDialog
 
     /// Save TX events on save
     void saveTxOnExit(void);
+
+    /// Copy RX event to clipboard
+    void copyTxToClipboard(void);
  
  signals:
 
@@ -486,6 +503,9 @@ class CFrmSession : public QDialog
 
     /// VSCP (class-id + token-id) -> received count
     std::map<uint32_t, uint32_t> m_mapRxEventToCount;
+
+    /// VSCP (class-id + token-id) -> received count
+    std::map<uint32_t, uint32_t> m_mapTxEventToCount;
 
     /// row -> comment
     std::map<int, QString> m_mapRxEventComment;

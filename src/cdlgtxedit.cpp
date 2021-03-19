@@ -34,6 +34,7 @@
 #include "cdlgtxedit.h"
 #include "ui_cdlgtxedit.h"
 
+#include <QDesktopServices>
 #include <QMessageBox>
 #include <QFileDialog>
 
@@ -47,17 +48,13 @@ CDlgTxEdit::CDlgTxEdit(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgTLS::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgTLS::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgTLS::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgTLS::onSetPwKeyFile ); 
+    connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpClassInfo);
+    connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpTypeInfo);
 
     connect(ui->comboClass, QOverload<int>::of(&QComboBox::currentIndexChanged), 
                 this, &CDlgTxEdit::currentVscpClassIndexChanged );
 
     fillVscpClass(0);
-
     setInitialFocus();  
 }
 
@@ -77,6 +74,28 @@ CDlgTxEdit::~CDlgTxEdit()
 void CDlgTxEdit::setInitialFocus(void)
 {
     ui->editName->setFocus();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showVscpClassInfo
+//
+
+void CDlgTxEdit::showVscpClassInfo()
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QString str = pworks->getHelpUrlForClass(getVscpClass());
+    QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showVscpClassInfo
+//
+
+void CDlgTxEdit::showVscpTypeInfo()
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QString str =  pworks->getHelpUrlForType(getVscpClass(), getVscpType());
+    QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
