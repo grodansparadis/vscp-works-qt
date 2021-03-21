@@ -1,4 +1,4 @@
-// cdlgselecttimestamp.h
+// cdlgselectsensorindex.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,25 +26,25 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGSELECTTIMESTAMP_H
-#define CDLGSELECTTIMESTAMP_H
+#ifndef CDLGSELECTSENSORINDEX_H
+#define CDLGSELECTSENSORINDEX_H
 
 
 #include <QDialog>
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgSelectTimeStamp;
+class CDlgSelectSensorIndex;
 }
 
 
-class CDlgSelectTimeStamp : public QDialog
+class CDlgSelectSensorIndex : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgSelectTimeStamp(QWidget *parent = nullptr);
-    ~CDlgSelectTimeStamp();
+    explicit CDlgSelectSensorIndex(QWidget *parent = nullptr);
+    ~CDlgSelectSensorIndex();
 
 public:
     
@@ -54,9 +54,9 @@ private slots:
 
 private:
 
-    Ui::CDlgSelectTimeStamp *ui;
+    Ui::CDlgSelectSensorIndex *ui;
 
 };
 
 
-#endif // CDLGSELECTTIMESTAMP_H
+#endif // CDLGSELECTSENSORINDEX_H

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgSelectDataSize</class>
- <widget class="QDialog" name="dlgSelectDataSize">
+ <class>CDlgSelectDataSize</class>
+ <widget class="QDialog" name="CDlgSelectDataSize">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -118,7 +118,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>dlgSelectDataSize</receiver>
+   <receiver>CDlgSelectDataSize</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -134,7 +134,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>dlgSelectDataSize</receiver>
+   <receiver>CDlgSelectDataSize</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

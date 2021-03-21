@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>dlgSelectDataCoding</class>
- <widget class="QDialog" name="dlgSelectDataCoding">
+ <class>CDlgSelectDataCoding</class>
+ <widget class="QDialog" name="CDlgSelectDataCoding">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -121,7 +121,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>dlgSelectDataCoding</receiver>
+   <receiver>CDlgSelectDataCoding</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -137,7 +137,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>dlgSelectDataCoding</receiver>
+   <receiver>CDlgSelectDataCoding</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

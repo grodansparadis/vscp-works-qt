@@ -170,6 +170,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgselectguid.ui
     src/cdlgselectobid.ui
     src/cdlgselectdata.ui
+    src/cdlgselectdatasize.ui
     src/cdlgselectmeasurementvalue.ui
     src/cdlgselectpriority.ui
     src/cdlgselectmeasurementvalue.ui
@@ -331,6 +332,10 @@ add_executable(vscp-works-qt
     src/cdlgselectdata.ui
     src/cdlgselectdata.h
     src/cdlgselectdata.cpp
+
+    src/cdlgselectdatasize.ui
+    src/cdlgselectdatasize.h
+    src/cdlgselectdatasize.cpp
 
     src/cdlgselectdatacoding.ui
     src/cdlgselectdatacoding.h

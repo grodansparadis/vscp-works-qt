@@ -1,4 +1,4 @@
-// cdlgselectdatacoding.cpp
+// cdlgselectsensorindex.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#include "cdlgselectdatacoding.h"
-#include "ui_cdlgselectdatacoding.h"
+#include "cdlgselectsensorindex.h"
+#include "ui_cdlgselectsensorindex.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -36,9 +36,9 @@
 // CTor
 //
 
-CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget *parent) :
+CDlgSelectSensorIndex::CDlgSelectSensorIndex(QWidget *parent) :
         QDialog(parent),
-    ui(new Ui::CDlgSelectDataCoding)
+    ui(new Ui::CDlgSelectSensorIndex)
 {
     ui->setupUi(this);
 
@@ -53,7 +53,7 @@ CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget *parent) :
 // DTor
 //
 
-CDlgSelectDataCoding::~CDlgSelectDataCoding()
+CDlgSelectSensorIndex::~CDlgSelectSensorIndex()
 {
     delete ui;
 }

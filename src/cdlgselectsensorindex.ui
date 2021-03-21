@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgSelectTimeStamp</class>
- <widget class="QDialog" name="CDlgSelectTimeStamp">
+ <class>CDlgSelectSensorIndex</class>
+ <widget class="QDialog" name="CDlgSelectSensorIndex">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Set sensor index constraint</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -34,7 +34,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>445</width>
+     <width>446</width>
      <height>41</height>
     </rect>
    </property>
@@ -48,15 +48,15 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Timestamp</string>
+       <string>Sensor Index</string>
       </property>
       <property name="buddy">
-       <cstring>comboCompareTimeStamp</cstring>
+       <cstring>comboCompareSensorIndex</cstring>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QComboBox" name="comboCompareTimeStamp">
+     <widget class="QComboBox" name="comboCompareSensorIndex">
       <item>
        <property name="text">
         <string>Don't care</string>
@@ -95,7 +95,7 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QSpinBox" name="spinBoxBoxTimeStamp">
+     <widget class="QSpinBox" name="spinBoxBoxSensorIndex">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -118,7 +118,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgSelectTimeStamp</receiver>
+   <receiver>CDlgSelectSensorIndex</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -134,7 +134,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgSelectTimeStamp</receiver>
+   <receiver>CDlgSelectSensorIndex</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
