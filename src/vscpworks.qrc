@@ -11,7 +11,8 @@
     <file alias="process_accept.png">../images/png/128x128/process_accept.png</file>
     <file alias="process_add.png">../images/png/128x128/process_add.png</file>
     <file alias="process_remove.png">../images/png/128x128/process_remove.png</file>
-    <file alias="down.png">../images/png/128x128/down.png</file>
+    <file alias="application_up.png">../images/png/128x128/application_up.png</file>
+    <file alias="down.png">../images/png/128x128/down.png</file>    
 
     <file alias="attachment.png">../images/png/64x64/attachment.png</file>
 
@@ -26,6 +27,8 @@
     <file>../images/background.png</file>
     <file>../images/watermark.png</file>
     <file>../images/watermark-canal.png</file>
+
+    <file alias="vscpworks.png">../images/vscpworks_128x128.png</file>
 
 </qresource>
 </RCC>

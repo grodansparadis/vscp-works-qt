@@ -29,6 +29,7 @@
 #ifndef CDLGEDITSESSIONFILTER_H
 #define CDLGEDITSESSIONFILTER_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -46,15 +47,59 @@ public:
     explicit CDlgEditSessionFilter(QWidget *parent = nullptr);
     ~CDlgEditSessionFilter();
 
+    // Use to store constraint type
+    const uint16_t role_constraint_type = Qt::UserRole;
+
 public:
     
+    /// Set focus on
+    void setInitialFocus(void);
+
+    /*!
+        Check if a constraint is already defined
+        @param chk Constraint to check for
+        @return True if allready defined
+    */
+    bool isConstraintDefined(uint8_t chk);
+
+    /*! 
+        Get pointer to session filter
+        @return Pointer to session filter
+    */
+    CSessionFilter *getSessionFilter(void) { return &m_sessionFilter; };
 
 private slots:
-    
 
+    /// Add allow filter constraint
+    void addAllowConstraint(void);
+    
+    /// Edit allow filter constraint
+    void editAllowConstraint(void);
+
+    /// Delete allow filter constraint
+    void deleteAllowConstraint(void);
+
+    /// Allow context menu
+    void showAllowContextMenu(const QPoint& pos);
+
+    /// Add deny filter constraint
+    void addDenyConstraint(void);
+
+    /// Edit deny filter constraint
+    void editDenyConstraint(void);
+
+    /// Delete deny filter constraint
+    void deleteDenyConstraint(void);
+
+    /// Allow context menu
+    void showDenyContextMenu(const QPoint& pos);
+    
 private:
 
     Ui::CDlgEditSessionFilter *ui;
+
+    // Settings for the filter
+    CSessionFilter m_sessionFilter;
 
 };
 

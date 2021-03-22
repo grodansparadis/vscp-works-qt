@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
+    <width>598</width>
     <height>508</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Select VSCL Class and Type</string>
+   <string>Select VSCP Class and Type</string>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -29,7 +32,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget">
+  <widget class="QListWidget" name="listClass">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -38,8 +41,17 @@
      <height>192</height>
     </rect>
    </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <property name="toolTip">
+    <string>Select class and type if special type is required</string>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::MultiSelection</enum>
+   </property>
   </widget>
-  <widget class="QListWidget" name="listWidget_2">
+  <widget class="QListWidget" name="listType">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -47,6 +59,15 @@
      <width>501</width>
      <height>192</height>
     </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <property name="toolTip">
+    <string>Select type if just special types(s) of a class is of interest</string>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::MultiSelection</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -67,12 +88,38 @@
     <rect>
      <x>20</x>
      <y>240</y>
-     <width>111</width>
+     <width>481</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>VSCP Type</string>
+    <string>VSCP Type (don't select for all type of a selected class)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnClearClasses">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>40</y>
+     <width>71</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnClearTypes">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>270</y>
+     <width>71</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear</string>
    </property>
   </widget>
  </widget>

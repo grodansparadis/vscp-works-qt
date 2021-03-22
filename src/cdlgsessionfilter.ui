@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>580</y>
-     <width>501</width>
+     <width>491</width>
      <height>32</height>
     </rect>
    </property>
@@ -116,6 +116,9 @@
      <height>191</height>
     </rect>
    </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -157,6 +160,16 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>listFilter</tabstop>
+  <tabstop>editDescription</tabstop>
+  <tabstop>btnAddFilter</tabstop>
+  <tabstop>btnEditFilter</tabstop>
+  <tabstop>btnCloneFilter</tabstop>
+  <tabstop>btnDeleteFilter</tabstop>
+  <tabstop>btnLoadFilter</tabstop>
+  <tabstop>btnSaveFilter</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

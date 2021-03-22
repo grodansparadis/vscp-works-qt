@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Select data coding</string>
+   <string>Select measurement data coding</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -74,22 +74,22 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater then</string>
+        <string>Greater than</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Greater then or equal to</string>
+        <string>Greater than or equal to</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Less then</string>
+        <string>Less than</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Less then or equal to</string>
+        <string>Less than or equal to</string>
        </property>
       </item>
      </widget>

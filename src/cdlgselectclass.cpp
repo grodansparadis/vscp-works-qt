@@ -26,6 +26,11 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
 #include "cdlgselectclass.h"
 #include "ui_cdlgselectclass.h"
 
@@ -42,11 +47,13 @@ CDlgSelectClass::CDlgSelectClass(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+    connect(ui->btnClearClasses, &QPushButton::clicked, this, &CDlgSelectClass::clearClassSelections );
+    connect(ui->btnClearTypes, &QPushButton::clicked, this, &CDlgSelectClass::clearTypeSelections ); 
+    connect(ui->listClass, &QListWidget::itemClicked, this, &CDlgSelectClass::itemClassClicked );   
+    connect(ui->listType, &QListWidget::itemClicked, this, &CDlgSelectClass::itemTypeClicked );  
+
+    fillVscpClasses();
+    fillVscpTypes();   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,27 +65,155 @@ CDlgSelectClass::~CDlgSelectClass()
     delete ui;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedClasses
+//
 
+QList<QListWidgetItem *>
+CDlgSelectClass::getSelectedClasses(void)
+{
+    QList<QListWidgetItem *> selected = ui->listClass->selectedItems();
+    return selected;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedTypes
+//
+
+QList<QListWidgetItem *>
+CDlgSelectClass::getSelectedTypes(void)
+{
+    QList<QListWidgetItem *> selected = ui->listType->selectedItems();
+    return selected;
+}
 
 
 // ----------------------------------------------------------------------------
 
 
-
 ///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
+// clearClassSelections
 //
 
-// void
-// CDlgEditSessionFilter::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
+void
+CDlgSelectClass::clearClassSelections(void)
+{
+    // Clear selections
+    ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// clearTypeSelections
+//
+
+void
+CDlgSelectClass::clearTypeSelections(void)
+{
+    // Clear selections
+    ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// itemTypeClicked
+//
+
+void
+CDlgSelectClass::itemClassClicked(QListWidgetItem *item)
+{
+    fillVscpTypes();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// itemTypeClicked
+//
+
+void
+CDlgSelectClass::itemTypeClicked(QListWidgetItem *item)
+{
+    int iiii = 01;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillVscpClasses
+//
+
+void
+CDlgSelectClass::fillVscpClasses(void)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    // Clear selections
+    ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
+
+    std::map<uint16_t, QString>::iterator it;
+    for (it = pworks->m_mapVscpClassToToken.begin();
+         it != pworks->m_mapVscpClassToToken.end();
+         ++it) {
+
+        uint16_t classId   = it->first;
+        QString classToken = it->second;
+
+        QString listItem =
+            vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
+        // while (listItem.length() < 30) listItem += " ";
+        listItem +=
+            vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
+            .c_str();
+        QListWidgetItem *item = new QListWidgetItem(listItem, ui->listClass);
+        item->setData(Qt::UserRole, classId);
+        ui->listClass->addItem(item);        
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillVscpTypes
+//
+
+void
+CDlgSelectClass::fillVscpTypes(void)
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    // Clear selections
+    //ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
+
+    ui->listType->clear();
+
+    // Get selected classes
+    QList<QListWidgetItem *> selected = ui->listClass->selectedItems();
+    if (!selected.size()) return;
+
+    std::map<uint32_t, QString>::iterator it;
+    for (it = pworks->m_mapVscpTypeToToken.begin();
+         it != pworks->m_mapVscpTypeToToken.end();
+         ++it) {
+
+        uint16_t classId  = (it->first >> 16) & 0xffff;
+        uint16_t typeId   = it->first & 0xfff;
+        QString typeToken = it->second;
+
+        bool bFound = false;
+        for (int i=0; i<selected.size(); i++) {
+            if (classId == selected[i]->data(Qt::UserRole)) {
+                bFound = true;
+                break;
+            }
+        }
+        if (!bFound) continue;
+
+        QString listItem =
+            vscp_str_format(
+            "%s ",
+            typeToken.toStdString().c_str())
+            .c_str();
+
+        listItem +=
+            vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
+            .c_str();
+        QListWidgetItem *item = new QListWidgetItem(listItem, ui->listType);
+
+        item->setData(Qt::UserRole, (((uint32_t)classId) << 16) + typeId);    
+        ui->listType->addItem(item);
+    }
+}
 

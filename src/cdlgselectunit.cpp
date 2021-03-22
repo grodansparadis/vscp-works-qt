@@ -36,9 +36,9 @@
 // CTor
 //
 
-CDlgSelectUnit::CDlgSelectUnit(QWidget *parent) :
+CDlgSelectMeasurementUnit::CDlgSelectMeasurementUnit(QWidget *parent) :
         QDialog(parent),
-    ui(new Ui::CDlgSelectUnit)
+    ui(new Ui::CDlgSelectMeasurementUnit)
 {
     ui->setupUi(this);
 
@@ -53,7 +53,7 @@ CDlgSelectUnit::CDlgSelectUnit(QWidget *parent) :
 // DTor
 //
 
-CDlgSelectUnit::~CDlgSelectUnit()
+CDlgSelectMeasurementUnit::~CDlgSelectMeasurementUnit()
 {
     delete ui;
 }

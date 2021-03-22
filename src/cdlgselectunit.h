@@ -34,17 +34,17 @@
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgSelectUnit;
+class CDlgSelectMeasurementUnit;
 }
 
 
-class CDlgSelectUnit : public QDialog
+class CDlgSelectMeasurementUnit : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgSelectUnit(QWidget *parent = nullptr);
-    ~CDlgSelectUnit();
+    explicit CDlgSelectMeasurementUnit(QWidget *parent = nullptr);
+    ~CDlgSelectMeasurementUnit();
 
 public:
     
@@ -54,7 +54,7 @@ private slots:
 
 private:
 
-    Ui::CDlgSelectUnit *ui;
+    Ui::CDlgSelectMeasurementUnit *ui;
 
 };
 

@@ -523,26 +523,25 @@ CFrmSession::createToolbar()
 
     // Filter
     // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-    QIcon filterIcon(":/filter.png");
-    m_setFilterActToolBar = m_toolBar->addAction(filterIcon,
+    m_setFilterActToolBar = m_toolBar->addAction(QIcon(":/filter.png"),
                                                  tr("Enable filter"),
                                                  this,
-                                                 &CFrmSession::menu_filter);
+                                                 &CFrmSession::menu_filter_enable);
     m_setFilterActToolBar->setStatusTip(tr("Enable/disable filter"));
     m_setFilterActToolBar->setCheckable(true);
 
     m_filterComboBox = new QComboBox;
-    m_filterComboBox->addItem("This is the magnifićant Filter 1");
+    m_filterComboBox->addItem("Filter 1");
     m_filterComboBox->addItem("Filter 2");
     m_filterComboBox->addItem("Filter 3");
     m_filterComboBox->addItem("Filter 4");
     m_toolBar->addWidget(m_filterComboBox);
 
     // Filter handling preferences-other
-    m_connectActToolBar = m_toolBar->addAction(QIcon::fromTheme("document-open-recent"),
+    m_setFilterActToolBar = m_toolBar->addAction(QIcon(":/process_accept.png"),
                                                tr("Filters..."),
                                                this,
-                                               &CFrmSession::menu_filter);
+                                               &CFrmSession::menu_filter_config);
 
     m_toolBar->addSeparator();
 
@@ -784,35 +783,37 @@ CFrmSession::menu_connect()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// menu_filter
+// menu_filter_config
 //
 
 void
-CFrmSession::menu_filter()
+CFrmSession::menu_filter_config()
 {
-    // insert into events (class,type) values (11,22);
-    // QSqlQuery query = QSqlQuery( m_evdb );
-    // query.exec("insert into events (class,type) values (11,22);");
-    // for (int i = 0; i<9999; i++) {
-    //     QSqlField field_idx("idx", QVariant::Int, "events");
-    //     field_idx.setAutoValue(true);
-    //     QSqlField field_class("class", QVariant::Int, "events");
-    //     field_class.setValue(10);
-    //     QSqlField field_type("type", QVariant::Int, "events");
-    //     field_type.setValue(i);
-    //     QSqlRecord rec;
-    //     rec.append(field_idx);
-    //     rec.append(field_class);
-    //     rec.append(field_type);
-    //     //tableModels->value((*registryMap)[type])
-    //     m_rxmodel->insertRecord(-1, rec);
-    // }
-    // m_rxmodel->submitAll();
     CDlgSessionFilter dlg;
     if (QDialog::Accepted == dlg.exec()) {
-
+        QMessageBox::information(
+          this,
+          tr("vscpworks+"),
+          tr("filter set"),
+          QMessageBox::Ok);
     }
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// menu_filter_enable
+//
+
+void
+CFrmSession::menu_filter_enable()
+{
+    QMessageBox::information(
+          this,
+          tr("vscpworks+"),
+          tr("filter enable"),
+          QMessageBox::Ok);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // menu_clear_rxlist

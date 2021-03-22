@@ -31,9 +31,6 @@
 
 #include "cdlgeditsessionfilter.h"
 
-#include "cdlgselectclass.h"
-#include "cdlgselectguid.h"
-
 #include "cdlgsessionfilter.h"
 #include "ui_cdlgsessionfilter.h"
 
@@ -70,6 +67,8 @@ CDlgSessionFilter::CDlgSessionFilter(QWidget *parent) :
             &QListWidget::customContextMenuRequested,
             this,
             &CDlgSessionFilter::showTxContextMenu);
+
+           
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,9 +79,6 @@ CDlgSessionFilter::~CDlgSessionFilter()
 {
     delete ui;
 }
-
-
-
 
 
 // ----------------------------------------------------------------------------
@@ -134,78 +130,9 @@ CDlgSessionFilter::showTxContextMenu(const QPoint& pos)
 void
 CDlgSessionFilter::addFilter()
 {
-    QStringList items;
-    items << tr("Class/type") 
-            << tr("GUID") 
-            << tr("OBID") 
-            << tr("Date")
-            << tr("Timestamp")
-            << tr("Data value(s)")
-            << tr("Date size")
-            << tr("Priority")
-            << tr("Must be measurement")
-            << tr("Must be Level I")
-            << tr("Must be Level II")
-            << tr("Sensor Index")
-            << tr("Measurement Value")
-            << tr("Measurement Unit")
-            << tr("Measurement data coding");
-
-    bool ok;
-    QString item = QInputDialog::getItem(this, tr("QInputDialog::getItem()"),
-                                         tr("Constraint:"), items, 0, false, &ok);
-    if (ok && !item.isEmpty()) {
-        if ( item == tr("Class/type") ) {
-            CDlgSelectClass dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }            
-        }
-        else if ( item == tr("GUID") ) { 
-            CDlgSelectGuid dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if ( item == tr("OBID") ) { 
+    CDlgEditSessionFilter dlg;
+    if (QDialog::Accepted == dlg.exec()) {
         
-        }
-        else if ( item == tr("Date") ) {
-        
-        }
-        else if ( item == tr("Timestamp") ) {
-        
-        }
-        else if ( item == tr("Data value(s)") ) {
-        
-        }
-        else if ( item == tr("Date size") ) {
-        
-        }
-        else if ( item == tr("Priority") ) {
-        
-        }
-        else if ( item == tr("Must be measurement") ) {
-        
-        }
-        else if ( item == tr("Must be Level I") ) {
-        
-        }
-        else if ( item == tr("Must be Level II") ) {
-        
-        }
-        else if ( item == tr("Sensor Index") ) {
-        
-        }
-        else if ( item == tr("Measurement Value") ) {
-        
-        }
-        else if ( item == tr("Measurement Unit") ) {
-        
-        }
-        else if ( item == tr("Measurement data coding") ) {
-        
-        }
     }
 }
 
@@ -280,21 +207,4 @@ CDlgSessionFilter::saveFilter()
           tr("saveFilter"),
           QMessageBox::Ok);
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
-
-// void
-// CDlgSessionFilter::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

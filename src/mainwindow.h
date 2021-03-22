@@ -122,8 +122,14 @@ private slots:
 #endif
     void newSession();
 
+    /// Handle app. settings.
     void showMainsettings(void);
+
+    /// Handle known GUID's
     void knownGuids(void);
+
+    /// Handle session filters
+    void sessionFilter(void);
 
     void editConnectionItem(void);
     void cloneConnectionItem(void);

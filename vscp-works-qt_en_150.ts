@@ -1892,44 +1892,296 @@ and the flag bits for the. the driver.
     <name>CDlgEditSessionFilter</name>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="14"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="89"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="93"/>
         <source>Edit Session filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="55"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="90"/>
-        <source>Allow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.ui" line="68"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="91"/>
-        <source>Deny</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.ui" line="94"/>
-        <location filename="src/cdlgeditsessionfilter.ui" line="133"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="92"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="95"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="94"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.ui" line="107"/>
-        <location filename="src/cdlgeditsessionfilter.ui" line="159"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="93"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="97"/>
+        <location filename="src/cdlgeditsessionfilter.ui" line="68"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="95"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.ui" line="120"/>
-        <location filename="src/cdlgeditsessionfilter.ui" line="146"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="94"/>
+        <location filename="src/cdlgeditsessionfilter.ui" line="81"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="96"/>
         <source>Delete...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.ui" line="94"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="97"/>
+        <source>Allow/Deny if unchecked) Constraints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.ui" line="107"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="99"/>
+        <source>Name of filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.ui" line="120"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.ui" line="133"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="103"/>
+        <source>Full description for event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.ui" line="146"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="105"/>
+        <source>Description</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="115"/>
+        <source>Select constraint to add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="116"/>
+        <source>[1] - Must be received event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="117"/>
+        <source>[2] - Must be transmitted event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="118"/>
+        <source>[3] - Class/type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="119"/>
+        <source>[4] - GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="120"/>
+        <source>[5] - OBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="121"/>
+        <source>[6] - Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="122"/>
+        <source>[7] - Timestamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="123"/>
+        <source>[8] - Data value(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="124"/>
+        <source>[9] - Date size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="125"/>
+        <source>[10] - Priority</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="126"/>
+        <source>[11] - Must be measurement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="127"/>
+        <source>[12] - Must be Level I</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="128"/>
+        <source>[13] - Must be Level II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="129"/>
+        <source>[14] - Sensor Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="130"/>
+        <source>[15] - Measurement Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="131"/>
+        <source>[16] - Measurement Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="132"/>
+        <source>[17] - Measurement data coding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="133"/>
+        <source>[18] - Script</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="136"/>
+        <source>QInputDialog::getItem()</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="137"/>
+        <source>Constraint:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="140"/>
+        <source>[1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="144"/>
+        <source>00 - Must be received event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="147"/>
+        <source>[2]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="151"/>
+        <source>01 - Must be transmitt event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="155"/>
+        <source>[3]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="160"/>
+        <source>03 - Must be VSCP Class / Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="164"/>
+        <source>[4]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="171"/>
+        <source>[5]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="178"/>
+        <source>[6]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="185"/>
+        <source>[7]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="192"/>
+        <source>[8]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="199"/>
+        <source>[9]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="206"/>
+        <source>[10]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="213"/>
+        <source>[11]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="216"/>
+        <source>[12]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="219"/>
+        <source>[13]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="222"/>
+        <source>[14]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="229"/>
+        <source>[15]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="236"/>
+        <source>[16]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="243"/>
+        <source>[17]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="250"/>
+        <source>[18]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="286"/>
+        <source>Add allow filter constraint...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="290"/>
+        <source>Edit allow filter constraint...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="294"/>
+        <source>Delete allow filter constraint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="340"/>
+        <source>Add deny filter constraint...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="344"/>
+        <source>Edit deny filter constraint...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="348"/>
+        <source>Delete deny filter constraint</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2811,6 +3063,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cdlgmainsettings.ui" line="107"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="378"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cdlgmainsettings.ui" line="110"/>
         <location filename="build/ui_cdlgmainsettings.h" line="381"/>
         <source>Confirm needed when events are cleared etc</source>
@@ -2826,6 +3084,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgmainsettings.ui" line="120"/>
         <location filename="build/ui_cdlgmainsettings.h" line="384"/>
         <source>Log level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="136"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="391"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set log level&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2865,6 +3129,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cdlgmainsettings.ui" line="207"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="396"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max number of events that will be received. Set to -1 for no limit.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cdlgmainsettings.ui" line="210"/>
         <location filename="build/ui_cdlgmainsettings.h" line="398"/>
         <source>-1</source>
@@ -2874,6 +3144,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgmainsettings.ui" line="217"/>
         <location filename="build/ui_cdlgmainsettings.h" line="399"/>
         <source>Class display format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="224"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="406"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP class data is displayed in&lt;span style=&quot; color:#cc0000;&quot;&gt; rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2911,6 +3187,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cdlgmainsettings.ui" line="258"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="415"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP type data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cdlgmainsettings.ui" line="267"/>
         <location filename="build/ui_cdlgmainsettings.h" line="410"/>
         <source>Numerical in selected base</source>
@@ -2926,6 +3208,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgmainsettings.ui" line="285"/>
         <location filename="build/ui_cdlgmainsettings.h" line="417"/>
         <source>GUID display format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="292"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="424"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP GUID data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2953,51 +3241,15 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.ui" line="322"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="429"/>
-        <source>Connect automatically</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="107"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="378"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="136"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="391"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set log level&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="207"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="396"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max number of events that will be received. Set to -1 for no limit.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="224"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="406"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP class data is displayed in&lt;span style=&quot; color:#cc0000;&quot;&gt; rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="258"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="415"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP type data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgmainsettings.ui" line="292"/>
-        <location filename="build/ui_cdlgmainsettings.h" line="424"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP GUID data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/cdlgmainsettings.ui" line="319"/>
         <location filename="build/ui_cdlgmainsettings.h" line="427"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically connect to remote host when session window is opended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgmainsettings.ui" line="322"/>
+        <location filename="build/ui_cdlgmainsettings.h" line="429"/>
+        <source>Connect automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3315,11 +3567,200 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgSelectData</name>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="14"/>
+        <location filename="build/ui_cdlgselectdata.h" line="125"/>
+        <source>Select Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="52"/>
+        <location filename="build/ui_cdlgselectdata.h" line="126"/>
+        <source>Data Constraint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="101"/>
+        <location filename="build/ui_cdlgselectdata.h" line="127"/>
+        <source>Don&apos;t care</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="106"/>
+        <location filename="build/ui_cdlgselectdata.h" line="128"/>
+        <source>Equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="111"/>
+        <location filename="build/ui_cdlgselectdata.h" line="129"/>
+        <source>Not qual to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="116"/>
+        <location filename="build/ui_cdlgselectdata.h" line="130"/>
+        <source>Greater then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="121"/>
+        <location filename="build/ui_cdlgselectdata.h" line="131"/>
+        <source>Greater then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="126"/>
+        <location filename="build/ui_cdlgselectdata.h" line="132"/>
+        <source>Less then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="131"/>
+        <location filename="build/ui_cdlgselectdata.h" line="133"/>
+        <source>Less then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="145"/>
+        <location filename="build/ui_cdlgselectdata.h" line="135"/>
+        <source>Data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="155"/>
+        <location filename="build/ui_cdlgselectdata.h" line="136"/>
+        <source>--&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="171"/>
+        <location filename="build/ui_cdlgselectdata.h" line="137"/>
+        <source>Delete...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgSelectDataCoding</name>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="14"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="97"/>
+        <source>Select measurement data coding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="51"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="98"/>
+        <source>Data Coding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="62"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="99"/>
+        <source>Don&apos;t care</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="67"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="100"/>
+        <source>Equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="72"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="101"/>
+        <source>Not qual to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="77"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="102"/>
+        <source>Greater then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="82"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="103"/>
+        <source>Greater then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="87"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="104"/>
+        <source>Less then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatacoding.ui" line="92"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="105"/>
+        <source>Less then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CDlgSelectDataSize</name>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="14"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="96"/>
+        <source>Select Data size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="51"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="97"/>
+        <source>Data Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="62"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="98"/>
+        <source>Don&apos;t care</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="67"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="99"/>
+        <source>Equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="72"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="100"/>
+        <source>Not qual to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="77"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="101"/>
+        <source>Greater then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="82"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="102"/>
+        <source>Greater then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="87"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="103"/>
+        <source>Less then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="92"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="104"/>
+        <source>Less then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgSelectDate</name>
     <message>
         <location filename="src/cdlgselectdate.ui" line="14"/>
         <location filename="build/ui_cdlgselectdate.h" line="249"/>
-        <source>Select data</source>
+        <source>Select date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3859,6 +4300,63 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgSelectMeasurementUnit</name>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="14"/>
+        <location filename="build/ui_cdlgselectunit.h" line="96"/>
+        <source>Select measurement unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="51"/>
+        <location filename="build/ui_cdlgselectunit.h" line="97"/>
+        <source>Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="62"/>
+        <location filename="build/ui_cdlgselectunit.h" line="98"/>
+        <source>Don&apos;t care</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="67"/>
+        <location filename="build/ui_cdlgselectunit.h" line="99"/>
+        <source>Equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="72"/>
+        <location filename="build/ui_cdlgselectunit.h" line="100"/>
+        <source>Not qual to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="77"/>
+        <location filename="build/ui_cdlgselectunit.h" line="101"/>
+        <source>Greater then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="82"/>
+        <location filename="build/ui_cdlgselectunit.h" line="102"/>
+        <source>Greater then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="87"/>
+        <location filename="build/ui_cdlgselectunit.h" line="103"/>
+        <source>Less then</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="92"/>
+        <location filename="build/ui_cdlgselectunit.h" line="104"/>
+        <source>Less then or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgSelectMeasurementValue</name>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="14"/>
@@ -4139,7 +4637,7 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="14"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="96"/>
-        <source>Dialog</source>
+        <source>Select timestamp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4187,63 +4685,6 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="92"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="104"/>
-        <source>Less then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CDlgSelectUnit</name>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="14"/>
-        <location filename="build/ui_cdlgselectunit.h" line="96"/>
-        <source>Select Unit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="51"/>
-        <location filename="build/ui_cdlgselectunit.h" line="97"/>
-        <source>Unit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="62"/>
-        <location filename="build/ui_cdlgselectunit.h" line="98"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="67"/>
-        <location filename="build/ui_cdlgselectunit.h" line="99"/>
-        <source>Equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="72"/>
-        <location filename="build/ui_cdlgselectunit.h" line="100"/>
-        <source>Not qual to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="77"/>
-        <location filename="build/ui_cdlgselectunit.h" line="101"/>
-        <source>Greater then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="82"/>
-        <location filename="build/ui_cdlgselectunit.h" line="102"/>
-        <source>Greater then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="87"/>
-        <location filename="build/ui_cdlgselectunit.h" line="103"/>
-        <source>Less then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="92"/>
-        <location filename="build/ui_cdlgselectunit.h" line="104"/>
         <source>Less then or equal to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4446,214 +4887,114 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="14"/>
         <location filename="src/cdlgsessionfilter.ui" line="55"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="89"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="90"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="97"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="98"/>
         <source>Session filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="68"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="91"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="99"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="81"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="92"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="100"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="94"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="93"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="101"/>
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="107"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="94"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="102"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="130"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="95"/>
+        <location filename="src/cdlgsessionfilter.ui" line="133"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="103"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="143"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="96"/>
+        <location filename="src/cdlgsessionfilter.ui" line="146"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="104"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="156"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="97"/>
+        <location filename="src/cdlgsessionfilter.ui" line="159"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="105"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="96"/>
         <source>Add filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="104"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
         <source>Edit filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="108"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="104"/>
         <source>Clone filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="112"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="108"/>
         <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="114"/>
         <source>Load filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="122"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
         <source>Save filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="138"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="158"/>
-        <source>Class/type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="139"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="164"/>
-        <source>GUID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="140"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="170"/>
-        <source>OBID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="141"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="173"/>
-        <source>Date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="142"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="176"/>
-        <source>Timestamp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="143"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="179"/>
-        <source>Data value(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="144"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="182"/>
-        <source>Date size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="145"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="185"/>
-        <source>Priority</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="146"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="188"/>
-        <source>Must be measurement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="147"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="191"/>
-        <source>Must be Level I</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="148"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="194"/>
-        <source>Must be Level II</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/cdlgsessionfilter.cpp" line="149"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="197"/>
-        <source>Sensor Index</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="150"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="200"/>
-        <source>Measurement Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="151"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="203"/>
-        <source>Measurement Unit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="152"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="164"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="178"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="192"/>
         <location filename="src/cdlgsessionfilter.cpp" line="206"/>
-        <source>Measurement data coding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="155"/>
-        <source>QInputDialog::getItem()</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="156"/>
-        <source>Constraint:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="222"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="237"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="251"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="265"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="279"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="223"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="150"/>
         <source>editFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="238"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="165"/>
         <source>cloneFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="252"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="179"/>
         <source>deleteFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="266"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="193"/>
         <source>loadFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="280"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="207"/>
         <source>saveFilter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4960,19 +5301,21 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cfrmsession.cpp" line="116"/>
         <location filename="src/cfrmsession.cpp" line="131"/>
-        <location filename="src/cfrmsession.cpp" line="1091"/>
-        <location filename="src/cfrmsession.cpp" line="1155"/>
-        <location filename="src/cfrmsession.cpp" line="1180"/>
-        <location filename="src/cfrmsession.cpp" line="1198"/>
-        <location filename="src/cfrmsession.cpp" line="1335"/>
-        <location filename="src/cfrmsession.cpp" line="1430"/>
-        <location filename="src/cfrmsession.cpp" line="1548"/>
-        <location filename="src/cfrmsession.cpp" line="1830"/>
-        <location filename="src/cfrmsession.cpp" line="1866"/>
-        <location filename="src/cfrmsession.cpp" line="1937"/>
-        <location filename="src/cfrmsession.cpp" line="2252"/>
-        <location filename="src/cfrmsession.cpp" line="2314"/>
-        <location filename="src/cfrmsession.cpp" line="2340"/>
+        <location filename="src/cfrmsession.cpp" line="796"/>
+        <location filename="src/cfrmsession.cpp" line="812"/>
+        <location filename="src/cfrmsession.cpp" line="1092"/>
+        <location filename="src/cfrmsession.cpp" line="1156"/>
+        <location filename="src/cfrmsession.cpp" line="1181"/>
+        <location filename="src/cfrmsession.cpp" line="1199"/>
+        <location filename="src/cfrmsession.cpp" line="1336"/>
+        <location filename="src/cfrmsession.cpp" line="1431"/>
+        <location filename="src/cfrmsession.cpp" line="1549"/>
+        <location filename="src/cfrmsession.cpp" line="1831"/>
+        <location filename="src/cfrmsession.cpp" line="1867"/>
+        <location filename="src/cfrmsession.cpp" line="1938"/>
+        <location filename="src/cfrmsession.cpp" line="2253"/>
+        <location filename="src/cfrmsession.cpp" line="2315"/>
+        <location filename="src/cfrmsession.cpp" line="2341"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5002,69 +5345,6 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="366"/>
-        <location filename="src/cfrmsession.cpp" line="369"/>
-        <source>Close session window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="515"/>
-        <source>Connect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="519"/>
-        <source>Connect/disconnect from remote host</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="528"/>
-        <source>Enable filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="531"/>
-        <source>Enable/disable filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="558"/>
-        <location filename="src/cfrmsession.cpp" line="1994"/>
-        <source>Clear receive list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="571"/>
-        <source>Unselect all RX rows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="377"/>
-        <location filename="src/cfrmsession.cpp" line="721"/>
-        <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="445"/>
-        <source>&amp;Host</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="446"/>
-        <source>Connect to host...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="447"/>
-        <source>Disconnect from host...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="450"/>
-        <source>Edit host settings...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/cfrmsession.cpp" line="344"/>
         <source>Load RX rows from file...</source>
         <translation type="unfinished"></translation>
@@ -5085,20 +5365,32 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cfrmsession.cpp" line="366"/>
+        <location filename="src/cfrmsession.cpp" line="369"/>
+        <source>Close session window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="377"/>
+        <location filename="src/cfrmsession.cpp" line="720"/>
+        <source>&amp;Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cfrmsession.cpp" line="378"/>
-        <location filename="src/cfrmsession.cpp" line="2000"/>
+        <location filename="src/cfrmsession.cpp" line="2001"/>
         <source>Copy RX event to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="382"/>
-        <location filename="src/cfrmsession.cpp" line="912"/>
+        <location filename="src/cfrmsession.cpp" line="913"/>
         <source>Copy TX event to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="386"/>
-        <location filename="src/cfrmsession.cpp" line="2004"/>
+        <location filename="src/cfrmsession.cpp" line="2005"/>
         <source>Copy RX event to TX</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5187,6 +5479,26 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cfrmsession.cpp" line="445"/>
+        <source>&amp;Host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="446"/>
+        <source>Connect to host...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="447"/>
+        <source>Disconnect from host...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="450"/>
+        <source>Edit host settings...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cfrmsession.cpp" line="454"/>
         <source>&amp;VSCP</source>
         <translation type="unfinished"></translation>
@@ -5242,372 +5554,413 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="543"/>
+        <location filename="src/cfrmsession.cpp" line="515"/>
+        <source>Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="519"/>
+        <source>Connect/disconnect from remote host</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="527"/>
+        <source>Enable filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="530"/>
+        <source>Enable/disable filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="542"/>
         <source>Filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="598"/>
+        <location filename="src/cfrmsession.cpp" line="557"/>
+        <location filename="src/cfrmsession.cpp" line="1995"/>
+        <source>Clear receive list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="570"/>
+        <source>Unselect all RX rows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="597"/>
         <source>Horizontal layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="602"/>
+        <location filename="src/cfrmsession.cpp" line="601"/>
         <source>Button %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="615"/>
+        <location filename="src/cfrmsession.cpp" line="614"/>
         <source>Receive Events </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="620"/>
+        <location filename="src/cfrmsession.cpp" line="619"/>
         <source>Dir, VSCP Class, VSCP Type, id, GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="671"/>
+        <location filename="src/cfrmsession.cpp" line="670"/>
         <source>Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="675"/>
+        <location filename="src/cfrmsession.cpp" line="674"/>
         <source>x,Name,Period,Count,Event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="703"/>
+        <location filename="src/cfrmsession.cpp" line="702"/>
         <source>&amp;Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="705"/>
+        <location filename="src/cfrmsession.cpp" line="704"/>
         <source>Transmit selected event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="713"/>
+        <location filename="src/cfrmsession.cpp" line="712"/>
         <source>&amp;Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="715"/>
+        <location filename="src/cfrmsession.cpp" line="714"/>
         <source>Add transmit event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="723"/>
+        <location filename="src/cfrmsession.cpp" line="722"/>
         <source>Edit selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="729"/>
+        <location filename="src/cfrmsession.cpp" line="728"/>
         <source>&amp;Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="731"/>
+        <location filename="src/cfrmsession.cpp" line="730"/>
         <source>Clone selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="737"/>
+        <location filename="src/cfrmsession.cpp" line="736"/>
         <source>&amp;Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="739"/>
+        <location filename="src/cfrmsession.cpp" line="738"/>
         <source>Delete selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="747"/>
+        <location filename="src/cfrmsession.cpp" line="746"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="749"/>
+        <location filename="src/cfrmsession.cpp" line="748"/>
         <source>Save selected transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="755"/>
+        <location filename="src/cfrmsession.cpp" line="754"/>
         <source>&amp;Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="757"/>
+        <location filename="src/cfrmsession.cpp" line="756"/>
         <source>Load transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="884"/>
+        <location filename="src/cfrmsession.cpp" line="797"/>
+        <source>filter set</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="813"/>
+        <source>filter enable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="885"/>
         <source>Item changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="884"/>
+        <location filename="src/cfrmsession.cpp" line="885"/>
         <source>Carpe Diem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="906"/>
+        <location filename="src/cfrmsession.cpp" line="907"/>
         <source>Send event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="918"/>
+        <location filename="src/cfrmsession.cpp" line="919"/>
         <source>Add transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="922"/>
+        <location filename="src/cfrmsession.cpp" line="923"/>
         <source>Edit selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="926"/>
+        <location filename="src/cfrmsession.cpp" line="927"/>
         <source>Clone selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="930"/>
+        <location filename="src/cfrmsession.cpp" line="931"/>
         <source>Delete selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="936"/>
+        <location filename="src/cfrmsession.cpp" line="937"/>
         <source>Save transmission rows...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="940"/>
+        <location filename="src/cfrmsession.cpp" line="941"/>
         <source>Load transmission rows...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="946"/>
+        <location filename="src/cfrmsession.cpp" line="947"/>
         <source>Clear selections...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1092"/>
+        <location filename="src/cfrmsession.cpp" line="1093"/>
         <source>There is no TX row selected.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1100"/>
-        <location filename="src/cfrmsession.cpp" line="2261"/>
-        <source>STRING</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1100"/>
-        <location filename="src/cfrmsession.cpp" line="2261"/>
-        <source>JSON</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1100"/>
-        <location filename="src/cfrmsession.cpp" line="2261"/>
-        <source>XML</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1100"/>
-        <location filename="src/cfrmsession.cpp" line="2261"/>
-        <source>HTML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="1101"/>
         <location filename="src/cfrmsession.cpp" line="2262"/>
-        <source>Format</source>
+        <source>STRING</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1101"/>
+        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <source>JSON</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1101"/>
+        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <source>XML</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1101"/>
+        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <source>HTML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="1102"/>
         <location filename="src/cfrmsession.cpp" line="2263"/>
+        <source>Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1103"/>
+        <location filename="src/cfrmsession.cpp" line="2264"/>
         <source>Season:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1156"/>
-        <location filename="src/cfrmsession.cpp" line="2315"/>
+        <location filename="src/cfrmsession.cpp" line="1157"/>
+        <location filename="src/cfrmsession.cpp" line="2316"/>
         <source>Failed to convert event to requested format.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1181"/>
+        <location filename="src/cfrmsession.cpp" line="1182"/>
         <source>You must select a TX row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1199"/>
+        <location filename="src/cfrmsession.cpp" line="1200"/>
         <source>Unable to send event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1458"/>
-        <source>_copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1586"/>
-        <source>File to load transmitt events from</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1588"/>
-        <location filename="src/cfrmsession.cpp" line="1701"/>
-        <source>TX files (*.xml *.*)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1605"/>
-        <source>no name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1699"/>
-        <source>File to save transmition events to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2010"/>
-        <source>Write events to file...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2013"/>
-        <source>Write marked events to file...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2024"/>
-        <source>Add/Edit comment...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2029"/>
-        <source>Toggle row mark</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2030"/>
-        <source>Toggle VSCP class mark</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2033"/>
-        <source>Toggle VSCP type mark</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="2097"/>
-        <source>Add comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cfrmsession.cpp" line="1336"/>
-        <location filename="src/cfrmsession.cpp" line="1431"/>
-        <location filename="src/cfrmsession.cpp" line="1549"/>
+        <location filename="src/cfrmsession.cpp" line="1337"/>
+        <location filename="src/cfrmsession.cpp" line="1432"/>
+        <location filename="src/cfrmsession.cpp" line="1550"/>
         <source>You must select a transmission row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1806"/>
+        <location filename="src/cfrmsession.cpp" line="1459"/>
+        <source>_copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1587"/>
+        <source>File to load transmitt events from</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1589"/>
+        <location filename="src/cfrmsession.cpp" line="1702"/>
+        <source>TX files (*.xml *.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1606"/>
+        <source>no name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1700"/>
+        <source>File to save transmition events to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="1807"/>
         <source>Form layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1808"/>
+        <location filename="src/cfrmsession.cpp" line="1809"/>
         <source>Line 1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1809"/>
+        <location filename="src/cfrmsession.cpp" line="1810"/>
         <source>Line 2, long text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1810"/>
+        <location filename="src/cfrmsession.cpp" line="1811"/>
         <source>Line 3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1831"/>
-        <location filename="src/cfrmsession.cpp" line="1867"/>
+        <location filename="src/cfrmsession.cpp" line="1832"/>
+        <location filename="src/cfrmsession.cpp" line="1868"/>
         <source>Failed to open a connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1938"/>
+        <location filename="src/cfrmsession.cpp" line="1939"/>
         <source>Failed to disconnect the connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1990"/>
+        <location filename="src/cfrmsession.cpp" line="1991"/>
         <source>Clear selections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2016"/>
+        <location filename="src/cfrmsession.cpp" line="2011"/>
+        <source>Write events to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2014"/>
+        <source>Write marked events to file...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2017"/>
         <source>Load events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2020"/>
+        <location filename="src/cfrmsession.cpp" line="2021"/>
         <source>Set/edit GUID (sensor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cfrmsession.cpp" line="2025"/>
+        <source>Add/Edit comment...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2026"/>
         <source>Remove comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="src/cfrmsession.cpp" line="2030"/>
+        <source>Toggle row mark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2031"/>
+        <source>Toggle VSCP class mark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2034"/>
+        <source>Toggle VSCP type mark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="src/cfrmsession.cpp" line="2098"/>
+        <source>Add comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cfrmsession.cpp" line="2099"/>
         <source>Comment:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2253"/>
-        <location filename="src/cfrmsession.cpp" line="2341"/>
+        <location filename="src/cfrmsession.cpp" line="2254"/>
+        <location filename="src/cfrmsession.cpp" line="2342"/>
         <source>There is no RX row selected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2353"/>
+        <location filename="src/cfrmsession.cpp" line="2354"/>
         <source>Copy from RX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2357"/>
+        <location filename="src/cfrmsession.cpp" line="2358"/>
         <source>Failed to convert RX event to string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2379"/>
-        <location filename="src/cfrmsession.cpp" line="2451"/>
+        <location filename="src/cfrmsession.cpp" line="2380"/>
+        <location filename="src/cfrmsession.cpp" line="2452"/>
         <source>File to save receive events to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2381"/>
-        <location filename="src/cfrmsession.cpp" line="2453"/>
-        <location filename="src/cfrmsession.cpp" line="2587"/>
+        <location filename="src/cfrmsession.cpp" line="2382"/>
+        <location filename="src/cfrmsession.cpp" line="2454"/>
+        <location filename="src/cfrmsession.cpp" line="2588"/>
         <source>RX files (*.xml *.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2585"/>
+        <location filename="src/cfrmsession.cpp" line="2586"/>
         <source>File to load receive events from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="3712"/>
+        <location filename="src/cfrmsession.cpp" line="3713"/>
         <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6364,8 +6717,8 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1657"/>
-        <location filename="src/cfrmsession.cpp" line="2753"/>
+        <location filename="src/cfrmsession.cpp" line="1658"/>
+        <location filename="src/cfrmsession.cpp" line="2754"/>
         <source>Incorrect file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6409,186 +6762,6 @@ p, li { white-space: pre-wrap; }
         <location filename="src/dlgeditsessionfilters.ui" line="127"/>
         <location filename="src/dlgeditsessionfilters.ui" line="179"/>
         <source>Delete...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>dlgSelectData</name>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdata.h" line="125"/>
-        <source>Select Data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="52"/>
-        <location filename="build/ui_cdlgselectdata.h" line="126"/>
-        <source>Data Constraint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="101"/>
-        <location filename="build/ui_cdlgselectdata.h" line="127"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="106"/>
-        <location filename="build/ui_cdlgselectdata.h" line="128"/>
-        <source>Equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="111"/>
-        <location filename="build/ui_cdlgselectdata.h" line="129"/>
-        <source>Not qual to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="116"/>
-        <location filename="build/ui_cdlgselectdata.h" line="130"/>
-        <source>Greater then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="121"/>
-        <location filename="build/ui_cdlgselectdata.h" line="131"/>
-        <source>Greater then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="126"/>
-        <location filename="build/ui_cdlgselectdata.h" line="132"/>
-        <source>Less then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="131"/>
-        <location filename="build/ui_cdlgselectdata.h" line="133"/>
-        <source>Less then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="145"/>
-        <location filename="build/ui_cdlgselectdata.h" line="135"/>
-        <source>Data</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="155"/>
-        <location filename="build/ui_cdlgselectdata.h" line="136"/>
-        <source>--&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="171"/>
-        <location filename="build/ui_cdlgselectdata.h" line="137"/>
-        <source>Delete...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>dlgSelectDataCoding</name>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="97"/>
-        <source>Select data coding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="51"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="98"/>
-        <source>Data Coding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="62"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="99"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="67"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="100"/>
-        <source>Equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="72"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="101"/>
-        <source>Not qual to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="77"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="102"/>
-        <source>Greater then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="82"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="103"/>
-        <source>Greater then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="87"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="104"/>
-        <source>Less then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="92"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="105"/>
-        <source>Less then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>dlgSelectDataSize</name>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="14"/>
-        <source>Select Data size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="51"/>
-        <source>Data Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="62"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="67"/>
-        <source>Equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="72"/>
-        <source>Not qual to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="77"/>
-        <source>Greater then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="82"/>
-        <source>Greater then or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="87"/>
-        <source>Less then</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="92"/>
-        <source>Less then or equal to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

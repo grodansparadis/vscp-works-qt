@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
+    <width>531</width>
     <height>107</height>
    </rect>
   </property>
@@ -32,9 +32,9 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>20</y>
-     <width>521</width>
+     <width>511</width>
      <height>41</height>
     </rect>
    </property>
@@ -74,22 +74,22 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater then</string>
+        <string>Greater than</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Greater then or equal to</string>
+        <string>Greater than or equal to</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Less then</string>
+        <string>Less than</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Less then or equal to</string>
+        <string>Less than or equal to</string>
        </property>
       </item>
      </widget>

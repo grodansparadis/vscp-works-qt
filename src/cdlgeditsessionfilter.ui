@@ -7,17 +7,21 @@
     <x>0</x>
     <y>0</y>
     <width>620</width>
-    <height>489</height>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Edit Session filter</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="vscpworks.qrc">
+    <normaloff>:/vscpworks.png</normaloff>:/vscpworks.png</iconset>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>450</y>
+     <y>510</y>
      <width>501</width>
      <height>32</height>
     </rect>
@@ -33,134 +37,135 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>30</y>
+     <y>100</y>
      <width>501</width>
      <height>192</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
     <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <property name="sortingEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnAddAllowConstraint">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>100</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnEditAllowConstraint">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>130</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Edit...</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnDeleteAllowConstraint">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>160</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Delete...</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="chkAllow">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>351</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Allow (Deny if unchecked) Constraints</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editName">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>40</y>
+     <width>501</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Name of filter</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
+     <y>20</y>
      <width>67</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Allow</string>
+    <string>Name</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textDescription">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>320</y>
+     <width>501</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Full description for event</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>230</y>
-     <width>67</width>
+     <y>300</y>
+     <width>111</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Deny</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="listDeny">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>250</y>
-     <width>501</width>
-     <height>192</height>
-    </rect>
-   </property>
-   <property name="contextMenuPolicy">
-    <enum>Qt::CustomContextMenu</enum>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>30</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Add...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>60</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_4">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>90</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Delete...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_3">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>250</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Add...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_5">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>310</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Delete...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_6">
-   <property name="geometry">
-    <rect>
-     <x>520</x>
-     <y>280</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit...</string>
+    <string>Description</string>
    </property>
   </widget>
  </widget>
- <resources/>
+ <tabstops>
+  <tabstop>editName</tabstop>
+  <tabstop>listAllow</tabstop>
+  <tabstop>textDescription</tabstop>
+  <tabstop>btnAddAllowConstraint</tabstop>
+  <tabstop>btnEditAllowConstraint</tabstop>
+  <tabstop>btnDeleteAllowConstraint</tabstop>
+  <tabstop>chkAllow</tabstop>
+ </tabstops>
+ <resources>
+  <include location="vscpworks.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
@@ -170,7 +175,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>248</x>
-     <y>254</y>
+     <y>570</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -186,7 +191,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>316</x>
-     <y>260</y>
+     <y>570</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

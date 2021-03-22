@@ -309,6 +309,9 @@ add_executable(vscp-works-qt
     src/ctxevent.h
     src/ctxevent.cpp
 
+    src/sessionfilter.h
+    src/sessionfilter.cpp
+
     src/cdlgsessionfilter.ui
     src/cdlgsessionfilter.h
     src/cdlgsessionfilter.cpp

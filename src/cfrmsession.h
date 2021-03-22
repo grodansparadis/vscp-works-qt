@@ -446,8 +446,15 @@ class CFrmSession : public QDialog
     void createFormGroupBox();
 
     // Toolbar
+    
+    /// Connect to host
     void menu_connect();
-    void menu_filter();
+
+    /// Configure receive filter
+    void menu_filter_config();
+
+    /// Enable&disable receive filter
+    void menu_filter_enable();
 
     enum { NumGridRows = 8, NumButtons = 4 };
 

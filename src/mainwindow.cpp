@@ -43,6 +43,7 @@
 #include "filedownloader.h"
 
 #include "version.h"
+#include "cdlgsessionfilter.h"
 #include "cfrmsession.h"
 #include "vscp_client_base.h"
 #include "cdlgmainsettings.h"
@@ -1385,9 +1386,11 @@ void MainWindow::createActions()
 
     QMenu *toolsMenu = menuBar()->addMenu(tr("&Tools"));
     QAction *settingsAct = toolsMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
-    settingsAct->setStatusTip(tr("Open settins..."));
+    settingsAct->setStatusTip(tr("Open settings..."));
     QAction *knownGuidAct = toolsMenu->addAction(tr("&Known GUID's"), this, &MainWindow::knownGuids);
     knownGuidAct->setStatusTip(tr("Edit/Add known GUID's..."));
+    QAction *sessionFilterAct = toolsMenu->addAction(tr("&Session filters..."), this, &MainWindow::sessionFilter);
+    knownGuidAct->setStatusTip(tr("Edit/Add session filters..."));
 
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
     QAction *helpAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
@@ -1653,6 +1656,22 @@ void MainWindow::knownGuids(void)
 {
     CDlgKnownGuid *dlg = new CDlgKnownGuid();
     dlg->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// sessionFilters
+//
+
+void MainWindow::sessionFilter(void)
+{
+    CDlgSessionFilter dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+        QMessageBox::information(
+          this,
+          tr("vscpworks+"),
+          tr("filter set"),
+          QMessageBox::Ok);
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

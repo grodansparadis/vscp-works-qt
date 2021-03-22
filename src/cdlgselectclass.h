@@ -47,10 +47,32 @@ public:
     ~CDlgSelectClass();
 
 public:
+
+    /// Get selected VSCP classes
+    QList<QListWidgetItem *> getSelectedClasses(void);
     
+    /// Get selected VSCP types
+    QList<QListWidgetItem *> getSelectedTypes(void);
+
+    /// Fill classes into list
+    void fillVscpClasses(void);
+
+    /// Fill type into list
+    void fillVscpTypes(void);
 
 private slots:
-    
+
+    /// Clear selections in class list
+    void clearClassSelections(void);
+
+    /// Clear selections in type list
+    void clearTypeSelections(void);
+
+    /// Item in class listbox clicked
+    void itemClassClicked(QListWidgetItem *item);
+
+    /// Item in type listbox clicked
+    void itemTypeClicked(QListWidgetItem *item);
 
 private:
 
