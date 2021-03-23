@@ -69,22 +69,68 @@ CDlgSelectClass::~CDlgSelectClass()
 // getSelectedClasses
 //
 
-QList<QListWidgetItem *>
+std::deque<uint16_t>
 CDlgSelectClass::getSelectedClasses(void)
 {
-    QList<QListWidgetItem *> selected = ui->listClass->selectedItems();
-    return selected;
+    std::deque<uint16_t> selClasses;
+    QList<QListWidgetItem *> _selectedClasses = ui->listClass->selectedItems();
+    for (int i=0; i<_selectedClasses.size(); i++) {
+        selClasses.push_back(_selectedClasses[i]->data(Qt::UserRole).toUInt());
+    }
+    return selClasses;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getSelectedTypes
 //
 
-QList<QListWidgetItem *>
+std::deque<uint32_t>
 CDlgSelectClass::getSelectedTypes(void)
 {
-    QList<QListWidgetItem *> selected = ui->listType->selectedItems();
-    return selected;
+    std::deque<uint32_t> selTypes;
+    QList<QListWidgetItem *> _selectedTypes = ui->listType->selectedItems();
+    for (int i=0; i<_selectedTypes.size(); i++) {
+        selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
+    }
+    return selTypes;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// selectClasses
+//
+
+void CDlgSelectClass::selectClasses(const std::deque<uint16_t>& listClass)
+{
+    for (auto const& vscp_class: listClass) {
+        for (int i=0; i<ui->listClass->count(); i++) {
+            QListWidgetItem *item = ui->listClass->item(i);
+            if (nullptr == item) continue;
+            if (vscp_class == item->data(Qt::UserRole)) {
+                item->setSelected(true);
+                break;
+            }
+        }
+    }
+
+    // Fill type for selected classes
+    fillVscpTypes();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// selectTypes
+//
+
+void CDlgSelectClass::selectTypes(const std::deque<uint32_t>& listType)
+{
+    for (auto const& vscp_type: listType) {
+        for (int i=0; i<ui->listType->count(); i++) {
+            QListWidgetItem *item = ui->listType->item(i);
+            if (nullptr == item) continue;
+            if (vscp_type == item->data(Qt::UserRole)) {
+                item->setSelected(true);
+            }
+        }
+    }
 }
 
 
@@ -176,6 +222,14 @@ CDlgSelectClass::fillVscpTypes(void)
 
     // Clear selections
     //ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
+    
+    // Save selections
+    std::deque<uint32_t> selTypes;
+    QList<QListWidgetItem *> _selectedTypes = ui->listType->selectedItems();
+    for (int i=0; i<_selectedTypes.size(); i++) {
+        qDebug() << _selectedTypes[i]->data(Qt::UserRole).toUInt();
+        selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
+    }
 
     ui->listType->clear();
 
@@ -214,6 +268,16 @@ CDlgSelectClass::fillVscpTypes(void)
 
         item->setData(Qt::UserRole, (((uint32_t)classId) << 16) + typeId);    
         ui->listType->addItem(item);
+    }
+
+    // Restore selections (where possible)
+    for (int i=0; i<selTypes.size(); i++) {
+        for (int j=0; j < ui->listType->count(); j++) {
+            if (ui->listType->item(j)->data(Qt::UserRole).toUInt() == selTypes[i]) {
+                ui->listType->item(j)->setSelected(true);
+                break;
+            }
+        }
     }
 }
 

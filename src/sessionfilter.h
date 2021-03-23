@@ -107,7 +107,7 @@ public:
         Check a value against another value with
         a specified set constraint 
     */
-    bool checkValue(uint8_t val, 
+    bool checkValue(uint16_t val, 
                         uint8_t evval, 
                         constraint chk);
     /*!
@@ -117,41 +117,59 @@ public:
     */
     bool check(const vscpEvent *pev);
 
+    // Direction RX  constraint handling
     void addReceiveConstraint(bool b=true) { m_bReceive = b; };
     bool isReceiveConstraint(void) { return m_bReceive; };
 
+    // Direction TX constraint handling
     void addTransmitConstraint(bool b=true) { m_bTransmit = b; };
     bool isTransmitConstraint(void) { return m_bTransmit; };
 
+    // Level I constraint handling
     void addLevel1Constraint(bool b=true) { m_bLevel1 = b; };
     bool isLevel1Constraint(void) { return m_bLevel1; };
 
+    // Level II Constraint handling
     void addLevel2Constraint(bool b=true) { m_bLevel2 = b; };
     bool isLevel2Constraint(void) { return m_bLevel2; };
 
+    // Measurement constraint handling
     void addMeasurementConstraint(bool b=true) { m_bMeasurement = b; };
     bool isMeasurementConstraint(void) { return m_bMeasurement; };
 
+    // Class constraint handling
     bool addClassConstraint(uint16_t vscp_class);
     bool removeClassConstraint(uint16_t vscp_class);
     bool isClassAccepted(const vscpEvent *pev);
+    std::deque<uint16_t> getClasses(void);
+    void clearClasses(void) { m_mapClass.clear(); };
 
+    // Type Constraint handling
     bool addTypeConstraint(uint32_t type);
     bool removeTypeConstraint(uint32_t type);
     bool isTypeAccepted(const vscpEvent *pev);
+    std::deque<uint32_t> getTypes(void);
+    void clearTypes(void) { m_mapType.clear(); };
 
-    bool addDataConstraint(uint8_t pos, uint8_t val, constraint chk = constraint::ANY);
-    bool removeDataConstraint(uint8_t pos);
+    // Data constraint handling
+    bool addDataConstraint(uint16_t pos, uint8_t val, constraint chk = constraint::ANY);
+    bool removeDataConstraint(uint16_t pos);
     bool isDataAccepted(const vscpEvent *pev);
 
+    // Data size constraint handling
     constraint getDataSizeConstraint(void) { return m_constraint_data_size; };
     uint16_t getDataSizeValue(void) { return m_data_size; };
     bool setDataSizeConstraint(uint16_t size, uint16_t val, constraint chk = constraint::ANY);
 
+    // GUID constraint handling
     bool addGuidConstraint(uint8_t pos, uint8_t val, constraint chk = constraint::ANY);
     bool removeGuidConstraint(uint8_t pos);
     bool isGuidAccepted(const vscpEvent *pev);
 
+    // Date constraint handling
+    bool addDateConstraint(uint8_t pos, uint16_t val, constraint chk = constraint::ANY);
+    bool removeDateConstraint(uint8_t pos);
+    bool isDateAccepted(const vscpEvent *pev);
 
  private:
 
@@ -179,25 +197,18 @@ public:
     // Class
     //      Accepted/Denied classes (no type is all)
     //      class -> accept
-    std::map<uint16_t, bool> m_mapclass;
+    std::map<uint16_t, bool> m_mapClass;
 
     // Type
     //      Accepted/Denied types (no type is all)
     //      class : type  -> accept
-    std::map<uint32_t, bool> m_maptype;
+    std::map<uint32_t, bool> m_mapType;
 
     /*!
         data compare (no data is all/none). Inverted for deny 
-            pos (16) : op (8) : value (8)
-            0 - accept any value
-            1 - not equal
-            2 - equal
-            3 - less than
-            4 - less than or equal
-            5 - greater than
-            6 - greate than or equal            
+            pos (16) -> op (8) : value (8)           
     */
-    std::deque<uint32_t> m_listData;
+    std::map<uint16_t,uint32_t> m_mapData;
 
     /*!
         data size constraint. Inverted for deny 
@@ -209,17 +220,11 @@ public:
 
     /*!
         GUID(no data is all). Inverted for deny 
-        op(8) : guid(8) : pos(8) 
- 
-            0 - accept any value
-            1 - not equal
-            2 - equal
-            3 - less than
-            4 - less than or equal
-            5 - greater than
-            6 - greate than or equal            
+        pos(8) -> chk(8) : val(8) 
+        If not defined zero is defined wish is 
+        don't care           
     */
-    std::deque<uint32_t> m_listguid;
+    std::map<uint8_t, uint16_t> m_mapGuid;
 
     /*!
         obid constraint
@@ -234,23 +239,10 @@ public:
     uint32_t m_timestamp;
 
     /*!
-        Date (no data is all)
-        // Check date
-        // Byte 0
-        //    Bit 0-3: Pos (0-7)
-        //    Bit 4-7: OP (0-7)
-        // Byte 1/2
-        //    Value
-            pos : op : value
-            0 - accept any value
-            1 - not equal
-            2 - equal
-            3 - less than
-            4 - less than or equal
-            5 - greater than
-            6 - greate than or equal            
+        Date (no data is all) 
+        pos -> chk(8) : val(16)         
     */
-    std::deque<uint32_t> m_date;
+    std::map<uint8_t,uint32_t> m_mapDate;
 
     /*! 
         Must be Level I event if set, don't care if not

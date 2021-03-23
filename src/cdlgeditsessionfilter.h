@@ -70,29 +70,17 @@ public:
 
 private slots:
 
-    /// Add allow filter constraint
-    void addAllowConstraint(void);
+    /// Add filter constraint
+    void addConstraint(void);
     
-    /// Edit allow filter constraint
-    void editAllowConstraint(void);
+    /// Edit filter constraint
+    void editConstraint(void);
 
-    /// Delete allow filter constraint
-    void deleteAllowConstraint(void);
+    /// Delete filter constraint
+    void deleteConstraint(void);
 
-    /// Allow context menu
-    void showAllowContextMenu(const QPoint& pos);
-
-    /// Add deny filter constraint
-    void addDenyConstraint(void);
-
-    /// Edit deny filter constraint
-    void editDenyConstraint(void);
-
-    /// Delete deny filter constraint
-    void deleteDenyConstraint(void);
-
-    /// Allow context menu
-    void showDenyContextMenu(const QPoint& pos);
+    /// Context menu
+    void showContextMenu(const QPoint& pos);
     
 private:
 

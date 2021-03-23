@@ -29,6 +29,10 @@
 #ifndef CDLGSELECTGUID_H
 #define CDLGSELECTGUID_H
 
+#include <vscp.h>
+#include <vscphelper.h>
+
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -46,11 +50,33 @@ public:
     explicit CDlgSelectGuid(QWidget *parent = nullptr);
     ~CDlgSelectGuid();
 
+    /*!
+        Get guid value for pos
+        @param pos Position 0-15 in GUID. 0 is MSB
+        @return GUID value.
+    */
+    uint8_t getGuidValue(uint8_t pos);
+
+    /*!
+        Get operation for GUID pos
+        @param pos Position 0-15 in GUID. 0 is MSB
+        @return GUID operation.
+    */
+    CSessionFilter::constraint getOperation(uint8_t pos);
+
 public:
     
 
 private slots:
     
+    /// Fill GUID from edit filed
+    void fillGuid(void);
+
+    /// Look up GUID from known GUID's
+    void askGuid(void);
+
+    /// Fetch an dill in Known GUID
+    void fetchKnownGuid(void);
 
 private:
 

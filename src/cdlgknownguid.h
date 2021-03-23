@@ -29,6 +29,8 @@
 #ifndef CDLGKNOWNGUID_H
 #define CDLGKNOWNGUID_H
 
+#include <guid.h>
+
 #include <QDialog>
 #include <QTableWidgetItem>
 
@@ -51,7 +53,7 @@ public:
     /*!
         set Initial focus
     */
-    void setInitialFocus(void);
+    void setInitialFocus(void);    
 
     /*!
         Insert one GUID element into table
@@ -91,6 +93,12 @@ public:
     */
     void setAddGuid(const QString& guid) 
                 { m_addGuid = guid; };
+
+    /*! 
+        Get the GUID that is selected
+        @return GUID on string form
+    */
+    bool getSelectedGuid(cguid& guid);
 
 public slots:
     

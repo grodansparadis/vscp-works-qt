@@ -29,6 +29,7 @@
 #include <vscp.h>
 #include <guid.h>
 #include <vscphelper.h>
+#include <guid.h>
 
 #include "vscpworks.h"
 
@@ -730,8 +731,23 @@ void  CDlgKnownGuid::btnSensorIndex(void)
     dlg.setGuidName(strname);
     
     if (QDialog::Accepted == dlg.exec()) {
-    
+        
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedGuid
+//
+
+bool CDlgKnownGuid::getSelectedGuid(cguid& guid)
+{
+    int row = ui->CDlgKnownGuid::listGuid->currentRow();
+    if (-1 == row) return false;
+    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
+    QString strguid = itemGuid->text();
+    strguid = strguid.trimmed();
+    guid.getFromString(strguid.toStdString());
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

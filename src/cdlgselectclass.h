@@ -49,10 +49,16 @@ public:
 public:
 
     /// Get selected VSCP classes
-    QList<QListWidgetItem *> getSelectedClasses(void);
+    std::deque<uint16_t> getSelectedClasses(void);
     
     /// Get selected VSCP types
-    QList<QListWidgetItem *> getSelectedTypes(void);
+    std::deque<uint32_t> getSelectedTypes(void);
+
+    /// Select classes from configured list
+    void selectClasses(const std::deque<uint16_t>& mapClass);
+
+    /// Select types from configured list
+    void selectTypes(const std::deque<uint32_t>& mapType);
 
     /// Fill classes into list
     void fillVscpClasses(void);

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
+    <width>679</width>
     <height>546</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QListWidget" name="listAllow">
+  <widget class="QListWidget" name="listConstraints">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -49,43 +49,43 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnAddAllowConstraint">
+  <widget class="QPushButton" name="btnAddConstraint">
    <property name="geometry">
     <rect>
      <x>520</x>
      <y>100</y>
-     <width>89</width>
+     <width>151</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
-    <string>Add...</string>
+    <string>Add constraint...</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnEditAllowConstraint">
+  <widget class="QPushButton" name="btnEditConstraint">
    <property name="geometry">
     <rect>
      <x>520</x>
      <y>130</y>
-     <width>89</width>
+     <width>151</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
-    <string>Edit...</string>
+    <string>Edit constraint...</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnDeleteAllowConstraint">
+  <widget class="QPushButton" name="btnDeleteConstraint">
    <property name="geometry">
     <rect>
      <x>520</x>
      <y>160</y>
-     <width>89</width>
+     <width>151</width>
      <height>25</height>
     </rect>
    </property>
    <property name="text">
-    <string>Delete...</string>
+    <string>Delete constraint...</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="chkAllow">
@@ -139,6 +139,9 @@
    <property name="toolTip">
     <string>Full description for event</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(211, 215, 207);</string>
+   </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
@@ -156,11 +159,11 @@
  </widget>
  <tabstops>
   <tabstop>editName</tabstop>
-  <tabstop>listAllow</tabstop>
+  <tabstop>listConstraints</tabstop>
   <tabstop>textDescription</tabstop>
-  <tabstop>btnAddAllowConstraint</tabstop>
-  <tabstop>btnEditAllowConstraint</tabstop>
-  <tabstop>btnDeleteAllowConstraint</tabstop>
+  <tabstop>btnAddConstraint</tabstop>
+  <tabstop>btnEditConstraint</tabstop>
+  <tabstop>btnDeleteConstraint</tabstop>
   <tabstop>chkAllow</tabstop>
  </tabstops>
  <resources>
