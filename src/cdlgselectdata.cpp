@@ -26,6 +26,11 @@
 // SOFTWARE.
 //
 
+#include <vscp.h>
+#include <vscphelper.h>
+
+#include <vscpworks.h>
+
 #include "cdlgselectdata.h"
 #include "ui_cdlgselectdata.h"
 
@@ -42,11 +47,12 @@ CDlgSelectData::CDlgSelectData(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+    connect(ui->btnAddValue, &QPushButton::clicked, this, &CDlgSelectData::onAddValue );
+    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSelectData::onDeleteValue ); 
+
+    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectData::onSetCertFile ); 
+    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectData::onSetKeyFile ); 
+    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectData::onSetPwKeyFile );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,26 +65,86 @@ CDlgSelectData::~CDlgSelectData()
 }
 
 
-
-
 // ----------------------------------------------------------------------------
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
+// onAddValue
 //
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
+void CDlgSelectData::onAddValue(void)
+{
+    // op : val : pos
+    // Check if there is a value for the position already
+    for (int i=0; i < ui->listValues->count(); i++) {
+        QListWidgetItem * item = ui->listValues->item(i);
+        if ((item->data(Qt::UserRole).toUInt() & 0xff) == ui->spinPos->value()) {
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("Data for this data item is already set. Delete item first to set a new value."),
+                        QMessageBox::Ok );
+            return;
+        }       
+    }
+
+    QString str;
+    uint8_t value = vscp_readStringValue(ui->editDataValue->text().toStdString());
+    uint8_t pos = ui->spinPos->value();
+        
+    switch (ui->comboCompareConstraint->currentIndex()) {
+        
+        default:
+        case 0:
+            str = "[%1] ANY %2";
+            break;
+
+        case 1:
+            str = "[%1] EQ %2";
+            break; 
+
+        case 2:
+            str = "[%1] NEQ %2";
+            break;
+
+        case 3:
+            str = "[%1] LT %2";
+            break;
+
+        case 4:
+            str = "[%1] LTEQ %2";
+            break;
+
+        case 5:
+            str = "[%1] GT %2";
+            break;
+
+        case 6:
+            str = "[%1] GTEQ %2";
+            break;                 
+    }
+    
+    QListWidgetItem *newitem = new QListWidgetItem;
+    if (nullptr == newitem) return;
+    
+    newitem->setText(str.arg(ui->spinPos->value()).arg(value));
+    newitem->setData(Qt::UserRole, 
+                        (((uint32_t)ui->comboCompareConstraint->currentIndex()) << 16) + 
+                        (((uint32_t)value) << 8) + 
+                        pos);                  
+    ui->listValues->addItem(newitem);                        
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onDeleteValue
+//
+
+void CDlgSelectData::onDeleteValue(void)
+{
+    QListWidgetItem *item = ui->listValues->currentItem();
+    if (nullptr != item) {
+        delete item;
+    }
+}
+
 

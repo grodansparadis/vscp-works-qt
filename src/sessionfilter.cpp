@@ -301,13 +301,41 @@ bool CSessionFilter::isGuidAccepted(const vscpEvent *pev)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getGuids
+//
+
+std::deque<uint32_t> 
+CSessionFilter::getGuids(void)
+{
+    std::deque<uint32_t> listGuid;
+
+    for (auto const& item : m_mapGuid){
+        uint32_t val = (((uint32_t)item.first) << 16) + item.second;
+        listGuid.push_back(val);    
+    }
+
+    return listGuid;   
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // addDateConstraint
 //
 
 bool CSessionFilter::addDateConstraint(uint8_t pos, uint16_t val, constraint chk)
 {
+    if (pos > 7) return false;
     m_mapDate[pos] = (static_cast<uint32_t>(chk) << 16) + val;
     return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDateConstraint
+//
+
+uint32_t CSessionFilter::getDateConstraint(uint8_t pos)
+{
+    if (pos > 7) return 0;
+    return m_mapDate[pos];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -379,12 +407,86 @@ bool CSessionFilter::isDateAccepted(const vscpEvent *pev)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// addObidConstraint
+//
+
+bool CSessionFilter::addObidConstraint(uint32_t val, constraint chk)
+{
+    m_obid = val;
+    m_constraint_obid = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeObidConstraint
+//
+
+bool CSessionFilter::removeObidConstraint(void)
+{
+    m_constraint_obid = constraint::ANY;
+    m_obid = 0;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeObidConstraint
+//
+
+bool CSessionFilter::isObidAccepted(const vscpEvent *pev)
+{
+    if (!checkValue(m_obid, pev->obid, m_constraint_obid)) {
+        return false;
+    }
+
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addTimeStampConstraint
+//
+
+bool CSessionFilter::addTimeStampConstraint(uint32_t val, constraint chk)
+{
+    m_timestamp = val;
+    m_constraint_timestamp = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeTimeStampConstraint
+//
+
+bool CSessionFilter::removeTimeStampConstraint(void)
+{
+    m_constraint_timestamp = constraint::ANY;
+    m_timestamp = 0;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isTimeStampAccepted
+//
+
+bool CSessionFilter::isTimeStampAccepted(const vscpEvent *pev)
+{
+    if (!checkValue(m_obid, pev->timestamp, m_constraint_timestamp)) {
+        return false;
+    }
+
+    return true;
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 // checkValue
 //
 
-bool CSessionFilter::checkValue(uint16_t val, 
-                                    uint8_t evval, 
-                                    constraint chk)
+bool CSessionFilter::checkValue(uint32_t val, 
+                                uint32_t evval, 
+                                constraint chk)
 {
     switch (chk) { 
         case constraint::NEQ:
@@ -463,16 +565,7 @@ bool CSessionFilter::check(const vscpEvent *pev)
     
     }
 
-    // Check obid
-    else if (constraint::ANY != m_constraint_timestamp) {
-    
-        if ( !checkValue(m_timestamp, pev->timestamp, m_constraint_timestamp)) {
-            return false;
-        }
-    
-    }
-
-    // Check obid
+    // Check timestamp
     else if (constraint::ANY != m_constraint_timestamp) {
     
         if ( !checkValue(m_timestamp, pev->timestamp, m_constraint_timestamp)) {

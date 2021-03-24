@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDlgSelectConstraint</class>
+ <widget class="QDialog" name="CDlgSelectConstraint">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>275</width>
+    <height>229</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Select filter constraint</string>
+  </property>
+  <widget class="QListWidget" name="listConstraints">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>List with filter constraints</string>
+   </property>
+   <item>
+    <property name="text">
+     <string>No constraint</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Must be received event</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Must be transmitted event</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Must be Level I event</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Must be Level II event</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Must be measurement</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Specific Class</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Specific Type</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Priority</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>GUID</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>OBID</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Timestamp</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Date</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Data size</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Data value(s)</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Sensor Index</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Measurement Unit</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Measurement data coding</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Measurement Value</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Script</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Constraints</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselecttimestamp.h"
 #include "ui_cdlgselecttimestamp.h"
 
@@ -60,25 +67,43 @@ CDlgSelectTimeStamp::~CDlgSelectTimeStamp()
 
 
 
-
 // ----------------------------------------------------------------------------
 
 
-
 ///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
+// getTimeStampValue
 //
 
-// void
-// CDlgSelectTimeStamp::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
+uint32_t CDlgSelectTimeStamp::getTimeStampValue(void)
+{
+    return vscp_readStringValue(ui->editTimeStamp->text().toStdString());
+}
 
+///////////////////////////////////////////////////////////////////////////////
+// setTimeStampValue
+//
+
+void CDlgSelectTimeStamp::setTimeStampValue(uint32_t value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+
+    ui->editTimeStamp->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getTimeStampConstraint
+//
+
+CSessionFilter::constraint CDlgSelectTimeStamp::getTimeStampConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintTimeStamp->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setTimeStampConstraint
+//
+
+void CDlgSelectTimeStamp::setTimeStampConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintTimeStamp->setCurrentIndex(static_cast<int>(op));
+}

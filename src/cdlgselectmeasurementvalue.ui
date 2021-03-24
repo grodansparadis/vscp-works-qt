@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>70</y>
-     <width>521</width>
+     <width>511</width>
      <height>32</height>
     </rect>
    </property>
@@ -74,16 +74,6 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater than</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Greater than or equal to</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Less than</string>
        </property>
       </item>
@@ -92,21 +82,25 @@
         <string>Less than or equal to</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Greater than</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater than or equal to</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QSpinBox" name="spinBoxBoxValue">
+     <widget class="QLineEdit" name="editValue">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>150</width>
-        <height>0</height>
-       </size>
       </property>
      </widget>
     </item>

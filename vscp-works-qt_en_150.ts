@@ -1892,365 +1892,181 @@ and the flag bits for the. the driver.
     <name>CDlgEditSessionFilter</name>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="14"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="98"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="99"/>
         <source>Edit Session filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="62"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="99"/>
-        <source>Add...</source>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="100"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1060"/>
+        <source>Add constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="75"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="100"/>
-        <source>Edit...</source>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1064"/>
+        <source>Edit constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="88"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
-        <source>Delete...</source>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="102"/>
+        <source>Delete constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="101"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="102"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="103"/>
         <source>Allow (Deny if unchecked) Constraints</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="114"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="104"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="105"/>
         <source>Name of filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="127"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="106"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="107"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="140"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="108"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="109"/>
         <source>Full description for event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.ui" line="153"/>
-        <location filename="build/ui_cdlgeditsessionfilter.h" line="110"/>
+        <location filename="src/cdlgeditsessionfilter.ui" line="156"/>
+        <location filename="build/ui_cdlgeditsessionfilter.h" line="111"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="137"/>
-        <source>Select constraint to add</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="138"/>
-        <source>[1] - Must be received event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="139"/>
-        <source>[2] - Must be transmitted event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="140"/>
-        <source>[3] - Class/type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="141"/>
-        <source>[4] - GUID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="142"/>
-        <source>[5] - OBID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="143"/>
-        <source>[6] - Date</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="144"/>
-        <source>[7] - Timestamp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="145"/>
-        <source>[8] - Data value(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="146"/>
-        <source>[9] - Date size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="147"/>
-        <source>[10] - Priority</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="148"/>
-        <source>[11] - Must be measurement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="149"/>
-        <source>[12] - Must be Level I</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="150"/>
-        <source>[13] - Must be Level II</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="151"/>
-        <source>[14] - Sensor Index</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="152"/>
-        <source>[15] - Measurement Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="153"/>
-        <source>[16] - Measurement Unit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="154"/>
-        <source>[17] - Measurement data coding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="155"/>
-        <source>[18] - Script</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="158"/>
-        <source>QInputDialog::getItem()</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="159"/>
-        <source>Constraint:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="163"/>
-        <source>[1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="169"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="132"/>
         <source>00 - Must be received event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="176"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="195"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="214"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="233"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="245"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="255"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="342"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="361"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="380"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="429"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="506"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="139"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="173"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="206"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="239"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="263"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="276"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="317"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="352"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="415"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="463"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="494"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="525"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="556"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="587"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="627"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="651"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="682"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="713"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="744"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="775"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="914"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="926"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="934"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="942"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="950"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="958"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1044"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="177"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="196"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="215"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="234"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="343"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="362"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="381"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="140"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="174"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="207"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="240"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="628"/>
         <source>This constraint is already set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="182"/>
-        <source>[2]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="188"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="166"/>
         <source>01 - Must be transmitt event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="201"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="347"/>
-        <source>[12]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="207"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="199"/>
         <source>12 - Must be level I event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="220"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="366"/>
-        <source>[13]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="226"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="232"/>
         <source>13 - Must be level 2 event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="239"/>
-        <source>[3]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="246"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="264"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="353"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="416"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="464"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="495"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="526"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="557"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="588"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="652"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="683"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="714"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="745"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="776"/>
         <source>This constraint is already set. Use edit instead of add.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="256"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="277"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="318"/>
         <source>No class defined. Att least one class need to be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="275"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="296"/>
         <source>03 - Must be specific VSCP Class/Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="280"/>
-        <source>[4]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="287"/>
-        <source>[5]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="294"/>
-        <source>[6]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="301"/>
-        <source>[7]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="308"/>
-        <source>[8]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="315"/>
-        <source>[9]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="322"/>
-        <source>[10]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="329"/>
-        <source>[11]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="335"/>
-        <source>11 - Must be measurement event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="354"/>
-        <source>12 - Must be Level I event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="373"/>
-        <source>13 - Must be Level II event</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="385"/>
-        <source>[14]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="392"/>
-        <source>[15]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="399"/>
-        <source>[16]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="406"/>
-        <source>[17]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="413"/>
-        <source>[18]</source>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="372"/>
+        <source>04 - Must be specific GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.cpp" line="430"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="507"/>
+        <source>05 - Must be specific OBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="620"/>
+        <source>11 - Must be measurement event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="915"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1045"/>
         <source>A constraint must be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="522"/>
-        <source>Add allow filter constraint...</source>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="927"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="935"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="943"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="951"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="959"/>
+        <source>There is nothing to edit for this constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="526"/>
-        <source>Edit allow filter constraint...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="530"/>
-        <source>Delete allow filter constraint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="576"/>
-        <source>Add deny filter constraint...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="580"/>
-        <source>Edit deny filter constraint...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="584"/>
-        <source>Delete deny filter constraint</source>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1068"/>
+        <source>Delete constraint</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2265,14 +2081,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgknownguid.ui" line="70"/>
         <location filename="build/ui_cdlgknownguid.h" line="122"/>
-        <location filename="src/cdlgknownguid.cpp" line="212"/>
+        <location filename="src/cdlgknownguid.cpp" line="221"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="83"/>
         <location filename="build/ui_cdlgknownguid.h" line="123"/>
-        <location filename="src/cdlgknownguid.cpp" line="213"/>
+        <location filename="src/cdlgknownguid.cpp" line="222"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2355,153 +2171,153 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="81"/>
+        <location filename="src/cdlgknownguid.cpp" line="85"/>
         <source>GUID, Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="168"/>
-        <location filename="src/cdlgknownguid.cpp" line="482"/>
-        <location filename="src/cdlgknownguid.cpp" line="569"/>
+        <location filename="src/cdlgknownguid.cpp" line="172"/>
+        <location filename="src/cdlgknownguid.cpp" line="491"/>
+        <location filename="src/cdlgknownguid.cpp" line="578"/>
         <source>SELECT * FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="174"/>
-        <location filename="src/cdlgknownguid.cpp" line="389"/>
-        <location filename="src/cdlgknownguid.cpp" line="404"/>
-        <location filename="src/cdlgknownguid.cpp" line="420"/>
-        <location filename="src/cdlgknownguid.cpp" line="473"/>
-        <location filename="src/cdlgknownguid.cpp" line="488"/>
-        <location filename="src/cdlgknownguid.cpp" line="521"/>
-        <location filename="src/cdlgknownguid.cpp" line="560"/>
-        <location filename="src/cdlgknownguid.cpp" line="575"/>
-        <location filename="src/cdlgknownguid.cpp" line="602"/>
-        <location filename="src/cdlgknownguid.cpp" line="617"/>
-        <location filename="src/cdlgknownguid.cpp" line="633"/>
-        <location filename="src/cdlgknownguid.cpp" line="663"/>
-        <location filename="src/cdlgknownguid.cpp" line="678"/>
-        <location filename="src/cdlgknownguid.cpp" line="714"/>
+        <location filename="src/cdlgknownguid.cpp" line="178"/>
+        <location filename="src/cdlgknownguid.cpp" line="398"/>
+        <location filename="src/cdlgknownguid.cpp" line="413"/>
+        <location filename="src/cdlgknownguid.cpp" line="429"/>
+        <location filename="src/cdlgknownguid.cpp" line="482"/>
+        <location filename="src/cdlgknownguid.cpp" line="497"/>
+        <location filename="src/cdlgknownguid.cpp" line="530"/>
+        <location filename="src/cdlgknownguid.cpp" line="569"/>
+        <location filename="src/cdlgknownguid.cpp" line="584"/>
+        <location filename="src/cdlgknownguid.cpp" line="611"/>
+        <location filename="src/cdlgknownguid.cpp" line="626"/>
+        <location filename="src/cdlgknownguid.cpp" line="642"/>
+        <location filename="src/cdlgknownguid.cpp" line="672"/>
+        <location filename="src/cdlgknownguid.cpp" line="687"/>
+        <location filename="src/cdlgknownguid.cpp" line="723"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="175"/>
-        <location filename="src/cdlgknownguid.cpp" line="489"/>
-        <location filename="src/cdlgknownguid.cpp" line="576"/>
+        <location filename="src/cdlgknownguid.cpp" line="179"/>
+        <location filename="src/cdlgknownguid.cpp" line="498"/>
+        <location filename="src/cdlgknownguid.cpp" line="585"/>
         <source>Unable to find record in database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="178"/>
-        <location filename="src/cdlgknownguid.cpp" line="492"/>
-        <location filename="src/cdlgknownguid.cpp" line="579"/>
+        <location filename="src/cdlgknownguid.cpp" line="182"/>
+        <location filename="src/cdlgknownguid.cpp" line="501"/>
+        <location filename="src/cdlgknownguid.cpp" line="588"/>
         <source>Unable to find record in database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="214"/>
+        <location filename="src/cdlgknownguid.cpp" line="223"/>
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="215"/>
+        <location filename="src/cdlgknownguid.cpp" line="224"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="217"/>
+        <location filename="src/cdlgknownguid.cpp" line="226"/>
         <source>Sensor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="373"/>
+        <location filename="src/cdlgknownguid.cpp" line="382"/>
         <source>Add new known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="390"/>
-        <location filename="src/cdlgknownguid.cpp" line="603"/>
+        <location filename="src/cdlgknownguid.cpp" line="399"/>
+        <location filename="src/cdlgknownguid.cpp" line="612"/>
         <source>Invalid GUID. Length is wrong.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="405"/>
-        <location filename="src/cdlgknownguid.cpp" line="618"/>
+        <location filename="src/cdlgknownguid.cpp" line="414"/>
+        <location filename="src/cdlgknownguid.cpp" line="627"/>
         <source>Invalid GUID. Format is wrong. Should be like &apos;FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="410"/>
-        <location filename="src/cdlgknownguid.cpp" line="623"/>
+        <location filename="src/cdlgknownguid.cpp" line="419"/>
+        <location filename="src/cdlgknownguid.cpp" line="632"/>
         <source>INSERT INTO guid (guid, name, description) VALUES (&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;);</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="421"/>
-        <location filename="src/cdlgknownguid.cpp" line="634"/>
+        <location filename="src/cdlgknownguid.cpp" line="430"/>
+        <location filename="src/cdlgknownguid.cpp" line="643"/>
         <source>Unable to save GUID into database (duplicate?).
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="424"/>
-        <location filename="src/cdlgknownguid.cpp" line="637"/>
+        <location filename="src/cdlgknownguid.cpp" line="433"/>
+        <location filename="src/cdlgknownguid.cpp" line="646"/>
         <source>Unable to save GUID into database (duplicate?). Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="465"/>
+        <location filename="src/cdlgknownguid.cpp" line="474"/>
         <source>Edit known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="474"/>
-        <location filename="src/cdlgknownguid.cpp" line="561"/>
-        <location filename="src/cdlgknownguid.cpp" line="664"/>
-        <location filename="src/cdlgknownguid.cpp" line="715"/>
+        <location filename="src/cdlgknownguid.cpp" line="483"/>
+        <location filename="src/cdlgknownguid.cpp" line="570"/>
+        <location filename="src/cdlgknownguid.cpp" line="673"/>
+        <location filename="src/cdlgknownguid.cpp" line="724"/>
         <source>No GUID is selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="512"/>
+        <location filename="src/cdlgknownguid.cpp" line="521"/>
         <source>UPDATE guid SET name=&apos;%1&apos;, description=&apos;%2&apos; WHERE guid=&apos;%3&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="522"/>
+        <location filename="src/cdlgknownguid.cpp" line="531"/>
         <source>Unable to save edited GUID into database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="525"/>
+        <location filename="src/cdlgknownguid.cpp" line="534"/>
         <source>Unable to save edited GUID into database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="553"/>
+        <location filename="src/cdlgknownguid.cpp" line="562"/>
         <source>Clone GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="672"/>
+        <location filename="src/cdlgknownguid.cpp" line="681"/>
         <source>DELETE FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="679"/>
+        <location filename="src/cdlgknownguid.cpp" line="688"/>
         <source>Unable to delete GUID.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="682"/>
+        <location filename="src/cdlgknownguid.cpp" line="691"/>
         <source>Unable to delete GUID. Err =</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3656,76 +3472,217 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CDlgSelectConstraint</name>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="14"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="65"/>
+        <source>Select filter constraint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="26"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="112"/>
+        <source>List with filter constraints</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="30"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="70"/>
+        <source>No constraint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="35"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="72"/>
+        <source>Must be received event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="40"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="74"/>
+        <source>Must be transmitted event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="45"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="76"/>
+        <source>Must be Level I event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="50"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="78"/>
+        <source>Must be Level II event</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="55"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="80"/>
+        <source>Must be measurement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="60"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="82"/>
+        <source>Specific Class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="65"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="84"/>
+        <source>Specific Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="70"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="86"/>
+        <source>Priority</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="75"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="88"/>
+        <source>GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="80"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="90"/>
+        <source>OBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="85"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="92"/>
+        <source>Timestamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="90"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="94"/>
+        <source>Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="95"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="96"/>
+        <source>Date size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="100"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="98"/>
+        <source>Data value(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="105"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="100"/>
+        <source>Sensor Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="110"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="102"/>
+        <source>Measurement Unit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="115"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="104"/>
+        <source>Measurement data coding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="120"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="106"/>
+        <source>Measurement Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="125"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="108"/>
+        <source>Script</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectconstraint.ui" line="139"/>
+        <location filename="build/ui_cdlgselectconstraint.h" line="114"/>
+        <source>Constraints</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgSelectData</name>
     <message>
         <location filename="src/cdlgselectdata.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdata.h" line="125"/>
+        <location filename="build/ui_cdlgselectdata.h" line="128"/>
         <source>Select Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdata.ui" line="52"/>
-        <location filename="build/ui_cdlgselectdata.h" line="126"/>
+        <location filename="build/ui_cdlgselectdata.h" line="129"/>
         <source>Data Constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="101"/>
-        <location filename="build/ui_cdlgselectdata.h" line="127"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="106"/>
-        <location filename="build/ui_cdlgselectdata.h" line="128"/>
-        <source>Equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="111"/>
-        <location filename="build/ui_cdlgselectdata.h" line="129"/>
-        <source>Not qual to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="116"/>
+        <location filename="src/cdlgselectdata.ui" line="96"/>
         <location filename="build/ui_cdlgselectdata.h" line="130"/>
-        <source>Greater than</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="121"/>
-        <location filename="build/ui_cdlgselectdata.h" line="131"/>
-        <source>Greater than or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="126"/>
-        <location filename="build/ui_cdlgselectdata.h" line="132"/>
-        <source>Less than</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="131"/>
-        <location filename="build/ui_cdlgselectdata.h" line="133"/>
-        <source>Less than or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="145"/>
-        <location filename="build/ui_cdlgselectdata.h" line="135"/>
         <source>Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="155"/>
-        <location filename="build/ui_cdlgselectdata.h" line="136"/>
-        <source>--&gt;</source>
+        <location filename="src/cdlgselectdata.ui" line="112"/>
+        <location filename="build/ui_cdlgselectdata.h" line="131"/>
+        <source>→</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="171"/>
+        <location filename="src/cdlgselectdata.ui" line="120"/>
+        <location filename="build/ui_cdlgselectdata.h" line="132"/>
+        <source>Don&apos;t care</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="125"/>
+        <location filename="build/ui_cdlgselectdata.h" line="133"/>
+        <source>Equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="130"/>
+        <location filename="build/ui_cdlgselectdata.h" line="134"/>
+        <source>Not qual to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="135"/>
+        <location filename="build/ui_cdlgselectdata.h" line="135"/>
+        <source>Greater than</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="140"/>
+        <location filename="build/ui_cdlgselectdata.h" line="136"/>
+        <source>Greater than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="145"/>
         <location filename="build/ui_cdlgselectdata.h" line="137"/>
+        <source>Less than</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="150"/>
+        <location filename="build/ui_cdlgselectdata.h" line="138"/>
+        <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="183"/>
+        <location filename="build/ui_cdlgselectdata.h" line="140"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3734,55 +3691,55 @@ and the flag bits for the. the driver.
     <name>CDlgSelectDataCoding</name>
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="97"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="96"/>
         <source>Select measurement data coding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="51"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="98"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="97"/>
         <source>Data Coding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="62"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="99"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="78"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="98"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="67"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="100"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="83"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="99"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="72"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="101"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="88"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="100"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="77"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="102"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="93"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="101"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="82"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="103"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="98"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="102"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="87"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="104"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="103"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="103"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatacoding.ui" line="92"/>
-        <location filename="build/ui_cdlgselectdatacoding.h" line="105"/>
+        <location filename="src/cdlgselectdatacoding.ui" line="108"/>
+        <location filename="build/ui_cdlgselectdatacoding.h" line="104"/>
         <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3791,56 +3748,56 @@ and the flag bits for the. the driver.
     <name>CDlgSelectDataSize</name>
     <message>
         <location filename="src/cdlgselectdatasize.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="96"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="95"/>
         <source>Select Data size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="46"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="96"/>
+        <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdatasize.ui" line="51"/>
         <location filename="build/ui_cdlgselectdatasize.h" line="97"/>
-        <source>Data Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="62"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="98"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdatasize.ui" line="67"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="99"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatasize.ui" line="72"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="100"/>
+        <location filename="src/cdlgselectdatasize.ui" line="56"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="98"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatasize.ui" line="77"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="101"/>
+        <location filename="src/cdlgselectdatasize.ui" line="61"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="99"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatasize.ui" line="82"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="102"/>
+        <location filename="src/cdlgselectdatasize.ui" line="66"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="100"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatasize.ui" line="87"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="103"/>
+        <location filename="src/cdlgselectdatasize.ui" line="71"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="101"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdatasize.ui" line="92"/>
-        <location filename="build/ui_cdlgselectdatasize.h" line="104"/>
+        <location filename="src/cdlgselectdatasize.ui" line="76"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="102"/>
         <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdatasize.ui" line="100"/>
+        <location filename="build/ui_cdlgselectdatasize.h" line="104"/>
+        <source>Data Size</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3848,167 +3805,167 @@ and the flag bits for the. the driver.
     <name>CDlgSelectDate</name>
     <message>
         <location filename="src/cdlgselectdate.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdate.h" line="249"/>
+        <location filename="build/ui_cdlgselectdate.h" line="251"/>
         <source>Select date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="45"/>
-        <location filename="build/ui_cdlgselectdate.h" line="250"/>
-        <source>Minute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdate.ui" line="72"/>
-        <location filename="src/cdlgselectdate.ui" line="137"/>
-        <location filename="src/cdlgselectdate.ui" line="179"/>
-        <location filename="src/cdlgselectdate.ui" line="257"/>
-        <location filename="src/cdlgselectdate.ui" line="296"/>
-        <location filename="src/cdlgselectdate.ui" line="335"/>
-        <location filename="build/ui_cdlgselectdate.h" line="251"/>
-        <location filename="build/ui_cdlgselectdate.h" line="261"/>
+        <location filename="src/cdlgselectdate.ui" line="46"/>
+        <location filename="src/cdlgselectdate.ui" line="85"/>
+        <location filename="src/cdlgselectdate.ui" line="134"/>
+        <location filename="src/cdlgselectdate.ui" line="183"/>
+        <location filename="src/cdlgselectdate.ui" line="222"/>
+        <location filename="src/cdlgselectdate.ui" line="347"/>
+        <location filename="build/ui_cdlgselectdate.h" line="252"/>
+        <location filename="build/ui_cdlgselectdate.h" line="260"/>
         <location filename="build/ui_cdlgselectdate.h" line="269"/>
-        <location filename="build/ui_cdlgselectdate.h" line="280"/>
-        <location filename="build/ui_cdlgselectdate.h" line="288"/>
-        <location filename="build/ui_cdlgselectdate.h" line="296"/>
+        <location filename="build/ui_cdlgselectdate.h" line="278"/>
+        <location filename="build/ui_cdlgselectdate.h" line="286"/>
+        <location filename="build/ui_cdlgselectdate.h" line="298"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="77"/>
-        <location filename="src/cdlgselectdate.ui" line="142"/>
-        <location filename="src/cdlgselectdate.ui" line="184"/>
-        <location filename="src/cdlgselectdate.ui" line="262"/>
-        <location filename="src/cdlgselectdate.ui" line="301"/>
-        <location filename="src/cdlgselectdate.ui" line="340"/>
-        <location filename="build/ui_cdlgselectdate.h" line="252"/>
-        <location filename="build/ui_cdlgselectdate.h" line="262"/>
+        <location filename="src/cdlgselectdate.ui" line="51"/>
+        <location filename="src/cdlgselectdate.ui" line="90"/>
+        <location filename="src/cdlgselectdate.ui" line="139"/>
+        <location filename="src/cdlgselectdate.ui" line="188"/>
+        <location filename="src/cdlgselectdate.ui" line="227"/>
+        <location filename="src/cdlgselectdate.ui" line="352"/>
+        <location filename="build/ui_cdlgselectdate.h" line="253"/>
+        <location filename="build/ui_cdlgselectdate.h" line="261"/>
         <location filename="build/ui_cdlgselectdate.h" line="270"/>
-        <location filename="build/ui_cdlgselectdate.h" line="281"/>
-        <location filename="build/ui_cdlgselectdate.h" line="289"/>
-        <location filename="build/ui_cdlgselectdate.h" line="297"/>
+        <location filename="build/ui_cdlgselectdate.h" line="279"/>
+        <location filename="build/ui_cdlgselectdate.h" line="287"/>
+        <location filename="build/ui_cdlgselectdate.h" line="299"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="82"/>
-        <location filename="src/cdlgselectdate.ui" line="147"/>
-        <location filename="src/cdlgselectdate.ui" line="189"/>
-        <location filename="src/cdlgselectdate.ui" line="267"/>
-        <location filename="src/cdlgselectdate.ui" line="306"/>
-        <location filename="src/cdlgselectdate.ui" line="345"/>
-        <location filename="build/ui_cdlgselectdate.h" line="253"/>
-        <location filename="build/ui_cdlgselectdate.h" line="263"/>
+        <location filename="src/cdlgselectdate.ui" line="56"/>
+        <location filename="src/cdlgselectdate.ui" line="95"/>
+        <location filename="src/cdlgselectdate.ui" line="144"/>
+        <location filename="src/cdlgselectdate.ui" line="193"/>
+        <location filename="src/cdlgselectdate.ui" line="232"/>
+        <location filename="src/cdlgselectdate.ui" line="357"/>
+        <location filename="build/ui_cdlgselectdate.h" line="254"/>
+        <location filename="build/ui_cdlgselectdate.h" line="262"/>
         <location filename="build/ui_cdlgselectdate.h" line="271"/>
-        <location filename="build/ui_cdlgselectdate.h" line="282"/>
-        <location filename="build/ui_cdlgselectdate.h" line="290"/>
-        <location filename="build/ui_cdlgselectdate.h" line="298"/>
+        <location filename="build/ui_cdlgselectdate.h" line="280"/>
+        <location filename="build/ui_cdlgselectdate.h" line="288"/>
+        <location filename="build/ui_cdlgselectdate.h" line="300"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="87"/>
-        <location filename="src/cdlgselectdate.ui" line="152"/>
-        <location filename="src/cdlgselectdate.ui" line="194"/>
-        <location filename="src/cdlgselectdate.ui" line="272"/>
-        <location filename="src/cdlgselectdate.ui" line="311"/>
-        <location filename="src/cdlgselectdate.ui" line="350"/>
-        <location filename="build/ui_cdlgselectdate.h" line="254"/>
-        <location filename="build/ui_cdlgselectdate.h" line="264"/>
+        <location filename="src/cdlgselectdate.ui" line="61"/>
+        <location filename="src/cdlgselectdate.ui" line="100"/>
+        <location filename="src/cdlgselectdate.ui" line="149"/>
+        <location filename="src/cdlgselectdate.ui" line="198"/>
+        <location filename="src/cdlgselectdate.ui" line="237"/>
+        <location filename="src/cdlgselectdate.ui" line="362"/>
+        <location filename="build/ui_cdlgselectdate.h" line="255"/>
+        <location filename="build/ui_cdlgselectdate.h" line="263"/>
         <location filename="build/ui_cdlgselectdate.h" line="272"/>
-        <location filename="build/ui_cdlgselectdate.h" line="283"/>
-        <location filename="build/ui_cdlgselectdate.h" line="291"/>
-        <location filename="build/ui_cdlgselectdate.h" line="299"/>
+        <location filename="build/ui_cdlgselectdate.h" line="281"/>
+        <location filename="build/ui_cdlgselectdate.h" line="289"/>
+        <location filename="build/ui_cdlgselectdate.h" line="301"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="92"/>
-        <location filename="src/cdlgselectdate.ui" line="157"/>
-        <location filename="src/cdlgselectdate.ui" line="199"/>
-        <location filename="src/cdlgselectdate.ui" line="277"/>
-        <location filename="src/cdlgselectdate.ui" line="316"/>
-        <location filename="src/cdlgselectdate.ui" line="355"/>
-        <location filename="build/ui_cdlgselectdate.h" line="255"/>
-        <location filename="build/ui_cdlgselectdate.h" line="265"/>
+        <location filename="src/cdlgselectdate.ui" line="66"/>
+        <location filename="src/cdlgselectdate.ui" line="105"/>
+        <location filename="src/cdlgselectdate.ui" line="154"/>
+        <location filename="src/cdlgselectdate.ui" line="203"/>
+        <location filename="src/cdlgselectdate.ui" line="242"/>
+        <location filename="src/cdlgselectdate.ui" line="367"/>
+        <location filename="build/ui_cdlgselectdate.h" line="256"/>
+        <location filename="build/ui_cdlgselectdate.h" line="264"/>
         <location filename="build/ui_cdlgselectdate.h" line="273"/>
-        <location filename="build/ui_cdlgselectdate.h" line="284"/>
-        <location filename="build/ui_cdlgselectdate.h" line="292"/>
-        <location filename="build/ui_cdlgselectdate.h" line="300"/>
+        <location filename="build/ui_cdlgselectdate.h" line="282"/>
+        <location filename="build/ui_cdlgselectdate.h" line="290"/>
+        <location filename="build/ui_cdlgselectdate.h" line="302"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="97"/>
-        <location filename="src/cdlgselectdate.ui" line="162"/>
-        <location filename="src/cdlgselectdate.ui" line="204"/>
-        <location filename="src/cdlgselectdate.ui" line="282"/>
-        <location filename="src/cdlgselectdate.ui" line="321"/>
-        <location filename="src/cdlgselectdate.ui" line="360"/>
-        <location filename="build/ui_cdlgselectdate.h" line="256"/>
-        <location filename="build/ui_cdlgselectdate.h" line="266"/>
+        <location filename="src/cdlgselectdate.ui" line="71"/>
+        <location filename="src/cdlgselectdate.ui" line="110"/>
+        <location filename="src/cdlgselectdate.ui" line="159"/>
+        <location filename="src/cdlgselectdate.ui" line="208"/>
+        <location filename="src/cdlgselectdate.ui" line="247"/>
+        <location filename="src/cdlgselectdate.ui" line="372"/>
+        <location filename="build/ui_cdlgselectdate.h" line="257"/>
+        <location filename="build/ui_cdlgselectdate.h" line="265"/>
         <location filename="build/ui_cdlgselectdate.h" line="274"/>
-        <location filename="build/ui_cdlgselectdate.h" line="285"/>
-        <location filename="build/ui_cdlgselectdate.h" line="293"/>
-        <location filename="build/ui_cdlgselectdate.h" line="301"/>
+        <location filename="build/ui_cdlgselectdate.h" line="283"/>
+        <location filename="build/ui_cdlgselectdate.h" line="291"/>
+        <location filename="build/ui_cdlgselectdate.h" line="303"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="102"/>
-        <location filename="src/cdlgselectdate.ui" line="167"/>
-        <location filename="src/cdlgselectdate.ui" line="209"/>
-        <location filename="src/cdlgselectdate.ui" line="287"/>
-        <location filename="src/cdlgselectdate.ui" line="326"/>
-        <location filename="src/cdlgselectdate.ui" line="365"/>
-        <location filename="build/ui_cdlgselectdate.h" line="257"/>
-        <location filename="build/ui_cdlgselectdate.h" line="267"/>
+        <location filename="src/cdlgselectdate.ui" line="76"/>
+        <location filename="src/cdlgselectdate.ui" line="115"/>
+        <location filename="src/cdlgselectdate.ui" line="164"/>
+        <location filename="src/cdlgselectdate.ui" line="213"/>
+        <location filename="src/cdlgselectdate.ui" line="252"/>
+        <location filename="src/cdlgselectdate.ui" line="377"/>
+        <location filename="build/ui_cdlgselectdate.h" line="258"/>
+        <location filename="build/ui_cdlgselectdate.h" line="266"/>
         <location filename="build/ui_cdlgselectdate.h" line="275"/>
-        <location filename="build/ui_cdlgselectdate.h" line="286"/>
-        <location filename="build/ui_cdlgselectdate.h" line="294"/>
-        <location filename="build/ui_cdlgselectdate.h" line="302"/>
+        <location filename="build/ui_cdlgselectdate.h" line="284"/>
+        <location filename="build/ui_cdlgselectdate.h" line="292"/>
+        <location filename="build/ui_cdlgselectdate.h" line="304"/>
         <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="110"/>
-        <location filename="build/ui_cdlgselectdate.h" line="259"/>
-        <source>Hour</source>
+        <location filename="src/cdlgselectdate.ui" line="123"/>
+        <location filename="build/ui_cdlgselectdate.h" line="268"/>
+        <source>Day</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="126"/>
-        <location filename="build/ui_cdlgselectdate.h" line="260"/>
-        <source>Year</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdate.ui" line="223"/>
+        <location filename="src/cdlgselectdate.ui" line="172"/>
         <location filename="build/ui_cdlgselectdate.h" line="277"/>
         <source>Second</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="233"/>
-        <location filename="build/ui_cdlgselectdate.h" line="278"/>
-        <source>Day</source>
+        <location filename="src/cdlgselectdate.ui" line="270"/>
+        <location filename="build/ui_cdlgselectdate.h" line="294"/>
+        <source>Hour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="246"/>
-        <location filename="build/ui_cdlgselectdate.h" line="279"/>
+        <location filename="src/cdlgselectdate.ui" line="286"/>
+        <location filename="build/ui_cdlgselectdate.h" line="295"/>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdate.ui" line="296"/>
+        <location filename="build/ui_cdlgselectdate.h" line="296"/>
+        <source>Minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdate.ui" line="306"/>
+        <location filename="build/ui_cdlgselectdate.h" line="297"/>
         <source>Month</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="385"/>
-        <location filename="build/ui_cdlgselectdate.h" line="304"/>
+        <location filename="src/cdlgselectdate.ui" line="414"/>
+        <location filename="build/ui_cdlgselectdate.h" line="306"/>
         <source>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdate.ui" line="398"/>
-        <location filename="build/ui_cdlgselectdate.h" line="305"/>
+        <location filename="src/cdlgselectdate.ui" line="427"/>
+        <location filename="build/ui_cdlgselectdate.h" line="307"/>
         <source>--&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4017,374 +3974,432 @@ and the flag bits for the. the driver.
     <name>CDlgSelectGuid</name>
     <message>
         <location filename="src/cdlgselectguid.ui" line="14"/>
-        <location filename="build/ui_cdlgselectguid.h" line="533"/>
-        <source>Select GUID</source>
+        <location filename="build/ui_cdlgselectguid.h" line="591"/>
+        <source>Select GUID constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="51"/>
-        <location filename="build/ui_cdlgselectguid.h" line="534"/>
-        <source>GUID[15]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="75"/>
-        <location filename="src/cdlgselectguid.ui" line="114"/>
-        <location filename="src/cdlgselectguid.ui" line="153"/>
-        <location filename="src/cdlgselectguid.ui" line="192"/>
-        <location filename="src/cdlgselectguid.ui" line="251"/>
-        <location filename="src/cdlgselectguid.ui" line="290"/>
-        <location filename="src/cdlgselectguid.ui" line="338"/>
-        <location filename="src/cdlgselectguid.ui" line="377"/>
-        <location filename="src/cdlgselectguid.ui" line="426"/>
-        <location filename="src/cdlgselectguid.ui" line="471"/>
-        <location filename="src/cdlgselectguid.ui" line="510"/>
-        <location filename="src/cdlgselectguid.ui" line="549"/>
-        <location filename="src/cdlgselectguid.ui" line="644"/>
-        <location filename="src/cdlgselectguid.ui" line="683"/>
-        <location filename="src/cdlgselectguid.ui" line="774"/>
-        <location filename="src/cdlgselectguid.ui" line="852"/>
-        <location filename="build/ui_cdlgselectguid.h" line="535"/>
-        <location filename="build/ui_cdlgselectguid.h" line="543"/>
-        <location filename="build/ui_cdlgselectguid.h" line="551"/>
-        <location filename="build/ui_cdlgselectguid.h" line="559"/>
-        <location filename="build/ui_cdlgselectguid.h" line="569"/>
-        <location filename="build/ui_cdlgselectguid.h" line="577"/>
-        <location filename="build/ui_cdlgselectguid.h" line="585"/>
-        <location filename="build/ui_cdlgselectguid.h" line="593"/>
-        <location filename="build/ui_cdlgselectguid.h" line="602"/>
-        <location filename="build/ui_cdlgselectguid.h" line="610"/>
-        <location filename="build/ui_cdlgselectguid.h" line="618"/>
-        <location filename="build/ui_cdlgselectguid.h" line="626"/>
-        <location filename="build/ui_cdlgselectguid.h" line="639"/>
-        <location filename="build/ui_cdlgselectguid.h" line="647"/>
-        <location filename="build/ui_cdlgselectguid.h" line="659"/>
-        <location filename="build/ui_cdlgselectguid.h" line="670"/>
+        <location filename="src/cdlgselectguid.ui" line="46"/>
+        <location filename="src/cdlgselectguid.ui" line="85"/>
+        <location filename="src/cdlgselectguid.ui" line="134"/>
+        <location filename="src/cdlgselectguid.ui" line="173"/>
+        <location filename="src/cdlgselectguid.ui" line="232"/>
+        <location filename="src/cdlgselectguid.ui" line="271"/>
+        <location filename="src/cdlgselectguid.ui" line="320"/>
+        <location filename="src/cdlgselectguid.ui" line="415"/>
+        <location filename="src/cdlgselectguid.ui" line="504"/>
+        <location filename="src/cdlgselectguid.ui" line="573"/>
+        <location filename="src/cdlgselectguid.ui" line="632"/>
+        <location filename="src/cdlgselectguid.ui" line="681"/>
+        <location filename="src/cdlgselectguid.ui" line="720"/>
+        <location filename="src/cdlgselectguid.ui" line="779"/>
+        <location filename="src/cdlgselectguid.ui" line="868"/>
+        <location filename="src/cdlgselectguid.ui" line="927"/>
+        <location filename="build/ui_cdlgselectguid.h" line="592"/>
+        <location filename="build/ui_cdlgselectguid.h" line="600"/>
+        <location filename="build/ui_cdlgselectguid.h" line="609"/>
+        <location filename="build/ui_cdlgselectguid.h" line="617"/>
+        <location filename="build/ui_cdlgselectguid.h" line="627"/>
+        <location filename="build/ui_cdlgselectguid.h" line="635"/>
+        <location filename="build/ui_cdlgselectguid.h" line="643"/>
+        <location filename="build/ui_cdlgselectguid.h" line="653"/>
+        <location filename="build/ui_cdlgselectguid.h" line="663"/>
+        <location filename="build/ui_cdlgselectguid.h" line="673"/>
+        <location filename="build/ui_cdlgselectguid.h" line="681"/>
+        <location filename="build/ui_cdlgselectguid.h" line="690"/>
+        <location filename="build/ui_cdlgselectguid.h" line="698"/>
+        <location filename="build/ui_cdlgselectguid.h" line="706"/>
+        <location filename="build/ui_cdlgselectguid.h" line="717"/>
+        <location filename="build/ui_cdlgselectguid.h" line="726"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="80"/>
-        <location filename="src/cdlgselectguid.ui" line="119"/>
-        <location filename="src/cdlgselectguid.ui" line="158"/>
-        <location filename="src/cdlgselectguid.ui" line="197"/>
-        <location filename="src/cdlgselectguid.ui" line="256"/>
-        <location filename="src/cdlgselectguid.ui" line="295"/>
-        <location filename="src/cdlgselectguid.ui" line="343"/>
-        <location filename="src/cdlgselectguid.ui" line="382"/>
-        <location filename="src/cdlgselectguid.ui" line="431"/>
-        <location filename="src/cdlgselectguid.ui" line="476"/>
-        <location filename="src/cdlgselectguid.ui" line="515"/>
-        <location filename="src/cdlgselectguid.ui" line="554"/>
-        <location filename="src/cdlgselectguid.ui" line="649"/>
-        <location filename="src/cdlgselectguid.ui" line="688"/>
-        <location filename="src/cdlgselectguid.ui" line="779"/>
-        <location filename="src/cdlgselectguid.ui" line="857"/>
-        <location filename="build/ui_cdlgselectguid.h" line="536"/>
-        <location filename="build/ui_cdlgselectguid.h" line="544"/>
-        <location filename="build/ui_cdlgselectguid.h" line="552"/>
-        <location filename="build/ui_cdlgselectguid.h" line="560"/>
-        <location filename="build/ui_cdlgselectguid.h" line="570"/>
-        <location filename="build/ui_cdlgselectguid.h" line="578"/>
-        <location filename="build/ui_cdlgselectguid.h" line="586"/>
-        <location filename="build/ui_cdlgselectguid.h" line="594"/>
-        <location filename="build/ui_cdlgselectguid.h" line="603"/>
-        <location filename="build/ui_cdlgselectguid.h" line="611"/>
-        <location filename="build/ui_cdlgselectguid.h" line="619"/>
-        <location filename="build/ui_cdlgselectguid.h" line="627"/>
-        <location filename="build/ui_cdlgselectguid.h" line="640"/>
-        <location filename="build/ui_cdlgselectguid.h" line="648"/>
-        <location filename="build/ui_cdlgselectguid.h" line="660"/>
-        <location filename="build/ui_cdlgselectguid.h" line="671"/>
+        <location filename="src/cdlgselectguid.ui" line="51"/>
+        <location filename="src/cdlgselectguid.ui" line="90"/>
+        <location filename="src/cdlgselectguid.ui" line="139"/>
+        <location filename="src/cdlgselectguid.ui" line="178"/>
+        <location filename="src/cdlgselectguid.ui" line="237"/>
+        <location filename="src/cdlgselectguid.ui" line="276"/>
+        <location filename="src/cdlgselectguid.ui" line="325"/>
+        <location filename="src/cdlgselectguid.ui" line="420"/>
+        <location filename="src/cdlgselectguid.ui" line="509"/>
+        <location filename="src/cdlgselectguid.ui" line="578"/>
+        <location filename="src/cdlgselectguid.ui" line="637"/>
+        <location filename="src/cdlgselectguid.ui" line="686"/>
+        <location filename="src/cdlgselectguid.ui" line="725"/>
+        <location filename="src/cdlgselectguid.ui" line="784"/>
+        <location filename="src/cdlgselectguid.ui" line="873"/>
+        <location filename="src/cdlgselectguid.ui" line="932"/>
+        <location filename="build/ui_cdlgselectguid.h" line="593"/>
+        <location filename="build/ui_cdlgselectguid.h" line="601"/>
+        <location filename="build/ui_cdlgselectguid.h" line="610"/>
+        <location filename="build/ui_cdlgselectguid.h" line="618"/>
+        <location filename="build/ui_cdlgselectguid.h" line="628"/>
+        <location filename="build/ui_cdlgselectguid.h" line="636"/>
+        <location filename="build/ui_cdlgselectguid.h" line="644"/>
+        <location filename="build/ui_cdlgselectguid.h" line="654"/>
+        <location filename="build/ui_cdlgselectguid.h" line="664"/>
+        <location filename="build/ui_cdlgselectguid.h" line="674"/>
+        <location filename="build/ui_cdlgselectguid.h" line="682"/>
+        <location filename="build/ui_cdlgselectguid.h" line="691"/>
+        <location filename="build/ui_cdlgselectguid.h" line="699"/>
+        <location filename="build/ui_cdlgselectguid.h" line="707"/>
+        <location filename="build/ui_cdlgselectguid.h" line="718"/>
+        <location filename="build/ui_cdlgselectguid.h" line="727"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="85"/>
-        <location filename="src/cdlgselectguid.ui" line="124"/>
-        <location filename="src/cdlgselectguid.ui" line="163"/>
-        <location filename="src/cdlgselectguid.ui" line="202"/>
-        <location filename="src/cdlgselectguid.ui" line="261"/>
-        <location filename="src/cdlgselectguid.ui" line="300"/>
-        <location filename="src/cdlgselectguid.ui" line="348"/>
-        <location filename="src/cdlgselectguid.ui" line="387"/>
-        <location filename="src/cdlgselectguid.ui" line="436"/>
-        <location filename="src/cdlgselectguid.ui" line="481"/>
-        <location filename="src/cdlgselectguid.ui" line="520"/>
-        <location filename="src/cdlgselectguid.ui" line="559"/>
-        <location filename="src/cdlgselectguid.ui" line="654"/>
-        <location filename="src/cdlgselectguid.ui" line="693"/>
-        <location filename="src/cdlgselectguid.ui" line="784"/>
-        <location filename="src/cdlgselectguid.ui" line="862"/>
-        <location filename="build/ui_cdlgselectguid.h" line="537"/>
-        <location filename="build/ui_cdlgselectguid.h" line="545"/>
-        <location filename="build/ui_cdlgselectguid.h" line="553"/>
-        <location filename="build/ui_cdlgselectguid.h" line="561"/>
-        <location filename="build/ui_cdlgselectguid.h" line="571"/>
-        <location filename="build/ui_cdlgselectguid.h" line="579"/>
-        <location filename="build/ui_cdlgselectguid.h" line="587"/>
-        <location filename="build/ui_cdlgselectguid.h" line="595"/>
-        <location filename="build/ui_cdlgselectguid.h" line="604"/>
-        <location filename="build/ui_cdlgselectguid.h" line="612"/>
-        <location filename="build/ui_cdlgselectguid.h" line="620"/>
-        <location filename="build/ui_cdlgselectguid.h" line="628"/>
-        <location filename="build/ui_cdlgselectguid.h" line="641"/>
-        <location filename="build/ui_cdlgselectguid.h" line="649"/>
-        <location filename="build/ui_cdlgselectguid.h" line="661"/>
-        <location filename="build/ui_cdlgselectguid.h" line="672"/>
+        <location filename="src/cdlgselectguid.ui" line="56"/>
+        <location filename="src/cdlgselectguid.ui" line="95"/>
+        <location filename="src/cdlgselectguid.ui" line="144"/>
+        <location filename="src/cdlgselectguid.ui" line="183"/>
+        <location filename="src/cdlgselectguid.ui" line="242"/>
+        <location filename="src/cdlgselectguid.ui" line="281"/>
+        <location filename="src/cdlgselectguid.ui" line="330"/>
+        <location filename="src/cdlgselectguid.ui" line="425"/>
+        <location filename="src/cdlgselectguid.ui" line="514"/>
+        <location filename="src/cdlgselectguid.ui" line="583"/>
+        <location filename="src/cdlgselectguid.ui" line="642"/>
+        <location filename="src/cdlgselectguid.ui" line="691"/>
+        <location filename="src/cdlgselectguid.ui" line="730"/>
+        <location filename="src/cdlgselectguid.ui" line="789"/>
+        <location filename="src/cdlgselectguid.ui" line="878"/>
+        <location filename="src/cdlgselectguid.ui" line="937"/>
+        <location filename="build/ui_cdlgselectguid.h" line="594"/>
+        <location filename="build/ui_cdlgselectguid.h" line="602"/>
+        <location filename="build/ui_cdlgselectguid.h" line="611"/>
+        <location filename="build/ui_cdlgselectguid.h" line="619"/>
+        <location filename="build/ui_cdlgselectguid.h" line="629"/>
+        <location filename="build/ui_cdlgselectguid.h" line="637"/>
+        <location filename="build/ui_cdlgselectguid.h" line="645"/>
+        <location filename="build/ui_cdlgselectguid.h" line="655"/>
+        <location filename="build/ui_cdlgselectguid.h" line="665"/>
+        <location filename="build/ui_cdlgselectguid.h" line="675"/>
+        <location filename="build/ui_cdlgselectguid.h" line="683"/>
+        <location filename="build/ui_cdlgselectguid.h" line="692"/>
+        <location filename="build/ui_cdlgselectguid.h" line="700"/>
+        <location filename="build/ui_cdlgselectguid.h" line="708"/>
+        <location filename="build/ui_cdlgselectguid.h" line="719"/>
+        <location filename="build/ui_cdlgselectguid.h" line="728"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="90"/>
-        <location filename="src/cdlgselectguid.ui" line="129"/>
-        <location filename="src/cdlgselectguid.ui" line="168"/>
-        <location filename="src/cdlgselectguid.ui" line="207"/>
-        <location filename="src/cdlgselectguid.ui" line="266"/>
-        <location filename="src/cdlgselectguid.ui" line="305"/>
-        <location filename="src/cdlgselectguid.ui" line="353"/>
-        <location filename="src/cdlgselectguid.ui" line="392"/>
-        <location filename="src/cdlgselectguid.ui" line="441"/>
-        <location filename="src/cdlgselectguid.ui" line="486"/>
-        <location filename="src/cdlgselectguid.ui" line="525"/>
-        <location filename="src/cdlgselectguid.ui" line="564"/>
-        <location filename="src/cdlgselectguid.ui" line="659"/>
-        <location filename="src/cdlgselectguid.ui" line="698"/>
-        <location filename="src/cdlgselectguid.ui" line="789"/>
-        <location filename="src/cdlgselectguid.ui" line="867"/>
-        <location filename="build/ui_cdlgselectguid.h" line="538"/>
-        <location filename="build/ui_cdlgselectguid.h" line="546"/>
-        <location filename="build/ui_cdlgselectguid.h" line="554"/>
-        <location filename="build/ui_cdlgselectguid.h" line="562"/>
-        <location filename="build/ui_cdlgselectguid.h" line="572"/>
-        <location filename="build/ui_cdlgselectguid.h" line="580"/>
-        <location filename="build/ui_cdlgselectguid.h" line="588"/>
-        <location filename="build/ui_cdlgselectguid.h" line="596"/>
-        <location filename="build/ui_cdlgselectguid.h" line="605"/>
-        <location filename="build/ui_cdlgselectguid.h" line="613"/>
-        <location filename="build/ui_cdlgselectguid.h" line="621"/>
-        <location filename="build/ui_cdlgselectguid.h" line="629"/>
-        <location filename="build/ui_cdlgselectguid.h" line="642"/>
-        <location filename="build/ui_cdlgselectguid.h" line="650"/>
-        <location filename="build/ui_cdlgselectguid.h" line="662"/>
-        <location filename="build/ui_cdlgselectguid.h" line="673"/>
+        <location filename="src/cdlgselectguid.ui" line="61"/>
+        <location filename="src/cdlgselectguid.ui" line="100"/>
+        <location filename="src/cdlgselectguid.ui" line="149"/>
+        <location filename="src/cdlgselectguid.ui" line="188"/>
+        <location filename="src/cdlgselectguid.ui" line="247"/>
+        <location filename="src/cdlgselectguid.ui" line="286"/>
+        <location filename="src/cdlgselectguid.ui" line="335"/>
+        <location filename="src/cdlgselectguid.ui" line="430"/>
+        <location filename="src/cdlgselectguid.ui" line="519"/>
+        <location filename="src/cdlgselectguid.ui" line="588"/>
+        <location filename="src/cdlgselectguid.ui" line="647"/>
+        <location filename="src/cdlgselectguid.ui" line="696"/>
+        <location filename="src/cdlgselectguid.ui" line="735"/>
+        <location filename="src/cdlgselectguid.ui" line="794"/>
+        <location filename="src/cdlgselectguid.ui" line="883"/>
+        <location filename="src/cdlgselectguid.ui" line="942"/>
+        <location filename="build/ui_cdlgselectguid.h" line="595"/>
+        <location filename="build/ui_cdlgselectguid.h" line="603"/>
+        <location filename="build/ui_cdlgselectguid.h" line="612"/>
+        <location filename="build/ui_cdlgselectguid.h" line="620"/>
+        <location filename="build/ui_cdlgselectguid.h" line="630"/>
+        <location filename="build/ui_cdlgselectguid.h" line="638"/>
+        <location filename="build/ui_cdlgselectguid.h" line="646"/>
+        <location filename="build/ui_cdlgselectguid.h" line="656"/>
+        <location filename="build/ui_cdlgselectguid.h" line="666"/>
+        <location filename="build/ui_cdlgselectguid.h" line="676"/>
+        <location filename="build/ui_cdlgselectguid.h" line="684"/>
+        <location filename="build/ui_cdlgselectguid.h" line="693"/>
+        <location filename="build/ui_cdlgselectguid.h" line="701"/>
+        <location filename="build/ui_cdlgselectguid.h" line="709"/>
+        <location filename="build/ui_cdlgselectguid.h" line="720"/>
+        <location filename="build/ui_cdlgselectguid.h" line="729"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="95"/>
-        <location filename="src/cdlgselectguid.ui" line="134"/>
-        <location filename="src/cdlgselectguid.ui" line="173"/>
-        <location filename="src/cdlgselectguid.ui" line="212"/>
-        <location filename="src/cdlgselectguid.ui" line="271"/>
-        <location filename="src/cdlgselectguid.ui" line="310"/>
-        <location filename="src/cdlgselectguid.ui" line="358"/>
-        <location filename="src/cdlgselectguid.ui" line="397"/>
-        <location filename="src/cdlgselectguid.ui" line="446"/>
-        <location filename="src/cdlgselectguid.ui" line="491"/>
-        <location filename="src/cdlgselectguid.ui" line="530"/>
-        <location filename="src/cdlgselectguid.ui" line="569"/>
-        <location filename="src/cdlgselectguid.ui" line="664"/>
-        <location filename="src/cdlgselectguid.ui" line="703"/>
-        <location filename="src/cdlgselectguid.ui" line="794"/>
-        <location filename="src/cdlgselectguid.ui" line="872"/>
-        <location filename="build/ui_cdlgselectguid.h" line="539"/>
-        <location filename="build/ui_cdlgselectguid.h" line="547"/>
-        <location filename="build/ui_cdlgselectguid.h" line="555"/>
-        <location filename="build/ui_cdlgselectguid.h" line="563"/>
-        <location filename="build/ui_cdlgselectguid.h" line="573"/>
-        <location filename="build/ui_cdlgselectguid.h" line="581"/>
-        <location filename="build/ui_cdlgselectguid.h" line="589"/>
-        <location filename="build/ui_cdlgselectguid.h" line="597"/>
-        <location filename="build/ui_cdlgselectguid.h" line="606"/>
-        <location filename="build/ui_cdlgselectguid.h" line="614"/>
-        <location filename="build/ui_cdlgselectguid.h" line="622"/>
-        <location filename="build/ui_cdlgselectguid.h" line="630"/>
-        <location filename="build/ui_cdlgselectguid.h" line="643"/>
-        <location filename="build/ui_cdlgselectguid.h" line="651"/>
-        <location filename="build/ui_cdlgselectguid.h" line="663"/>
-        <location filename="build/ui_cdlgselectguid.h" line="674"/>
+        <location filename="src/cdlgselectguid.ui" line="66"/>
+        <location filename="src/cdlgselectguid.ui" line="105"/>
+        <location filename="src/cdlgselectguid.ui" line="154"/>
+        <location filename="src/cdlgselectguid.ui" line="193"/>
+        <location filename="src/cdlgselectguid.ui" line="252"/>
+        <location filename="src/cdlgselectguid.ui" line="291"/>
+        <location filename="src/cdlgselectguid.ui" line="340"/>
+        <location filename="src/cdlgselectguid.ui" line="435"/>
+        <location filename="src/cdlgselectguid.ui" line="524"/>
+        <location filename="src/cdlgselectguid.ui" line="593"/>
+        <location filename="src/cdlgselectguid.ui" line="652"/>
+        <location filename="src/cdlgselectguid.ui" line="701"/>
+        <location filename="src/cdlgselectguid.ui" line="740"/>
+        <location filename="src/cdlgselectguid.ui" line="799"/>
+        <location filename="src/cdlgselectguid.ui" line="888"/>
+        <location filename="src/cdlgselectguid.ui" line="947"/>
+        <location filename="build/ui_cdlgselectguid.h" line="596"/>
+        <location filename="build/ui_cdlgselectguid.h" line="604"/>
+        <location filename="build/ui_cdlgselectguid.h" line="613"/>
+        <location filename="build/ui_cdlgselectguid.h" line="621"/>
+        <location filename="build/ui_cdlgselectguid.h" line="631"/>
+        <location filename="build/ui_cdlgselectguid.h" line="639"/>
+        <location filename="build/ui_cdlgselectguid.h" line="647"/>
+        <location filename="build/ui_cdlgselectguid.h" line="657"/>
+        <location filename="build/ui_cdlgselectguid.h" line="667"/>
+        <location filename="build/ui_cdlgselectguid.h" line="677"/>
+        <location filename="build/ui_cdlgselectguid.h" line="685"/>
+        <location filename="build/ui_cdlgselectguid.h" line="694"/>
+        <location filename="build/ui_cdlgselectguid.h" line="702"/>
+        <location filename="build/ui_cdlgselectguid.h" line="710"/>
+        <location filename="build/ui_cdlgselectguid.h" line="721"/>
+        <location filename="build/ui_cdlgselectguid.h" line="730"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="100"/>
-        <location filename="src/cdlgselectguid.ui" line="139"/>
-        <location filename="src/cdlgselectguid.ui" line="178"/>
-        <location filename="src/cdlgselectguid.ui" line="217"/>
-        <location filename="src/cdlgselectguid.ui" line="276"/>
-        <location filename="src/cdlgselectguid.ui" line="315"/>
-        <location filename="src/cdlgselectguid.ui" line="363"/>
-        <location filename="src/cdlgselectguid.ui" line="402"/>
-        <location filename="src/cdlgselectguid.ui" line="451"/>
-        <location filename="src/cdlgselectguid.ui" line="496"/>
-        <location filename="src/cdlgselectguid.ui" line="535"/>
-        <location filename="src/cdlgselectguid.ui" line="574"/>
-        <location filename="src/cdlgselectguid.ui" line="669"/>
-        <location filename="src/cdlgselectguid.ui" line="708"/>
-        <location filename="src/cdlgselectguid.ui" line="799"/>
-        <location filename="src/cdlgselectguid.ui" line="877"/>
-        <location filename="build/ui_cdlgselectguid.h" line="540"/>
-        <location filename="build/ui_cdlgselectguid.h" line="548"/>
-        <location filename="build/ui_cdlgselectguid.h" line="556"/>
-        <location filename="build/ui_cdlgselectguid.h" line="564"/>
-        <location filename="build/ui_cdlgselectguid.h" line="574"/>
-        <location filename="build/ui_cdlgselectguid.h" line="582"/>
-        <location filename="build/ui_cdlgselectguid.h" line="590"/>
-        <location filename="build/ui_cdlgselectguid.h" line="598"/>
-        <location filename="build/ui_cdlgselectguid.h" line="607"/>
-        <location filename="build/ui_cdlgselectguid.h" line="615"/>
-        <location filename="build/ui_cdlgselectguid.h" line="623"/>
-        <location filename="build/ui_cdlgselectguid.h" line="631"/>
-        <location filename="build/ui_cdlgselectguid.h" line="644"/>
-        <location filename="build/ui_cdlgselectguid.h" line="652"/>
-        <location filename="build/ui_cdlgselectguid.h" line="664"/>
-        <location filename="build/ui_cdlgselectguid.h" line="675"/>
+        <location filename="src/cdlgselectguid.ui" line="71"/>
+        <location filename="src/cdlgselectguid.ui" line="110"/>
+        <location filename="src/cdlgselectguid.ui" line="159"/>
+        <location filename="src/cdlgselectguid.ui" line="198"/>
+        <location filename="src/cdlgselectguid.ui" line="257"/>
+        <location filename="src/cdlgselectguid.ui" line="296"/>
+        <location filename="src/cdlgselectguid.ui" line="345"/>
+        <location filename="src/cdlgselectguid.ui" line="440"/>
+        <location filename="src/cdlgselectguid.ui" line="529"/>
+        <location filename="src/cdlgselectguid.ui" line="598"/>
+        <location filename="src/cdlgselectguid.ui" line="657"/>
+        <location filename="src/cdlgselectguid.ui" line="706"/>
+        <location filename="src/cdlgselectguid.ui" line="745"/>
+        <location filename="src/cdlgselectguid.ui" line="804"/>
+        <location filename="src/cdlgselectguid.ui" line="893"/>
+        <location filename="src/cdlgselectguid.ui" line="952"/>
+        <location filename="build/ui_cdlgselectguid.h" line="597"/>
+        <location filename="build/ui_cdlgselectguid.h" line="605"/>
+        <location filename="build/ui_cdlgselectguid.h" line="614"/>
+        <location filename="build/ui_cdlgselectguid.h" line="622"/>
+        <location filename="build/ui_cdlgselectguid.h" line="632"/>
+        <location filename="build/ui_cdlgselectguid.h" line="640"/>
+        <location filename="build/ui_cdlgselectguid.h" line="648"/>
+        <location filename="build/ui_cdlgselectguid.h" line="658"/>
+        <location filename="build/ui_cdlgselectguid.h" line="668"/>
+        <location filename="build/ui_cdlgselectguid.h" line="678"/>
+        <location filename="build/ui_cdlgselectguid.h" line="686"/>
+        <location filename="build/ui_cdlgselectguid.h" line="695"/>
+        <location filename="build/ui_cdlgselectguid.h" line="703"/>
+        <location filename="build/ui_cdlgselectguid.h" line="711"/>
+        <location filename="build/ui_cdlgselectguid.h" line="722"/>
+        <location filename="build/ui_cdlgselectguid.h" line="731"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="105"/>
-        <location filename="src/cdlgselectguid.ui" line="144"/>
-        <location filename="src/cdlgselectguid.ui" line="183"/>
-        <location filename="src/cdlgselectguid.ui" line="222"/>
-        <location filename="src/cdlgselectguid.ui" line="281"/>
-        <location filename="src/cdlgselectguid.ui" line="320"/>
-        <location filename="src/cdlgselectguid.ui" line="368"/>
-        <location filename="src/cdlgselectguid.ui" line="407"/>
-        <location filename="src/cdlgselectguid.ui" line="456"/>
-        <location filename="src/cdlgselectguid.ui" line="501"/>
-        <location filename="src/cdlgselectguid.ui" line="540"/>
-        <location filename="src/cdlgselectguid.ui" line="579"/>
-        <location filename="src/cdlgselectguid.ui" line="674"/>
-        <location filename="src/cdlgselectguid.ui" line="713"/>
-        <location filename="src/cdlgselectguid.ui" line="804"/>
-        <location filename="src/cdlgselectguid.ui" line="882"/>
-        <location filename="build/ui_cdlgselectguid.h" line="541"/>
-        <location filename="build/ui_cdlgselectguid.h" line="549"/>
-        <location filename="build/ui_cdlgselectguid.h" line="557"/>
-        <location filename="build/ui_cdlgselectguid.h" line="565"/>
-        <location filename="build/ui_cdlgselectguid.h" line="575"/>
-        <location filename="build/ui_cdlgselectguid.h" line="583"/>
-        <location filename="build/ui_cdlgselectguid.h" line="591"/>
-        <location filename="build/ui_cdlgselectguid.h" line="599"/>
-        <location filename="build/ui_cdlgselectguid.h" line="608"/>
-        <location filename="build/ui_cdlgselectguid.h" line="616"/>
-        <location filename="build/ui_cdlgselectguid.h" line="624"/>
-        <location filename="build/ui_cdlgselectguid.h" line="632"/>
-        <location filename="build/ui_cdlgselectguid.h" line="645"/>
-        <location filename="build/ui_cdlgselectguid.h" line="653"/>
-        <location filename="build/ui_cdlgselectguid.h" line="665"/>
-        <location filename="build/ui_cdlgselectguid.h" line="676"/>
+        <location filename="src/cdlgselectguid.ui" line="76"/>
+        <location filename="src/cdlgselectguid.ui" line="115"/>
+        <location filename="src/cdlgselectguid.ui" line="164"/>
+        <location filename="src/cdlgselectguid.ui" line="203"/>
+        <location filename="src/cdlgselectguid.ui" line="262"/>
+        <location filename="src/cdlgselectguid.ui" line="301"/>
+        <location filename="src/cdlgselectguid.ui" line="350"/>
+        <location filename="src/cdlgselectguid.ui" line="445"/>
+        <location filename="src/cdlgselectguid.ui" line="534"/>
+        <location filename="src/cdlgselectguid.ui" line="603"/>
+        <location filename="src/cdlgselectguid.ui" line="662"/>
+        <location filename="src/cdlgselectguid.ui" line="711"/>
+        <location filename="src/cdlgselectguid.ui" line="750"/>
+        <location filename="src/cdlgselectguid.ui" line="809"/>
+        <location filename="src/cdlgselectguid.ui" line="898"/>
+        <location filename="src/cdlgselectguid.ui" line="957"/>
+        <location filename="build/ui_cdlgselectguid.h" line="598"/>
+        <location filename="build/ui_cdlgselectguid.h" line="606"/>
+        <location filename="build/ui_cdlgselectguid.h" line="615"/>
+        <location filename="build/ui_cdlgselectguid.h" line="623"/>
+        <location filename="build/ui_cdlgselectguid.h" line="633"/>
+        <location filename="build/ui_cdlgselectguid.h" line="641"/>
+        <location filename="build/ui_cdlgselectguid.h" line="649"/>
+        <location filename="build/ui_cdlgselectguid.h" line="659"/>
+        <location filename="build/ui_cdlgselectguid.h" line="669"/>
+        <location filename="build/ui_cdlgselectguid.h" line="679"/>
+        <location filename="build/ui_cdlgselectguid.h" line="687"/>
+        <location filename="build/ui_cdlgselectguid.h" line="696"/>
+        <location filename="build/ui_cdlgselectguid.h" line="704"/>
+        <location filename="build/ui_cdlgselectguid.h" line="712"/>
+        <location filename="build/ui_cdlgselectguid.h" line="723"/>
+        <location filename="build/ui_cdlgselectguid.h" line="732"/>
         <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="230"/>
-        <location filename="build/ui_cdlgselectguid.h" line="567"/>
-        <source>GUID[5]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="240"/>
-        <location filename="build/ui_cdlgselectguid.h" line="568"/>
-        <source>GUID[9]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="415"/>
-        <location filename="build/ui_cdlgselectguid.h" line="601"/>
-        <source>GUID[7]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="587"/>
-        <location filename="build/ui_cdlgselectguid.h" line="634"/>
-        <source>GUID[4]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="597"/>
-        <location filename="build/ui_cdlgselectguid.h" line="635"/>
-        <source>GUID[2]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="610"/>
-        <location filename="build/ui_cdlgselectguid.h" line="636"/>
-        <source>GUID[10]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="623"/>
-        <location filename="build/ui_cdlgselectguid.h" line="637"/>
-        <source>GUID[0]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="633"/>
-        <location filename="build/ui_cdlgselectguid.h" line="638"/>
+        <location filename="src/cdlgselectguid.ui" line="123"/>
+        <location filename="build/ui_cdlgselectguid.h" line="608"/>
         <source>GUID[6]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="721"/>
-        <location filename="build/ui_cdlgselectguid.h" line="655"/>
-        <source>GUID[13]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="743"/>
-        <location filename="build/ui_cdlgselectguid.h" line="656"/>
-        <source>GUID[3]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="753"/>
-        <location filename="build/ui_cdlgselectguid.h" line="657"/>
-        <source>GUID[1]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="763"/>
-        <location filename="build/ui_cdlgselectguid.h" line="658"/>
-        <source>GUID[11]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectguid.ui" line="818"/>
-        <location filename="build/ui_cdlgselectguid.h" line="667"/>
+        <location filename="src/cdlgselectguid.ui" line="211"/>
+        <location filename="build/ui_cdlgselectguid.h" line="625"/>
         <source>GUID[14]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="828"/>
-        <location filename="build/ui_cdlgselectguid.h" line="668"/>
-        <source>GUID[12]</source>
+        <location filename="src/cdlgselectguid.ui" line="221"/>
+        <location filename="build/ui_cdlgselectguid.h" line="626"/>
+        <source>GUID[13]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="841"/>
-        <location filename="build/ui_cdlgselectguid.h" line="669"/>
+        <location filename="src/cdlgselectguid.ui" line="358"/>
+        <location filename="build/ui_cdlgselectguid.h" line="651"/>
         <source>GUID[8]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="899"/>
-        <location filename="build/ui_cdlgselectguid.h" line="678"/>
+        <location filename="src/cdlgselectguid.ui" line="374"/>
+        <location filename="build/ui_cdlgselectguid.h" line="652"/>
+        <source>GUID[15]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="463"/>
+        <location filename="build/ui_cdlgselectguid.h" line="661"/>
+        <source>GUID[3]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="473"/>
+        <location filename="build/ui_cdlgselectguid.h" line="662"/>
+        <source>GUID[2]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="542"/>
+        <location filename="build/ui_cdlgselectguid.h" line="671"/>
+        <source>GUID[12]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="562"/>
+        <location filename="build/ui_cdlgselectguid.h" line="672"/>
+        <source>GUID[4]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="670"/>
+        <location filename="build/ui_cdlgselectguid.h" line="689"/>
+        <source>GUID[7]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="827"/>
+        <location filename="build/ui_cdlgselectguid.h" line="714"/>
+        <source>GUID[5]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="847"/>
+        <location filename="build/ui_cdlgselectguid.h" line="715"/>
+        <source>GUID[1]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="857"/>
+        <location filename="build/ui_cdlgselectguid.h" line="716"/>
+        <source>GUID[11]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="906"/>
+        <location filename="build/ui_cdlgselectguid.h" line="725"/>
+        <source>GUID[10]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="965"/>
+        <location filename="build/ui_cdlgselectguid.h" line="734"/>
+        <source>GUID[0]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="985"/>
+        <location filename="build/ui_cdlgselectguid.h" line="735"/>
+        <source>GUID[9]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1004"/>
+        <location filename="build/ui_cdlgselectguid.h" line="736"/>
         <source>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="912"/>
-        <location filename="build/ui_cdlgselectguid.h" line="679"/>
-        <source>--&gt;</source>
+        <location filename="src/cdlgselectguid.ui" line="1017"/>
+        <location filename="build/ui_cdlgselectguid.h" line="738"/>
+        <source>Set GUID values from string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.ui" line="925"/>
-        <location filename="build/ui_cdlgselectguid.h" line="680"/>
-        <source>Fetch known node GUID</source>
+        <location filename="src/cdlgselectguid.ui" line="1020"/>
+        <location filename="build/ui_cdlgselectguid.h" line="740"/>
+        <source>→</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1033"/>
+        <location filename="build/ui_cdlgselectguid.h" line="742"/>
+        <source>Set values from known GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1036"/>
+        <location filename="build/ui_cdlgselectguid.h" line="744"/>
+        <source>Set from known GUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1049"/>
+        <location filename="build/ui_cdlgselectguid.h" line="746"/>
+        <source>What known GUID is this?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1052"/>
+        <location filename="build/ui_cdlgselectguid.h" line="748"/>
+        <source>❓</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1065"/>
+        <location filename="build/ui_cdlgselectguid.h" line="749"/>
+        <source>Don&apos;t change check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1104"/>
+        <location filename="build/ui_cdlgselectguid.h" line="751"/>
+        <source>Get GUID value to string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.ui" line="1107"/>
+        <location filename="build/ui_cdlgselectguid.h" line="753"/>
+        <source>←</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.cpp" line="356"/>
+        <location filename="src/cdlgselectguid.cpp" line="504"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.cpp" line="357"/>
+        <source>Faild to convert GUID string</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectguid.cpp" line="505"/>
+        <source>No GUID selected</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4397,51 +4412,51 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="51"/>
+        <location filename="src/cdlgselectunit.ui" line="46"/>
         <location filename="build/ui_cdlgselectunit.h" line="97"/>
-        <source>Unit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectunit.ui" line="62"/>
-        <location filename="build/ui_cdlgselectunit.h" line="98"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="67"/>
-        <location filename="build/ui_cdlgselectunit.h" line="99"/>
+        <location filename="src/cdlgselectunit.ui" line="51"/>
+        <location filename="build/ui_cdlgselectunit.h" line="98"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="72"/>
-        <location filename="build/ui_cdlgselectunit.h" line="100"/>
+        <location filename="src/cdlgselectunit.ui" line="56"/>
+        <location filename="build/ui_cdlgselectunit.h" line="99"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="77"/>
-        <location filename="build/ui_cdlgselectunit.h" line="101"/>
+        <location filename="src/cdlgselectunit.ui" line="61"/>
+        <location filename="build/ui_cdlgselectunit.h" line="100"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="82"/>
-        <location filename="build/ui_cdlgselectunit.h" line="102"/>
+        <location filename="src/cdlgselectunit.ui" line="66"/>
+        <location filename="build/ui_cdlgselectunit.h" line="101"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="87"/>
-        <location filename="build/ui_cdlgselectunit.h" line="103"/>
+        <location filename="src/cdlgselectunit.ui" line="71"/>
+        <location filename="build/ui_cdlgselectunit.h" line="102"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectunit.ui" line="92"/>
-        <location filename="build/ui_cdlgselectunit.h" line="104"/>
+        <location filename="src/cdlgselectunit.ui" line="76"/>
+        <location filename="build/ui_cdlgselectunit.h" line="103"/>
         <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectunit.ui" line="90"/>
+        <location filename="build/ui_cdlgselectunit.h" line="105"/>
+        <source>Unit</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4449,55 +4464,55 @@ and the flag bits for the. the driver.
     <name>CDlgSelectMeasurementValue</name>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="14"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="96"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="95"/>
         <source>Select measurement value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="51"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="97"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="96"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="62"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="98"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="97"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="67"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="99"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="98"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="72"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="100"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="99"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="77"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="101"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="100"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="82"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="102"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="101"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="87"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="103"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="102"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="92"/>
-        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="104"/>
+        <location filename="build/ui_cdlgselectmeasurementvalue.h" line="103"/>
         <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4506,56 +4521,62 @@ and the flag bits for the. the driver.
     <name>CDlgSelectObId</name>
     <message>
         <location filename="src/cdlgselectobid.ui" line="14"/>
-        <location filename="build/ui_cdlgselectobid.h" line="96"/>
+        <location filename="build/ui_cdlgselectobid.h" line="95"/>
         <source>Select OBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectobid.ui" line="46"/>
+        <location filename="build/ui_cdlgselectobid.h" line="96"/>
+        <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectobid.ui" line="51"/>
         <location filename="build/ui_cdlgselectobid.h" line="97"/>
-        <source>OBID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectobid.ui" line="62"/>
-        <location filename="build/ui_cdlgselectobid.h" line="98"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectobid.ui" line="67"/>
-        <location filename="build/ui_cdlgselectobid.h" line="99"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectobid.ui" line="72"/>
-        <location filename="build/ui_cdlgselectobid.h" line="100"/>
+        <location filename="src/cdlgselectobid.ui" line="56"/>
+        <location filename="build/ui_cdlgselectobid.h" line="98"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectobid.ui" line="77"/>
-        <location filename="build/ui_cdlgselectobid.h" line="101"/>
+        <location filename="src/cdlgselectobid.ui" line="61"/>
+        <location filename="build/ui_cdlgselectobid.h" line="99"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectobid.ui" line="82"/>
-        <location filename="build/ui_cdlgselectobid.h" line="102"/>
+        <location filename="src/cdlgselectobid.ui" line="66"/>
+        <location filename="build/ui_cdlgselectobid.h" line="100"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectobid.ui" line="87"/>
-        <location filename="build/ui_cdlgselectobid.h" line="103"/>
+        <location filename="src/cdlgselectobid.ui" line="71"/>
+        <location filename="build/ui_cdlgselectobid.h" line="101"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectobid.ui" line="92"/>
-        <location filename="build/ui_cdlgselectobid.h" line="104"/>
+        <location filename="src/cdlgselectobid.ui" line="76"/>
+        <location filename="build/ui_cdlgselectobid.h" line="102"/>
         <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectobid.ui" line="90"/>
+        <location filename="build/ui_cdlgselectobid.h" line="104"/>
+        <source>OBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectobid.ui" line="106"/>
+        <location filename="build/ui_cdlgselectobid.h" line="105"/>
+        <source>0</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4673,51 +4694,51 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectsensorindex.ui" line="51"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="97"/>
-        <source>Sensor Index</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="src/cdlgselectsensorindex.ui" line="62"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="98"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="97"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="67"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="99"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="98"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="72"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="100"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="99"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="77"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="101"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="100"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="82"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="102"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="101"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="87"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="103"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="102"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="92"/>
-        <location filename="build/ui_cdlgselectsensorindex.h" line="104"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="103"/>
         <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectsensorindex.ui" line="106"/>
+        <location filename="build/ui_cdlgselectsensorindex.h" line="105"/>
+        <source>Sensor Index</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4725,56 +4746,56 @@ and the flag bits for the. the driver.
     <name>CDlgSelectTimeStamp</name>
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="14"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="96"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="95"/>
         <source>Select timestamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselecttimestamp.ui" line="46"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="96"/>
+        <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="51"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="97"/>
-        <source>Timestamp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="62"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="98"/>
-        <source>Don&apos;t care</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="67"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="99"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="72"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="100"/>
+        <location filename="src/cdlgselecttimestamp.ui" line="56"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="98"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="77"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="101"/>
+        <location filename="src/cdlgselecttimestamp.ui" line="61"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="99"/>
         <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="82"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="102"/>
+        <location filename="src/cdlgselecttimestamp.ui" line="66"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="100"/>
         <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="87"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="103"/>
+        <location filename="src/cdlgselecttimestamp.ui" line="71"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="101"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselecttimestamp.ui" line="92"/>
-        <location filename="build/ui_cdlgselecttimestamp.h" line="104"/>
+        <location filename="src/cdlgselecttimestamp.ui" line="76"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="102"/>
         <source>Less than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselecttimestamp.ui" line="90"/>
+        <location filename="build/ui_cdlgselecttimestamp.h" line="104"/>
+        <source>Timestamp</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4976,61 +4997,95 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="14"/>
         <location filename="src/cdlgsessionfilter.ui" line="55"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="97"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="98"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="99"/>
         <source>Session filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="68"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="99"/>
-        <source>Add...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.ui" line="81"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="100"/>
-        <source>Edit...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.ui" line="94"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="101"/>
-        <source>Clone...</source>
+        <source>Add a new filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="107"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="102"/>
-        <source>Delete...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.ui" line="133"/>
+        <location filename="src/cdlgsessionfilter.ui" line="71"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="103"/>
+        <source>New filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="84"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="105"/>
+        <source>Edit a selected filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="87"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="107"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
+        <source>Edit filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="100"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="109"/>
+        <source>Clone a selected filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="103"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="111"/>
+        <source>Clone filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="116"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="113"/>
+        <source>Delete a selected filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="119"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="115"/>
+        <source>Delete filter...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="148"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="116"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="146"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="104"/>
-        <source>Save...</source>
+        <location filename="src/cdlgsessionfilter.ui" line="161"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="118"/>
+        <source>Save filters to storage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.ui" line="159"/>
-        <location filename="build/ui_cdlgsessionfilter.h" line="105"/>
-        <source>Load...</source>
+        <location filename="src/cdlgsessionfilter.ui" line="164"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="120"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
+        <source>Save filters...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="177"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="122"/>
+        <source>Load filters from storage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgsessionfilter.ui" line="180"/>
+        <location filename="build/ui_cdlgsessionfilter.h" line="124"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="114"/>
+        <source>Load filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsessionfilter.cpp" line="96"/>
         <source>Add filter...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
-        <source>Edit filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5041,16 +5096,6 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.cpp" line="108"/>
         <source>Delete filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="114"/>
-        <source>Load filters...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
-        <source>Save filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

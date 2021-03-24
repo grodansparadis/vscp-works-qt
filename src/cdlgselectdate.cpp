@@ -26,11 +26,20 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectdate.h"
 #include "ui_cdlgselectdate.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDate>
+#include <QCalendarWidget>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -42,11 +51,8 @@ CDlgSelectDate::CDlgSelectDate(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+    connect(ui->calendar, &QCalendarWidget::clicked, this, &CDlgSelectDate::dateClicked );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,25 +66,241 @@ CDlgSelectDate::~CDlgSelectDate()
 
 
 
-
 // ----------------------------------------------------------------------------
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
+// getYearValue
 //
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
+uint16_t CDlgSelectDate::getYearValue(void)
+{
+    return ui->editYear->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setYearValue
+//
+
+void CDlgSelectDate::setYearValue(uint16_t year)
+{
+    ui->editYear->setText(QString::number(year));   
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getYearConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getYearConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintYear->currentIndex());  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setYearConstraint
+//
+
+void CDlgSelectDate::setYearConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintYear->setCurrentIndex(static_cast<int>(op));   
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getMonthValue
+//
+
+uint8_t CDlgSelectDate::getMonthValue(void)
+{
+    return ui->editMonth->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// MonthValue
+//
+
+void CDlgSelectDate::setMonthValue(uint8_t month)
+{
+    ui->editMonth->setText(QString::number(month));  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getMonthConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getMonthConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintMonth->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setMonthConstraint
+//
+
+void CDlgSelectDate::setMonthConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintMonth->setCurrentIndex(static_cast<int>(op));    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDayValue
+//
+
+uint8_t CDlgSelectDate::getDayValue(void)
+{
+    return ui->editDay->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDayValue
+//
+
+void CDlgSelectDate::setDayValue(uint8_t day)
+{
+    ui->editDay->setText(QString::number(day));  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDayConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getDayConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintDay->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDayConstraint
+//
+
+void CDlgSelectDate::setDayConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintDay->setCurrentIndex(static_cast<int>(op)); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getHourValue
+//
+
+uint8_t CDlgSelectDate::getHourValue(void)
+{
+    return ui->editHour->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setHourValue
+//
+
+void CDlgSelectDate::setHourValue(uint8_t hour)
+{
+    ui->editHour->setText(QString::number(hour));  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getHourConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getHourConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintHour->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setHourConstraint
+//
+
+void CDlgSelectDate::setHourConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintHour->setCurrentIndex(static_cast<int>(op)); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getMinuteValue
+//
+
+uint8_t CDlgSelectDate::getMinuteValue(void)
+{
+    return ui->editMinute->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setMinuteValue
+//
+
+void CDlgSelectDate::setMinuteValue(uint8_t minute)
+{
+    ui->editMinute->setText(QString::number(minute));  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getMinuteConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getMinuteConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintMinute->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setMinuteConstraint
+//
+
+void CDlgSelectDate::setMinuteConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintMinute->setCurrentIndex(static_cast<int>(op)); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSecondValue
+//
+
+uint8_t CDlgSelectDate::getSecondValue(void)
+{
+    return ui->editSecond->text().toUInt();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setSecondValue
+//
+
+void CDlgSelectDate::setSecondValue(uint8_t second)
+{
+    ui->editSecond->setText(QString::number(second));  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSecondConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDate::getSecondConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintSecond->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setSecondConstraint
+//
+
+void CDlgSelectDate::setSecondConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintSecond->setCurrentIndex(static_cast<int>(op)); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// dateClicked
+//
+
+void CDlgSelectDate::dateClicked(const QDate& date)
+{
+    //QDate	selectedDate() const
+    setYearValue(date.year());
+    setMonthValue(date.month());
+    setDayValue(date.day());
+}
+
+// ----------------------------------------------------------------------------
+
+
+
+
 

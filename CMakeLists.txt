@@ -179,6 +179,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgselectsensorindex.ui
     src/cdlgselectdatacoding.ui
     src/cdlgselectdate.ui
+    src/cdlgselectconstraint.ui
 )
 
 add_executable(vscp-works-qt
@@ -367,6 +368,10 @@ add_executable(vscp-works-qt
     src/cdlgselectdate.ui
     src/cdlgselectdate.h
     src/cdlgselectdate.cpp
+
+    src/cdlgselectconstraint.ui
+    src/cdlgselectconstraint.h
+    src/cdlgselectconstraint.cpp
 
     vscp/src/vscp/common/version.h
     vscp/src/vscp/common/vscp.h

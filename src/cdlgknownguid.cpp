@@ -53,6 +53,9 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // edit on row double click
+    m_bEnableDblClickAccept = false;
+
     ui->btnSave->setVisible(false);
     ui->btnLoad->setVisible(false); 
 
@@ -199,7 +202,12 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
 
 void CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem *item)
 {
-    btnEdit();
+    if (!m_bEnableDblClickAccept) {
+        btnEdit();
+    }
+    else {
+        accept();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

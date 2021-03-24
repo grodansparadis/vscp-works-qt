@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTOBID_H
 #define CDLGSELECTOBID_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -47,7 +48,17 @@ public:
     ~CDlgSelectObId();
 
 public:
-    
+    /// Get set OBID value
+    uint32_t getObidValue();
+
+    /// Set OOBID value
+    void setObidValue(uint32_t value);
+
+    /// Get set OBID constraint
+    CSessionFilter::constraint getObidConstraint();
+
+    /// Set OBID constraint
+    void setObidConstraint(CSessionFilter::constraint op);
 
 private slots:
     

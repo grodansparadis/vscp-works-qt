@@ -50,7 +50,12 @@ public:
     
 
 private slots:
-    
+
+    /// Add data value to listbox
+    void onAddValue(void);
+
+    /// Delete data value from listbox
+    void onDeleteValue(void);
 
 private:
 

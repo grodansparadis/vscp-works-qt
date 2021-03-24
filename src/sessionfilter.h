@@ -67,7 +67,7 @@ public:
         5 - GT:   greater than
         6 - GTEQ  greate than or equal 
     */
-    enum class constraint {ANY=0, NEQ, EQ, LT, LTEQ, GT, GTEQ};
+    enum class constraint {ANY=0, EQ, NEQ, LT, LTEQ, GT, GTEQ};
 
     static const uint8_t type_unknown = 0;
     static const uint8_t type_must_be_receive = 1;
@@ -90,6 +90,14 @@ public:
     static const uint8_t type_value = 18;
     static const uint8_t type_script = 19;
 
+    // Date constraint pos codes
+    static const uint8_t date_pos_year = 0;
+    static const uint8_t date_pos_month = 1;
+    static const uint8_t date_pos_day = 2;
+    static const uint8_t date_pos_hour = 3;
+    static const uint8_t date_pos_minute = 4;
+    static const uint8_t date_pos_second = 5;
+
     /*!
         Setters / Getters
     */
@@ -106,9 +114,12 @@ public:
     /*!
         Check a value against another value with
         a specified set constraint 
+        @param val Value
+        @param evval Event value to check
+        @param chk Constraint
     */
-    bool checkValue(uint16_t val, 
-                        uint8_t evval, 
+    bool checkValue(uint32_t val, 
+                        uint32_t evval, 
                         constraint chk);
     /*!
         Check if event should be shown
@@ -165,11 +176,27 @@ public:
     bool addGuidConstraint(uint8_t pos, uint8_t val, constraint chk = constraint::ANY);
     bool removeGuidConstraint(uint8_t pos);
     bool isGuidAccepted(const vscpEvent *pev);
+    std::deque<uint32_t> getGuids(void);
 
     // Date constraint handling
     bool addDateConstraint(uint8_t pos, uint16_t val, constraint chk = constraint::ANY);
+    uint32_t getDateConstraint(uint8_t pos);
     bool removeDateConstraint(uint8_t pos);
     bool isDateAccepted(const vscpEvent *pev);
+
+    // OBID constraint
+    bool addObidConstraint(uint32_t val, constraint chk = constraint::ANY);
+    bool removeObidConstraint(void);
+    bool isObidAccepted(const vscpEvent *pev);
+    uint32_t getObidValue(void) { return m_obid; }
+    constraint getObidConstraint(void) { return m_constraint_obid; }
+
+    // TimeStamp constraint
+    bool addTimeStampConstraint(uint32_t val, constraint chk = constraint::ANY);
+    bool removeTimeStampConstraint(void);
+    bool isTimeStampAccepted(const vscpEvent *pev);
+    uint32_t getTimeStampValue(void) { return m_timestamp; }
+    constraint getTimeStampConstraint(void) { return m_constraint_timestamp; }
 
  private:
 

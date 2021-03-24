@@ -31,6 +31,7 @@
 
 #include "sessionfilter.h"
 
+#include "cdlgselectconstraint.h"
 #include "cdlgselectclass.h"
 #include "cdlgselectguid.h"
 #include "cdlgselectobid.h"
@@ -118,423 +119,1019 @@ CDlgEditSessionFilter::isConstraintDefined(uint8_t chk)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// addConstraintReceive
+//
+
+void CDlgEditSessionFilter::addConstraintReceive()
+{
+    // Must be received event (no meaning to have both)
+    if (!(isConstraintDefined(CSessionFilter::type_must_be_receive) && 
+            isConstraintDefined(CSessionFilter::type_must_be_receive))) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_must_be_receive);
+        item->setText(tr("00 - Must be received event"));
+        ui->listConstraints->addItem(item);
+        m_sessionFilter.addReceiveConstraint(true);
+    }
+    else {
+        // This constraint is already set
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set"),
+                        QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintReceive
+
+//
+
+void CDlgEditSessionFilter::editConstraintReceive()
+{
+    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintTransmit
+//
+
+void CDlgEditSessionFilter::addConstraintTransmit()
+{
+    // Must be transitted event (no meaning to have both)
+    if (!(isConstraintDefined(CSessionFilter::type_must_be_receive) && 
+            isConstraintDefined(CSessionFilter::type_must_be_receive))) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
+        item->setText(tr("01 - Must be transmitt event"));
+        ui->listConstraints->addItem(item);
+        m_sessionFilter.addTransmitConstraint(true);
+    }
+    else {
+        // This constraint is already set
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set"),
+                        QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintTransmit
+//
+
+void CDlgEditSessionFilter::editConstraintTransmit()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintLevel1
+//
+
+void CDlgEditSessionFilter::addConstraintLevel1()
+{
+    // Must be Level I event (no meaning to have both)
+    if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
+            isConstraintDefined(CSessionFilter::type_must_be_level2))) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
+        item->setText(tr("12 - Must be level I event"));
+        ui->listConstraints->addItem(item);
+        m_sessionFilter.addLevel1Constraint(true);
+    }
+    else {
+        // This constraint is already set
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set"),
+                        QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintLevel1
+//
+
+void CDlgEditSessionFilter::editConstraintLevel1()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintLevel2
+//
+
+void CDlgEditSessionFilter::addConstraintLevel2()
+{
+    // Must be Level II event (no meaning to have both)
+    if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
+            isConstraintDefined(CSessionFilter::type_must_be_level2))) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
+        item->setText(tr("13 - Must be level 2 event"));
+        ui->listConstraints->addItem(item);
+        m_sessionFilter.addLevel2Constraint(true);
+    }
+    else {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set"),
+                        QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintLevel2
+//
+
+void CDlgEditSessionFilter::editConstraintLevel2()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintClass
+//
+
+void CDlgEditSessionFilter::addConstraintClass(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_class)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    CDlgSelectClass dlg;
+
+    if (QDialog::Accepted == dlg.exec()) {
+        
+        std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
+        if (!selected_classes.size()) {
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("No class defined. Att least one class need to be selected"),
+                        QMessageBox::Ok );
+            return;          
+        }
+
+        // Add the selected classes to the filter
+        for (int i=0; i<selected_classes.size(); i++) {
+            getSessionFilter()->addClassConstraint(selected_classes[i]);
+        }
+
+        std::deque<uint32_t> selected_types = dlg.getSelectedTypes();
+
+        // Add the selected types to the filter
+        for (int i=0; i<selected_types.size(); i++) {
+            getSessionFilter()->addTypeConstraint(selected_types[i]);
+        }
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_class);
+        item->setText(tr("03 - Must be specific VSCP Class/Type"));
+        ui->listConstraints->addItem(item);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintClass
+//
+
+void CDlgEditSessionFilter::editConstraintClass(void)
+{
+    CDlgSelectClass dlg;
+
+    dlg.selectClasses(m_sessionFilter.getClasses());
+    dlg.selectTypes(m_sessionFilter.getTypes());
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
+        if (!selected_classes.size()) {
+            QMessageBox::information(this, 
+                    tr("vscpworks+"),
+                    tr("No class defined. Att least one class need to be selected"),
+                    QMessageBox::Ok );
+            return;          
+        }
+
+        getSessionFilter()->clearClasses();
+        getSessionFilter()->clearTypes();
+
+        // Add the selected classes to the filter
+        for (int i=0; i<selected_classes.size(); i++) {
+            qDebug() << selected_classes[i];
+            getSessionFilter()->addClassConstraint(selected_classes[i]);
+        }
+
+        std::deque<uint32_t> selected_types = dlg.getSelectedTypes();
+
+        // Add the selected types to the filter
+        for (int i=0; i<selected_types.size(); i++) {
+            getSessionFilter()->addTypeConstraint(selected_types[i]);
+        }
+        
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintGuid
+//
+
+void 
+CDlgEditSessionFilter::addConstraintGuid(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_guid)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // GUID
+    CDlgSelectGuid dlg;        
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        for (int i=0; i<16; i++) {
+            qDebug() << dlg.getGuidValue(i);
+            getSessionFilter()->addGuidConstraint(i, 
+                                        dlg.getGuidValue(i), 
+                                        dlg.getGuidConstraint(i));                    
+        }
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_guid);
+        item->setText(tr("04 - Must be specific GUID"));
+        ui->listConstraints->addItem(item);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintGuid
+//
+
+void 
+CDlgEditSessionFilter::editConstraintGuid(void)
+{
+    CDlgSelectGuid dlg;                
+    
+    std::deque<uint32_t> listGuid = getSessionFilter()->getGuids();
+    for (auto const& item: listGuid) {
+        qDebug() << (item & 0xff) << " " << ((item >> 16) & 0xff);
+        dlg.setGuidValue((item >> 16) & 0xff, item & 0xff); 
+        dlg.setGuidConstraint((item >> 16) & 0xff, 
+                                static_cast<CSessionFilter::constraint>((item >> 8) & 0xff));
+    }
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        for (int i=0; i<16; i++) {
+            getSessionFilter()->addGuidConstraint(i, 
+                                        dlg.getGuidValue(i), 
+                                        dlg.getGuidConstraint(i));                    
+        }
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintObid
+//
+
+void
+CDlgEditSessionFilter::addConstraintObid(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_obid)) {
+        // This constraint is already set
+        QMessageBox::information(this,
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;
+    }
+    
+    CDlgSelectObId dlg;
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addObidConstraint(dlg.getObidValue(),
+                                            dlg.getObidConstraint());
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_obid);
+        item->setText(tr("05 - Must be specific OBID"));
+        ui->listConstraints->addItem(item);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintObid
+//
+
+void
+CDlgEditSessionFilter::editConstraintObid(void)
+{
+    CDlgSelectObId dlg;
+
+    dlg.setObidValue(m_sessionFilter.getObidValue());
+    dlg.setObidConstraint(m_sessionFilter.getObidConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addObidConstraint(dlg.getObidValue(), 
+                                            dlg.getObidConstraint());
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintDate
+//
+
+void CDlgEditSessionFilter::addConstraintDate(void)
+{
+    uint16_t value;
+    CSessionFilter::constraint op;
+
+    if (isConstraintDefined(CSessionFilter::type_date)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Date
+    CDlgSelectDate dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+        
+        // Year
+        value = dlg.getYearValue();
+        if (value > 9999) value = 1956; // Well at least more realistic :)
+        op = dlg.getYearConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_year,
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_year);
+        }
+
+        // Month
+        value = dlg.getMonthValue();
+        if ((value > 12) || !value) value = 1;
+        op = dlg.getMonthConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_month, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_month);
+        }
+
+        // Day
+        value = dlg.getDayValue();
+        if ((value > 31) || !value) value = 1;
+        op = dlg.getDayConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_day, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_day);
+        }
+
+        // Hour
+        value = dlg.getHourValue();
+        if ((value > 23)) value = 0;
+        op = dlg.getHourConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_hour, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_hour);
+        }
+
+        // Minute
+        value = dlg.getMinuteValue();
+        if ((value > 59)) value = 0;
+        op = dlg.getMinuteConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_minute, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_minute);
+        }
+
+        // Second
+        value = dlg.getSecondValue();
+        if ((value > 59)) value = 0;
+        op = dlg.getSecondConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_second, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_second);
+        }
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_date);
+        item->setText(tr("06 - Must be specific date"));
+        ui->listConstraints->addItem(item);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintDate
+//
+
+void CDlgEditSessionFilter::editConstraintDate(void)
+{
+    uint16_t value;
+    uint32_t cv;
+    CSessionFilter::constraint op;
+
+    // Date
+    CDlgSelectDate dlg;
+
+    // year
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_year);
+    if (cv) {
+        dlg.setYearValue(cv & 0xffff);
+        dlg.setYearConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    // month
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_month);
+    if (cv) {
+        dlg.setMonthValue(cv & 0xff);
+        dlg.setMonthConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    // day
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_day);
+    if (cv) {
+        dlg.setDayValue(cv & 0xffff);
+        dlg.setDayConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    // hour
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_hour);
+    if (cv) {
+        dlg.setHourValue(cv & 0xff);
+        dlg.setHourConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    // minute
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_minute);
+    if (cv) {
+        dlg.setMinuteValue(cv & 0xff);
+        dlg.setMinuteConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    // second
+    cv = m_sessionFilter.getDateConstraint(CSessionFilter::date_pos_second);
+    if (cv) {
+        dlg.setSecondValue(cv & 0xffff);
+        dlg.setSecondConstraint(static_cast<CSessionFilter::constraint>((cv >> 16) & 0x0f));
+    }
+
+    if (QDialog::Accepted == dlg.exec()) {
+        
+        // Year
+        value = dlg.getYearValue();
+        if (value > 9999) value = 1956; // Well at least more realistic :)
+        op = dlg.getYearConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_year, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_year);
+        }
+
+        // Month
+        value = dlg.getMonthValue();
+        if ((value > 12) || !value) value = 1;
+        op = dlg.getMonthConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_month, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_month);
+        }
+
+        // Day
+        value = dlg.getDayValue();
+        if ((value > 31) || !value) value = 1;
+        op = dlg.getDayConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_day, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_day);
+        }
+
+        // Hour
+        value = dlg.getHourValue();
+        if ((value > 23)) value = 0;
+        op = dlg.getHourConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_hour, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_hour);
+        }
+
+        // Minute
+        value = dlg.getMinuteValue();
+        if ((value > 59)) value = 0;
+        op = dlg.getMinuteConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_minute, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_minute);
+        }
+
+        // Second
+        value = dlg.getSecondValue();
+        if ((value > 59)) value = 0;
+        op = dlg.getSecondConstraint();
+        if (CSessionFilter::constraint::ANY != op) {
+            m_sessionFilter.addDateConstraint(CSessionFilter::date_pos_second, 
+                                                value, 
+                                                op);
+        }
+        else {
+            m_sessionFilter.removeDateConstraint(CSessionFilter::date_pos_second);
+        }
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintTimeStamp
+//
+
+void CDlgEditSessionFilter::addConstraintTimeStamp(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_timestamp)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Timestamp
+    CDlgSelectTimeStamp dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addTimeStampConstraint(dlg.getTimeStampValue(),
+                                                dlg.getTimeStampConstraint());
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_timestamp);
+        item->setText(tr("06 - Must be specific Timestamp"));
+        ui->listConstraints->addItem(item);
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintTimeStamp
+//
+
+void CDlgEditSessionFilter::editConstraintTimeStamp(void)
+{
+    CDlgSelectTimeStamp dlg;
+
+    dlg.setTimeStampValue(m_sessionFilter.getTimeStampValue());
+    dlg.setTimeStampConstraint(m_sessionFilter.getTimeStampConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addTimeStampConstraint(dlg.getTimeStampValue(), 
+                                                dlg.getTimeStampConstraint());
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintData
+//
+
+void CDlgEditSessionFilter::addConstraintData(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_data)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Data content
+    CDlgSelectData dlg;
+
+
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintData
+//
+
+void CDlgEditSessionFilter::editConstraintData(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintDataSize
+//
+
+void CDlgEditSessionFilter::addConstraintDataSize(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_data_size)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Data size
+    CDlgSelectDataSize dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintDataSize
+//
+
+void CDlgEditSessionFilter::editConstraintDataSize(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintPriority
+//
+
+void CDlgEditSessionFilter::addConstraintPriority(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_priority)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Priority
+    CDlgSelectPriority dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintPriority
+//
+
+void CDlgEditSessionFilter::editConstraintPriority(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintMeasurement
+//
+
+void CDlgEditSessionFilter::addConstraintMeasurement(void)
+{
+    // Must be mesurement
+    // Must be Level II event (no meaning to have both)
+    if (!(isConstraintDefined(CSessionFilter::type_must_be_measurement))) {
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_must_be_measurement);
+        item->setText(tr("11 - Must be measurement event"));
+        ui->listConstraints->addItem(item);
+        m_sessionFilter.addLevel2Constraint(true);
+    }
+    else {
+        // This constraint is already set
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set"),
+                        QMessageBox::Ok );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintMeasurement
+//
+
+void CDlgEditSessionFilter::editConstraintMeasurement(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintSensorIndex
+//
+
+void CDlgEditSessionFilter::addConstraintSensorIndex(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Measurement sensor index
+    CDlgSelectSensorIndex dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintSensorIndex
+//
+
+void CDlgEditSessionFilter::editConstraintSensorIndex(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintValue
+//
+
+void CDlgEditSessionFilter::addConstraintValue(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_value)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Measurement value
+    CDlgSelectMeasurementValue dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintValue
+//
+
+void CDlgEditSessionFilter::editConstraintValue(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintUnit
+//
+
+void CDlgEditSessionFilter::addConstraintUnit(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_unit)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Measurement unit
+    CDlgSelectMeasurementUnit dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintUnit
+//
+
+void CDlgEditSessionFilter::editConstraintUnit(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintDataCoding
+//
+
+void CDlgEditSessionFilter::addConstraintDataCoding(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_data_coding)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
+    // Measurement data coding
+    CDlgSelectDataCoding dlg;
+    if (QDialog::Accepted == dlg.exec()) {
+
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintDataCoding
+//
+
+void CDlgEditSessionFilter::editConstraintDataCoding(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addConstraintScript
+//
+
+void CDlgEditSessionFilter::addConstraintScript(void)
+{
+    if (isConstraintDefined(CSessionFilter::type_script)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+    // Script
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editConstraintScript
+//
+
+void CDlgEditSessionFilter::editConstraintScript(void)
+{
+
+}
+
+
+// ----------------------------------------------------------------------------
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
 // addConstraint
 //
 
 void
 CDlgEditSessionFilter::addConstraint(void)
 {
-    QStringList items;
-    items   << tr("Select constraint to add")
-            << tr("[1] - Must be received event")
-            << tr("[2] - Must be transmitted event")
-            << tr("[3] - Class/type") 
-            << tr("[4] - GUID") 
-            << tr("[5] - OBID") 
-            << tr("[6] - Date")
-            << tr("[7] - Timestamp")
-            << tr("[8] - Data value(s)")
-            << tr("[9] - Date size")
-            << tr("[10] - Priority")
-            << tr("[11] - Must be measurement")
-            << tr("[12] - Must be Level I")
-            << tr("[13] - Must be Level II")
-            << tr("[14] - Sensor Index")
-            << tr("[15] - Measurement Value")
-            << tr("[16] - Measurement Unit")
-            << tr("[17] - Measurement data coding")
-            << tr("[18] - Script");
+    CDlgSelectConstraint dlgSelect;
+    if (QDialog::Accepted != dlgSelect.exec()) {
+        return;
+    }
 
-    bool ok;
-    QString item = QInputDialog::getItem(this, tr("QInputDialog::getItem()"),
-                                         tr("Constraint:"), items, 0, false, &ok);
-    if (ok && !item.isEmpty()) {
+    int constraint = dlgSelect.getSelectedConstraint();
 
-        // Must be receive event
-        if (item.contains(tr("[1]"))) {
-            // Must be received event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_receive) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_receive))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_receive);
-                item->setText(tr("00 - Must be received event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addReceiveConstraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        // Must be transmit event
-        else if (item.contains(tr("[2]"))) {
-            // Must be transitted event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_receive) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_receive))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
-                item->setText(tr("01 - Must be transmitt event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addTransmitConstraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        // Must be Level I
-        else if (item.contains(tr("[12]"))) {
-            // Must be Level I event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_level2))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
-                item->setText(tr("12 - Must be level I event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addLevel1Constraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        // Must be level II
-        else if (item.contains(tr("[13]"))) {
-            // Must be Level II event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_level2))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_transmit);
-                item->setText(tr("13 - Must be level 2 event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addLevel2Constraint(true);
-            }
-            else {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        // Class
-        else if (item.contains(tr("[3]"))) {            
+    // Must be receive event
+    if (CSessionFilter::type_must_be_receive == constraint) {
+        addConstraintReceive();
+    }
 
-            if (isConstraintDefined(CSessionFilter::type_class)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
+    // Must be transmit event
+    else if (CSessionFilter::type_must_be_transmit == constraint) {
+        addConstraintTransmit();        
+    }
 
-            CDlgSelectClass dlg;
+    // Must be Level I
+    else if (CSessionFilter::type_must_be_level1 == constraint) {
+        addConstraintLevel1();        
+    }
 
-            if (QDialog::Accepted == dlg.exec()) {
-                
-                std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
-                if (!selected_classes.size()) {
-                    QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("No class defined. Att least one class need to be selected"),
-                              QMessageBox::Ok );
-                    return;          
-                }
+    // Must be level II
+    else if (CSessionFilter::type_must_be_level2 == constraint) {
+        addConstraintLevel2();
+    }
 
-                // Add the selected classes to the filter
-                for (int i=0; i<selected_classes.size(); i++) {
-                    getSessionFilter()->addClassConstraint(selected_classes[i]);
-                }
+    // Add Class / Type
+    else if ((CSessionFilter::type_class == constraint) || 
+             (CSessionFilter::type_type == constraint)) {            
+        addConstraintLevel2();                             
+    }
 
-                std::deque<uint32_t> selected_types = dlg.getSelectedTypes();
+    // * * * Add GUID
+    else if (CSessionFilter::type_guid == constraint) { 
+        addConstraintGuid();
+    }
 
-                // Add the selected types to the filter
-                for (int i=0; i<selected_types.size(); i++) {
-                    getSessionFilter()->addTypeConstraint(selected_types[i]);
-                }
+    // * * * Add  OBID
+    else if (CSessionFilter::type_obid == constraint) {
+        addConstraintObid();
+    }
 
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_class);
-                item->setText(tr("03 - Must be specific VSCP Class/Type"));
-                ui->listConstraints->addItem(item);
-            }            
-        }
-        // * * * GUID
-        else if (item.contains(tr("[4]"))) { 
+    // * * * Add Date
+    else if (CSessionFilter::type_date == constraint) {
+        addConstraintDate();        
+    }
 
-            if (isConstraintDefined(CSessionFilter::type_guid)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
+    // * * * Add 
+    else if (CSessionFilter::type_timestamp == constraint) {
+        addConstraintTimeStamp();        
+    }
 
-            // GUID
-            CDlgSelectGuid dlg;
-            if (QDialog::Accepted == dlg.exec()) {
+    // * * * Add 
+    else if (CSessionFilter::type_data == constraint) {
+        addConstraintData();        
+    }
 
-                for (int i=0; i<16; i++) {
-                    
-                }
+    // * * * Add 
+    else if (CSessionFilter::type_data_size == constraint) {
+        addConstraintDataSize();        
+    }
 
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_guid);
-                item->setText(tr("04 - Must be specific GUID"));
-                ui->listConstraints->addItem(item);
-            }
+    // * * * Add 
+    else if (CSessionFilter::type_priority == constraint) {
+        addConstraintPriority();
+    }
 
-        }
-        else if (item.contains(tr("[5]"))) {
+    // * * * Add 
+    else if (CSessionFilter::type_must_be_measurement == constraint) {
+        addConstraintMeasurement();
+    }
 
-            if (isConstraintDefined(CSessionFilter::type_obid)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
+    // * * * Add 
+    else if (CSessionFilter::type_sensor_index == constraint) {
+        addConstraintSensorIndex();
+    }
 
-            // OBID
-            CDlgSelectObId dlg;
-            if (QDialog::Accepted == dlg.exec()) {
+    // * * * Add 
+    else if (CSessionFilter::type_value == constraint) {
+        addConstraintValue();
+    }
 
-            }
-        }
-        else if (item.contains(tr("[6]"))) {
+    // * * * Add 
+    else if (CSessionFilter::type_unit == constraint) {
+        addConstraintUnit();
+    }
 
-            if (isConstraintDefined(CSessionFilter::type_date)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
+    // * * * Add 
+    else if (CSessionFilter::type_data_coding == constraint) {
+        addConstraintDataCoding();
+    }
 
-            // Date
-            CDlgSelectDate dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[7]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_timestamp)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Timestamp
-            CDlgSelectTimeStamp dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[8]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_data)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Data content
-            CDlgSelectData dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[9]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_data_size)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Data size
-            CDlgSelectDataSize dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[10]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_priority)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Priority
-            CDlgSelectPriority dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[11]"))) {
-
-            // Must be mesurement
-            // Must be Level II event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_measurement))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_measurement);
-                item->setText(tr("11 - Must be measurement event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addLevel2Constraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        else if (item.contains(tr("[12]"))) {
-            // Must be Level I
-            // Must be Level II event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_level2))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_level1);
-                item->setText(tr("12 - Must be Level I event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addLevel2Constraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }
-        else if (item.contains(tr("[13]"))) {
-            // Must be level II
-            // Must be Level II event (no meaning to have both)
-            if (!(isConstraintDefined(CSessionFilter::type_must_be_level1) && 
-                  isConstraintDefined(CSessionFilter::type_must_be_level2))) {
-                QListWidgetItem *item = new QListWidgetItem();
-                item->setData(role_constraint_type, CSessionFilter::type_must_be_level2);
-                item->setText(tr("13 - Must be Level II event"));
-                ui->listConstraints->addItem(item);
-                m_sessionFilter.addLevel2Constraint(true);
-            }
-            else {
-                // This constraint is already set
-                 QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set"),
-                              QMessageBox::Ok );
-            }
-        }        
-        else if (item.contains(tr("[14]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Measurement sensor index
-            CDlgSelectSensorIndex dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[15]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_value)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Measurement value
-            CDlgSelectMeasurementValue dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[16]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_unit)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Measurement unit
-            CDlgSelectMeasurementUnit dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[17]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_data_coding)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-
-            // Measurement data coding
-            CDlgSelectDataCoding dlg;
-            if (QDialog::Accepted == dlg.exec()) {
-
-            }
-        }
-        else if (item.contains(tr("[18]"))) {
-
-            if (isConstraintDefined(CSessionFilter::type_script)) {
-                // This constraint is already set
-                QMessageBox::information(this, 
-                              tr("vscpworks+"),
-                              tr("This constraint is already set. Use edit instead of add."),
-                              QMessageBox::Ok );
-                return;                               
-            }
-            // Script
-        }
+    // * * * Add 
+    else if (CSessionFilter::type_script == constraint) {
+        addConstraintScript();
     }
 }
 
@@ -557,6 +1154,7 @@ CDlgEditSessionFilter::editConstraint(void)
     QListWidgetItem *item = ui->listConstraints->currentItem();
     switch( item->data(role_constraint_type).toInt()) {
 
+        // * * * Edit receive
         case CSessionFilter::type_must_be_receive:
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -564,6 +1162,7 @@ CDlgEditSessionFilter::editConstraint(void)
                               QMessageBox::Ok );
             return;
 
+        // * * * Edit transmit
         case CSessionFilter::type_must_be_transmit:
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -571,6 +1170,7 @@ CDlgEditSessionFilter::editConstraint(void)
                               QMessageBox::Ok );
             return;
 
+        // * * * Edit leve1
         case CSessionFilter::type_must_be_level1:
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -578,6 +1178,7 @@ CDlgEditSessionFilter::editConstraint(void)
                               QMessageBox::Ok );
             return;
 
+        // * * * Edit  level2
         case CSessionFilter::type_must_be_level2:
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -585,6 +1186,7 @@ CDlgEditSessionFilter::editConstraint(void)
                               QMessageBox::Ok );
             return;
 
+        // * * * Edit measurement
         case CSessionFilter::type_must_be_measurement:
             QMessageBox::information(this, 
                               tr("vscpworks+"),
@@ -592,82 +1194,74 @@ CDlgEditSessionFilter::editConstraint(void)
                               QMessageBox::Ok );
             return;
 
+        // * * * Edit Class
         case CSessionFilter::type_class:
-            {
-                CDlgSelectClass dlg;
-
-                dlg.selectClasses(m_sessionFilter.getClasses());
-                dlg.selectTypes(m_sessionFilter.getTypes());
-
-                if (QDialog::Accepted == dlg.exec()) {
-
-                    std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
-                    if (!selected_classes.size()) {
-                        QMessageBox::information(this, 
-                                tr("vscpworks+"),
-                                tr("No class defined. Att least one class need to be selected"),
-                                QMessageBox::Ok );
-                        return;          
-                    }
-
-                    getSessionFilter()->clearClasses();
-                    getSessionFilter()->clearTypes();
-
-                    // Add the selected classes to the filter
-                    for (int i=0; i<selected_classes.size(); i++) {
-                        qDebug() << selected_classes[i];
-                        getSessionFilter()->addClassConstraint(selected_classes[i]);
-                    }
-
-                    std::deque<uint32_t> selected_types = dlg.getSelectedTypes();
-
-                    // Add the selected types to the filter
-                    for (int i=0; i<selected_types.size(); i++) {
-                        getSessionFilter()->addTypeConstraint(selected_types[i]);
-                    }
-                    
-                }
-
-            }
+            editConstraintClass();            
             break;
 
+        // * * * Edit Type
         case CSessionFilter::type_type:
+            editConstraintClass();
             break;
 
+        // * * * Edit Priority
         case CSessionFilter::type_priority:
+            editConstraintPriority();
             break;
 
+        // * * * Edit GUID
         case CSessionFilter::type_guid:
+            editConstraintGuid();            
             break;
 
+        // * * * Edit OBID
         case CSessionFilter::type_obid:
+            editConstraintObid();                
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_timestamp:
+            editConstraintTimeStamp();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_date:
+            editConstraintDate();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_data_size:
+            editConstraintDataSize();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_data:
+            editConstraintData();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_sensor_index:
+            editConstraintSensorIndex();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_unit:
+            editConstraintUnit();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_data_coding:
+            editConstraintDataCoding();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_value:
+            editConstraintValue();
             break;
 
+        // * * * Edit 
         case CSessionFilter::type_script:
+            editConstraintScript();
             break;
     }
 }

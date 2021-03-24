@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
+    <width>460</width>
     <height>99</height>
    </rect>
   </property>
@@ -34,29 +34,13 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>445</width>
+     <width>441</width>
      <height>41</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Timestamp</string>
-      </property>
-      <property name="buddy">
-       <cstring>comboCompareTimeStamp</cstring>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
-     <widget class="QComboBox" name="comboCompareTimeStamp">
+     <widget class="QComboBox" name="comboConstraintTimeStamp">
       <item>
        <property name="text">
         <string>Don't care</string>
@@ -74,16 +58,6 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater than</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Greater than or equal to</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Less than</string>
        </property>
       </item>
@@ -92,21 +66,41 @@
         <string>Less than or equal to</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Greater than</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater than or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Timestamp</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboConstraintTimeStamp</cstring>
+      </property>
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QSpinBox" name="spinBoxBoxTimeStamp">
+     <widget class="QLineEdit" name="editTimeStamp">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>150</width>
-        <height>0</height>
-       </size>
       </property>
      </widget>
     </item>

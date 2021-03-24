@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectobid.h"
 #include "ui_cdlgselectobid.h"
 
@@ -58,27 +65,47 @@ CDlgSelectObId::~CDlgSelectObId()
     delete ui;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// getObidValue
+//
 
+uint32_t CDlgSelectObId::getObidValue(void)
+{
+    return vscp_readStringValue(ui->editObid->text().toStdString());
+}
 
+///////////////////////////////////////////////////////////////////////////////
+// setObidValue
+//
+
+void CDlgSelectObId::setObidValue(uint32_t value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+
+    ui->editObid->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getObidConstraint
+//
+
+CSessionFilter::constraint CDlgSelectObId::getObidConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboConstraintObid->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getObidConstraint
+//
+
+void CDlgSelectObId::setObidConstraint(CSessionFilter::constraint op)
+{
+    ui->comboConstraintObid->setCurrentIndex(static_cast<int>(op));
+}
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
 
-// void
-// CDlgSelectObId::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

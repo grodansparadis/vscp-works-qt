@@ -1,4 +1,4 @@
-// cdlgselecttimestamp.h
+// cldgselectconstraint.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,8 +26,11 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGSELECTTIMESTAMP_H
-#define CDLGSELECTTIMESTAMP_H
+#ifndef SELECTCONSTRAINT_H
+#define SELECTCONSTRAINT_H
+
+#include <vscp.h>
+#include <vscphelper.h>
 
 #include "sessionfilter.h"
 
@@ -35,39 +38,30 @@
 #include <QListWidgetItem>
 
 namespace Ui {
-class CDlgSelectTimeStamp;
+class CDlgSelectConstraint;
 }
 
 
-class CDlgSelectTimeStamp : public QDialog
+class CDlgSelectConstraint : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CDlgSelectTimeStamp(QWidget *parent = nullptr);
-    ~CDlgSelectTimeStamp();
-
+    explicit CDlgSelectConstraint(QWidget *parent = nullptr);
+    ~CDlgSelectConstraint();
+    
 public:
-    /// Get set TimeStamp value
-    uint32_t getTimeStampValue();
-
-    /// Set TimeStamp value
-    void setTimeStampValue(uint32_t value);
-
-    /// Get set TimeStamp constraint
-    CSessionFilter::constraint getTimeStampConstraint();
-
-    /// Set TimeStamp constraint
-    void setTimeStampConstraint(CSessionFilter::constraint op);
+    int getSelectedConstraint(void);
 
 private slots:
-    
+
+    /// Handled for list element click
+    void constraintSelected(QListWidgetItem *item);
 
 private:
 
-    Ui::CDlgSelectTimeStamp *ui;
+    Ui::CDlgSelectConstraint *ui;
 
 };
 
-
-#endif // CDLGSELECTTIMESTAMP_H
+#endif  // SELECTCONSTRAINT_H

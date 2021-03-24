@@ -39,22 +39,6 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Unit</string>
-      </property>
-      <property name="buddy">
-       <cstring>comboCompareUnit</cstring>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <widget class="QComboBox" name="comboCompareUnit">
       <item>
@@ -74,16 +58,6 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater than</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Greater than or equal to</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Less than</string>
        </property>
       </item>
@@ -92,20 +66,46 @@
         <string>Less than or equal to</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Greater than</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater than or equal to</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Unit</string>
+      </property>
+      <property name="buddy">
+       <cstring>comboCompareUnit</cstring>
+      </property>
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QSpinBox" name="spinBoxBoxUnit">
+     <widget class="QLineEdit" name="editUnit">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="minimumSize">
+      <property name="maximumSize">
        <size>
-        <width>150</width>
-        <height>0</height>
+        <width>80</width>
+        <height>16777215</height>
        </size>
       </property>
      </widget>

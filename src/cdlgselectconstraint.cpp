@@ -1,4 +1,4 @@
-// cdlgselecttimestamp.h
+// cldgselectconstraint.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,48 +26,58 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGSELECTTIMESTAMP_H
-#define CDLGSELECTTIMESTAMP_H
+#include "cdlgselectconstraint.h"
+#include "ui_cdlgselectconstraint.h"
 
-#include "sessionfilter.h"
+#include <QMessageBox>
+#include <QFileDialog>
 
-#include <QDialog>
-#include <QListWidgetItem>
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
 
-namespace Ui {
-class CDlgSelectTimeStamp;
+CDlgSelectConstraint::CDlgSelectConstraint(QWidget *parent) :
+        QDialog(parent),
+    ui(new Ui::CDlgSelectConstraint)
+{
+    ui->setupUi(this);
+
+    connect(ui->listConstraints, &QListWidget::itemClicked, this, &CDlgSelectConstraint::constraintSelected ); 
+    connect(ui->listConstraints, &QListWidget::itemDoubleClicked, this, &CDlgSelectConstraint::constraintSelected );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+CDlgSelectConstraint::~CDlgSelectConstraint()
+{
+    delete ui;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSelectedConstraint
+//
+
+int
+CDlgSelectConstraint::getSelectedConstraint(void)
+{
+    return ui->listConstraints->currentRow();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// constraintSelected
+//
+
+void
+CDlgSelectConstraint::constraintSelected(QListWidgetItem *item)
+{
+    accept();
 }
 
 
-class CDlgSelectTimeStamp : public QDialog
-{
-    Q_OBJECT
 
-public:
-    explicit CDlgSelectTimeStamp(QWidget *parent = nullptr);
-    ~CDlgSelectTimeStamp();
-
-public:
-    /// Get set TimeStamp value
-    uint32_t getTimeStampValue();
-
-    /// Set TimeStamp value
-    void setTimeStampValue(uint32_t value);
-
-    /// Get set TimeStamp constraint
-    CSessionFilter::constraint getTimeStampConstraint();
-
-    /// Set TimeStamp constraint
-    void setTimeStampConstraint(CSessionFilter::constraint op);
-
-private slots:
-    
-
-private:
-
-    Ui::CDlgSelectTimeStamp *ui;
-
-};
+// ----------------------------------------------------------------------------
 
 
-#endif // CDLGSELECTTIMESTAMP_H
+

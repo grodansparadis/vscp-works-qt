@@ -52,25 +52,42 @@ public:
 
     /*!
         Get guid value for pos
-        @param pos Position 0-15 in GUID. 0 is MSB
+        @param pos Position 0-15 in GUID. 0 is LSB
         @return GUID value.
     */
     uint8_t getGuidValue(uint8_t pos);
 
     /*!
+        Set GUID value for pos
+        @param pos Position to set GUID value for
+        @param value Value to set
+    */
+    void setGuidValue(uint8_t pos, uint8_t value);
+
+    /*!
         Get operation for GUID pos
-        @param pos Position 0-15 in GUID. 0 is MSB
+        @param pos Position 0-15 in GUID. 0 is LSB
         @return GUID operation.
     */
-    CSessionFilter::constraint getOperation(uint8_t pos);
+    CSessionFilter::constraint getGuidConstraint(uint8_t pos);
 
+    /*!
+        Set constraint for GUID at pos
+        @param pos Pos to set constraint at
+        @param op Constrant to set
+    */
+    void setGuidConstraint(uint8_t pos, CSessionFilter::constraint op);
+    
 public:
     
 
 private slots:
     
-    /// Fill GUID from edit filed
+    /// Fill GUID from edit field
     void fillGuid(void);
+
+    /// Set GUID field from GUID values
+    void getGuid(void);
 
     /// Look up GUID from known GUID's
     void askGuid(void);

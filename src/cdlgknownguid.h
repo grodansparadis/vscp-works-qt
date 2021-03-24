@@ -100,6 +100,12 @@ public:
     */
     bool getSelectedGuid(cguid& guid);
 
+    /*!
+        Enable disable alternative double click
+        behaviour
+    */
+    void enableAccept(bool b) { m_bEnableDblClickAccept = b; };    
+
 public slots:
     
     /// Dialog return
@@ -128,8 +134,15 @@ public slots:
 
     /// Handler for save button
     void btnSave(void); 
+    
 
 private:
+
+    /*!
+        If true a double click of a row item accepts
+        the entry instead of going into edit.
+    */
+    bool m_bEnableDblClickAccept;
 
     Ui::CDlgKnownGuid *ui;
 

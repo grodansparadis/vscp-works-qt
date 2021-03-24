@@ -68,6 +68,78 @@ public:
     */
     CSessionFilter *getSessionFilter(void) { return &m_sessionFilter; };
 
+    // add/edit constraint for Receive
+    void addConstraintReceive(void);
+    void editConstraintReceive(void);
+
+    // add/edit constraint for Transmit
+    void addConstraintTransmit(void);
+    void editConstraintTransmit(void);
+
+    // add/edit constraint for Level I
+    void addConstraintLevel1(void);
+    void editConstraintLevel1(void);
+
+    // add/edit constraint for Level II
+    void addConstraintLevel2(void);
+    void editConstraintLevel2(void);
+
+    // add/edit constraint for Class/Type
+    void addConstraintClass(void);
+    void editConstraintClass(void);
+
+    // add/edit constraint for GUID
+    void addConstraintGuid(void);
+    void editConstraintGuid(void);
+
+    // add/edit constraint for OBID
+    void addConstraintObid(void);
+    void editConstraintObid(void);
+
+    // add/edit constraint for Date
+    void addConstraintDate(void);
+    void editConstraintDate(void);
+
+    // add/edit constraint for TimeStamp
+    void addConstraintTimeStamp(void);
+    void editConstraintTimeStamp(void);
+
+    // add/edit constraint for Data
+    void addConstraintData(void);
+    void editConstraintData(void);
+
+    // add/edit constraint for Data Size
+    void addConstraintDataSize(void);
+    void editConstraintDataSize(void);
+
+    // add/edit constraint for Priority
+    void addConstraintPriority(void);
+    void editConstraintPriority(void);
+
+    // add/edit constraint for Must be measurement
+    void addConstraintMeasurement(void);
+    void editConstraintMeasurement(void);
+
+    // add/edit constraint for sensor index
+    void addConstraintSensorIndex(void);
+    void editConstraintSensorIndex(void);
+
+    // add/edit constraint for measurement value
+    void addConstraintValue(void);
+    void editConstraintValue(void);
+
+    // add/edit constraint for unit
+    void addConstraintUnit(void);
+    void editConstraintUnit(void);
+
+    // add/edit constraint for data coding
+    void addConstraintDataCoding(void);
+    void editConstraintDataCoding(void);
+
+    // add/edit constraint for script
+    void addConstraintScript(void);
+    void editConstraintScript(void);
+
 private slots:
 
     /// Add filter constraint
