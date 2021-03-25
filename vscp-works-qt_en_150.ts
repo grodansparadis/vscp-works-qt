@@ -1899,14 +1899,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="62"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="100"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1060"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1310"/>
         <source>Add constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="75"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1064"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1314"/>
         <source>Edit constraint...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1961,24 +1961,24 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="317"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="352"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="415"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="463"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="494"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="525"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="556"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="587"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="627"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="651"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="682"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="713"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="744"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="775"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="914"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="926"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="934"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="942"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="950"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="958"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1044"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="466"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="708"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="755"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="806"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="837"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="877"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="901"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="932"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="963"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="994"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1025"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1164"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1176"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1184"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1192"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1200"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1208"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1294"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1987,7 +1987,7 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="174"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="207"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="240"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="628"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="878"/>
         <source>This constraint is already set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2010,16 +2010,16 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="264"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="353"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="416"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="464"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="495"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="526"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="557"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="588"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="652"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="683"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="714"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="745"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="776"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="467"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="709"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="756"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="807"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="838"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="902"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="933"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="964"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="995"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1026"/>
         <source>This constraint is already set. Use edit instead of add.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2045,27 +2045,42 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="620"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="556"/>
+        <source>06 - Must be specific date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="723"/>
+        <source>06 - Must be specific Timestamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="771"/>
+        <source>07 - Must be specific data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="870"/>
         <source>11 - Must be measurement event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="915"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1045"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1165"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1295"/>
         <source>A constraint must be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="927"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="935"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="943"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="951"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="959"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1177"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1185"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1193"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1201"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1209"/>
         <source>There is nothing to edit for this constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1068"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1318"/>
         <source>Delete constraint</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3560,13 +3575,13 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectconstraint.ui" line="90"/>
         <location filename="build/ui_cdlgselectconstraint.h" line="94"/>
-        <source>Date</source>
+        <source>Date/Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectconstraint.ui" line="95"/>
         <location filename="build/ui_cdlgselectconstraint.h" line="96"/>
-        <source>Date size</source>
+        <source>Data size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3616,74 +3631,90 @@ and the flag bits for the. the driver.
     <name>CDlgSelectData</name>
     <message>
         <location filename="src/cdlgselectdata.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdata.h" line="128"/>
+        <location filename="build/ui_cdlgselectdata.h" line="130"/>
         <source>Select Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="52"/>
-        <location filename="build/ui_cdlgselectdata.h" line="129"/>
+        <location filename="src/cdlgselectdata.ui" line="55"/>
+        <location filename="build/ui_cdlgselectdata.h" line="131"/>
         <source>Data Constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="96"/>
-        <location filename="build/ui_cdlgselectdata.h" line="130"/>
+        <location filename="src/cdlgselectdata.ui" line="89"/>
+        <location filename="build/ui_cdlgselectdata.h" line="132"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="102"/>
+        <location filename="build/ui_cdlgselectdata.h" line="133"/>
         <source>Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="112"/>
-        <location filename="build/ui_cdlgselectdata.h" line="131"/>
+        <location filename="src/cdlgselectdata.ui" line="118"/>
+        <location filename="build/ui_cdlgselectdata.h" line="134"/>
         <source>→</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="120"/>
-        <location filename="build/ui_cdlgselectdata.h" line="132"/>
+        <location filename="src/cdlgselectdata.ui" line="126"/>
+        <location filename="build/ui_cdlgselectdata.h" line="135"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="125"/>
-        <location filename="build/ui_cdlgselectdata.h" line="133"/>
+        <location filename="src/cdlgselectdata.ui" line="131"/>
+        <location filename="build/ui_cdlgselectdata.h" line="136"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="130"/>
-        <location filename="build/ui_cdlgselectdata.h" line="134"/>
+        <location filename="src/cdlgselectdata.ui" line="136"/>
+        <location filename="build/ui_cdlgselectdata.h" line="137"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="135"/>
-        <location filename="build/ui_cdlgselectdata.h" line="135"/>
-        <source>Greater than</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="140"/>
-        <location filename="build/ui_cdlgselectdata.h" line="136"/>
-        <source>Greater than or equal to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/cdlgselectdata.ui" line="145"/>
-        <location filename="build/ui_cdlgselectdata.h" line="137"/>
+        <location filename="src/cdlgselectdata.ui" line="141"/>
+        <location filename="build/ui_cdlgselectdata.h" line="138"/>
         <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="150"/>
-        <location filename="build/ui_cdlgselectdata.h" line="138"/>
+        <location filename="src/cdlgselectdata.ui" line="146"/>
+        <location filename="build/ui_cdlgselectdata.h" line="139"/>
         <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.ui" line="183"/>
+        <location filename="src/cdlgselectdata.ui" line="151"/>
         <location filename="build/ui_cdlgselectdata.h" line="140"/>
+        <source>Greater than</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="156"/>
+        <location filename="build/ui_cdlgselectdata.h" line="141"/>
+        <source>Greater than or equal to</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.ui" line="192"/>
+        <location filename="build/ui_cdlgselectdata.h" line="143"/>
         <source>Delete...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.cpp" line="130"/>
+        <source>vscpworks+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgselectdata.cpp" line="131"/>
+        <source>Data for this data item is already set. Delete item first to set a new value.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3722,25 +3753,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="93"/>
         <location filename="build/ui_cdlgselectdatacoding.h" line="101"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="98"/>
         <location filename="build/ui_cdlgselectdatacoding.h" line="102"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="103"/>
         <location filename="build/ui_cdlgselectdatacoding.h" line="103"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdatacoding.ui" line="108"/>
         <location filename="build/ui_cdlgselectdatacoding.h" line="104"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3805,7 +3836,7 @@ and the flag bits for the. the driver.
     <name>CDlgSelectDate</name>
     <message>
         <location filename="src/cdlgselectdate.ui" line="14"/>
-        <location filename="build/ui_cdlgselectdate.h" line="251"/>
+        <location filename="build/ui_cdlgselectdate.h" line="271"/>
         <source>Select date</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3816,12 +3847,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="183"/>
         <location filename="src/cdlgselectdate.ui" line="222"/>
         <location filename="src/cdlgselectdate.ui" line="347"/>
-        <location filename="build/ui_cdlgselectdate.h" line="252"/>
-        <location filename="build/ui_cdlgselectdate.h" line="260"/>
-        <location filename="build/ui_cdlgselectdate.h" line="269"/>
-        <location filename="build/ui_cdlgselectdate.h" line="278"/>
-        <location filename="build/ui_cdlgselectdate.h" line="286"/>
+        <location filename="build/ui_cdlgselectdate.h" line="272"/>
+        <location filename="build/ui_cdlgselectdate.h" line="280"/>
+        <location filename="build/ui_cdlgselectdate.h" line="289"/>
         <location filename="build/ui_cdlgselectdate.h" line="298"/>
+        <location filename="build/ui_cdlgselectdate.h" line="306"/>
+        <location filename="build/ui_cdlgselectdate.h" line="318"/>
         <source>Don&apos;t care</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3832,12 +3863,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="188"/>
         <location filename="src/cdlgselectdate.ui" line="227"/>
         <location filename="src/cdlgselectdate.ui" line="352"/>
-        <location filename="build/ui_cdlgselectdate.h" line="253"/>
-        <location filename="build/ui_cdlgselectdate.h" line="261"/>
-        <location filename="build/ui_cdlgselectdate.h" line="270"/>
-        <location filename="build/ui_cdlgselectdate.h" line="279"/>
-        <location filename="build/ui_cdlgselectdate.h" line="287"/>
+        <location filename="build/ui_cdlgselectdate.h" line="273"/>
+        <location filename="build/ui_cdlgselectdate.h" line="281"/>
+        <location filename="build/ui_cdlgselectdate.h" line="290"/>
         <location filename="build/ui_cdlgselectdate.h" line="299"/>
+        <location filename="build/ui_cdlgselectdate.h" line="307"/>
+        <location filename="build/ui_cdlgselectdate.h" line="319"/>
         <source>Equal to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3848,12 +3879,12 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="193"/>
         <location filename="src/cdlgselectdate.ui" line="232"/>
         <location filename="src/cdlgselectdate.ui" line="357"/>
-        <location filename="build/ui_cdlgselectdate.h" line="254"/>
-        <location filename="build/ui_cdlgselectdate.h" line="262"/>
-        <location filename="build/ui_cdlgselectdate.h" line="271"/>
-        <location filename="build/ui_cdlgselectdate.h" line="280"/>
-        <location filename="build/ui_cdlgselectdate.h" line="288"/>
+        <location filename="build/ui_cdlgselectdate.h" line="274"/>
+        <location filename="build/ui_cdlgselectdate.h" line="282"/>
+        <location filename="build/ui_cdlgselectdate.h" line="291"/>
         <location filename="build/ui_cdlgselectdate.h" line="300"/>
+        <location filename="build/ui_cdlgselectdate.h" line="308"/>
+        <location filename="build/ui_cdlgselectdate.h" line="320"/>
         <source>Not qual to</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3864,13 +3895,13 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="198"/>
         <location filename="src/cdlgselectdate.ui" line="237"/>
         <location filename="src/cdlgselectdate.ui" line="362"/>
-        <location filename="build/ui_cdlgselectdate.h" line="255"/>
-        <location filename="build/ui_cdlgselectdate.h" line="263"/>
-        <location filename="build/ui_cdlgselectdate.h" line="272"/>
-        <location filename="build/ui_cdlgselectdate.h" line="281"/>
-        <location filename="build/ui_cdlgselectdate.h" line="289"/>
+        <location filename="build/ui_cdlgselectdate.h" line="275"/>
+        <location filename="build/ui_cdlgselectdate.h" line="283"/>
+        <location filename="build/ui_cdlgselectdate.h" line="292"/>
         <location filename="build/ui_cdlgselectdate.h" line="301"/>
-        <source>Greater than</source>
+        <location filename="build/ui_cdlgselectdate.h" line="309"/>
+        <location filename="build/ui_cdlgselectdate.h" line="321"/>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3880,13 +3911,13 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="203"/>
         <location filename="src/cdlgselectdate.ui" line="242"/>
         <location filename="src/cdlgselectdate.ui" line="367"/>
-        <location filename="build/ui_cdlgselectdate.h" line="256"/>
-        <location filename="build/ui_cdlgselectdate.h" line="264"/>
-        <location filename="build/ui_cdlgselectdate.h" line="273"/>
-        <location filename="build/ui_cdlgselectdate.h" line="282"/>
-        <location filename="build/ui_cdlgselectdate.h" line="290"/>
+        <location filename="build/ui_cdlgselectdate.h" line="276"/>
+        <location filename="build/ui_cdlgselectdate.h" line="284"/>
+        <location filename="build/ui_cdlgselectdate.h" line="293"/>
         <location filename="build/ui_cdlgselectdate.h" line="302"/>
-        <source>Greater than or equal to</source>
+        <location filename="build/ui_cdlgselectdate.h" line="310"/>
+        <location filename="build/ui_cdlgselectdate.h" line="322"/>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3896,13 +3927,13 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="208"/>
         <location filename="src/cdlgselectdate.ui" line="247"/>
         <location filename="src/cdlgselectdate.ui" line="372"/>
-        <location filename="build/ui_cdlgselectdate.h" line="257"/>
-        <location filename="build/ui_cdlgselectdate.h" line="265"/>
-        <location filename="build/ui_cdlgselectdate.h" line="274"/>
-        <location filename="build/ui_cdlgselectdate.h" line="283"/>
-        <location filename="build/ui_cdlgselectdate.h" line="291"/>
+        <location filename="build/ui_cdlgselectdate.h" line="277"/>
+        <location filename="build/ui_cdlgselectdate.h" line="285"/>
+        <location filename="build/ui_cdlgselectdate.h" line="294"/>
         <location filename="build/ui_cdlgselectdate.h" line="303"/>
-        <source>Less than</source>
+        <location filename="build/ui_cdlgselectdate.h" line="311"/>
+        <location filename="build/ui_cdlgselectdate.h" line="323"/>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3912,60 +3943,60 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectdate.ui" line="213"/>
         <location filename="src/cdlgselectdate.ui" line="252"/>
         <location filename="src/cdlgselectdate.ui" line="377"/>
-        <location filename="build/ui_cdlgselectdate.h" line="258"/>
-        <location filename="build/ui_cdlgselectdate.h" line="266"/>
-        <location filename="build/ui_cdlgselectdate.h" line="275"/>
-        <location filename="build/ui_cdlgselectdate.h" line="284"/>
-        <location filename="build/ui_cdlgselectdate.h" line="292"/>
+        <location filename="build/ui_cdlgselectdate.h" line="278"/>
+        <location filename="build/ui_cdlgselectdate.h" line="286"/>
+        <location filename="build/ui_cdlgselectdate.h" line="295"/>
         <location filename="build/ui_cdlgselectdate.h" line="304"/>
-        <source>Less than or equal to</source>
+        <location filename="build/ui_cdlgselectdate.h" line="312"/>
+        <location filename="build/ui_cdlgselectdate.h" line="324"/>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="123"/>
-        <location filename="build/ui_cdlgselectdate.h" line="268"/>
+        <location filename="build/ui_cdlgselectdate.h" line="288"/>
         <source>Day</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="172"/>
-        <location filename="build/ui_cdlgselectdate.h" line="277"/>
+        <location filename="build/ui_cdlgselectdate.h" line="297"/>
         <source>Second</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="270"/>
-        <location filename="build/ui_cdlgselectdate.h" line="294"/>
+        <location filename="build/ui_cdlgselectdate.h" line="314"/>
         <source>Hour</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="286"/>
-        <location filename="build/ui_cdlgselectdate.h" line="295"/>
+        <location filename="build/ui_cdlgselectdate.h" line="315"/>
         <source>Year</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="296"/>
-        <location filename="build/ui_cdlgselectdate.h" line="296"/>
+        <location filename="build/ui_cdlgselectdate.h" line="316"/>
         <source>Minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="306"/>
-        <location filename="build/ui_cdlgselectdate.h" line="297"/>
+        <location filename="build/ui_cdlgselectdate.h" line="317"/>
         <source>Month</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="414"/>
-        <location filename="build/ui_cdlgselectdate.h" line="306"/>
+        <location filename="build/ui_cdlgselectdate.h" line="326"/>
         <source>00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectdate.ui" line="427"/>
-        <location filename="build/ui_cdlgselectdate.h" line="307"/>
+        <location filename="build/ui_cdlgselectdate.h" line="327"/>
         <source>--&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4119,7 +4150,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="709"/>
         <location filename="build/ui_cdlgselectguid.h" line="720"/>
         <location filename="build/ui_cdlgselectguid.h" line="729"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4127,7 +4158,7 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectguid.ui" line="105"/>
         <location filename="src/cdlgselectguid.ui" line="154"/>
         <location filename="src/cdlgselectguid.ui" line="193"/>
-        <location filename="src/cdlgselectguid.ui" line="252"/>
+        <location filename="src/cdlgselectguid.ui" line="257"/>
         <location filename="src/cdlgselectguid.ui" line="291"/>
         <location filename="src/cdlgselectguid.ui" line="340"/>
         <location filename="src/cdlgselectguid.ui" line="435"/>
@@ -4143,7 +4174,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="604"/>
         <location filename="build/ui_cdlgselectguid.h" line="613"/>
         <location filename="build/ui_cdlgselectguid.h" line="621"/>
-        <location filename="build/ui_cdlgselectguid.h" line="631"/>
+        <location filename="build/ui_cdlgselectguid.h" line="632"/>
         <location filename="build/ui_cdlgselectguid.h" line="639"/>
         <location filename="build/ui_cdlgselectguid.h" line="647"/>
         <location filename="build/ui_cdlgselectguid.h" line="657"/>
@@ -4155,7 +4186,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="710"/>
         <location filename="build/ui_cdlgselectguid.h" line="721"/>
         <location filename="build/ui_cdlgselectguid.h" line="730"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4163,7 +4194,7 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgselectguid.ui" line="110"/>
         <location filename="src/cdlgselectguid.ui" line="159"/>
         <location filename="src/cdlgselectguid.ui" line="198"/>
-        <location filename="src/cdlgselectguid.ui" line="257"/>
+        <location filename="src/cdlgselectguid.ui" line="252"/>
         <location filename="src/cdlgselectguid.ui" line="296"/>
         <location filename="src/cdlgselectguid.ui" line="345"/>
         <location filename="src/cdlgselectguid.ui" line="440"/>
@@ -4179,7 +4210,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="605"/>
         <location filename="build/ui_cdlgselectguid.h" line="614"/>
         <location filename="build/ui_cdlgselectguid.h" line="622"/>
-        <location filename="build/ui_cdlgselectguid.h" line="632"/>
+        <location filename="build/ui_cdlgselectguid.h" line="631"/>
         <location filename="build/ui_cdlgselectguid.h" line="640"/>
         <location filename="build/ui_cdlgselectguid.h" line="648"/>
         <location filename="build/ui_cdlgselectguid.h" line="658"/>
@@ -4191,7 +4222,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="711"/>
         <location filename="build/ui_cdlgselectguid.h" line="722"/>
         <location filename="build/ui_cdlgselectguid.h" line="731"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4227,7 +4258,7 @@ and the flag bits for the. the driver.
         <location filename="build/ui_cdlgselectguid.h" line="712"/>
         <location filename="build/ui_cdlgselectguid.h" line="723"/>
         <location filename="build/ui_cdlgselectguid.h" line="732"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4432,25 +4463,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectunit.ui" line="61"/>
         <location filename="build/ui_cdlgselectunit.h" line="100"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectunit.ui" line="66"/>
         <location filename="build/ui_cdlgselectunit.h" line="101"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectunit.ui" line="71"/>
         <location filename="build/ui_cdlgselectunit.h" line="102"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectunit.ui" line="76"/>
         <location filename="build/ui_cdlgselectunit.h" line="103"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4495,25 +4526,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="77"/>
         <location filename="build/ui_cdlgselectmeasurementvalue.h" line="100"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="82"/>
         <location filename="build/ui_cdlgselectmeasurementvalue.h" line="101"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="87"/>
         <location filename="build/ui_cdlgselectmeasurementvalue.h" line="102"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectmeasurementvalue.ui" line="92"/>
         <location filename="build/ui_cdlgselectmeasurementvalue.h" line="103"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4546,25 +4577,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectobid.ui" line="61"/>
         <location filename="build/ui_cdlgselectobid.h" line="99"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectobid.ui" line="66"/>
         <location filename="build/ui_cdlgselectobid.h" line="100"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectobid.ui" line="71"/>
         <location filename="build/ui_cdlgselectobid.h" line="101"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectobid.ui" line="76"/>
         <location filename="build/ui_cdlgselectobid.h" line="102"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4714,25 +4745,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="77"/>
         <location filename="build/ui_cdlgselectsensorindex.h" line="100"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="82"/>
         <location filename="build/ui_cdlgselectsensorindex.h" line="101"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="87"/>
         <location filename="build/ui_cdlgselectsensorindex.h" line="102"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselectsensorindex.ui" line="92"/>
         <location filename="build/ui_cdlgselectsensorindex.h" line="103"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4771,25 +4802,25 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="61"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="99"/>
-        <source>Greater than</source>
+        <source>Less than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="66"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="100"/>
-        <source>Greater than or equal to</source>
+        <source>Less than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="71"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="101"/>
-        <source>Less than</source>
+        <source>Greater than</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgselecttimestamp.ui" line="76"/>
         <location filename="build/ui_cdlgselecttimestamp.h" line="102"/>
-        <source>Less than or equal to</source>
+        <source>Greater than or equal to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

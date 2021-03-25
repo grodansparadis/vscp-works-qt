@@ -164,7 +164,9 @@ public:
 
     // Data constraint handling
     bool addDataConstraint(uint16_t pos, uint8_t val, constraint chk = constraint::ANY);
+    void addDataConstraints(const std::deque<uint32_t>& listData);
     bool removeDataConstraint(uint16_t pos);
+    std::deque<uint32_t> getDataConstraints(void);
     bool isDataAccepted(const vscpEvent *pev);
 
     // Data size constraint handling
@@ -196,7 +198,7 @@ public:
     bool removeTimeStampConstraint(void);
     bool isTimeStampAccepted(const vscpEvent *pev);
     uint32_t getTimeStampValue(void) { return m_timestamp; }
-    constraint getTimeStampConstraint(void) { return m_constraint_timestamp; }
+    constraint getTimeStampConstraint(void) { return m_constraint_timestamp; }    
 
  private:
 
@@ -269,7 +271,7 @@ public:
         Date (no data is all) 
         pos -> chk(8) : val(16)         
     */
-    std::map<uint8_t,uint32_t> m_mapDate;
+    std::map<uint8_t,uint32_t> m_mapDateTime;
 
     /*! 
         Must be Level I event if set, don't care if not

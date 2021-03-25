@@ -77,6 +77,12 @@ CSessionFilter::~CSessionFilter()
     
 }
 
+
+
+// ----------------------------------------------------------------------------
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // addClassConstraint
 //
@@ -119,6 +125,13 @@ std::deque<uint16_t> CSessionFilter::getClasses(void)
     }
     return listClasses;
 }
+
+
+
+// ----------------------------------------------------------------------------
+
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // addTypeConstraint
@@ -163,77 +176,11 @@ std::deque<uint32_t> CSessionFilter::getTypes(void)
     return listTypes;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// addDataConstraint
-//
 
-bool CSessionFilter::addDataConstraint(uint16_t pos, uint8_t val, constraint chk)
-{
-    // pos(16) -> chk(8) : val (8) 
-    m_mapData[pos] = (((uint16_t)chk) << 16) + val;
-    return true;
-}
 
-///////////////////////////////////////////////////////////////////////////////
-// removeDataConstraint
-//
+// ----------------------------------------------------------------------------
 
-bool CSessionFilter::removeDataConstraint(uint16_t pos)
-{
-    m_mapData.erase(pos);
-    return true;
-}
 
-///////////////////////////////////////////////////////////////////////////////
-// isDataAccepted
-//
-
-bool CSessionFilter::isDataAccepted(const vscpEvent *pev)
-{
-    // No data is a negative match
-    if (!pev->sizeData || (nullptr == pev->pdata)) return false;
-
-    if ( m_mapData.size() ) {
-        for (auto const& item : m_mapData) {
-
-            uint16_t pos = item.first;
-            uint8_t chk = (item.second >> 16) & 0xff;
-            uint8_t val = item.second & 0xff;
-
-            // Data size less then positive is a negative match
-            if (pos >= pev->sizeData) return false;
-
-            constraint op = static_cast<constraint>(chk);
-            switch(op) {
-                case constraint::NEQ:
-                    if (!(val != pev->pdata[pos])) return false;
-                    break;
-
-                case constraint::EQ:
-                    if (!(val == pev->pdata[pos])) return false;
-                    break;
-
-                case constraint::LT:
-                    if (!(val < pev->pdata[pos])) return false;
-                    break;
-
-                case constraint::LTEQ:
-                    if (!(val <= pev->pdata[pos])) return false;
-                    break; 
-
-                case constraint::GT:
-                    if (!(val > pev->pdata[pos])) return false;
-                    break;
-
-                case constraint::GTEQ:
-                    if (!(val >= pev->pdata[pos])) return false;
-                    break;                    
-            } 
-        }
-    }
-
-    return true;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // addGuidConstraint
@@ -317,6 +264,14 @@ CSessionFilter::getGuids(void)
     return listGuid;   
 }
 
+
+
+
+// ----------------------------------------------------------------------------
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // addDateConstraint
 //
@@ -324,7 +279,7 @@ CSessionFilter::getGuids(void)
 bool CSessionFilter::addDateConstraint(uint8_t pos, uint16_t val, constraint chk)
 {
     if (pos > 7) return false;
-    m_mapDate[pos] = (static_cast<uint32_t>(chk) << 16) + val;
+    m_mapDateTime[pos] = (static_cast<uint32_t>(chk) << 16) + val;
     return true;
 }
 
@@ -335,7 +290,7 @@ bool CSessionFilter::addDateConstraint(uint8_t pos, uint16_t val, constraint chk
 uint32_t CSessionFilter::getDateConstraint(uint8_t pos)
 {
     if (pos > 7) return 0;
-    return m_mapDate[pos];
+    return m_mapDateTime[pos];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -344,7 +299,7 @@ uint32_t CSessionFilter::getDateConstraint(uint8_t pos)
 
 bool CSessionFilter::removeDateConstraint(uint8_t pos)
 {
-    m_mapDate.erase(pos);
+    m_mapDateTime.erase(pos);
     return true;
 }
 
@@ -354,9 +309,9 @@ bool CSessionFilter::removeDateConstraint(uint8_t pos)
 
 bool CSessionFilter::isDateAccepted(const vscpEvent *pev)
 {
-    if (m_mapDate.size()) {
+    if (m_mapDateTime.size()) {
 
-        for (auto const& item : m_mapDate) {
+        for (auto const& item : m_mapDateTime) {
 
             uint8_t pos = item.first;
             constraint chk = static_cast<constraint>((item.second >> 16) & 0xff);
@@ -406,6 +361,12 @@ bool CSessionFilter::isDateAccepted(const vscpEvent *pev)
     return true;
 }
 
+
+
+// ----------------------------------------------------------------------------
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // addObidConstraint
 //
@@ -440,6 +401,10 @@ bool CSessionFilter::isObidAccepted(const vscpEvent *pev)
 
     return true;
 }
+
+
+// ----------------------------------------------------------------------------
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // addTimeStampConstraint
@@ -476,6 +441,85 @@ bool CSessionFilter::isTimeStampAccepted(const vscpEvent *pev)
     return true;
 }
 
+
+// ----------------------------------------------------------------------------
+
+
+///////////////////////////////////////////////////////////////////////////////
+// addDataConstraints
+//
+
+void CSessionFilter::addDataConstraints(const std::deque<uint32_t>& listData)
+{
+    m_mapData.clear();
+
+    // listData: pos (16) : op (8) : value (8)     
+    for (int i=0; i< listData.size(); i++) {
+        uint16_t pos = (listData[i] >> 16) & 0x1ff;
+        // map: pos (16) -> op (8) : value (8) 
+        m_mapData[pos] = listData[i] & 0x1fffffff;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDataConstraints
+//
+
+std::deque<uint32_t> CSessionFilter::getDataConstraints(void)
+{
+    std::deque<uint32_t> listData;
+    for (auto const& item : m_mapData) {
+        // listData: pos (16) : op (8) : value (8
+        listData.push_back(item.second);
+    }
+    return listData;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addDataConstraint
+//
+
+bool CSessionFilter::addDataConstraint(uint16_t pos, uint8_t val, constraint chk)
+{
+    // pos(16) -> chk(8) : val (8) 
+    m_mapData[pos] = (((uint16_t)chk) << 16) + val;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// removeDataConstraint
+//
+
+bool CSessionFilter::removeDataConstraint(uint16_t pos)
+{
+    m_mapData.erase(pos);
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isDataAccepted
+//
+
+bool CSessionFilter::isDataAccepted(const vscpEvent *pev)
+{
+    for (auto const& item : m_mapData) {
+        
+        // If data pos > size - no match
+        if (pev->sizeData >= item.first) {
+            return false;
+        }
+
+        if (!checkValue( item.second & 0xff,
+                            pev->pdata[item.first],
+                            static_cast<constraint>((item.second >> 8) & 0xff))) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
 // ----------------------------------------------------------------------------
 
 
@@ -484,9 +528,9 @@ bool CSessionFilter::isTimeStampAccepted(const vscpEvent *pev)
 // checkValue
 //
 
-bool CSessionFilter::checkValue(uint32_t val, 
-                                uint32_t evval, 
-                                constraint chk)
+bool CSessionFilter::checkValue(uint32_t val,
+                                    uint32_t evval,
+                                    constraint chk)
 {
     switch (chk) { 
         case constraint::NEQ:
@@ -581,7 +625,7 @@ bool CSessionFilter::check(const vscpEvent *pev)
     // Byte 1/2
     //    Value
 
-    if (m_mapDate.size()) {
+    if (m_mapDateTime.size()) {
         if (!isDateAccepted(pev)) return false;        
     }
 

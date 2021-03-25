@@ -47,7 +47,27 @@ public:
     ~CDlgSelectData();
 
 public:
+
+    /*!
+        Add value to list
+        @param pos Position for value to add
+        @param value Value to add
+        @param op Constraint value
+    */
+    void addValue(uint16_t pos, uint8_t value, uint8_t op);
     
+    /*! 
+        Set data 
+        @param listData List with defined values (pos(8):op(8):value(8))
+
+    */
+    void setData(std::deque<uint32_t> listData);
+
+    /*!
+        Get data
+        @return List with defined values (pos(8):op(8):value(8))
+    */
+    std::deque<uint32_t> getData(void);
 
 private slots:
 

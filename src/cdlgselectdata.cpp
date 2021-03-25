@@ -48,11 +48,7 @@ CDlgSelectData::CDlgSelectData(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->btnAddValue, &QPushButton::clicked, this, &CDlgSelectData::onAddValue );
-    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSelectData::onDeleteValue ); 
-
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectData::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectData::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectData::onSetPwKeyFile );   
+    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSelectData::onDeleteValue );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,31 +64,15 @@ CDlgSelectData::~CDlgSelectData()
 // ----------------------------------------------------------------------------
 
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // onAddValue
 //
 
-void CDlgSelectData::onAddValue(void)
+void CDlgSelectData::addValue(uint16_t pos, uint8_t value, uint8_t op)
 {
-    // op : val : pos
-    // Check if there is a value for the position already
-    for (int i=0; i < ui->listValues->count(); i++) {
-        QListWidgetItem * item = ui->listValues->item(i);
-        if ((item->data(Qt::UserRole).toUInt() & 0xff) == ui->spinPos->value()) {
-            QMessageBox::information(this, 
-                        tr("vscpworks+"),
-                        tr("Data for this data item is already set. Delete item first to set a new value."),
-                        QMessageBox::Ok );
-            return;
-        }       
-    }
-
     QString str;
-    uint8_t value = vscp_readStringValue(ui->editDataValue->text().toStdString());
-    uint8_t pos = ui->spinPos->value();
         
-    switch (ui->comboCompareConstraint->currentIndex()) {
+    switch (op) {
         
         default:
         case 0:
@@ -127,12 +107,36 @@ void CDlgSelectData::onAddValue(void)
     QListWidgetItem *newitem = new QListWidgetItem;
     if (nullptr == newitem) return;
     
-    newitem->setText(str.arg(ui->spinPos->value()).arg(value));
+    newitem->setText(str.arg(pos).arg(value));
     newitem->setData(Qt::UserRole, 
-                        (((uint32_t)ui->comboCompareConstraint->currentIndex()) << 16) + 
-                        (((uint32_t)value) << 8) + 
-                        pos);                  
-    ui->listValues->addItem(newitem);                        
+                        (((uint32_t)pos) << 16) +                                           // pos
+                        (((uint32_t)ui->comboCompareConstraint->currentIndex()) << 8) +     // op
+                        value);                                                             // value
+    ui->listValues->addItem(newitem); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onAddValue
+//
+
+void CDlgSelectData::onAddValue(void)
+{
+    // op : val : pos
+    // Check if there is a value for the position already
+    for (int i=0; i < ui->listValues->count(); i++) {
+        QListWidgetItem * item = ui->listValues->item(i);
+        if ((item->data(Qt::UserRole).toUInt() & 0xff) == ui->spinPos->value()) {
+            QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("Data for this data item is already set. Delete item first to set a new value."),
+                        QMessageBox::Ok );
+            return;
+        }       
+    }
+
+    addValue(ui->spinPos->value(),
+                (uint8_t)vscp_readStringValue(ui->editDataValue->text().toStdString()),
+                ui->comboCompareConstraint->currentIndex());                       
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,4 +151,34 @@ void CDlgSelectData::onDeleteValue(void)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// setData
+//
+
+void CDlgSelectData::setData(std::deque<uint32_t> listData)
+{
+    for (int i=0; i < listData.size(); i++) {
+        // listData: pos (16) : op (8) : value (8)
+        qDebug() << listData[i];
+        addValue((listData[i] >> 16) & 0x1ff,   // pos
+                    listData[i] & 0xff,         // value
+                    (listData[i] >> 8) & 0xff); // opt
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getData
+//
+
+std::deque<uint32_t> CDlgSelectData::getData(void)
+{
+    std::deque<uint32_t> listData;
+    // listData: pos (16) : op (8) : value (8)
+    for (int i=0; i < ui->listValues->count(); i++) {
+        QListWidgetItem *item = ui->listValues->item(i);
+        uint32_t addData = item->data(Qt::UserRole).toUInt();
+        listData.push_back(addData);
+    }
+    return listData;
+}
 

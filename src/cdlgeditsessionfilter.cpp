@@ -761,10 +761,15 @@ void CDlgEditSessionFilter::addConstraintData(void)
     // Data content
     CDlgSelectData dlg;
 
-
-
     if (QDialog::Accepted == dlg.exec()) {
 
+        std::deque<uint32_t> listData = dlg.getData();
+        m_sessionFilter.addDataConstraints(listData);
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_data);
+        item->setText(tr("07 - Must be specific data"));
+        ui->listConstraints->addItem(item);
         
     }
 }
@@ -775,7 +780,18 @@ void CDlgEditSessionFilter::addConstraintData(void)
 
 void CDlgEditSessionFilter::editConstraintData(void)
 {
+    // Data content
+    CDlgSelectData dlg;
 
+    std::deque<uint32_t> listData = m_sessionFilter.getDataConstraints();
+    dlg.setData(listData);
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        std::deque<uint32_t> listData = dlg.getData();
+        m_sessionFilter.addDataConstraints(listData);
+        
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -796,6 +812,12 @@ void CDlgEditSessionFilter::addConstraintDataSize(void)
     // Data size
     CDlgSelectDataSize dlg;
     if (QDialog::Accepted == dlg.exec()) {
+
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_data_size);
+        item->setText(tr("08 - Must be specific data size"));
+        ui->listConstraints->addItem(item);
 
     }
 }
@@ -824,9 +846,23 @@ void CDlgEditSessionFilter::addConstraintPriority(void)
         return;                               
     }
 
+    if (isConstraintDefined(CSessionFilter::type_priority)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
     // Priority
     CDlgSelectPriority dlg;
     if (QDialog::Accepted == dlg.exec()) {
+
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setData(role_constraint_type, CSessionFilter::type_data);
+        item->setText(tr("09 - Must be specific data priority"));
+        ui->listConstraints->addItem(item);
 
     }
 }
@@ -846,6 +882,15 @@ void CDlgEditSessionFilter::editConstraintPriority(void)
 
 void CDlgEditSessionFilter::addConstraintMeasurement(void)
 {
+    if (isConstraintDefined(CSessionFilter::type_must_be_measurement)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
     // Must be mesurement
     // Must be Level II event (no meaning to have both)
     if (!(isConstraintDefined(CSessionFilter::type_must_be_measurement))) {
@@ -870,7 +915,7 @@ void CDlgEditSessionFilter::addConstraintMeasurement(void)
 
 void CDlgEditSessionFilter::editConstraintMeasurement(void)
 {
-
+    // No edit to do
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -879,6 +924,15 @@ void CDlgEditSessionFilter::editConstraintMeasurement(void)
 
 void CDlgEditSessionFilter::addConstraintSensorIndex(void)
 {
+    if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
+        // This constraint is already set
+        QMessageBox::information(this, 
+                        tr("vscpworks+"),
+                        tr("This constraint is already set. Use edit instead of add."),
+                        QMessageBox::Ok );
+        return;                               
+    }
+
     if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
         // This constraint is already set
         QMessageBox::information(this, 
