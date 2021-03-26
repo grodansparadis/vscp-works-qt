@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectdatasize.h"
 #include "ui_cdlgselectdatasize.h"
 
@@ -40,13 +47,7 @@ CDlgSelectDataSize::CDlgSelectDataSize(QWidget *parent) :
         QDialog(parent),
     ui(new Ui::CDlgSelectDataSize)
 {
-    ui->setupUi(this);
-
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+    ui->setupUi(this);  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,26 +60,48 @@ CDlgSelectDataSize::~CDlgSelectDataSize()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// getDataSizeValue
+//
+
+uint16_t CDlgSelectDataSize::getDataSizeValue(void)
+{
+    return vscp_readStringValue(ui->editDataSize->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDataSizeValue
+//
+
+void CDlgSelectDataSize::setDataSizeValue(uint16_t value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+    ui->editDataSize->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDataSizeConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDataSize::getDataSizeConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboCompareDataSize->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDataSizeConstraint
+//
+
+void CDlgSelectDataSize::setDataSizeConstraint(CSessionFilter::constraint op)
+{
+    ui->comboCompareDataSize->setCurrentIndex(static_cast<int>(op));
+}
+
 
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

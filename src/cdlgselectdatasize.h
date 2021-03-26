@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTDATASIZE_H
 #define CDLGSELECTDATASIZE_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -48,6 +49,17 @@ public:
 
 public:
     
+    /// Get set data size value
+    uint16_t getDataSizeValue();
+
+    /// Set data size value
+    void setDataSizeValue(uint16_t value);
+
+    /// Get set data size constraint
+    CSessionFilter::constraint getDataSizeConstraint();
+
+    /// Set data size constraint
+    void setDataSizeConstraint(CSessionFilter::constraint op);
 
 private slots:
     

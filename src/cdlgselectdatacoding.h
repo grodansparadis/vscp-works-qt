@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTDATACODING_H
 #define CDLGSELECTDATACODING_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -47,7 +48,17 @@ public:
     ~CDlgSelectDataCoding();
 
 public:
-    
+    /// Get set data coding value
+    uint8_t getDataCodingValue();
+
+    /// Set data coding value
+    void setDataCodingValue(uint8_t value);
+
+    /// Get set data coding constraint
+    CSessionFilter::constraint getDataCodingConstraint();
+
+    /// Set data coding constraint
+    void setDataCodingConstraint(CSessionFilter::constraint op);
 
 private slots:
     

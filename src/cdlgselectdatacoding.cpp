@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectdatacoding.h"
 #include "ui_cdlgselectdatacoding.h"
 
@@ -42,11 +49,6 @@ CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,26 +61,47 @@ CDlgSelectDataCoding::~CDlgSelectDataCoding()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// getDataCodingValue
+//
+
+uint8_t CDlgSelectDataCoding::getDataCodingValue(void)
+{
+    return vscp_readStringValue(ui->editDataCoding->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDataCodingValue
+//
+
+void CDlgSelectDataCoding::setDataCodingValue(uint8_t value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+    ui->editDataCoding->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getDataCodingConstraint
+//
+
+CSessionFilter::constraint CDlgSelectDataCoding::getDataCodingConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboCompareDataCoding->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setDataCodingConstraint
+//
+
+void CDlgSelectDataCoding::setDataCodingConstraint(CSessionFilter::constraint op)
+{
+    ui->comboCompareDataCoding->setCurrentIndex(static_cast<int>(op));
+}
 
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

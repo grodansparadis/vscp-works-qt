@@ -518,7 +518,73 @@ bool CSessionFilter::isDataAccepted(const vscpEvent *pev)
     return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// setDataSizeConstraint
+//
 
+bool CSessionFilter::addDataSizeConstraint(uint16_t size, constraint chk)
+{
+    if (size > 511) size = 511;
+    m_data_size = size;
+    m_constraint_data_size = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addPriorityConstraint
+//
+
+bool CSessionFilter::addPriorityConstraint(uint8_t priority, constraint chk)
+{
+    if (priority > 7) m_priority = 7;
+    m_priority = priority;
+    m_constraint_priority = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addPriorityConstraint
+//
+
+bool CSessionFilter::addSensorIndexConstraint(uint8_t sensor_index, constraint chk)
+{
+    m_sensor_index = sensor_index;
+    m_constraint_sensor_index = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addMeasurementValueConstraint
+//
+
+bool CSessionFilter::addMeasurementValueConstraint(double value, constraint chk)
+{
+    m_value = value;
+    m_constraint_value = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addMeasurementUnitConstraint
+//
+
+bool CSessionFilter::addMeasurementUnitConstraint(uint8_t unit, constraint chk)
+{
+    m_unit = unit;
+    m_constraint_unit = chk;
+    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addMeasurementDataCodingConstraint
+//
+
+bool CSessionFilter::addMeasurementDataCodingConstraint(uint8_t coding, constraint chk)
+{
+    m_data_coding = coding;
+    m_constraint_data_coding = chk;
+    return true;
+}
 
 // ----------------------------------------------------------------------------
 

@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTUNIT_H
 #define CDLGSELECTUNIT_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -47,7 +48,17 @@ public:
     ~CDlgSelectMeasurementUnit();
 
 public:
-    
+    /// Get set Unit value
+    uint8_t getMeasurementUnitValue();
+
+    /// Set Unit value
+    void setMeasurementUnitValue(uint8_t value);
+
+    /// Get unit constraint
+    CSessionFilter::constraint getMeasurementUnitConstraint();
+
+    /// Set Priority constraint
+    void setMeasurementUnitConstraint(CSessionFilter::constraint op);
 
 private slots:
     

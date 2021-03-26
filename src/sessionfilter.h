@@ -172,7 +172,7 @@ public:
     // Data size constraint handling
     constraint getDataSizeConstraint(void) { return m_constraint_data_size; };
     uint16_t getDataSizeValue(void) { return m_data_size; };
-    bool setDataSizeConstraint(uint16_t size, uint16_t val, constraint chk = constraint::ANY);
+    bool addDataSizeConstraint(uint16_t size, constraint chk = constraint::ANY);
 
     // GUID constraint handling
     bool addGuidConstraint(uint8_t pos, uint8_t val, constraint chk = constraint::ANY);
@@ -200,6 +200,30 @@ public:
     uint32_t getTimeStampValue(void) { return m_timestamp; }
     constraint getTimeStampConstraint(void) { return m_constraint_timestamp; }    
 
+    // Priority constraint handling
+    constraint getPriorityConstraint(void) { return m_constraint_priority; };
+    uint16_t getPriorityValue(void) { return m_priority; };
+    bool addPriorityConstraint(uint8_t priority, constraint chk = constraint::ANY);
+
+    // Sensor index constraint handling
+    constraint getSensorIndexConstraint(void) { return m_constraint_sensor_index; };
+    uint16_t getSensorIndexValue(void) { return m_sensor_index; };
+    bool addSensorIndexConstraint(uint8_t size, constraint chk = constraint::ANY);
+
+    // Measurement value constraint handling
+    constraint getMeasurementValueConstraint(void) { return m_constraint_value; };
+    double getMeasurementValue(void) { return m_value; };
+    bool addMeasurementValueConstraint(double value, constraint chk = constraint::ANY);
+
+    // Measurement unit constraint handling
+    constraint getMeasurementUnitConstraint(void) { return m_constraint_unit; };
+    uint8_t getMeasurementUnit(void) { return m_unit; };
+    bool addMeasurementUnitConstraint(uint8_t unit, constraint chk = constraint::ANY);
+
+    // Measurement data coding constraint handling
+    constraint getMeasurementDataCodingConstraint(void) { return m_constraint_data_coding; };
+    uint8_t getMeasurementDataCoding(void) { return m_data_coding; };
+    bool addMeasurementDataCodingConstraint(uint8_t coding, constraint chk = constraint::ANY);
  private:
 
     /*!
@@ -245,6 +269,13 @@ public:
     */
     constraint m_constraint_data_size;
     uint16_t m_data_size;
+
+    /*!
+        Priority constraint. Inverted for deny 
+        size : value
+    */
+    constraint m_constraint_priority;
+    uint8_t m_priority;
 
 
     /*!

@@ -23,7 +23,7 @@
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// SOFTWARE. 
 //
 
 #ifndef CDLGSELECTOBID_H
@@ -51,7 +51,7 @@ public:
     /// Get set OBID value
     uint32_t getObidValue();
 
-    /// Set OOBID value
+    /// Set OBID value
     void setObidValue(uint32_t value);
 
     /// Get set OBID constraint

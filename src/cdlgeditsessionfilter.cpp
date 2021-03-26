@@ -811,8 +811,12 @@ void CDlgEditSessionFilter::addConstraintDataSize(void)
 
     // Data size
     CDlgSelectDataSize dlg;
+
+
+
     if (QDialog::Accepted == dlg.exec()) {
 
+        m_sessionFilter.addDataSizeConstraint(dlg.getDataSizeValue(), dlg.getDataSizeConstraint());
 
         QListWidgetItem *item = new QListWidgetItem();
         item->setData(role_constraint_type, CSessionFilter::type_data_size);
@@ -828,7 +832,17 @@ void CDlgEditSessionFilter::addConstraintDataSize(void)
 
 void CDlgEditSessionFilter::editConstraintDataSize(void)
 {
+    // Data size
+    CDlgSelectDataSize dlg;
 
+        dlg.setDataSizeValue(m_sessionFilter.getDataSizeValue());
+        dlg.setDataSizeConstraint(m_sessionFilter.getDataSizeConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addDataSizeConstraint(dlg.getDataSizeValue(), dlg.getDataSizeConstraint());
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -846,18 +860,11 @@ void CDlgEditSessionFilter::addConstraintPriority(void)
         return;                               
     }
 
-    if (isConstraintDefined(CSessionFilter::type_priority)) {
-        // This constraint is already set
-        QMessageBox::information(this, 
-                        tr("vscpworks+"),
-                        tr("This constraint is already set. Use edit instead of add."),
-                        QMessageBox::Ok );
-        return;                               
-    }
-
     // Priority
     CDlgSelectPriority dlg;
     if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addPriorityConstraint(dlg.getPriorityValue(), dlg.getPriorityConstraint());
 
         QListWidgetItem *item = new QListWidgetItem();
         item->setData(role_constraint_type, CSessionFilter::type_data);
@@ -873,7 +880,17 @@ void CDlgEditSessionFilter::addConstraintPriority(void)
 
 void CDlgEditSessionFilter::editConstraintPriority(void)
 {
+    // Priority
+    CDlgSelectPriority dlg;
 
+    dlg.setPriorityValue(m_sessionFilter.getPriorityValue());
+    dlg.setPriorityConstraint(m_sessionFilter.getPriorityConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+
+        m_sessionFilter.addPriorityConstraint(dlg.getPriorityValue(), dlg.getPriorityConstraint());
+
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -933,19 +950,10 @@ void CDlgEditSessionFilter::addConstraintSensorIndex(void)
         return;                               
     }
 
-    if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
-        // This constraint is already set
-        QMessageBox::information(this, 
-                        tr("vscpworks+"),
-                        tr("This constraint is already set. Use edit instead of add."),
-                        QMessageBox::Ok );
-        return;                               
-    }
-
     // Measurement sensor index
     CDlgSelectSensorIndex dlg;
     if (QDialog::Accepted == dlg.exec()) {
-
+        m_sessionFilter.addSensorIndexConstraint(dlg.getSensorIndexValue(), dlg.getSensorIndexConstraint());
     }
 }
 
@@ -955,7 +963,15 @@ void CDlgEditSessionFilter::addConstraintSensorIndex(void)
 
 void CDlgEditSessionFilter::editConstraintSensorIndex(void)
 {
+    // Sensor Index
+    CDlgSelectSensorIndex dlg;
 
+    dlg.setSensorIndexValue(m_sessionFilter.getSensorIndexValue());
+    dlg.setSensorIndexConstraint(m_sessionFilter.getSensorIndexConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+        m_sessionFilter.addSensorIndexConstraint(dlg.getSensorIndexValue(), dlg.getSensorIndexConstraint());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -976,7 +992,8 @@ void CDlgEditSessionFilter::addConstraintValue(void)
     // Measurement value
     CDlgSelectMeasurementValue dlg;
     if (QDialog::Accepted == dlg.exec()) {
-
+        m_sessionFilter.addMeasurementValueConstraint(dlg.getMeasurementValue(), 
+                                                        dlg.getMeasurementValueConstraint());
     }
 }
 
@@ -986,7 +1003,16 @@ void CDlgEditSessionFilter::addConstraintValue(void)
 
 void CDlgEditSessionFilter::editConstraintValue(void)
 {
+    // Sensor Index
+    CDlgSelectMeasurementValue dlg;
 
+    dlg.setMeasurementValue(m_sessionFilter.getMeasurementValue());
+    dlg.setMeasurementValueConstraint(m_sessionFilter.getMeasurementValueConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+        m_sessionFilter.addMeasurementValueConstraint(dlg.getMeasurementValue(), 
+                                                        dlg.getMeasurementValueConstraint());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1007,7 +1033,8 @@ void CDlgEditSessionFilter::addConstraintUnit(void)
     // Measurement unit
     CDlgSelectMeasurementUnit dlg;
     if (QDialog::Accepted == dlg.exec()) {
-
+        m_sessionFilter.addMeasurementUnitConstraint(dlg.getMeasurementUnitValue(), 
+                                            dlg.getMeasurementUnitConstraint());
     }
 }
 
@@ -1017,7 +1044,16 @@ void CDlgEditSessionFilter::addConstraintUnit(void)
 
 void CDlgEditSessionFilter::editConstraintUnit(void)
 {
+    // Sensor Index
+    CDlgSelectMeasurementUnit dlg;
 
+    dlg.setMeasurementUnitValue(m_sessionFilter.getMeasurementUnit());
+    dlg.setMeasurementUnitConstraint(m_sessionFilter.getMeasurementUnitConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+        m_sessionFilter.addMeasurementUnitConstraint(dlg.getMeasurementUnitValue(), 
+                                                    dlg.getMeasurementUnitConstraint());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1038,7 +1074,8 @@ void CDlgEditSessionFilter::addConstraintDataCoding(void)
     // Measurement data coding
     CDlgSelectDataCoding dlg;
     if (QDialog::Accepted == dlg.exec()) {
-
+        m_sessionFilter.addMeasurementDataCodingConstraint(dlg.getDataCodingValue(), 
+                                                    dlg.getDataCodingConstraint());
     }
 }
 
@@ -1048,7 +1085,16 @@ void CDlgEditSessionFilter::addConstraintDataCoding(void)
 
 void CDlgEditSessionFilter::editConstraintDataCoding(void)
 {
+    // Sensor Index
+    CDlgSelectDataCoding dlg;
 
+    dlg.setDataCodingValue(m_sessionFilter.getMeasurementDataCoding());
+    dlg.setDataCodingConstraint(m_sessionFilter.getMeasurementDataCodingConstraint());
+
+    if (QDialog::Accepted == dlg.exec()) {
+        m_sessionFilter.addMeasurementDataCodingConstraint(dlg.getDataCodingValue(), 
+                                                    dlg.getDataCodingConstraint());
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

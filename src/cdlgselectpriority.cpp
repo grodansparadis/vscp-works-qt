@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectpriority.h"
 #include "ui_cdlgselectpriority.h"
 
@@ -41,12 +48,7 @@ CDlgSelectPriority::CDlgSelectPriority(QWidget *parent) :
     ui(new Ui::CDlgSelectPriority)
 {
     ui->setupUi(this);
-
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,27 +60,46 @@ CDlgSelectPriority::~CDlgSelectPriority()
     delete ui;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// getPriorityValue
+//
 
+uint8_t CDlgSelectPriority::getPriorityValue(void)
+{
+    return ui->comboPriority->currentIndex();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPriorityValue
+//
+
+void CDlgSelectPriority::setPriorityValue(uint8_t value)
+{
+    ui->comboPriority->setCurrentIndex(value & 7);    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getPriorityConstraint
+//
+
+CSessionFilter::constraint 
+CDlgSelectPriority::getPriorityConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboComparePriority->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setPriorityConstraint
+//
+
+void CDlgSelectPriority::setPriorityConstraint(CSessionFilter::constraint op)
+{
+    ui->comboComparePriority->setCurrentIndex(static_cast<int>(op));
+}
 
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
-
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

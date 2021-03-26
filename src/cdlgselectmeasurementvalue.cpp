@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectmeasurementvalue.h"
 #include "ui_cdlgselectmeasurementvalue.h"
 
@@ -41,12 +48,6 @@ CDlgSelectMeasurementValue::CDlgSelectMeasurementValue(QWidget *parent) :
     ui(new Ui::CDlgSelectMeasurementValue)
 {
     ui->setupUi(this);
-
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,26 +60,47 @@ CDlgSelectMeasurementValue::~CDlgSelectMeasurementValue()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// getMeasurementValue
+//
+
+double CDlgSelectMeasurementValue::getMeasurementValue(void)
+{
+    return vscp_readStringValue(ui->editMeasurementValue->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setMeasurementValueValue
+//
+
+void CDlgSelectMeasurementValue::setMeasurementValue(double value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+    ui->editMeasurementValue->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getMeasurementValueConstraint
+//
+
+CSessionFilter::constraint CDlgSelectMeasurementValue::getMeasurementValueConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboCompareMeasurementValue->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setMeasurementValueConstraint
+//
+
+void CDlgSelectMeasurementValue::setMeasurementValueConstraint(CSessionFilter::constraint op)
+{
+    ui->comboCompareMeasurementValue->setCurrentIndex(static_cast<int>(op));
+}
 
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

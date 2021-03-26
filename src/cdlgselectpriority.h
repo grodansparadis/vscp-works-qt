@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTPRIORITY_H
 #define CDLGSELECTPRIORITY_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -47,7 +48,17 @@ public:
     ~CDlgSelectPriority();
 
 public:
-    
+    /// Get set Priority value
+    uint8_t getPriorityValue();
+
+    /// Set Priority value
+    void setPriorityValue(uint8_t value);
+
+    /// Get set Priority constraint
+    CSessionFilter::constraint getPriorityConstraint();
+
+    /// Set Priority constraint
+    void setPriorityConstraint(CSessionFilter::constraint op);
 
 private slots:
     

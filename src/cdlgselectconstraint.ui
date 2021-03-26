@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>275</width>
-    <height>420</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>30</y>
      <width>256</width>
-     <height>381</height>
+     <height>361</height>
     </rect>
    </property>
    <property name="toolTip">

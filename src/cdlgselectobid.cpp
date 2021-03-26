@@ -47,13 +47,7 @@ CDlgSelectObId::CDlgSelectObId(QWidget *parent) :
         QDialog(parent),
     ui(new Ui::CDlgSelectObId)
 {
-    ui->setupUi(this);
-
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectObId::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectObId::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectObId::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectObId::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectObId::onSetPwKeyFile );   
+    ui->setupUi(this);  
 }
 
 ///////////////////////////////////////////////////////////////////////////////

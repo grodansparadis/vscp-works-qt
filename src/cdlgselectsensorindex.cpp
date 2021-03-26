@@ -26,6 +26,13 @@
 // SOFTWARE.
 //
 
+#include "vscp.h"
+#include "vscphelper.h"
+
+#include "vscpworks.h"
+
+#include "sessionfilter.h"
+
 #include "cdlgselectsensorindex.h"
 #include "ui_cdlgselectsensorindex.h"
 
@@ -40,13 +47,7 @@ CDlgSelectSensorIndex::CDlgSelectSensorIndex(QWidget *parent) :
         QDialog(parent),
     ui(new Ui::CDlgSelectSensorIndex)
 {
-    ui->setupUi(this);
 
-    // connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaFile );
-    // connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgSelectClass::onSetCaPath ); 
-    // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
-    // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
-    // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,27 +59,48 @@ CDlgSelectSensorIndex::~CDlgSelectSensorIndex()
     delete ui;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// getSensorIndexValue
+//
 
+uint8_t CDlgSelectSensorIndex::getSensorIndexValue(void)
+{
+    return vscp_readStringValue(ui->editSensorIndex->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setSensorIndexValue
+//
+
+void CDlgSelectSensorIndex::setSensorIndexValue(uint8_t value)
+{
+    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+    ui->editSensorIndex->setText(pworks->decimalToStringInBase(value));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getSensorIndexConstraint
+//
+
+CSessionFilter::constraint 
+CDlgSelectSensorIndex::getSensorIndexConstraint(void)
+{
+    return static_cast<CSessionFilter::constraint>(ui->comboCompareSensorIndex->currentIndex());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setSensorIndexConstraint
+//
+
+void CDlgSelectSensorIndex::setSensorIndexConstraint(CSessionFilter::constraint op)
+{
+    ui->comboCompareSensorIndex->setCurrentIndex(static_cast<int>(op));
+}
 
 
 // ----------------------------------------------------------------------------
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-// onSetCaFile
-//
 
-// void
-// CDlgSelectPriority::onSetCaFile(void)
-// {
-//     QFileDialog dlg;
-//     QString str = dlg.getOpenFileName(this,
-//                                       "Select CA file",
-//                                       ".",
-//                                       tr("Certificates (*.ca *.crt);;All (*)"));
-//     if (str.length()) {
-//         setCaFile(str);
-//     }
-// }
 

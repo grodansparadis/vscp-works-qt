@@ -29,6 +29,7 @@
 #ifndef CDLGSELECTMEASUREMENTVALUE_H
 #define CDLGSELECTMEASUREMENTVALUE_H
 
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
@@ -48,6 +49,17 @@ public:
 
 public:
     
+    /// Get set measurement value
+    double getMeasurementValue();
+
+    /// Set measurement value
+    void setMeasurementValue(double value);
+
+    /// Get set measurement value constraint
+    CSessionFilter::constraint getMeasurementValueConstraint();
+
+    /// Set measurement value constraint
+    void setMeasurementValueConstraint(CSessionFilter::constraint op);
 
 private slots:
     
