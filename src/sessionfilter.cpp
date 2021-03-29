@@ -160,7 +160,7 @@ bool CSessionFilter::removeTypeConstraint(uint32_t type)
 bool CSessionFilter::isTypeAccepted(const vscpEvent *pev)
 {
     if (nullptr == pev) return false;
-    return m_mapType[((uint32_t)(pev->vscp_class))<<16 + pev->vscp_type];
+    return m_mapType[(((uint32_t)(pev->vscp_class))<<16) + pev->vscp_type];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

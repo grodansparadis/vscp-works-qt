@@ -4846,63 +4846,63 @@ and the flag bits for the. the driver.
     <name>CDlgSensorIndex</name>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="23"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="110"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="110"/>
         <source>Sensorindex - Known sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="76"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="111"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="111"/>
         <location filename="src/cdlgsensorindex.cpp" line="216"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="89"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="112"/>
         <location filename="src/cdlgsensorindex.cpp" line="217"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="102"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="113"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="115"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="114"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="114"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="131"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="115"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="115"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="147"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="116"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="116"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="173"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="117"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="117"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="190"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="118"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="118"/>
         <source>GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="206"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="119"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="119"/>
         <source>name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7076,6 +7076,119 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/vscpworks.h" line="90"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>wndBootloader</name>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="14"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="14"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="14"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="14"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="14"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="101"/>
+        <source>VSCP Bootloader</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="67"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="67"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="67"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="67"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="67"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="103"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="83"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="83"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="83"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="83"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="83"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="104"/>
+        <source>&lt; Prev</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="96"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="96"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="96"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="96"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="96"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="105"/>
+        <source>Next &gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="109"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="109"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="109"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="109"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="109"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="106"/>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="125"/>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="125"/>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="107"/>
+        <source>VSCP Bootloader wizard will now walk you through 
+the steps needed to update he firmware of your 
+remote device. 
+
+The node you need to update can be located on a VSCP bus 
+connected to a server on a remote location or be connected
+to an interface on your local computer. 
+
+Please don&apos;t turn of the power off the remote node 
+until the firmware update process is completed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="125"/>
+        <source>Select the interface you want to use 
+
+If you want to use a remote VSCP server connected 
+node you must  select interface and node on that 
+server as well. </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="125"/>
+        <source>Select device to bootload
+
+Enter the nickname or the full GUID for the device you want to work with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="125"/>
+        <source>Select the bootloader algorithm to use 
+
+If you load bootloader info from the MDF file the algorithm will 
+be set for you.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="150"/>
+        <source>Select algorithm fron MDF...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="163"/>
+        <source>VSCP standard algorithm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="176"/>
+        <source>or select</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_0_MinGW_32bit-Debug/ui_wndbootloader.h" line="59"/>
+        <source>wndBootloader</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

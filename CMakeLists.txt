@@ -56,7 +56,7 @@ elseif(UNIX)
 endif()
 
 if (WIN32)
-set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
+#set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -64,9 +64,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
@@ -82,19 +79,16 @@ set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Expat C library
 if (WIN32)
-# Download expat
-# StartVisual studio command prompt
-# go to unpack folder/expat
-# md build
-# cd build
-# cmake ..
-# msbuild /m expat.sln
-# Build libs with expat.sln
-# include path: E:\libexpat-R_2_2_9\expat\lib
-# Lib Path: E:\libexpat-R_2_2_9\expat\build\Release
-# Lib: libexpat.lib
-set(EXPAT_INCLUDE_DIRS "E:\\libexpat-R_2_2_9\\expat\\lib")
-set(EXPAT_LIBRARIES "E:\\libexpat-R_2_2_9\\expat\\build\\Release\\libexpat.lib")
+find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
+get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
+
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+
+find_package(expat CONFIG REQUIRED)
+
+find_package(dlfcn-win32 CONFIG REQUIRED)
+
 else()
 include(FindEXPAT)
 find_package(EXPAT REQUIRED)
@@ -106,15 +100,15 @@ if (WIN32)
 # mosquitto has been replaced with Paho
 # https://github.com/eclipse/paho.mqtt.c
 # https://github.com/eclipse/paho.mqtt.cpp
-message("PAHO-------------------------------------<")
-set(PAHO_LIBRARIES "C:\\mqtt\\paho-c\\lib\\")
-set(PAHO_CPP_LIBRARIES "C:\\mqtt\\paho-cpp\\lib\\")
-set(PAHO_INCLUDE_DIR "C:\\mqtt\\paho-c\\include\\")
-message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}")
-message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
-else()
-include(Findpaho-mqtt)
-find_package(paho-mqtt REQUIRED)
+# message("PAHO-------------------------------------<")
+# set(PAHO_LIBRARIES "C:\\mqtt\\paho-c\\lib\\")
+# set(PAHO_CPP_LIBRARIES "C:\\mqtt\\paho-cpp\\lib\\")
+# set(PAHO_INCLUDE_DIR "C:\\mqtt\\paho-c\\include\\")
+# message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}")
+# message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
+# else()
+# include(Findpaho-mqtt)
+# find_package(paho-mqtt REQUIRED)
 endif()
 
 # DELETE Check SLL version and set variable accordingly
@@ -124,8 +118,8 @@ endif()
 
 if (WIN32)
 #  find_package(dlfcn-win32 REQUIRED)
-  set(DLFCN_INCLUDES "E:\\development\\dlfcn-win32\\src\\")
-  set(DLFCN__LIBS "E:\\development\\dlfcn-win32\\src\\")
+#   set(DLFCN_INCLUDES "E:\\development\\dlfcn-win32\\src\\")
+#   set(DLFCN__LIBS "E:\\development\\dlfcn-win32\\src\\")
 endif() 
 
 # Set civetweb build flags
@@ -450,6 +444,28 @@ set(LOCAL_WIN_INCLUDE "windows\\include\\")
 set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
 endif()  
 
+if (WIN32)
+include_directories( PUBLIC ./src 
+    ./build
+    ./ui
+    ${VSCP_PATH}/src/vscp/common/
+    ${VSCP_PATH}/src/common
+    ${VSCP_PATH}/src/common/third_party
+    ${VSCP_PATH}/src/common/third_party/nlohmann
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include
+    ${Qt5Widgets_INCLUDE_DIRS}
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5SerialBus_INCLUDE_DIRS}
+    ${Qt5SerialPort_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
+    ${CMAKE_BINARY_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ${PAHO_INCLUDE_DIRS}
+    ${EXPAT_INCLUDE_DIRS}
+    ${DLFCN_INCLUDES}
+    ${LOCAL_WIN_INCLUDE}
+    ${LOCAL_SYSLOG_INCLUDE} )
+else()
 include_directories( PUBLIC ./src 
     ./build
     ./ui
@@ -470,10 +486,29 @@ include_directories( PUBLIC ./src
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
     ${LOCAL_SYSLOG_INCLUDE} )
+ endif()   
 
+if (WIN32)  
 target_link_libraries(vscp-works-qt PRIVATE     
     Qt5::Widgets
     Qt5::Core 
+    Qt5::Network
+    Qt5::Quick 
+    Qt5::Sql
+    Qt5:SerialBus
+    Qt5::SerialPort
+    m
+    pthread
+    OpenSSL::SSL 
+    OpenSSL::Crypto
+    OpenSSL::SSL OpenSSL::Crypto
+    eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
+    expat::expat
+    dlfcn-win32::dl)
+else()
+target_link_libraries(vscp-works-qt PRIVATE     
+    ${Qt5Widgets_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
     Qt5::Network
     Qt5::Quick 
     Qt5::Sql
@@ -488,23 +523,25 @@ target_link_libraries(vscp-works-qt PRIVATE
     ${PAHO_LIBRARIES}
     ${EXPAT_LIBRARIES}
     ${DLFCN_LIBS})
+endif()
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
 
-message(" Qt5Widgets_INCLUDE_DIRS =${Qt5Widgets_INCLUDE_DIRS}     ")
-message(" Qt5Widgets_LIBRARIES =${Qt5Widgets_LIBRARIES}   ")
+message(" Qt5Widgets_INCLUDE_DIRS = ${Qt5Widgets_INCLUDE_DIRS}     ")
+message(" Qt5Widgets_LIBRARIES = ${Qt5Widgets_LIBRARIES}   ")
 
-message(" Qt5Core_INCLUDE_DIRS =${Qt5Core_INCLUDE_DIRS}   ")
-message(" Qt5Core_LIBRARIES =${Qt5Core_LIBRARIES}         ")
+message(" Qt5Core_INCLUDE_DIRS = ${Qt5Core_INCLUDE_DIRS}   ")
+message(" Qt5Core_LIBRARIES = ${Qt5Core_LIBRARIES}         ")
 
-message(" Qt5SerialPort_INCLUDE_DIRS =${Qt5SerialPort_INCLUDE_DIRS}")
-message(" Qt5SerialPort_LIBRARIES =${Qt5SerialPort_LIBRARIES}")
+message(" Qt5SerialPort_INCLUDE_DIRS = ${Qt5SerialPort_INCLUDE_DIRS}")
+message(" Qt5SerialPort_LIBRARIES = ${Qt5SerialPort_LIBRARIES}")
 
-message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}")
+message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}  ${eclipse_paho_mqtt_c_INCLUDE_DIRS}")
 message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
 
+message(Main include: "${VCPKG_HOME}/installed/x64_linux/include")
 
 #include(GNUInstallDirs)
 if(WIN32)
