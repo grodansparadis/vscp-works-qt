@@ -1,6 +1,1 @@
-[submodule "vscp"]
-	path = vscp
-	url = https://github.com/grodansparadis/vscp.git
-[submodule "vcpkg"]
-	path = vcpkg
-	url = https://github.com/microsoft/vcpkg.git
+
