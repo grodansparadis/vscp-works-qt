@@ -1075,7 +1075,7 @@ void CDlgEditSessionFilter::addConstraintDataCoding(void)
     CDlgSelectDataCoding dlg;
     if (QDialog::Accepted == dlg.exec()) {
         m_sessionFilter.addMeasurementDataCodingConstraint(dlg.getDataCodingValue(), 
-                                                    dlg.getDataCodingConstraint());
+                                                            dlg.getDataCodingConstraint());
     }
 }
 
@@ -1093,7 +1093,7 @@ void CDlgEditSessionFilter::editConstraintDataCoding(void)
 
     if (QDialog::Accepted == dlg.exec()) {
         m_sessionFilter.addMeasurementDataCodingConstraint(dlg.getDataCodingValue(), 
-                                                    dlg.getDataCodingConstraint());
+                                                            dlg.getDataCodingConstraint());
     }
 }
 

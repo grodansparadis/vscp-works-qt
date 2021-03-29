@@ -1899,14 +1899,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="62"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="100"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1310"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1394"/>
         <source>Add constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="75"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1314"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1398"/>
         <source>Edit constraint...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1965,20 +1965,21 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="708"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="755"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="806"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="837"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="877"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="901"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="932"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="963"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="994"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1025"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1164"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1176"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1184"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1192"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1200"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1208"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1294"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="857"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="905"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="923"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="947"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="986"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1027"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1068"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1109"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1248"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1260"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1268"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1276"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1284"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1292"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1378"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1987,7 +1988,7 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="174"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="207"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="240"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="878"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="924"/>
         <source>This constraint is already set</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2014,12 +2015,13 @@ and the flag bits for the. the driver.
         <location filename="src/cdlgeditsessionfilter.cpp" line="709"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="756"/>
         <location filename="src/cdlgeditsessionfilter.cpp" line="807"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="838"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="902"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="933"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="964"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="995"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1026"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="858"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="906"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="948"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="987"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1028"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1069"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1110"/>
         <source>This constraint is already set. Use edit instead of add.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2060,27 +2062,37 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="870"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="823"/>
+        <source>08 - Must be specific data size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="871"/>
+        <source>09 - Must be specific data priority</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="916"/>
         <source>11 - Must be measurement event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1165"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1295"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1249"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1379"/>
         <source>A constraint must be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1177"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1185"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1193"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1201"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1209"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1261"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1269"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1277"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1285"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1293"/>
         <source>There is nothing to edit for this constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1318"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1402"/>
         <source>Delete constraint</source>
         <translation type="unfinished"></translation>
     </message>

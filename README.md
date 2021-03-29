@@ -73,6 +73,69 @@ use
 
 if you want to build a version suitable for debugging.
 
+## Build on Windows
+
+# Install Qt
+
+Go to the [qt site](https://www.qt.io/download) and follow the instructions
+
+# Install the vcpkg package manager
+
+Install the vcpkg package manager by cloning its github repository in a folder
+
+```bash
+git clone https://github.com/microsoft/vcpkg.git
+```
+
+then go into the folder
+
+```bash
+cd vcpkg
+```
+
+Run the vcpkg bootstrapper command
+
+```bash
+bootstrap-vcpkg.bat
+```
+
+The process is described in detail [here](https://docs.microsoft.com/en-us/cpp/build/install-vcpkg?view=msvc-160&tabs=windows)
+
+To [integrate with Visual Studio](https://docs.microsoft.com/en-us/cpp/build/integrate-vcpkg?view=msvc-160) run
+
+```bash
+vcpkg integrate install
+```
+
+Install the required libs
+
+```bash
+vcpkg install pthread
+vcpkg install expat
+vcpkg install openssl
+vcpkg install paho-mqtt
+```
+
+```bash
+vcpkg list
+```
+
+will give 
+
+![](images/vcpkg-install-list.png)
+
+after installing the required libs
+
+Full usage is describe [here](https://docs.microsoft.com/en-us/cpp/build/manage-libraries-with-vcpkg?view=msvc-160&tabs=windows)
+
+Build as usual but use
+
+```bash
+cmake .. -DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake
+```
+
+Location for nmake.exe need to be in your path
+
 ----
 
 **Internal project Notes below**
