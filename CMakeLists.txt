@@ -22,17 +22,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+# VSCP_PATH - set to path to local vscp repository. Default is "../vscp". Set with
+# -DVSCP_PATH="path"
+#
 
 cmake_minimum_required(VERSION 3.5)
-
 project(vscp-works-qt LANGUAGES CXX C)
-
 
 option(USE_SSL "Use SSL" TRUE)
 
-
 ## --- C++11 build flags ---
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -41,8 +40,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # --- System Libraries ---
-
 include(GNUInstallDirs)
+
+# --- Path to vscp --- 
+if (NOT DEFINED VSCP_PATH)
+set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
+endif()
 
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -373,71 +376,71 @@ add_executable(vscp-works-qt
     src/cdlgselectconstraint.h
     src/cdlgselectconstraint.cpp
 
-    vscp/src/vscp/common/version.h
-    vscp/src/vscp/common/vscp.h
-    vscp/src/vscp/common/vscpremotetcpif.h
-    vscp/src/vscp/common/vscpremotetcpif.cpp
-    vscp/src/vscp/common/vscpdatetime.h
-    vscp/src/vscp/common/vscpdatetime.cpp
-    vscp/src/vscp/common/guid.h
-    vscp/src/vscp/common/guid.cpp
-    vscp/src/vscp/common/mdf.h
-    vscp/src/vscp/common/mdf.cpp
-    vscp/src/vscp/common/vscphelper.h
-    vscp/src/vscp/common/vscphelper.cpp
-    vscp/src/vscp/common/canal.h
-    vscp/src/vscp/common/canaldlldef.h
-    vscp/src/vscp/common/vscpcanaldeviceif.h
-    vscp/src/vscp/common/vscpcanaldeviceif.cpp
-    vscp/src/vscp/common/canal_xmlconfig.h
-    vscp/src/vscp/common/canal_xmlconfig.cpp
-    vscp/src/vscp/common/vscp_client_base.h
-    vscp/src/vscp/common/vscp_client_base.cpp
-    vscp/src/vscp/common/vscp_client_local.h
-    vscp/src/vscp/common/vscp_client_local.cpp
-    vscp/src/vscp/common/vscp_client_canal.h
-    vscp/src/vscp/common/vscp_client_canal.cpp    
-    vscp/src/vscp/common/vscp_client_mqtt.h
-    vscp/src/vscp/common/vscp_client_mqtt.cpp
-    vscp/src/vscp/common/vscp_client_tcp.h
-    vscp/src/vscp/common/vscp_client_tcp.cpp
-    vscp/src/vscp/common/vscp_client_socketcan.h
-    vscp/src/vscp/common/vscp_client_socketcan.cpp
-    vscp/src/vscp/common/vscp_client_ws1.h
-    vscp/src/vscp/common/vscp_client_ws1.cpp 
-    vscp/src/vscp/common/vscp_client_ws2.h
-    vscp/src/vscp/common/vscp_client_ws2.cpp 
-    vscp/src/vscp/common/vscp_client_udp.h
-    vscp/src/vscp/common/vscp_client_udp.cpp 
-    vscp/src/vscp/common/vscp_client_multicast.h
-    vscp/src/vscp/common/vscp_client_multicast.cpp 
-    vscp/src/vscp/common/vscp_client_rest.h
-    vscp/src/vscp/common/vscp_client_rest.cpp
-    vscp/src/vscp/common/vscp_client_rawcan.h
-    vscp/src/vscp/common/vscp_client_rawcan.cpp
-    vscp/src/vscp/common/vscp_client_rawmqtt.h
-    vscp/src/vscp/common/vscp_client_rawmqtt.cpp
-    vscp/src/vscp/common/vscp_bootloader.h
-    vscp/src/vscp/common/vscp_bootloader.cpp
-    vscp/src/vscp/common/vscpunit.h
-    vscp/src/vscp/common/vscpunit.cpp
-    vscp/src/common/third_party/mustache.hpp
-    vscp/src/common/third_party/civetweb-1.13/include/civetweb.h
-    vscp/src/common/third_party/civetweb-1.13/src/civetweb.c
-    vscp/src/common/sockettcp.h
-    vscp/src/common/sockettcp.c
-    vscp/src/common/vscpbase64.h
-    vscp/src/common/vscpbase64.c
-    vscp/src/common/vscp_aes.h
-    vscp/src/common/vscp_aes.c
-    vscp/src/common/crc.h
-    vscp/src/common/crc.c
-    vscp/src/common/crc8.h
-    vscp/src/common/crc8.c
-    vscp/src/common/vscpmd5.h
-    vscp/src/common/vscpmd5.c
-    vscp/src/common/fastpbkdf2.h
-    vscp/src/common/fastpbkdf2.c    
+    ${VSCP_PATH}/src/vscp/common/version.h
+    ${VSCP_PATH}/src/vscp/common/vscp.h
+    ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h
+    ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.cpp
+    ${VSCP_PATH}/src/vscp/common/vscpdatetime.h
+    ${VSCP_PATH}/src/vscp/common/vscpdatetime.cpp
+    ${VSCP_PATH}/src/vscp/common/guid.h
+    ${VSCP_PATH}/src/vscp/common/guid.cpp
+    ${VSCP_PATH}/src/vscp/common/mdf.h
+    ${VSCP_PATH}/src/vscp/common/mdf.cpp
+    ${VSCP_PATH}/src/vscp/common/vscphelper.h
+    ${VSCP_PATH}/src/vscp/common/vscphelper.cpp
+    ${VSCP_PATH}/src/vscp/common/canal.h
+    ${VSCP_PATH}/src/vscp/common/canaldlldef.h
+    ${VSCP_PATH}/src/vscp/common/vscpcanaldeviceif.h
+    ${VSCP_PATH}/src/vscp/common/vscpcanaldeviceif.cpp
+    ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.h
+    ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_base.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_base.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_local.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_local.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_canal.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_canal.cpp    
+    ${VSCP_PATH}/src/vscp/common/vscp_client_mqtt.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_mqtt.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_tcp.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_tcp.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_socketcan.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_socketcan.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_ws1.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_ws1.cpp 
+    ${VSCP_PATH}/src/vscp/common/vscp_client_ws2.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_ws2.cpp 
+    ${VSCP_PATH}/src/vscp/common/vscp_client_udp.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_udp.cpp 
+    ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.cpp 
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rest.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rest.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_bootloader.h
+    ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
+    ${VSCP_PATH}/src/vscp/common/vscpunit.h
+    ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
+    ${VSCP_PATH}/src/common/third_party/mustache.hpp
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include/civetweb.h
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/src/civetweb.c
+    ${VSCP_PATH}/src/common/sockettcp.h
+    ${VSCP_PATH}/src/common/sockettcp.c
+    ${VSCP_PATH}/src/common/vscpbase64.h
+    ${VSCP_PATH}/src/common/vscpbase64.c
+    ${VSCP_PATH}/src/common/vscp_aes.h
+    ${VSCP_PATH}/src/common/vscp_aes.c
+    ${VSCP_PATH}/src/common/crc.h
+    ${VSCP_PATH}/src/common/crc.c
+    ${VSCP_PATH}/src/common/crc8.h
+    ${VSCP_PATH}/src/common/crc8.c
+    ${VSCP_PATH}/src/common/vscpmd5.h
+    ${VSCP_PATH}/src/common/vscpmd5.c
+    ${VSCP_PATH}/src/common/fastpbkdf2.h
+    ${VSCP_PATH}/src/common/fastpbkdf2.c    
     install/vscp-works-qt.desktop
     ${TS_FILES}
   ) 
@@ -452,11 +455,11 @@ include_directories( PUBLIC ./src
     ./ui
     third_party/mqtt
     third_party/mqtt/clib
-    vscp/src/vscp/common/
-    vscp/src/common
-    vscp/src/common/third_party
-    vscp/src/common/third_party/nlohmann
-    vscp/src/common/third_party/civetweb-1.13/include
+    ${VSCP_PATH}/src/vscp/common/
+    ${VSCP_PATH}/src/common
+    ${VSCP_PATH}/src/common/third_party
+    ${VSCP_PATH}/src/common/third_party/nlohmann
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5SerialBus_INCLUDE_DIRS}
     ${Qt5Network_INCLUDE_DIRS}

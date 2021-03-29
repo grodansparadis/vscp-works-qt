@@ -36,26 +36,23 @@ Paho version 1.3 or bigger should be used. Build manually from [Paho code reposi
 
 to enable needed SSL
 
+### You need the vscp repository for support source files
 
-
-### Clone this repository in a folder.
 ```bash
-  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
+  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
+  cd vscp
+  git checkout development
+``` 
+
+This source is by default expected to be in a folder on the same level as the vscp-works-qt project. But you can use another location and set the path to this folder with *-DVSCP_PATH="path to vscp folder"* when issuing cmake for vscp-works-qt.
+
+For now the *development branch* is needed for the vscp project. This is temporary.
+
+
+### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
+```bash
+  git clone https://github.com/grodansparadis/vscp-works-qt.git
 ```  
-
-### Temporary step while development branch of VSCP is used
-```
-cd vscp-works-qt
-cd vscp
-git pull origin development
-cd ..
-```
-
-May need
-
-```
-git pull origin development --allow-unrelated-histories 
-```
 
 ### Go to the build folder and make the project
 ```bash
@@ -72,6 +69,14 @@ use
 ```
 
 if you want to build a version suitable for debugging.
+
+use 
+
+```bash
+  cmake -DVSCP_PATH="path to vscp" ..
+```
+
+if you need to set a path to the local copy of the vscp main repository
 
 ## Build on Windows
 
