@@ -28,6 +28,10 @@
 // https://blog.csdn.net/weixin_30251587/article/details/96939409
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "vscphelper.h"
 #include "vscpworks.h"
 

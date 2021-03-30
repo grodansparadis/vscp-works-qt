@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include <vscp.h>
 #include <guid.h>
 #include <vscphelper.h>

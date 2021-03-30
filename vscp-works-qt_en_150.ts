@@ -137,54 +137,54 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="227"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="242"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="260"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="322"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="336"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="359"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="366"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="230"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="245"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="263"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="325"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="339"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="362"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="369"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="228"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="231"/>
         <source>The driver does not exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="281"/>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="287"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="284"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="290"/>
         <source>Set path to CANAL driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="283"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="286"/>
         <source>Drivers (*.so)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="289"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="292"/>
         <source>Drivers (*.so);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="337"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="340"/>
         <source>Driver is a generation one driver that does not have any configuration data embedded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="360"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="363"/>
         <source>Failed to parse XML file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="367"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="370"/>
         <source>Sorry, no configuration information available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingscanal.cpp" line="387"/>
+        <location filename="src/cdlgconnsettingscanal.cpp" line="390"/>
         <source>This wizard will help to generate and fill in the configuration string 
 and the flag bits for the. the driver.
 
@@ -416,42 +416,42 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="717"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="726"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="758"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="768"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="906"/>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="1009"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="721"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="730"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="762"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="772"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="910"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="1013"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="718"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="722"/>
         <source>Failed to initialize MQTT client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="727"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="731"/>
         <source>Failed to connect to remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="759"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="763"/>
         <source>Failed to disconnect from remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="765"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="769"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="907"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="911"/>
         <source>Are you sure the subscription topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmqtt.cpp" line="1010"/>
+        <location filename="src/cdlgconnsettingsmqtt.cpp" line="1014"/>
         <source>Are you sure the publish topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -561,12 +561,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmulticast.cpp" line="355"/>
+        <location filename="src/cdlgconnsettingsmulticast.cpp" line="359"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsmulticast.cpp" line="358"/>
+        <location filename="src/cdlgconnsettingsmulticast.cpp" line="362"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,62 +730,62 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="299"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="335"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="342"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="362"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="396"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="439"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="468"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="491"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="305"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="341"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="348"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="368"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="402"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="445"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="474"/>
         <location filename="src/cdlgconnsettingsrawcan.cpp" line="497"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="504"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="503"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="510"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="300"/>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="397"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="306"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="403"/>
         <source>The filter need a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="336"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="342"/>
         <source>Do you really want to delete filter?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="343"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="349"/>
         <source>A filter must be selected from the list before you can delete it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="363"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="369"/>
         <source>A filter must be selected from the list before you can edit it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="440"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="446"/>
         <source>A filter must be selected from the list before you can set it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="469"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="475"/>
         <source>A filter must be selected from the list before you can clone it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="489"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="495"/>
         <source>Failed to connect to interface. [%1] rv=%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="498"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="504"/>
         <source>Successful connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawcan.cpp" line="505"/>
+        <location filename="src/cdlgconnsettingsrawcan.cpp" line="511"/>
         <source>Failed to disconnect from interface.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -911,50 +911,50 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="623"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="632"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="664"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="674"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="714"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="744"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="795"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="898"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="627"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="636"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="668"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="678"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="718"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="748"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="799"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="902"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="624"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="628"/>
         <source>Failed to initialize MQTT client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="633"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="637"/>
         <source>Failed to connect to remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="665"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="669"/>
         <source>Failed to disconnect from remote MQTT broker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="671"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="675"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="715"/>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="745"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="719"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="749"/>
         <source>Subscription topic:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="796"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="800"/>
         <source>Are you sure the subscription topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="899"/>
+        <location filename="src/cdlgconnsettingsrawmqtt.cpp" line="903"/>
         <source>Are you sure the publish topic should be deleted?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1040,12 +1040,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrest.cpp" line="351"/>
+        <location filename="src/cdlgconnsettingsrest.cpp" line="355"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsrest.cpp" line="354"/>
+        <location filename="src/cdlgconnsettingsrest.cpp" line="358"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1209,62 +1209,62 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="320"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="356"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="363"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="383"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="417"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="460"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="489"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="512"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="326"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="362"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="369"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="389"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="423"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="466"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="495"/>
         <location filename="src/cdlgconnsettingssocketcan.cpp" line="518"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="525"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="524"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="531"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="321"/>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="418"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="327"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="424"/>
         <source>The filter need a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="357"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="363"/>
         <source>Do you really want to delete filter?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="364"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="370"/>
         <source>A filter must be selected from the list before you can delete it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="384"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="390"/>
         <source>A filter must be selected from the list before you can edit it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="461"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="467"/>
         <source>A filter must be selected from the list before you can set it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="490"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="496"/>
         <source>A filter must be selected from the list before you can clone it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="510"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="516"/>
         <source>Failed to connect to interface. [%1] rv=%2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="519"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="525"/>
         <source>Successful connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingssocketcan.cpp" line="526"/>
+        <location filename="src/cdlgconnsettingssocketcan.cpp" line="532"/>
         <source>Failed to disconnect from interface.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1464,57 +1464,57 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="604"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="611"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="640"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="649"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="666"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="675"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="727"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="612"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="619"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="648"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="657"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="674"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="683"/>
         <location filename="src/cdlgconnsettingstcpip.cpp" line="735"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="740"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="743"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="748"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="604"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="612"/>
         <source>Failed to initialize tcp/ip client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="611"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="675"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="619"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="683"/>
         <source>Failed to connect to remote tcp/ip host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="634"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="642"/>
         <source>Failed to get version from server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="640"/>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="735"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="648"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="743"/>
         <source>Failed to disconnect from remote tcp/ip host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="646"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="654"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="666"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="674"/>
         <source>Failed to initialize tcp/ip object</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="727"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="735"/>
         <source>Failed to get interfaces from server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingstcpip.cpp" line="740"/>
+        <location filename="src/cdlgconnsettingstcpip.cpp" line="748"/>
         <source>Interfaces fetched from remote server</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1618,12 +1618,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsudp.cpp" line="354"/>
+        <location filename="src/cdlgconnsettingsudp.cpp" line="358"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsudp.cpp" line="357"/>
+        <location filename="src/cdlgconnsettingsudp.cpp" line="361"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1709,12 +1709,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsws1.cpp" line="351"/>
+        <location filename="src/cdlgconnsettingsws1.cpp" line="355"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsws1.cpp" line="354"/>
+        <location filename="src/cdlgconnsettingsws1.cpp" line="358"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1800,12 +1800,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsws2.cpp" line="351"/>
+        <location filename="src/cdlgconnsettingsws2.cpp" line="355"/>
         <source>Connection test was successful</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgconnsettingsws2.cpp" line="354"/>
+        <location filename="src/cdlgconnsettingsws2.cpp" line="358"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1899,14 +1899,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="62"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="100"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1394"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1398"/>
         <source>Add constraint...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgeditsessionfilter.ui" line="75"/>
         <location filename="build/ui_cdlgeditsessionfilter.h" line="101"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1398"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1402"/>
         <source>Edit constraint...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1947,152 +1947,152 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="132"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="136"/>
         <source>00 - Must be received event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="139"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="173"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="206"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="239"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="263"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="276"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="317"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="352"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="415"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="466"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="708"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="755"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="806"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="857"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="905"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="923"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="947"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="986"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1027"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1068"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1109"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1248"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1260"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1268"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1276"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1284"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1292"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1378"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="143"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="177"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="210"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="243"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="267"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="280"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="321"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="356"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="419"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="470"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="712"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="759"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="810"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="861"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="909"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="927"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="951"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="990"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1031"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1072"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1113"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1252"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1264"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1272"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1280"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1288"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1296"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1382"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="140"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="174"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="207"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="240"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="924"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="144"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="178"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="211"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="244"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="928"/>
         <source>This constraint is already set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="166"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="170"/>
         <source>01 - Must be transmitt event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="199"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="203"/>
         <source>12 - Must be level I event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="232"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="236"/>
         <source>13 - Must be level 2 event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="264"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="353"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="416"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="467"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="709"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="756"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="807"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="858"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="906"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="948"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="987"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1028"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1069"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1110"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="268"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="357"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="420"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="471"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="713"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="760"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="811"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="862"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="910"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="952"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="991"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1032"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1073"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1114"/>
         <source>This constraint is already set. Use edit instead of add.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="277"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="318"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="281"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="322"/>
         <source>No class defined. Att least one class need to be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="296"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="300"/>
         <source>03 - Must be specific VSCP Class/Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="372"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="376"/>
         <source>04 - Must be specific GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="430"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="434"/>
         <source>05 - Must be specific OBID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="556"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="560"/>
         <source>06 - Must be specific date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="723"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="727"/>
         <source>06 - Must be specific Timestamp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="771"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="775"/>
         <source>07 - Must be specific data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="823"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="827"/>
         <source>08 - Must be specific data size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="871"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="875"/>
         <source>09 - Must be specific data priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="916"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="920"/>
         <source>11 - Must be measurement event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1249"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1379"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1253"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1383"/>
         <source>A constraint must be selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1261"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1269"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1277"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1285"/>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1293"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1265"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1273"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1281"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1289"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1297"/>
         <source>There is nothing to edit for this constraint</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgeditsessionfilter.cpp" line="1402"/>
+        <location filename="src/cdlgeditsessionfilter.cpp" line="1406"/>
         <source>Delete constraint</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2108,14 +2108,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgknownguid.ui" line="70"/>
         <location filename="build/ui_cdlgknownguid.h" line="122"/>
-        <location filename="src/cdlgknownguid.cpp" line="221"/>
+        <location filename="src/cdlgknownguid.cpp" line="225"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgknownguid.ui" line="83"/>
         <location filename="build/ui_cdlgknownguid.h" line="123"/>
-        <location filename="src/cdlgknownguid.cpp" line="222"/>
+        <location filename="src/cdlgknownguid.cpp" line="226"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2198,153 +2198,153 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="85"/>
+        <location filename="src/cdlgknownguid.cpp" line="89"/>
         <source>GUID, Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="172"/>
-        <location filename="src/cdlgknownguid.cpp" line="491"/>
-        <location filename="src/cdlgknownguid.cpp" line="578"/>
+        <location filename="src/cdlgknownguid.cpp" line="176"/>
+        <location filename="src/cdlgknownguid.cpp" line="495"/>
+        <location filename="src/cdlgknownguid.cpp" line="582"/>
         <source>SELECT * FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="178"/>
-        <location filename="src/cdlgknownguid.cpp" line="398"/>
-        <location filename="src/cdlgknownguid.cpp" line="413"/>
-        <location filename="src/cdlgknownguid.cpp" line="429"/>
-        <location filename="src/cdlgknownguid.cpp" line="482"/>
-        <location filename="src/cdlgknownguid.cpp" line="497"/>
-        <location filename="src/cdlgknownguid.cpp" line="530"/>
-        <location filename="src/cdlgknownguid.cpp" line="569"/>
-        <location filename="src/cdlgknownguid.cpp" line="584"/>
-        <location filename="src/cdlgknownguid.cpp" line="611"/>
-        <location filename="src/cdlgknownguid.cpp" line="626"/>
-        <location filename="src/cdlgknownguid.cpp" line="642"/>
-        <location filename="src/cdlgknownguid.cpp" line="672"/>
-        <location filename="src/cdlgknownguid.cpp" line="687"/>
-        <location filename="src/cdlgknownguid.cpp" line="723"/>
+        <location filename="src/cdlgknownguid.cpp" line="182"/>
+        <location filename="src/cdlgknownguid.cpp" line="402"/>
+        <location filename="src/cdlgknownguid.cpp" line="417"/>
+        <location filename="src/cdlgknownguid.cpp" line="433"/>
+        <location filename="src/cdlgknownguid.cpp" line="486"/>
+        <location filename="src/cdlgknownguid.cpp" line="501"/>
+        <location filename="src/cdlgknownguid.cpp" line="534"/>
+        <location filename="src/cdlgknownguid.cpp" line="573"/>
+        <location filename="src/cdlgknownguid.cpp" line="588"/>
+        <location filename="src/cdlgknownguid.cpp" line="615"/>
+        <location filename="src/cdlgknownguid.cpp" line="630"/>
+        <location filename="src/cdlgknownguid.cpp" line="646"/>
+        <location filename="src/cdlgknownguid.cpp" line="676"/>
+        <location filename="src/cdlgknownguid.cpp" line="691"/>
+        <location filename="src/cdlgknownguid.cpp" line="727"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="179"/>
-        <location filename="src/cdlgknownguid.cpp" line="498"/>
-        <location filename="src/cdlgknownguid.cpp" line="585"/>
+        <location filename="src/cdlgknownguid.cpp" line="183"/>
+        <location filename="src/cdlgknownguid.cpp" line="502"/>
+        <location filename="src/cdlgknownguid.cpp" line="589"/>
         <source>Unable to find record in database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="182"/>
-        <location filename="src/cdlgknownguid.cpp" line="501"/>
-        <location filename="src/cdlgknownguid.cpp" line="588"/>
+        <location filename="src/cdlgknownguid.cpp" line="186"/>
+        <location filename="src/cdlgknownguid.cpp" line="505"/>
+        <location filename="src/cdlgknownguid.cpp" line="592"/>
         <source>Unable to find record in database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="223"/>
+        <location filename="src/cdlgknownguid.cpp" line="227"/>
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="224"/>
+        <location filename="src/cdlgknownguid.cpp" line="228"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="226"/>
+        <location filename="src/cdlgknownguid.cpp" line="230"/>
         <source>Sensor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="382"/>
+        <location filename="src/cdlgknownguid.cpp" line="386"/>
         <source>Add new known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="399"/>
-        <location filename="src/cdlgknownguid.cpp" line="612"/>
+        <location filename="src/cdlgknownguid.cpp" line="403"/>
+        <location filename="src/cdlgknownguid.cpp" line="616"/>
         <source>Invalid GUID. Length is wrong.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="414"/>
-        <location filename="src/cdlgknownguid.cpp" line="627"/>
+        <location filename="src/cdlgknownguid.cpp" line="418"/>
+        <location filename="src/cdlgknownguid.cpp" line="631"/>
         <source>Invalid GUID. Format is wrong. Should be like &apos;FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="419"/>
-        <location filename="src/cdlgknownguid.cpp" line="632"/>
+        <location filename="src/cdlgknownguid.cpp" line="423"/>
+        <location filename="src/cdlgknownguid.cpp" line="636"/>
         <source>INSERT INTO guid (guid, name, description) VALUES (&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;);</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="430"/>
-        <location filename="src/cdlgknownguid.cpp" line="643"/>
+        <location filename="src/cdlgknownguid.cpp" line="434"/>
+        <location filename="src/cdlgknownguid.cpp" line="647"/>
         <source>Unable to save GUID into database (duplicate?).
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="433"/>
-        <location filename="src/cdlgknownguid.cpp" line="646"/>
+        <location filename="src/cdlgknownguid.cpp" line="437"/>
+        <location filename="src/cdlgknownguid.cpp" line="650"/>
         <source>Unable to save GUID into database (duplicate?). Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="474"/>
+        <location filename="src/cdlgknownguid.cpp" line="478"/>
         <source>Edit known GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="483"/>
-        <location filename="src/cdlgknownguid.cpp" line="570"/>
-        <location filename="src/cdlgknownguid.cpp" line="673"/>
-        <location filename="src/cdlgknownguid.cpp" line="724"/>
+        <location filename="src/cdlgknownguid.cpp" line="487"/>
+        <location filename="src/cdlgknownguid.cpp" line="574"/>
+        <location filename="src/cdlgknownguid.cpp" line="677"/>
+        <location filename="src/cdlgknownguid.cpp" line="728"/>
         <source>No GUID is selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="521"/>
+        <location filename="src/cdlgknownguid.cpp" line="525"/>
         <source>UPDATE guid SET name=&apos;%1&apos;, description=&apos;%2&apos; WHERE guid=&apos;%3&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="531"/>
+        <location filename="src/cdlgknownguid.cpp" line="535"/>
         <source>Unable to save edited GUID into database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="534"/>
+        <location filename="src/cdlgknownguid.cpp" line="538"/>
         <source>Unable to save edited GUID into database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="562"/>
+        <location filename="src/cdlgknownguid.cpp" line="566"/>
         <source>Clone GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="681"/>
+        <location filename="src/cdlgknownguid.cpp" line="685"/>
         <source>DELETE FROM guid WHERE guid=&apos;%1&apos;;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="688"/>
+        <location filename="src/cdlgknownguid.cpp" line="692"/>
         <source>Unable to delete GUID.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgknownguid.cpp" line="691"/>
+        <location filename="src/cdlgknownguid.cpp" line="695"/>
         <source>Unable to delete GUID. Err =</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2723,18 +2723,18 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1196"/>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1254"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1200"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1258"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1197"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1201"/>
         <source>Nothing selected. Filter and mask will be set to zero.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel1filterwizard.cpp" line="1255"/>
+        <location filename="src/cdlglevel1filterwizard.cpp" line="1259"/>
         <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2894,12 +2894,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.cpp" line="885"/>
+        <location filename="src/cdlglevel2filter.cpp" line="889"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlglevel2filter.cpp" line="886"/>
+        <location filename="src/cdlglevel2filter.cpp" line="890"/>
         <source>The VSCP class for this type is not currently selected. Should it be selected?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3300,18 +3300,18 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="199"/>
-        <location filename="src/cdlgmainsettings.cpp" line="206"/>
+        <location filename="src/cdlgmainsettings.cpp" line="203"/>
+        <location filename="src/cdlgmainsettings.cpp" line="210"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="200"/>
+        <location filename="src/cdlgmainsettings.cpp" line="204"/>
         <source>Unable to load events from VSCP event database.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgmainsettings.cpp" line="207"/>
+        <location filename="src/cdlgmainsettings.cpp" line="211"/>
         <source>Events reloaded from event database.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3720,12 +3720,12 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.cpp" line="130"/>
+        <location filename="src/cdlgselectdata.cpp" line="134"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectdata.cpp" line="131"/>
+        <location filename="src/cdlgselectdata.cpp" line="135"/>
         <source>Data for this data item is already set. Delete item first to set a new value.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4430,18 +4430,18 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.cpp" line="356"/>
-        <location filename="src/cdlgselectguid.cpp" line="504"/>
+        <location filename="src/cdlgselectguid.cpp" line="360"/>
+        <location filename="src/cdlgselectguid.cpp" line="508"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.cpp" line="357"/>
+        <location filename="src/cdlgselectguid.cpp" line="361"/>
         <source>Faild to convert GUID string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgselectguid.cpp" line="505"/>
+        <location filename="src/cdlgselectguid.cpp" line="509"/>
         <source>No GUID selected</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4853,14 +4853,14 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsensorindex.ui" line="76"/>
         <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="111"/>
-        <location filename="src/cdlgsensorindex.cpp" line="216"/>
+        <location filename="src/cdlgsensorindex.cpp" line="220"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="89"/>
         <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="112"/>
-        <location filename="src/cdlgsensorindex.cpp" line="217"/>
+        <location filename="src/cdlgsensorindex.cpp" line="221"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4907,130 +4907,130 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="83"/>
+        <location filename="src/cdlgsensorindex.cpp" line="87"/>
         <source>Sensor, Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="171"/>
-        <location filename="src/cdlgsensorindex.cpp" line="493"/>
-        <location filename="src/cdlgsensorindex.cpp" line="585"/>
+        <location filename="src/cdlgsensorindex.cpp" line="175"/>
+        <location filename="src/cdlgsensorindex.cpp" line="497"/>
+        <location filename="src/cdlgsensorindex.cpp" line="589"/>
         <source>SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="178"/>
-        <location filename="src/cdlgsensorindex.cpp" line="431"/>
-        <location filename="src/cdlgsensorindex.cpp" line="484"/>
-        <location filename="src/cdlgsensorindex.cpp" line="500"/>
-        <location filename="src/cdlgsensorindex.cpp" line="536"/>
-        <location filename="src/cdlgsensorindex.cpp" line="576"/>
-        <location filename="src/cdlgsensorindex.cpp" line="592"/>
-        <location filename="src/cdlgsensorindex.cpp" line="626"/>
-        <location filename="src/cdlgsensorindex.cpp" line="676"/>
-        <location filename="src/cdlgsensorindex.cpp" line="691"/>
+        <location filename="src/cdlgsensorindex.cpp" line="182"/>
+        <location filename="src/cdlgsensorindex.cpp" line="435"/>
+        <location filename="src/cdlgsensorindex.cpp" line="488"/>
+        <location filename="src/cdlgsensorindex.cpp" line="504"/>
+        <location filename="src/cdlgsensorindex.cpp" line="540"/>
+        <location filename="src/cdlgsensorindex.cpp" line="580"/>
+        <location filename="src/cdlgsensorindex.cpp" line="596"/>
+        <location filename="src/cdlgsensorindex.cpp" line="630"/>
+        <location filename="src/cdlgsensorindex.cpp" line="680"/>
+        <location filename="src/cdlgsensorindex.cpp" line="695"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="179"/>
-        <location filename="src/cdlgsensorindex.cpp" line="501"/>
-        <location filename="src/cdlgsensorindex.cpp" line="593"/>
+        <location filename="src/cdlgsensorindex.cpp" line="183"/>
+        <location filename="src/cdlgsensorindex.cpp" line="505"/>
+        <location filename="src/cdlgsensorindex.cpp" line="597"/>
         <source>Unable to find record in database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="182"/>
-        <location filename="src/cdlgsensorindex.cpp" line="504"/>
-        <location filename="src/cdlgsensorindex.cpp" line="596"/>
+        <location filename="src/cdlgsensorindex.cpp" line="186"/>
+        <location filename="src/cdlgsensorindex.cpp" line="508"/>
+        <location filename="src/cdlgsensorindex.cpp" line="600"/>
         <source>Unable to find record in database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="218"/>
+        <location filename="src/cdlgsensorindex.cpp" line="222"/>
         <source>Clone...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="219"/>
+        <location filename="src/cdlgsensorindex.cpp" line="223"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="408"/>
+        <location filename="src/cdlgsensorindex.cpp" line="412"/>
         <source>Add new sensor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="418"/>
-        <location filename="src/cdlgsensorindex.cpp" line="613"/>
+        <location filename="src/cdlgsensorindex.cpp" line="422"/>
+        <location filename="src/cdlgsensorindex.cpp" line="617"/>
         <source>INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, &apos;%3&apos;, &apos;%4&apos;);</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="432"/>
-        <location filename="src/cdlgsensorindex.cpp" line="627"/>
+        <location filename="src/cdlgsensorindex.cpp" line="436"/>
+        <location filename="src/cdlgsensorindex.cpp" line="631"/>
         <source>Unable to save sensor into database (duplicate?).
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="435"/>
-        <location filename="src/cdlgsensorindex.cpp" line="630"/>
+        <location filename="src/cdlgsensorindex.cpp" line="439"/>
+        <location filename="src/cdlgsensorindex.cpp" line="634"/>
         <source>Unable to save GUID into database (duplicate?). Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="476"/>
+        <location filename="src/cdlgsensorindex.cpp" line="480"/>
         <source>Edit sensor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="485"/>
-        <location filename="src/cdlgsensorindex.cpp" line="577"/>
-        <location filename="src/cdlgsensorindex.cpp" line="677"/>
+        <location filename="src/cdlgsensorindex.cpp" line="489"/>
+        <location filename="src/cdlgsensorindex.cpp" line="581"/>
+        <location filename="src/cdlgsensorindex.cpp" line="681"/>
         <source>No sensor is selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="524"/>
+        <location filename="src/cdlgsensorindex.cpp" line="528"/>
         <source>UPDATE sensorindex SET name=&apos;%1&apos;, description=&apos;%2&apos; WHERE sensor=&apos;%3&apos; AND link_to_guid=%4;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="537"/>
+        <location filename="src/cdlgsensorindex.cpp" line="541"/>
         <source>Unable to save edited GUID into database.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="540"/>
+        <location filename="src/cdlgsensorindex.cpp" line="544"/>
         <source>Unable to save edited GUID into database. Err =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="569"/>
+        <location filename="src/cdlgsensorindex.cpp" line="573"/>
         <source>Clone sensor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="684"/>
+        <location filename="src/cdlgsensorindex.cpp" line="688"/>
         <source>DELETE FROM sensorindex WHERE sensor=&apos;%1&apos; AND link_to_guid=%2;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="692"/>
+        <location filename="src/cdlgsensorindex.cpp" line="696"/>
         <source>Unable to delete sensor.
 
  Error =</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsensorindex.cpp" line="695"/>
+        <location filename="src/cdlgsensorindex.cpp" line="699"/>
         <source>Unable to delete sensor. Err =</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5066,7 +5066,7 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="87"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="107"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="104"/>
         <source>Edit filter...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5109,7 +5109,7 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="164"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="120"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="122"/>
         <source>Save filters...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5122,56 +5122,56 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/cdlgsessionfilter.ui" line="180"/>
         <location filename="build/ui_cdlgsessionfilter.h" line="124"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="114"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="118"/>
         <source>Load filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="96"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="100"/>
         <source>Add filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="104"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="108"/>
         <source>Clone filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="108"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="112"/>
         <source>Delete filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="149"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="164"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="178"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="192"/>
-        <location filename="src/cdlgsessionfilter.cpp" line="206"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="153"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="168"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="182"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="196"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="210"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="150"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="154"/>
         <source>editFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="165"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="169"/>
         <source>cloneFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="179"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="183"/>
         <source>deleteFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="193"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="197"/>
         <source>loadFilter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgsessionfilter.cpp" line="207"/>
+        <location filename="src/cdlgsessionfilter.cpp" line="211"/>
         <source>saveFilter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5262,14 +5262,14 @@ and the flag bits for the. the driver.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgtls.cpp" line="218"/>
-        <location filename="src/cdlgtls.cpp" line="249"/>
+        <location filename="src/cdlgtls.cpp" line="222"/>
+        <location filename="src/cdlgtls.cpp" line="253"/>
         <source>Certificates (*.ca *.crt);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cdlgtls.cpp" line="266"/>
-        <location filename="src/cdlgtls.cpp" line="283"/>
+        <location filename="src/cdlgtls.cpp" line="270"/>
+        <location filename="src/cdlgtls.cpp" line="287"/>
         <source>Key-files (*.key);;All (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5476,668 +5476,668 @@ and the flag bits for the. the driver.
 <context>
     <name>CFrmSession</name>
     <message>
-        <location filename="src/cfrmsession.cpp" line="116"/>
-        <location filename="src/cfrmsession.cpp" line="131"/>
-        <location filename="src/cfrmsession.cpp" line="796"/>
-        <location filename="src/cfrmsession.cpp" line="812"/>
-        <location filename="src/cfrmsession.cpp" line="1092"/>
-        <location filename="src/cfrmsession.cpp" line="1156"/>
-        <location filename="src/cfrmsession.cpp" line="1181"/>
-        <location filename="src/cfrmsession.cpp" line="1199"/>
-        <location filename="src/cfrmsession.cpp" line="1336"/>
-        <location filename="src/cfrmsession.cpp" line="1431"/>
-        <location filename="src/cfrmsession.cpp" line="1549"/>
-        <location filename="src/cfrmsession.cpp" line="1831"/>
-        <location filename="src/cfrmsession.cpp" line="1867"/>
-        <location filename="src/cfrmsession.cpp" line="1938"/>
-        <location filename="src/cfrmsession.cpp" line="2253"/>
-        <location filename="src/cfrmsession.cpp" line="2315"/>
-        <location filename="src/cfrmsession.cpp" line="2341"/>
+        <location filename="src/cfrmsession.cpp" line="124"/>
+        <location filename="src/cfrmsession.cpp" line="139"/>
+        <location filename="src/cfrmsession.cpp" line="804"/>
+        <location filename="src/cfrmsession.cpp" line="820"/>
+        <location filename="src/cfrmsession.cpp" line="1100"/>
+        <location filename="src/cfrmsession.cpp" line="1164"/>
+        <location filename="src/cfrmsession.cpp" line="1189"/>
+        <location filename="src/cfrmsession.cpp" line="1207"/>
+        <location filename="src/cfrmsession.cpp" line="1344"/>
+        <location filename="src/cfrmsession.cpp" line="1439"/>
+        <location filename="src/cfrmsession.cpp" line="1557"/>
+        <location filename="src/cfrmsession.cpp" line="1839"/>
+        <location filename="src/cfrmsession.cpp" line="1875"/>
+        <location filename="src/cfrmsession.cpp" line="1946"/>
+        <location filename="src/cfrmsession.cpp" line="2261"/>
+        <location filename="src/cfrmsession.cpp" line="2323"/>
+        <location filename="src/cfrmsession.cpp" line="2349"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="117"/>
+        <location filename="src/cfrmsession.cpp" line="125"/>
         <source>Can&apos;t open session window - configuration data is missing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="132"/>
+        <location filename="src/cfrmsession.cpp" line="140"/>
         <source>Can&apos;t open session window - The connection type is unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="142"/>
+        <location filename="src/cfrmsession.cpp" line="150"/>
         <source> - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="147"/>
+        <location filename="src/cfrmsession.cpp" line="155"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="327"/>
+        <location filename="src/cfrmsession.cpp" line="335"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="344"/>
+        <location filename="src/cfrmsession.cpp" line="352"/>
         <source>Load RX rows from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="349"/>
+        <location filename="src/cfrmsession.cpp" line="357"/>
         <source>Write RX rows to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="355"/>
+        <location filename="src/cfrmsession.cpp" line="363"/>
         <source>Load TX rows from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="360"/>
+        <location filename="src/cfrmsession.cpp" line="368"/>
         <source>Write TX rows to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="366"/>
-        <location filename="src/cfrmsession.cpp" line="369"/>
+        <location filename="src/cfrmsession.cpp" line="374"/>
+        <location filename="src/cfrmsession.cpp" line="377"/>
         <source>Close session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="377"/>
-        <location filename="src/cfrmsession.cpp" line="720"/>
+        <location filename="src/cfrmsession.cpp" line="385"/>
+        <location filename="src/cfrmsession.cpp" line="728"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="378"/>
-        <location filename="src/cfrmsession.cpp" line="2001"/>
+        <location filename="src/cfrmsession.cpp" line="386"/>
+        <location filename="src/cfrmsession.cpp" line="2009"/>
         <source>Copy RX event to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="382"/>
-        <location filename="src/cfrmsession.cpp" line="913"/>
+        <location filename="src/cfrmsession.cpp" line="390"/>
+        <location filename="src/cfrmsession.cpp" line="921"/>
         <source>Copy TX event to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="386"/>
-        <location filename="src/cfrmsession.cpp" line="2005"/>
+        <location filename="src/cfrmsession.cpp" line="394"/>
+        <location filename="src/cfrmsession.cpp" line="2013"/>
         <source>Copy RX event to TX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="391"/>
+        <location filename="src/cfrmsession.cpp" line="399"/>
         <source>Clear RX selections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="394"/>
+        <location filename="src/cfrmsession.cpp" line="402"/>
         <source>Alt+U</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="395"/>
+        <location filename="src/cfrmsession.cpp" line="403"/>
         <source>Clear selections in RX list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="397"/>
-        <location filename="src/cfrmsession.cpp" line="401"/>
+        <location filename="src/cfrmsession.cpp" line="405"/>
+        <location filename="src/cfrmsession.cpp" line="409"/>
         <source>Clear RX list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="400"/>
+        <location filename="src/cfrmsession.cpp" line="408"/>
         <source>Ctrl+N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="403"/>
-        <location filename="src/cfrmsession.cpp" line="407"/>
+        <location filename="src/cfrmsession.cpp" line="411"/>
+        <location filename="src/cfrmsession.cpp" line="415"/>
         <source>Clear TX list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="406"/>
+        <location filename="src/cfrmsession.cpp" line="414"/>
         <source>Alt+2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="411"/>
+        <location filename="src/cfrmsession.cpp" line="419"/>
         <source>Toggle RX row mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="414"/>
+        <location filename="src/cfrmsession.cpp" line="422"/>
         <source>Alt+M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="415"/>
-        <location filename="src/cfrmsession.cpp" line="421"/>
-        <location filename="src/cfrmsession.cpp" line="427"/>
+        <location filename="src/cfrmsession.cpp" line="423"/>
+        <location filename="src/cfrmsession.cpp" line="429"/>
+        <location filename="src/cfrmsession.cpp" line="435"/>
         <source>Mark the receive row with special background color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="417"/>
+        <location filename="src/cfrmsession.cpp" line="425"/>
         <source>Toggle RX Class mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="423"/>
+        <location filename="src/cfrmsession.cpp" line="431"/>
         <source>Toggle RX Type mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="429"/>
+        <location filename="src/cfrmsession.cpp" line="437"/>
         <source>Add/Edit RX comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="433"/>
+        <location filename="src/cfrmsession.cpp" line="441"/>
         <source>Add a comment to selected RX row(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="435"/>
+        <location filename="src/cfrmsession.cpp" line="443"/>
         <source>Remove RX comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="439"/>
+        <location filename="src/cfrmsession.cpp" line="447"/>
         <source>Remove a comment from selected RX row(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="445"/>
+        <location filename="src/cfrmsession.cpp" line="453"/>
         <source>&amp;Host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="446"/>
+        <location filename="src/cfrmsession.cpp" line="454"/>
         <source>Connect to host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="447"/>
+        <location filename="src/cfrmsession.cpp" line="455"/>
         <source>Disconnect from host...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="450"/>
+        <location filename="src/cfrmsession.cpp" line="458"/>
         <source>Edit host settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="454"/>
+        <location filename="src/cfrmsession.cpp" line="462"/>
         <source>&amp;VSCP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="455"/>
+        <location filename="src/cfrmsession.cpp" line="463"/>
         <source>Read register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="456"/>
+        <location filename="src/cfrmsession.cpp" line="464"/>
         <source>Write register...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="457"/>
+        <location filename="src/cfrmsession.cpp" line="465"/>
         <source>Read (all) registers...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="458"/>
+        <location filename="src/cfrmsession.cpp" line="466"/>
         <source>Read GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="459"/>
+        <location filename="src/cfrmsession.cpp" line="467"/>
         <source>Read MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="460"/>
+        <location filename="src/cfrmsession.cpp" line="468"/>
         <source>Download MDF...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="464"/>
+        <location filename="src/cfrmsession.cpp" line="472"/>
         <source>&amp;Setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="465"/>
+        <location filename="src/cfrmsession.cpp" line="473"/>
         <source>Set/define filter...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="466"/>
+        <location filename="src/cfrmsession.cpp" line="474"/>
         <source>Settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="474"/>
+        <location filename="src/cfrmsession.cpp" line="482"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="515"/>
+        <location filename="src/cfrmsession.cpp" line="523"/>
         <source>Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="519"/>
+        <location filename="src/cfrmsession.cpp" line="527"/>
         <source>Connect/disconnect from remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="527"/>
+        <location filename="src/cfrmsession.cpp" line="535"/>
         <source>Enable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="530"/>
+        <location filename="src/cfrmsession.cpp" line="538"/>
         <source>Enable/disable filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="542"/>
+        <location filename="src/cfrmsession.cpp" line="550"/>
         <source>Filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="557"/>
-        <location filename="src/cfrmsession.cpp" line="1995"/>
+        <location filename="src/cfrmsession.cpp" line="565"/>
+        <location filename="src/cfrmsession.cpp" line="2003"/>
         <source>Clear receive list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="570"/>
+        <location filename="src/cfrmsession.cpp" line="578"/>
         <source>Unselect all RX rows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="597"/>
+        <location filename="src/cfrmsession.cpp" line="605"/>
         <source>Horizontal layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="601"/>
+        <location filename="src/cfrmsession.cpp" line="609"/>
         <source>Button %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="614"/>
+        <location filename="src/cfrmsession.cpp" line="622"/>
         <source>Receive Events </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="619"/>
+        <location filename="src/cfrmsession.cpp" line="627"/>
         <source>Dir, VSCP Class, VSCP Type, id, GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="670"/>
+        <location filename="src/cfrmsession.cpp" line="678"/>
         <source>Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="674"/>
+        <location filename="src/cfrmsession.cpp" line="682"/>
         <source>x,Name,Period,Count,Event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="702"/>
+        <location filename="src/cfrmsession.cpp" line="710"/>
         <source>&amp;Transmit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="704"/>
+        <location filename="src/cfrmsession.cpp" line="712"/>
         <source>Transmit selected event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="712"/>
+        <location filename="src/cfrmsession.cpp" line="720"/>
         <source>&amp;Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="714"/>
+        <location filename="src/cfrmsession.cpp" line="722"/>
         <source>Add transmit event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="722"/>
+        <location filename="src/cfrmsession.cpp" line="730"/>
         <source>Edit selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="728"/>
+        <location filename="src/cfrmsession.cpp" line="736"/>
         <source>&amp;Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="730"/>
+        <location filename="src/cfrmsession.cpp" line="738"/>
         <source>Clone selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="736"/>
+        <location filename="src/cfrmsession.cpp" line="744"/>
         <source>&amp;Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="738"/>
+        <location filename="src/cfrmsession.cpp" line="746"/>
         <source>Delete selected event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="746"/>
+        <location filename="src/cfrmsession.cpp" line="754"/>
         <source>&amp;Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="748"/>
+        <location filename="src/cfrmsession.cpp" line="756"/>
         <source>Save selected transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="754"/>
+        <location filename="src/cfrmsession.cpp" line="762"/>
         <source>&amp;Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="756"/>
+        <location filename="src/cfrmsession.cpp" line="764"/>
         <source>Load transmit event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="797"/>
+        <location filename="src/cfrmsession.cpp" line="805"/>
         <source>filter set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="813"/>
+        <location filename="src/cfrmsession.cpp" line="821"/>
         <source>filter enable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="885"/>
+        <location filename="src/cfrmsession.cpp" line="893"/>
         <source>Item changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="885"/>
+        <location filename="src/cfrmsession.cpp" line="893"/>
         <source>Carpe Diem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="907"/>
+        <location filename="src/cfrmsession.cpp" line="915"/>
         <source>Send event</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="919"/>
+        <location filename="src/cfrmsession.cpp" line="927"/>
         <source>Add transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="923"/>
+        <location filename="src/cfrmsession.cpp" line="931"/>
         <source>Edit selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="927"/>
+        <location filename="src/cfrmsession.cpp" line="935"/>
         <source>Clone selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="931"/>
+        <location filename="src/cfrmsession.cpp" line="939"/>
         <source>Delete selected transmission row...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="937"/>
+        <location filename="src/cfrmsession.cpp" line="945"/>
         <source>Save transmission rows...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="941"/>
+        <location filename="src/cfrmsession.cpp" line="949"/>
         <source>Load transmission rows...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="947"/>
+        <location filename="src/cfrmsession.cpp" line="955"/>
         <source>Clear selections...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1093"/>
+        <location filename="src/cfrmsession.cpp" line="1101"/>
         <source>There is no TX row selected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1101"/>
-        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <location filename="src/cfrmsession.cpp" line="1109"/>
+        <location filename="src/cfrmsession.cpp" line="2270"/>
         <source>STRING</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1101"/>
-        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <location filename="src/cfrmsession.cpp" line="1109"/>
+        <location filename="src/cfrmsession.cpp" line="2270"/>
         <source>JSON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1101"/>
-        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <location filename="src/cfrmsession.cpp" line="1109"/>
+        <location filename="src/cfrmsession.cpp" line="2270"/>
         <source>XML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1101"/>
-        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <location filename="src/cfrmsession.cpp" line="1109"/>
+        <location filename="src/cfrmsession.cpp" line="2270"/>
         <source>HTML</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1102"/>
-        <location filename="src/cfrmsession.cpp" line="2263"/>
+        <location filename="src/cfrmsession.cpp" line="1110"/>
+        <location filename="src/cfrmsession.cpp" line="2271"/>
         <source>Format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1103"/>
-        <location filename="src/cfrmsession.cpp" line="2264"/>
+        <location filename="src/cfrmsession.cpp" line="1111"/>
+        <location filename="src/cfrmsession.cpp" line="2272"/>
         <source>Season:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1157"/>
-        <location filename="src/cfrmsession.cpp" line="2316"/>
+        <location filename="src/cfrmsession.cpp" line="1165"/>
+        <location filename="src/cfrmsession.cpp" line="2324"/>
         <source>Failed to convert event to requested format.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1182"/>
+        <location filename="src/cfrmsession.cpp" line="1190"/>
         <source>You must select a TX row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1200"/>
+        <location filename="src/cfrmsession.cpp" line="1208"/>
         <source>Unable to send event(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1337"/>
-        <location filename="src/cfrmsession.cpp" line="1432"/>
-        <location filename="src/cfrmsession.cpp" line="1550"/>
+        <location filename="src/cfrmsession.cpp" line="1345"/>
+        <location filename="src/cfrmsession.cpp" line="1440"/>
+        <location filename="src/cfrmsession.cpp" line="1558"/>
         <source>You must select a transmission row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1459"/>
+        <location filename="src/cfrmsession.cpp" line="1467"/>
         <source>_copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1587"/>
+        <location filename="src/cfrmsession.cpp" line="1595"/>
         <source>File to load transmitt events from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1589"/>
-        <location filename="src/cfrmsession.cpp" line="1702"/>
+        <location filename="src/cfrmsession.cpp" line="1597"/>
+        <location filename="src/cfrmsession.cpp" line="1710"/>
         <source>TX files (*.xml *.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1606"/>
+        <location filename="src/cfrmsession.cpp" line="1614"/>
         <source>no name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1700"/>
+        <location filename="src/cfrmsession.cpp" line="1708"/>
         <source>File to save transmition events to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1807"/>
+        <location filename="src/cfrmsession.cpp" line="1815"/>
         <source>Form layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1809"/>
+        <location filename="src/cfrmsession.cpp" line="1817"/>
         <source>Line 1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1810"/>
+        <location filename="src/cfrmsession.cpp" line="1818"/>
         <source>Line 2, long text:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1811"/>
+        <location filename="src/cfrmsession.cpp" line="1819"/>
         <source>Line 3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1832"/>
-        <location filename="src/cfrmsession.cpp" line="1868"/>
+        <location filename="src/cfrmsession.cpp" line="1840"/>
+        <location filename="src/cfrmsession.cpp" line="1876"/>
         <source>Failed to open a connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1939"/>
+        <location filename="src/cfrmsession.cpp" line="1947"/>
         <source>Failed to disconnect the connection to the remote host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1991"/>
+        <location filename="src/cfrmsession.cpp" line="1999"/>
         <source>Clear selections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2011"/>
+        <location filename="src/cfrmsession.cpp" line="2019"/>
         <source>Write events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2014"/>
+        <location filename="src/cfrmsession.cpp" line="2022"/>
         <source>Write marked events to file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2017"/>
+        <location filename="src/cfrmsession.cpp" line="2025"/>
         <source>Load events from file...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2021"/>
+        <location filename="src/cfrmsession.cpp" line="2029"/>
         <source>Set/edit GUID (sensor)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2025"/>
+        <location filename="src/cfrmsession.cpp" line="2033"/>
         <source>Add/Edit comment...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2026"/>
+        <location filename="src/cfrmsession.cpp" line="2034"/>
         <source>Remove comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2030"/>
+        <location filename="src/cfrmsession.cpp" line="2038"/>
         <source>Toggle row mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2031"/>
+        <location filename="src/cfrmsession.cpp" line="2039"/>
         <source>Toggle VSCP class mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2034"/>
+        <location filename="src/cfrmsession.cpp" line="2042"/>
         <source>Toggle VSCP type mark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2098"/>
+        <location filename="src/cfrmsession.cpp" line="2106"/>
         <source>Add comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2099"/>
+        <location filename="src/cfrmsession.cpp" line="2107"/>
         <source>Comment:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2254"/>
-        <location filename="src/cfrmsession.cpp" line="2342"/>
+        <location filename="src/cfrmsession.cpp" line="2262"/>
+        <location filename="src/cfrmsession.cpp" line="2350"/>
         <source>There is no RX row selected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2354"/>
+        <location filename="src/cfrmsession.cpp" line="2362"/>
         <source>Copy from RX</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2358"/>
+        <location filename="src/cfrmsession.cpp" line="2366"/>
         <source>Failed to convert RX event to string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2380"/>
-        <location filename="src/cfrmsession.cpp" line="2452"/>
+        <location filename="src/cfrmsession.cpp" line="2387"/>
+        <location filename="src/cfrmsession.cpp" line="2459"/>
         <source>File to save receive events to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2382"/>
-        <location filename="src/cfrmsession.cpp" line="2454"/>
-        <location filename="src/cfrmsession.cpp" line="2588"/>
+        <location filename="src/cfrmsession.cpp" line="2389"/>
+        <location filename="src/cfrmsession.cpp" line="2461"/>
+        <location filename="src/cfrmsession.cpp" line="2595"/>
         <source>RX files (*.xml *.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="2586"/>
+        <location filename="src/cfrmsession.cpp" line="2593"/>
         <source>File to load receive events from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/cfrmsession.cpp" line="3713"/>
+        <location filename="src/cfrmsession.cpp" line="3720"/>
         <source>&lt;h3&gt;VSCP Event count&lt;/h3&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6145,7 +6145,7 @@ and the flag bits for the. the driver.
 <context>
     <name>CanalConfigWizard</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="51"/>
+        <location filename="src/canalconfigwizard.cpp" line="55"/>
         <source>VSCP level I (CANAL) driver configuration Wizard</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6153,12 +6153,12 @@ and the flag bits for the. the driver.
 <context>
     <name>ConclusionPage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="122"/>
+        <location filename="src/canalconfigwizard.cpp" line="126"/>
         <source>Wizard is ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="140"/>
+        <location filename="src/canalconfigwizard.cpp" line="144"/>
         <source>Pressing finish will write configuration and flags to the configuration dialog.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6166,7 +6166,7 @@ and the flag bits for the. the driver.
 <context>
     <name>ConfigChoicePage</name>
     <message>
-        <location filename="src/canalconfigwizard.cpp" line="405"/>
+        <location filename="src/canalconfigwizard.cpp" line="409"/>
         <source>Select on of the available choices</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6507,402 +6507,402 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="164"/>
+        <location filename="src/mainwindow.cpp" line="174"/>
         <source>Connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="165"/>
+        <location filename="src/mainwindow.cpp" line="175"/>
         <source>VSCP Remote Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="180"/>
+        <location filename="src/mainwindow.cpp" line="190"/>
         <source>Local Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="183"/>
+        <location filename="src/mainwindow.cpp" line="193"/>
         <source>Holds local connections. Typically logfile and debug content containing VSCP events.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="190"/>
+        <location filename="src/mainwindow.cpp" line="200"/>
         <source>CANAL Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="200"/>
+        <location filename="src/mainwindow.cpp" line="210"/>
         <source>Socketcan Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="210"/>
+        <location filename="src/mainwindow.cpp" line="220"/>
         <source>TCP/IP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="220"/>
+        <location filename="src/mainwindow.cpp" line="230"/>
         <source>MQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="230"/>
+        <location filename="src/mainwindow.cpp" line="240"/>
         <source>WS1 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="240"/>
+        <location filename="src/mainwindow.cpp" line="250"/>
         <source>WS2 Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="250"/>
+        <location filename="src/mainwindow.cpp" line="260"/>
         <source>UDP Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="260"/>
+        <location filename="src/mainwindow.cpp" line="270"/>
         <source>Multicast Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="270"/>
+        <location filename="src/mainwindow.cpp" line="280"/>
         <source>REST Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="280"/>
+        <location filename="src/mainwindow.cpp" line="290"/>
         <source>RAWCAN Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="290"/>
+        <location filename="src/mainwindow.cpp" line="300"/>
         <source>RAWMQTT Connections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="320"/>
-        <location filename="src/mainwindow.cpp" line="397"/>
-        <location filename="src/mainwindow.cpp" line="457"/>
-        <location filename="src/mainwindow.cpp" line="902"/>
-        <location filename="src/mainwindow.cpp" line="1671"/>
-        <location filename="src/mainwindow.cpp" line="1693"/>
-        <location filename="src/mainwindow.cpp" line="1707"/>
-        <location filename="src/mainwindow.cpp" line="1745"/>
-        <location filename="src/mainwindow.cpp" line="1783"/>
-        <location filename="src/mainwindow.cpp" line="1792"/>
-        <location filename="src/mainwindow.cpp" line="1830"/>
-        <location filename="src/mainwindow.cpp" line="1868"/>
-        <location filename="src/mainwindow.cpp" line="1877"/>
-        <location filename="src/mainwindow.cpp" line="1916"/>
-        <location filename="src/mainwindow.cpp" line="1954"/>
-        <location filename="src/mainwindow.cpp" line="1963"/>
-        <location filename="src/mainwindow.cpp" line="2003"/>
-        <location filename="src/mainwindow.cpp" line="2041"/>
-        <location filename="src/mainwindow.cpp" line="2050"/>
-        <location filename="src/mainwindow.cpp" line="2090"/>
-        <location filename="src/mainwindow.cpp" line="2128"/>
-        <location filename="src/mainwindow.cpp" line="2137"/>
-        <location filename="src/mainwindow.cpp" line="2177"/>
-        <location filename="src/mainwindow.cpp" line="2215"/>
-        <location filename="src/mainwindow.cpp" line="2224"/>
-        <location filename="src/mainwindow.cpp" line="2264"/>
-        <location filename="src/mainwindow.cpp" line="2303"/>
-        <location filename="src/mainwindow.cpp" line="2312"/>
-        <location filename="src/mainwindow.cpp" line="2352"/>
-        <location filename="src/mainwindow.cpp" line="2390"/>
-        <location filename="src/mainwindow.cpp" line="2399"/>
-        <location filename="src/mainwindow.cpp" line="2438"/>
-        <location filename="src/mainwindow.cpp" line="2476"/>
-        <location filename="src/mainwindow.cpp" line="2485"/>
-        <location filename="src/mainwindow.cpp" line="2524"/>
-        <location filename="src/mainwindow.cpp" line="2562"/>
-        <location filename="src/mainwindow.cpp" line="2571"/>
-        <location filename="src/mainwindow.cpp" line="2610"/>
-        <location filename="src/mainwindow.cpp" line="2648"/>
-        <location filename="src/mainwindow.cpp" line="2657"/>
-        <location filename="src/mainwindow.cpp" line="2696"/>
+        <location filename="src/mainwindow.cpp" line="330"/>
+        <location filename="src/mainwindow.cpp" line="407"/>
+        <location filename="src/mainwindow.cpp" line="467"/>
+        <location filename="src/mainwindow.cpp" line="912"/>
+        <location filename="src/mainwindow.cpp" line="1681"/>
+        <location filename="src/mainwindow.cpp" line="1703"/>
+        <location filename="src/mainwindow.cpp" line="1717"/>
+        <location filename="src/mainwindow.cpp" line="1755"/>
+        <location filename="src/mainwindow.cpp" line="1793"/>
+        <location filename="src/mainwindow.cpp" line="1802"/>
+        <location filename="src/mainwindow.cpp" line="1840"/>
+        <location filename="src/mainwindow.cpp" line="1878"/>
+        <location filename="src/mainwindow.cpp" line="1887"/>
+        <location filename="src/mainwindow.cpp" line="1926"/>
+        <location filename="src/mainwindow.cpp" line="1964"/>
+        <location filename="src/mainwindow.cpp" line="1973"/>
+        <location filename="src/mainwindow.cpp" line="2014"/>
+        <location filename="src/mainwindow.cpp" line="2053"/>
+        <location filename="src/mainwindow.cpp" line="2062"/>
+        <location filename="src/mainwindow.cpp" line="2102"/>
+        <location filename="src/mainwindow.cpp" line="2140"/>
+        <location filename="src/mainwindow.cpp" line="2149"/>
+        <location filename="src/mainwindow.cpp" line="2189"/>
+        <location filename="src/mainwindow.cpp" line="2227"/>
+        <location filename="src/mainwindow.cpp" line="2236"/>
+        <location filename="src/mainwindow.cpp" line="2276"/>
+        <location filename="src/mainwindow.cpp" line="2315"/>
+        <location filename="src/mainwindow.cpp" line="2324"/>
+        <location filename="src/mainwindow.cpp" line="2364"/>
+        <location filename="src/mainwindow.cpp" line="2402"/>
+        <location filename="src/mainwindow.cpp" line="2411"/>
+        <location filename="src/mainwindow.cpp" line="2450"/>
+        <location filename="src/mainwindow.cpp" line="2488"/>
+        <location filename="src/mainwindow.cpp" line="2497"/>
+        <location filename="src/mainwindow.cpp" line="2536"/>
+        <location filename="src/mainwindow.cpp" line="2575"/>
+        <location filename="src/mainwindow.cpp" line="2584"/>
+        <location filename="src/mainwindow.cpp" line="2625"/>
+        <location filename="src/mainwindow.cpp" line="2664"/>
+        <location filename="src/mainwindow.cpp" line="2673"/>
+        <location filename="src/mainwindow.cpp" line="2712"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="321"/>
+        <location filename="src/mainwindow.cpp" line="331"/>
         <source>Failed to load remote event data. Will not be used.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="398"/>
+        <location filename="src/mainwindow.cpp" line="408"/>
         <source>Unable to get version for remote VSCP event data. Will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="458"/>
+        <location filename="src/mainwindow.cpp" line="468"/>
         <source>A new VSCP event database has automatically been downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="898"/>
+        <location filename="src/mainwindow.cpp" line="908"/>
         <source>Are you sure that you want to delete [</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1240"/>
+        <location filename="src/mainwindow.cpp" line="1250"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1247"/>
+        <location filename="src/mainwindow.cpp" line="1257"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1268"/>
+        <location filename="src/mainwindow.cpp" line="1278"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1269"/>
+        <location filename="src/mainwindow.cpp" line="1279"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1272"/>
+        <location filename="src/mainwindow.cpp" line="1282"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1274"/>
+        <location filename="src/mainwindow.cpp" line="1284"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1304"/>
+        <location filename="src/mainwindow.cpp" line="1314"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1306"/>
+        <location filename="src/mainwindow.cpp" line="1316"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1312"/>
+        <location filename="src/mainwindow.cpp" line="1322"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1314"/>
+        <location filename="src/mainwindow.cpp" line="1324"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1320"/>
+        <location filename="src/mainwindow.cpp" line="1330"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1322"/>
+        <location filename="src/mainwindow.cpp" line="1332"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1328"/>
+        <location filename="src/mainwindow.cpp" line="1338"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1330"/>
+        <location filename="src/mainwindow.cpp" line="1340"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1336"/>
+        <location filename="src/mainwindow.cpp" line="1346"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1338"/>
+        <location filename="src/mainwindow.cpp" line="1348"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1346"/>
+        <location filename="src/mainwindow.cpp" line="1356"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1349"/>
+        <location filename="src/mainwindow.cpp" line="1359"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1351"/>
+        <location filename="src/mainwindow.cpp" line="1361"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1352"/>
+        <location filename="src/mainwindow.cpp" line="1362"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1356"/>
+        <location filename="src/mainwindow.cpp" line="1366"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1359"/>
+        <location filename="src/mainwindow.cpp" line="1369"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1366"/>
+        <location filename="src/mainwindow.cpp" line="1376"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1368"/>
+        <location filename="src/mainwindow.cpp" line="1378"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1375"/>
+        <location filename="src/mainwindow.cpp" line="1385"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1377"/>
+        <location filename="src/mainwindow.cpp" line="1387"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1387"/>
+        <location filename="src/mainwindow.cpp" line="1397"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1388"/>
+        <location filename="src/mainwindow.cpp" line="1398"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1389"/>
+        <location filename="src/mainwindow.cpp" line="1399"/>
         <source>Open settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1390"/>
+        <location filename="src/mainwindow.cpp" line="1400"/>
         <source>&amp;Known GUID&apos;s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1391"/>
+        <location filename="src/mainwindow.cpp" line="1401"/>
         <source>Edit/Add known GUID&apos;s...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1392"/>
+        <location filename="src/mainwindow.cpp" line="1402"/>
         <source>&amp;Session filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1393"/>
+        <location filename="src/mainwindow.cpp" line="1403"/>
         <source>Edit/Add session filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1395"/>
+        <location filename="src/mainwindow.cpp" line="1405"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1396"/>
+        <location filename="src/mainwindow.cpp" line="1406"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1397"/>
+        <location filename="src/mainwindow.cpp" line="1407"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1399"/>
+        <location filename="src/mainwindow.cpp" line="1409"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1400"/>
+        <location filename="src/mainwindow.cpp" line="1410"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1416"/>
+        <location filename="src/mainwindow.cpp" line="1426"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1512"/>
+        <location filename="src/mainwindow.cpp" line="1522"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1513"/>
+        <location filename="src/mainwindow.cpp" line="1523"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1528"/>
+        <location filename="src/mainwindow.cpp" line="1538"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1672"/>
+        <location filename="src/mainwindow.cpp" line="1682"/>
         <source>filter set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1694"/>
-        <location filename="src/mainwindow.cpp" line="1746"/>
-        <location filename="src/mainwindow.cpp" line="1784"/>
-        <location filename="src/mainwindow.cpp" line="1831"/>
-        <location filename="src/mainwindow.cpp" line="1869"/>
-        <location filename="src/mainwindow.cpp" line="1917"/>
-        <location filename="src/mainwindow.cpp" line="1955"/>
-        <location filename="src/mainwindow.cpp" line="2004"/>
-        <location filename="src/mainwindow.cpp" line="2042"/>
-        <location filename="src/mainwindow.cpp" line="2091"/>
-        <location filename="src/mainwindow.cpp" line="2129"/>
-        <location filename="src/mainwindow.cpp" line="2178"/>
-        <location filename="src/mainwindow.cpp" line="2216"/>
-        <location filename="src/mainwindow.cpp" line="2265"/>
-        <location filename="src/mainwindow.cpp" line="2304"/>
-        <location filename="src/mainwindow.cpp" line="2353"/>
-        <location filename="src/mainwindow.cpp" line="2391"/>
-        <location filename="src/mainwindow.cpp" line="2439"/>
-        <location filename="src/mainwindow.cpp" line="2477"/>
-        <location filename="src/mainwindow.cpp" line="2525"/>
-        <location filename="src/mainwindow.cpp" line="2563"/>
-        <location filename="src/mainwindow.cpp" line="2611"/>
-        <location filename="src/mainwindow.cpp" line="2649"/>
-        <location filename="src/mainwindow.cpp" line="2697"/>
+        <location filename="src/mainwindow.cpp" line="1704"/>
+        <location filename="src/mainwindow.cpp" line="1756"/>
+        <location filename="src/mainwindow.cpp" line="1794"/>
+        <location filename="src/mainwindow.cpp" line="1841"/>
+        <location filename="src/mainwindow.cpp" line="1879"/>
+        <location filename="src/mainwindow.cpp" line="1927"/>
+        <location filename="src/mainwindow.cpp" line="1965"/>
+        <location filename="src/mainwindow.cpp" line="2015"/>
+        <location filename="src/mainwindow.cpp" line="2054"/>
+        <location filename="src/mainwindow.cpp" line="2103"/>
+        <location filename="src/mainwindow.cpp" line="2141"/>
+        <location filename="src/mainwindow.cpp" line="2190"/>
+        <location filename="src/mainwindow.cpp" line="2228"/>
+        <location filename="src/mainwindow.cpp" line="2277"/>
+        <location filename="src/mainwindow.cpp" line="2316"/>
+        <location filename="src/mainwindow.cpp" line="2365"/>
+        <location filename="src/mainwindow.cpp" line="2403"/>
+        <location filename="src/mainwindow.cpp" line="2451"/>
+        <location filename="src/mainwindow.cpp" line="2489"/>
+        <location filename="src/mainwindow.cpp" line="2537"/>
+        <location filename="src/mainwindow.cpp" line="2576"/>
+        <location filename="src/mainwindow.cpp" line="2626"/>
+        <location filename="src/mainwindow.cpp" line="2665"/>
+        <location filename="src/mainwindow.cpp" line="2713"/>
         <source>A connection needs a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1708"/>
-        <location filename="src/mainwindow.cpp" line="1793"/>
-        <location filename="src/mainwindow.cpp" line="1878"/>
-        <location filename="src/mainwindow.cpp" line="1964"/>
-        <location filename="src/mainwindow.cpp" line="2051"/>
-        <location filename="src/mainwindow.cpp" line="2138"/>
-        <location filename="src/mainwindow.cpp" line="2225"/>
-        <location filename="src/mainwindow.cpp" line="2313"/>
-        <location filename="src/mainwindow.cpp" line="2400"/>
-        <location filename="src/mainwindow.cpp" line="2486"/>
-        <location filename="src/mainwindow.cpp" line="2572"/>
-        <location filename="src/mainwindow.cpp" line="2658"/>
+        <location filename="src/mainwindow.cpp" line="1718"/>
+        <location filename="src/mainwindow.cpp" line="1803"/>
+        <location filename="src/mainwindow.cpp" line="1888"/>
+        <location filename="src/mainwindow.cpp" line="1974"/>
+        <location filename="src/mainwindow.cpp" line="2063"/>
+        <location filename="src/mainwindow.cpp" line="2150"/>
+        <location filename="src/mainwindow.cpp" line="2237"/>
+        <location filename="src/mainwindow.cpp" line="2325"/>
+        <location filename="src/mainwindow.cpp" line="2412"/>
+        <location filename="src/mainwindow.cpp" line="2498"/>
+        <location filename="src/mainwindow.cpp" line="2585"/>
+        <location filename="src/mainwindow.cpp" line="2674"/>
         <source>Failed to add new connection.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6910,8 +6910,8 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <location filename="src/cfrmsession.cpp" line="1658"/>
-        <location filename="src/cfrmsession.cpp" line="2754"/>
+        <location filename="src/cfrmsession.cpp" line="1666"/>
+        <location filename="src/cfrmsession.cpp" line="2761"/>
         <source>Incorrect file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6961,12 +6961,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>main</name>
     <message>
-        <location filename="src/main.cpp" line="27"/>
+        <location filename="src/main.cpp" line="35"/>
         <source>Set &lt;directory&gt; as home.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/main.cpp" line="28"/>
+        <location filename="src/main.cpp" line="36"/>
         <source>directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6974,97 +6974,97 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vscpworks</name>
     <message>
-        <location filename="src/vscpworks.cpp" line="146"/>
+        <location filename="src/vscpworks.cpp" line="154"/>
         <source>Unknown type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="151"/>
+        <location filename="src/vscpworks.cpp" line="159"/>
         <source>No connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="155"/>
+        <location filename="src/vscpworks.cpp" line="163"/>
         <source>VSCP local connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="159"/>
+        <location filename="src/vscpworks.cpp" line="167"/>
         <source>VSCP tcp/ip connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="163"/>
+        <location filename="src/vscpworks.cpp" line="171"/>
         <source>VSCP CANAL/Level I connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="167"/>
+        <location filename="src/vscpworks.cpp" line="175"/>
         <source>VSCP socketcan connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="171"/>
+        <location filename="src/vscpworks.cpp" line="179"/>
         <source>VSCP websocket protocol 1 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="175"/>
+        <location filename="src/vscpworks.cpp" line="183"/>
         <source>VSCP websocket protocol 2 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="179"/>
+        <location filename="src/vscpworks.cpp" line="187"/>
         <source>VSCP MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="183"/>
+        <location filename="src/vscpworks.cpp" line="191"/>
         <source>VSCP UDP connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="187"/>
+        <location filename="src/vscpworks.cpp" line="195"/>
         <source>VSCP multicast connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="191"/>
+        <location filename="src/vscpworks.cpp" line="199"/>
         <source>VSCP REST connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="195"/>
+        <location filename="src/vscpworks.cpp" line="203"/>
         <source>VSCP RS-232 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="199"/>
+        <location filename="src/vscpworks.cpp" line="207"/>
         <source>VSCP RS-485 connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="203"/>
+        <location filename="src/vscpworks.cpp" line="211"/>
         <source>Raw CAN connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="207"/>
+        <location filename="src/vscpworks.cpp" line="215"/>
         <source>Raw MQTT connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="438"/>
+        <location filename="src/vscpworks.cpp" line="446"/>
         <source>The VSCP event database does not exist. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="447"/>
+        <location filename="src/vscpworks.cpp" line="455"/>
         <source>The VSCP event database could not be opened. Is it available? [%s]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/vscpworks.cpp" line="645"/>
+        <location filename="src/vscpworks.cpp" line="653"/>
         <source>Failed to insert GUID into database %s</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7076,119 +7076,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="src/vscpworks.h" line="90"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>wndBootloader</name>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="14"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="14"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="14"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="14"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="14"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="101"/>
-        <source>VSCP Bootloader</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="67"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="67"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="67"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="67"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="67"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="103"/>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="83"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="83"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="83"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="83"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="83"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="104"/>
-        <source>&lt; Prev</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="96"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="96"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="96"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="96"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="96"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="105"/>
-        <source>Next &gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="109"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="109"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="109"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="109"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="109"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="106"/>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader1.ui" line="125"/>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader5.ui" line="125"/>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_1_MSVC2010_32bit-Debug/ui_wndbootloader.h" line="107"/>
-        <source>VSCP Bootloader wizard will now walk you through 
-the steps needed to update he firmware of your 
-remote device. 
-
-The node you need to update can be located on a VSCP bus 
-connected to a server on a remote location or be connected
-to an interface on your local computer. 
-
-Please don&apos;t turn of the power off the remote node 
-until the firmware update process is completed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader2.ui" line="125"/>
-        <source>Select the interface you want to use 
-
-If you want to use a remote VSCP server connected 
-node you must  select interface and node on that 
-server as well. </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader3.ui" line="125"/>
-        <source>Select device to bootload
-
-Enter the nickname or the full GUID for the device you want to work with</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="125"/>
-        <source>Select the bootloader algorithm to use 
-
-If you load bootloader info from the MDF file the algorithm will 
-be set for you.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="150"/>
-        <source>Select algorithm fron MDF...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="163"/>
-        <source>VSCP standard algorithm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/vscp_bootloader/wndbootloader4.ui" line="176"/>
-        <source>or select</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="vscp/contrib/vscp_bootloader/build-vscp_bootloader-Desktop_Qt_5_2_0_MinGW_32bit-Debug/ui_wndbootloader.h" line="59"/>
-        <source>wndBootloader</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

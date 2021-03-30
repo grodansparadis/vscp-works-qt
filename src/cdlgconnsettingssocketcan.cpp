@@ -26,6 +26,12 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
+#ifndef WIN32
+
 #include <vscphelper.h>
 #include <vscp_client_socketcan.h>
 
@@ -528,3 +534,4 @@ void CDlgConnSettingsSocketCan::onTestConnection(void)
     }
 }
 
+#endif  // WIN32

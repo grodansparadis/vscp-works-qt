@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgsocketcanflags.h"
 #include "ui_cdlgsocketcanflags.h"
 

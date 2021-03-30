@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgcanfilter.h"
 #include "ui_cdlgcanfilter.h"
 

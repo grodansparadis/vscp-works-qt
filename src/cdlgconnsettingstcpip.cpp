@@ -26,6 +26,14 @@
 // SOFTWARE.
 //
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "vscpworks.h"
 
 #include "cdlgconnsettingstcpip.h"

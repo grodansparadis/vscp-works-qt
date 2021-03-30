@@ -28,6 +28,10 @@
 #ifndef CFRMSESSION_H
 #define CFRMSESSION_H
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <vscp.h>
 
 #include <vscp_client_base.h>

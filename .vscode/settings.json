@@ -87,13 +87,8 @@
         "**/.git/subtree-cache/**": true,
         "**/node_modules/**": true
     },
-    "cSpell.words": [
-        "c",
-        "display",
-        "dlg",
-        "guid",
-        "index",
-        "sensor",
-        "str"
+    "cmake.configureArgs": [
+        "-DVCPKG_TARGET_TRIPLET=x64-windows",
+        "-DCMAKE_TOOLCHAIN_FILE=E:/development/vcpkg/scripts/buildsystems/vcpkg.cmake"
     ]
 }

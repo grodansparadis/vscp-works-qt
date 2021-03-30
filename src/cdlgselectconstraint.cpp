@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgselectconstraint.h"
 #include "ui_cdlgselectconstraint.h"
 

@@ -29,6 +29,8 @@
 #ifndef CDLGCONNSETTINGSSOCKETCAN_H
 #define CDLGCONNSETTINGSSOCKETCAN_H
 
+#ifndef WIN32
+
 #include "vscp_client_socketcan.h"
 
 #include <QDialog>
@@ -166,5 +168,6 @@ public:
     vscpClientSocketCan m_clientSocketcan;
 };
 
+#endif  // WIN32
 
 #endif // CDLGCONNSETTINGSSOCKETCAN_H

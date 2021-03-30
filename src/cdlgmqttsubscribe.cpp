@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgmqttsubscribe.h"
 #include "ui_cdlgmqttsubscribe.h"
 

@@ -28,6 +28,10 @@
 // https://doc.qt.io/qt-5/qtwidgets-itemviews-fetchmore-example.html
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "eventlistmodel.h"
 
 #include <QGuiApplication>

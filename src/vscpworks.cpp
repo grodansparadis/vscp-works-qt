@@ -26,7 +26,15 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
+#ifndef WIN32
 #include <syslog.h>
+#else
+#include <windows.h>
+#endif
 
 #include <vscp.h>
 #include <vscphelper.h>
@@ -436,7 +444,7 @@ bool vscpworks::loadEventDb(void)
     // If the database don't exist, bail out
     if (!QFile::exists(dbpath)) {
         QString err = QString(tr("The VSCP event database does not exist. Is it available? [%s]")).arg(dbpath);
-        syslog(LOG_ERR, "%s", err.toStdString().c_str());
+        fprintf(stderr, "%s", err.toStdString().c_str());
         m_mutexVscpEventsMaps.unlock();
         return false;
     }
@@ -445,7 +453,7 @@ bool vscpworks::loadEventDb(void)
 
     if (!m_evdb.open()) {
         QString err = QString(tr("The VSCP event database could not be opened. Is it available? [%s]")).arg(dbpath);
-        syslog(LOG_ERR, "%s", err.toStdString().c_str());
+        fprintf(stderr, "%s", err.toStdString().c_str());
         m_mutexVscpEventsMaps.unlock();
         return false;
     }

@@ -26,8 +26,18 @@
 // SOFTWARE.
 //
 
-#include <syslog.h>
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
+#ifdef WIN32
+#include <winsock2.h>
+#include <windows.h>
+#endif
 
 #include <QtWidgets>
 #include <QMessageBox>
@@ -423,7 +433,7 @@ void MainWindow::checkRemoteEventDbVersion()
         } 
     }
     catch (...) {
-        syslog(LOG_ERR,"Parsing VSCP Event version information failed");
+        fprintf(stderr,"Parsing VSCP Event version information failed");
     }
 }
 
@@ -1941,9 +1951,9 @@ restart:
 //
 
 void MainWindow::newSocketCanConnection()
-{
+{  
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-
+#ifndef WIN32
     CDlgConnSettingsSocketCan dlg(this);
     dlg.setInitialFocus();
 
@@ -1977,6 +1987,7 @@ restart:
         addChildItemToConnectionTree(m_topitem_socketcan, conn);
         m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
     }
+#endif    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1986,7 +1997,7 @@ restart:
 void MainWindow::editSocketCanConnection(treeWidgetItemConn *itemConn)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    
+ #ifndef WIN32   
     // Get the connection object  
     QJsonObject *pconn = itemConn->getJson();
 
@@ -2021,6 +2032,7 @@ restart:
 
         m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
     }
+#endif    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2552,6 +2564,7 @@ void MainWindow::newRawCanConnection()
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
+#ifndef WIN32
     CDlgConnSettingsRawCan dlg(this);
     dlg.setInitialFocus();
 
@@ -2585,6 +2598,7 @@ restart:
         addChildItemToConnectionTree(m_topitem_rawcan, conn);
         m_topitem_rawcan->sortChildren(0, Qt::AscendingOrder);
     }
+#endif    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2595,6 +2609,7 @@ void MainWindow::editRawCanConnection(treeWidgetItemConn *itemConn)
 {
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     
+#ifndef WIN32    
     // Get the connection object  
     QJsonObject *pconn = itemConn->getJson();
 
@@ -2628,6 +2643,7 @@ restart:
 
         m_topitem_rawcan->sortChildren(0, Qt::AscendingOrder);
     }
+#endif    
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgtls.h"
 #include "ui_cdlgtls.h"
 

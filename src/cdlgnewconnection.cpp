@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "cdlgnewconnection.h"
 #include "ui_cdlgnewconnection.h"
 

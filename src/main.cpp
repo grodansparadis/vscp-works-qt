@@ -1,3 +1,11 @@
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include "vscp.h"
 #include "version.h"
 #include "vscphelper.h"

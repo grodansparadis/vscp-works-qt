@@ -49,6 +49,7 @@ endif()
 
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-DWIN32_LEAN_AND_MEANS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
@@ -58,6 +59,11 @@ endif()
 if (WIN32)
 #set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
 endif()
+
+# if (MSVC)
+# # use precompiled headers
+# set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h" "-fstdafx.h")
+# endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -121,6 +127,7 @@ if (WIN32)
 #   set(DLFCN_INCLUDES "E:\\development\\dlfcn-win32\\src\\")
 #   set(DLFCN__LIBS "E:\\development\\dlfcn-win32\\src\\")
 endif() 
+
 
 # Set civetweb build flags
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET")
@@ -436,12 +443,17 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/common/fastpbkdf2.h
     ${VSCP_PATH}/src/common/fastpbkdf2.c    
     install/vscp-works-qt.desktop
-    ${TS_FILES}
+    ${TS_FILES}    
   ) 
 
+# add_executable(vscp-works-qt
+#     src/StdAfx.h
+#     src/StdAfx.cpp
+# )
+
 if (WIN32)
-set(LOCAL_WIN_INCLUDE "windows\\include\\")
-set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
+#set(LOCAL_WIN_INCLUDE "windows\\include\\")
+#set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
 endif()  
 
 if (WIN32)
@@ -543,9 +555,9 @@ message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
 
 message(Main include: "${VCPKG_HOME}/installed/x64_linux/include")
 
-#include(GNUInstallDirs)
 if(WIN32)
-	  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-DWIN32_LEAN_AND_MEANS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
@@ -562,4 +574,4 @@ install(FILES ${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/share/icons/) 
 
 # Event database etc
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/vscp-works-qt/) 
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/vscp-works-qt/)

@@ -26,6 +26,9 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
 
 #include "cdlgconnsettingscanal.h"
 #include "ui_cdlgconnsettingscanal.h"

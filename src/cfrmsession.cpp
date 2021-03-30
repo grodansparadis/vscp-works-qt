@@ -27,6 +27,14 @@
 //
 // tableWidget->resizeRowsToContents();
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifdef WIN32
+#include "StdAfx.h"
+#endif
+
 #include <stdlib.h>
 
 #include <vscp.h>
@@ -1689,7 +1697,7 @@ void
 CFrmSession::saveTxEvents(const QString& path)
 {
     QString fileName = path;
-    vscpEvent* pev;
+    //vscpEvent* pev;
 
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
@@ -2369,8 +2377,7 @@ void
 CFrmSession::saveMarkRxToFile(void)
 {
     QString fileName;
-    vscpEvent* pev;
-
+    //vscpEvent* pev;
 
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -2441,7 +2448,7 @@ void
 CFrmSession::saveRxToFile(void)
 {
     QString fileName;
-    vscpEvent* pev;
+    //vscpEvent* pev;
 
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
