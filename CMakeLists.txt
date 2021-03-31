@@ -50,6 +50,10 @@ endif()
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DWIN32_LEAN_AND_MEANS)
+    add_definitions(-DOPENSSL_API_1_1)
+    add_definitions(-D_POSIX_C_SOURCE)
+    add_definitions(-DUSE_WEBSOCKET)
+    add_definitions(-DUSE_IPV6)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
@@ -60,10 +64,11 @@ if (WIN32)
 #set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
 endif()
 
-# if (MSVC)
-# # use precompiled headers
-# set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h" "-fstdafx.h")
-# endif()
+if (MSVC)
+#     # use precompiled headers
+#     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h" "-fstdafx.h")
+    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h")
+endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -76,8 +81,8 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
 
-#set (THREADS_PREFER_PTHREAD_FLAG ON)
-#find_package(Threads REQUIRED)
+set (THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 find_package(OpenSSL REQUIRED)
 
@@ -85,6 +90,7 @@ set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Expat C library
 if (WIN32)
+find_package(pthread REQUIRED)
 find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
 get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
 get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
@@ -130,7 +136,7 @@ endif()
 
 
 # Set civetweb build flags
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET")
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
 string(FIND "${OPENSSL_VERSION}" "1.1." SSL_VER_POS)
 if(${SSL_VER_POS})
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
@@ -446,20 +452,11 @@ add_executable(vscp-works-qt
     ${TS_FILES}    
   ) 
 
-# add_executable(vscp-works-qt
-#     src/StdAfx.h
-#     src/StdAfx.cpp
-# )
-
-if (WIN32)
-#set(LOCAL_WIN_INCLUDE "windows\\include\\")
-#set(LOCAL_SYSLOG_INCLUDE "windows\\syslog\\include\\")
-endif()  
-
 if (WIN32)
 include_directories( PUBLIC ./src 
     ./build
     ./ui
+    ${PThreads4W_DLL_DIR}
     ${VSCP_PATH}/src/vscp/common/
     ${VSCP_PATH}/src/common
     ${VSCP_PATH}/src/common/third_party
@@ -507,10 +504,15 @@ target_link_libraries(vscp-works-qt PRIVATE
     Qt5::Network
     Qt5::Quick 
     Qt5::Sql
-    Qt5:SerialBus
-    Qt5::SerialPort
-    m
-    pthread
+#    Qt5:SerialBus
+#    Qt5::SerialPort
+#    m
+#    pthreadVC3d.lib
+#    pthreadVC3d.lib
+#    pthreadVSE3d.lib
+#    pthreadVC3.lib  
+    E:\\development\\vcpkg\\installed\\x64-windows\\lib\\pthreadVC3.lib
+    E:\\development\\vcpkg\\installed\\x64-windows\\lib\\pthreadVCE3.lib
     OpenSSL::SSL 
     OpenSSL::Crypto
     OpenSSL::SSL OpenSSL::Crypto
