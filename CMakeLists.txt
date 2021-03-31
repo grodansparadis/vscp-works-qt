@@ -118,9 +118,9 @@ if (WIN32)
 # set(PAHO_INCLUDE_DIR "C:\\mqtt\\paho-c\\include\\")
 # message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}")
 # message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
-# else()
-# include(Findpaho-mqtt)
-# find_package(paho-mqtt REQUIRED)
+else()
+ include(Findpaho-mqtt)
+ find_package(paho-mqtt REQUIRED)
 endif()
 
 # DELETE Check SLL version and set variable accordingly
@@ -507,10 +507,6 @@ target_link_libraries(vscp-works-qt PRIVATE
 #    Qt5:SerialBus
 #    Qt5::SerialPort
 #    m
-#    pthreadVC3d.lib
-#    pthreadVC3d.lib
-#    pthreadVSE3d.lib
-#    pthreadVC3.lib  
     E:\\development\\vcpkg\\installed\\x64-windows\\lib\\pthreadVC3.lib
     E:\\development\\vcpkg\\installed\\x64-windows\\lib\\pthreadVCE3.lib
     OpenSSL::SSL 
