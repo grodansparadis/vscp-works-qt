@@ -4,6 +4,7 @@ build
 src/CMakeCache.txt
 src/CMakeFiles/
 src/cmake_install.cmake
+vscp-works-qt_en_150.ts
 
 # Buildfiles on windows
 ALL_BUILD.vcxproj

@@ -1,4 +1,4 @@
-name: CMake
+name: CMake-Mac
 
 on: [push]
 
