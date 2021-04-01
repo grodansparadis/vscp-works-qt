@@ -325,11 +325,25 @@ MainWindow::MainWindow()
 
     initRemoteEventDbFetch();
 
+    // On first start-up wait a while for the
+    // event database to be downloaded
+    // QString pathEventDb = pworks->m_shareFolder;
+    // pathEventDb += "vscp_events.sqlite3";
+    // qint64 start = QDateTime::currentMSecsSinceEpoch();
+    // while (true) {
+    //     if (QFile::exists(pathEventDb) || 
+    //         ((QDateTime::currentMSecsSinceEpoch()-start) > 5000)) {
+    //         break;
+    //     }
+    //     sleep(1);
+    // }
+
     if (!pworks->loadEventDb()) {
-        QMessageBox::information(this, 
-                                    tr("vscpworks+"),
-                                    tr("Failed to load remote event data. Will not be used."),
-                                    QMessageBox::Ok );
+        statusBar()->showMessage(tr("Failed to load remote event data. Will try to load from external source."));
+        // QMessageBox::information(this, 
+        //                             tr("vscpworks+"),
+        //                             tr("Failed to load remote event data. Will try to load from external source."),
+        //                             QMessageBox::Ok );
     }
 
     //m_connTreeTable->selectionModel()->select(1, QItemSelectionModel::Select | QItemSelectionModel::Rows); 
@@ -384,7 +398,7 @@ void MainWindow::initForcedRemoteEventDbFetch()
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
     // Get version for remote events
-    QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
+    QUrl eventUrl(tr("https://www.vscp.org/events/vscp_events.sqlite3"));
     pworks->m_pVersionCtrl = new FileDownloader(eventUrl, this);
 
     bool success = connect(pworks->m_pVersionCtrl, &FileDownloader::downloaded, 
@@ -444,9 +458,24 @@ void MainWindow::checkRemoteEventDbVersion()
 
 void MainWindow::downloadedEventDb()
 {
+    QString tmpPath;
+    QFile file;
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-    QFile file("/tmp/vscp_events.sqlite3");
+    QTemporaryDir dir;
+    if (dir.isValid()) {
+        tmpPath = dir.path() + tr("/vscp_events.sqlite3");
+    }
+    else {
+#ifdef WIN32
+        // C:\Users\<Username>\AppData\Local\Temp
+        tmpPath = tr("C:/WINDOWS/Temp/vscp_events.sqlite3");
+#else
+        tmpPath = tr("/tmp/vscp_events.sqlite3");
+#endif
+    }
+    
+    file.setFileName(tmpPath);
     file.open(QIODevice::WriteOnly);
     file.write(pworks->m_pVersionCtrl->downloadedData());
     file.close();
@@ -458,11 +487,12 @@ void MainWindow::downloadedEventDb()
         QFile::remove(path);
     }
 
-    QFile::copy("/tmp/vscp_events.sqlite3", path);    
+    QFile::copy(tmpPath, path);
 
     pworks->m_lastEventDbLoadDateTime = pworks->m_lastEventDbServerDateTime;
     pworks->writeSettings();
     pworks->loadEventDb();
+    statusBar()->showMessage(tr("A new VSCP event database has automatically been downloaded."));
     QMessageBox::information(this, 
                                 tr("vscpworks+"),
                                 tr("A new VSCP event database has automatically been downloaded."),
