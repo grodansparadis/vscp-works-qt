@@ -38,6 +38,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         cd vcpkg 
+        ls
         .\vcpkg\bootstrap-vcpkg.bat 
         .\vcpkg\vcpkg install expat:x64-windows 
         .\vcpkg install qt5:x64-windows 
