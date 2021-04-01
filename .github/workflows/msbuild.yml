@@ -39,7 +39,7 @@ jobs:
       run: |
         cd vcpkg 
         ls
-        .\vcpkg\bootstrap-vcpkg.bat 
+        ./vcpkg/bootstrap-vcpkg.bat 
         .\vcpkg\vcpkg install expat:x64-windows 
         .\vcpkg install qt5:x64-windows 
         .\vcpkg install pthread:x64-windows 
