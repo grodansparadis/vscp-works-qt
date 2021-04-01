@@ -2,6 +2,153 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_150">
 <context>
+    <name>AbstractButtonSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="42"/>
+        <source>AbstractButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="46"/>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="47"/>
+        <source>The text displayed on the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="57"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="57"/>
+        <source>Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="58"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="58"/>
+        <source>Determines how the icon and text are displayed within the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="71"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="71"/>
+        <source>Checkable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="72"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="72"/>
+        <source>Whether the button is checkable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="83"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="83"/>
+        <source>Checked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="84"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="84"/>
+        <source>Whether the button is checked.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="95"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="95"/>
+        <source>Exclusive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="96"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="96"/>
+        <source>Whether the button is exclusive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="107"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="107"/>
+        <source>Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="108"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="108"/>
+        <source>Whether the button repeats while pressed and held down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BusyIndicatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="46"/>
+        <source>BusyIndicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="50"/>
+        <source>Running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="51"/>
+        <source>Whether the busy indicator is currently indicating activity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ButtonSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="43"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="43"/>
+        <source>Button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="47"/>
+        <source>AutoRepeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="48"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="48"/>
+        <source>Whether the button repeats pressed(), released() and clicked() signals while the button is pressed and held down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="58"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="58"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="59"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="59"/>
+        <source>Whether the button is flat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="69"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="69"/>
+        <source>Highlighted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="70"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="70"/>
+        <source>Whether the button is highlighted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgCanFilter</name>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="14"/>
@@ -4846,63 +4993,73 @@ and the flag bits for the. the driver.
     <name>CDlgSensorIndex</name>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="23"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="110"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="110"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="110"/>
         <source>Sensorindex - Known sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="76"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="111"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="111"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="111"/>
         <location filename="src/cdlgsensorindex.cpp" line="220"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="89"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="112"/>
         <location filename="src/cdlgsensorindex.cpp" line="221"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="102"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="113"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="115"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="114"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="114"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="114"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="131"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="115"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="115"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="115"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="147"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="116"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="116"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="116"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="173"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="117"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="117"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="117"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="190"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="118"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="118"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="118"/>
         <source>GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="206"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="119"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="119"/>
+        <location filename="build/vscp-works-qt_autogen/include_Release/ui_cdlgsensorindex.h" line="119"/>
         <source>name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6151,6 +6308,120 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CheckBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckBoxSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckBoxSpecifics.qml" line="46"/>
+        <source>CheckBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CheckDelegateSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckDelegateSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckDelegateSpecifics.qml" line="46"/>
+        <source>CheckDelegate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CheckSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="44"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="44"/>
+        <source>Check State</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="45"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="45"/>
+        <source>The current check state.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="57"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="57"/>
+        <source>Tri-state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="58"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="58"/>
+        <source>Whether the checkbox has three states.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ComboBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="46"/>
+        <source>ComboBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="50"/>
+        <source>Text Role</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="51"/>
+        <source>The model role used for displaying text.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="61"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="61"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="62"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="74"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="74"/>
+        <source>Editable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="75"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="75"/>
+        <source>Whether the combo box is editable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="85"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="85"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="86"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="86"/>
+        <source>Whether the combo box button is flat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="96"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="96"/>
+        <source>DisplayText</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="97"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="97"/>
+        <source>Holds the text that is displayed on the combo box button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConclusionPage</name>
     <message>
         <location filename="src/canalconfigwizard.cpp" line="126"/>
@@ -6168,6 +6439,222 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/canalconfigwizard.cpp" line="409"/>
         <source>Select on of the available choices</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ContainerSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="42"/>
+        <source>Container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="46"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="47"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ControlSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="42"/>
+        <source>Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="46"/>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="47"/>
+        <source>Whether the control is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="58"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="58"/>
+        <source>Focus Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="59"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="59"/>
+        <source>Focus policy of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="71"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="71"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="72"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="72"/>
+        <source>Whether control accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="83"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="83"/>
+        <source>Spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="84"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="84"/>
+        <source>Spacing between internal elements of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="97"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="97"/>
+        <source>Wheel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="98"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="98"/>
+        <source>Whether control accepts wheel events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DelayButtonSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="46"/>
+        <source>DelayButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="50"/>
+        <source>Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="51"/>
+        <source>The delay in milliseconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DialSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="46"/>
+        <source>Dial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="51"/>
+        <source>The current value of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="65"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="66"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="66"/>
+        <source>The starting value of the dial range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="80"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="80"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="81"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="81"/>
+        <source>The ending value of the dial range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="95"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="95"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="96"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="96"/>
+        <source>The step size of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="110"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="110"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="111"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="111"/>
+        <source>The snap mode of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="123"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="123"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="124"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="124"/>
+        <source>Whether the dial provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="135"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="135"/>
+        <source>Input Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="136"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="136"/>
+        <source>How the dial tracks movement.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="148"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="148"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="149"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="149"/>
+        <source>Whether the dial wraps when dragged.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6337,6 +6824,136 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/scan.ui" line="165"/>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="46"/>
+        <source>GroupBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="50"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="51"/>
+        <source>The title of the group box.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>InsetSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="42"/>
+        <source>Inset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="46"/>
+        <source>Vertical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="50"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="51"/>
+        <source>Top inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="68"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="68"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="69"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="69"/>
+        <source>Bottom inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="83"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="83"/>
+        <source>Horizontal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="87"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="87"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="88"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="88"/>
+        <source>Left inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="105"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="105"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="106"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="106"/>
+        <source>Right inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ItemDelegateSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="43"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="43"/>
+        <source>ItemDelegate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="47"/>
+        <source>Highlighted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="48"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="48"/>
+        <source>Whether the delegate is highlighted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LabelSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="54"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="57"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="54"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="57"/>
+        <source>Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="66"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="69"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="66"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="69"/>
+        <source>Style Color</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6908,11 +7525,852 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>PaddingSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="42"/>
+        <source>Padding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="46"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="47"/>
+        <source>Padding between the content and the top edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="60"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="60"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="61"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="61"/>
+        <source>Padding between the content and the left edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="74"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="74"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="75"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="75"/>
+        <source>Padding between the content and the right edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="88"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="88"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="89"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="89"/>
+        <source>Padding between the content and the bottom edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PageIndicatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="46"/>
+        <source>PageIndicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="50"/>
+        <source>Count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="51"/>
+        <source>The number of pages.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="64"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="64"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="65"/>
+        <source>The index of the current page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="78"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="78"/>
+        <source>Interactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="79"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="79"/>
+        <source>Whether the control is interactive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PageSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="46"/>
+        <source>Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="50"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="51"/>
+        <source>Title of the page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="61"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="61"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="62"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="75"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="75"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="76"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="76"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PaneSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="42"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="42"/>
+        <source>Pane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="46"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="47"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="47"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="60"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="60"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="61"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="61"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgressBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="46"/>
+        <source>ProgressBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="50"/>
+        <source>Indeterminate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="51"/>
+        <source>Whether the progress is indeterminate.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="62"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="63"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="63"/>
+        <source>The current value of the progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="77"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="77"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="78"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="78"/>
+        <source>The starting value for the progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="92"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="92"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="93"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="93"/>
+        <source>The ending value for the progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="src/cfrmsession.cpp" line="1666"/>
         <location filename="src/cfrmsession.cpp" line="2761"/>
         <source>Incorrect file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RangeSliderSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="46"/>
+        <source>RangeSlider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="50"/>
+        <source>First Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="51"/>
+        <source>The value of the first range slider handle.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="65"/>
+        <source>Second Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="66"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="66"/>
+        <source>The value of the second range slider handle.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="80"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="80"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="81"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="81"/>
+        <source>The starting value of the range slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="95"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="95"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="96"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="96"/>
+        <source>The ending value of the range slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="110"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="110"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="111"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="111"/>
+        <source>The step size of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="125"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="125"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="126"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="126"/>
+        <source>The snap mode of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="138"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="138"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="139"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="139"/>
+        <source>The orientation of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="151"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="151"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="152"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="152"/>
+        <source>Whether the range slider provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="163"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="163"/>
+        <source>Touch drag threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="164"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="164"/>
+        <source>The threshold (in logical pixels) at which a touch drag event will be initiated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RoundButtonSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="46"/>
+        <source>RoundButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="50"/>
+        <source>Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="51"/>
+        <source>Radius of the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScrollViewSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="46"/>
+        <source>ScrollView</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="50"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="51"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="64"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="64"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="65"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SliderSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="46"/>
+        <source>Slider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="51"/>
+        <source>The current value of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="65"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="66"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="66"/>
+        <source>The starting value of the slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="80"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="80"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="81"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="81"/>
+        <source>The ending value of the slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="95"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="95"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="96"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="96"/>
+        <source>The step size of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="110"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="110"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="111"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="111"/>
+        <source>The snap mode of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="123"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="123"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="124"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="124"/>
+        <source>The orientation of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="136"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="136"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="137"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="137"/>
+        <source>Whether the slider provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="148"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="148"/>
+        <source>Touch drag threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="149"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="149"/>
+        <source>The threshold (in logical pixels) at which a touch drag event will be initiated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpinBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="46"/>
+        <source>SpinBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="51"/>
+        <source>The current value of the spinbox.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="64"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="64"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="65"/>
+        <source>The starting value of the spinbox range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="78"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="78"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="79"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="79"/>
+        <source>The ending value of the spinbox range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="92"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="92"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="93"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="93"/>
+        <source>The step size of the spinbox.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="106"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="106"/>
+        <source>Editable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="107"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="107"/>
+        <source>Whether the spinbox is editable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="118"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="118"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="119"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="119"/>
+        <source>Whether the spinbox wraps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SwipeViewSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="46"/>
+        <source>SwipeView</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="50"/>
+        <source>Interactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="51"/>
+        <source>Whether the view is interactive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="62"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="63"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="63"/>
+        <source>Orientation of the view.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TabBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="46"/>
+        <source>TabBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="50"/>
+        <source>Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="51"/>
+        <source>Position of the tabbar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="63"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="63"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="64"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="64"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="77"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="77"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="78"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="78"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextAreaSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="46"/>
+        <source>TextArea</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="50"/>
+        <source>Placeholder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="51"/>
+        <source>Placeholder text displayed when the editor is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="62"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="63"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="63"/>
+        <source>Whether text area accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="77"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="80"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="77"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="80"/>
+        <source>Placeholder Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextFieldSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="46"/>
+        <source>TextField</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="50"/>
+        <source>Placeholder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="51"/>
+        <source>Placeholder text displayed when the editor is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="62"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="62"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="63"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="63"/>
+        <source>Whether text field accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="77"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="80"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="77"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="80"/>
+        <source>Placeholder Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="46"/>
+        <source>ToolBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="50"/>
+        <source>Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="51"/>
+        <source>Position of the toolbar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolSeparatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="46"/>
+        <source>ToolSeparator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="50"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="51"/>
+        <source>The orientation of the separator.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TumblerSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="46"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="46"/>
+        <source>Tumbler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="50"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="50"/>
+        <source>Visible Count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="51"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="51"/>
+        <source>The count of visible items.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="64"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="64"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="65"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="65"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="78"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="78"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="79"/>
+        <location filename="build/Release/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="79"/>
+        <source>Whether the tumbler wrap.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

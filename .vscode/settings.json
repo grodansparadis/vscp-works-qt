@@ -90,5 +90,6 @@
     "cmake.configureArgs": [
         "-DVCPKG_TARGET_TRIPLET=x64-windows",
         "-DCMAKE_TOOLCHAIN_FILE=E:/development/vcpkg/scripts/buildsystems/vcpkg.cmake"
-    ]
+    ],
+    "cmake.generator": "Visual Studio 16 2019"
 }

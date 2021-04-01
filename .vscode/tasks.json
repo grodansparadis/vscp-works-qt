@@ -34,7 +34,7 @@
             }
         },
         {
-            "taskName": "clean & build all 5.15.2",
+            "taskName": "Clean & build all 5.15.2",
             "type": "shell",
             "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make",
             "args": [],
@@ -56,7 +56,7 @@
             }
         },
         {
-            "taskName": "clean & build all 6.0.2",
+            "taskName": "Clean & build all 6.0.2",
             "type": "shell",
             "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.0.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make",
             "args": [],
@@ -76,7 +76,7 @@
                   "message": 5
                 }
             }
-        },
+        },        
         {
             "type": "shell",
             "label": "g++ build active file",
