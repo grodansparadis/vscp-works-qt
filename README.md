@@ -80,11 +80,34 @@ if you need to set a path to the local copy of the vscp main repository
 
 ## Build on Windows
 
-# Install Qt
+If you don't have Visual Studio Code installed it is recommended. You can fined it [here](https://code.visualstudio.com/download).
+
+Install cmake-tools, c++ extension
+
+```bash
+ext install cmake-tools
+```
+
+## VSCP main and VSCP works repositories
+You need to checkout the VSCP main repository code as well (but not in the vcpkg folder). You do this with
+
+```bash
+  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
+  cd vscp
+  git checkout development
+``` 
+
+and the vscp-works-qt code
+
+```bash
+git clone https://github.com/grodansparadis/vscp-works-qt.git
+```
+
+## Optionally install Qt for uae of Qt tools
 
 Go to the [qt site](https://www.qt.io/download) and follow the instructions
 
-# Install the vcpkg package manager
+## Install the vcpkg package manager
 
 Install the vcpkg package manager by cloning its github repository in a folder
 
@@ -115,11 +138,15 @@ vcpkg integrate install
 Install the required libs
 
 ```bash
-vcpkg install pthread
-vcpkg install expat
-vcpkg install openssl
-vcpkg install paho-mqtt
+vcpkg install qt5:x64-windows
+vcpkg install pthread:x64-windows
+vcpkg install dlfcn-win32:x64-windows
+vcpkg install expat:x64-windows
+vcpkg install openssl:x64-windows
+vcpkg install paho-mqtt:x64-windows
 ```
+
+The Qt installation may take some considerable time
 
 ```bash
 vcpkg list
@@ -133,15 +160,34 @@ after installing the required libs
 
 Full usage is describe [here](https://docs.microsoft.com/en-us/cpp/build/manage-libraries-with-vcpkg?view=msvc-160&tabs=windows)
 
+
 Build as usual but use
 
 ```bash
-cmake .. -DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake
+cd vscp-vscp-works
+mkdir build
+cd build
+cmake .. -CMAKE_BUILD_TYPE=Release|Debug -DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake -DVSCP_PATH=path-vscp-repository
 ```
 
-Location for nmake.exe need to be in your path
+Note that *Release|Debug* should be either *Release* or *Debug*
 
-----
+The windows build files can now be found in the build folder and all needed files to run the project can  after build - be found in build/release or build/Debug depending on CMAKE_BUILD_TYPE setting.
+
+Building and configuration is simplified with VS Code installed. Configure/build/run can be done (se lower toolbar). Using VS Code it ,ay be useful to add
+
+```json
+"cmake.configureSettings": {
+   "CMAKE_BUILD_TYPE": "${buildType}"
+}
+``` 
+
+to your settings.json file.
+
+
+
+
+-------------------------------------------------------------------------------
 
 **Internal project Notes below**
 
