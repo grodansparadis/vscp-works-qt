@@ -146,7 +146,7 @@ vcpkg install openssl:x64-windows
 vcpkg install paho-mqtt:x64-windows
 ```
 
-The Qt installation may take some considerable time
+The Qt installation may take some time
 
 ```bash
 vcpkg list
@@ -184,8 +184,13 @@ Building and configuration is simplified with VS Code installed. Configure/build
 
 to your settings.json file.
 
+To build at the command prompt use
 
+```bash
+msbuild vscp-works-qt.sln
+```
 
+Note that you must have a *developer command prompt*
 
 -------------------------------------------------------------------------------
 
