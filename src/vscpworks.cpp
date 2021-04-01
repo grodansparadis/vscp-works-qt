@@ -669,7 +669,7 @@ bool vscpworks::addGuid(QString guid, QString name)
 
 int vscpworks::getIdxForGuidRecord(const QString& guid)
 {
-    int index;
+    int index = -1;
 
     m_mutexGuidMap.lock();
 

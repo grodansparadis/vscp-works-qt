@@ -2,6 +2,130 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_150">
 <context>
+    <name>AbstractButtonSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="42"/>
+        <source>AbstractButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="46"/>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="47"/>
+        <source>The text displayed on the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="57"/>
+        <source>Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="58"/>
+        <source>Determines how the icon and text are displayed within the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="71"/>
+        <source>Checkable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="72"/>
+        <source>Whether the button is checkable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="83"/>
+        <source>Checked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="84"/>
+        <source>Whether the button is checked.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="95"/>
+        <source>Exclusive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="96"/>
+        <source>Whether the button is exclusive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="107"/>
+        <source>Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/AbstractButtonSection.qml" line="108"/>
+        <source>Whether the button repeats while pressed and held down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>BusyIndicatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="46"/>
+        <source>BusyIndicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="50"/>
+        <source>Running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/BusyIndicatorSpecifics.qml" line="51"/>
+        <source>Whether the busy indicator is currently indicating activity.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ButtonSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="43"/>
+        <source>Button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="47"/>
+        <source>AutoRepeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="48"/>
+        <source>Whether the button repeats pressed(), released() and clicked() signals while the button is pressed and held down.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="58"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="59"/>
+        <source>Whether the button is flat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="69"/>
+        <source>Highlighted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ButtonSection.qml" line="70"/>
+        <source>Whether the button is highlighted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CDlgCanFilter</name>
     <message>
         <location filename="src/cdlgcanfilter.ui" line="14"/>
@@ -4846,63 +4970,63 @@ and the flag bits for the. the driver.
     <name>CDlgSensorIndex</name>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="23"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="110"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="110"/>
         <source>Sensorindex - Known sensors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="76"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="111"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="111"/>
         <location filename="src/cdlgsensorindex.cpp" line="220"/>
         <source>Add...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="89"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="112"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="112"/>
         <location filename="src/cdlgsensorindex.cpp" line="221"/>
         <source>Edit...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="102"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="113"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="113"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="115"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="114"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="114"/>
         <source>Delete...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="131"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="115"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="115"/>
         <source>Load...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="147"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="116"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="116"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="173"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="117"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="117"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="190"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="118"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="118"/>
         <source>GUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/cdlgsensorindex.ui" line="206"/>
-        <location filename="build/vscp-works-qt_autogen/include/ui_cdlgsensorindex.h" line="119"/>
+        <location filename="build/vscp-works-qt_autogen/include_Debug/ui_cdlgsensorindex.h" line="119"/>
         <source>name</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6151,6 +6275,103 @@ and the flag bits for the. the driver.
     </message>
 </context>
 <context>
+    <name>CheckBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckBoxSpecifics.qml" line="46"/>
+        <source>CheckBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CheckDelegateSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckDelegateSpecifics.qml" line="46"/>
+        <source>CheckDelegate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CheckSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="44"/>
+        <source>Check State</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="45"/>
+        <source>The current check state.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="57"/>
+        <source>Tri-state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/CheckSection.qml" line="58"/>
+        <source>Whether the checkbox has three states.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ComboBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="46"/>
+        <source>ComboBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="50"/>
+        <source>Text Role</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="51"/>
+        <source>The model role used for displaying text.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="61"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="62"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="74"/>
+        <source>Editable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="75"/>
+        <source>Whether the combo box is editable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="85"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="86"/>
+        <source>Whether the combo box button is flat.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="96"/>
+        <source>DisplayText</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ComboBoxSpecifics.qml" line="97"/>
+        <source>Holds the text that is displayed on the combo box button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ConclusionPage</name>
     <message>
         <location filename="src/canalconfigwizard.cpp" line="126"/>
@@ -6168,6 +6389,188 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/canalconfigwizard.cpp" line="409"/>
         <source>Select on of the available choices</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ContainerSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="42"/>
+        <source>Container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="46"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ContainerSection.qml" line="47"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ControlSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="42"/>
+        <source>Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="46"/>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="47"/>
+        <source>Whether the control is enabled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="58"/>
+        <source>Focus Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="59"/>
+        <source>Focus policy of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="71"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="72"/>
+        <source>Whether control accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="83"/>
+        <source>Spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="84"/>
+        <source>Spacing between internal elements of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="97"/>
+        <source>Wheel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ControlSection.qml" line="98"/>
+        <source>Whether control accepts wheel events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DelayButtonSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="46"/>
+        <source>DelayButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="50"/>
+        <source>Delay</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DelayButtonSpecifics.qml" line="51"/>
+        <source>The delay in milliseconds.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DialSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="46"/>
+        <source>Dial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="51"/>
+        <source>The current value of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="65"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="66"/>
+        <source>The starting value of the dial range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="80"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="81"/>
+        <source>The ending value of the dial range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="95"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="96"/>
+        <source>The step size of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="110"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="111"/>
+        <source>The snap mode of the dial.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="123"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="124"/>
+        <source>Whether the dial provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="135"/>
+        <source>Input Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="136"/>
+        <source>How the dial tracks movement.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="148"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/DialSpecifics.qml" line="149"/>
+        <source>Whether the dial wraps when dragged.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6337,6 +6740,115 @@ and the flag bits for the. the driver.
     <message>
         <location filename="src/scan.ui" line="165"/>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GroupBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="46"/>
+        <source>GroupBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="50"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/GroupBoxSpecifics.qml" line="51"/>
+        <source>The title of the group box.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>InsetSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="42"/>
+        <source>Inset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="46"/>
+        <source>Vertical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="50"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="51"/>
+        <source>Top inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="68"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="69"/>
+        <source>Bottom inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="83"/>
+        <source>Horizontal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="87"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="88"/>
+        <source>Left inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="105"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/InsetSection.qml" line="106"/>
+        <source>Right inset for the background.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ItemDelegateSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="43"/>
+        <source>ItemDelegate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="47"/>
+        <source>Highlighted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ItemDelegateSection.qml" line="48"/>
+        <source>Whether the delegate is highlighted.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LabelSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="54"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="57"/>
+        <source>Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="66"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/LabelSpecifics.qml" line="69"/>
+        <source>Style Color</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6583,347 +7095,547 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="src/mainwindow.cpp" line="342"/>
-        <location filename="src/mainwindow.cpp" line="419"/>
-        <location filename="src/mainwindow.cpp" line="494"/>
-        <location filename="src/mainwindow.cpp" line="939"/>
-        <location filename="src/mainwindow.cpp" line="1708"/>
-        <location filename="src/mainwindow.cpp" line="1730"/>
-        <location filename="src/mainwindow.cpp" line="1744"/>
-        <location filename="src/mainwindow.cpp" line="1782"/>
-        <location filename="src/mainwindow.cpp" line="1820"/>
-        <location filename="src/mainwindow.cpp" line="1829"/>
-        <location filename="src/mainwindow.cpp" line="1867"/>
-        <location filename="src/mainwindow.cpp" line="1905"/>
-        <location filename="src/mainwindow.cpp" line="1914"/>
-        <location filename="src/mainwindow.cpp" line="1953"/>
-        <location filename="src/mainwindow.cpp" line="1991"/>
-        <location filename="src/mainwindow.cpp" line="2000"/>
-        <location filename="src/mainwindow.cpp" line="2041"/>
-        <location filename="src/mainwindow.cpp" line="2080"/>
-        <location filename="src/mainwindow.cpp" line="2089"/>
-        <location filename="src/mainwindow.cpp" line="2129"/>
-        <location filename="src/mainwindow.cpp" line="2167"/>
-        <location filename="src/mainwindow.cpp" line="2176"/>
-        <location filename="src/mainwindow.cpp" line="2216"/>
-        <location filename="src/mainwindow.cpp" line="2254"/>
-        <location filename="src/mainwindow.cpp" line="2263"/>
-        <location filename="src/mainwindow.cpp" line="2303"/>
-        <location filename="src/mainwindow.cpp" line="2342"/>
-        <location filename="src/mainwindow.cpp" line="2351"/>
-        <location filename="src/mainwindow.cpp" line="2391"/>
-        <location filename="src/mainwindow.cpp" line="2429"/>
-        <location filename="src/mainwindow.cpp" line="2438"/>
-        <location filename="src/mainwindow.cpp" line="2477"/>
-        <location filename="src/mainwindow.cpp" line="2515"/>
-        <location filename="src/mainwindow.cpp" line="2524"/>
-        <location filename="src/mainwindow.cpp" line="2563"/>
-        <location filename="src/mainwindow.cpp" line="2602"/>
-        <location filename="src/mainwindow.cpp" line="2611"/>
-        <location filename="src/mainwindow.cpp" line="2652"/>
-        <location filename="src/mainwindow.cpp" line="2691"/>
-        <location filename="src/mainwindow.cpp" line="2700"/>
-        <location filename="src/mainwindow.cpp" line="2739"/>
+        <source>Failed to load remote event data. Will try to load from external source.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="src/mainwindow.cpp" line="421"/>
+        <location filename="src/mainwindow.cpp" line="497"/>
+        <location filename="src/mainwindow.cpp" line="942"/>
+        <location filename="src/mainwindow.cpp" line="1711"/>
+        <location filename="src/mainwindow.cpp" line="1733"/>
+        <location filename="src/mainwindow.cpp" line="1747"/>
+        <location filename="src/mainwindow.cpp" line="1785"/>
+        <location filename="src/mainwindow.cpp" line="1823"/>
+        <location filename="src/mainwindow.cpp" line="1832"/>
+        <location filename="src/mainwindow.cpp" line="1870"/>
+        <location filename="src/mainwindow.cpp" line="1908"/>
+        <location filename="src/mainwindow.cpp" line="1917"/>
+        <location filename="src/mainwindow.cpp" line="1956"/>
+        <location filename="src/mainwindow.cpp" line="1994"/>
+        <location filename="src/mainwindow.cpp" line="2003"/>
+        <location filename="src/mainwindow.cpp" line="2044"/>
+        <location filename="src/mainwindow.cpp" line="2083"/>
+        <location filename="src/mainwindow.cpp" line="2092"/>
+        <location filename="src/mainwindow.cpp" line="2132"/>
+        <location filename="src/mainwindow.cpp" line="2170"/>
+        <location filename="src/mainwindow.cpp" line="2179"/>
+        <location filename="src/mainwindow.cpp" line="2219"/>
+        <location filename="src/mainwindow.cpp" line="2257"/>
+        <location filename="src/mainwindow.cpp" line="2266"/>
+        <location filename="src/mainwindow.cpp" line="2306"/>
+        <location filename="src/mainwindow.cpp" line="2345"/>
+        <location filename="src/mainwindow.cpp" line="2354"/>
+        <location filename="src/mainwindow.cpp" line="2394"/>
+        <location filename="src/mainwindow.cpp" line="2432"/>
+        <location filename="src/mainwindow.cpp" line="2441"/>
+        <location filename="src/mainwindow.cpp" line="2480"/>
+        <location filename="src/mainwindow.cpp" line="2518"/>
+        <location filename="src/mainwindow.cpp" line="2527"/>
+        <location filename="src/mainwindow.cpp" line="2566"/>
+        <location filename="src/mainwindow.cpp" line="2605"/>
+        <location filename="src/mainwindow.cpp" line="2614"/>
+        <location filename="src/mainwindow.cpp" line="2655"/>
+        <location filename="src/mainwindow.cpp" line="2694"/>
+        <location filename="src/mainwindow.cpp" line="2703"/>
+        <location filename="src/mainwindow.cpp" line="2742"/>
         <source>vscpworks+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="343"/>
-        <source>Failed to load remote event data. Will not be used.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="src/mainwindow.cpp" line="399"/>
+        <location filename="src/mainwindow.cpp" line="401"/>
         <source>https://www.vscp.org/events/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="420"/>
+        <location filename="src/mainwindow.cpp" line="422"/>
         <source>Unable to get version for remote VSCP event data. Will not be downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="465"/>
+        <location filename="src/mainwindow.cpp" line="467"/>
         <source>/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="470"/>
+        <location filename="src/mainwindow.cpp" line="472"/>
         <source>C:/WINDOWS/Temp/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="472"/>
+        <location filename="src/mainwindow.cpp" line="474"/>
         <source>/tmp/vscp_events.sqlite3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="src/mainwindow.cpp" line="495"/>
+        <location filename="src/mainwindow.cpp" line="498"/>
         <source>A new VSCP event database has automatically been downloaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="935"/>
+        <location filename="src/mainwindow.cpp" line="938"/>
         <source>Are you sure that you want to delete [</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1277"/>
+        <location filename="src/mainwindow.cpp" line="1280"/>
         <source>&lt;b&gt;VSCP Works+&lt;/b&gt; is the second generation toolbox for general VSCP configuration, diagnostics and other VSCP related tasks.&lt;br/&gt;&lt;p&gt;&lt;b&gt;Version&lt;/b&gt;: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1284"/>
+        <location filename="src/mainwindow.cpp" line="1287"/>
         <source>About VSCP Works+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1305"/>
+        <location filename="src/mainwindow.cpp" line="1308"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1306"/>
+        <location filename="src/mainwindow.cpp" line="1309"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1309"/>
+        <location filename="src/mainwindow.cpp" line="1312"/>
         <source>&amp;New connection...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1311"/>
+        <location filename="src/mainwindow.cpp" line="1314"/>
         <source>New connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1341"/>
+        <location filename="src/mainwindow.cpp" line="1344"/>
         <source>&amp;Session window...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1343"/>
+        <location filename="src/mainwindow.cpp" line="1346"/>
         <source>Open a new VSCP Session window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1349"/>
+        <location filename="src/mainwindow.cpp" line="1352"/>
         <source>&amp;Configuration...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1351"/>
+        <location filename="src/mainwindow.cpp" line="1354"/>
         <source>Open a new VSCP configuration window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1357"/>
+        <location filename="src/mainwindow.cpp" line="1360"/>
         <source>Scan for &amp;Device...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1359"/>
+        <location filename="src/mainwindow.cpp" line="1362"/>
         <source>Open a new device scan window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1365"/>
+        <location filename="src/mainwindow.cpp" line="1368"/>
         <source>&amp;Bootloader wizard...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1367"/>
+        <location filename="src/mainwindow.cpp" line="1370"/>
         <source>Open a new VSCP bootloader wizard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1373"/>
+        <location filename="src/mainwindow.cpp" line="1376"/>
         <source>&amp;MDF editor...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1375"/>
+        <location filename="src/mainwindow.cpp" line="1378"/>
         <source>Open a new NDF editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1383"/>
+        <location filename="src/mainwindow.cpp" line="1386"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1386"/>
+        <location filename="src/mainwindow.cpp" line="1389"/>
         <source>Exit the application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1388"/>
+        <location filename="src/mainwindow.cpp" line="1391"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1389"/>
+        <location filename="src/mainwindow.cpp" line="1392"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1393"/>
+        <location filename="src/mainwindow.cpp" line="1396"/>
         <source>Cu&amp;t</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1396"/>
+        <location filename="src/mainwindow.cpp" line="1399"/>
         <source>Cut the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1403"/>
+        <location filename="src/mainwindow.cpp" line="1406"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1405"/>
+        <location filename="src/mainwindow.cpp" line="1408"/>
         <source>Copy the current selection&apos;s contents to the clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1412"/>
+        <location filename="src/mainwindow.cpp" line="1415"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1414"/>
+        <location filename="src/mainwindow.cpp" line="1417"/>
         <source>Paste the clipboard&apos;s contents into the current selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1424"/>
+        <location filename="src/mainwindow.cpp" line="1427"/>
         <source>&amp;Tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1425"/>
+        <location filename="src/mainwindow.cpp" line="1428"/>
         <source>&amp;Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1426"/>
+        <location filename="src/mainwindow.cpp" line="1429"/>
         <source>Open settings...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1427"/>
+        <location filename="src/mainwindow.cpp" line="1430"/>
         <source>&amp;Known GUID&apos;s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1428"/>
+        <location filename="src/mainwindow.cpp" line="1431"/>
         <source>Edit/Add known GUID&apos;s...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1429"/>
+        <location filename="src/mainwindow.cpp" line="1432"/>
         <source>&amp;Session filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1430"/>
+        <location filename="src/mainwindow.cpp" line="1433"/>
         <source>Edit/Add session filters...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1432"/>
+        <location filename="src/mainwindow.cpp" line="1435"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1433"/>
+        <location filename="src/mainwindow.cpp" line="1436"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1434"/>
+        <location filename="src/mainwindow.cpp" line="1437"/>
         <source>Show the application&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1436"/>
+        <location filename="src/mainwindow.cpp" line="1439"/>
         <source>About &amp;Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1437"/>
+        <location filename="src/mainwindow.cpp" line="1440"/>
         <source>Show the Qt library&apos;s About box</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1453"/>
+        <location filename="src/mainwindow.cpp" line="1456"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1549"/>
+        <location filename="src/mainwindow.cpp" line="1552"/>
         <source>Application</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1550"/>
+        <location filename="src/mainwindow.cpp" line="1553"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1565"/>
+        <location filename="src/mainwindow.cpp" line="1568"/>
         <source>File loaded</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1709"/>
+        <location filename="src/mainwindow.cpp" line="1712"/>
         <source>filter set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1731"/>
-        <location filename="src/mainwindow.cpp" line="1783"/>
-        <location filename="src/mainwindow.cpp" line="1821"/>
-        <location filename="src/mainwindow.cpp" line="1868"/>
-        <location filename="src/mainwindow.cpp" line="1906"/>
-        <location filename="src/mainwindow.cpp" line="1954"/>
-        <location filename="src/mainwindow.cpp" line="1992"/>
-        <location filename="src/mainwindow.cpp" line="2042"/>
-        <location filename="src/mainwindow.cpp" line="2081"/>
-        <location filename="src/mainwindow.cpp" line="2130"/>
-        <location filename="src/mainwindow.cpp" line="2168"/>
-        <location filename="src/mainwindow.cpp" line="2217"/>
-        <location filename="src/mainwindow.cpp" line="2255"/>
-        <location filename="src/mainwindow.cpp" line="2304"/>
-        <location filename="src/mainwindow.cpp" line="2343"/>
-        <location filename="src/mainwindow.cpp" line="2392"/>
-        <location filename="src/mainwindow.cpp" line="2430"/>
-        <location filename="src/mainwindow.cpp" line="2478"/>
-        <location filename="src/mainwindow.cpp" line="2516"/>
-        <location filename="src/mainwindow.cpp" line="2564"/>
-        <location filename="src/mainwindow.cpp" line="2603"/>
-        <location filename="src/mainwindow.cpp" line="2653"/>
-        <location filename="src/mainwindow.cpp" line="2692"/>
-        <location filename="src/mainwindow.cpp" line="2740"/>
+        <location filename="src/mainwindow.cpp" line="1734"/>
+        <location filename="src/mainwindow.cpp" line="1786"/>
+        <location filename="src/mainwindow.cpp" line="1824"/>
+        <location filename="src/mainwindow.cpp" line="1871"/>
+        <location filename="src/mainwindow.cpp" line="1909"/>
+        <location filename="src/mainwindow.cpp" line="1957"/>
+        <location filename="src/mainwindow.cpp" line="1995"/>
+        <location filename="src/mainwindow.cpp" line="2045"/>
+        <location filename="src/mainwindow.cpp" line="2084"/>
+        <location filename="src/mainwindow.cpp" line="2133"/>
+        <location filename="src/mainwindow.cpp" line="2171"/>
+        <location filename="src/mainwindow.cpp" line="2220"/>
+        <location filename="src/mainwindow.cpp" line="2258"/>
+        <location filename="src/mainwindow.cpp" line="2307"/>
+        <location filename="src/mainwindow.cpp" line="2346"/>
+        <location filename="src/mainwindow.cpp" line="2395"/>
+        <location filename="src/mainwindow.cpp" line="2433"/>
+        <location filename="src/mainwindow.cpp" line="2481"/>
+        <location filename="src/mainwindow.cpp" line="2519"/>
+        <location filename="src/mainwindow.cpp" line="2567"/>
+        <location filename="src/mainwindow.cpp" line="2606"/>
+        <location filename="src/mainwindow.cpp" line="2656"/>
+        <location filename="src/mainwindow.cpp" line="2695"/>
+        <location filename="src/mainwindow.cpp" line="2743"/>
         <source>A connection needs a description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="src/mainwindow.cpp" line="1745"/>
-        <location filename="src/mainwindow.cpp" line="1830"/>
-        <location filename="src/mainwindow.cpp" line="1915"/>
-        <location filename="src/mainwindow.cpp" line="2001"/>
-        <location filename="src/mainwindow.cpp" line="2090"/>
-        <location filename="src/mainwindow.cpp" line="2177"/>
-        <location filename="src/mainwindow.cpp" line="2264"/>
-        <location filename="src/mainwindow.cpp" line="2352"/>
-        <location filename="src/mainwindow.cpp" line="2439"/>
-        <location filename="src/mainwindow.cpp" line="2525"/>
-        <location filename="src/mainwindow.cpp" line="2612"/>
-        <location filename="src/mainwindow.cpp" line="2701"/>
+        <location filename="src/mainwindow.cpp" line="1748"/>
+        <location filename="src/mainwindow.cpp" line="1833"/>
+        <location filename="src/mainwindow.cpp" line="1918"/>
+        <location filename="src/mainwindow.cpp" line="2004"/>
+        <location filename="src/mainwindow.cpp" line="2093"/>
+        <location filename="src/mainwindow.cpp" line="2180"/>
+        <location filename="src/mainwindow.cpp" line="2267"/>
+        <location filename="src/mainwindow.cpp" line="2355"/>
+        <location filename="src/mainwindow.cpp" line="2442"/>
+        <location filename="src/mainwindow.cpp" line="2528"/>
+        <location filename="src/mainwindow.cpp" line="2615"/>
+        <location filename="src/mainwindow.cpp" line="2704"/>
         <source>Failed to add new connection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PaddingSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="42"/>
+        <source>Padding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="46"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="47"/>
+        <source>Padding between the content and the top edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="60"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="61"/>
+        <source>Padding between the content and the left edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="74"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="75"/>
+        <source>Padding between the content and the right edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="88"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaddingSection.qml" line="89"/>
+        <source>Padding between the content and the bottom edge of the control.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PageIndicatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="46"/>
+        <source>PageIndicator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="50"/>
+        <source>Count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="51"/>
+        <source>The number of pages.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="64"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="65"/>
+        <source>The index of the current page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="78"/>
+        <source>Interactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageIndicatorSpecifics.qml" line="79"/>
+        <source>Whether the control is interactive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PageSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="46"/>
+        <source>Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="50"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="51"/>
+        <source>Title of the page.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="61"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="62"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="75"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PageSpecifics.qml" line="76"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PaneSection</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="42"/>
+        <source>Pane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="46"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="47"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="60"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/PaneSection.qml" line="61"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgressBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="46"/>
+        <source>ProgressBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="50"/>
+        <source>Indeterminate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="51"/>
+        <source>Whether the progress is indeterminate.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="62"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="63"/>
+        <source>The current value of the progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="77"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="78"/>
+        <source>The starting value for the progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="92"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ProgressBarSpecifics.qml" line="93"/>
+        <source>The ending value for the progress.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6933,6 +7645,514 @@ p, li { white-space: pre-wrap; }
         <location filename="src/cfrmsession.cpp" line="1666"/>
         <location filename="src/cfrmsession.cpp" line="2761"/>
         <source>Incorrect file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RangeSliderSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="46"/>
+        <source>RangeSlider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="50"/>
+        <source>First Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="51"/>
+        <source>The value of the first range slider handle.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="65"/>
+        <source>Second Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="66"/>
+        <source>The value of the second range slider handle.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="80"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="81"/>
+        <source>The starting value of the range slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="95"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="96"/>
+        <source>The ending value of the range slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="110"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="111"/>
+        <source>The step size of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="125"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="126"/>
+        <source>The snap mode of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="138"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="139"/>
+        <source>The orientation of the range slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="151"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="152"/>
+        <source>Whether the range slider provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="163"/>
+        <source>Touch drag threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RangeSliderSpecifics.qml" line="164"/>
+        <source>The threshold (in logical pixels) at which a touch drag event will be initiated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RoundButtonSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="46"/>
+        <source>RoundButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="50"/>
+        <source>Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/RoundButtonSpecifics.qml" line="51"/>
+        <source>Radius of the button.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ScrollViewSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="46"/>
+        <source>ScrollView</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="50"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="51"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="64"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ScrollViewSpecifics.qml" line="65"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SliderSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="46"/>
+        <source>Slider</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="51"/>
+        <source>The current value of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="65"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="66"/>
+        <source>The starting value of the slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="80"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="81"/>
+        <source>The ending value of the slider range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="95"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="96"/>
+        <source>The step size of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="110"/>
+        <source>Snap Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="111"/>
+        <source>The snap mode of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="123"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="124"/>
+        <source>The orientation of the slider.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="136"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="137"/>
+        <source>Whether the slider provides live value updates.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="148"/>
+        <source>Touch drag threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SliderSpecifics.qml" line="149"/>
+        <source>The threshold (in logical pixels) at which a touch drag event will be initiated.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpinBoxSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="46"/>
+        <source>SpinBox</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="50"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="51"/>
+        <source>The current value of the spinbox.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="64"/>
+        <source>From</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="65"/>
+        <source>The starting value of the spinbox range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="78"/>
+        <source>To</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="79"/>
+        <source>The ending value of the spinbox range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="92"/>
+        <source>Step Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="93"/>
+        <source>The step size of the spinbox.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="106"/>
+        <source>Editable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="107"/>
+        <source>Whether the spinbox is editable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="118"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SpinBoxSpecifics.qml" line="119"/>
+        <source>Whether the spinbox wraps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SwipeViewSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="46"/>
+        <source>SwipeView</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="50"/>
+        <source>Interactive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="51"/>
+        <source>Whether the view is interactive.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="62"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/SwipeViewSpecifics.qml" line="63"/>
+        <source>Orientation of the view.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TabBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="46"/>
+        <source>TabBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="50"/>
+        <source>Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="51"/>
+        <source>Position of the tabbar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="63"/>
+        <source>Content Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="64"/>
+        <source>Content height used for calculating the total implicit width.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="77"/>
+        <source>Content Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TabBarSpecifics.qml" line="78"/>
+        <source>Content height used for calculating the total implicit height.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextAreaSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="46"/>
+        <source>TextArea</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="50"/>
+        <source>Placeholder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="51"/>
+        <source>Placeholder text displayed when the editor is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="62"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="63"/>
+        <source>Whether text area accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="77"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextAreaSpecifics.qml" line="80"/>
+        <source>Placeholder Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextFieldSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="46"/>
+        <source>TextField</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="50"/>
+        <source>Placeholder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="51"/>
+        <source>Placeholder text displayed when the editor is empty.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="62"/>
+        <source>Hover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="63"/>
+        <source>Whether text field accepts hover events.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="77"/>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TextFieldSpecifics.qml" line="80"/>
+        <source>Placeholder Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolBarSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="46"/>
+        <source>ToolBar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="50"/>
+        <source>Position</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolBarSpecifics.qml" line="51"/>
+        <source>Position of the toolbar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ToolSeparatorSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="46"/>
+        <source>ToolSeparator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="50"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/ToolSeparatorSpecifics.qml" line="51"/>
+        <source>The orientation of the separator.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TumblerSpecifics</name>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="46"/>
+        <source>Tumbler</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="50"/>
+        <source>Visible Count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="51"/>
+        <source>The count of visible items.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="64"/>
+        <source>Current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="65"/>
+        <source>The index of the current item.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="78"/>
+        <source>Wrap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="build/Debug/qml/QtQuick/Controls.2/designer/TumblerSpecifics.qml" line="79"/>
+        <source>Whether the tumbler wrap.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

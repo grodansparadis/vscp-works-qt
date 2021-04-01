@@ -59,14 +59,10 @@ elseif(UNIX)
     set(LIBS_SYSTEM c stdc++)
 endif()
 
-if (WIN32)
-#set (CMAKE_PREFIX_PATH "E:\\Qt\\5.15.2\\msvc2019_64\\")
-endif()
-
 if (MSVC)
 #     # use precompiled headers
 #     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h" "-fstdafx.h")
-    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h")
+    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h ")
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
