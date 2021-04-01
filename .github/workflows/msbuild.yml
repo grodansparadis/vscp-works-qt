@@ -25,7 +25,7 @@ jobs:
         path: vscp
         ref: development
 
-    - name: Checkout vscp repo
+    - name: Checkout vcpkg repo
       uses: actions/checkout@v2
       with:
         repository: microsoft/vcpkg
@@ -37,7 +37,7 @@ jobs:
     - name: Integrate with development environment and install
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        cd vcpkg 
+        cd vcpkg \
         .\vcpkg\bootstrap-vcpkg.bat \
         .\vcpkg\vcpkg install expat:x64-windows \
         .\vcpkg install qt5:x64-windows \
