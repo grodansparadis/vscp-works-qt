@@ -42,17 +42,17 @@ jobs:
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        cd '${{ github.workspace }}/vcpkg' 
+        cd '${{ github.workspace }}/vcpkg/' && ls
         ls
-        call '${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe qt5:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe pthread:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe dlfcn-win32:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe expat:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe openssl:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe paho-mqtt:x64-windows 
-        call '${{ github.workspace }}/vcpkg/vcpkg.exe integrate install 
+        call'${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
+        '${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe qt5:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe pthread:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe dlfcn-win32:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe expat:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe openssl:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe paho-mqtt:x64-windows 
+        '${{ github.workspace }}/vcpkg/vcpkg.exe integrate install 
         cd '${{ github.workspace }}' 
 
     - name: Create Build Environment
