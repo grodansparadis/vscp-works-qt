@@ -42,7 +42,7 @@ jobs:
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        cd ''${{ github.workspace }}/vcpkg/'
+        cd ''${{ github.workspace }}/vcpkg/' && ls
         ls
         call'${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
         '${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows 
