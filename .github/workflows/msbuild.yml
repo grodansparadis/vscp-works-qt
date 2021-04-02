@@ -47,7 +47,7 @@ jobs:
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        call'${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
+        call bootstrap-vcpkg.bat
         vcpkg.exe install expat:x64-windows 
         vcpkg.exe install qt5:x64-windows 
         vcpkg.exe install pthread:x64-windows 
@@ -73,7 +73,7 @@ jobs:
       run: cmake ..  -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake -DVSCP_PATH=vscp/
 
     - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+      working-directory: ${{env.GITHUB_WORKSPACE}}/build
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
