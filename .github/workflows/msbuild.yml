@@ -34,7 +34,12 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
 
+    - name: Install 7Zip PowerShell Module
+        shell: powershell
+        run: Install-Module 7Zip4PowerShell -Force -Verbose  
+
     - name: Integrate with development environment and install
+      shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         cd '${{ github.workspace }}/vcpkg' 
