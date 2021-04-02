@@ -111,9 +111,6 @@ else()
     # paho
     include(Findpaho-mqtt)
     find_package(paho-mqtt REQUIRED)
-
-    find_package(Qt5SerialPort CONFIG REQUIRED)
-    find_package(Qt5SerialBus CONFIG REQUIRED)
 endif()
 
 # Set civetweb build flags
@@ -500,8 +497,6 @@ if (WIN32)
         Qt5::Quick 
         Qt5::Sql
         Qt5::Charts
-    #    Qt::SerialBus Qt5::SerialBus Qt::SerialBusPrivate Qt5::PeakCanBusPlugin
-    #    Qt::SerialPort Qt5::SerialPort Qt::SerialPortPrivate Qt5::SerialPortPrivate
         PThreads4W::PThreads4W_CXXEXC
         OpenSSL::SSL 
         OpenSSL::Crypto
@@ -517,12 +512,9 @@ if (WIN32)
         Qt5::Quick 
         Qt5::Sql
         Qt5::Charts
-    #    SerialBus
-    #    Qt5::SerialPort
         m
         dl
         Threads::Threads
-#        pthread
         OpenSSL::SSL 
         OpenSSL::Crypto
         ${OPENSSL_LIBRARIES}
@@ -535,19 +527,6 @@ endif()
 qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
 
-# message(" Qt5Widgets_INCLUDE_DIRS = ${Qt5Widgets_INCLUDE_DIRS}     ")
-# message(" Qt5Widgets_LIBRARIES = ${Qt5Widgets_LIBRARIES}   ")
-
-# message(" Qt5Core_INCLUDE_DIRS = ${Qt5Core_INCLUDE_DIRS}   ")
-# message(" Qt5Core_LIBRARIES = ${Qt5Core_LIBRARIES}         ")
-
-# message(" Qt5SerialPort_INCLUDE_DIRS = ${Qt5SerialPort_INCLUDE_DIRS}")
-# message(" Qt5SerialPort_LIBRARIES = ${Qt5SerialPort_LIBRARIES}")
-
-# message(" PAHO_INCLUDE_DIR = ${PAHO_INCLUDE_DIR}  ${eclipse_paho_mqtt_c_INCLUDE_DIRS}")
-# message(" PAHO_LIBRARIES = ${PAHO_LIBRARIES}")
-
-# message(Main include: "${VCPKG_HOME}/installed/x64_linux/include")
 
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
