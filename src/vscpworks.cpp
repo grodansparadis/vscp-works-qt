@@ -58,13 +58,6 @@
 #include <QUuid>
 #include <QTextDocument>
 
-// CAN test  (TODO remove)
-#include <QCanBus>
-#include <QCanBusFrame>
-#include <QCloseEvent>
-#include <QDesktopServices>
-#include <QTimer>
-
 #include <nlohmann/json.hpp>
 
 // for convenience
