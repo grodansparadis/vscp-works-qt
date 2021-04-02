@@ -76,7 +76,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
 #find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Charts)
 
 # pthreads
 set (THREADS_PREFER_PTHREAD_FLAG ON)
@@ -112,8 +112,8 @@ else()
     include(Findpaho-mqtt)
     find_package(paho-mqtt REQUIRED)
 
-#    find_package(Qt5SerialPort CONFIG REQUIRED)
-#    find_package(Qt5SerialBus CONFIG REQUIRED)
+    find_package(Qt5SerialPort CONFIG REQUIRED)
+    find_package(Qt5SerialBus CONFIG REQUIRED)
 endif()
 
 # Set civetweb build flags
@@ -368,6 +368,12 @@ add_executable(vscp-works-qt
     src/cdlgselectconstraint.h
     src/cdlgselectconstraint.cpp
 
+    src/widgetgraph.h
+    src/widgetgraph.cpp 
+
+    src/xyseries.h
+    src/xyseries.cpp
+
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h
     ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h
@@ -474,6 +480,7 @@ else()
         ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
+        ${Qt5SerialPort_INCLUDE_DIRS}
         ${Qt5Network_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
         ${OPENSSL_INCLUDE_DIR}
@@ -485,19 +492,6 @@ else()
  endif()   
 
 if (WIN32)
-    # message("--------------->${PThreads4W_LIBRARY}")
-    # message("--------------->${PThreads4W_CXXEXC_LIBRARY}")
-    # message("--------------->${PThreads4W_STRUCTEXC_LIBRARY}")
-    # if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    #     find_library(PTHREAD_LIBRARY_VC3 pthreadVC3d.lib)
-    #     find_library(PTHREAD_LIBRARY_VCE3 pthreadVC3d.lib)
-    # else()
-    #     find_library(PTHREAD_LIBRARY_VC3 pthreadVC3.lib)
-    #     find_library(PTHREAD_LIBRARY_VCE3 pthreadVC3.lib)
-    # endif()
-
-    # find_library(PTHREAD_LIBRARY_VC3 pthreadVC3.lib)
-    # find_library(PTHREAD_LIBRARY_VCE3 pthreadVC3.lib)
 
     target_link_libraries(vscp-works-qt PRIVATE     
         Qt5::Widgets
@@ -505,12 +499,9 @@ if (WIN32)
         Qt5::Network
         Qt5::Quick 
         Qt5::Sql
+        Qt5::Charts
     #    Qt::SerialBus Qt5::SerialBus Qt::SerialBusPrivate Qt5::PeakCanBusPlugin
     #    Qt::SerialPort Qt5::SerialPort Qt::SerialPortPrivate Qt5::SerialPortPrivate
-    #    ${PTHREAD_LIBRARY_VC3}
-    #    ${PTHREAD_LIBRARY_VCE3}
-    #    ${PThreads4W_LIBRARY}
-    #    ${PThreads4W_CXXEXC_LIBRARY}
         PThreads4W::PThreads4W_CXXEXC
         OpenSSL::SSL 
         OpenSSL::Crypto
@@ -525,6 +516,7 @@ if (WIN32)
         Qt5::Network
         Qt5::Quick 
         Qt5::Sql
+        Qt5::Charts
     #    SerialBus
     #    Qt5::SerialPort
         m
