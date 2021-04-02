@@ -48,7 +48,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
         call'${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
-        ./vcpkg.exe install expat:x64-windows 
+        vcpkg.exe install expat:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe qt5:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe pthread:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe dlfcn-win32:x64-windows 
