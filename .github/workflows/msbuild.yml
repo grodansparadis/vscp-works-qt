@@ -33,8 +33,8 @@ jobs:
 
     - name: ls
       shell: cmd
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: ls ..
+      working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
+      run: ls && pwd
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
@@ -45,11 +45,10 @@ jobs:
 
     - name: Integrate with development environment and install
       shell: cmd
-      working-directory: ${{env.GITHUB_WORKSPACE}}
+      working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        cd ''${{ github.workspace }}/vcpkg/' && ls
         call'${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat'
-        '${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows 
+        ./vcpkg.exe install expat:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe qt5:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe pthread:x64-windows 
         '${{ github.workspace }}/vcpkg/vcpkg.exe dlfcn-win32:x64-windows 
