@@ -9,6 +9,7 @@ env:
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
   # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  # https://github.com/ilammy/msvc-dev-cmd
   BUILD_CONFIGURATION: Release
 
 jobs:
@@ -17,6 +18,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: ilammy/msvc-dev-cmd@v1
 
     - name: Checkout vscp repo
       uses: actions/checkout@v2
