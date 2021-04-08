@@ -89,8 +89,11 @@ set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Windows Libs
 if (WIN32)
-    # Paho MQTT
+    
+    # pthread
     find_package(pthread REQUIRED)
+
+    # Paho MQTT
     find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
     get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
     get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)

@@ -92,7 +92,7 @@ ext install cmake-tools
 You need to checkout the VSCP main repository code as well (but not in the vcpkg folder). You do this with
 
 ```bash
-  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
+  git clone https://github.com/grodansparadis/vscp.git
   cd vscp
   git checkout development
 ``` 
@@ -169,6 +169,8 @@ mkdir build
 cd build
 cmake .. -CMAKE_BUILD_TYPE=Release|Debug -DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake -DVSCP_PATH=path-vscp-repository
 ```
+
+The **CMAKE_TOOLCHAIN_FILE** path may be different in your case
 
 Note that *Release|Debug* should be either *Release* or *Debug*
 
