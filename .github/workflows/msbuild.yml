@@ -17,6 +17,11 @@ env:
 jobs:
   build:
     runs-on: windows-latest
+    include:
+      - os: windows-latest
+        triplet: x64-windows
+        vcpkgCommitId: '30124253eecff36bc90f73341edbfb4f845e2a1e'
+        vcpkgPackages: 'expat qt5 qt5-charts pthread dlfcn-win32 openssl paho-mqtt spdlog'
 
     steps:
     - uses: actions/checkout@v2
@@ -57,7 +62,6 @@ jobs:
         $VCPKG_ROOT/vcpkg install qt5-charts:x64-windows
         $VCPKG_ROOT/vcpkg install pthread:x64-windows 
         $VCPKG_ROOT/vcpkg install dlfcn-win32:x64-windows 
-        $VCPKG_ROOT/vcpkg install expat:x64-windows 
         $VCPKG_ROOT/vcpkg install openssl:x64-windows 
         $VCPKG_ROOT/vcpkg install paho-mqtt:x64-windows 
         $VCPKG_ROOT/vcpkg install spdlog:x64-windows
@@ -80,7 +84,6 @@ jobs:
     #     vcpkg.exe install qt5-charts:x64-windows
     #     vcpkg.exe install pthread:x64-windows 
     #     vcpkg.exe install dlfcn-win32:x64-windows 
-    #     vcpkg.exe install expat:x64-windows 
     #     vcpkg.exe install openssl:x64-windows 
     #     vcpkg.exe install paho-mqtt:x64-windows 
     #     vcpkg.exe install spdlog:x64-windows
