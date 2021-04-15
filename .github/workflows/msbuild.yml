@@ -33,6 +33,9 @@ jobs:
         path: vscp
         ref: development
 
+    # Install latest CMake.
+    - uses: lukka/get-cmake@latest
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
 
@@ -40,26 +43,47 @@ jobs:
       shell: powershell
       run: Install-Module 7Zip4PowerShell -Force -Verbose
   
-    - name: Checkout vcpkg repo
-      uses: actions/checkout@v2
+    # Restore from cache the previously built ports. If cache-miss, download and build vcpkg (aka "bootstrap vcpkg").
+    - name: Restore from cache and install vcpkg
+      # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
+      uses: lukka/run-vcpkg@v6
       with:
-        repository: microsoft/vcpkg
-        path: vcpkg'    
+        setupOnly: true
+    # Now that vcpkg is installed, it is being used to run with the desired arguments.
+    - run: |
+        $VCPKG_ROOT/vcpkg install integrate install 
+        $VCPKG_ROOT/vcpkg install expat:x64-windows 
+        $VCPKG_ROOT/vcpkg install qt5:x64-windows 
+        $VCPKG_ROOT/vcpkg install qt5-charts:x64-windows
+        $VCPKG_ROOT/vcpkg install pthread:x64-windows 
+        $VCPKG_ROOT/vcpkg install dlfcn-win32:x64-windows 
+        $VCPKG_ROOT/vcpkg install expat:x64-windows 
+        $VCPKG_ROOT/vcpkg install openssl:x64-windows 
+        $VCPKG_ROOT/vcpkg install paho-mqtt:x64-windows 
+        $VCPKG_ROOT/vcpkg install spdlog:x64-windows
+      shell: bash
 
-    - name: Integrate with development environment and install
-      shell: cmd
-      working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
-      run: |
-        call bootstrap-vcpkg.bat
-        vcpkg.exe install expat:x64-windows 
-        vcpkg.exe install qt5:x64-windows 
-        vcpkg.exe install qt5-charts:x64-windows
-        vcpkg.exe install pthread:x64-windows 
-        vcpkg.exe install dlfcn-win32:x64-windows 
-        vcpkg.exe install expat:x64-windows 
-        vcpkg.exe install openssl:x64-windows 
-        vcpkg.exe install paho-mqtt:x64-windows 
-        vcpkg.exe install integrate install 
+    # - name: Checkout vcpkg repo
+    #   uses: actions/checkout@v2
+    #   with:
+    #     repository: microsoft/vcpkg
+    #     path: vcpkg'    
+
+    # - name: Integrate with development environment and install
+    #   shell: cmd
+    #   working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
+    #   run: |
+    #     call bootstrap-vcpkg.bat
+    #     vcpkg.exe install integrate install 
+    #     vcpkg.exe install expat:x64-windows 
+    #     vcpkg.exe install qt5:x64-windows 
+    #     vcpkg.exe install qt5-charts:x64-windows
+    #     vcpkg.exe install pthread:x64-windows 
+    #     vcpkg.exe install dlfcn-win32:x64-windows 
+    #     vcpkg.exe install expat:x64-windows 
+    #     vcpkg.exe install openssl:x64-windows 
+    #     vcpkg.exe install paho-mqtt:x64-windows 
+    #     vcpkg.exe install spdlog:x64-windows
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
