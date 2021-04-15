@@ -423,8 +423,8 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
     ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
     ${VSCP_PATH}/src/common/third_party/mustache.hpp
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include/civetweb.h
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.13/src/civetweb.c
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include/civetweb.h
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.14/src/civetweb.c
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -453,7 +453,7 @@ if (WIN32)
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Core_INCLUDE_DIRS}
@@ -477,7 +477,7 @@ else()
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.13/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
         ${Qt5SerialPort_INCLUDE_DIRS}
