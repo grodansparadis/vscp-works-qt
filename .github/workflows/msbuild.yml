@@ -59,7 +59,8 @@ jobs:
         vcpkg.exe install expat:x64-windows 
         vcpkg.exe install openssl:x64-windows 
         vcpkg.exe install paho-mqtt:x64-windows 
-#        vcpkg.exe install integrate install 
+        vcpkg.exe install getopts:x64-windows
+        vcpkg.exe install integrate install 
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -74,7 +75,7 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake ..  -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVSCP_PATH=${{github.workspace}}/vscp/
+      run: ls ${{github.workspace}} && cmake .. -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake -DVSCP_PATH=${{github.workspace}}/vscp/
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}/build
