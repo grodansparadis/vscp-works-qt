@@ -16,6 +16,7 @@ If you still want to build this project
   sudo apt install qtdeclarative5-dev
   sudo apt install libqt5serialport5
   sudo apt install libqt5serialport5-dev
+  sudo apt install libqt5charts-dev
 ```
 
 ### Install other needed libs
@@ -88,7 +89,7 @@ Install cmake-tools, c++ extension
 ext install cmake-tools
 ```
 
-## VSCP main and VSCP works repositories
+### VSCP main and VSCP works repositories
 You need to checkout the VSCP main repository code as well (but not in the vcpkg folder). You do this with
 
 ```bash
@@ -103,11 +104,11 @@ and the vscp-works-qt code
 git clone https://github.com/grodansparadis/vscp-works-qt.git
 ```
 
-## Optionally install Qt for uae of Qt tools
+### Optionally install Qt for uae of Qt tools
 
 Go to the [qt site](https://www.qt.io/download) and follow the instructions
 
-## Install the vcpkg package manager
+### Install the vcpkg package manager
 
 Install the vcpkg package manager by cloning its github repository in a folder
 

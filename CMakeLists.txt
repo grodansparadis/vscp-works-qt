@@ -94,9 +94,12 @@ if (WIN32)
     find_package(pthread REQUIRED)
 
     # Paho MQTT
-    find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
-    get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
-    get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
+    #find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
+    #get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
+    #get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
+
+    # Mosquitto lib
+    find_package(mosquitto CONFIG REQUIRED)
 
     # SQLite3
     find_package(unofficial-sqlite3 CONFIG REQUIRED)
@@ -112,8 +115,9 @@ else()
     find_package(EXPAT REQUIRED)
     include_directories(${EXPAT_INCLUDE_DIRS})
     # paho
-    include(Findpaho-mqtt)
-    find_package(paho-mqtt REQUIRED)
+    #include(Findpaho-mqtt)
+    # Mosquitto lib
+    include(FindMosquitto)
 endif()
 
 # Set civetweb build flags
@@ -423,8 +427,9 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
     ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
     ${VSCP_PATH}/src/common/third_party/mustache.hpp
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include/civetweb.h
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.14/src/civetweb.c
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include/civetweb.h
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.15/src/civetweb.c
+    ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -453,7 +458,8 @@ if (WIN32)
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
+        ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Core_INCLUDE_DIRS}
@@ -462,7 +468,7 @@ if (WIN32)
         ${Qt5Network_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
         ${OPENSSL_INCLUDE_DIR}
-        ${PAHO_INCLUDE_DIRS}
+        ${MOSQUITTO_INCLUDE_DIRS}
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
@@ -477,14 +483,15 @@ else()
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.14/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
+        ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
         ${Qt5SerialPort_INCLUDE_DIRS}
         ${Qt5Network_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR}
         ${OPENSSL_INCLUDE_DIR}
-        ${PAHO_INCLUDE_DIRS}
+        ${MOSQUITTO_INCLUDE_DIRS}
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
@@ -504,7 +511,8 @@ if (WIN32)
         OpenSSL::SSL 
         OpenSSL::Crypto
         OpenSSL::SSL OpenSSL::Crypto
-        eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
+     #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
+        ${MOSQUITTO_LIBRARIES}
         expat::expat
         dlfcn-win32::dl)
     else()
@@ -521,7 +529,8 @@ if (WIN32)
         OpenSSL::SSL 
         OpenSSL::Crypto
         ${OPENSSL_LIBRARIES}
-        ${PAHO_LIBRARIES}
+#        ${PAHO_LIBRARIES}
+        ${MOSQUITTO_LIBRARIES}
         ${EXPAT_LIBRARIES}
         ${DLFCN_LIBS})
 endif()

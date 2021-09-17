@@ -614,20 +614,20 @@ CDlgConnSettingsRawMqtt::onTestConnection(void)
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     // Initialize host connection
-    if (VSCP_ERROR_SUCCESS !=
-        m_client.init(getBroker().toStdString().c_str(),
-                      // getPort(),
-                      // "#",
-                      // "test",
-                      "",
-                      getUser().toStdString().c_str(),
-                      getPassword().toStdString().c_str())) {
-        QApplication::restoreOverrideCursor();
-        QMessageBox::information(this,
-                                 tr("vscpworks+"),
-                                 tr("Failed to initialize MQTT client"));
-        return;
-    }
+    // if (VSCP_ERROR_SUCCESS !=
+    //     m_client.init(getBroker().toStdString().c_str(),
+    //                   // getPort(),
+    //                   // "#",
+    //                   // "test",
+    //                   "",
+    //                   getUser().toStdString().c_str(),
+    //                   getPassword().toStdString().c_str())) {
+    //     QApplication::restoreOverrideCursor();
+    //     QMessageBox::information(this,
+    //                              tr("vscpworks+"),
+    //                              tr("Failed to initialize MQTT client"));
+    //     return;
+    // }
 
     // Connect to remote host
     if (VSCP_ERROR_SUCCESS != m_client.connect()) {
