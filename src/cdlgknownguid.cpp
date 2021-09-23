@@ -224,10 +224,10 @@ void CDlgKnownGuid::showContextMenu(const QPoint& pos)
 
     menu->addAction(QString(tr("Add...")), this, SLOT(btnAdd()));
     menu->addAction(QString(tr("Edit...")), this, SLOT(btnEdit()));
-    menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone())); 
-    menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete())); 
+    menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone()));
+    menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete()));
     menu->addSeparator();
-    menu->addAction(QString(tr("Sensor...")), this, SLOT(btnSensorIndex())); 
+    menu->addAction(QString(tr("Sensor...")), this, SLOT(btnSensorIndex()));
 
     // menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
     // menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
