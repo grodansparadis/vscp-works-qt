@@ -90,25 +90,25 @@ set(TS_FILES vscp-works-qt_en_150.ts)
 # Windows Libs
 if (WIN32)
     
-    # pthread
-    find_package(pthread REQUIRED)
+  # pthread
+  find_package(pthread REQUIRED)
 
-    # Paho MQTT
-    #find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
-    #get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
-    #get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
+  # Paho MQTT
+  #find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
+  #get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
+  #get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
 
-    # Mosquitto lib
-    find_package(mosquitto CONFIG REQUIRED)
+  # Mosquitto lib
+  find_package(mosquitto CONFIG REQUIRED)
 
-    # SQLite3
-    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+  # SQLite3
+  find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
-    # Expat C library
-    find_package(expat CONFIG REQUIRED)
+  # Expat C library
+  find_package(expat CONFIG REQUIRED)
 
-    # dlfcn
-    find_package(dlfcn-win32 CONFIG REQUIRED)
+  # dlfcn
+  find_package(dlfcn-win32 CONFIG REQUIRED)
 else()
     # expat
     include(FindEXPAT)
@@ -429,7 +429,7 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/common/third_party/mustache.hpp
     ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include/civetweb.h
     ${VSCP_PATH}/src/common/third_party/civetweb-1.15/src/civetweb.c
-    ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
+    ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -459,7 +459,7 @@ if (WIN32)
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
         ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
-        ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
+        ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Core_INCLUDE_DIRS}
@@ -484,7 +484,7 @@ else()
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
         ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
-        ${VSCP_PATH}/src/common/third_party/spdlog-1.8.5/include/
+        ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
         ${Qt5SerialPort_INCLUDE_DIRS}
