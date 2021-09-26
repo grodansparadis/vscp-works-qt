@@ -57,6 +57,17 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // display the dialog on the right of the current screen.
+    // QRect rect = geometry();           // get current geometry of dialog window
+    // QRect parentRect = parent->geometry();    // get current geometry of parent window
+    // rect.moveTo(mapToGlobal(QPoint(parentRect.x() + parentRect.width() - rect.width(), parentRect.y())));
+    // setGeometry(rect);
+
+
+    //QRect scr = /*QApplication::desktop()*/screenGeometry();
+    //move( scr.center() - rect().center() );
+    //QWidget::mapToGlobal()
+
     // edit on row double click
     m_bEnableDblClickAccept = false;
 

@@ -1695,6 +1695,13 @@ void MainWindow::showMainsettings(void)
 void MainWindow::knownGuids(void)
 {
     CDlgKnownGuid *dlg = new CDlgKnownGuid(this);
+
+    //place help dialog "top right" corner just inside the top right corner of parent window
+    // QRect rect = dlg->geometry();           // get current geometry of dialog window
+    // QRect parentRect = this->geometry();    // get current geometry of parent window
+    // rect.moveTo(mapToGlobal(QPoint(parentRect.x() + parentRect.width() - rect.width(), parentRect.y())));
+    // dlg->setGeometry(rect);
+    
     dlg->show();
 }
 
