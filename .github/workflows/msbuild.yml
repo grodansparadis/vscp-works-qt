@@ -12,6 +12,7 @@ env:
   #
   # https://github.com/marketplace/actions/run-vcpkg
   # https://github.com/ilammy/msvc-dev-cmd
+
   BUILD_CONFIGURATION: Release
 
 jobs:
@@ -36,12 +37,12 @@ jobs:
         path: vscp
         ref: development
 
-    - name: Install vcpkg
-      uses: lukka/run-vcpkg@v2
-      with:
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        vcpkgArguments: '@${{ github.workspace }}/vcpkg.txt'
-        appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
+    # - name: Install vcpkg
+    #   uses: lukka/run-vcpkg@v2
+    #   with:
+    #     vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+    #     vcpkgArguments: '@${{ github.workspace }}/vcpkg.txt'
+    #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
 
     # Install latest CMake.
     - name: Run vcpkg
