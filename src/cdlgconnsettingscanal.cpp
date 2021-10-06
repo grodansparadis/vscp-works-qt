@@ -250,7 +250,7 @@ void CDlgConnSettingsCanal::testDriver()
         uint32_t dllversion = m_vscpClient.m_canalif.CanalGetDllVersion();
         const char *pVendor = m_vscpClient.m_canalif.CanalGetVendorString();
         std::string strGenerationOne = m_vscpClient.m_canalif.isGenerationOne() ?
-                                            "Generation one driver (wizard will not work)" : "Generation two driver";
+                                            "Generation one driver (wizard will not work)" : "Generation 2 driver";
         std::string str = vscp_str_format("The driver is OK. \n\nVersion = %d.%d.%d.%d\n%s\n\n%s", 
                                             (dllversion >> 24) & 0xff,
                                             (dllversion >> 16) & 0xff,

@@ -92,7 +92,7 @@ CTxWidgetItem::~CTxWidgetItem()
 // ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-// vscp_client_callback
+// vscp_client_ack
 //
 
 // void CVscpClientCallback::eventReceived(vscpEvent *pev)
@@ -250,8 +250,13 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
             break;
 
         case CVscpClient::connType::CANAL:
-          m_vscpClient = new vscpClientCanal();
-            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient = new vscpClientCanal();
+            if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+                // Failed to initialize
+                QMessageBox::warning(this, tr("VSCP Works +"),
+                                               tr("Failed to initialize CANAL driver. See log for more details."));
+                return;
+            }
             m_vscpClient->setCallback(eventReceived, this);
             m_connectActToolBar->setChecked(true);
             connectToRemoteHost(true);
@@ -386,6 +391,7 @@ CFrmSession::~CFrmSession()
         vscpEvent* pev = m_rxEvents.front();
         m_rxEvents.pop_front();
         vscp_deleteEvent(pev);
+        pev = nullptr;
     }
 
     // This should neo be needed
@@ -918,6 +924,7 @@ CFrmSession::menu_clear_rxlist(void)
         vscpEvent* pev = m_rxEvents.front();
         m_rxEvents.pop_front();
         vscp_deleteEvent(pev);
+        pev = nullptr;
     }
 
     // Clear the event counter
@@ -925,6 +932,9 @@ CFrmSession::menu_clear_rxlist(void)
 
     // Erase all comments
     m_mapRxEventComment.clear();
+
+    // Display number of items
+    m_lcdNumber->display(m_rxTable->rowCount());
 
     m_mutexRxList.unlock();
 
@@ -1089,7 +1099,7 @@ bool CFrmSession::addTxRow(bool bEnable,
     m_txTable->setItem(m_txTable->rowCount() - 1, txrow_period, item);    
 
     // Event
-    CTxWidgetItem* itemEvent = new CTxWidgetItem("Test");
+    CTxWidgetItem* itemEvent = new CTxWidgetItem("no name");
     if (nullptr == itemEvent) {
         return false;
     }
@@ -1128,6 +1138,7 @@ bool CFrmSession::addTxRow(bool bEnable,
     for (int i = 0; i < m_txTable->rowCount(); i++) {
         m_txTable->setRowHeight(i, 10);
     }
+
     m_txTable->setUpdatesEnabled(true);
     return true;
 }
@@ -1522,7 +1533,7 @@ CFrmSession::cloneTxEvent(void)
         if (nullptr == itemSourceEvent) {
             return;
         }
-        CTxWidgetItem* itemTargetEvent = new CTxWidgetItem("Test");
+        CTxWidgetItem* itemTargetEvent = new CTxWidgetItem("new");
         if (nullptr == itemTargetEvent) {
             return;
         }
@@ -1798,7 +1809,9 @@ CFrmSession::saveTxEvents(const QString& path)
             // Save selected items
             QList<QModelIndex>::iterator it;
             for (it = selection.begin(); it != selection.end(); it++) {
-                CTxWidgetItem* itemSourceEvent = (CTxWidgetItem *)m_txTable->item(it->row(), txrow_event);
+                CTxWidgetItem* itemSourceEvent =
+                        (CTxWidgetItem *)m_txTable->item(it->row(),
+                        txrow_event);
 
                 stream.writeStartElement("row");
                 stream.writeAttribute("enable", 
@@ -1903,18 +1916,7 @@ CFrmSession::connectToRemoteHost(bool checked)
 
     if (checked) {
         if (pworks->m_session_bAutoConnect) {
-            if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to connect to remote client");
-                QMessageBox::information(
-                  this,
-                  tr("vscpworks+"),
-                  tr("Failed to open a connection to the remote host"),
-                  QMessageBox::Ok);
-            }
-            else {
-              
-            }
+            doConnectToRemoteHost();
         }
     }
     else {
@@ -1929,6 +1931,7 @@ CFrmSession::connectToRemoteHost(bool checked)
 void
 CFrmSession::doConnectToRemoteHost(void)
 {
+    int rv;
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     switch (m_vscpConnType) {
@@ -1942,20 +1945,35 @@ CFrmSession::doConnectToRemoteHost(void)
         case CVscpClient::connType::TCPIP:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to connect to remote client");
+                            "Session: Unable to connect to remote host.");
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
-                  tr("Failed to open a connection to the remote host"),
+                  tr("Failed to open a connection to the remote host (see log for more info)."),
                   QMessageBox::Ok);
             }
             else {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connect to remote client");
+                            "Session: Successful connect to remote client.");
             }
             break;
 
         case CVscpClient::connType::CANAL:
+            if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
+                QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
+                str += rv;
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            str);
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to open a connection to the CANAL driver (see log for more info)."),
+                  QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful connected to the CANAL driver.");
+            }
             break;
 
         case CVscpClient::connType::SOCKETCAN:
@@ -1970,16 +1988,16 @@ CFrmSession::doConnectToRemoteHost(void)
         case CVscpClient::connType::MQTT:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to connect to remote client");
+                            "Session: Unable to connect to remote host");
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
-                  tr("Failed to open a connection to the remote host"),
+                  tr("Failed to open a connection to the remote host (see log for more info)."),
                   QMessageBox::Ok);
             }
             else {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connect to remote client");
+                            "Session: Successful connect to remote host");
             }
             break;
 
@@ -2013,6 +2031,7 @@ CFrmSession::doConnectToRemoteHost(void)
 void
 CFrmSession::doDisconnectFromRemoteHost(void)
 {
+    int rv;
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     switch (m_vscpConnType) {
@@ -2026,16 +2045,33 @@ CFrmSession::doDisconnectFromRemoteHost(void)
         case CVscpClient::connType::TCPIP:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to disconnect remote client");
+                            "Session: Unable to disconnect tcp/ip remote client");
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
-                  tr("Failed to disconnect the connection to the remote host"),
+                  tr("Failed to disconnect the connection to the txp/ip remote host"),
                   QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful disconnect from tcp/ip remote host");
             }
             break;
 
         case CVscpClient::connType::CANAL:
+            if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
+                QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
+                str += rv;
+                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                QMessageBox::information( this,
+                                          tr("vscpworks+"),
+                                          tr("Failed to disconnect the connection to the CANAL driver"),
+                                          QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful disconnect from CANAL driver");
+            }
             break;
 
         case CVscpClient::connType::SOCKETCAN:
@@ -2050,12 +2086,16 @@ CFrmSession::doDisconnectFromRemoteHost(void)
         case CVscpClient::connType::MQTT:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
                 pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to disconnect remote client");
+                            "Session: Unable to disconnect from MQTT remote client");
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
-                  tr("Failed to disconnect the connection to the remote host"),
+                  tr("Failed to disconnect the connection to the MQTT remote host"),
                   QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful disconnect from the MQTT remote host");
             }
             break;
 
@@ -3730,8 +3770,18 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
     int row = m_rxTable->rowCount();
     m_rxTable->insertRow(row);
 
-    // Save event
-    m_rxEvents.push_back(pev);
+    // Make copy of event
+    vscpEvent *pevnew = new vscpEvent;
+    if (pevnew == nullptr) {
+        // TODO log error
+        return;
+    }
+    pevnew->sizeData = 0;
+    pevnew->pdata = nullptr;
+    vscp_copyEvent(pevnew, pev);
+
+    // Save event copy in rx list
+    m_rxEvents.push_back(pevnew);
 
     // * * * Direction * * *
     QTableWidgetItem* itemDir = new QTableWidgetItem("◀"); // ➤ ➜ ➡ ➤ ᐊ
@@ -3754,22 +3804,22 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
 
     // * * * Class * * *
     QTableWidgetItem* itemClass = new QTableWidgetItem();
-    setClassInfoForRow(itemClass, pev);
+    setClassInfoForRow(itemClass, pevnew);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
 
     // * * * Type * * *
     QTableWidgetItem* itemType = new QTableWidgetItem();
-    setTypeInfoForRow(itemType, pev);
+    setTypeInfoForRow(itemType, pevnew);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
 
     // * * * Node id * * *
     QTableWidgetItem* itemNodeId = new QTableWidgetItem();
-    setNodeIdInfoForRow(itemNodeId, pev);
+    setNodeIdInfoForRow(itemNodeId, pevnew);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
 
     // * * * Guid * * *
     QTableWidgetItem* itemGuid = new QTableWidgetItem();
-    setGuidInfoForRow(itemGuid, pev);
+    setGuidInfoForRow(itemGuid, pevnew);
     m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
 
     m_rxTable->setUpdatesEnabled(false);

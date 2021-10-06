@@ -51,8 +51,6 @@ CTxEvent::CTxEvent()
     m_count = 1;
     m_period = 0;
     m_pev = nullptr;    
-
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,12 +72,17 @@ CTxEvent::~CTxEvent()
 
 bool CTxEvent::newEvent(void) 
 {
+    // Clean up previous allocated VSCP event (if any)
     if (nullptr != m_pev) {
         vscp_deleteEvent(m_pev);
         m_pev = nullptr;
     } 
 
-    if (!vscp_newEvent(&m_pev)) return false;
+    // Allocate new VSCP event
+    if (!vscp_newEvent(&m_pev)) {
+        return false;
+    }
+
     return true;
 }
 

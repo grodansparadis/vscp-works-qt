@@ -1970,7 +1970,9 @@ MainWindow::newCanalConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
+
         QString strName = dlg.getName();
         if (!strName.length()) {
             QMessageBox::warning(this,

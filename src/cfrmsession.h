@@ -141,7 +141,7 @@ class CFrmSession : public QDialog
     const uint32_t RX_ROW_FLAG_RX = 0x00000000;         // Receive row
     const uint32_t RX_ROW_FLAG_TX = 0x00000001;         // Transmit row
     const uint32_t RX_ROW_MARKED = 0x00000002;          // Marked row
-    const uint32_t RX_ROW_MAREKED_CLASS = 0x00000004;   // Transmit row
+    const uint32_t RX_ROW_MARKED_CLASS = 0x00000004;    // Transmit row
     const uint32_t RX_ROW_MARKED_TYPE = 0x00000008;     // Transmit row
 
     // VSCP Class display format
@@ -149,21 +149,30 @@ class CFrmSession : public QDialog
     // numerical_in_base - VSCP class code in selected base
     // numerical_hex_dex - VSCP class code in hex/dec
     // Symbolic_hex_dec  - Symbolic name + VSCP class code 
-    enum class classDisplayFormat {symbolic=0, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+    enum class classDisplayFormat {symbolic=0,
+                                    numerical_in_base,
+                                    numerical_hex_dec,
+                                    symbolic_hex_dec};
 
     // VSCP Type display format
     // symbolic          - Just symbolic name
     // numerical_in_base - VSCP type code in selected base
     // numerical_hex_dex - VSCP type code in hex/dec
     // Symbolic_hex_dec  - Symbolic name + VSCP type code 
-    enum class typeDisplayFormat {symbolic=0, numerical_in_base, numerical_hex_dec, symbolic_hex_dec};
+    enum class typeDisplayFormat {symbolic=0,
+                                    numerical_in_base,
+                                    numerical_hex_dec,
+                                    symbolic_hex_dec};
 
     // VSCP GUID display format
     // guid              - GUID
     // symbolic          - Symbolic code if possible
     // symbolic_guid     - Symbolic + GUID
     // guid_symbolic     - GUID + symbolic
-    enum class guidDisplayFormat {guid=0, symbolic, symbolic_guid, guid_symbolic};
+    enum class guidDisplayFormat {guid=0,
+                                    symbolic,
+                                    symbolic_guid,
+                                    guid_symbolic};
 
     //void close(void);
 
