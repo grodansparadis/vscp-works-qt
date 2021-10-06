@@ -70,7 +70,7 @@ using namespace kainjow::mustache;
 
 vscpworks::vscpworks(int &argc, char **argv) :
         QApplication(argc, argv)
-{        
+{
     m_base = numerical_base::HEX;   // Numerical base 
     m_bAskBeforeDelete = true;  
     m_logLevel = LOG_LEVEL_NONE;    // No logging

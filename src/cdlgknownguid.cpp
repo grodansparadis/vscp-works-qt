@@ -189,14 +189,14 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
     if (QSqlError::NoError != query.lastError().type()) {
+        pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
+                        query.lastError().text());                
         return;                            
     }
 
@@ -408,7 +408,7 @@ again:
         strguid = strguid.trimmed();
 
         // Validate length
-        if (47 != strguid.length()) {
+        if (47 < strguid.length()) {
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Invalid GUID. Length is wrong."),
@@ -440,14 +440,13 @@ again:
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
         if (QSqlError::NoError != query.lastError().type()) {
-            QMessageBox::information(this, 
+            pworks->m_mutexGuidMap.unlock();
+            QMessageBox::information(this,
                               tr("vscpworks+"),
-                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
-                              QMessageBox::Ok );    
+                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text() );
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save GUID into database (duplicate?). Err =") + 
-                            query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
+                            query.lastError().text());                           
             goto again;                            
         }
 
@@ -508,14 +507,14 @@ void  CDlgKnownGuid::btnEdit(void)
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
     if (QSqlError::NoError != query.lastError().type()) {
+        pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
+                        query.lastError().text());                        
         return;                            
     }
 
@@ -541,14 +540,14 @@ again:
                             .arg(strguid), 
                             pworks->m_worksdb);
         if (QSqlError::NoError != query.lastError().type()) {
+            pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save edited GUID into database. Err =") + 
-                            query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
+                            query.lastError().text());                            
             goto again;                            
         }
 
@@ -595,6 +594,7 @@ void  CDlgKnownGuid::btnClone(void)
     QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
     if (QSqlError::NoError != query.lastError().type()) {
+        pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
@@ -602,7 +602,6 @@ void  CDlgKnownGuid::btnClone(void)
         pworks->log(pworks->LOG_LEVEL_ERROR,
                         tr("Unable to find record in database. Err =") + 
                         query.lastError().text());
-        pworks->m_mutexGuidMap.unlock();                
         return;                            
     }
 
@@ -653,6 +652,7 @@ again:
                         .arg(dlg.getDescription()), 
                         pworks->m_worksdb);
         if (QSqlError::NoError != query.lastError().type()) {
+            pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
@@ -660,7 +660,6 @@ again:
             pworks->log(pworks->LOG_LEVEL_ERROR,
                             tr("Unable to save GUID into database (duplicate?). Err =") + 
                             query.lastError().text());
-            pworks->m_mutexGuidMap.unlock();                
             goto again;                            
         }
 
@@ -689,37 +688,47 @@ void  CDlgKnownGuid::btnDelete(void)
                               QMessageBox::Ok );
         return;
     }
-    QTableWidgetItem * item = ui->listGuid->item(row, 0);
-    QString strguid = item->text();
-    strguid = strguid.trimmed();
 
-    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
-    pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    int rv = QMessageBox::warning(this,
+                                    tr("vscpworks+"),
+                                    tr("Are you sure?"),
+                                    QMessageBox::Ok | QMessageBox::Cancel );
 
-    if (QSqlError::NoError != query.lastError().type()) {
-        QMessageBox::information(this, 
-                            tr("vscpworks+"),
-                            tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );    
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to delete GUID. Err =") + 
-                        query.lastError().text());                                          
+    if ( QMessageBox::Ok == rv ) {
+        QTableWidgetItem * item = ui->listGuid->item(row, 0);
+        QString strguid = item->text();
+        strguid = strguid.trimmed();
+
+        QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
+        pworks->m_mutexGuidMap.lock();
+        QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+        if (QSqlError::NoError != query.lastError().type()) {
+            pworks->m_mutexGuidMap.unlock();
+            QMessageBox::information(this,
+                                tr("vscpworks+"),
+                                tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                                QMessageBox::Ok );
+            pworks->log(pworks->LOG_LEVEL_ERROR,
+                            tr("Unable to delete GUID. Err =") +
+                            query.lastError().text());
+            return;
+        }
+        else {
+
+            // Delete row
+            ui->listGuid->removeRow(row);
+
+            // Delete from internal table
+            pworks->m_mapGuidToSymbolicName.erase(strguid);
+            // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
+            // if (std::map::end != it) {
+
+            // }
+        }
+
+        pworks->m_mutexGuidMap.unlock();
     }
-    else {
-
-        // Delete row
-        ui->listGuid->removeRow(row);
-
-        // Delete from internal table
-        pworks->m_mapGuidToSymbolicName.erase(strguid);
-        // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
-        // if (std::map::end != it) {
-             
-        // }
-    }
-
-    pworks->m_mutexGuidMap.unlock();                        
 }
 
 
@@ -779,7 +788,7 @@ bool CDlgKnownGuid::getSelectedGuid(cguid& guid)
 
 void  CDlgKnownGuid::btnLoad(void)
 {
-    int i = 8;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -788,6 +797,6 @@ void  CDlgKnownGuid::btnLoad(void)
 
 void  CDlgKnownGuid::btnSave(void)
 {
-    int i = 8;
+
 }
 

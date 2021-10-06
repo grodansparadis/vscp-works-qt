@@ -377,7 +377,9 @@ CDlgConnSettingsMqtt::getKeepAlive(void)
 void
 CDlgConnSettingsMqtt::setKeepAlive(uint32_t timeout)
 {
-    m_client.setResponseTimeout(timeout);
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QString str       = pworks->decimalToStringInBase(timeout, 10);
+    ui->editKeepAlive->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -596,7 +598,7 @@ CDlgConnSettingsMqtt::getJson(void)
         obj["format"]        = pitem->getFormatInt();
         subscriptionArray.append(obj);
     }
-    m_jsonConfig["subscriptions"] = subscriptionArray;
+    m_jsonConfig["subscribe"] = subscriptionArray;
 
     // Save all publishing
     QJsonArray publishingArray;
@@ -609,7 +611,7 @@ CDlgConnSettingsMqtt::getJson(void)
         obj["bretain"]     = pitem->getRetain();
         publishingArray.append(obj);
     }
-    m_jsonConfig["publishing"] = publishingArray;
+    m_jsonConfig["publish"] = publishingArray;
 
     return m_jsonConfig;
 }
@@ -661,8 +663,8 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
         setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
 
     // Subscriptions
-    if (m_jsonConfig["subscriptions"].isArray()) {
-        QJsonArray interfacesArray = m_jsonConfig["subscriptions"].toArray();
+    if (m_jsonConfig["subscribe"].isArray()) {
+        QJsonArray interfacesArray = m_jsonConfig["subscribe"].toArray();
 
         for (auto v : interfacesArray) {
 
@@ -678,8 +680,8 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
     }
 
     // Publish
-    if (m_jsonConfig["publishing"].isArray()) {
-        QJsonArray interfacesArray = m_jsonConfig["publishing"].toArray();
+    if (m_jsonConfig["publish"].isArray()) {
+        QJsonArray interfacesArray = m_jsonConfig["publish"].toArray();
 
         for (auto v : interfacesArray) {
 
@@ -710,18 +712,15 @@ CDlgConnSettingsMqtt::onTestConnection(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    // Initialize host connection
-    // if (VSCP_ERROR_SUCCESS !=
-    //     m_client.init(getBroker().toStdString().c_str(),
-    //                   "",
-    //                   getUser().toStdString().c_str(),
-    //                   getPassword().toStdString().c_str())) {
-    //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this,
-    //                              tr("vscpworks+"),
-    //                              tr("Failed to initialize MQTT client"));
-    //     return;
-    // }
+    std::string str = getBroker().toStdString();
+    m_client.setHost(str);
+    str = getUser().toStdString();
+    m_client.setUser(str);
+    str = getPassword().toStdString();
+    m_client.setPassword(str);
+    str = getClientId().toStdString();
+    m_client.setClientId(str);
+    //m_client->setConnectionTimeout(ui->spinConnectionTimeout->value());  // TODO
 
     // Connect to remote host
     if (VSCP_ERROR_SUCCESS != m_client.connect()) {
@@ -733,26 +732,26 @@ CDlgConnSettingsMqtt::onTestConnection(void)
         return;
     }
 
-    // // Get server version
-    // uint8_t major_ver;
-    // uint8_t minor_ver;
-    // uint8_t release_ver;
-    // uint8_t build_ver;
-    // QString strVersion;
-    // if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
-    //                                                 &minor_ver,
-    //                                                 &release_ver,
-    //                                                 &build_ver ) ) {
+    // Get server version
+    uint8_t major_ver;
+    uint8_t minor_ver;
+    uint8_t release_ver;
+    uint8_t build_ver;
+    QString strVersion;
+    if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
+                                                    &minor_ver,
+                                                    &release_ver,
+                                                    &build_ver ) ) {
 
-    //     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
-    //                                     (int)major_ver,
-    //                                     (int)minor_ver,
-    //                                     (int)release_ver,
-    //                                     (int)build_ver ).c_str();
-    // }
-    // else {
-    //     strVersion = tr("Failed to get version from server");
-    // }
+        strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
+                                        (int)major_ver,
+                                        (int)minor_ver,
+                                        (int)release_ver,
+                                        (int)build_ver ).c_str();
+    }
+    else {
+        strVersion = tr("Failed to get version from server");
+    }
 
     // Disconnect from remote host
     if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
@@ -976,12 +975,14 @@ CDlgConnSettingsMqtt::onClonePublish(void)
 {
     // Get selected row
     int row = ui->listPublish->currentRow();
-    if (-1 == row)
+    if (-1 == row) {
         return;
+    }
 
     PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
-    if (nullptr == pitem)
+    if (nullptr == pitem) {
         return;
+    }
 
     ui->listPublish->addItem(new PublishItem(pitem->getTopic(),
                                              pitem->getFormat(),

@@ -43,6 +43,18 @@
 #include <mustache.hpp>
 
 #include <vscp_client_tcp.h>
+#include <vscp_client_canal.h>
+#include <vscp_client_udp.h>
+#include <vscp_client_ws1.h>
+#include <vscp_client_ws2.h>
+#include <vscp_client_socketcan.h>
+#include <vscp_client_rest.h>
+#include <vscp_client_mqtt.h>
+#include <vscp_client_rawmqtt.h>
+#include <vscp_client_rawcan.h>
+#include <vscp_client_rs232.h>
+#include <vscp_client_rs485.h>
+#include <vscp_client_multicast.h>
 
 #include "cdlgknownguid.h"
 #include "cdlgsessionfilter.h"
@@ -238,39 +250,99 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
             break;
 
         case CVscpClient::connType::CANAL:
+          m_vscpClient = new vscpClientCanal();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::SOCKETCAN:
+            m_vscpClient = new vscpClientSocketCan();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::WS1:
+            m_vscpClient = new vscpClientWs1();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::WS2:
+            m_vscpClient = new vscpClientWs2();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::MQTT:
+            m_vscpClient = new vscpClientMqtt();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::UDP:
+            m_vscpClient = new vscpClientUdp();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::MULTICAST:
+            m_vscpClient = new vscpClientMulticast();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::REST:
+            m_vscpClient = new vscpClientRest();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::RS232:
+            m_vscpClient = new vscpClientRs232();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::RS485:
+            m_vscpClient = new vscpClientRs485();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::RAWCAN:
+            m_vscpClient = new vscpClientRawCan();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
 
         case CVscpClient::connType::RAWMQTT:
+            m_vscpClient = new vscpClientRawMqtt();
+            m_vscpClient->initFromJson(strJson.toStdString());
+            m_vscpClient->setCallback(eventReceived, this);
+            m_connectActToolBar->setChecked(true);
+            connectToRemoteHost(true);
             break;
     }
 
@@ -1841,6 +1913,7 @@ CFrmSession::connectToRemoteHost(bool checked)
                   QMessageBox::Ok);
             }
             else {
+              
             }
         }
     }
@@ -1895,6 +1968,19 @@ CFrmSession::doConnectToRemoteHost(void)
             break;
 
         case CVscpClient::connType::MQTT:
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to connect to remote client");
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to open a connection to the remote host"),
+                  QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful connect to remote client");
+            }
             break;
 
         case CVscpClient::connType::UDP:
@@ -1962,6 +2048,15 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             break;
 
         case CVscpClient::connType::MQTT:
+            if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Unable to disconnect remote client");
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to disconnect the connection to the remote host"),
+                  QMessageBox::Ok);
+            }
             break;
 
         case CVscpClient::connType::UDP:
@@ -2081,7 +2176,7 @@ CFrmSession::setGuid(void)
             dlg->setAddGuid(guid.c_str());
             dlg->btnAdd();
         }
-
+        // Show dialog
         dlg->exec();
     }
 
@@ -3034,6 +3129,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         }
 
         if (vscp_isMeasurement(pev)) {
+
             CVscpUnit u = pworks->getUnitInfo(pev->vscp_class,
                                               pev->vscp_type,
                                               vscp_getMeasurementUnit(pev));

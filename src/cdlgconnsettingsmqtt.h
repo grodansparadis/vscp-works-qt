@@ -29,33 +29,39 @@
 #ifndef CDLGCONNSETTINGSMQTT_H
 #define CDLGCONNSETTINGSMQTT_H
 
-#include "vscphelper.h"
 #include "vscp_client_mqtt.h"
+#include "vscphelper.h"
 
 #include <QDialog>
-#include <QListWidgetItem>
 #include <QJsonObject>
+#include <QListWidgetItem>
 
 // ----------------------------------------------------------------------------
 
 class SubscribeItem : public QListWidgetItem {
 
-public:
-    SubscribeItem(const QString &topic, enumMqttMsgFormat fmt=autofmt);
+  public:
+    SubscribeItem(const QString& topic, enumMqttMsgFormat fmt = autofmt);
     ~SubscribeItem();
 
     /// Getters/setters for topic
     QString getTopic(void) { return m_topic; };
-    void setTopic(const QString& topic) { m_topic = topic; setText(topic); };
+    void setTopic(const QString& topic)
+    {
+        m_topic = topic;
+        setText(topic);
+    };
 
     /// Getters/setters for format
     enumMqttMsgFormat getFormat(void) { return m_format; };
     int getFormatInt(void) { return static_cast<int>(m_format); };
     void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
-    void setFormatFromInt(int fmt) { m_format = static_cast<enumMqttMsgFormat>(fmt); };
+    void setFormatFromInt(int fmt)
+    {
+        m_format = static_cast<enumMqttMsgFormat>(fmt);
+    };
 
-private:
-
+  private:
     /// Subscribe topic
     QString m_topic;
 
@@ -67,8 +73,11 @@ private:
 
 class PublishItem : public QListWidgetItem {
 
-public:
-    PublishItem(const QString &topic, enumMqttMsgFormat fmt=jsonfmt, int qos=0, bool bretain=false);
+  public:
+    PublishItem(const QString& topic,
+                enumMqttMsgFormat fmt = jsonfmt,
+                int qos               = 0,
+                bool bretain          = false);
     ~PublishItem();
 
     /// Getters/setters for topic
@@ -87,10 +96,12 @@ public:
     enumMqttMsgFormat getFormat(void) { return m_format; };
     int getFormatInt(void) { return static_cast<int>(m_format); };
     void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
-    void setFormatFromInt(int fmt) { m_format = static_cast<enumMqttMsgFormat>(fmt); };
-    
-private:
+    void setFormatFromInt(int fmt)
+    {
+        m_format = static_cast<enumMqttMsgFormat>(fmt);
+    };
 
+  private:
     /// Quality of service
     int m_qos;
 
@@ -110,13 +121,11 @@ namespace Ui {
 class CDlgConnSettingsMqtt;
 }
 
-class CDlgConnSettingsMqtt : public QDialog
-{
+class CDlgConnSettingsMqtt : public QDialog {
     Q_OBJECT
 
-
-public:
-    explicit CDlgConnSettingsMqtt(QWidget *parent = nullptr);
+  public:
+    explicit CDlgConnSettingsMqtt(QWidget* parent = nullptr);
     ~CDlgConnSettingsMqtt();
 
     /*!
@@ -231,7 +240,7 @@ public:
     QJsonObject getJson(void);
     void setJson(const QJsonObject* pobj);
 
- private slots:
+  private slots:
 
     /// Add subscription
     void onAddSubscription(void);
@@ -272,15 +281,14 @@ public:
     /// Publish context menu
     void onPublishContextMenu(const QPoint& pos);
 
-private:
-
-    Ui::CDlgConnSettingsMqtt *ui;
+  private:
+    Ui::CDlgConnSettingsMqtt* ui;
 
     /// TLS flag (secure transport if enabled)
     bool m_bTLS;
 
     /*!
-        the server certificate will be verified and the connection 
+        the server certificate will be verified and the connection
         aborted if the verification fails.
     */
     bool m_bVerifyPeer;
@@ -300,8 +308,8 @@ private:
     /// Password keyfile
     QString m_pwkeyfile;
 
-    /*! 
-        This variable holds the connection type that 
+    /*!
+        This variable holds the connection type that
         the used select
     */
     CVscpClient::connType m_selected_type;
@@ -312,6 +320,5 @@ private:
     /// VSCP MQTT client
     vscpClientMqtt m_client;
 };
-
 
 #endif // CDLGCONNSETTINGSMQTT_H

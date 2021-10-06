@@ -422,6 +422,10 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.cpp
     ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.h
     ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rs232.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rs232.cpp
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.h
+    ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.cpp
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.h
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
     ${VSCP_PATH}/src/vscp/common/vscpunit.h

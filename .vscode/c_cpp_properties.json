@@ -26,34 +26,35 @@
         {
             "name": "Linux",
             "includePath": [
-                "/usr/include/c++/7",
-                "/usr/include/x86_64-linux-gnu/c++/7",
-                "/usr/include/c++/7/backward",
-                "/usr/lib/gcc/x86_64-linux-gnu/7/include",
-                "/usr/local/include",
-                "/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed",
+                "/usr/local/include",               
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
-                "${workspaceRoot}",
-                "${workspaceFolder}/src",
-                "${workspaceFolder}/_vscp_common",
-                "${workspaceFolder}/_vscp_common_general"
+                "${workspaceFolder}/../vscp/src/common/",
+                "${workspaceFolder}/../vscp/src/common/third_party/",
+                "${workspaceFolder}/../vscp/src/common/third_party/nlohmann/",
+                "${workspaceFolder}/../vscp/src/common/third_party/spdlog-1.9.2/",
+                "${workspaceFolder}/../vscp/src/common/third_party/sqlite3-3.35.4/",
+                "${workspaceFolder}/../vscp/src/common/third_party/duktape-2.6.0/",
+                "${workspaceFolder}/../vscp/src/common/third_party/fastpbkdf2-1.0.0/",
+                "${workspaceFolder}/../vscp/src/vscp/common",
+                "${workspaceFolder}/src/"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "/usr/include/c++/7",
-                    "/usr/include/x86_64-linux-gnu/c++/7",
-                    "/usr/include/c++/7/backward",
-                    "/usr/lib/gcc/x86_64-linux-gnu/7/include",
                     "/usr/local/include",
-                    "/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed",
                     "/usr/include/x86_64-linux-gnu",
                     "/usr/include",
-                    "${workspaceFolder}/src",
-                    "${workspaceFolder}/_vscp_common",
-                    "   ${workspaceFolder}/_vscp_common_general"
+                    "${workspaceFolder}/../vscp/src/common/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/nlohmann/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/spdlog-1.9.2/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/sqlite3-3.35.4/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/duktape-2.6.0/",
+                    "${workspaceFolder}/../vscp/src/common/third_party/fastpbkdf2-1.0.0/",
+                    "${workspaceFolder}/../vscp/src/vscp/common",
+                    "${workspaceFolder}/src/"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

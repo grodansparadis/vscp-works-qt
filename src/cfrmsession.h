@@ -291,7 +291,8 @@ class CFrmSession : public QDialog
 
     /*!
         Connect to remote host and update UI to 
-        indicate the result of the operation
+        indicate the result of the operation.
+        @param checked false if not connected. True if connected.
     */
     void connectToRemoteHost(bool checked);    
 
