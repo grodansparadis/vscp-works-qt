@@ -1,4 +1,4 @@
-name: cmake-msbuild
+name: Windows Build
 
 on: [push]
 
@@ -105,8 +105,9 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        dir ${{github.workspace}}
-        cmake .. -DCMAKE_TOOLCHAIN_FILE="${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{github.workspace}}/vscp/"
+        mkdir build
+        cd build
+        cmake .. -G "Visual Studio 16 2019" -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{github.workspace}}/vscp/"
 
     - name: Build
       #working-directory: ${{env.GITHUB_WORKSPACE}}/build

@@ -163,7 +163,7 @@ std::string CDlgConnSettingsCanal::getFlagsStr(void)
 
 void CDlgConnSettingsCanal::setFlags(uint32_t flags)
 {
-    std::string str = vscp_str_format("%lu", (unsigned long)flags);
+    std::string str = vscp_str_format("0x%lX", (unsigned long)flags);
     ui->editFlags->setText(str.c_str());
 }
 
@@ -250,7 +250,7 @@ void CDlgConnSettingsCanal::testDriver()
         uint32_t dllversion = m_vscpClient.m_canalif.CanalGetDllVersion();
         const char *pVendor = m_vscpClient.m_canalif.CanalGetVendorString();
         std::string strGenerationOne = m_vscpClient.m_canalif.isGenerationOne() ?
-                                            "Generation one driver (wizard will not work)" : "Generation 2 driver";
+                                            "Generation 1 driver (wizard will not work)" : "Generation 2 driver";
         std::string str = vscp_str_format("The driver is OK. \n\nVersion = %d.%d.%d.%d\n%s\n\n%s", 
                                             (dllversion >> 24) & 0xff,
                                             (dllversion >> 16) & 0xff,

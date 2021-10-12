@@ -1959,6 +1959,7 @@ CFrmSession::doConnectToRemoteHost(void)
             break;
 
         case CVscpClient::connType::CANAL:
+            QApplication::setOverrideCursor(Qt::WaitCursor);
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
                 QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
                 str += rv;
@@ -1974,6 +1975,7 @@ CFrmSession::doConnectToRemoteHost(void)
                 pworks->log(pworks->LOG_LEVEL_ERROR,
                             "Session: Successful connected to the CANAL driver.");
             }
+            QApplication::restoreOverrideCursor();
             break;
 
         case CVscpClient::connType::SOCKETCAN:
@@ -2059,6 +2061,11 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             break;
 
         case CVscpClient::connType::CANAL:
+
+            // Remove callback
+
+            QApplication::setOverrideCursor(Qt::WaitCursor);
+
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
                 QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
                 str += rv;
@@ -2072,6 +2079,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
                 pworks->log(pworks->LOG_LEVEL_ERROR,
                             "Session: Successful disconnect from CANAL driver");
             }
+            QApplication::restoreOverrideCursor();
             break;
 
         case CVscpClient::connType::SOCKETCAN:
@@ -3019,7 +3027,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     }
 
     // Variables - If any defined
-    std::list<renderFunc*> m_renderFuncs;
+    std::list<renderFunc*> lstRenderFuncs;
     if (renderEventVariables.length()) {
 
         // Define the event in the JavaScript domain
@@ -3115,7 +3123,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
                     QJSValue fun     = myEngine.evaluate(func);
                     QJSValue result  = fun.call();
                     prf->value       = result.toString().trimmed();
-                    m_renderFuncs.push_back(prf);
+                    lstRenderFuncs.push_back(prf);
                 }
             }
         }
@@ -3157,13 +3165,13 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
         // m_renderFuncs;
         // for (std::list<struct renderFunc *>::iterator it =
         // m_renderFuncs.begin(); it != m_renderFuncs.end(); ++it){
-        while (m_renderFuncs.size()) {
-            struct renderFunc* prf = m_renderFuncs.front();
+        while (lstRenderFuncs.size()) {
+            struct renderFunc* prf = lstRenderFuncs.front();
             // Render
             _data.set(prf->name.toStdString(), prf->value.toStdString());
             qDebug() << prf->name << " - " << prf->value;
             // Remove from list
-            m_renderFuncs.pop_front();
+            lstRenderFuncs.pop_front();
             // Unallocate
             delete prf;
         }

@@ -145,6 +145,7 @@ vcpkg install dlfcn-win32:x64-windows
 vcpkg install expat:x64-windows
 vcpkg install openssl:x64-windows
 vcpkg install paho-mqtt:x64-windows
+vcpkg install qtcharts:x64-windows
 ```
 
 The Qt installation may take some time
