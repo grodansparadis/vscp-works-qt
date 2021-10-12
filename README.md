@@ -1,5 +1,8 @@
 # vscp-works-qt
 
+![Linux Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/build.yml/badge.svg) 
+![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
+
 _"First they ignore you, then they laugh at you, then they fight you, then you win”_
 
 ## !!!!! WARNING !!!!!!!  This IS Work in progress
