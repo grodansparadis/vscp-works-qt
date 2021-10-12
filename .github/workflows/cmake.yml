@@ -73,6 +73,7 @@ jobs:
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
-        make -j$(nproc)
-        make install DESTDIR=AppDir
+        cmake --build .
+#        make -j$(nproc)
+#        make install DESTDIR=AppDir
 

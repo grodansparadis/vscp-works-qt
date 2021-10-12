@@ -69,6 +69,13 @@ jobs:
     - name: Prepare Qt Libraries
       uses: jurplel/install-qt-action@v2
 
+    - name: Cache vcpkg
+      id: cache-vcpkg
+      uses: actions/cache@v2
+      with:
+        path: vcpkg
+        key: ${{ runner.os }}-vcpkg
+
     - name: Checkout vcpkg repo
       uses: actions/checkout@v2
       with:
