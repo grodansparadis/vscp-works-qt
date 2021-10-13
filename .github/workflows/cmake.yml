@@ -34,6 +34,9 @@ jobs:
     - name: Update before installing packages
       run: sudo apt-get update
 
+    - name: Install cmake manually
+      run: sudo apt-get install cmake
+
     - name: Install libmosquitto-dev manually
       run: sudo apt-get install libmosquitto-dev
     
