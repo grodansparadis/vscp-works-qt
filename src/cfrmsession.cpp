@@ -32,7 +32,7 @@
 #endif
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #include <stdlib.h>
@@ -73,6 +73,11 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QClipboard>
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 using namespace kainjow::mustache;
 

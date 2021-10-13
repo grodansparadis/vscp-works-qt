@@ -3,7 +3,7 @@
 #endif
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #include "vscp.h"
@@ -16,9 +16,15 @@
 #include "vscpworks.h"
 #include "mainwindow.h"
 
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 int main(int argc, char *argv[])
 {
+    spdlog::debug("Starting VSCP Works");
+
     vscpworks app(argc, argv);
     QCoreApplication::setOrganizationName("VSCP");
     QCoreApplication::setOrganizationDomain("vscp.org");
@@ -35,7 +41,6 @@ int main(int argc, char *argv[])
             QCoreApplication::translate("main", "Set <directory> as home."),
             QCoreApplication::translate("main", "directory"));
     parser.process(app);
-
     app.loadSettings();
 
     MainWindow mainWin; 

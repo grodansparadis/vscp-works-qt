@@ -27,7 +27,7 @@
 //
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #include "vscp.h"
@@ -40,6 +40,11 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor

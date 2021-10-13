@@ -31,7 +31,7 @@
 #endif
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #ifdef WIN32
@@ -73,7 +73,14 @@
 #include "version.h"
 #include "vscp_client_base.h"
 
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+
 #include "mainwindow.h"
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // treeWidgetItemConn
@@ -187,14 +194,14 @@ MainWindow::MainWindow()
     QBrush b(Qt::darkYellow);
 
     // Local
-    QStringList strlist_local(QString(tr("Local Connections")).split(','));
+    QStringList strlist_local(QString(tr("Local")).split(','));
     m_topitem_local =
       new QTreeWidgetItem(strlist_local,
                           static_cast<int>(CVscpClient::connType::LOCAL));
     m_topitem_local->setIcon(0, iconTest);
     m_topitem_local->setToolTip(
       0,
-      tr("Holds local connections. Typically logfile and debug content "
+      tr("Holds local files/streams. Typically logfile and debug content "
          "containing VSCP events."));
     // Set font
     m_topitem_local->setForeground(0, b);

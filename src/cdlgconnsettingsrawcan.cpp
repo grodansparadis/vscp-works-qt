@@ -27,7 +27,7 @@
 //
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #ifndef WIN32
@@ -46,6 +46,11 @@
 #include <QMessageBox>
 #include <QJsonArray>
 #include <QMenu>
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -488,6 +493,7 @@ void CDlgConnSettingsRawCan::onTestConnection(void)
 {
     int rv;
     m_clientSocketcan.init(getDevice().toStdString(), 
+                            "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00",
                             getFlags(), 
                             getResponseTimeout());
     

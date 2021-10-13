@@ -27,11 +27,11 @@
 //
 
 #ifdef WIN32
-#include "StdAfx.h"
+#include <pch.h>
 #endif
 
 #ifndef WIN32
-#include <syslog.h>
+
 #else
 #include <windows.h>
 #endif
@@ -57,6 +57,11 @@
 #include <QJSEngine>
 #include <QUuid>
 #include <QTextDocument>
+
+#include <spdlog/async.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 #include <nlohmann/json.hpp>
 
@@ -226,6 +231,7 @@ QString vscpworks::getConnectionName(CVscpClient::connType type)
 void vscpworks::loadSettings(void)
 {
     QString str;   
+
 
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());    
 

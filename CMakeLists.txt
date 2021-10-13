@@ -61,8 +61,8 @@ endif()
 
 if (MSVC)
 #     # use precompiled headers
-#     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h" "-fstdafx.h")
-    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bstdafx.h ")
+#     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h" "-fpch.h")
+    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h ")
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
