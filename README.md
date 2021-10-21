@@ -1,7 +1,9 @@
 # vscp-works-qt
 
-![Linux Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/build.yml/badge.svg) 
+![Linux Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/cmake.yml/badge.svg) 
 ![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+
 
 _"First they ignore you, then they laugh at you, then they fight you, then you win”_
 
