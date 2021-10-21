@@ -48,6 +48,11 @@ jobs:
        
     - name: Install qt5 components manually
       run: sudo apt install qttools5-dev qt5-default qtdeclarative5-dev libqt5charts5-dev 
+
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
+      with:
+        cmake-version: '3.18.x'  
     
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable

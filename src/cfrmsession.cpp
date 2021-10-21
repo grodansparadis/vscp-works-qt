@@ -269,7 +269,12 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
 
         case CVscpClient::connType::SOCKETCAN:
             m_vscpClient = new vscpClientSocketCan();
-            m_vscpClient->initFromJson(strJson.toStdString());
+            if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+                // Failed to initialize
+                QMessageBox::warning(this, tr("VSCP Works +"),
+                                               tr("Failed to initialize SOCKETCAN driver. See log for more details."));
+                return;
+            }
             m_vscpClient->setCallback(eventReceived, this);
             m_connectActToolBar->setChecked(true);
             connectToRemoteHost(true);
@@ -1984,6 +1989,22 @@ CFrmSession::doConnectToRemoteHost(void)
             break;
 
         case CVscpClient::connType::SOCKETCAN:
+            QApplication::setOverrideCursor(Qt::WaitCursor);
+            if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
+                QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
+                str += rv;
+                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                QMessageBox::information(
+                  this,
+                  tr("vscpworks+"),
+                  tr("Failed to open a connection to SOCKETCAN (see log for more info)."),
+                  QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful connected to SOCKETCAN.");
+            }
+            QApplication::restoreOverrideCursor();
             break;
 
         case CVscpClient::connType::WS1:
@@ -2088,6 +2109,22 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             break;
 
         case CVscpClient::connType::SOCKETCAN:
+            QApplication::setOverrideCursor(Qt::WaitCursor);
+
+            if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
+                QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");
+                str += rv;
+                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                QMessageBox::information( this,
+                                          tr("vscpworks+"),
+                                          tr("Failed to disconnect the connection to the SOCKETCAN driver"),
+                                          QMessageBox::Ok);
+            }
+            else {
+                pworks->log(pworks->LOG_LEVEL_ERROR,
+                            "Session: Successful disconnect from SOCKETCAN driver");
+            }
+            QApplication::restoreOverrideCursor();
             break;
 
         case CVscpClient::connType::WS1:

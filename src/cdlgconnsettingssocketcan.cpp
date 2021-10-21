@@ -237,7 +237,7 @@ QJsonObject CDlgConnSettingsSocketCan::getJson(void)
     m_jsonConfig["name"] = getName();
     m_jsonConfig["device"] = getDevice();
     m_jsonConfig["flags"] = (int)getFlags();
-    m_jsonConfig["resonse-timeout"] = (int)getResponseTimeout();
+    m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
 
 
     QJsonArray filterArray;
