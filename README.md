@@ -7,9 +7,6 @@
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 
-_"First they ignore you, then they laugh at you, then they fight you, then you win”_
-
-## !!!!! WARNING !!!!!!!  This IS Work in progress
 This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far far far from a usable state. There is no documentation. No user setup information and no help.
 
 ## Build
