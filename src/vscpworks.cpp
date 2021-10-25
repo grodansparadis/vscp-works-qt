@@ -76,9 +76,19 @@ using namespace kainjow::mustache;
 vscpworks::vscpworks(int &argc, char **argv) :
         QApplication(argc, argv)
 {
-    m_base = numerical_base::HEX;   // Numerical base 
+    m_base = numerical_base::HEX;        // Numerical base
     m_bAskBeforeDelete = true;  
-    m_logLevel = LOG_LEVEL_NONE;    // No logging
+
+    // Logging defaults
+    m_fileLogLevel     = spdlog::level::info;
+    m_fileLogPattern   = "[vscpd] [%^%l%$] %v";
+    m_fileLogPath      = "/var/log/vscp/vscp.log";
+    m_maxFileLogSize   = 5242880;
+    m_maxFileLogFiles  = 7;
+
+    m_bEnableConsoleLog = false;
+    m_consoleLogLevel   = spdlog::level::info;
+    m_consoleLogPattern = "[vscpd] [%^%l%$] %v";
 
     m_session_maxEvents = -1;
 
@@ -89,6 +99,17 @@ vscpworks::vscpworks(int &argc, char **argv) :
     m_session_bAutoConnect = true;
     m_session_bShowFullTypeToken = false;
     m_session_bAutoSaveTxRows = true;
+
+    // Logging defaults
+    m_fileLogLevel    = spdlog::level::info;
+    m_fileLogPattern  = "[vscpworks+] [%^%l%$] %v";
+    m_fileLogPath     = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+    m_maxFileLogSize  = 5242880;
+    m_maxFileLogFiles = 7;
+
+    m_bEnableConsoleLog = false;
+    m_consoleLogLevel   = spdlog::level::info;
+    m_consoleLogPattern = "[vscpworks+] [%^%l%$] %v";
 
     // After the following it is possible to create and destroy event objects 
     // dynamically at run-time
@@ -282,7 +303,66 @@ void vscpworks::loadSettings(void)
 
     m_bAskBeforeDelete = settings.value("bAskBeforeDelete", true).toBool();
 
-    m_logLevel = settings.value("logLevel", LOG_LEVEL_NONE).toInt();
+    // * * * Logging * * *
+    int level = settings.value("fileLogLevel", 4).toInt();  // Default: 4 == "information";
+    switch (level) {
+      case 0:
+        m_fileLogLevel = spdlog::level::trace;
+        break;
+      case 1:
+        m_fileLogLevel = spdlog::level::debug;
+        break;
+      default:  
+      case 2:     
+        m_fileLogLevel = spdlog::level::info;
+        break;
+      case 3:
+        m_fileLogLevel = spdlog::level::warn;
+        break;
+      case 4:     
+        m_fileLogLevel = spdlog::level::err;
+        break;
+      case 5:
+        m_fileLogLevel = spdlog::level::critical;
+        break;
+      case 6:
+        m_fileLogLevel = spdlog::level::off;
+        break;
+    };
+    m_fileLogPattern = 
+      settings.value("fileLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
+    m_fileLogPath = 
+      settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
+    m_maxFileLogSize = settings.value("fileLogMaxSize", 5242880).toInt();
+    m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
+
+    level = settings.value("consoleLogLevel", 4).toInt();  // Default: 4 == "information";
+    switch (level) {
+      case 0:
+        m_consoleLogLevel = spdlog::level::trace;
+        break;
+      case 1:
+        m_consoleLogLevel = spdlog::level::debug;
+        break;
+      default:  
+      case 2:     
+        m_consoleLogLevel = spdlog::level::info;
+        break;
+      case 3:
+        m_consoleLogLevel = spdlog::level::warn;
+        break;
+      case 4:     
+        m_consoleLogLevel = spdlog::level::err;
+        break;
+      case 5:
+        m_consoleLogLevel = spdlog::level::critical;
+        break;
+      case 6:
+        m_consoleLogLevel = spdlog::level::off;
+        break;
+    };
+
+    m_consoleLogPattern = settings.value("consoleLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
 
     // * * * Session * * *
 
@@ -344,8 +424,71 @@ void vscpworks::writeSettings()
     settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
     settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
     settings.setValue("bAskBeforeDelete", m_bAskBeforeDelete);
-    settings.setValue("logLevel", m_logLevel);
     settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
+
+    // * * * Logging * * *
+    int level = 4;  // Default: 4 == "information";
+    switch (m_fileLogLevel) {
+      case spdlog::level::trace:
+        level = 0;
+        break;
+      case spdlog::level::debug:
+        level = 1;
+        break;
+      default:  
+      case spdlog::level::info:
+        level = 2;
+        break;
+      case spdlog::level::warn:
+        level = 3;
+        break;
+      case spdlog::level::err:
+        level = 4;
+        break;
+      case spdlog::level::critical:
+        level = 5;
+        break;
+      case spdlog::level::off:
+        level = 6;
+        break;
+    };  
+
+    settings.setValue("fileLogLevel", level);
+    settings.setValue("fileLogPattern", QString::fromStdString(m_fileLogPattern));
+    settings.setValue("fileLogPath", QString::fromStdString(m_fileLogPath));
+    settings.setValue("fileLogMaxSize", m_maxFileLogSize);
+    settings.setValue("fileLogMaxFiles", m_maxFileLogFiles);  
+
+
+    level = 4;  // Default: 4 == "information";
+    switch (m_consoleLogLevel) {
+      case spdlog::level::trace:
+        level = 0;
+        break;
+      case spdlog::level::debug:
+        level = 1;
+        break;
+      default:  
+      case spdlog::level::info:
+        level = 2;
+        break;
+      case spdlog::level::warn:
+        level = 3;
+        break;
+      case spdlog::level::err:
+        level = 4;
+        break;
+      case spdlog::level::critical:
+        level = 5;
+        break;
+      case spdlog::level::off:
+        level = 6;
+        break;
+    };  
+
+    settings.setValue("consoleLogLevel", level);
+    settings.setValue("consoleLogPattern", QString::fromStdString(m_consoleLogPattern));
+
 
     // * * * Session * * *
 
@@ -497,23 +640,23 @@ bool vscpworks::loadEventDb(void)
 void vscpworks::log(int level, const QString& message)
 {
     // Log only messages 
-    if (level <= m_logLevel) {
+    // if (level <= m_logLevel) {
 
-        QDateTime now = QDateTime::currentDateTime();
+    //     QDateTime now = QDateTime::currentDateTime();
 
-        QString strQuery = "INSERT INTO log (level, datetime, message) values (";
-        strQuery +=  QString::number(level);
-        strQuery += ",";
-        strQuery += "'" + now.toString() + "'";
-        strQuery += ",";
-        strQuery += "'" +message + "'";
-        strQuery += ");";
+    //     QString strQuery = "INSERT INTO log (level, datetime, message) values (";
+    //     strQuery +=  QString::number(level);
+    //     strQuery += ",";
+    //     strQuery += "'" + now.toString() + "'";
+    //     strQuery += ",";
+    //     strQuery += "'" +message + "'";
+    //     strQuery += ");";
 
-        QSqlQuery query = QSqlQuery( m_worksdb );
-        if (!query.exec(strQuery)) {
-            qDebug() << "Failed to insert log message";
-        }
-    }
+    //     QSqlQuery query = QSqlQuery( m_worksdb );
+    //     if (!query.exec(strQuery)) {
+    //         qDebug() << "Failed to insert log message";
+    //     }
+    // }
 }
 
 
@@ -655,9 +798,8 @@ bool vscpworks::addGuid(QString guid, QString name)
     QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
     QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_worksdb);
     if (queryClass.lastError().isValid()) {
-        log(LOG_LEVEL_ERROR, 
-                tr("Failed to insert GUID into database %s")
-                    .arg(queryClass.lastError().text().toStdString().c_str()));
+        spdlog::error(std::string(tr("Failed to insert GUID into database %s")
+                        .arg(queryClass.lastError().text()).toStdString()));
         qDebug() << queryClass.lastError();
         return false;
     }

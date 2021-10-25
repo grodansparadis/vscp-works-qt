@@ -65,7 +65,7 @@ public slots:
     /// Reload VSCP event db
     void onReLoadEventDb(void);
     
-    /// Dialog return
+    /// Dialog return 
     void done(int r);    
 
 private:

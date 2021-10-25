@@ -74,13 +74,6 @@
 #include <QStandardPaths>
 #include <QClipboard>
 
-#include <spdlog/async.h>
-#include <spdlog/sinks/rotating_file_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/spdlog.h>
-
-using namespace kainjow::mustache;
-
 // ----------------------------------------------------------------------------
 
 CTxWidgetItem::CTxWidgetItem(const QString& text)
@@ -132,10 +125,10 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     m_vscpClient   = NULL;
 
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    pworks->log(pworks->LOG_LEVEL_DEBUG, "Session: Session module opended");
+    spdlog::debug(std::string(tr("Session: Session module opended").toStdString()));
 
     if (nullptr == pconn) {
-        pworks->log(pworks->LOG_LEVEL_ERROR, "Session: pconn is null");
+        spdlog::error(std::string(tr("Session: pconn is null").toStdString()));
         QMessageBox::information(
           this,
           tr("vscpworks+"),
@@ -149,8 +142,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
 
     // Must have a type
     if (m_connObject["type"].isNull()) {
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                    "Session: Type is not define in JSON data");
+        spdlog::error(std::string(tr("Session: Type is not define in JSON data").toStdString()));
         QMessageBox::information(
           this,
           tr("vscpworks+"),
@@ -1293,8 +1285,7 @@ CFrmSession::sendTxEvent(void)
 
         for ( int i=0; i<itemEvent->m_tx.getCount(); i++) {
             if (VSCP_ERROR_SUCCESS != m_vscpClient->send(*pev)) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to send event");
+                spdlog::error(std::string(tr("Session: Unable to send event").toStdString()));
                 QMessageBox::information(
                 this,
                 tr("vscpworks+"),
@@ -1954,8 +1945,7 @@ CFrmSession::doConnectToRemoteHost(void)
 
         case CVscpClient::connType::TCPIP:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to connect to remote host.");
+                spdlog::error(std::string(tr("Session: Unable to connect to remote host.").toStdString()));
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -1963,8 +1953,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connect to remote client.");
+                spdlog::error(std::string(tr("Session: Successful connect to remote client.").toStdString()));
             }
             break;
 
@@ -1973,8 +1962,7 @@ CFrmSession::doConnectToRemoteHost(void)
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
                 QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
                 str += rv;
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            str);
+                spdlog::error(str.toStdString());
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -1982,8 +1970,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connected to the CANAL driver.");
+                spdlog::error(std::string(tr("Session: Successful connected to the CANAL driver.").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -1993,7 +1980,7 @@ CFrmSession::doConnectToRemoteHost(void)
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
                 QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
                 str += rv;
-                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                spdlog::error(str.toStdString());
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -2001,8 +1988,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connected to SOCKETCAN.");
+                spdlog::error(std::string(tr("Session: Successful connected to SOCKETCAN.").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -2015,8 +2001,7 @@ CFrmSession::doConnectToRemoteHost(void)
 
         case CVscpClient::connType::MQTT:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to connect to remote host");
+                spdlog::error(std::string(tr("Session: Unable to connect to remote host").toStdString()));
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -2024,8 +2009,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful connect to remote host");
+                spdlog::error(std::string(tr("Session: Successful connect to remote host").toStdString()));
             }
             break;
 
@@ -2072,8 +2056,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
 
         case CVscpClient::connType::TCPIP:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to disconnect tcp/ip remote client");
+                spdlog::error(std::string(tr("Session: Unable to disconnect tcp/ip remote client").toStdString()));
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -2081,8 +2064,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful disconnect from tcp/ip remote host");
+                spdlog::error(std::string(tr("Session: Successful disconnect from tcp/ip remote host").toStdString()));
             }
             break;
 
@@ -2095,15 +2077,14 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
                 QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
                 str += rv;
-                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                spdlog::error(str.toStdString());
                 QMessageBox::information( this,
                                           tr("vscpworks+"),
                                           tr("Failed to disconnect the connection to the CANAL driver"),
                                           QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful disconnect from CANAL driver");
+                spdlog::error(std::string(tr("Session: Successful disconnect from CANAL driver").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -2114,15 +2095,14 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
                 QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");
                 str += rv;
-                pworks->log(pworks->LOG_LEVEL_ERROR, str);
+                spdlog::error(str.toStdString());
                 QMessageBox::information( this,
                                           tr("vscpworks+"),
                                           tr("Failed to disconnect the connection to the SOCKETCAN driver"),
                                           QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful disconnect from SOCKETCAN driver");
+                spdlog::error(std::string(tr("Session: Successful disconnect from SOCKETCAN driver").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -2135,8 +2115,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
 
         case CVscpClient::connType::MQTT:
             if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Unable to disconnect from MQTT remote client");
+                spdlog::error(std::string(tr("Session: Unable to disconnect from MQTT remote client").toStdString()));
                 QMessageBox::information(
                   this,
                   tr("vscpworks+"),
@@ -2144,8 +2123,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR,
-                            "Session: Successful disconnect from the MQTT remote host");
+                spdlog::error(std::string(tr("Session: Successful disconnect from the MQTT remote host").toStdString()));
             }
             break;
 
@@ -2547,8 +2525,7 @@ CFrmSession::copyRxToTx(void)
                 addTxRow(true, tr("Copy from RX"), 1, 0, strevent.c_str());
             }
             else {
-                pworks->log(pworks->LOG_LEVEL_ERROR, 
-                                tr("Failed to convert RX event to string"));
+                spdlog::error(std::string(tr("Failed to convert RX event to string").toStdString()));
             }
         }
     }

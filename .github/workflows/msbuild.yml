@@ -26,9 +26,8 @@ jobs:
     - name: Clone
       uses: actions/checkout@v2
 
-    - name: Display environment variables
-      shell: cmd
-      run: set
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
 
     - name: Checkout vscp repo
       uses: actions/checkout@v2
@@ -99,9 +98,8 @@ jobs:
         vcpkg.exe install spdlog:x64-windows
 
     - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/build 
+      run: |
+        mkdir build && cd build
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable

@@ -47,10 +47,6 @@
 #include <QMessageBox>
 #include <QMenu>
 
-#include <spdlog/async.h>
-#include <spdlog/sinks/rotating_file_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/spdlog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -199,9 +195,8 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());                
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()),
+                         query.lastError().text().toStdString());                
         return;                            
     }
 
@@ -449,9 +444,8 @@ again:
             QMessageBox::information(this,
                               tr("vscpworks+"),
                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text() );
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save GUID into database (duplicate?). Err =") + 
-                            query.lastError().text());                           
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
+                             query.lastError().text().toStdString());                         
             goto again;                            
         }
 
@@ -517,9 +511,8 @@ void  CDlgKnownGuid::btnEdit(void)
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());                        
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
+                         query.lastError().text().toStdString());                  
         return;                            
     }
 
@@ -550,9 +543,9 @@ again:
                               tr("vscpworks+"),
                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save edited GUID into database. Err =") + 
-                            query.lastError().text());                            
+
+            spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) + 
+                             query.lastError().text().toStdString());                            
             goto again;                            
         }
 
@@ -604,9 +597,8 @@ void  CDlgKnownGuid::btnClone(void)
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
+                         query.lastError().text().toStdString());
         return;                            
     }
 
@@ -662,9 +654,8 @@ again:
                               tr("vscpworks+"),
                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save GUID into database (duplicate?). Err =") + 
-                            query.lastError().text());
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
+                             query.lastError().text().toStdString());
             goto again;                            
         }
 
@@ -714,9 +705,8 @@ void  CDlgKnownGuid::btnDelete(void)
                                 tr("vscpworks+"),
                                 tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
                                 QMessageBox::Ok );
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to delete GUID. Err =") +
-                            query.lastError().text());
+            spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
+                             query.lastError().text().toStdString());
             return;
         }
         else {

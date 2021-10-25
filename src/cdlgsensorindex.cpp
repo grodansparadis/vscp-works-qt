@@ -183,13 +183,12 @@ void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
 
     // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
         pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
@@ -436,13 +435,12 @@ again:
         
         // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save GUID into database (duplicate?). Err =") + 
-                            query.lastError().text());
             pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
@@ -505,13 +503,12 @@ void CDlgSensorIndex::btnEdit(void)
 
     // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
         pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
@@ -541,13 +538,12 @@ again:
 
         // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save edited GUID into database. Err =") + 
-                            query.lastError().text());
             pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
@@ -597,13 +593,12 @@ void CDlgSensorIndex::btnClone(void)
 
     // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
         QMessageBox::information(this,
                             tr("vscpworks+"),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to find record in database. Err =") + 
-                        query.lastError().text());
         pworks->m_mutexSensorIndexMap.unlock();                
         return;                            
     }
@@ -631,13 +626,12 @@ again:
                        
         // Check for database operation error
         if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
                               tr("vscpworks+"),
                               tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
-            pworks->log(pworks->LOG_LEVEL_ERROR,
-                            tr("Unable to save GUID into database (duplicate?). Err =") + 
-                            query.lastError().text());
             pworks->m_mutexSensorIndexMap.unlock();                
             goto again;                            
         }
@@ -696,13 +690,12 @@ void CDlgSensorIndex::btnDelete(void)
 
     // Check for database operation error
     if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to delete sensor. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
         QMessageBox::information(this, 
                             tr("vscpworks+"),
                             tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );    
-        pworks->log(pworks->LOG_LEVEL_ERROR,
-                        tr("Unable to delete sensor. Err =") + 
-                        query.lastError().text());                                          
+                            QMessageBox::Ok );                                            
     }
     else {
 

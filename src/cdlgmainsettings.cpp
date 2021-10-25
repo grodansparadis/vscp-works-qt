@@ -73,10 +73,11 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     // Ask befor delete/clear
     ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);    
 
-    // Log level
-    ui->comboLogLevel->setCurrentIndex(pworks->m_logLevel);
-
     // * * * Session Window tab * * *
+
+
+
+
 
     // Max number of session events
     ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
@@ -96,8 +97,82 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     // VSCP type token format  
     ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
     
+    // * * *  logging tab * * *
 
-    // * * * Data tab * * *
+    // File log level
+    switch (pworks->m_fileLogLevel) {
+    
+      case spdlog::level::off:
+        ui->comboFileLogLevel->setCurrentIndex(0);
+        break;
+
+      case spdlog::level::critical:
+        ui->comboFileLogLevel->setCurrentIndex(1);
+        break;
+
+      case spdlog::level::err:
+        ui->comboFileLogLevel->setCurrentIndex(2);
+        break;  
+
+      case spdlog::level::warn:
+        ui->comboFileLogLevel->setCurrentIndex(3);
+        break;
+
+      default:
+      case spdlog::level::info:
+        ui->comboFileLogLevel->setCurrentIndex(4);
+        break;  
+
+      case spdlog::level::debug:
+        ui->comboFileLogLevel->setCurrentIndex(5);
+        break;  
+
+      case spdlog::level::trace:
+        ui->comboFileLogLevel->setCurrentIndex(6);
+        break;  
+    }
+
+    ui->editFileLogPattern->setText(pworks->m_fileLogPattern.c_str());
+    ui->editFileLogPath->setText(pworks->m_fileLogPath.c_str());
+    ui->editFileLogMaxSize->setText(QString::number(pworks->m_maxFileLogSize));
+    ui->editFileLogMaxFiles->setText(QString::number(pworks->m_maxFileLogFiles));
+
+    // File log level
+    switch(pworks->m_consoleLogLevel) {
+    
+      case spdlog::level::off:
+        ui->comboConsoleLogLevel->setCurrentIndex(0);
+        break;
+
+      case spdlog::level::critical:
+        ui->comboConsoleLogLevel->setCurrentIndex(1);
+        break;
+
+      case spdlog::level::err:
+        ui->comboConsoleLogLevel->setCurrentIndex(2);
+        break;  
+
+      case spdlog::level::warn:
+        ui->comboConsoleLogLevel->setCurrentIndex(3);
+        break;
+
+      default:
+      case spdlog::level::info:
+        ui->comboConsoleLogLevel->setCurrentIndex(4);
+        break;  
+
+      case spdlog::level::debug:
+        ui->comboConsoleLogLevel->setCurrentIndex(5);
+        break;  
+
+      case spdlog::level::trace:
+        ui->comboConsoleLogLevel->setCurrentIndex(6);
+        break;  
+    }
+
+    ui->editConsoleLogPattern->setText(pworks->m_consoleLogPattern.c_str());
+
+    // ------------------------------------------------------------------------
 
     // Local storage folder
     ui->pathLocalStorage->setText(pworks->m_shareFolder);
@@ -148,30 +223,104 @@ void CDlgMainSettings::done(int rv)
 {
     if (QDialog::Accepted == rv) { // ok was pressed
         
-        vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+      vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
-        // General
-        pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
-        pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();
-        pworks->m_logLevel = ui->comboLogLevel->currentIndex();
+      // General
+      pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
+      pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();        
 
-        // Session window
-        pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
-        pworks->m_session_ClassDisplayFormat = 
-            static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
-        pworks->m_session_TypeDisplayFormat = 
-            static_cast<CFrmSession::typeDisplayFormat>(ui->comboTypeDisplayFormat->currentIndex());
-        pworks->m_session_GuidDisplayFormat = 
-            static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
-        pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
-        pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
-        
+      // Session window
+      pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
+      pworks->m_session_ClassDisplayFormat = 
+          static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
+      pworks->m_session_TypeDisplayFormat = 
+          static_cast<CFrmSession::typeDisplayFormat>(ui->comboTypeDisplayFormat->currentIndex());
+      pworks->m_session_GuidDisplayFormat = 
+          static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
+      pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
+      pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
+      
+      // Logging
 
-        // Data
+      // File log level
+      int level = ui->comboFileLogLevel->currentIndex();
+      switch (level) {
+          
+          case 0:
+            pworks->m_fileLogLevel = spdlog::level::off;
+            break;
 
-        pworks->writeSettings();
+          case 1:
+            pworks->m_fileLogLevel = spdlog::level::critical;
+            break;
+
+          case 2:
+            pworks->m_fileLogLevel = spdlog::level::err;
+            break;
+
+          case 3:
+            pworks->m_fileLogLevel = spdlog::level::warn;
+            break;
+
+          default:
+          case 4:
+            pworks->m_fileLogLevel = spdlog::level::info;
+            break;   
+
+          case 5:
+            pworks->m_fileLogLevel = spdlog::level::debug;
+            break;       
+
+          case 6:
+            pworks->m_fileLogLevel = spdlog::level::trace;
+            break;  
+      }
+
+      pworks->m_fileLogPattern = ui->editFileLogPattern->text().toStdString();
+      pworks->m_fileLogPath = ui->editFileLogPath->text().toStdString();
+      pworks->m_maxFileLogSize = vscp_readStringValue(ui->editFileLogMaxSize->text().toStdString());
+      pworks->m_maxFileLogFiles = vscp_readStringValue(ui->editFileLogMaxFiles->text().toStdString());
+
+      // Console log level
+      level = ui->comboConsoleLogLevel->currentIndex();
+      switch (level) {
+          
+          case 0:
+            pworks->m_consoleLogLevel = spdlog::level::off;
+            break;
+
+          case 1:
+            pworks->m_consoleLogLevel = spdlog::level::critical;
+            break;
+
+          case 2:
+            pworks->m_consoleLogLevel = spdlog::level::err;
+            break;
+
+          case 3:
+            pworks->m_consoleLogLevel = spdlog::level::warn;
+            break;
+
+          default:
+          case 4:
+            pworks->m_consoleLogLevel = spdlog::level::info;
+            break;   
+
+          case 5:
+            pworks->m_consoleLogLevel = spdlog::level::debug;
+            break;       
+
+          case 6:
+            pworks->m_consoleLogLevel = spdlog::level::trace;
+            break;  
+      }
+
+      pworks->m_consoleLogPattern = ui->editConsoleLogPattern->text().toStdString();
+    
+      // Data
+      pworks->writeSettings();
     }
-    QDialog::done(rv);
+  QDialog::done(rv);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

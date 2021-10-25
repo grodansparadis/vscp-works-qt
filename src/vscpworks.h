@@ -50,6 +50,17 @@
 
 #include <list>
 
+#include <json.hpp> // Needs C++11  -std=c++11
+#include <mustache.hpp>
+
+#include "spdlog/sinks/rotating_file_sink.h"
+#include "spdlog/spdlog.h"
+
+// https://github.com/nlohmann/json
+using json = nlohmann::json;
+
+using namespace kainjow::mustache;
+
 // Register to be used for signals
 Q_DECLARE_METATYPE(vscpEvent)
 Q_DECLARE_METATYPE(vscpEventEx)
@@ -88,11 +99,6 @@ class vscpworks : public QApplication {
 
     const QString URL_EVENT_VERSION = tr("https://www.vscp.org/events/version.js");
     const QString URL_EVENT_DATABASE = tr("https://www.vscp.org/events/vscp_events.sqlite3");
-
-    const int LOG_LEVEL_NONE = 0;
-    const int LOG_LEVEL_ERROR = 1;
-    const int LOG_LEVEL_INFO = 2;
-    const int LOG_LEVEL_DEBUG = 3;
 
     /*!
         Add connection
@@ -346,8 +352,20 @@ class vscpworks : public QApplication {
     */
     bool m_bAskBeforeDelete;
 
-    /// The current log level  
-    int m_logLevel;
+    //**************************************************************************
+    //                            LOGGER (SPDLOG)
+    //**************************************************************************
+
+    bool m_bEnableFileLog;
+    spdlog::level::level_enum m_fileLogLevel;
+    std::string m_fileLogPattern;
+    std::string m_fileLogPath;
+    uint32_t m_maxFileLogSize;
+    uint16_t m_maxFileLogFiles;
+
+    bool m_bEnableConsoleLog;
+    spdlog::level::level_enum m_consoleLogLevel;
+    std::string m_consoleLogPattern;
 
     // ------------------------------------------------------------------------
     // Session
