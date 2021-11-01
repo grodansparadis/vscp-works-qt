@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>frmNodeConfig</class>
+ <widget class="QMainWindow" name="frmNodeConfig">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -44,7 +44,7 @@
             <enum>QTabWidget::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="tab_reg">
             <property name="sizePolicy">
@@ -70,9 +70,38 @@
              </property>
              <column>
               <property name="text">
-               <string notr="true">1</string>
+               <string notr="true">Pos:Page</string>
               </property>
              </column>
+             <column>
+              <property name="text">
+               <string>R/W</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Value</string>
+              </property>
+             </column>
+             <item>
+              <property name="text">
+               <string>0000:0000</string>
+              </property>
+              <property name="text">
+               <string>rw</string>
+              </property>
+              <property name="text">
+               <string>Memory</string>
+              </property>
+              <property name="text">
+               <string>0x56</string>
+              </property>
+             </item>
             </widget>
            </widget>
            <widget class="QWidget" name="tab_rv">
@@ -114,6 +143,27 @@
       <property name="title">
        <string>Info</string>
       </property>
+      <widget class="QWebView" name="webView">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>19</y>
+         <width>741</width>
+         <height>201</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="url">
+        <url>
+         <string>about:blank</string>
+        </url>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -161,6 +211,7 @@
    <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
    <addaction name="actionClearLog"/>
+   <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConnect">
@@ -223,6 +274,11 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header location="global">QtWebKitWidgets/QWebView</header>
+  </customwidget>
   <customwidget>
    <class>SendFrameBox</class>
    <extends>QGroupBox</extends>

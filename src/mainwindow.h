@@ -125,6 +125,8 @@ private slots:
     void commitData(QSessionManager &);
 #endif
     void newSession();
+    void newNodeConfiguration();
+    void newNodeScan();
 
     /// Handle app. settings.
     void showMainsettings(void);

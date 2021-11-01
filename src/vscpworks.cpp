@@ -451,7 +451,7 @@ void vscpworks::writeSettings()
       case spdlog::level::off:
         level = 6;
         break;
-    };  
+    };
 
     settings.setValue("fileLogLevel", level);
     settings.setValue("fileLogPattern", QString::fromStdString(m_fileLogPattern));

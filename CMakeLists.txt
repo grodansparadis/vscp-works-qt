@@ -179,6 +179,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgselectdatacoding.ui
     src/cdlgselectdate.ui
     src/cdlgselectconstraint.ui
+    src/cfrmmodeconfig.ui
 )
 
 add_executable(vscp-works-qt

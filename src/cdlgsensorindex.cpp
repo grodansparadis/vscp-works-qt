@@ -695,7 +695,7 @@ void CDlgSensorIndex::btnDelete(void)
         QMessageBox::information(this, 
                             tr("vscpworks+"),
                             tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );                                            
+                            QMessageBox::Ok );        
     }
     else {
 

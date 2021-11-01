@@ -69,6 +69,7 @@
 #include "cdlgnewconnection.h"
 #include "cdlgsessionfilter.h"
 #include "cfrmsession.h"
+#include "cfrmnodeconfig.h"
 #include "filedownloader.h"
 #include "version.h"
 #include "vscp_client_base.h"
@@ -208,7 +209,7 @@ MainWindow::MainWindow()
     m_topitem_local->setFont(0, font);
     m_connTreeTable->addTopLevelItem(m_topitem_local);
 
-    // canal
+    // CANAL
     QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
     m_topitem_canal =
       new QTreeWidgetItem(strlist_canal,
@@ -1403,7 +1404,7 @@ MainWindow::connectionsWasModified()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// createActions
+// createActions for Main menu
 //
 
 void
@@ -1413,8 +1414,8 @@ MainWindow::createActions()
     QMenu* fileMenu       = menuBar()->addMenu(tr("&File"));
     QToolBar* fileToolBar = addToolBar(tr("File"));
 
-    const QIcon newIcon =
-      QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
+    // New connection
+    const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
     QAction* newAct = new QAction(newIcon, tr("&New connection..."), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("New connection"));
@@ -1446,46 +1447,45 @@ MainWindow::createActions()
 
     fileMenu->addSeparator();
 
+    // New Session
     const QIcon newSessionIcon = QIcon::fromTheme("emblem-symbolic-link");
-    QAction* newSessionAct =
-      new QAction(newSessionIcon, tr("&Session window..."), this);
+    QAction* newSessionAct = new QAction(newSessionIcon, tr("&Session window..."), this);
     newSessionAct->setShortcuts(QKeySequence::SaveAs);
     newSessionAct->setStatusTip(tr("Open a new VSCP Session window"));
     connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
     fileMenu->addAction(newSessionAct);
     fileToolBar->addAction(newSessionAct);
 
+    // Node configuration
     const QIcon newDevConfigIcon = QIcon::fromTheme("document-properties");
-    QAction* newDevConfigAct =
-      new QAction(newDevConfigIcon, tr("&Configuration..."), this);
+    QAction* newDevConfigAct = new QAction(newDevConfigIcon, tr("&Configuration..."), this);
     newDevConfigAct->setShortcuts(QKeySequence::SaveAs);
     newDevConfigAct->setStatusTip(tr("Open a new VSCP configuration window"));
-    connect(newDevConfigAct, &QAction::triggered, this, &MainWindow::save);
+    connect(newDevConfigAct, &QAction::triggered, this, &MainWindow::newNodeConfiguration);
     fileMenu->addAction(newDevConfigAct);
     fileToolBar->addAction(newDevConfigAct);
 
+    // Scan for devices
     const QIcon scanForDeviceIcon = QIcon::fromTheme("edit-find");
-    QAction* scanForDeviceAct =
-      new QAction(scanForDeviceIcon, tr("Scan for &Device..."), this);
+    QAction* scanForDeviceAct = new QAction(scanForDeviceIcon, tr("Scan for &Device..."), this);
     scanForDeviceAct->setShortcuts(QKeySequence::SaveAs);
     scanForDeviceAct->setStatusTip(tr("Open a new device scan window."));
-    connect(scanForDeviceAct, &QAction::triggered, this, &MainWindow::save);
+    connect(scanForDeviceAct, &QAction::triggered, this, &MainWindow::newNodeScan);
     fileMenu->addAction(scanForDeviceAct);
     fileToolBar->addAction(scanForDeviceAct);
 
+    // Bootloader wizard
     const QIcon bootloaderIcon = QIcon::fromTheme("emblem-downloads");
-    QAction* bootloaderAct =
-      new QAction(bootloaderIcon, tr("&Bootloader wizard..."), this);
+    QAction* bootloaderAct = new QAction(bootloaderIcon, tr("&Bootloader wizard..."), this);
     bootloaderAct->setShortcuts(QKeySequence::SaveAs);
     bootloaderAct->setStatusTip(tr("Open a new VSCP bootloader wizard."));
     connect(bootloaderAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(bootloaderAct);
     fileToolBar->addAction(bootloaderAct);
 
-    const QIcon newMdfEditorIcon =
-      QIcon::fromTheme("emblem-documents"); // applications-office
-    QAction* newMdfEditorAct =
-      new QAction(newMdfEditorIcon, tr("&MDF editor..."), this);
+    // MDF Editor
+    const QIcon newMdfEditorIcon = QIcon::fromTheme("emblem-documents"); // applications-office
+    QAction* newMdfEditorAct = new QAction(newMdfEditorIcon, tr("&MDF editor..."), this);
     newMdfEditorAct->setShortcuts(QKeySequence::SaveAs);
     newMdfEditorAct->setStatusTip(tr("Open a new NDF editor"));
     connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::save);
@@ -1495,8 +1495,7 @@ MainWindow::createActions()
     fileMenu->addSeparator();
 
     const QIcon exitIcon = QIcon::fromTheme("application-exit");
-    QAction* exitAct =
-      fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
+    QAction* exitAct = fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
     exitAct->setShortcuts(QKeySequence::Quit);
 
     exitAct->setStatusTip(tr("Exit the application"));
@@ -1505,8 +1504,7 @@ MainWindow::createActions()
     QToolBar* editToolBar = addToolBar(tr("Edit"));
 
 #ifndef QT_NO_CLIPBOARD
-    const QIcon cutIcon =
-      QIcon::fromTheme("edit-cut", QIcon(":/images/cut.png"));
+    const QIcon cutIcon = QIcon::fromTheme("edit-cut", QIcon(":/images/cut.png"));
     QAction* cutAct = new QAction(cutIcon, tr("Cu&t"), this);
 
     cutAct->setShortcuts(QKeySequence::Cut);
@@ -1517,8 +1515,7 @@ MainWindow::createActions()
     editMenu->addAction(cutAct);
     editToolBar->addAction(cutAct);
 
-    const QIcon copyIcon =
-      QIcon::fromTheme("edit-copy", QIcon(":/images/copy.png"));
+    const QIcon copyIcon = QIcon::fromTheme("edit-copy", QIcon(":/images/copy.png"));
     QAction* copyAct = new QAction(copyIcon, tr("&Copy"), this);
     copyAct->setShortcuts(QKeySequence::Copy);
     copyAct->setStatusTip(tr("Copy the current selection's contents to the "
@@ -1528,8 +1525,7 @@ MainWindow::createActions()
     editMenu->addAction(copyAct);
     editToolBar->addAction(copyAct);
 
-    const QIcon pasteIcon =
-      QIcon::fromTheme("edit-paste", QIcon(":/images/paste.png"));
+    const QIcon pasteIcon = QIcon::fromTheme("edit-paste", QIcon(":/images/paste.png"));
     QAction* pasteAct = new QAction(pasteIcon, tr("&Paste"), this);
     pasteAct->setShortcuts(QKeySequence::Paste);
     pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
@@ -1544,26 +1540,29 @@ MainWindow::createActions()
 #endif // !QT_NO_CLIPBOARD
 
     QMenu* toolsMenu     = menuBar()->addMenu(tr("&Tools"));
-    QAction* settingsAct = toolsMenu->addAction(tr("&Settings"),
-                                                this,
-                                                &MainWindow::showMainsettings);
-    settingsAct->setStatusTip(tr("Open settings..."));
-    QAction* knownGuidAct =
-      toolsMenu->addAction(tr("&Known GUID's"), this, &MainWindow::knownGuids);
+    // QAction* settingsAct = toolsMenu->addAction(tr("&Settings"),
+    //                                             this,
+    //                                             &MainWindow::showMainsettings);
+    // settingsAct->setStatusTip(tr("Open settings..."));
+    QAction* knownGuidAct = toolsMenu->addAction(tr("&Known GUID's"), this, &MainWindow::knownGuids);
     knownGuidAct->setStatusTip(tr("Edit/Add known GUID's..."));
     QAction* sessionFilterAct =
       toolsMenu->addAction(tr("&Session filters..."),
                            this,
                            &MainWindow::sessionFilter);
     knownGuidAct->setStatusTip(tr("Edit/Add session filters..."));
+    QMenu* configMenu = menuBar()->addMenu(tr("&Configuration"));
+    QAction* settingsAct = configMenu->addAction(tr("&Settings"),
+                                                this,
+                                                &MainWindow::showMainsettings);
+    settingsAct->setStatusTip(tr("Open settings..."));
+
 
     QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
-    QAction* helpAct =
-      helpMenu->addAction(tr("&About"), this, &MainWindow::about);
+    QAction* helpAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
     helpAct->setStatusTip(tr("Show the application's About box"));
 
-    QAction* aboutQtAct =
-      helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
+    QAction* aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 
 #ifndef QT_NO_CLIPBOARD
@@ -2968,6 +2967,31 @@ restart:
 
         m_topitem_rawmqtt->sortChildren(0, Qt::AscendingOrder);
     }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// newNodeConfiguration
+//
+
+void
+MainWindow::newNodeConfiguration()
+{
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+    frmNodeConfig dlg(this);
+    dlg.setInitialFocus();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// newNodeScan
+//
+
+void
+MainWindow::newNodeScan()
+{
+
 }
 
 #endif
