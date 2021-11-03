@@ -1,169 +1,244 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>frmNodeConfig</class>
- <widget class="QMainWindow" name="frmNodeConfig">
+ <class>CFrmNodeConfig</class>
+ <widget class="QMainWindow" name="CFrmNodeConfig">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>771</width>
-    <height>704</height>
+    <width>870</width>
+    <height>819</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>CAN Example</string>
+   <string>VSCP Node Configuration</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QGroupBox" name="receivedMessagesBox">
+     <widget class="QGroupBox" name="groupBox_3">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
-        <verstretch>6</verstretch>
+        <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="title">
-       <string>Node configuration</string>
+       <string/>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
-         <item>
-          <widget class="QTabWidget" name="tabWidget">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>10</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="tabPosition">
-            <enum>QTabWidget::North</enum>
-           </property>
-           <property name="tabShape">
-            <enum>QTabWidget::Rounded</enum>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <widget class="QWidget" name="tab_reg">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>500</height>
+          </size>
+         </property>
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QTabWidget" name="tabWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
+              <verstretch>20</verstretch>
              </sizepolicy>
             </property>
-            <attribute name="title">
-             <string>Registers</string>
-            </attribute>
-            <widget class="QTreeWidget" name="treeWidget">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>721</width>
-               <height>361</height>
-              </rect>
+            <property name="tabPosition">
+             <enum>QTabWidget::North</enum>
+            </property>
+            <property name="tabShape">
+             <enum>QTabWidget::Rounded</enum>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="tab_reg">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
+             <attribute name="title">
+              <string>Registers</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QTreeWidget" name="treeWidgetRegisters">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>10</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <column>
+                 <property name="text">
+                  <string notr="true">Pos:Page</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>R/W</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Name</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Value</string>
+                 </property>
+                </column>
+                <item>
+                 <property name="text">
+                  <string>0000:0000</string>
+                 </property>
+                 <property name="text">
+                  <string>rw</string>
+                 </property>
+                 <property name="text">
+                  <string>Memory</string>
+                 </property>
+                 <property name="text">
+                  <string>0x56</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_rv">
+             <attribute name="title">
+              <string>Remote Variables</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
+              <item>
+               <widget class="QTreeWidget" name="treeWidget_2">
+                <column>
+                 <property name="text">
+                  <string notr="true">1</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_dm">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <column>
-              <property name="text">
-               <string notr="true">Pos:Page</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>R/W</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Name</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Value</string>
-              </property>
-             </column>
-             <item>
-              <property name="text">
-               <string>0000:0000</string>
-              </property>
-              <property name="text">
-               <string>rw</string>
-              </property>
-              <property name="text">
-               <string>Memory</string>
-              </property>
-              <property name="text">
-               <string>0x56</string>
-              </property>
-             </item>
+             <attribute name="title">
+              <string>Decission Matrix</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <item>
+               <widget class="QTreeWidget" name="treeWidget_3">
+                <column>
+                 <property name="text">
+                  <string notr="true">1</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_wizard">
+             <attribute name="title">
+              <string>Wizards</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <widget class="QTreeWidget" name="treeWidget_4">
+                <column>
+                 <property name="text">
+                  <string notr="true">1</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </widget>
-           <widget class="QWidget" name="tab_rv">
-            <attribute name="title">
-             <string>Remote Variables</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="tab_dm">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <attribute name="title">
-             <string>Decission Matrix</string>
-            </attribute>
-           </widget>
-           <widget class="QWidget" name="tab_wizard">
-            <attribute name="title">
-             <string>Wizards</string>
-            </attribute>
-           </widget>
-          </widget>
-         </item>
-        </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Info</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QTextBrowser" name="infoArea"/>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="SendFrameBox" name="sendFrameBox">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>2</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="title">
-       <string>Info</string>
-      </property>
-      <widget class="QWebView" name="webView">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>19</y>
-         <width>741</width>
-         <height>201</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="url">
-        <url>
-         <string>about:blank</string>
-        </url>
-       </property>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -173,20 +248,21 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>771</width>
+     <width>870</width>
      <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCalls">
     <property name="title">
-     <string>&amp;Calls</string>
+     <string>&amp;Tools</string>
     </property>
     <addaction name="actionConnect"/>
-    <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
-    <addaction name="actionResetController"/>
+    <addaction name="actionUpdate"/>
+    <addaction name="actionUpdateLocal"/>
+    <addaction name="actionUpdateFull"/>
     <addaction name="separator"/>
-    <addaction name="actionClearLog"/>
+    <addaction name="actionActionLoadDefaults"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -208,33 +284,45 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionConnect"/>
-   <addaction name="actionDisconnect"/>
    <addaction name="separator"/>
-   <addaction name="actionClearLog"/>
+   <addaction name="actionUpdate"/>
+   <addaction name="actionUpdateFull"/>
+   <addaction name="actionUpdateLocal"/>
+   <addaction name="actionActionLoadDefaults"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionConnect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
-    <iconset resource="../../../qtserialbus/examples/serialbus/can/can.qrc">
-     <normaloff>:/images/connect.png</normaloff>:/images/connect.png</iconset>
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/disconnect.png</normaloff>
+     <normalon>:/connect.png</normalon>:/disconnect.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Connect</string>
    </property>
+   <property name="toolTip">
+    <string>Connect to remote node</string>
+   </property>
   </action>
-  <action name="actionDisconnect">
+  <action name="actionUpdate">
    <property name="icon">
-    <iconset resource="../../../qtserialbus/examples/serialbus/can/can.qrc">
-     <normaloff>:/images/disconnect.png</normaloff>:/images/disconnect.png</iconset>
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/down.png</normaloff>:/down.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Disconnect</string>
+    <string>&amp;Update</string>
+   </property>
+   <property name="toolTip">
+    <string>Update configuration data</string>
    </property>
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset resource="../../../qtserialbus/examples/serialbus/can/can.qrc">
+    <iconset>
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
@@ -246,15 +334,6 @@
     <string>&amp;About Qt</string>
    </property>
   </action>
-  <action name="actionClearLog">
-   <property name="icon">
-    <iconset resource="../../../qtserialbus/examples/serialbus/can/can.qrc">
-     <normaloff>:/images/clear.png</normaloff>:/images/clear.png</iconset>
-   </property>
-   <property name="text">
-    <string>Clear &amp;Log</string>
-   </property>
-  </action>
   <action name="actionPluginDocumentation">
    <property name="text">
     <string>Plugin Documentation</string>
@@ -263,31 +342,60 @@
     <string>Open plugin documentation in Webbrowser</string>
    </property>
   </action>
-  <action name="actionResetController">
+  <action name="actionUseLocal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>&amp;Reset CAN Controller</string>
+    <string>Local</string>
    </property>
    <property name="toolTip">
-    <string>Reset CAN Controller</string>
+    <string>Load MDF from local file</string>
+   </property>
+  </action>
+  <action name="actionActionLoadDefaults">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/page_swap.png</normaloff>:/page_swap.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Defaults</string>
+   </property>
+   <property name="toolTip">
+    <string>Load default values</string>
+   </property>
+  </action>
+  <action name="actionUpdateLocal">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/folder_previous.png</normaloff>:/folder_previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Update &amp;Local</string>
+   </property>
+   <property name="toolTip">
+    <string>Update configuration data</string>
+   </property>
+  </action>
+  <action name="actionUpdateFull">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/folder_down.png</normaloff>:/folder_down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Update &amp;Full</string>
+   </property>
+   <property name="toolTip">
+    <string>Update configuration data</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header location="global">QtWebKitWidgets/QWebView</header>
-  </customwidget>
-  <customwidget>
-   <class>SendFrameBox</class>
-   <extends>QGroupBox</extends>
-   <header location="global">sendframebox.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
-  <include location="../../../qtserialbus/examples/serialbus/can/can.qrc"/>
+  <include location="vscpworks.qrc"/>
  </resources>
  <connections/>
 </ui>

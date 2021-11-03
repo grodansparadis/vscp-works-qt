@@ -1,4 +1,4 @@
-// cfrmnodeconfig.cpp
+// cfrmnodescan.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -25,8 +25,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#ifndef CFRMNODECONFIG_H
-#define CFRMNODECONFIG_H
+#ifndef CFRMNODESCAN_H
+#define CFRMNODESCAN_H
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -34,7 +34,6 @@
 
 #include <vscp.h>
 #include <vscp_client_base.h>
-#include "ctxevent.h"
 
 #include <QObject>
 #include <QDialog>
@@ -67,7 +66,7 @@ QT_END_NAMESPACE
 #include <QTableWidgetItem>
 
 namespace Ui {
-class CFrmNodeConfig;
+class CFrmNodeScan;
 }
 
 
@@ -78,14 +77,14 @@ class CFrmNodeConfig;
     The session window
 */
 
-class CFrmNodeConfig : public QMainWindow
+class CFrmNodeScan : public QMainWindow
 {
   Q_OBJECT
 
  public:
 
-    explicit CFrmNodeConfig(QWidget *parent = nullptr, QJsonObject* pconnObj = nullptr);
-    virtual ~CFrmNodeConfig();
+    explicit CFrmNodeScan(QWidget *parent = nullptr, QJsonObject* pconnObj = nullptr);
+    virtual ~CFrmNodeScan();
 
     /*!
         set Initial focus
@@ -169,8 +168,8 @@ class CFrmNodeConfig : public QMainWindow
     std::deque<vscpEvent *> m_rxEvents;
 
     // The UI definition
-    Ui::CFrmNodeConfig *ui;
+    Ui::CFrmNodeScan *ui;
 
 };
 
-#endif // CFrmNodeConfig_H
+#endif // CFrmNodeScan_H

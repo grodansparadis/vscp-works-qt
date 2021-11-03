@@ -31,7 +31,7 @@
 
 #include <guid.h>
 
-#include <QDialog>
+#include <QDialog>  
 #include <QTableWidgetItem>
 
 namespace Ui {

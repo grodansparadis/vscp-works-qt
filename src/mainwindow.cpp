@@ -45,7 +45,7 @@
 
 //#include <QtSerialPort/QSerialPort>
 //#include <QCanBus>
-// #include <QCanBusDevice>
+// #include <QCanBusDevice>6
 // #include <QCanBusFactory>
 // #include <QCanBusFrame>
 
@@ -390,6 +390,8 @@ MainWindow::MainWindow()
     // m_connTreeTable->selectionModel()->select(1, QItemSelectionModel::Select
     // | QItemSelectionModel::Rows);
     // m_connTreeTable->setCurrentIndex(QModelIndex())
+
+    setWindowTitle(tr("VSCP Works+"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1152,79 +1154,79 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         switch (item->type()) {
 
             case static_cast<int>(CVscpClient::connType::LOCAL):
-                menu->addAction(QString("Add new local connection..."),
+                menu->addAction(QString(tr("Add new local connection...")),
                                 this,
                                 SLOT(newLocalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::TCPIP):
-                menu->addAction(QString("Add new tcp/ip connection..."),
+                menu->addAction(QString(tr("Add new tcp/ip connection...")),
                                 this,
                                 SLOT(newTcpipConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::CANAL):
-                menu->addAction(QString("Add new CANAL connection..."),
+                menu->addAction(QString(tr("Add new CANAL connection...")),
                                 this,
                                 SLOT(newCanalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::SOCKETCAN):
-                menu->addAction(QString("Add new Socketcan connection..."),
+                menu->addAction(QString(tr("Add new Socketcan connection...")),
                                 this,
                                 SLOT(newSocketCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS1):
-                menu->addAction(QString("Add new websocket WS1 connection..."),
+                menu->addAction(QString(tr("Add new websocket WS1 connection...")),
                                 this,
                                 SLOT(newWs1Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS2):
-                menu->addAction(QString("Add new websocket WS2 connection..."),
+                menu->addAction(QString(tr("Add new websocket WS2 connection...")),
                                 this,
                                 SLOT(newWs2Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MQTT):
-                menu->addAction(QString("Add new MQTT connection..."),
+                menu->addAction(QString(tr("Add new MQTT connection...")),
                                 this,
                                 SLOT(newMqttConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::UDP):
-                menu->addAction(QString("Add new UDP connection..."),
+                menu->addAction(QString(tr("Add new UDP connection...")),
                                 this,
                                 SLOT(newUdpConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MULTICAST):
-                menu->addAction(QString("Add new multicast connection..."),
+                menu->addAction(QString(tr("Add new multicast connection...")),
                                 this,
                                 SLOT(newMulticastConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::REST):
-                menu->addAction(QString("Add new REST connection..."),
+                menu->addAction(QString(tr("Add new REST connection...")),
                                 this,
                                 SLOT(newRestConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWCAN):
-                menu->addAction(QString("Add new raw CAN connection..."),
+                menu->addAction(QString(tr("Add new raw CAN connection...")),
                                 this,
                                 SLOT(newRawCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWMQTT):
-                menu->addAction(QString("Add new raw MQTT connection..."),
+                menu->addAction(QString(tr("Add new raw MQTT connection...")),
                                 this,
                                 SLOT(newRawMqttConnection()));
                 break;
 
             default:
-                menu->addAction(QString("Add new connection..."),
+                menu->addAction(QString(tr("Add new connection...")),
                                 this,
                                 SLOT(newConnection()));
                 break;
@@ -1234,79 +1236,79 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         switch (item->parent()->type()) {
 
             case static_cast<int>(CVscpClient::connType::LOCAL):
-                menu->addAction(QString("Add new local connection"),
+                menu->addAction(QString(tr("Add new local connection")),
                                 this,
                                 SLOT(newLocalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::TCPIP):
-                menu->addAction(QString("Add new tcp/ip connection"),
+                menu->addAction(QString(tr("Add new tcp/ip connection")),
                                 this,
                                 SLOT(newTcpipConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::CANAL):
-                menu->addAction(QString("Add new CANAL connection"),
+                menu->addAction(QString(tr("Add new CANAL connection")),
                                 this,
                                 SLOT(newCanalConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::SOCKETCAN):
-                menu->addAction(QString("Add new Socketcan connection"),
+                menu->addAction(QString(tr("Add new Socketcan connection")),
                                 this,
                                 SLOT(newSocketCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS1):
-                menu->addAction(QString("Add new websocket WS1 connection"),
+                menu->addAction(QString(tr("Add new websocket WS1 connection")),
                                 this,
                                 SLOT(newWs1Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::WS2):
-                menu->addAction(QString("Add new websocket WS2 connection"),
+                menu->addAction(QString(tr("Add new websocket WS2 connection")),
                                 this,
                                 SLOT(newWs2Connection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MQTT):
-                menu->addAction(QString("Add new MQTT connection"),
+                menu->addAction(QString(tr("Add new MQTT connection")),
                                 this,
                                 SLOT(newMqttConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::UDP):
-                menu->addAction(QString("Add new UDP connection"),
+                menu->addAction(QString(tr("Add new UDP connection")),
                                 this,
                                 SLOT(newUdpConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::MULTICAST):
-                menu->addAction(QString("Add new multicast connection"),
+                menu->addAction(QString(tr("Add new multicast connection")),
                                 this,
                                 SLOT(newMulticastConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::REST):
-                menu->addAction(QString("Add new REST connection"),
+                menu->addAction(QString(tr("Add new REST connection")),
                                 this,
                                 SLOT(newRestConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWCAN):
-                menu->addAction(QString("Add new raw CAN connection"),
+                menu->addAction(QString(tr("Add new raw CAN connection")),
                                 this,
                                 SLOT(newRawCanConnection()));
                 break;
 
             case static_cast<int>(CVscpClient::connType::RAWMQTT):
-                menu->addAction(QString("Add new raw MQTT connection"),
+                menu->addAction(QString(tr("Add new raw MQTT connection")),
                                 this,
                                 SLOT(newRawMqttConnection()));
                 break;
 
             default:
-                menu->addAction(QString("Add new connection..."),
+                menu->addAction(QString(tr("Add new connection...")),
                                 this,
                                 SLOT(newConnection()));
                 break;
@@ -1315,18 +1317,47 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         // Connections are stored in a list and there position is the index.
         // item->type() is this index + 1000 therefore we need to subtract 1000
         // to get the correct index (uint32_t)(item->type()))
-        menu->addAction(QString("Edit this connection"),
+
+        menu->addAction(QString(tr("Edit this connection")),
                         this,
                         SLOT(editConnectionItem()));
-        menu->addAction(QString("Remove this connection"),
+        menu->addAction(QString(tr("Remove this connection")),
                         this,
                         SLOT(removeConnectionItem()));
-        menu->addAction(QString("Clone this connection"),
+        menu->addAction(QString(tr("Clone this connection")),
                         this,
                         SLOT(cloneConnectionItem()));
-        menu->addAction(QString("Add new connection"),
+        menu->addAction(QString(tr("Add new connection")),
                         this,
                         SLOT(newConnection()));
+
+        // Add a separator
+        menu->addSeparator();
+
+        // Add the choices for the different operation frames that need a connection
+        const QIcon newSessionIcon = QIcon(":/page.png");
+        menu->addAction(newSessionIcon,
+                        QString(tr("Session")),
+                        this,
+                        SLOT(newSession()));
+
+        const QIcon devConfigIcon = QIcon(":/page_process.png");
+        menu->addAction(devConfigIcon,
+                        QString(tr("Configuration")),
+                        this,
+                        SLOT(newNodeConfiguration()));
+
+        const QIcon scanForNodeIcon = QIcon(":/page_search.png");
+        menu->addAction(scanForNodeIcon,
+                        QString(tr("Node scan")),
+                        this,
+                        SLOT(newNodeScan())); 
+
+        const QIcon bootloadIcon = QIcon(":/page_up.png");
+        menu->addAction(bootloadIcon,
+                        QString(tr("Bootload")),
+                        this,
+                        SLOT(newNodeBootload()));                         
     }
 
     menu->popup(m_connTreeTable->viewport()->mapToGlobal(pos));
@@ -1417,76 +1448,58 @@ MainWindow::createActions()
     // New connection
     const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
     QAction* newAct = new QAction(newIcon, tr("&New connection..."), this);
-    newAct->setShortcuts(QKeySequence::New);
+    newAct->setShortcut(Qt::Key_N | Qt::CTRL);
     newAct->setStatusTip(tr("New connection"));
     connect(newAct, &QAction::triggered, this, &MainWindow::newConnection);
     fileMenu->addAction(newAct);
     fileToolBar->addAction(newAct);
 
-    // const QIcon openIcon = QIcon::fromTheme("document-open",
-    // QIcon(":/images/open.png")); QAction *openAct = new QAction(openIcon,
-    // tr("&Open..."), this); openAct->setShortcuts(QKeySequence::Open);
-    // openAct->setStatusTip(tr("Open an existing file"));
-    // connect(openAct, &QAction::triggered, this, &MainWindow::open);
-    // fileMenu->addAction(openAct);
-    // fileToolBar->addAction(openAct);
-
-    // const QIcon saveIcon = QIcon::fromTheme("document-save",
-    // QIcon(":/images/save.png")); QAction *saveAct = new QAction(saveIcon,
-    // tr("&Save"), this); saveAct->setShortcuts(QKeySequence::Save);
-    // saveAct->setStatusTip(tr("Save the document to disk"));
-    // connect(saveAct, &QAction::triggered, this, &MainWindow::save);
-    // fileMenu->addAction(saveAct);
-    // fileToolBar->addAction(saveAct);
-
-    // const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
-    // QAction *saveAsAct = fileMenu->addAction(saveAsIcon, tr("Save &As..."),
-    // this, &MainWindow::saveAs);
-    // saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    // saveAsAct->setStatusTip(tr("Save the document under a new name"));
-
     fileMenu->addSeparator();
 
     // New Session
-    const QIcon newSessionIcon = QIcon::fromTheme("emblem-symbolic-link");
+    //const QIcon newSessionIcon = QIcon::fromTheme("emblem-symbolic-link");
+    const QIcon newSessionIcon = QIcon(":/page.png");
     QAction* newSessionAct = new QAction(newSessionIcon, tr("&Session window..."), this);
-    newSessionAct->setShortcuts(QKeySequence::SaveAs);
+    newSessionAct->setShortcut(Qt::Key_S | Qt::CTRL);
     newSessionAct->setStatusTip(tr("Open a new VSCP Session window"));
     connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
     fileMenu->addAction(newSessionAct);
     fileToolBar->addAction(newSessionAct);
 
     // Node configuration
-    const QIcon newDevConfigIcon = QIcon::fromTheme("document-properties");
+    const QIcon newDevConfigIcon = QIcon(":/page_process.png");
     QAction* newDevConfigAct = new QAction(newDevConfigIcon, tr("&Configuration..."), this);
-    newDevConfigAct->setShortcuts(QKeySequence::SaveAs);
+    newDevConfigAct->setShortcut(Qt::Key_C | Qt::CTRL);
     newDevConfigAct->setStatusTip(tr("Open a new VSCP configuration window"));
     connect(newDevConfigAct, &QAction::triggered, this, &MainWindow::newNodeConfiguration);
     fileMenu->addAction(newDevConfigAct);
     fileToolBar->addAction(newDevConfigAct);
 
-    // Scan for devices
-    const QIcon scanForDeviceIcon = QIcon::fromTheme("edit-find");
-    QAction* scanForDeviceAct = new QAction(scanForDeviceIcon, tr("Scan for &Device..."), this);
-    scanForDeviceAct->setShortcuts(QKeySequence::SaveAs);
-    scanForDeviceAct->setStatusTip(tr("Open a new device scan window."));
-    connect(scanForDeviceAct, &QAction::triggered, this, &MainWindow::newNodeScan);
-    fileMenu->addAction(scanForDeviceAct);
-    fileToolBar->addAction(scanForDeviceAct);
+    // Scan for nodes
+    //const QIcon scanForNodeIcon = QIcon::fromTheme("edit-find");
+    const QIcon scanForNodeIcon = QIcon(":/page_search.png");
+    QAction* scanForNodeAct = new QAction(scanForNodeIcon, tr("Scan for &nodes..."), this);
+    scanForNodeAct->setShortcut(Qt::Key_F | Qt::CTRL);
+    scanForNodeAct->setStatusTip(tr("Open a new node scan window."));
+    connect(scanForNodeAct, &QAction::triggered, this, &MainWindow::newNodeScan);
+    fileMenu->addAction(scanForNodeAct);
+    fileToolBar->addAction(scanForNodeAct);
 
     // Bootloader wizard
-    const QIcon bootloaderIcon = QIcon::fromTheme("emblem-downloads");
+    //const QIcon bootloaderIcon = QIcon::fromTheme("emblem-downloads");
+    const QIcon bootloaderIcon = QIcon(":/page_up.png");
     QAction* bootloaderAct = new QAction(bootloaderIcon, tr("&Bootloader wizard..."), this);
-    bootloaderAct->setShortcuts(QKeySequence::SaveAs);
+    bootloaderAct->setShortcut(Qt::Key_B | Qt::CTRL);
     bootloaderAct->setStatusTip(tr("Open a new VSCP bootloader wizard."));
     connect(bootloaderAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(bootloaderAct);
     fileToolBar->addAction(bootloaderAct);
 
     // MDF Editor
-    const QIcon newMdfEditorIcon = QIcon::fromTheme("emblem-documents"); // applications-office
+    //const QIcon newMdfEditorIcon = QIcon::fromTheme("emblem-documents"); // applications-office
+    const QIcon newMdfEditorIcon = QIcon(":/page_edit.png");
     QAction* newMdfEditorAct = new QAction(newMdfEditorIcon, tr("&MDF editor..."), this);
-    newMdfEditorAct->setShortcuts(QKeySequence::SaveAs);
+    newMdfEditorAct->setShortcut(Qt::Key_M | Qt::CTRL);
     newMdfEditorAct->setStatusTip(tr("Open a new NDF editor"));
     connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::save);
     fileMenu->addAction(newMdfEditorAct);
@@ -2068,6 +2081,7 @@ MainWindow::newTcpipConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2160,6 +2174,7 @@ MainWindow::newSocketCanConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2253,6 +2268,7 @@ MainWindow::newMqttConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2344,6 +2360,7 @@ MainWindow::newWs1Connection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2435,6 +2452,7 @@ MainWindow::newWs2Connection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2527,6 +2545,7 @@ MainWindow::newUdpConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2618,6 +2637,7 @@ MainWindow::newMulticastConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2708,6 +2728,7 @@ MainWindow::newRestConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2799,6 +2820,7 @@ MainWindow::newRawCanConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2892,6 +2914,7 @@ MainWindow::newRawMqttConnection()
     dlg.setInitialFocus();
 
 restart:
+
     if (QDialog::Accepted == dlg.exec()) {
         QString strName = dlg.getName();
         if (!strName.length()) {
@@ -2977,12 +3000,36 @@ restart:
 void
 MainWindow::newNodeConfiguration()
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    frmNodeConfig dlg(this);
-    dlg.setInitialFocus();
+  // CFrmNodeConfig dlg(this);
+  // dlg.setInitialFocus();
+
+  QList<QTreeWidgetItem*> itemList;
+  itemList = m_connTreeTable->selectedItems();
+
+  foreach (QTreeWidgetItem* item, itemList) {
+
+    // Not intereste din top level items
+    if (NULL != item->parent()) {
+
+      // Get item
+      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
+
+      // Get the connection object
+      QJsonObject* pconn = itemConn->getJson();
+
+      CFrmNodeConfig* w = new CFrmNodeConfig(nullptr, pconn);
+      w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+      w->setWindowFlags(Qt::Window);
+      w->show();
+      w->raise();
+      // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+      w->activateWindow();
+    }
+  }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // newNodeScan
@@ -2990,6 +3037,17 @@ MainWindow::newNodeConfiguration()
 
 void
 MainWindow::newNodeScan()
+{
+
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// newNodeBootload
+//
+
+void
+MainWindow::newNodeBootload()
 {
 
 }

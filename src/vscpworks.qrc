@@ -1,34 +1,88 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
+<RCC>
+  <qresource>
+    <file alias="connect.png">../images/connect.png</file>
+    <file alias="disconnect.png">../images/disconnect.png</file>
+    <file alias="clear.png">../images/clear.png</file>
     <file alias="accept.png">../images/png/128x128/accept.png</file>
     <file alias="add.png">../images/png/128x128/add.png</file>
     <file alias="info.png">../images/png/128x128/info.png</file>
     <file alias="remove.png">../images/png/128x128/remove.png</file>
-    
-
     <file alias="process.png">../images/png/128x128/process.png</file>
     <file alias="process_accept.png">../images/png/128x128/process_accept.png</file>
     <file alias="process_add.png">../images/png/128x128/process_add.png</file>
     <file alias="process_remove.png">../images/png/128x128/process_remove.png</file>
+    <file alias="application.png">../images/png/128x128/application.png</file>
     <file alias="application_up.png">../images/png/128x128/application_up.png</file>
-    <file alias="down.png">../images/png/128x128/down.png</file>    
+    <file alias="application_remove.png">../images/png/128x128/application_remove.png</file>
+    <file alias="application_next.png">../images/png/128x128/application_next.png</file>
+    <file alias="application_lock.png">../images/png/128x128/application_lock.png</file>
+    <file alias="application_edit.png">../images/png/128x128/application_edit.png</file>
+    
+    <file alias="printer_search.png">../images/png/128x128/printer_search.png</file>
 
+    <file alias="search.png">../images/png/128x128/search.png</file>
+    <file alias="search_add.png">../images/png/128x128/search_add.png</file>
+    <file alias="search_remove.png">../images/png/128x128/search_remove.png</file>
+
+    <file alias="folder.png">../images/png/128x128/folder.png</file>
+    <file alias="folder_accept.png">../images/png/128x128/folder_accept.png</file>
+    <file alias="folder_add.png">../images/png/128x128/folder_add.png</file>
+    <file alias="folder_down.png">../images/png/128x128/folder_down.png</file>
+    <file alias="folder_edit.png">../images/png/128x128/folder_edit.png</file>
+    <file alias="folder_full.png">../images/png/128x128/folder_full.png</file>
+    <file alias="folder_full_accept.png">../images/png/128x128/folder_full_accept.png</file>
+    <file alias="folder_full_add.png">../images/png/128x128/folder_full_add.png</file>
+    <file alias="folder_full_delete.png">../images/png/128x128/folder_full_delete.png</file>
+    <file alias="folder_next.png">../images/png/128x128/folder_next.png</file>
+    <file alias="folder_previous.png">../images/png/128x128/folder_previous.png</file>
+    <file alias="folder_process.png">../images/png/128x128/folder_process.png</file>
+    <file alias="folder_remove.png">../images/png/128x128/folder_remove.png</file>
+    <file alias="folder_up.png">../images/png/128x128/folder_up.png</file>
+
+    <file alias="note_accept.png">../images/png/128x128/note_accept.png</file>
+    <file alias="note_add.png">../images/png/128x128/note_add.png</file>
+    <file alias="note_edit.png">../images/png/128x128/note_edit.png</file>
+    <file alias="note_remove.png">../images/png/128x128/note_remove.png</file>
+    <file alias="notes_edit.png">../images/png/128x128/notes_edit.png</file>
+
+    <file alias="page.png">../images/png/128x128/page.png</file>
+    <file alias="page_accept.png">../images/png/128x128/page_accept.png</file>
+    <file alias="page_add.png">../images/png/128x128/page_add.png</file>
+    <file alias="page_down.png">../images/png/128x128/page_down.png</file>
+    <file alias="page_edit.png">../images/png/128x128/page_edit.png</file>
+    <file alias="page_next.png">../images/png/128x128/page_next.png</file>
+    <file alias="page_previous.png">../images/png/128x128/page_previous.png</file>
+    <file alias="page_process.png">../images/png/128x128/page_process.png</file>
+    <file alias="page_remove.png">../images/png/128x128/page_remove.png</file>
+    <file alias="page_search.png">../images/png/128x128/page_search.png</file>
+    <file alias="page_swap.png">../images/png/128x128/page_swap.png</file>
+    <file alias="page_up.png">../images/png/128x128/page_up.png</file>
+
+    <file alias="down.png">../images/png/128x128/down.png</file>
     <file alias="attachment.png">../images/png/64x64/attachment.png</file>
-
-    <file alias="connect.png">../images/linkconnected_87208.png</file>
+    <file alias="connect_chain.png">../images/linkconnected_87208.png</file>
     <file alias="filter.png">../images/Filter_icon-icons.com_52097.png</file>
-    <!-- https://www.iconsdb.com/red-icons/check-mark-3-icon.html -->
     <file alias="high-importance.png">../images/high-importance-128.png</file>
     <file alias="check-mark-red.png">../images/check-mark-3-128.png</file>
     <file alias="comment.png">../images/comment-square-128.png</file>
-    
     <file>../images/banner.png</file>
     <file>../images/background.png</file>
     <file>../images/watermark.png</file>
     <file>../images/watermark-canal.png</file>
-
     <file alias="vscpworks.png">../images/vscpworks_128x128.png</file>
-
-</qresource>
+    <file>../images/png/128x128/page.png</file>
+    <file>../images/png/128x128/page_accept.png</file>
+    <file>../images/png/128x128/page_add.png</file>
+    <file>../images/png/128x128/page_down.png</file>
+    <file>../images/png/128x128/page_edit.png</file>
+    <file>../images/png/128x128/page_next.png</file>
+    <file>../images/png/128x128/page_previous.png</file>
+    <file>../images/png/128x128/page_previous.prv.jpg</file>
+    <file>../images/png/128x128/page_process.png</file>
+    <file>../images/png/128x128/page_remove.png</file>
+    <file>../images/png/128x128/page_search.png</file>
+    <file>../images/png/128x128/page_swap.png</file>
+    <file>../images/png/128x128/page_up.png</file>
+  </qresource>
+  <qresource prefix="img"/>
 </RCC>

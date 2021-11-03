@@ -151,8 +151,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         return;
     }
 
-    m_vscpConnType =
-      static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+    m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
 
     QString str; // = tr("VSCP Client Session - ");
     str += pworks->getConnectionName(m_vscpConnType);

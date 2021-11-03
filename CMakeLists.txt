@@ -62,7 +62,7 @@ endif()
 if (MSVC)
 #     # use precompiled headers
 #     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h" "-fpch.h")
-    set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h ")
+  set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h ")
 endif()
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -85,7 +85,7 @@ find_package(Threads REQUIRED)
 #openssl
 find_package(OpenSSL REQUIRED)
 
-set(TS_FILES vscp-works-qt_en_150.ts)
+#set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Windows Libs
 if (WIN32)
@@ -179,7 +179,8 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgselectdatacoding.ui
     src/cdlgselectdate.ui
     src/cdlgselectconstraint.ui
-    src/cfrmmodeconfig.ui
+    src/cfrmnodeconfig.ui
+    src/cfrmnodescan.ui
 )
 
 add_executable(vscp-works-qt
@@ -290,6 +291,14 @@ add_executable(vscp-works-qt
 
     src/eventlistmodel.h
     src/eventlistmodel.cpp
+
+    src/cfrmnodeconfig.h
+    src/cfrmnodeconfig.cpp
+    src/cfrmnodeconfig.ui
+
+    src/cfrmnodescan.h
+    src/cfrmnodescan.cpp
+    src/cfrmnodescan.ui
 
     src/cdlgeditguid.ui
     src/cdlgeditguid.h
@@ -541,7 +550,7 @@ if (WIN32)
 endif()
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+# qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc) 
 
 

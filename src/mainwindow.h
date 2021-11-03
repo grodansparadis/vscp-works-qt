@@ -127,6 +127,7 @@ private slots:
     void newSession();
     void newNodeConfiguration();
     void newNodeScan();
+    void newNodeBootload();
 
     /// Handle app. settings.
     void showMainsettings(void);

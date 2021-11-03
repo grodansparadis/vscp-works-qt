@@ -1,4 +1,4 @@
-// cfrmnodeconfig.cpp
+// cfrmnodescan.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -56,8 +56,8 @@
 #include <vscp_client_ws1.h>
 #include <vscp_client_ws2.h>
 
-#include "cfrmnodeconfig.h"
-#include "ui_cfrmnodeconfig.h"
+#include "cfrmnodescan.h"
+#include "ui_cfrmnodescan.h"
 //#include "cdlgmainsettings.h"
 //#include "cdlgtxedit.h"
 
@@ -100,12 +100,12 @@ eventReceived(vscpEvent* pev, void* pobj)
 // ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-// CFrmNodeConfig
+// CFrmNodeScan
 //
 
-CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
+CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   : QMainWindow(parent)
-  , ui(new Ui::CFrmNodeConfig)
+  , ui(new Ui::CFrmNodeScan)
 {
   ui->setupUi(this);
 
@@ -307,7 +307,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 // DTor
 //
 
-CFrmNodeConfig::~CFrmNodeConfig()
+CFrmNodeScan::~CFrmNodeScan()
 {
   // Make sure we are disconnected
   doDisconnectFromRemoteHost();
@@ -326,7 +326,7 @@ CFrmNodeConfig::~CFrmNodeConfig()
 // accepted
 //
 
-void CFrmNodeConfig::done(int rv)
+void CFrmNodeScan::done(int rv)
 {
     if (QDialog::Accepted == rv) { // ok was pressed
         
@@ -345,7 +345,7 @@ void CFrmNodeConfig::done(int rv)
 //
 
 void
-CFrmNodeConfig::menu_open_main_settings(void)
+CFrmNodeScan::menu_open_main_settings(void)
 {
   // CDlgMainSettings* dlg = new CDlgMainSettings(this);
   // dlg->exec();
@@ -356,7 +356,7 @@ CFrmNodeConfig::menu_open_main_settings(void)
 //
 
 void
-CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
+CFrmNodeScan::showRegisterContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
 
@@ -410,7 +410,7 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
 //
 
 void
-CFrmNodeConfig::connectToRemoteHost(bool checked)
+CFrmNodeScan::connectToRemoteHost(bool checked)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -429,7 +429,7 @@ CFrmNodeConfig::connectToRemoteHost(bool checked)
 //
 
 void
-CFrmNodeConfig::doConnectToRemoteHost(void)
+CFrmNodeScan::doConnectToRemoteHost(void)
 {
   int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -548,7 +548,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
 //
 
 void
-CFrmNodeConfig::doDisconnectFromRemoteHost(void)
+CFrmNodeScan::doDisconnectFromRemoteHost(void)
 {
   int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -677,7 +677,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 }
 
 void
-CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
+CFrmNodeScan::receiveRxRow(vscpEvent* pev)
 {
   ;
 }
@@ -687,7 +687,7 @@ CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
 //
 
 void
-CFrmNodeConfig::threadReceive(vscpEvent* pev)
+CFrmNodeScan::threadReceive(vscpEvent* pev)
 {
   emit dataReceived(pev);
 }
