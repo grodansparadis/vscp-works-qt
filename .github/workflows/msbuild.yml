@@ -86,7 +86,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
         call bootstrap-vcpkg.bat
-        vcpkg.exe install integrate install 
+        vcpkg.exe integrate install 
         vcpkg.exe install expat:x64-windows
         vcpkg.exe install libmosquitto:x64-windows
         vcpkg.exe install qt5:x64-windows 

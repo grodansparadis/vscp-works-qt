@@ -93,7 +93,7 @@
              <enum>QTabWidget::Rounded</enum>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>3</number>
             </property>
             <widget class="QWidget" name="tab_reg">
              <property name="sizePolicy">
@@ -121,20 +121,53 @@
                  <property name="text">
                   <string notr="true">Pos:Page</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>R/W</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="foreground">
+                  <brush brushstyle="NoBrush">
+                   <color alpha="255">
+                    <red>0</red>
+                    <green>0</green>
+                    <blue>0</blue>
+                   </color>
+                  </brush>
                  </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Name</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Value</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <item>
@@ -164,9 +197,47 @@
                <widget class="QTreeWidget" name="treeWidget_2">
                 <column>
                  <property name="text">
-                  <string notr="true">1</string>
+                  <string notr="true">Name</string>
                  </property>
                 </column>
+                <column>
+                 <property name="text">
+                  <string>Access</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Type</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Content</string>
+                 </property>
+                 <property name="toolTip">
+                  <string/>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                </column>
+                <item>
+                 <property name="text">
+                  <string>counter1</string>
+                 </property>
+                 <property name="text">
+                  <string>rw</string>
+                 </property>
+                 <property name="text">
+                  <string>UINT32</string>
+                 </property>
+                 <property name="text">
+                  <string>0x12345</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -186,9 +257,70 @@
                <widget class="QTreeWidget" name="treeWidget_3">
                 <column>
                  <property name="text">
-                  <string notr="true">1</string>
+                  <string notr="true">Origin</string>
                  </property>
                 </column>
+                <column>
+                 <property name="text">
+                  <string notr="true">origin</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Flags</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Class Mask</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Class Filter</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Type Mask</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Type Filter</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Parameter</string>
+                 </property>
+                </column>
+                <item>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                 <property name="text">
+                  <string>0x00</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -202,9 +334,14 @@
                <widget class="QTreeWidget" name="treeWidget_4">
                 <column>
                  <property name="text">
-                  <string notr="true">1</string>
+                  <string notr="true">Name</string>
                  </property>
                 </column>
+                <item>
+                 <property name="text">
+                  <string>Set setpoint for temperaturesensor 1</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>

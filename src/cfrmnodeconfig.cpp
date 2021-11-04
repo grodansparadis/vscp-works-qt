@@ -61,6 +61,7 @@
 //#include "cdlgmainsettings.h"
 //#include "cdlgtxedit.h"
 
+#include <mdf.h>
 
 #include <QClipboard>
 #include <QFile>
