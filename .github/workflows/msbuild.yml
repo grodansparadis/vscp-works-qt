@@ -97,6 +97,9 @@ jobs:
         vcpkg.exe install paho-mqtt:x64-windows 
         vcpkg.exe install spdlog:x64-windows
 
+    - name: Setup cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
+
     - name: Create Build Environment
       run: |
         mkdir build && cd build
