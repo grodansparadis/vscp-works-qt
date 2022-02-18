@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -427,7 +427,7 @@ class vscpworks : public QApplication {
     FileDownloader  *m_pVersionCtrl; 
 
     /// List with defined connections uuid,conf-obj
-    QMap<QString,QJsonObject> m_mapConn;
+    QMap<QString,QJsonObject> m_mapConn; 
 
     /// Mutex protecting vscpClass/vscpType maps
     QMutex m_mutexVscpEventsMaps;

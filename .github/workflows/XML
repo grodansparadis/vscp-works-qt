@@ -1,0 +1,1456 @@
+wxXmlNode *child1 = doc.GetRoot()->GetChildren();
+  while (child1) {
+
+    // One module
+    if (child1->GetName() == ("module")) {
+
+      wxXmlNode *child2 = child1->GetChildren();
+      while (child2) {
+
+        if (child2->GetName() == "name") {
+          m_strModule_Name = child2->GetNodeContent().ToStdString();
+        }
+        else if (child2->GetName() == "model") {
+          m_strModule_Model = child2->GetNodeContent().ToStdString();
+        }
+        else if (child2->GetName() == "version") {
+          m_strModule_Version = child2->GetNodeContent().ToStdString();
+        }
+        else if (child2->GetName() == "description") {
+          std::string str;
+
+          str = child2->GetAttribute("lang", "en").ToStdString();
+
+          if (str == m_strLocale) {
+            m_strModule_Description = child2->GetNodeContent().ToStdString();
+          }
+          else if (("en" == str) && m_strModule_Description.empty()) {
+            m_strModule_Description = child2->GetNodeContent().ToStdString();
+          }
+        }
+        else if (child2->GetName() == "infourl") {
+          m_strModule_InfoURL = child2->GetNodeContent().ToStdString();
+        }
+        else if (child2->GetName() == "changed") {
+          m_changeDate = child2->GetNodeContent().ToStdString();
+        }
+        else if (child2->GetName() == "buffersize") {
+          m_Module_buffersize = vscp_readStringValue(child2->GetNodeContent().ToStdString());
+        }
+        else if (child2->GetName() == "manufacturer") {
+
+          CMDF_Manufacturer *pmanufacturer = new CMDF_Manufacturer;
+          wxASSERT(NULL != pmanufacturer);
+          m_list_manufacturer.push_back(pmanufacturer);
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == "name") {
+              pmanufacturer->m_strName = child3->GetNodeContent().ToStdString();
+            }
+            else if (child3->GetName() == "address") {
+
+              CMDF_Address *pAddress = new CMDF_Address;
+              wxASSERT(NULL != pAddress);
+              pmanufacturer->m_list_Address.push_back(pAddress);
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "street") {
+                  pAddress->m_strStreet = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "town") {
+                  pAddress->m_strTown = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "city") {
+                  pAddress->m_strCity = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "postcode") {
+                  pAddress->m_strPostCode = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "state") {
+                  pAddress->m_strState = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "region") {
+                  pAddress->m_strRegion = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "country") {
+                  pAddress->m_strCountry = child4->GetNodeContent().ToStdString();
+                }
+
+                child4 = child4->GetNext();
+
+              } // child4
+
+            } // address
+            else if (child3->GetName() == "telephone") {
+
+              CMDF_Item *pPhone = new CMDF_Item;
+              wxASSERT(NULL != pPhone);
+              pmanufacturer->m_list_Phone.push_back(pPhone);
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "number") {
+                  pPhone->m_strItem = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "description") {
+                  std::string str;
+
+                  str = child4->GetAttribute("lang", "en").ToStdString();
+
+                  if (str == m_strLocale) {
+                    pPhone->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if (("en" == str) && pPhone->m_strDescription.empty()) {
+                    pPhone->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+
+                child4 = child4->GetNext();
+
+              } // child 4
+
+            } // telephone
+            else if (child3->GetName() == "fax") {
+
+              CMDF_Item *pFax = new CMDF_Item;
+              wxASSERT(NULL != pFax);
+              pmanufacturer->m_list_Fax.push_back(pFax);
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "number") {
+                  pFax->m_strItem = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "description") {
+                  std::string str;
+
+                  str = child4->GetAttribute("lang", "en").ToStdString();
+
+                  if (str == m_strLocale) {
+                    pFax->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if (("en" == str) && pFax->m_strDescription.empty()) {
+                    pFax->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+
+                child4 = child4->GetNext();
+
+              } // Child 4
+            }   // fax
+            else if (child3->GetName() == "email") {
+
+              CMDF_Item *pEmail = new CMDF_Item;
+              wxASSERT(NULL != pEmail);
+              pmanufacturer->m_list_Email.push_back(pEmail);
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "address") {
+                  pEmail->m_strItem = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "description") {
+                  std::string str;
+
+                  str = child4->GetAttribute("lang", "en").ToStdString();
+
+                  if (str == m_strLocale) {
+                    pEmail->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if (("en" == str) && pEmail->m_strDescription.empty()) {
+                    pEmail->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+
+                child4 = child4->GetNext();
+
+              } // child 4
+
+            } // email
+            else if (child3->GetName() == "web") {
+
+              CMDF_Item *pWeb = new CMDF_Item;
+              wxASSERT(NULL != pWeb);
+              pmanufacturer->m_list_Web.push_back(pWeb);
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "address") {
+                  pWeb->m_strItem = child4->GetNodeContent().ToStdString();
+                }
+                else if (child4->GetName() == "description") {
+                  std::string str;
+
+                  str = child4->GetAttribute("lang", "en").ToStdString();
+
+                  if (str == m_strLocale) {
+                    pWeb->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if (("en" == str) && pWeb->m_strDescription.empty()) {
+                    pWeb->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+
+                child4 = child4->GetNext();
+
+              } // child 4
+
+            } // web
+
+            child3 = child3->GetNext();
+
+          } // while child3
+
+        } // manufacturer
+        else if (child2->GetName() == "firmware") {
+
+          m_firmware.m_strPath       = child2->GetAttribute("path", "").ToStdString();
+          m_firmware.m_size          = vscp_readStringValue(child2->GetAttribute("size", "0").ToStdString());
+          std::string format         = child2->GetAttribute("format", "intelhex8").ToStdString();
+          m_firmware.m_version_major = vscp_readStringValue(child2->GetAttribute("version_major", "0").ToStdString());
+          m_firmware.m_version_minor = vscp_readStringValue(child2->GetAttribute("version_minor", "0").ToStdString());
+          m_firmware.m_version_subminor =
+            vscp_readStringValue(child2->GetAttribute("version_subminor", "0").ToStdString());
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            std::string str;
+            str = child3->GetAttribute("lang", "en").ToStdString();
+
+            if (str == m_strLocale) {
+              m_firmware.m_description = child3->GetNodeContent().ToStdString();
+            }
+            else if (("en" == str) && m_strModule_Description.empty()) {
+              m_firmware.m_description = child3->GetNodeContent().ToStdString();
+            }
+
+            child3 = child3->GetNext();
+
+          } // child3
+
+        } // firmware
+
+        else if ((child2->GetName() == "abstractions") || (child3->GetName() == "remotevar")) {
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if ((child3->GetName() == "abstraction") || (child3->GetName() == "remotevar")) {
+
+              CMDF_RemoteVariable *pRemoteVar = new CMDF_RemoteVariable;
+              wxASSERT(NULL != pRemoteVar);
+              m_list_remotevar.push_back(pRemoteVar);
+
+              pRemoteVar->m_strID      = child3->GetAttribute("id", "").ToStdString();
+              pRemoteVar->m_strDefault = child3->GetAttribute("default", "").ToStdString();
+              pRemoteVar->m_nPage      = vscp_readStringValue(child3->GetAttribute("page", "0").ToStdString());
+              pRemoteVar->m_nOffset    = vscp_readStringValue(child3->GetAttribute("offset", "0").ToStdString());
+              pRemoteVar->m_nBitnumber = vscp_readStringValue(child3->GetAttribute("bit", "0").ToStdString());
+              pRemoteVar->m_nWidth     = vscp_readStringValue(child3->GetAttribute("width", "0").ToStdString());
+              pRemoteVar->m_nMax       = vscp_readStringValue(child3->GetAttribute("max", "0").ToStdString());
+              pRemoteVar->m_nMin       = vscp_readStringValue(child3->GetAttribute("min", "0").ToStdString());
+              std::string stridx       = child3->GetAttribute("indexed", "false").ToStdString();
+              pRemoteVar->m_fgcolor =
+                wxUINT32_SWAP_ALWAYS(vscp_readStringValue(child3->GetAttribute("fgcolor", "0x00000000").ToStdString()));
+              pRemoteVar->m_bgcolor =
+                wxUINT32_SWAP_ALWAYS(vscp_readStringValue(child3->GetAttribute("bgcolor", "0xffffffff").ToStdString()));
+              pRemoteVar->m_fgcolor >>= 8;
+              pRemoteVar->m_bgcolor >>= 8;
+
+              vscp_makeLower(stridx);
+              if (stridx.npos != stridx.find("true")) {
+                pRemoteVar->m_bIndexed = true;
+              }
+              else {
+                pRemoteVar->m_bIndexed = false;
+              }
+
+              std::string strType = child3->GetAttribute("type", "").ToStdString();
+
+              if (strType == "string") {
+                pRemoteVar->m_nType = type_string;
+              }
+              else if (strType == "bitfield") {
+                pRemoteVar->m_nType = type_bitfield;
+              }
+              else if (strType == "bool") {
+                pRemoteVar->m_nType = type_boolval;
+              }
+              else if (strType == "char") {
+                pRemoteVar->m_nType = type_int8_t;
+              }
+              else if (strType == "int8_t") {
+                pRemoteVar->m_nType = type_int8_t;
+              }
+              else if (strType == "byte") {
+                pRemoteVar->m_nType = type_uint8_t;
+              }
+              else if (strType == "uint8_t") {
+                pRemoteVar->m_nType = type_uint8_t;
+              }
+              else if (strType == "int16_t") {
+                pRemoteVar->m_nType = type_int16_t;
+              }
+              else if (strType == "short") {
+                pRemoteVar->m_nType = type_int16_t;
+              }
+              else if (strType == "integer") {
+                pRemoteVar->m_nType = type_int16_t;
+              }
+              else if (strType == "uint16_t") {
+                pRemoteVar->m_nType = type_uint16_t;
+              }
+              else if (strType == "int32_t") {
+                pRemoteVar->m_nType = type_int32_t;
+              }
+              else if (strType == "long") {
+                pRemoteVar->m_nType = type_int32_t;
+              }
+              else if (strType == "uint32_t") {
+                pRemoteVar->m_nType = type_uint32_t;
+              }
+              else if (strType == "int64_t") {
+                pRemoteVar->m_nType = type_int64_t;
+              }
+              else if (strType == "uint64_t") {
+                pRemoteVar->m_nType = type_uint64_t;
+              }
+              else if (strType == "double") {
+                pRemoteVar->m_nType = type_double;
+              }
+              else if (strType == "float") {
+                pRemoteVar->m_nType = type_float;
+              }
+              else if (strType == "date") {
+                pRemoteVar->m_nType = type_date;
+              }
+              else if (strType == "time") {
+                pRemoteVar->m_nType = type_time;
+              }
+              else if (strType == "guid") {
+                pRemoteVar->m_nType = type_guid;
+              }
+              else if (strType == "index8_int16_t") {
+                pRemoteVar->m_nType = type_index8_int16_t;
+              }
+              else if (strType == "index8_uint16_t") {
+                pRemoteVar->m_nType = type_index8_uint16_t;
+              }
+              else if (strType == "index8_int32_t") {
+                pRemoteVar->m_nType = type_guid;
+              }
+              else if (strType == "index8_uint32_t") {
+                pRemoteVar->m_nType = type_index8_uint32_t;
+              }
+              else if (strType == "index8_int64_t") {
+                pRemoteVar->m_nType = type_index8_int64_t;
+              }
+              else if (strType == "index8_uint64_t") {
+                pRemoteVar->m_nType = type_index8_uint64_t;
+              }
+              else if (strType == "index8_float") {
+                pRemoteVar->m_nType = type_index8_float;
+              }
+              else if (strType == "index8_double") {
+                pRemoteVar->m_nType = type_index8_double;
+              }
+              else if (strType == "index8_date") {
+                pRemoteVar->m_nType = type_index8_date;
+              }
+              else if (strType == "index8_time") {
+                pRemoteVar->m_nType = type_index8_time;
+              }
+              else if (strType == "index8_guid") {
+                pRemoteVar->m_nType = type_index8_guid;
+              }
+              else if (strType == "index8_string") {
+                pRemoteVar->m_nType = type_index8_string;
+              }
+              else {
+                pRemoteVar->m_nType = type_unknown;
+              }
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == "name") {
+                  std::string str;
+                  str = child4->GetAttribute("lang", "en");
+
+                  if (str == m_strLocale) {
+                    pRemoteVar->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                  else if (("en" == str) && pRemoteVar->m_strName.empty()) {
+                    pRemoteVar->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == "description") {
+                  std::string str;
+                  str = child4->GetAttribute("lang", "en").ToStdString();
+
+                  if (str == m_strLocale) {
+                    pRemoteVar->m_strDescription = child4->GetNodeContent().ToStdString();
+                    mdfDescriptionFormat(pRemoteVar->m_strDescription);
+                  }
+                  else if (("en" == str) && pRemoteVar->m_strName.empty()) {
+                    pRemoteVar->m_strDescription = child4->GetNodeContent().ToStdString();
+                    mdfDescriptionFormat(pRemoteVar->m_strDescription);
+                  }
+                }
+                else if (child4->GetName() == "help") {
+                  std::string str;
+                  str = child4->GetAttribute("lang", "en");
+
+                  if (str == m_strLocale) {
+                    pRemoteVar->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pRemoteVar->m_strHelpType = child4->GetAttribute("type", "text").ToStdString();
+                  }
+                  else if (("en" == str)) {
+                    pRemoteVar->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pRemoteVar->m_strHelpType = child4->GetAttribute("type", "text").ToStdString();
+                  }
+                }
+                else if (child4->GetName() == "access") {
+
+                  // Set default access
+                  pRemoteVar->m_nAccess       = MDF_ACCESS_READ;
+                  std::string strAccessRights = child4->GetNodeContent().ToStdString();
+
+                  vscp_makeUpper(strAccessRights);
+                  if (strAccessRights.npos != strAccessRights.find("R")) {
+                    pRemoteVar->m_nAccess |= MDF_ACCESS_READ;
+                  }
+
+                  if (strAccessRights.npos != strAccessRights.find("W")) {
+                    pRemoteVar->m_nAccess |= MDF_ACCESS_WRITE;
+                  }
+                }
+                else if (child4->GetName() == "valuelist") {
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child5->GetName() == "item") {
+
+                      CMDF_ValueListValue *pValueItem = new CMDF_ValueListValue;
+                      wxASSERT(NULL != pValueItem);
+                      pRemoteVar->m_list_value.push_back(pValueItem);
+                      pValueItem->m_strValue = child5->GetAttribute("value", "").ToStdString();
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("name")) {
+                          std::string str;
+                          str = child6->GetAttribute("lang", "en").ToStdString();
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                          else if (("en" == str) && pValueItem->m_strName.empty()) {
+                            pValueItem->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == "description") {
+                          std::string str;
+                          str = child6->GetAttribute("lang", "en").ToStdString();
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                          else if (("en" == str) && pValueItem->m_strName.empty()) {
+                            pValueItem->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == "help") {
+                          std::string str;
+                          str = child6->GetAttribute("lang", "en");
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pValueItem->m_strHelpType = child6->GetAttribute("type", "text").ToStdString();
+                          }
+                          else if (("en" == str)) {
+                            pValueItem->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pValueItem->m_strHelpType = child6->GetAttribute("type", "text").ToStdString();
+                          }
+                        }
+
+                        child6 = child6->GetNext();
+                      }
+                    }
+
+                    child5 = child5->GetNext();
+
+                  } // while 5
+                }
+
+                child4 = child4->GetNext();
+
+              } // while 5
+            }
+
+            child3 = child3->GetNext();
+          }
+        }
+        else if (child2->GetName() == "registers") {
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == "reg") {
+
+              std::string strType;
+              CMDF_Register *pRegister = new CMDF_Register;
+              wxASSERT(NULL != pRegister);
+
+              pRegister->m_rowInGrid = -1; // Set when reg is
+              written to grid pRegister->m_nPage =
+                vscp_readStringValue(child3->GetAttribute(("page"), ("0")).ToStdString());
+              pRegister->m_nOffset    = vscp_readStringValue(child3->GetAttribute(("offset"), ("0")).ToStdString());
+              pRegister->m_nWidth     = vscp_readStringValue(child3->GetAttribute(("width"), ("8")).ToStdString());
+              pRegister->m_size       = vscp_readStringValue(child3->GetAttribute(("size"), ("1")).ToStdString());
+              pRegister->m_nMin       = vscp_readStringValue(child3->GetAttribute(("min"), ("0")).ToStdString());
+              pRegister->m_nMax       = vscp_readStringValue(child3->GetAttribute(("max"), ("255")).ToStdString());
+              pRegister->m_strDefault = child3->GetAttribute(("default"), ("UNDEF")).ToStdString();
+              pRegister->m_fgcolor    = wxUINT32_SWAP_ALWAYS(
+                vscp_readStringValue(child3->GetAttribute(("fgcolor"), ("0x00000000")).ToStdString()));
+              pRegister->m_bgcolor = wxUINT32_SWAP_ALWAYS(
+                vscp_readStringValue(child3->GetAttribute(("bgcolor"), ("0xffffffff")).ToStdString()));
+              pRegister->m_fgcolor >>= 8;
+              pRegister->m_bgcolor >>= 8;
+              strType = child3->GetAttribute(("type"), ("std")).ToStdString();
+              vscp_trim(strType);
+              pRegister->m_type = REGISTER_TYPE_STANDARD;
+              if (("dmatrix1") == strType) {
+                if (pRegister->m_size > 1) {
+                  pRegister->m_type = REGISTER_TYPE_DMATRIX1;
+                }
+              }
+              else if (("block") == strType) {
+                if (pRegister->m_size > 1) {
+                  pRegister->m_type = REGISTER_TYPE_BLOCK;
+                }
+              }
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == ("name")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en"));
+
+                  if (str == m_strLocale) {
+                    pRegister->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                  else if ((("en") == str) && pRegister->m_strName.empty()) {
+                    pRegister->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("description")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pRegister->m_strDescription = child4->GetNodeContent().ToStdString();
+                    mdfDescriptionFormat(pRegister->m_strDescription);
+                  }
+                  else if ((("en") == str) && pRegister->m_strName.empty()) {
+                    pRegister->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("access")) {
+                  pRegister->m_nAccess        = MDF_ACCESS_READ;
+                  std::string strAccessRights = child4->GetNodeContent().ToStdString();
+
+                  vscp_makeUpper(strAccessRights);
+                  if (strAccessRights == "R") {
+                    pRegister->m_nAccess |= MDF_ACCESS_READ;
+                  }
+
+                  if (strAccessRights == "W") {
+                    pRegister->m_nAccess |= MDF_ACCESS_WRITE;
+                  }
+                }
+                else if (child4->GetName() == ("help")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en"));
+
+                  if (str == m_strLocale) {
+                    pRegister->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pRegister->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                  else if ((("en") == str)) {
+                    pRegister->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pRegister->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                }
+                // Not allowed for non standard regs
+                else if ((child4->GetName() == ("bitfield")) && (REGISTER_TYPE_STANDARD == pRegister->m_type)) {
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child5->GetName() == ("bit")) {
+
+                      CMDF_Bit *pBit = new CMDF_Bit;
+                      wxASSERT(NULL != pBit);
+                      pRegister->m_list_bit.push_back(pBit);
+                      pBit->m_nPos   = vscp_readStringValue(child5->GetAttribute(("pos"), ("0")).ToStdString());
+                      pBit->m_nWidth = vscp_readStringValue(child5->GetAttribute(("width"), ("0")).ToStdString());
+                      pBit->m_nPos   = vscp_readStringValue(child5->GetAttribute(("default"), ("0")).ToStdString());
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("name")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pBit->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pBit->m_strName.empty()) {
+                            pBit->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("description")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en"));
+
+                          if (str == m_strLocale) {
+                            pBit->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pBit->m_strName.empty()) {
+                            pBit->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("help")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pBit->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pBit->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                          else if ((("en") == str)) {
+                            pBit->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pBit->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("access")) {
+
+                          pBit->m_nAccess             = MDF_ACCESS_READ;
+                          std::string strAccessRights = child6->GetNodeContent().ToStdString();
+
+                          vscp_makeUpper(strAccessRights);
+                          if (strAccessRights.npos != strAccessRights.find(("R"))) {
+                            pBit->m_nAccess |= MDF_ACCESS_READ;
+                          }
+
+                          if (strAccessRights.npos != strAccessRights.find(("W"))) {
+                            pBit->m_nAccess |= MDF_ACCESS_WRITE;
+                          }
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+                    }
+
+                    child5 = child5->GetNext();
+
+                  } // while 5
+                }
+                // Not allowed for non standard regs
+                else if ((child4->GetName() == ("valuelist")) && (REGISTER_TYPE_STANDARD == pRegister->m_type)) {
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child5->GetName() == ("item")) {
+
+                      CMDF_ValueListValue *pValueItem = new CMDF_ValueListValue;
+                      wxASSERT(NULL != pValueItem);
+                      pRegister->m_list_value.push_back(pValueItem);
+                      pValueItem->m_strValue = child5->GetAttribute(("value"), ("")).ToStdString();
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("name")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pValueItem->m_strName.empty()) {
+                            pValueItem->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("description")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en"));
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pValueItem->m_strName.empty()) {
+                            pValueItem->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("help")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pValueItem->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pValueItem->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                          else if ((("en") == str)) {
+                            pValueItem->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pValueItem->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+
+                    } // item
+
+                    child5 = child5->GetNext();
+
+                  } // while 5
+                }
+
+                child4 = child4->GetNext();
+
+              } // while 4
+
+              // If register type is not 'std' then we need to add more registers
+                // at this point accoring to the 'size' attribute
+                if (REGISTER_TYPE_DMATRIX1 == pRegister->m_type)
+              {
+
+                /*for (int idx = 0; idx < pRegister->m_size; idx++) {
+                  std::string str;
+                  CMDF_Register *pRegisterExt = new CMDF_Register;
+                  wxASSERT(NULL != pRegisterExt);
+                  *pRegisterExt        = *pRegister;
+                  pRegisterExt->m_size = 1;
+                  pRegisterExt->m_nOffset += idx;
+
+                  switch (idx % 8) {
+                    case 0: // originating address
+                      pRegisterExt->m_strName = vscp_str_format(tr("Decision matrix row %d: Oaddr"), 1 + idx / 8);
+                      pRegisterExt->m_strDescription =
+                        "Originating address.\nSet to nickname for node that should trigger
+                        action here. Oaddr is the originating address.\nMeans we are only
+                        interested in messages from the node given here.\n0x00 is segment
+                        controller and 0xff is a node without a nickname.\nIf bit 6 of flags is
+                        set oaddr will not be checked and events from all nodes will be
+                        accepted."; 
+                      break; 
+                    case 1: // flags pRegisterExt->m_strName =
+     vscp_str_format( tr("Decision matrix row %d: Flags" ), 1+idx/8 );
+                                             pRegisterExt->m_strDescription =
+     tr( "Flags. Set selection behaviour.\nThe enable bit can be used to disable
+     a decion matrix row while it is edited.\nThe zone and use subzone bits
+     can be activated to have a check on the zone / subzone information\nof an
+     event.That is the zone / subzone of the machine must match the one of the
+     event to trigger\nthe DM row." ); break; case 2: // class mask
+                                             pRegisterExt->m_strName =
+     vscp_str_format( tr( "Decision matrix row %d: Class mask (low eight
+     bits)" ), 1+idx/8 ); pRegisterExt->m_strDescription = tr( "The lowest eight
+     bits of the class mask that defines the events that should trigger the
+     action of\nthis decision matrix row. Bit 8 of the class mask is stored in
+     bit 1 of the flag byte." ); break; case 3: // class filter
+                                             pRegisterExt->m_strName =
+     vscp_str_format( tr("Decision matrix row %d: Class filter (low eight
+     bits)" ), 1+idx/8 ); pRegisterExt->m_strDescription = tr( "The lowest eight
+     bits of the class filter that defines the events that should trigger the
+     action of\nthis decision matrix row. Bit 8 of the class filter is stored
+     in bit 1 of the flag byte." ); break; case 4: // type mask
+                                             pRegisterExt->m_strName =
+     vscp_str_format( ( "Decision matrix row %d: Type mask" ), 1+idx/8 );
+                                             pRegisterExt->m_strDescription =
+     ( "Type mask that defines the events that should trigger the action of
+     this decision matrix row." ); break; case 5: // type filter
+                                             pRegisterExt->m_strName =
+     vscp_str_format( ( "Decision matrix row %d: Type filter" ), 1+idx/8 );
+                                             pRegisterExt->m_strDescription =
+     ( "Type filter that defines the events that should trigger the action of
+     this decision matrix row." ); break; case 6: // action
+                                             pRegisterExt->m_strName =
+     vscp_str_format( ( "Decision matrix row %d: Action" ), 1+idx/8 );
+                                             pRegisterExt->m_strDescription =
+     ( "This is the action or operation that should be performed if the
+     filtering is satisfied.\nOnly action code 0x00 is predefined and means
+     No-Operation.\nAll other codes are application specific and typical
+     application defined codes could do\nmeasurement, send predefined event
+     etc." ); break; case 7: // action parameter pRegisterExt->m_strName =
+     vscp_str_format( ( "Decision matrix row %d: Action parameter" ),
+     1+idx/8 ); pRegisterExt->m_strDescription = ( "A numeric action parameter
+     can be set and its meaning is application specific." ); break;
+                  }
+
+                  // push_back the register
+                  m_list_register.push_back(pRegisterExt);
+                } */
+
+                // Detete the placeholder
+                delete pRegister;
+              }
+              else if (REGISTER_TYPE_BLOCK == pRegister->m_type)
+              {
+
+                for (int idx = 0; idx < pRegister->m_size; idx++) {
+                  CMDF_Register *pRegisterExt = new CMDF_Register;
+                  wxASSERT(NULL != pRegisterExt);
+                  *pRegisterExt        = *pRegister;
+                  pRegisterExt->m_size = 1;
+                  pRegisterExt->m_nOffset += idx;
+                  pRegisterExt->m_strName = vscp_str_format(("%s%d"), pRegisterExt->m_strName.c_str(), idx);
+                  // Append the register
+                  m_list_register.push_back(pRegisterExt);
+                }
+
+                // Detete the placeholder
+                delete pRegister;
+              }
+              else { m_list_register.push_back(pRegister); }
+
+            } // Reg
+
+            child3 = child3->GetNext();
+
+          } // while 3
+        }
+        else if (child2->GetName() == ("dmatrix")) {
+
+          //
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == ("level")) {
+              m_dmInfo.m_nLevel = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+            else if (child3->GetName() == ("start")) {
+              m_dmInfo.m_nStartPage   = vscp_readStringValue(child3->GetAttribute("page", "0").ToStdString());
+              m_dmInfo.m_nStartOffset = vscp_readStringValue(child3->GetAttribute("offset", "0").ToStdString());
+              std::string stridx      = child3->GetAttribute("indexed", "false").ToStdString();
+
+              vscp_makeLower(stridx);
+              if (stridx.npos != stridx.find(("true"))) {
+                m_dmInfo.m_bIndexed = true;
+              }
+              else {
+                m_dmInfo.m_bIndexed = false;
+              }
+            }
+            else if (child3->GetName() == ("rowcnt")) {
+              m_dmInfo.m_nRowCount = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+            else if (child3->GetName() == ("rowsize")) {
+              m_dmInfo.m_nRowSize = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+            else if (child3->GetName() == ("action")) {
+
+              CMDF_Action *pAction = new CMDF_Action;
+              wxASSERT(NULL != pAction);
+              m_dmInfo.m_list_action.push_back(pAction);
+
+              // Action parameters
+              pAction->m_nCode = vscp_readStringValue(child3->GetAttribute(("code"), ("0")).ToStdString());
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == ("name")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pAction->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                  else if ((("en") == str) && pAction->m_strName.empty()) {
+                    pAction->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("description")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pAction->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if ((("en") == str) && pAction->m_strName.empty()) {
+                    pAction->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("help")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pAction->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pAction->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                  else if ((("en") == str)) {
+                    pAction->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pAction->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("param")) {
+
+                  CMDF_ActionParameter *pActionParameter = new CMDF_ActionParameter;
+                  wxASSERT(NULL != pActionParameter);
+                  pAction->m_list_ActionParameter.push_back(pActionParameter);
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child5->GetName() == ("name")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pActionParameter->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                      else if ((("en") == str) && pActionParameter->m_strName.empty()) {
+                        pActionParameter->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("description")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pActionParameter->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                      else if ((("en") == str) && pActionParameter->m_strName.empty()) {
+                        pActionParameter->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("help")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pActionParameter->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pActionParameter->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                      else if ((("en") == str)) {
+                        pActionParameter->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pActionParameter->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("bit")) {
+
+                      CMDF_Bit *pBit = new CMDF_Bit;
+                      wxASSERT(NULL != pBit);
+                      pActionParameter->m_list_bit.push_back(pBit);
+                      pBit->m_nPos     = vscp_readStringValue(child5->GetAttribute(("pos"), ("0")).ToStdString());
+                      pBit->m_nWidth   = vscp_readStringValue(child5->GetAttribute(("width"), ("0")).ToStdString());
+                      pBit->m_nDefault = vscp_readStringValue(child5->GetAttribute(("default"), ("0")).ToStdString());
+                      pBit->m_nAccess  = vscp_readStringValue(child5->GetAttribute(("access"), ("0")).ToStdString());
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("name")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pBit->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pBit->m_strName.empty()) {
+                            pBit->m_strName = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("description")) {
+                          std::string str;
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pBit->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                          else if ((("en") == str) && pBit->m_strName.empty()) {
+                            pBit->m_strDescription = child6->GetNodeContent().ToStdString();
+                          }
+                        }
+                        else if (child6->GetName() == ("help")) {
+                          std::string str;
+
+                          str = child6->GetAttribute(("lang"), ("en")).ToStdString();
+
+                          if (str == m_strLocale) {
+                            pBit->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pBit->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                          else if ((("en") == str)) {
+                            pBit->m_strHelp     = child6->GetNodeContent().ToStdString();
+                            pBit->m_strHelpType = child6->GetAttribute(("type"), ("text")).ToStdString();
+                          }
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+                    }
+                    else if (child5->GetName() == ("valuelist")) {
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("item")) {
+
+                          CMDF_ValueListValue *pValue = new CMDF_ValueListValue;
+                          wxASSERT(NULL != pValue);
+                          pActionParameter->m_list_value.push_back(pValue);
+                          pValue->m_strValue = child6->GetAttribute(("value"), ("0")).ToStdString();
+
+                          wxXmlNode *child7 = child6->GetChildren();
+                          while (child7) {
+
+                            if (child7->GetName() == ("name")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValue->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pValue->m_strName.empty()) {
+                                pValue->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("description")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValue->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pValue->m_strName.empty()) {
+                                pValue->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child6->GetName() == ("help")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValue->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pValue->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                              else if ((("en") == str)) {
+                                pValue->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pValue->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                            }
+
+                            child7 = child7->GetNext();
+
+                          } // while 5
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+                    }
+
+                    child5 = child5->GetNext();
+
+                  } // 5
+
+                } // if 'param'
+
+                child4 = child4->GetNext();
+
+              } // while 4
+
+            } // while 3
+
+            child3 = child3->GetNext();
+
+          } // child 3
+        }
+        else if (child2->GetName() == ("events")) {
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == ("event")) {
+
+              CMDF_Event *pEvent = new CMDF_Event;
+              wxASSERT(NULL != pEvent);
+              m_list_event.push_back(pEvent);
+              pEvent->m_nClass    = vscp_readStringValue(child3->GetAttribute(("class"), ("0")).ToStdString());
+              pEvent->m_nType     = vscp_readStringValue(child3->GetAttribute(("type"), ("0")).ToStdString());
+              pEvent->m_nPriority = vscp_readStringValue(child3->GetAttribute(("priority"), ("0")).ToStdString());
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == ("name")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pEvent->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                  else if ((("en") == str) && pEvent->m_strName.empty()) {
+                    pEvent->m_strName = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("description")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pEvent->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                  else if ((("en") == str) && pEvent->m_strName.empty()) {
+                    pEvent->m_strDescription = child4->GetNodeContent().ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("help")) {
+                  std::string str;
+                  str = child4->GetAttribute(("lang"), ("en")).ToStdString();
+
+                  if (str == m_strLocale) {
+                    pEvent->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pEvent->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                  else if ((("en") == str)) {
+                    pEvent->m_strHelp     = child4->GetNodeContent().ToStdString();
+                    pEvent->m_strHelpType = child4->GetAttribute(("type"), ("text")).ToStdString();
+                  }
+                }
+                else if (child4->GetName() == ("data")) {
+
+                  CMDF_EventData *pEventData = new CMDF_EventData;
+                  wxASSERT(NULL != pEventData);
+                  pEvent->m_list_eventdata.push_back(pEventData);
+                  pEventData->m_nOffset = vscp_readStringValue(child4->GetAttribute(("offset"), ("0")).ToStdString());
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child4->GetName() == ("name")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pEventData->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                      else if ((("en") == str) && pEventData->m_strName.empty()) {
+                        pEventData->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child4->GetName() == "description") {
+                      std::string str;
+                      str = child5->GetAttribute("lang", "en").ToStdString();
+
+                      if (str == m_strLocale) {
+                        pEventData->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                      else if (("en" == str) && pEventData->m_strName.empty()) {
+                        pEventData->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child4->GetName() == ("help")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pEventData->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pEventData->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                      else if ((("en") == str)) {
+                        pEventData->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pEventData->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("valuelist")) {
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("item")) {
+
+                          CMDF_ValueListValue *pValueItem = new CMDF_ValueListValue;
+                          wxASSERT(NULL != pValueItem);
+                          pEventData->m_list_value.push_back(pValueItem);
+                          pValueItem->m_strValue = child6->GetAttribute(("value"), ("")).ToStdString();
+
+                          wxXmlNode *child7 = child5->GetChildren();
+                          while (child7) {
+
+                            if (child7->GetName() == ("name")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValueItem->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pValueItem->m_strName.empty()) {
+                                pValueItem->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("description")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValueItem->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pValueItem->m_strName.empty()) {
+                                pValueItem->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("help")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pValueItem->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pValueItem->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                              else if ((("en") == str)) {
+                                pValueItem->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pValueItem->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                            }
+
+                            child7 = child7->GetNext();
+                          }
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+                    }
+                    else if (child5->GetName() == ("bitfield")) {
+
+                      wxXmlNode *child6 = child5->GetChildren();
+                      while (child6) {
+
+                        if (child6->GetName() == ("bit")) {
+
+                          CMDF_Bit *pBit = new CMDF_Bit;
+                          wxASSERT(NULL != pBit);
+                          pEventData->m_list_bit.push_back(pBit);
+                          pBit->m_nPos   = vscp_readStringValue(child6->GetAttribute("pos", "0").ToStdString());
+                          pBit->m_nWidth = vscp_readStringValue(child6->GetAttribute("width", "0").ToStdString());
+                          pBit->m_nPos   = vscp_readStringValue(child6->GetAttribute("default", "0").ToStdString());
+
+                          wxXmlNode *child7 = child6->GetChildren();
+                          while (child7) {
+
+                            if (child7->GetName() == ("name")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pBit->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pBit->m_strName.empty()) {
+                                pBit->m_strName = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("description")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pBit->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                              else if ((("en") == str) && pBit->m_strName.empty()) {
+                                pBit->m_strDescription = child7->GetNodeContent().ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("help")) {
+                              std::string str;
+                              str = child7->GetAttribute(("lang"), ("en")).ToStdString();
+
+                              if (str == m_strLocale) {
+                                pBit->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pBit->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                              else if ((("en") == str)) {
+                                pBit->m_strHelp     = child7->GetNodeContent().ToStdString();
+                                pBit->m_strHelpType = child7->GetAttribute(("type"), ("text")).ToStdString();
+                              }
+                            }
+                            else if (child7->GetName() == ("access")) {
+
+                              pBit->m_nAccess             = MDF_ACCESS_READ;
+                              std::string strAccessRights = child7->GetNodeContent().ToStdString();
+
+                              vscp_makeUpper(strAccessRights);
+                              if (strAccessRights.npos != strAccessRights.find(("R"))) {
+                                pBit->m_nAccess |= MDF_ACCESS_READ;
+                              }
+
+                              if (strAccessRights.npos != strAccessRights.find(("W"))) {
+                                pBit->m_nAccess |= MDF_ACCESS_WRITE;
+                              }
+                            }
+
+                            child7 = child7->GetNext();
+
+                          } // while 7
+                        }
+
+                        child6 = child6->GetNext();
+
+                      } // while 6
+                    }
+
+                    child5 = child5->GetNext();
+
+                  } // while 5
+                }
+
+                child4 = child4->GetNext();
+
+              } // while
+            }
+
+            child3 = child3->GetNext();
+
+          } // while
+        }
+        else if (child2->GetName() == ("alarm")) {
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == ("bitfield")) {
+
+              wxXmlNode *child4 = child3->GetChildren();
+              while (child4) {
+
+                if (child4->GetName() == ("bit")) {
+
+                  CMDF_Bit *pBit = new CMDF_Bit;
+                  wxASSERT(NULL != pBit);
+                  m_list_alarmbits.push_back(pBit);
+
+                  pBit->m_nPos   = vscp_readStringValue(child4->GetAttribute("pos", "0").ToStdString());
+                  pBit->m_nWidth = vscp_readStringValue(child4->GetAttribute("width", "0").ToStdString());
+                  pBit->m_nPos   = vscp_readStringValue(child4->GetAttribute("default", "0").ToStdString());
+
+                  wxXmlNode *child5 = child4->GetChildren();
+                  while (child5) {
+
+                    if (child5->GetName() == ("name")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pBit->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                      else if ((("en") == str) && pBit->m_strName.empty()) {
+                        pBit->m_strName = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("description")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pBit->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                      else if ((("en") == str) && pBit->m_strName.empty()) {
+                        pBit->m_strDescription = child5->GetNodeContent().ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("help")) {
+                      std::string str;
+                      str = child5->GetAttribute(("lang"), ("en")).ToStdString();
+
+                      if (str == m_strLocale) {
+                        pBit->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pBit->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                      else if ((("en") == str)) {
+                        pBit->m_strHelp     = child5->GetNodeContent().ToStdString();
+                        pBit->m_strHelpType = child5->GetAttribute(("type"), ("text")).ToStdString();
+                      }
+                    }
+                    else if (child5->GetName() == ("access")) {
+
+                      pBit->m_nAccess             = MDF_ACCESS_READ;
+                      std::string strAccessRights = child5->GetNodeContent().ToStdString();
+
+                      vscp_makeUpper(strAccessRights);
+                      if (strAccessRights.npos != strAccessRights.find(("R"))) {
+                        pBit->m_nAccess |= MDF_ACCESS_READ;
+                      }
+
+                      if (strAccessRights.npos != strAccessRights.find(("W"))) {
+                        pBit->m_nAccess |= MDF_ACCESS_WRITE;
+                      }
+                    }
+
+                    child5 = child5->GetNext();
+
+                  } // while 7
+                }
+
+                child4 = child4->GetNext();
+
+              } // while 6
+            }
+
+            child3 = child3->GetNext();
+          }
+        }
+        else if (child2->GetName() == ("boot")) {
+
+          wxXmlNode *child3 = child2->GetChildren();
+          while (child3) {
+
+            if (child3->GetName() == ("algorithm")) {
+              m_bootInfo.m_nAlgorithm = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+            else if (child3->GetName() == ("blocksize")) {
+              m_bootInfo.m_nBlockSize = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+            else if (child3->GetName() == ("blockcount")) {
+              m_bootInfo.m_nBlockSize = vscp_readStringValue(child3->GetNodeContent().ToStdString());
+            }
+
+            child3 = child3->GetNext();
+          }
+        }
+
+        child2 = child2->GetNext();
+
+      } // while Child2
+
+    } // module
+
+    child1 = child1->GetNext();
+
+  } // while Child1
+
+  // If a Level I dm is placed at location 126 on the first
+  // page it will be automatically set to indexed
+  if ((1 == m_dmInfo.m_nLevel) && (126 == m_dmInfo.m_nStartOffset) && (0 == m_dmInfo.m_nStartPage)) {
+    m_dmInfo.m_bIndexed = true;
+  }

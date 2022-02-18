@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,8 @@
 #endif
 
 #include <vscp.h>
+#include <mdf.h>
+#include <register.h>
 #include <vscp_client_base.h>
 #include "ctxevent.h"
 
@@ -42,6 +44,7 @@
 #include <QTableWidgetItem>
 #include <QtSql>
 #include <QLCDNumber>
+#include <QTreeWidget>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -61,6 +64,8 @@ class QAction;
 class QTableWidgetItem;
 class QTableWidget;
 class QToolBox;
+class QSpinBox;
+class QTreeWidgetItem;
 QT_END_NAMESPACE
 
 #include <QMainWindow>
@@ -69,6 +74,56 @@ QT_END_NAMESPACE
 namespace Ui {
 class CFrmNodeConfig;
 }
+
+
+enum registerColumns {
+  REG_COL_POS = 0,
+  REG_COL_ACCESS,
+  REG_COL_VALUE,
+  REG_COL_DESCRIPTION
+};
+
+enum remotevarColumns {
+  REMOTEVAR_COL_NAME = 0,
+  REMOTEVAR_COL_ACCESS,
+  REMOTEVAR_COL_TYPE,
+  REMOTEVAR_COL_VALUE
+};
+
+enum dmColumns {
+  DM_LEVEL1_COL_ORIGIN = 0,
+  DM_LEVEL1_COL_FLAGS,
+  DM_LEVEL1_COL_CLASS_MASK,
+  DM_LEVEL1_COL_CLASS_FILTER,
+  DM_LEVEL1_COL_TYPE_MASK,
+  DM_LEVEL1_COL_TYPE_FILTER,
+  DM_LEVEL1_COL_ACTION,
+  DM_LEVEL1_COL_PARAMETER
+};
+
+enum filesColumns {
+  FILE_COL_NAME = 0
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+/*!
+    Class that represent a row in the TX list
+*/
+class CRegisterWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+    CRegisterWidgetItem(const QString& text);
+    virtual ~CRegisterWidgetItem();
+
+    /*!
+      Pointer to MDF register row for this tree item
+    */
+    CMDF_Register *m_pmdfreg;
+};
 
 
 // ----------------------------------------------------------------------------
@@ -111,6 +166,7 @@ class CFrmNodeConfig : public QMainWindow
     */
     void doDisconnectFromRemoteHost(void);
     
+    
  public slots:
     
     /// Dialog return
@@ -142,6 +198,26 @@ class CFrmNodeConfig : public QMainWindow
     /// Open settings dialog
     void 
     menu_open_main_settings(void);
+
+    /*!
+      Let user select a GUID to use 
+    */
+    void selectGuid(void);  // std::string strguid = "-"
+
+    /*!     
+      Update data
+    */
+    void update(void);
+
+    /*!
+      Update changed registers
+    */
+    void updateChanged();
+
+    /*!
+      Update all registers and read MDF again
+    */
+    void updateFull(void);
  
  signals:
 
@@ -149,6 +225,19 @@ class CFrmNodeConfig : public QMainWindow
     void dataReceived(vscpEvent* pev);
 
  private:
+
+    /// MDF definitions
+    CMDF m_mdf;
+
+    /// Standard registers
+    CStandardRegisters m_stdregs;
+
+    /// Number of updates. Cleared afte4r a full update
+    uint32_t m_nUpdates;
+
+    // Holds widget items for register page headers
+    // register -> header
+    std::map<uint32_t, QTreeWidgetItem *> m_mapRegTopPages;
 
     /// The VSCP client type
     CVscpClient::connType m_vscpConnType;
@@ -171,6 +260,18 @@ class CFrmNodeConfig : public QMainWindow
     // The UI definition
     Ui::CFrmNodeConfig *ui;
 
+    /// Text box for configuration GUID
+    QLineEdit *m_guidConfig;
+
+    /// Button to open GUID selections dialog
+    QPushButton *m_btnSetGUID;
+
+    /// Spin box for configuration nodeid
+    QSpinBox *m_nodeidConfig;
+
+    // Contains interface information
+    QComboBox *m_comboInterface;   
+    
 };
 
 #endif // CFrmNodeConfig_H

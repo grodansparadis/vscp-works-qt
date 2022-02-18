@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -329,10 +329,8 @@ void vscpworks::loadSettings(void)
         m_fileLogLevel = spdlog::level::off;
         break;
     };
-    m_fileLogPattern = 
-      settings.value("fileLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
-    m_fileLogPath = 
-      settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
+    m_fileLogPattern = settings.value("fileLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
+    m_fileLogPath = settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
     m_maxFileLogSize = settings.value("fileLogMaxSize", 5242880).toInt();
     m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
 

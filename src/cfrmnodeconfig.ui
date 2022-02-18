@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>870</width>
-    <height>819</height>
+    <width>861</width>
+    <height>832</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -15,6 +15,9 @@
     <width>0</width>
     <height>0</height>
    </size>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>VSCP Node Configuration</string>
@@ -79,12 +82,20 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QTabWidget" name="tabWidget">
+           <widget class="QTabWidget" name="session_tabWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>20</verstretch>
              </sizepolicy>
+            </property>
+            <property name="cursor">
+             <cursorShape>ArrowCursor</cursorShape>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(246, 245, 244);
+selection-background-color: rgb(154, 153, 150);
+</string>
             </property>
             <property name="tabPosition">
              <enum>QTabWidget::North</enum>
@@ -93,7 +104,13 @@
              <enum>QTabWidget::Rounded</enum>
             </property>
             <property name="currentIndex">
-             <number>3</number>
+             <number>0</number>
+            </property>
+            <property name="elideMode">
+             <enum>Qt::ElideNone</enum>
+            </property>
+            <property name="documentMode">
+             <bool>false</bool>
             </property>
             <widget class="QWidget" name="tab_reg">
              <property name="sizePolicy">
@@ -102,8 +119,15 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <attribute name="icon">
+              <iconset resource="vscpworks.qrc">
+               <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
+             </attribute>
              <attribute name="title">
               <string>Registers</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Defined registers</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
@@ -114,12 +138,18 @@
                   <verstretch>10</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="acceptDrops">
+                 <bool>false</bool>
+                </property>
                 <property name="autoFillBackground">
                  <bool>false</bool>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(246, 245, 244);</string>
+                </property>
                 <column>
                  <property name="text">
-                  <string notr="true">Pos:Page</string>
+                  <string notr="true">Page:Offset</string>
                  </property>
                  <property name="font">
                   <font>
@@ -130,27 +160,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>R/W</string>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="foreground">
-                  <brush brushstyle="NoBrush">
-                   <color alpha="255">
-                    <red>0</red>
-                    <green>0</green>
-                    <blue>0</blue>
-                   </color>
-                  </brush>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Name</string>
+                  <string>Access</string>
                  </property>
                  <property name="font">
                   <font>
@@ -170,27 +180,64 @@
                   </font>
                  </property>
                 </column>
+                <column>
+                 <property name="text">
+                  <string>Description</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </column>
                 <item>
                  <property name="text">
-                  <string>0000:0000</string>
+                  <string>Page 0</string>
                  </property>
                  <property name="text">
-                  <string>rw</string>
+                  <string/>
                  </property>
                  <property name="text">
-                  <string>Memory</string>
+                  <string/>
                  </property>
                  <property name="text">
-                  <string>0x56</string>
+                  <string/>
                  </property>
+                 <item>
+                  <property name="text">
+                   <string>0000:0000</string>
+                  </property>
+                  <property name="text">
+                   <string>rw</string>
+                  </property>
+                  <property name="text">
+                   <string>0x55</string>
+                  </property>
+                  <property name="text">
+                   <string>This is a test</string>
+                  </property>
+                 </item>
                 </item>
                </widget>
               </item>
              </layout>
             </widget>
             <widget class="QWidget" name="tab_rv">
+             <attribute name="icon">
+              <iconset resource="vscpworks.qrc">
+               <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
+             </attribute>
              <attribute name="title">
               <string>Remote Variables</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Defined remote variables</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
@@ -199,20 +246,38 @@
                  <property name="text">
                   <string notr="true">Name</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Access</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Type</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>Content</string>
+                  <string>Value</string>
                  </property>
                  <property name="toolTip">
                   <string/>
@@ -249,8 +314,15 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <attribute name="icon">
+              <iconset resource="vscpworks.qrc">
+               <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
+             </attribute>
              <attribute name="title">
               <string>Decission Matrix</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>Decission matrix of device</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
@@ -259,40 +331,88 @@
                  <property name="text">
                   <string notr="true">Origin</string>
                  </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string notr="true">origin</string>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Flags</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Class Mask</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Class Filter</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Type Mask</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Type Filter</string>
                  </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Action</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
                   <string>Parameter</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <item>
@@ -325,16 +445,32 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="tab_wizard">
+            <widget class="QWidget" name="tab_files">
+             <attribute name="icon">
+              <iconset resource="vscpworks.qrc">
+               <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
+             </attribute>
              <attribute name="title">
-              <string>Wizards</string>
+              <string>Files</string>
+             </attribute>
+             <attribute name="toolTip">
+              <string>External file resources</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
                <widget class="QTreeWidget" name="treeWidget_4">
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <column>
                  <property name="text">
                   <string notr="true">Name</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
                  </property>
                 </column>
                 <item>
@@ -385,7 +521,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>870</width>
+     <width>861</width>
      <height>22</height>
     </rect>
    </property>
@@ -401,7 +537,7 @@
     <addaction name="separator"/>
     <addaction name="actionActionLoadDefaults"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -428,7 +564,11 @@
    <addaction name="actionActionLoadDefaults"/>
    <addaction name="separator"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="cursor">
+    <cursorShape>ArrowCursor</cursorShape>
+   </property>
+  </widget>
   <action name="actionConnect">
    <property name="checkable">
     <bool>true</bool>
@@ -457,13 +597,19 @@
     <string>Update configuration data</string>
    </property>
   </action>
-  <action name="actionQuit">
+  <action name="actionClose">
    <property name="icon">
     <iconset>
      <normaloff>:/images/application-exit.png</normaloff>:/images/application-exit.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>Close configuration window</string>
+   </property>
+   <property name="toolTip">
+    <string>Close window</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
    </property>
   </action>
   <action name="actionAboutQt">
@@ -514,7 +660,7 @@
     <string>Update &amp;Local</string>
    </property>
    <property name="toolTip">
-    <string>Update configuration data</string>
+    <string>Load local MDF</string>
    </property>
   </action>
   <action name="actionUpdateFull">
@@ -526,7 +672,7 @@
     <string>Update &amp;Full</string>
    </property>
    <property name="toolTip">
-    <string>Update configuration data</string>
+    <string>Update all configuration data from device</string>
    </property>
   </action>
  </widget>
@@ -534,5 +680,22 @@
  <resources>
   <include location="vscpworks.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>CFrmNodeConfig</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>409</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

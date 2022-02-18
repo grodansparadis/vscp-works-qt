@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -438,49 +438,49 @@ CDlgConnSettingsTcpip::setPwKeyFile(const QString& str)
 QJsonObject 
 CDlgConnSettingsTcpip::getJson(void)
 {
-    std::string str;
+  std::string str;
 
-    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
-    m_jsonConfig["name"] = getName();
-    m_jsonConfig["host"] = getHost();
-    m_jsonConfig["user"] = getUser();
-    m_jsonConfig["password"] = getPassword();
-    m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
-    m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
-    m_jsonConfig["bpoll"] = getPoll();
-    m_jsonConfig["bfull-l2"] = getFullL2();
-    m_jsonConfig["selected-interface"] = getInterface();
-    
-    m_jsonConfig["btls"] = isTLSEnabled();
-    m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
-    m_jsonConfig["cafile"] = getCaFile();
-    m_jsonConfig["capath"] = getCaPath();
-    m_jsonConfig["certfile"] = getCertFile();
-    m_jsonConfig["keyfile"] = getKeyFile();
-    m_jsonConfig["pwkeyfile"] = getPwKeyFile();
+  m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
+  m_jsonConfig["name"] = getName();
+  m_jsonConfig["host"] = getHost();
+  m_jsonConfig["user"] = getUser();
+  m_jsonConfig["password"] = getPassword();
+  m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
+  m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
+  m_jsonConfig["bpoll"] = getPoll();
+  m_jsonConfig["bfull-l2"] = getFullL2();
+  m_jsonConfig["selected-interface"] = getInterface();
+  
+  m_jsonConfig["btls"] = isTLSEnabled();
+  m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+  m_jsonConfig["cafile"] = getCaFile();
+  m_jsonConfig["capath"] = getCaPath();
+  m_jsonConfig["certfile"] = getCertFile();
+  m_jsonConfig["keyfile"] = getKeyFile();
+  m_jsonConfig["pwkeyfile"] = getPwKeyFile();
 
-    // Filter
-    m_jsonConfig["priority-filter"] = m_filter.filter_priority;
-    m_jsonConfig["priority-mask"] = m_filter.mask_priority;
-    m_jsonConfig["class-filter"] = m_filter.filter_class;
-    m_jsonConfig["class-mask"] = m_filter.mask_class;
-    m_jsonConfig["type-filter"] = m_filter.filter_type;
-    m_jsonConfig["type-mask"] = m_filter.mask_type;
-    vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
-    m_jsonConfig["guid-filter"] = str.c_str();
-    vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
-    m_jsonConfig["guid-mask"] = str.c_str();
+  // Filter
+  m_jsonConfig["priority-filter"] = m_filter.filter_priority;
+  m_jsonConfig["priority-mask"] = m_filter.mask_priority;
+  m_jsonConfig["class-filter"] = m_filter.filter_class;
+  m_jsonConfig["class-mask"] = m_filter.mask_class;
+  m_jsonConfig["type-filter"] = m_filter.filter_type;
+  m_jsonConfig["type-mask"] = m_filter.mask_type;
+  vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
+  m_jsonConfig["guid-filter"] = str.c_str();
+  vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
+  m_jsonConfig["guid-mask"] = str.c_str();
 
-    // Save all fetched interfaces
-    QJsonArray interfaceArray;
-    for ( int i=0; i<ui->comboInterface->count(); i++) {        
-        QJsonObject obj;
-        obj["if-item"] = ui->comboInterface->itemText(i);
-        interfaceArray.append(obj);
-    }
-    m_jsonConfig["interfaces"] = interfaceArray;
+  // Save all fetched interfaces
+  QJsonArray interfaceArray;
+  for ( int i=0; i<ui->comboInterface->count(); i++) {        
+      QJsonObject obj;
+      obj["if-item"] = ui->comboInterface->itemText(i);
+      interfaceArray.append(obj);
+  }
+  m_jsonConfig["interfaces"] = interfaceArray;
 
-    return m_jsonConfig; 
+  return m_jsonConfig; 
 }
 
 
@@ -548,18 +548,17 @@ CDlgConnSettingsTcpip::setJson(const QJsonObject *pobj)
 
     // Interfaces
     if (m_jsonConfig["interfaces"].isArray()) {
-        QJsonArray interfacesArray = m_jsonConfig["interfaces"].toArray();  
 
-        for (auto v : interfacesArray) {
+      QJsonArray interfacesArray = m_jsonConfig["interfaces"].toArray();  
 
-            QString strInterface;
-            QJsonObject item = v.toObject();
-            if (!item["if-item"].isNull()) {
-                strInterface = item["if-item"].toString();
-                ui->comboInterface->addItem(strInterface);
-            }
+      for (auto v : interfacesArray) {
+        QString strInterface;
+        QJsonObject item = v.toObject();
+        if (!item["if-item"].isNull()) {
+            strInterface = item["if-item"].toString();
+            ui->comboInterface->addItem(strInterface);
         }
-        
+      }        
     }
 
     QString selectedInterface; 
@@ -729,8 +728,8 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
                                                 interface_guid.toStdString().c_str(),
                                                 interface_type.toStdString().c_str(),
                                                 interface_id.toStdString().c_str()).c_str();
+            ui->comboInterface->addItem(item, i);                                   
 
-            ui->comboInterface->addItem(item, i);
             qDebug() << iflist.size();
             qDebug() << iflist[i].c_str();
         }                

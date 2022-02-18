@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -52,6 +52,13 @@ class QTreeWidgetItem;
 class QModelIndex;
 QT_END_NAMESPACE
 
+// types for main treelist items
+enum class itemType {
+    NONE=0, 
+    CONNECTION=1000
+};
+
+
 class FileDownloader;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,7 +92,6 @@ private:
     QJsonObject m_conn;
     
 };
-
 
 
 ///////////////////////////////////////////////////////////////////////////////

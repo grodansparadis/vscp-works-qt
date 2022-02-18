@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2021 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2022 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -73,6 +73,7 @@
 #include <QFile>
 #include <QStandardPaths>
 #include <QClipboard>
+#include <QKeySequence>
 
 // ----------------------------------------------------------------------------
 
@@ -188,8 +189,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     // createFormGroupBox();
     createTxGridGroup();
 
-    m_buttonBox =
-      new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    m_buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
     connect(m_buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -206,10 +206,9 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
             &CFrmSession::showRxContextMenu);
 
     // Handle selections
-    connect(
-      m_rxTable->selectionModel(),
-      SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-      SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
+    connect(m_rxTable->selectionModel(),
+            SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+            SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
 
     // Lay out things
     QVBoxLayout* mainLayout = new QVBoxLayout;
@@ -450,9 +449,10 @@ CFrmSession::createMenu()
 
     
     m_exitAct = m_fileMenu->addAction(windowCloseIcon,
-                                      tr("Close session window"),
+                                      tr("Close window"),
                                       this,
                                       &CFrmSession::close);
+    m_exitAct->setShortcut(QKeySequence(tr("Ctrl+X")));                                  
     m_exitAct->setStatusTip(tr("Close session window"));
 
     m_menuBar->addMenu(m_fileMenu);
@@ -1952,7 +1952,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                spdlog::error(std::string(tr("Session: Successful connect to remote client.").toStdString()));
+                spdlog::info(std::string(tr("Session: Successful connect to remote client.").toStdString()));
             }
             break;
 
@@ -1969,7 +1969,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                spdlog::error(std::string(tr("Session: Successful connected to the CANAL driver.").toStdString()));
+                spdlog::info(std::string(tr("Session: Successful connected to the CANAL driver.").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -1987,7 +1987,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                spdlog::error(std::string(tr("Session: Successful connected to SOCKETCAN.").toStdString()));
+                spdlog::info(std::string(tr("Session: Successful connected to SOCKETCAN.").toStdString()));
             }
             QApplication::restoreOverrideCursor();
             break;
@@ -2008,7 +2008,7 @@ CFrmSession::doConnectToRemoteHost(void)
                   QMessageBox::Ok);
             }
             else {
-                spdlog::error(std::string(tr("Session: Successful connect to remote host").toStdString()));
+                spdlog::info(std::string(tr("Session: Successful connect to remote host").toStdString()));
             }
             break;
 

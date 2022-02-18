@@ -120,6 +120,14 @@ else()
     include(FindMosquitto)
 endif()
 
+find_package(CURL REQUIRED) 
+IF(CURL_FOUND)
+  INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
+  SET(requiredlibs ${requiredlibs} ${CURL_LIBRARIES} )
+ELSE(CURL_FOUND)
+  MESSAGE(FATAL_ERROR "Could not find the CURL library.")
+ENDIF(CURL_FOUND)
+
 # Set civetweb build flags
 add_definitions(-DUSE_WEBSOCKET)
 add_definitions(-DUSE_IPV6)
@@ -406,6 +414,8 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/vscp/common/vscpcanaldeviceif.cpp
     ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.h
     ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.cpp
+    ${VSCP_PATH}/src/vscp/common/register.h
+    ${VSCP_PATH}/src/vscp/common/register.cpp
     ${VSCP_PATH}/src/vscp/common/vscp_client_base.h
     ${VSCP_PATH}/src/vscp/common/vscp_client_base.cpp
     ${VSCP_PATH}/src/vscp/common/vscp_client_local.h
@@ -486,7 +496,10 @@ if (WIN32)
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
-        ${LOCAL_SYSLOG_INCLUDE} )
+        ${LOCAL_SYSLOG_INCLUDE} 
+        ${CURL_INCLUDE_DIR}
+      )
+        
 else()
     include_directories( PUBLIC ./src 
         ./build
@@ -509,7 +522,10 @@ else()
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
-        ${LOCAL_SYSLOG_INCLUDE} )
+        ${LOCAL_SYSLOG_INCLUDE} 
+        ${CURL_INCLUDE_DIR}
+      )
+        
  endif()   
 
 if (WIN32)
@@ -528,6 +544,7 @@ if (WIN32)
      #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
         ${MOSQUITTO_LIBRARIES}
         expat::expat
+        ${CURL_LIBRARIES}
         dlfcn-win32::dl)
     else()
     target_link_libraries(vscp-works-qt PRIVATE     
@@ -546,6 +563,7 @@ if (WIN32)
 #        ${PAHO_LIBRARIES}
         ${MOSQUITTO_LIBRARIES}
         ${EXPAT_LIBRARIES}
+        ${CURL_LIBRARIES}
         ${DLFCN_LIBS})
 endif()
 
