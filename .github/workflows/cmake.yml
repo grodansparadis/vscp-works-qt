@@ -43,6 +43,9 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
+    - name: Install libcurl4-openssl-dev manually 
+      run: sudo apt install libcurl4-openssl-dev  
+
     - name: Install paho manually
       run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
        

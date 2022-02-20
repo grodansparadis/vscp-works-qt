@@ -204,6 +204,11 @@ class CFrmNodeConfig : public QMainWindow
     */
     void selectGuid(void);  // std::string strguid = "-"
 
+    /*!
+      Double click on register
+    */
+    void onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
+
     /*!     
       Update data
     */

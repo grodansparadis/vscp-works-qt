@@ -512,7 +512,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionUpdate, 
           SIGNAL(triggered()),           
           this, 
-          SLOT(update()));       
+          SLOT(update()));   
+
+  connect(ui->treeWidgetRegisters, 
+          SIGNAL(itemDoubleClicked(QTreeWidgetItem *item, int column)),           
+          this, 
+          SLOT(onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column)));            
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -941,6 +946,15 @@ CFrmNodeConfig::update(void)
   }
 }
 
+void
+CFrmNodeConfig::onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+  if (2 == column) {
+    //ui->treeWidgetRegisters->editItem(item, column);
+    std::cout << "double clicked" << std::endl;
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // updateChanged
 //
@@ -1114,7 +1128,7 @@ CFrmNodeConfig::updateFull(void)
       CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("trttttt");
       char buf[64];
       std::string str;
-      sprintf(buf, "%X : %X", page, reg.second->getOffset());
+      sprintf(buf, "%X : %lX", (unsigned int)page, (unsigned long)reg.second->getOffset());
       itemReg->setText(0, buf);
       itemReg->setTextAlignment(0, Qt::AlignCenter);
       itemReg->setText(1, "rw");

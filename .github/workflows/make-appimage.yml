@@ -45,6 +45,9 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
+    - name: Install libcurl4-openssl-dev manually 
+      run: sudo apt install libcurl4-openssl-dev  
+
     # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
     - name: Set QT repo
       run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
