@@ -32,7 +32,7 @@ project(vscp-works-qt LANGUAGES CXX C)
 option(USE_SSL "Use SSL" TRUE)
 
 ## --- C++11 build flags ---
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 

@@ -131,8 +131,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   , ui(new Ui::CFrmNodeConfig)
 {
   ui->setupUi(this);
+  
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  m_nUpdates = 0; // No update operations yet
+  m_nUpdates = 0;                   // No update operations yet
+  m_StandardRegTopPage = nullptr;   // No standard registers
+  ui->treeWidgetRegisters->clear(); // Clear the tree
+  m_mapRegTopPages.clear();         // Clear the page map
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -140,11 +145,27 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   QHeaderView* regTreeViewHeader = ui->treeWidgetRegisters->header();
   regTreeViewHeader->setDefaultAlignment(Qt::AlignCenter);
-  ui->treeWidgetRegisters->setColumnWidth(0, 150);
-  ui->treeWidgetRegisters->setColumnWidth(1, 80);
-  ui->treeWidgetRegisters->setColumnWidth(2, 80);
+  // Enable context menu
+  ui->treeWidgetRegisters->setContextMenuPolicy(Qt::CustomContextMenu); 
+  ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 200);
+  ui->treeWidgetRegisters->setColumnWidth(REG_COL_ACCESS, 80);
+  ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 160);
 
   ui->treeWidgetRegisters->clear();
+  ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  
+  // Numerical base from settings
+  m_baseComboBox = new QComboBox;
+  m_baseComboBox->addItem("Hex");
+  m_baseComboBox->addItem("Decimal");
+  m_baseComboBox->addItem("Octal");
+  m_baseComboBox->addItem("Binary");
+  ui->mainToolBar->addWidget(m_baseComboBox);
+  m_baseComboBox->setCurrentIndex(static_cast<int>(pworks->m_config_base));
+  ui->mainToolBar->addSeparator();
+
+  // MDF colors from settings
+  ui->actionDisableColors->setChecked(pworks->m_config_bDisableColors);
 
   // QStringList headers;
   // for (int i = 0; i < ui->treeView->model()->columnCount(); i++) {
@@ -153,13 +174,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   //void QTreeWidgetItem::setForeground(int column, const QBrush &brush)
 
   // Add page top item
-  QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);
-  itemTopReg1->setText(0, "Page 0");
-  itemTopReg1->setFont(0, QFont("Arial", 12, QFont::Bold));
-  itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
+  // QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);
+  // itemTopReg1->setText(0, "Page 0");
+  // itemTopReg1->setFont(0, QFont("Arial", 12, QFont::Bold));
+  // itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
   //itemTopReg1->get  setStyleSheet("background-color: red");
   //itemTopReg1->setForeground(0, QBrush(QColor("#0000FF")));
-  itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
+  //itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
   //itemTopReg1->setBackground(0, QBrush(QColor(Qt::black)));
   // QList<QTableWidgetItem*>::iterator it;
   // for (it = sellist.begin(); it != sellist.end(); it++) {
@@ -170,19 +191,19 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   //         (*it)->setBackground(Qt::cyan);
   //     }
   // }
-  ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
+  // ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
 
-  // Add register sub item
-  CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("trttttt");
-  itemReg->setText(0, "0000:0000");
-  itemReg->setTextAlignment(0, Qt::AlignCenter);
-  itemReg->setText(1, "rw");
-  itemReg->setTextAlignment(1, Qt::AlignCenter);
-  itemReg->setText(2, "0x55");
-  itemReg->setTextAlignment(2, Qt::AlignCenter);
-  itemReg->setText(3, "This is a test");
-  itemReg->setTextAlignment(0, Qt::AlignLeft);
-  itemTopReg1->addChild(itemReg);
+  // // Add register sub item
+  // CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("trttttt");
+  // itemReg->setText(0, "0000:0000");
+  // itemReg->setTextAlignment(0, Qt::AlignCenter);
+  // itemReg->setText(1, "rw");
+  // itemReg->setTextAlignment(1, Qt::AlignCenter);
+  // itemReg->setText(2, "0x55");
+  // itemReg->setTextAlignment(2, Qt::AlignCenter);
+  // itemReg->setText(3, "This is a test");
+  // itemReg->setTextAlignment(0, Qt::AlignLeft);
+  // itemTopReg1->addChild(itemReg);
 
   m_nodeidConfig   = nullptr;
   m_guidConfig     = nullptr;
@@ -207,7 +228,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
 
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  //vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   spdlog::debug(
     std::string(tr("Node configuration module opended").toStdString()));
 
@@ -337,27 +358,27 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
         QJsonArray json_if_array = m_connObject["interfaces"].toArray();
         std::string _str;
         size_t sz = json_if_array.size();
-        std::string sss =
-          json_if_array.at(0)["if-item"].toString().toStdString();
+        std::string sss = json_if_array.at(0)["if-item"].toString().toStdString();
         foreach (const QJsonValue& value, json_if_array) {
           // qDebug() << value.toObject().value("if-item").toString();
           // std::string if =
           // value.toObject().value("if-item").toString().toStdString();
           // std::cout << "if = " << if << std::endl;
-          m_comboInterface->addItem(
-            value.toObject().value("if-item").toString());
+          m_comboInterface->addItem(value.toObject().value("if-item").toString());
           //_str = value.toObject()["if-item"].toString().toStdString();
           // if (value.toObject()["name"].toString() == interface) {
           //   _str = value.toObject();
           //   //break;
-          // }
-          m_comboInterface->setCurrentText(interface.c_str());
+          // }          
         }
+
+        m_comboInterface->setCurrentText(interface.c_str());
+        std::cout << "interface = " << interface << std::endl;
 
         // Nickname
         m_nodeidConfig = new QSpinBox();
-        m_nodeidConfig->setRange(0, 0xff);
-        ui->mainToolBar->addWidget(new QLabel("node id:"));
+        m_nodeidConfig->setRange(1, 0xfd);
+        ui->mainToolBar->addWidget(new QLabel(" node id:"));
         ui->mainToolBar->addWidget(m_nodeidConfig);
       }
 
@@ -504,20 +525,58 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   // Menu and toolbar commands
 
+  // Connect has been clicked
   connect(ui->actionConnect,
           SIGNAL(triggered(bool)),
           this,
           SLOT(connectToRemoteHost(bool)));
 
+  // Update has been clicked
   connect(ui->actionUpdate, 
           SIGNAL(triggered()),           
           this, 
           SLOT(update()));   
 
-  connect(ui->treeWidgetRegisters, 
-          SIGNAL(itemDoubleClicked(QTreeWidgetItem *item, int column)),           
+  connect(ui->actionDisableColors,
+          SIGNAL(triggered(bool)),
+          this,
+          SLOT(disableColors(bool)));        
+
+  // Base change
+  connect(m_baseComboBox, 
+          SIGNAL(currentIndexChanged(int)),
           this, 
-          SLOT(onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column)));            
+          SLOT(onBaseChange(int)));
+
+  // Interface change
+  connect(m_comboInterface, 
+          SIGNAL(currentIndexChanged(int)),
+          this, 
+          SLOT(onInterfaceChange(int)));    
+
+  // Node id change
+  connect(m_nodeidConfig, 
+          SIGNAL(valueChanged(int)),
+          this, 
+          SLOT(onNodeIdChange(int)));                   
+
+  // Register row has been double clicked.
+  connect(ui->treeWidgetRegisters, 
+            &QTreeWidget::itemDoubleClicked,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked);
+
+  // Register item value has changed.
+  connect(ui->treeWidgetRegisters, 
+            &QTreeWidget::itemChanged,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetCellChanged);  
+
+  // Open pop up menu on right click on VSCP type listbox
+  connect(ui->treeWidgetRegisters,
+        &QTreeWidget::customContextMenuRequested,
+        this,
+        &CFrmNodeConfig::showRegisterContextMenu);                     
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -575,49 +634,61 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
 
-  menu->addAction(QString(tr("Send event")), this, SLOT(sendTxEvent()));
+  menu->addAction(QString(tr("Update")), 
+                  this, 
+                  SLOT(update()));
+
+  menu->addAction(QString(tr("Full Update")), 
+                  this, 
+                  SLOT(updateFull()));                
 
   menu->addSeparator();
 
-  menu->addAction(QString(tr("Copy TX event to clipboard")),
+  menu->addAction(QString(tr("Read value(s) for selected row(s)")),
                   this,
-                  SLOT(copyTxToClipboard()));
+                  SLOT(readSelectedRegisterValues()));
+
+  menu->addAction(QString(tr("Write value(s) for selected row(s)")),
+                  this,
+                  SLOT(writeSelectedRegisterValues()));
+
+  menu->addAction(QString(tr("Write default value(s) for selected row(s)")),
+                  this,
+                  SLOT(defaultSelectedRegisterValues()));
+
+  menu->addAction(QString(tr("Set default values for ALL rows")),
+                  this,
+                  SLOT(defaultRegisterAll()));                
+
+  menu->addAction(QString(tr("Undo value(s) for selected row(s)")),
+                  this,
+                  SLOT(undoSelectedRegisterValues()));
+
+  menu->addAction(QString(tr("Redo value(s) for selected row(s)")),
+                  this,
+                  SLOT(redoSelectedRegisterValues()));
+
+  menu->addSeparator();        
+
+  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")),
+                  this,
+                  SLOT(saveSelectedRegisterValues()));
+
+  menu->addAction(QString(tr("Save ALL register values to disk")),
+                  this,
+                  SLOT(saveAllRegisterValues()));                        
+
+  menu->addAction(QString(tr("Load register values from disk")),
+                  this,
+                  SLOT(loadRegisterValues())); 
 
   menu->addSeparator();
 
-  menu->addAction(QString(tr("Add transmission row...")),
+  menu->addAction(QString(tr("Goto register page...")),
                   this,
-                  SLOT(addTxEvent()));
+                  SLOT(gotoRegisterPageMenu()));
 
-  menu->addAction(QString(tr("Edit selected transmission row...")),
-                  this,
-                  SLOT(editTxEvent()));
-
-  menu->addAction(QString(tr("Clone selected transmission row...")),
-                  this,
-                  SLOT(cloneTxEvent()));
-
-  menu->addAction(QString(tr("Delete selected transmission row...")),
-                  this,
-                  SLOT(deleteTxEvent()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Save transmission rows...")),
-                  this,
-                  SLOT(saveTxEvents()));
-
-  menu->addAction(QString(tr("Load transmission rows...")),
-                  this,
-                  SLOT(loadTxEvents()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Clear selections...")),
-                  this,
-                  SLOT(clrSelectionsTxEvent()));
-
-  // menu->popup(m_txTable->viewport()->mapToGlobal(pos));
+  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -925,6 +996,76 @@ CFrmNodeConfig::selectGuid(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// disableColors
+//
+
+void
+CFrmNodeConfig::disableColors(bool bColors)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  pworks->m_config_bDisableColors = bColors;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onBaseChange
+//
+
+void
+CFrmNodeConfig::onBaseChange(int index)
+{
+    int base = 10;
+    QString qstr;
+    QString prefix;
+    numerical_base numbase = static_cast<numerical_base>(index);
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    switch (numbase) {
+        case numerical_base::HEX:
+            prefix = "0x";
+            base   = 16;
+            break;
+        case numerical_base::DECIMAL:
+        default:
+            prefix = "";
+            base   = 10;
+            break;
+        case numerical_base::OCTAL:
+            prefix = "0o";
+            base   = 8;
+            break;
+        case numerical_base::BINARY:
+            prefix = "0b";
+            base   = 2;
+            break;
+    }
+
+    QApplication::restoreOverrideCursor();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onNodeIdChange
+//
+
+void
+CFrmNodeConfig::onInterfaceChange(int index)
+{
+  ui->treeWidgetRegisters->clear();
+  m_nUpdates = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onNodeIdChange
+//
+
+void
+CFrmNodeConfig::onNodeIdChange(int nodeid)
+{
+  ui->treeWidgetRegisters->clear();
+  m_nUpdates = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // update
 //
 
@@ -941,18 +1082,265 @@ CFrmNodeConfig::update(void)
     }
     else {
       // update changed registers
-      updateChanged();
+      //updateChanged();
+      updateFull();
     }
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// onRegisterTreeWidgetItemDoubleClicked
+//
+
 void
-CFrmNodeConfig::onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column)
+CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
   if (2 == column) {
-    //ui->treeWidgetRegisters->editItem(item, column);
-    std::cout << "double clicked" << std::endl;
+    ui->treeWidgetRegisters->editItem(item, column);
+    
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRegisterTreeWidgetCellChanged
+//
+
+void
+CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem *item, int column)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString strValue = item->text(column);
+  uint32_t value = vscp_readStringValue(strValue.toStdString());
+
+  strValue = pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()); 
+
+  // switch(static_cast<numerical_base>(m_baseComboBox->currentIndex()) ) {
+  //   case numerical_base::HEX:
+  //     strvalue = vscpworks::decimalToStringInBase(value, m_baseComboBox->currentIndex()); 
+  //     break;
+  //   case numerical_base::DECIMAL:
+  //     value = vscp_readStringValue(item->text(column).toStdString());
+  //     break;
+  //   case numerical_base::OCTAL:
+  //     value = vscp_readStringValue(item->text(column).toStdString());
+  //     break;
+  //   case numerical_base::BINARY:
+  //     value = vscp_readStringValue(item->text(column).toStdString());
+  //     break;
+  //   default:
+  //     break;
+  // }
+  item->setForeground(column, QBrush(Qt::red));
+  item->setText(column, strValue);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderStandardRegisters
+//
+
+void
+CFrmNodeConfig::renderStandardRegisters(void)
+{
+  int rv;
+  uint8_t value;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QTreeWidgetItem* itemTopStdReg = new QTreeWidgetItem(QTreeWidgetItem::UserType);    
+  itemTopStdReg->setText(REG_COL_POS, "Standard registers");
+  itemTopStdReg->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
+  itemTopStdReg->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
+  itemTopStdReg->setForeground(0, QBrush(QColor("royalblue")));
+  ui->treeWidgetRegisters->addTopLevelItem(itemTopStdReg);
+  // Save a pointer to the standard register top item
+  m_StandardRegTopPage = itemTopStdReg;
+
+
+  CRegisterWidgetItem* itemReg;
+
+  // Alarm status register
+  value = m_stdregs.getReg(0x80);
+  itemReg = new CRegisterWidgetItem("Register");
+  if (nullptr==itemReg) {
+    spdlog::critical("Failed to create standard register widget item");
+    return;
+  }
+
+  // Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | 
+  //                               Qt::ItemIsSelectable | 
+  //                               Qt::ItemNeverHasChildren;
+  //itemFlags |=  Qt::ItemIsEditable; 
+  itemReg->setFlags(Qt::ItemIsEnabled | 
+                    Qt::ItemIsSelectable | 
+                    /*Qt::ItemIsEditable | */
+                    Qt::ItemNeverHasChildren);
+
+  // Set foreground and background colors from MDF 
+  for (int i=0; i<4; i++) {
+    itemReg->setForeground(i, QBrush(QColor("black")));
+    itemReg->setBackground(i, QBrush(QColor("orange")));
+  }
+    
+  // pos
+  itemReg->setText(REG_COL_POS, "0 : 128");
+  itemReg->setTextAlignment(REG_COL_POS, Qt::AlignCenter);
+
+  // Access
+  itemReg->setText(REG_COL_ACCESS, "r");
+  itemReg->setTextAlignment(REG_COL_ACCESS, Qt::AlignCenter);
+
+  // Value
+  itemReg->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString().c_str());
+  itemReg->setTextAlignment(REG_COL_VALUE, Qt::AlignCenter);
+
+  itemReg->setText(REG_COL_NAME, "Alarm status register");
+  itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
+  itemTopStdReg->addChild(itemReg);
+  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderRegisters
+//
+
+void
+CFrmNodeConfig::renderRegisters(void)
+{
+  int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  
+  ui->treeWidgetRegisters->clear(); // Clear the tree
+  m_mapRegTopPages.clear();         // Clear the page map
+
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;
+
+  // node id
+  guidNode.setLSB(m_nodeidConfig->value());
+
+  // ----------------------------------------------------------
+  // Fill status info
+  // ----------------------------------------------------------
+
+  renderStandardRegisters();
+
+  // ----------------------------------------------------------
+  // Fill register info
+  // ----------------------------------------------------------
+
+  // Att top level pages
+
+  std::set<uint16_t> pages;
+  uint32_t nPages = m_mdf.getPages(pages);
+  spdlog::trace("MDF page count = {}", nPages);
+
+  // Get user registers for all pages
+  rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    std::cout << "Failed to read user regs: " << rv << std::endl;
+    spdlog::error("Failed to init user registers");
+    return;
+  }
+
+  for (auto page : pages) {
+
+    spdlog::trace("MDF page = {}", page);
+    std::cout << "MDF page = " << page << std::endl;
+
+    //CRegisterPage *preg = m_userregs.getPage(page); 
+    
+    QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);    
+    itemTopReg1->setText(REG_COL_POS, "Page " + QString::number(page));
+    itemTopReg1->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
+    itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
+    itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
+    ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
+    // Save a pointer to the register top item
+    m_mapRegTopPages[page] = itemTopReg1;
+
+    // Add registers
+    //std::deque<CMDF_Register *> *pregs = m_mdf.getRegisterList();
+
+    std::map<uint32_t, CMDF_Register *> mapRegs;
+    m_mdf.getRegisterMap(page, mapRegs);
+
+    for (auto item : mapRegs) {
+
+      CMDF_Register *pregmdf = item.second;
+
+      CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("Register");
+      if (nullptr==itemReg) {
+        spdlog::critical("Failed to create register widget item");
+        continue;
+      }
+
+      Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | 
+                                Qt::ItemIsSelectable | 
+                                Qt::ItemNeverHasChildren;       
+
+      // Set foreground and background colors from MDF 
+      if (!pworks->m_config_bDisableColors) {
+        for (int i=0; i<4; i++) {
+          itemReg->setForeground(i, QBrush(QColor(pregmdf->getForegroundColor())));
+          itemReg->setBackground(i, QBrush(QColor(pregmdf->getBackgroundColor())));
+        }
+      }
+      
+      // Save a pointer to register information
+      itemReg->m_pmdfreg = pregmdf;
+
+      // page : offset in selected base (not binary) 
+      char buf[64];
+      std::string str;
+      sprintf(buf, 
+              "%u : %lu", 
+              page,
+              (unsigned long)pregmdf->getOffset());
+      itemReg->setText(REG_COL_POS, buf);
+      itemReg->setTextAlignment(REG_COL_POS, Qt::AlignCenter);
+
+      mdf_access_mode access = pregmdf->getAccess();
+      if (MDF_REG_ACCESS_READ_ONLY == access) {
+        //itemReg->setForeground(2, QBrush(QColor("gray")));
+        itemReg->setText(REG_COL_ACCESS, "r");
+      }
+      else if (MDF_REG_ACCESS_WRITE_ONLY == access) {
+        //itemReg->setForeground(2, QBrush(QColor("darkgreen")));
+        itemReg->setText(REG_COL_ACCESS, "w");
+        itemFlags |=  Qt::ItemIsEditable; 
+      }
+      else if (MDF_REG_ACCESS_READ_WRITE == access) {
+        //itemReg->setForeground(2, QBrush(QColor("red")));
+        itemReg->setText(REG_COL_ACCESS, "rw");
+        itemFlags |=  Qt::ItemIsEditable; 
+      }
+      else {
+        //itemReg->setForeground(2, QBrush(QColor("black")));
+        itemReg->setText(REG_COL_ACCESS, "---");
+      }
+      itemReg->setTextAlignment(REG_COL_ACCESS, Qt::AlignCenter);
+
+      // Value
+      int value = m_userregs.getReg(page, pregmdf->getOffset());
+      if (-1 == value) {
+        itemReg->setText(REG_COL_VALUE, "---");
+      }
+      else {
+        itemReg->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString().c_str());
+      }
+      itemReg->setTextAlignment(REG_COL_VALUE, Qt::AlignCenter);
+
+      itemReg->setFlags(itemFlags);
+
+      itemReg->setText(REG_COL_NAME, pregmdf->getName().c_str());
+      itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
+      itemTopReg1->addChild(itemReg);
+    }
+  }
+
+  m_nUpdates++; // Another update
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -983,39 +1371,40 @@ CFrmNodeConfig::updateFull(void)
   m_nUpdates = 0;
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+  // Show a progress bar
   QProgressBar* pbar = new QProgressBar(this);
-  ui->statusBar->addWidget(pbar);
+  //ui->statusBar->addWidget(pbar);
   pbar->setMaximum(100);
        
-
-  if (m_vscpConnType == CVscpClient::connType::NONE) {
-    ui->statusBar->removeWidget(pbar); 
-    QApplication::restoreOverrideCursor();
-    return;    
-  }
-
   // Must be connected to a remote host
   if (m_vscpConnType == CVscpClient::connType::NONE) {
-    QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar); 
+    QApplication::restoreOverrideCursor();    
     return;
   }
 
-  cguid guidNode("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:01");
-
   // CAN4VSCP interface
-  cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
-  // std::cout << "GUID " << guid.getAsString() << std::endl;
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;
+  // node id
+  guidNode.setLSB(m_nodeidConfig->value());
+  //cguid guidNode("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:01");
 
   QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
+  // * * * Load standard registers * * *
+
   ui->statusBar->showMessage(tr("Reading standard registers from device..."));
-  CVscpClient& obj = *m_vscpClient;
-  int rv = m_stdregs.init(obj, guidNode, guidInterface);
+
+  int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface);
   if (VSCP_ERROR_SUCCESS != rv) {
-    std::cout << "Failed to read standard regs: " << rv << std::endl;
-    spdlog::error("Failed to init standard registers");
+    ui->statusBar->showMessage(tr("Failed to read standard registers from device."));
+    spdlog::error("Failed to init standard registers {0}", rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return;
@@ -1025,6 +1414,8 @@ CFrmNodeConfig::updateFull(void)
 
   pbar->setValue(25);
   spdlog::trace("Standard register read");
+
+  // * * * Download MDF * * *
 
   // Get GUID
   cguid guid;
@@ -1057,6 +1448,7 @@ CFrmNodeConfig::updateFull(void)
   CURLcode curl_rv;
   curl_rv = m_mdf.downLoadMDF(url, tempPath);
   if (CURLE_OK != curl_rv) {
+    ui->statusBar->showMessage(tr("Failed to download MDF file for device."));
     spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
@@ -1068,78 +1460,120 @@ CFrmNodeConfig::updateFull(void)
 
   spdlog::trace("MDF Downloader", tempPath);
 
+  // * * * Parse  MDF * * *
+
   ui->statusBar->showMessage(tr("Parsing MDF file..."));
   rv = m_mdf.parseMDF(tempPath);
   if (VSCP_ERROR_SUCCESS != rv) {
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return;
   }
 
-  pbar->setValue(100);
+  pbar->setValue(80);
   QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
   ui->statusBar->showMessage(tr("MDF read from device and parsed OK"));
   spdlog::trace("Parsing MDF OK");
-  //delay(5);
+
+  // Fill register data
+  renderRegisters();
+
+  pbar->setValue(100);
+
   QApplication::restoreOverrideCursor();
   ui->statusBar->removeWidget(pbar);
+}
 
-  m_nUpdates++; // Another update - well the first
 
-  // ==========================================================
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::readSelectedRegisterValues(void)
+{
   
-  ui->treeWidgetRegisters->clear(); // Clear the tree
-  m_mapRegTopPages.clear();         // Clear the page map
+}
 
-  // ----------------------------------------------------------
-  // Fill status info
-  // ----------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
 
-  // ----------------------------------------------------------
-  // Fill register info
-  // ----------------------------------------------------------
+void CFrmNodeConfig::writeSelectedRegisterValues(void)
+{
 
-  // Att top level pages
+}
 
-  std::set<long> pages;
-  uint32_t nPages = m_mdf.getPages(pages);
-  spdlog::trace("MDF page count = {}", nPages);
-  for (auto page : pages) {
-    spdlog::trace("MDF page = {}", page);
-    std::cout << "MDF page = " << page << std::endl;
-    QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);
-    itemTopReg1->setText(0, "Page " + QString::number(page));
-    itemTopReg1->setFont(0, QFont("Arial", 12, QFont::Bold));
-    itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
-    itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
-    ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
-    // Save a pointer to the register top item
-    m_mapRegTopPages[page] = itemTopReg1;
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
 
-    // Add registers
-    //std::deque<CMDF_Register *> *pregs = m_mdf.getRegisterList();
+void CFrmNodeConfig::defaultSelectedRegisterValues(void)
+{
 
-    std::map<uint32_t, CMDF_Register *> mapRegs;
-    m_mdf.getRegisterMap(page, mapRegs);
+}
 
-    for (auto reg : mapRegs) {
-      CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("trttttt");
-      char buf[64];
-      std::string str;
-      sprintf(buf, "%X : %lX", (unsigned int)page, (unsigned long)reg.second->getOffset());
-      itemReg->setText(0, buf);
-      itemReg->setTextAlignment(0, Qt::AlignCenter);
-      itemReg->setText(1, "rw");
-      itemReg->setTextAlignment(1, Qt::AlignCenter);
-      itemReg->setText(2, "0x55");
-      itemReg->setTextAlignment(2, Qt::AlignCenter);
-      itemReg->setText(3, reg.second->getName().c_str());
-      itemReg->setTextAlignment(0, Qt::AlignLeft);
-      itemTopReg1->addChild(itemReg);
-    }
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
 
-  }
+void CFrmNodeConfig::defaultRegisterAll(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::undoSelectedRegisterValues(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::redoSelectedRegisterValues(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::gotoRegisterPageMenu(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::saveSelectedRegisterValues(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedRegisterValues
+//
+
+void CFrmNodeConfig::saveAllRegisterValues(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadRegisterValues
+//
+
+void CFrmNodeConfig::loadRegisterValues(void)
+{
 
 }

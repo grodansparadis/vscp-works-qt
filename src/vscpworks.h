@@ -402,6 +402,16 @@ class vscpworks : public QApplication {
     CFrmSession::guidDisplayFormat m_session_GuidDisplayFormat;
 
     // ------------------------------------------------------------------------
+    // Configuration
+    // ------------------------------------------------------------------------
+
+    /// Base for configuration values
+    numerical_base m_config_base;
+
+    /// Disable colors in configuration
+    bool m_config_bDisableColors;
+
+    // ------------------------------------------------------------------------
 
     /// URL for event database
     QUrl m_eventDbUrl;

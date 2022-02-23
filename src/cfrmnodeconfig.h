@@ -65,6 +65,7 @@ class QTableWidgetItem;
 class QTableWidget;
 class QToolBox;
 class QSpinBox;
+class QComboBox;
 class QTreeWidgetItem;
 QT_END_NAMESPACE
 
@@ -80,7 +81,7 @@ enum registerColumns {
   REG_COL_POS = 0,
   REG_COL_ACCESS,
   REG_COL_VALUE,
-  REG_COL_DESCRIPTION
+  REG_COL_NAME
 };
 
 enum remotevarColumns {
@@ -104,6 +105,7 @@ enum dmColumns {
 enum filesColumns {
   FILE_COL_NAME = 0
 };
+
 
 
 // ----------------------------------------------------------------------------
@@ -205,9 +207,51 @@ class CFrmNodeConfig : public QMainWindow
     void selectGuid(void);  // std::string strguid = "-"
 
     /*!
-      Double click on register
+      Disable/enable MDF colors
     */
-    void onTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
+    void disableColors(bool bColors);
+
+    /*!
+      Base combo chaged value
+      Update data 
+      @param index Index of the new value
+    */
+    void onBaseChange(int index);
+
+    /*!
+      A new interface as been selected
+      @param index Index for new interface
+    */
+    void onInterfaceChange(int index);
+
+    /*!
+      A new nodeid as been selected
+      @param nodeid New node id
+    */
+    void onNodeIdChange(int nodeid);
+
+    /*!
+      Double click on register line. This juste select the row for all columns except 
+      the value column. Double clicking on this column edit's the value.
+    */
+    void onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    /*!
+      Register value changed. If use edits the register value and it is changed
+      then this method is called.
+    */
+    void onRegisterTreeWidgetCellChanged(QTreeWidgetItem *item, int column);
+
+    /*!
+      Fill standard register data for already 
+      loaded registers
+    */
+    void renderStandardRegisters(void);
+
+    /*!
+      Fill register data from already loaded registers
+    */
+    void renderRegisters(void);
 
     /*!     
       Update data
@@ -223,7 +267,57 @@ class CFrmNodeConfig : public QMainWindow
       Update all registers and read MDF again
     */
     void updateFull(void);
- 
+
+    /*!
+      Read selected registers 
+    */
+    void readSelectedRegisterValues(void);
+
+    /*!
+      Write selected registers 
+    */
+    void writeSelectedRegisterValues(void);
+
+    /*!
+      Set selected registers to default value
+    */
+    void defaultSelectedRegisterValues(void);
+
+    /*!
+      Set all registers to default values
+    */
+    void defaultRegisterAll(void);
+
+    /*!
+      Undo selected register values
+    */
+    void undoSelectedRegisterValues(void);
+
+    /*!
+      Redo selected register values
+    */
+    void redoSelectedRegisterValues(void);
+
+    /*!
+      Show menu to select register page
+    */
+    void gotoRegisterPageMenu(void);
+
+    /*!
+      Save selected register values
+    */
+    void saveSelectedRegisterValues(void);
+
+    /*!
+      Save selected register values
+    */
+    void saveAllRegisterValues(void);
+
+    /*!
+      Save selected register values
+    */
+    void loadRegisterValues(void);
+
  signals:
 
     /// Data received from callback
@@ -234,11 +328,16 @@ class CFrmNodeConfig : public QMainWindow
     /// MDF definitions
     CMDF m_mdf;
 
-    /// Standard registers
+    /// VSCP standard registers
     CStandardRegisters m_stdregs;
 
-    /// Number of updates. Cleared afte4r a full update
+    /// VSCP device user registers
+    CUserRegisters m_userregs;
+
+    /// Number of updates. Cleared after a full update
     uint32_t m_nUpdates;
+
+    QTreeWidgetItem * m_StandardRegTopPage;
 
     // Holds widget items for register page headers
     // register -> header
@@ -264,6 +363,9 @@ class CFrmNodeConfig : public QMainWindow
 
     // The UI definition
     Ui::CFrmNodeConfig *ui;
+
+    /// Combo box for numerical base
+    QComboBox *m_baseComboBox;
 
     /// Text box for configuration GUID
     QLineEdit *m_guidConfig;

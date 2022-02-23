@@ -705,8 +705,7 @@ CFrmSession::createRxGroupBox()
     QStringList headers(
       QString(tr("Dir, VSCP Class, VSCP Type, id, GUID")).split(','));
     m_rxTable = new QTableWidget;
-    m_rxTable->setContextMenuPolicy(
-      Qt::CustomContextMenu); // Enable context menu
+    m_rxTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
     m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_rxTable->setAlternatingRowColors(true);
 
@@ -760,8 +759,7 @@ CFrmSession::createTxGridGroup()
 
     QStringList headers(QString(tr("x,Name,Period,Count,Event")).split(','));
     m_txTable = new QTableWidget;
-    m_txTable->setContextMenuPolicy(
-      Qt::CustomContextMenu); // Enable context menu
+    m_txTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
     m_txTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_txTable->setAlternatingRowColors(true);
     m_txTable->setColumnCount(5);

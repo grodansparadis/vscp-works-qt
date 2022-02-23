@@ -75,10 +75,6 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
     // * * * Session Window tab * * *
 
-
-
-
-
     // Max number of session events
     ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
 
@@ -96,6 +92,14 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
     // VSCP type token format  
     ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
+
+    // * * * config tab * * *
+
+    // Base for config values
+    ui->comboNumberBaseConfig->setCurrentIndex(static_cast<int>(pworks->m_config_base));
+
+    // Disable colors from MDF
+    ui->chkConfigDisableColors->setChecked(pworks->m_config_bDisableColors);
     
     // * * *  logging tab * * *
 
@@ -239,6 +243,10 @@ void CDlgMainSettings::done(int rv)
           static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
       pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
       pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
+
+      // Config window
+      pworks->m_config_base = static_cast<numerical_base>(ui->comboNumberBaseConfig->currentIndex());
+      pworks->m_config_bDisableColors = ui->chkConfigDisableColors->isChecked();
       
       // Logging
 

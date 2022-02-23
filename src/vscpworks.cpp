@@ -375,7 +375,11 @@ void vscpworks::loadSettings(void)
 
     m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();    
     m_session_bShowFullTypeToken =  settings.value("sessionShowFullTypeToken", true).toBool(); 
-    m_session_bAutoSaveTxRows =  settings.value("sessionAutoSaveTxRows", true).toBool();       
+    m_session_bAutoSaveTxRows =  settings.value("sessionAutoSaveTxRows", true).toBool(); 
+
+    // * * * Config * * * 
+    m_config_base = static_cast<numerical_base>(settings.value("configNumericBase", "1").toInt());     
+    m_config_bDisableColors =  settings.value("configDisableColors", false).toBool(); 
 
     // VSCP event database last load date/time
     // ---------------------------------------
@@ -499,6 +503,10 @@ void vscpworks::writeSettings()
     settings.setValue("sessionAutoConnect", m_session_bAutoConnect);
     settings.setValue("sessionShowFullTypeToken", m_session_bShowFullTypeToken);
     settings.setValue("sessionAutoSaveTxRows", m_session_bAutoSaveTxRows);
+
+    // * * * Config * * * 
+    settings.setValue("configNumericBase", static_cast<int>(m_config_base));
+    settings.setValue("configDisableColors", m_config_bDisableColors);
 
     writeConnections();
 
