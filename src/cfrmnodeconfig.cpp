@@ -1142,6 +1142,7 @@ void
 CFrmNodeConfig::renderStandardRegisters(void)
 {
   int rv;
+  std::string str;
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -1157,45 +1158,67 @@ CFrmNodeConfig::renderStandardRegisters(void)
 
   CRegisterWidgetItem* itemReg;
 
-  // Alarm status register
-  value = m_stdregs.getReg(0x80);
-  itemReg = new CRegisterWidgetItem("Register");
-  if (nullptr==itemReg) {
-    spdlog::critical("Failed to create standard register widget item");
-    return;
+  for (int i=0;
+       i < sizeof(m_stdregs.m_vscp_standard_registers_defs)/sizeof(__struct_standard_register_defs);
+       i++) {
+
+    // Register    
+    itemReg = new CRegisterWidgetItem("Register");
+    if (nullptr==itemReg) {
+      spdlog::critical("Failed to create standard register widget item");
+      return;
+    }
+
+    // Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | 
+    //                               Qt::ItemIsSelectable | 
+    //                               Qt::ItemNeverHasChildren;
+    //itemFlags |=  Qt::ItemIsEditable; 
+    itemReg->setFlags(Qt::ItemIsEnabled | 
+                      Qt::ItemIsSelectable | 
+                      /*Qt::ItemIsEditable | */
+                      Qt::ItemNeverHasChildren);
+
+    // Set foreground and background colors from MDF 
+    for (int j=0; j<4; j++) {
+      itemReg->setForeground(j, QBrush(QColor("black")));
+      itemReg->setBackground(j, QBrush(QColor(m_stdregs.m_vscp_standard_registers_defs[i].bgcolor)));
+    }
+      
+    // Register pospos
+    uint8_t reg = m_stdregs.m_vscp_standard_registers_defs[i].reg;
+    str = "0 : " + QString::number(reg, 10).toStdString();
+    str += " / 0x" + QString::number(reg, 16).toStdString();
+    itemReg->setText(REG_COL_POS, str.c_str());
+    itemReg->setTextAlignment(REG_COL_POS, Qt::AlignCenter);
+
+    // Access
+    if (0 == m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+      itemReg->setText(REG_COL_ACCESS, "r");
+    }
+    else if (1 == m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+      itemReg->setText(REG_COL_ACCESS, "rw");
+    }
+    else if (2 == m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+      itemReg->setText(REG_COL_ACCESS, "w");
+    }
+    else {
+      itemReg->setText(REG_COL_ACCESS, "?");
+    }
+    itemReg->setTextAlignment(REG_COL_ACCESS, Qt::AlignCenter);
+
+    // Value
+    value = m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg);
+    std::cout << "Value: " << QString::number(value, 10).toStdString() << std::endl;
+    itemReg->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString().c_str());
+    itemReg->setTextAlignment(REG_COL_VALUE, Qt::AlignCenter);
+
+    str = m_stdregs.m_vscp_standard_registers_defs[i].name;
+    //str += QString::number(sizeof(m_stdregs.m_vscp_standard_registers_defs)/sizeof(__struct_standard_register_defs)).toStdString();
+    itemReg->setText(REG_COL_NAME, str.c_str());
+    itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
+
+    itemTopStdReg->addChild(itemReg);
   }
-
-  // Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | 
-  //                               Qt::ItemIsSelectable | 
-  //                               Qt::ItemNeverHasChildren;
-  //itemFlags |=  Qt::ItemIsEditable; 
-  itemReg->setFlags(Qt::ItemIsEnabled | 
-                    Qt::ItemIsSelectable | 
-                    /*Qt::ItemIsEditable | */
-                    Qt::ItemNeverHasChildren);
-
-  // Set foreground and background colors from MDF 
-  for (int i=0; i<4; i++) {
-    itemReg->setForeground(i, QBrush(QColor("black")));
-    itemReg->setBackground(i, QBrush(QColor("orange")));
-  }
-    
-  // pos
-  itemReg->setText(REG_COL_POS, "0 : 128");
-  itemReg->setTextAlignment(REG_COL_POS, Qt::AlignCenter);
-
-  // Access
-  itemReg->setText(REG_COL_ACCESS, "r");
-  itemReg->setTextAlignment(REG_COL_ACCESS, Qt::AlignCenter);
-
-  // Value
-  itemReg->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString().c_str());
-  itemReg->setTextAlignment(REG_COL_VALUE, Qt::AlignCenter);
-
-  itemReg->setText(REG_COL_NAME, "Alarm status register");
-  itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
-  itemTopStdReg->addChild(itemReg);
-  
 }
 
 ///////////////////////////////////////////////////////////////////////////////

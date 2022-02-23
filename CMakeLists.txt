@@ -42,6 +42,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # --- System Libraries ---
 include(GNUInstallDirs)
 
+# Added extensions for curl lib find
+list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
+
 # --- Path to vscp --- 
 if (NOT DEFINED VSCP_PATH)
 set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
