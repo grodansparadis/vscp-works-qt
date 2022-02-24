@@ -318,6 +318,12 @@ class CFrmNodeConfig : public QMainWindow
     */
     void loadRegisterValues(void);
 
+    /*!
+      Fill HTML area with MDF information from
+      the selected device
+    */
+    void fillDeviceHtmlInfo(void);
+
  signals:
 
     /// Data received from callback
