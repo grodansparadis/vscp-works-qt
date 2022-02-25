@@ -1170,13 +1170,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
       return;
     }
 
-    // Qt::ItemFlags itemFlags = Qt::ItemIsEnabled |
-    //                               Qt::ItemIsSelectable |
-    //                               Qt::ItemNeverHasChildren;
-    // itemFlags |=  Qt::ItemIsEditable;
-    itemReg->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable |
-                      /*Qt::ItemIsEditable | */
-                      Qt::ItemNeverHasChildren);
+    Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
     // Set foreground and background colors from MDF
     for (int j = 0; j < 4; j++) {
@@ -1197,9 +1191,11 @@ CFrmNodeConfig::renderStandardRegisters(void)
     }
     else if (1 == m_stdregs.m_vscp_standard_registers_defs[i].access) {
       itemReg->setText(REG_COL_ACCESS, "rw");
+      itemFlags |= Qt::ItemIsEditable;
     }
     else if (2 == m_stdregs.m_vscp_standard_registers_defs[i].access) {
       itemReg->setText(REG_COL_ACCESS, "w");
+      itemFlags |= Qt::ItemIsEditable;
     }
     else {
       itemReg->setText(REG_COL_ACCESS, "?");
@@ -1222,6 +1218,8 @@ CFrmNodeConfig::renderStandardRegisters(void)
     // QString::number(sizeof(m_stdregs.m_vscp_standard_registers_defs)/sizeof(__struct_standard_register_defs)).toStdString();
     itemReg->setText(REG_COL_NAME, str.c_str());
     itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
+
+    itemReg->setFlags(itemFlags);
 
     itemTopStdReg->addChild(itemReg);
   }
@@ -1306,8 +1304,7 @@ CFrmNodeConfig::renderRegisters(void)
         continue;
       }
 
-      Qt::ItemFlags itemFlags =
-        Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
+      Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
       // Set foreground and background colors from MDF
       if (!pworks->m_config_bDisableColors) {
