@@ -359,8 +359,8 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
         QJsonArray json_if_array = m_connObject["interfaces"].toArray();
         std::string _str;
         size_t sz = json_if_array.size();
-        std::string sss =
-          json_if_array.at(0)["if-item"].toString().toStdString();
+        // std::string sss =
+        //   json_if_array.at(0)["if-item"].toString().toStdString();
         foreach (const QJsonValue& value, json_if_array) {
           // qDebug() << value.toObject().value("if-item").toString();
           // std::string if =
