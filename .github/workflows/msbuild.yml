@@ -87,7 +87,7 @@ jobs:
       run: |
         call bootstrap-vcpkg.bat
         vcpkg.exe integrate install 
-        vcpkg.exe install libcurl4-openssl-dev
+        vcpkg.exe install curl:x64-windows
         vcpkg.exe install expat:x64-windows
         vcpkg.exe install libmosquitto:x64-windows
         vcpkg.exe install qt5:x64-windows 

@@ -1158,7 +1158,8 @@ CFrmNodeConfig::renderStandardRegisters(void)
 
   CRegisterWidgetItem* itemReg;
 
-  for (int i = 0; i < sizeof(m_stdregs.m_vscp_standard_registers_defs) /
+  for (int i = 0; 
+        i < sizeof(m_stdregs.m_vscp_standard_registers_defs) /
                         sizeof(__struct_standard_register_defs);
        i++) {
 
@@ -1180,29 +1181,24 @@ CFrmNodeConfig::renderStandardRegisters(void)
     // Set foreground and background colors from MDF
     for (int j = 0; j < 4; j++) {
       itemReg->setForeground(j, QBrush(QColor("black")));
-      itemReg->setBackground(
-        j,
-        QBrush(QColor(m_stdregs.m_vscp_standard_registers_defs[i].bgcolor)));
+      itemReg->setBackground(j, QBrush(QColor(m_stdregs.m_vscp_standard_registers_defs[i].bgcolor)));
     }
 
     // Register pospos
     uint8_t reg = m_stdregs.m_vscp_standard_registers_defs[i].reg;
-    str         = "0 : " + QString::number(reg, 10).toStdString();
+    str = "0 : " + QString::number(reg, 10).toStdString();
     str += " / 0x" + QString::number(reg, 16).toStdString();
     itemReg->setText(REG_COL_POS, str.c_str());
     itemReg->setTextAlignment(REG_COL_POS, Qt::AlignCenter);
 
     // Access
-    if (0 ==
-        m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+    if (0 == m_stdregs.m_vscp_standard_registers_defs[i].access) {
       itemReg->setText(REG_COL_ACCESS, "r");
     }
-    else if (1 == m_stdregs.getReg(
-                    m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+    else if (1 == m_stdregs.m_vscp_standard_registers_defs[i].access) {
       itemReg->setText(REG_COL_ACCESS, "rw");
     }
-    else if (2 == m_stdregs.getReg(
-                    m_stdregs.m_vscp_standard_registers_defs[i].reg)) {
+    else if (2 == m_stdregs.m_vscp_standard_registers_defs[i].access) {
       itemReg->setText(REG_COL_ACCESS, "w");
     }
     else {
