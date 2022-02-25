@@ -359,20 +359,8 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
         QJsonArray json_if_array = m_connObject["interfaces"].toArray();
         std::string _str;
         size_t sz = json_if_array.size();
-        // std::string sss =
-        //   json_if_array.at(0)["if-item"].toString().toStdString();
         foreach (const QJsonValue& value, json_if_array) {
-          // qDebug() << value.toObject().value("if-item").toString();
-          // std::string if =
-          // value.toObject().value("if-item").toString().toStdString();
-          // std::cout << "if = " << if << std::endl;
-          m_comboInterface->addItem(
-            value.toObject().value("if-item").toString());
-          //_str = value.toObject()["if-item"].toString().toStdString();
-          // if (value.toObject()["name"].toString() == interface) {
-          //   _str = value.toObject();
-          //   //break;
-          // }
+          m_comboInterface->addItem(value.toObject().value("if-item").toString());
         }
 
         m_comboInterface->setCurrentText(interface.c_str());
@@ -1733,9 +1721,9 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
 
   html += "</font><b>Page select:</b><font color=\"#009900\"> ";
   html += QString::number(m_stdregs.getRegisterPage()).toStdString();
-  html += " MSB =";
+  html += " MSB=";
   html += QString::number(m_stdregs.getReg(VSCP_STD_REGISTER_PAGE_SELECT_MSB)).toStdString();
-  html += " LSB = ";
+  html += " LSB= ";
   html += QString::number(m_stdregs.getReg(VSCP_STD_REGISTER_PAGE_SELECT_LSB)).toStdString();
   html += "<br>";
 

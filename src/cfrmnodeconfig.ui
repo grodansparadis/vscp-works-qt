@@ -613,8 +613,8 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="icon">
     <iconset resource="vscpworks.qrc">
-     <normaloff>:/disconnect.png</normaloff>
-     <normalon>:/connect.png</normalon>:/disconnect.png</iconset>
+     <normaloff>:/images/svg/plug-disconnected-black.svg</normaloff>
+     <normalon>:/images/svg/connect.svg</normalon>:/images/svg/plug-disconnected-black.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Connect</string>
@@ -626,7 +626,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionUpdate">
    <property name="icon">
     <iconset resource="vscpworks.qrc">
-     <normaloff>:/down.png</normaloff>:/down.png</iconset>
+     <normaloff>:/images/svg/update-arrows-square.svg</normaloff>:/images/svg/update-arrows-square.svg</iconset>
    </property>
    <property name="text">
     <string>&amp;Update</string>
@@ -680,7 +680,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="icon">
     <iconset resource="vscpworks.qrc">
-     <normaloff>:/page_swap.png</normaloff>:/page_swap.png</iconset>
+     <normaloff>:/images/svg/left-arrow.svg</normaloff>:/images/svg/left-arrow.svg</iconset>
    </property>
    <property name="text">
     <string>Defaults</string>
@@ -692,7 +692,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionUpdateLocal">
    <property name="icon">
     <iconset resource="vscpworks.qrc">
-     <normaloff>:/folder_previous.png</normaloff>:/folder_previous.png</iconset>
+     <normaloff>:/images/svg/rotate-update-opaque.svg</normaloff>:/images/svg/rotate-update-opaque.svg</iconset>
    </property>
    <property name="text">
     <string>Update &amp;Local</string>
@@ -704,7 +704,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionUpdateFull">
    <property name="icon">
     <iconset resource="vscpworks.qrc">
-     <normaloff>:/folder_down.png</normaloff>:/folder_down.png</iconset>
+     <normaloff>:/images/svg/rotate-update-blue.svg</normaloff>:/images/svg/rotate-update-blue.svg</iconset>
    </property>
    <property name="text">
     <string>Update &amp;Full</string>

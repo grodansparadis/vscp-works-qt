@@ -1,6 +1,17 @@
 <RCC>
   <qresource>
+    <file>../images/svg/search.svg</file>
+    <file>../images/svg/nodes.svg</file>
+    <file>../images/svg/plug-disconnected-black.svg</file>
+    <file>../images/svg/plug-disconnected-white.svg</file>
+    <file>../images/svg/connect.svg</file>
     <file alias="connect.png">../images/connect.png</file>
+    <file>../images/svg/left-arrow.svg</file>
+    <file>../images/svg/update-clock-clock.svg</file>
+    <file>../images/svg/rotate-update-blue.svg</file>
+    <file>../images/svg/rotate-update-opaque.svg</file>
+    <file>../images/svg/update-arrow-up.svg</file>
+    <file>../images/svg/update-arrows-square.svg</file>
     <file alias="disconnect.png">../images/disconnect.png</file>
     <file alias="clear.png">../images/clear.png</file>
     <file alias="accept.png">../images/png/128x128/accept.png</file>
@@ -17,13 +28,10 @@
     <file alias="application_next.png">../images/png/128x128/application_next.png</file>
     <file alias="application_lock.png">../images/png/128x128/application_lock.png</file>
     <file alias="application_edit.png">../images/png/128x128/application_edit.png</file>
-    
     <file alias="printer_search.png">../images/png/128x128/printer_search.png</file>
-
     <file alias="search.png">../images/png/128x128/search.png</file>
     <file alias="search_add.png">../images/png/128x128/search_add.png</file>
     <file alias="search_remove.png">../images/png/128x128/search_remove.png</file>
-
     <file alias="folder.png">../images/png/128x128/folder.png</file>
     <file alias="folder_accept.png">../images/png/128x128/folder_accept.png</file>
     <file alias="folder_add.png">../images/png/128x128/folder_add.png</file>
@@ -38,13 +46,11 @@
     <file alias="folder_process.png">../images/png/128x128/folder_process.png</file>
     <file alias="folder_remove.png">../images/png/128x128/folder_remove.png</file>
     <file alias="folder_up.png">../images/png/128x128/folder_up.png</file>
-
     <file alias="note_accept.png">../images/png/128x128/note_accept.png</file>
     <file alias="note_add.png">../images/png/128x128/note_add.png</file>
     <file alias="note_edit.png">../images/png/128x128/note_edit.png</file>
     <file alias="note_remove.png">../images/png/128x128/note_remove.png</file>
     <file alias="notes_edit.png">../images/png/128x128/notes_edit.png</file>
-
     <file alias="page.png">../images/png/128x128/page.png</file>
     <file alias="page_accept.png">../images/png/128x128/page_accept.png</file>
     <file alias="page_add.png">../images/png/128x128/page_add.png</file>
@@ -57,7 +63,6 @@
     <file alias="page_search.png">../images/png/128x128/page_search.png</file>
     <file alias="page_swap.png">../images/png/128x128/page_swap.png</file>
     <file alias="page_up.png">../images/png/128x128/page_up.png</file>
-
     <file alias="down.png">../images/png/128x128/down.png</file>
     <file alias="attachment.png">../images/png/64x64/attachment.png</file>
     <file alias="connect_chain.png">../images/linkconnected_87208.png</file>
