@@ -553,7 +553,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
-    <addaction name="actionActionLoadDefaults"/>
+    <addaction name="actionLoadDefaults"/>
     <addaction name="separator"/>
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
@@ -599,7 +599,7 @@ p, li { white-space: pre-wrap; }
    <addaction name="actionUpdate"/>
    <addaction name="actionUpdateFull"/>
    <addaction name="actionUpdateLocal"/>
-   <addaction name="actionActionLoadDefaults"/>
+   <addaction name="actionLoadDefaults"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -632,7 +632,7 @@ p, li { white-space: pre-wrap; }
     <string>&amp;Update</string>
    </property>
    <property name="toolTip">
-    <string>Update configuration data</string>
+    <string>Update configuration data (write changed/read)</string>
    </property>
   </action>
   <action name="actionClose">
@@ -674,7 +674,7 @@ p, li { white-space: pre-wrap; }
     <string>Load MDF from local file</string>
    </property>
   </action>
-  <action name="actionActionLoadDefaults">
+  <action name="actionLoadDefaults">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -698,7 +698,7 @@ p, li { white-space: pre-wrap; }
     <string>Update &amp;Local</string>
    </property>
    <property name="toolTip">
-    <string>Load local MDF</string>
+    <string>Update using local MDF</string>
    </property>
   </action>
   <action name="actionUpdateFull">

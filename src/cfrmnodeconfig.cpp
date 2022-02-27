@@ -1219,8 +1219,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
 
     // Value
     value = m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg);
-    std::cout << "Value: " << QString::number(value, 10).toStdString()
-              << std::endl;
+    std::cout << "Value: " << QString::number(value, 10).toStdString() << std::endl;
     itemReg->setText(
       REG_COL_VALUE,
       pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
@@ -1289,7 +1288,7 @@ CFrmNodeConfig::renderRegisters(void)
   for (auto page : pages) {
 
     spdlog::trace("MDF page = {}", page);
-    std::cout << "MDF page = " << page << std::endl;
+    //std::cout << "MDF page = " << page << std::endl;
 
     // CRegisterPage *preg = m_userregs.getPage(page);
 
@@ -1544,6 +1543,40 @@ CFrmNodeConfig::updateFull(void)
 void
 CFrmNodeConfig::readSelectedRegisterValues(void)
 {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // CAN4VSCP interface
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;
+  // node id
+  guidNode.setLSB(m_nodeidConfig->value());
+
+  QList<QTreeWidgetItem *>listSelected = ui->treeWidgetRegisters->selectedItems();
+  for (auto item: listSelected) {
+    if (item->type() == TREE_LIST_REGISTER_TYPE) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem *)item;
+      uint8_t value = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString()); 
+      if (VSCP_ERROR_SUCCESS == vscp_readLevel1Register(*m_vscpClient,
+                                                          guidNode,
+                                                          guidInterface,
+                                                          itemReg->m_regPage,
+                                                          itemReg->m_regOffset,
+                                                          value )) {                                                           
+        item->setText( REG_COL_VALUE,
+                          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                          .toStdString().c_str()); 
+        for (int i=0; i<4; i++) {
+          item->setForeground(i, QBrush(Qt::black));
+        }                            
+      }
+      else {
+        spdlog::error("Failed to read register");
+      }
+    }  
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
