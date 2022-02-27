@@ -88,7 +88,8 @@
 CRegisterWidgetItem::CRegisterWidgetItem(const QString& text)
   : QTreeWidgetItem(QTreeWidgetItem::UserType + 1)
 {
-  ;
+  m_regPage = 0;
+  m_regOffset = 0;
 }
 
 CRegisterWidgetItem::~CRegisterWidgetItem()
@@ -991,6 +992,29 @@ CFrmNodeConfig::disableColors(bool bColors)
   pworks->m_config_bDisableColors = bColors;
 
   // Disable/Enable colors for standard registers
+  if (bColors) {
+    for (int i = 0; i < m_StandardRegTopPage->childCount(); i++) {
+      CRegisterWidgetItem *child = (CRegisterWidgetItem *)m_StandardRegTopPage->child(i);
+      for (int j = 0; j < 4; j++) {
+        if ( child->type() == TREE_LIST_REGISTER_TYPE) {
+          //child->setForeground(j, child->parent()->foreground(j));
+          child->setBackground(j, child->parent()->background(j));  
+        }
+      }
+    }
+  }
+  else {
+    for (int i = 0; i < m_StandardRegTopPage->childCount(); i++){
+      CRegisterWidgetItem *child = (CRegisterWidgetItem *)m_StandardRegTopPage->child(i);
+      for (int j = 0; j < 4; j++) { 
+        if ( child->type() == TREE_LIST_REGISTER_TYPE) {
+          //child->setForeground(j, QBrush(QColor("black")));
+          child->setBackground(j, QBrush(QColor(m_stdregs.m_vscp_standard_registers_defs[i].bgcolor)));  
+        }
+      }
+    }
+  }
+  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1134,8 +1158,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QTreeWidgetItem* itemTopStdReg =
-    new QTreeWidgetItem(QTreeWidgetItem::UserType);
+  QTreeWidgetItem* itemTopStdReg = new QTreeWidgetItem(QTreeWidgetItem::UserType);
   itemTopStdReg->setText(REG_COL_POS, "Standard registers");
   itemTopStdReg->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
   itemTopStdReg->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
@@ -1157,6 +1180,10 @@ CFrmNodeConfig::renderStandardRegisters(void)
       spdlog::critical("Failed to create standard register widget item");
       return;
     }
+
+    // Save register pos for later reference
+    itemReg->m_regPage = 0;
+    itemReg->m_regOffset = m_stdregs.m_vscp_standard_registers_defs[i].reg;
 
     Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
@@ -1266,8 +1293,7 @@ CFrmNodeConfig::renderRegisters(void)
 
     // CRegisterPage *preg = m_userregs.getPage(page);
 
-    QTreeWidgetItem* itemTopReg1 =
-      new QTreeWidgetItem(QTreeWidgetItem::UserType);
+    QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);
     itemTopReg1->setText(REG_COL_POS, "Page " + QString::number(page));
     itemTopReg1->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
     itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
@@ -1297,15 +1323,17 @@ CFrmNodeConfig::renderRegisters(void)
       // Set foreground and background colors from MDF
       if (!pworks->m_config_bDisableColors) {
         for (int i = 0; i < 4; i++) {
-          itemReg->setForeground(i,
-                                 QBrush(QColor(pregmdf->getForegroundColor())));
-          itemReg->setBackground(i,
-                                 QBrush(QColor(pregmdf->getBackgroundColor())));
+          itemReg->setForeground(i, QBrush(QColor(pregmdf->getForegroundColor())));
+          itemReg->setBackground(i, QBrush(QColor(pregmdf->getBackgroundColor())));
         }
       }
 
+      // Save reister info so we can find info later
+      itemReg->m_regPage = page;
+      itemReg->m_regOffset = pregmdf->getOffset();
+
       // Save a pointer to register information
-      itemReg->m_pmdfreg = pregmdf;
+      //itemReg->m_pmdfreg = pregmdf;
 
       // page : offset in selected base (not binary)
       char buf[64];

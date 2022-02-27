@@ -106,7 +106,7 @@ enum filesColumns {
   FILE_COL_NAME = 0
 };
 
-
+#define TREE_LIST_REGISTER_TYPE (QTreeWidgetItem::UserType + 1)
 
 // ----------------------------------------------------------------------------
 
@@ -124,7 +124,17 @@ class CRegisterWidgetItem : public QTreeWidgetItem
     /*!
       Pointer to MDF register row for this tree item
     */
-    CMDF_Register *m_pmdfreg;
+    //CMDF_Register *m_pmdfreg;
+
+    /*!
+      Register page
+    */
+    uint16_t m_regPage;
+
+    /*!
+      Register offset
+    */
+    uint32_t m_regOffset;
 };
 
 
@@ -343,7 +353,8 @@ class CFrmNodeConfig : public QMainWindow
     /// Number of updates. Cleared after a full update
     uint32_t m_nUpdates;
 
-    QTreeWidgetItem * m_StandardRegTopPage;
+    // Points to top item for standar registers
+    QTreeWidgetItem *m_StandardRegTopPage;
 
     // Holds widget items for register page headers
     // register -> header
