@@ -1480,7 +1480,7 @@ delay(uint16_t n)
 int
 CFrmNodeConfig::doUpdate(std::string mdfpath)
 {
-  //m_nUpdates = 0;
+  // m_nUpdates = 0;
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
