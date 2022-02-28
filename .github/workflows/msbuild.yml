@@ -82,18 +82,16 @@ jobs:
         path: vcpkg
         key: ${{ runner.os }}-vcpkg
 
-    # - name: Checkout vcpkg repo
-    #   uses: actions/checkout@v2
-    #   with:
-    #     repository: microsoft/vcpkg
-    #     path: vcpkg    
+    - name: Checkout vcpkg repo
+      uses: actions/checkout@v2
+      with:
+        repository: microsoft/vcpkg
+        path: vcpkg    
 
     - name: Integrate with development environment and install
       shell: cmd
-      #working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
+      working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        git clone https://github.com/microsoft/vcpkg
-        cd vcpkg
         vcpkg\bootstrap-vcpkg.bat
         vcpkg\vcpkg.exe integrate install 
         vcpkg\vcpkg.exe install curl:x64-windows
