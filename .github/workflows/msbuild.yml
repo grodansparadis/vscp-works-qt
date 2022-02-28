@@ -92,19 +92,19 @@ jobs:
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        vcpkg\bootstrap-vcpkg.bat
-        vcpkg\vcpkg.exe integrate install 
-        vcpkg\vcpkg.exe install curl:x64-windows
-        vcpkg\vcpkg.exe install expat:x64-windows
-        vcpkg\vcpkg.exe install spdlog:x64-windows
-        vcpkg\vcpkg.exe install libmosquitto:x64-windows
-        vcpkg\vcpkg.exe install qt5:x64-windows 
-        vcpkg\vcpkg.exe install qt5-charts:x64-windows
-        vcpkg\vcpkg.exe install pthread:x64-windows 
-        vcpkg\vcpkg.exe install dlfcn-win32:x64-windows 
-        vcpkg\vcpkg.exe install openssl:x64-windows 
-        vcpkg\vcpkg.exe install paho-mqtt:x64-windows 
-        vcpkg\vcpkg.exe install spdlog:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\bootstrap-vcpkg.bat
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe integrate install 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install curl:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install expat:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install spdlog:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install libmosquitto:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install qt5:x64-windows 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install qt5-charts:x64-windows
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install pthread:x64-windows 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install dlfcn-win32:x64-windows 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install openssl:x64-windows 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install paho-mqtt:x64-windows 
+        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install spdlog:x64-windows
 
     # - name: Setup cmake
     #   uses: jwlawson/actions-setup-cmake@v1.12
@@ -129,7 +129,7 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{env.GITHUB_WORKSPACE}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="../vscp/"
+        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{env.GITHUB_WORKSPACE}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{env.GITHUB_WORKSPACE}}/vscp/"
 
     - name: Build
       #working-directory: ${{env.GITHUB_WORKSPACE}}/build
