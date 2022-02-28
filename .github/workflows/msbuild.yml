@@ -98,7 +98,6 @@ jobs:
         vcpkg.exe install openssl:x64-windows 
         vcpkg.exe install paho-mqtt:x64-windows 
         vcpkg.exe install spdlog:x64-windows
-        vcpkg.exe install co[libcurl]:x64-windows
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v1.9
