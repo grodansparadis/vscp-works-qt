@@ -177,7 +177,14 @@ class CFrmNodeConfig : public QMainWindow
         indicate this
     */
     void doDisconnectFromRemoteHost(void);
-    
+
+    /*!     
+      Do the actual update
+      @param mdfpath Path to local MDF file. If empty then
+                      the MDF file is read from the remote device.
+      @return VSCP_ERROR_SUCCESS on success or error code on failure.
+    */
+    int doUpdate(std::string mdfpath);
     
  public slots:
     
@@ -263,15 +270,16 @@ class CFrmNodeConfig : public QMainWindow
     */
     void renderRegisters(void);
 
+    /*!
+      Write all changed registers to the device
+      @return VSCP_ERROR_SUCCESS on success, error code on failure.
+    */
+    int writeChanges(void);
+
     /*!     
       Update data
     */
     void update(void);
-
-    /*!
-      Update changed registers
-    */
-    void updateChanged();
 
     /*!
       Update all registers and read MDF again

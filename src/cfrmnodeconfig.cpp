@@ -82,6 +82,7 @@
 #include <QXmlStreamReader>
 #include <QtSql>
 #include <QtWidgets>
+#include <QTreeWidgetItemIterator>
 
 // ----------------------------------------------------------------------------
 
@@ -1089,18 +1090,44 @@ void
 CFrmNodeConfig::update(void)
 {
   if (m_connObject["bfull-l2"].toBool()) {
+
   }
   else {
     if (!m_nUpdates) {
-      // Update all registers
-      updateFull();
+      // Read in and render all registers
+      if (VSCP_ERROR_SUCCESS != doUpdate("")) {
+        spdlog::error("Update: Failed to read and render registers from the remote device.");
+        QMessageBox::information(
+          this,
+          tr(APPNAME),
+          tr("Failed to read and render registers from the remote device."),
+          QMessageBox::Ok);
+      }
     }
     else {
-      // update changed registers
-      // updateChanged();
-      updateFull();
+      // Write changes
+      if (VSCP_ERROR_SUCCESS != writeChanges()) {
+        spdlog::error("Update: Failed to write changes to remote device.");
+        int ret = QMessageBox::warning(this, tr(APPNAME),
+                               tr("Failed to write changes to remote device. Please retry operation."),
+                               QMessageBox::Ok );
+        
+        return;   
+      }
+
     }
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateFull
+//
+
+void
+CFrmNodeConfig::updateFull(void)
+{
+  m_nUpdates = 0;
+  update(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1379,13 +1406,62 @@ CFrmNodeConfig::renderRegisters(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// updateChanged
+// writeChanges
 //
 
-void
-CFrmNodeConfig::updateChanged(void)
+int
+CFrmNodeConfig::writeChanges(void)
+
 {
-  ;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  if (!m_vscpClient->isConnected()) {
+    spdlog::error("Aborted write changed register(s) due to no connection.");
+    return VSCP_ERROR_CONNECTION;                               
+  }
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+
+  // CAN4VSCP interface
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;  
+  guidNode.setLSB(m_nodeidConfig->value());  // Set node id
+
+  QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
+  while (*item) {
+    if ((*item)->type() == TREE_LIST_REGISTER_TYPE && 
+        QBrush(QColor("red")) == (*item)->foreground(REG_COL_VALUE)) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem *)(*item);
+      uint8_t value = vscp_readStringValue((*item)->text(REG_COL_VALUE).toStdString()); 
+      if (VSCP_ERROR_SUCCESS == vscp_writeLevel1Register(*m_vscpClient,
+                                                          guidNode,
+                                                          guidInterface,
+                                                          itemReg->m_regPage,
+                                                          itemReg->m_regOffset,
+                                                          value )) {                                                           
+        m_bInternalChange = true;
+        (*item)->setText( REG_COL_VALUE,
+                        pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                        .toStdString().c_str()); 
+        (*item)->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+        m_bInternalChange = false;                                                  
+      }
+      else {
+        spdlog::error("Failed to write changed registers");
+        ui->statusBar->showMessage(tr("Failed to write changed registers"));
+        return VSCP_ERROR_COMMUNICATION;
+      }
+    }
+    ++item;
+  }
+
+  ui->statusBar->showMessage(tr("Changed registers written OK"));
+  QApplication::restoreOverrideCursor();
+
+  return VSCP_ERROR_SUCCESS;
 }
 
 static void
@@ -1398,13 +1474,13 @@ delay(uint16_t n)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// updateFull
+// doUpdate
 //
 
-void
-CFrmNodeConfig::updateFull(void)
+int
+CFrmNodeConfig::doUpdate(std::string mdfpath)
 {
-  m_nUpdates = 0;
+  //m_nUpdates = 0;
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -1418,7 +1494,7 @@ CFrmNodeConfig::updateFull(void)
   if (m_vscpConnType == CVscpClient::connType::NONE) {
     ui->statusBar->removeWidget(pbar);
     QApplication::restoreOverrideCursor();
-    return;
+    return VSCP_ERROR_CONNECTION;
   }
 
   // CAN4VSCP interface
@@ -1439,12 +1515,11 @@ CFrmNodeConfig::updateFull(void)
 
   int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface);
   if (VSCP_ERROR_SUCCESS != rv) {
-    ui->statusBar->showMessage(
-      tr("Failed to read standard registers from device."));
+    ui->statusBar->showMessage(tr("Failed to read standard registers from device."));
     spdlog::error("Failed to init standard registers {0}", rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
-    return;
+    return VSCP_ERROR_COMMUNICATION;
   }
 
   QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -1491,7 +1566,7 @@ CFrmNodeConfig::updateFull(void)
     spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
-    return;
+    return VSCP_ERROR_COMMUNICATION;
   }
 
   pbar->setValue(75);
@@ -1508,7 +1583,7 @@ CFrmNodeConfig::updateFull(void)
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
-    return;
+    return VSCP_ERROR_PARSING;
   }
 
   pbar->setValue(80);
@@ -1524,6 +1599,8 @@ CFrmNodeConfig::updateFull(void)
 
   QApplication::restoreOverrideCursor();
   ui->statusBar->removeWidget(pbar);
+
+  return VSCP_ERROR_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1536,7 +1613,7 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (!m_vscpClient->isConnected()) {
-    int ret = QMessageBox::warning(this, APPNAME,
+    int ret = QMessageBox::warning(this, tr(APPNAME),
                                tr("Need to be connected to perform this operation."),
                                QMessageBox::Ok );
     spdlog::error("Aborted read register(s) due to no connection.");
@@ -1593,7 +1670,7 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (!m_vscpClient->isConnected()) {
-    int ret = QMessageBox::warning(this, APPNAME,
+    int ret = QMessageBox::warning(this, tr(APPNAME),
                                tr("Need to be connected to perform this operation."),
                                QMessageBox::Ok );
     spdlog::error("Aborted read register(s) due to no connection.");
@@ -1647,7 +1724,7 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
 void
 CFrmNodeConfig::defaultSelectedRegisterValues(void)
 {
-  ;
+  writeChanges();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

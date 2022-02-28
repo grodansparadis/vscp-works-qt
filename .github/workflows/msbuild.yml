@@ -82,29 +82,30 @@ jobs:
         path: vcpkg
         key: ${{ runner.os }}-vcpkg
 
-    - name: Checkout vcpkg repo
-      uses: actions/checkout@v2
-      with:
-        repository: microsoft/vcpkg
-        path: vcpkg    
+    # - name: Checkout vcpkg repo
+    #   uses: actions/checkout@v2
+    #   with:
+    #     repository: microsoft/vcpkg
+    #     path: vcpkg    
 
     - name: Integrate with development environment and install
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        call bootstrap-vcpkg.bat
-        vcpkg.exe integrate install 
-        vcpkg.exe install curl:x64-windows
-        vcpkg.exe install expat:x64-windows
-        vcpkg.exe install spdlog:x64-windows
-        vcpkg.exe install libmosquitto:x64-windows
-        vcpkg.exe install qt5:x64-windows 
-        vcpkg.exe install qt5-charts:x64-windows
-        vcpkg.exe install pthread:x64-windows 
-        vcpkg.exe install dlfcn-win32:x64-windows 
-        vcpkg.exe install openssl:x64-windows 
-        vcpkg.exe install paho-mqtt:x64-windows 
-        vcpkg.exe install spdlog:x64-windows
+        git clone https://github.com/microsoft/vcpkg
+        vcpkg\bootstrap-vcpkg.bat
+        vcpkg\vcpkg.exe integrate install 
+        vcpkg\vcpkg.exe install curl:x64-windows
+        vcpkg\vcpkg.exe install expat:x64-windows
+        vcpkg\vcpkg.exe install spdlog:x64-windows
+        vcpkg\vcpkg.exe install libmosquitto:x64-windows
+        vcpkg\vcpkg.exe install qt5:x64-windows 
+        vcpkg\vcpkg.exe install qt5-charts:x64-windows
+        vcpkg\vcpkg.exe install pthread:x64-windows 
+        vcpkg\vcpkg.exe install dlfcn-win32:x64-windows 
+        vcpkg\vcpkg.exe install openssl:x64-windows 
+        vcpkg\vcpkg.exe install paho-mqtt:x64-windows 
+        vcpkg\vcpkg.exe install spdlog:x64-windows
 
     # - name: Setup cmake
     #   uses: jwlawson/actions-setup-cmake@v1.12
