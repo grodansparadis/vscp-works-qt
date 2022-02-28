@@ -65,6 +65,8 @@ using namespace kainjow::mustache;
 Q_DECLARE_METATYPE(vscpEvent)
 Q_DECLARE_METATYPE(vscpEventEx)
 
+#define APPNAME tr("VSCP Works+")
+
 // home folder is used for storage of program configuration
 // system folder holds databases etc
 #ifdef WIN32

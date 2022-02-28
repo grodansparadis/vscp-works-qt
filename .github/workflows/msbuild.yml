@@ -86,7 +86,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         repository: microsoft/vcpkg
-        path: vcpkg'    
+        path: vcpkg    
 
     - name: Integrate with development environment and install
       shell: cmd
@@ -106,8 +106,15 @@ jobs:
         vcpkg.exe install paho-mqtt:x64-windows 
         vcpkg.exe install spdlog:x64-windows
 
-    - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v1.9
+    # - name: Setup cmake
+    #   uses: jwlawson/actions-setup-cmake@v1.12
+    # - name: Cmake
+    #   run: |
+    #     git clone https://github.com/microsoft/vcpkg
+    #     vcpkg\bootstrap-vcpkg.bat
+      #  vcpkg\vcpkg install cpprestsdk:x64-windows
+      #  cd my-project\build
+      #  cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\src\vcpkg\scripts\buildsystems\vcpkg.cmake
 
     - name: Create Build Environment
       run: |
@@ -127,4 +134,6 @@ jobs:
       #working-directory: ${{env.GITHUB_WORKSPACE}}/build
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+      run: |
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+        msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}

@@ -1535,6 +1535,14 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+  if (!m_vscpClient->isConnected()) {
+    int ret = QMessageBox::warning(this, APPNAME,
+                               tr("Need to be connected to perform this operation."),
+                               QMessageBox::Ok );
+    spdlog::error("Aborted read register(s) due to no connection.");
+    return;                               
+  }
+
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
   // CAN4VSCP interface
@@ -1582,19 +1590,68 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
 void
 CFrmNodeConfig::writeSelectedRegisterValues(void)
 {
+   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  if (!m_vscpClient->isConnected()) {
+    int ret = QMessageBox::warning(this, APPNAME,
+                               tr("Need to be connected to perform this operation."),
+                               QMessageBox::Ok );
+    spdlog::error("Aborted read register(s) due to no connection.");
+    return;                               
+  }
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+
+  // CAN4VSCP interface
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;  
+  guidNode.setLSB(m_nodeidConfig->value());  // Set node id
+
+  QList<QTreeWidgetItem *>listSelected = ui->treeWidgetRegisters->selectedItems();
+  for (auto item: listSelected) {
+    if (item->type() == TREE_LIST_REGISTER_TYPE) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem *)item;
+      uint8_t value = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString()); 
+      if (VSCP_ERROR_SUCCESS == vscp_writeLevel1Register(*m_vscpClient,
+                                                          guidNode,
+                                                          guidInterface,
+                                                          itemReg->m_regPage,
+                                                          itemReg->m_regOffset,
+                                                          value )) {                                                           
+        m_bInternalChange = true;
+        item->setText( REG_COL_VALUE,
+                        pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                        .toStdString().c_str());
+        item->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+        m_bInternalChange = false;
+      }
+      else {
+        spdlog::error("Failed to write register(s)");
+        ui->statusBar->showMessage(tr("Failed to write register(s)"));
+        return;
+      }
+    }
+  }
+
+  ui->statusBar->showMessage(tr("Register(s) written OK"));
+  QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// defaultSelectedRegisterValues
 //
 
 void
 CFrmNodeConfig::defaultSelectedRegisterValues(void)
 {
+  ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// defaultRegisterAll
 //
 
 void
@@ -1603,7 +1660,7 @@ CFrmNodeConfig::defaultRegisterAll(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// undoSelectedRegisterValues
 //
 
 void
@@ -1612,7 +1669,7 @@ CFrmNodeConfig::undoSelectedRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// redoSelectedRegisterValues
 //
 
 void
@@ -1621,7 +1678,7 @@ CFrmNodeConfig::redoSelectedRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// gotoRegisterPageMenu
 //
 
 void
@@ -1630,7 +1687,7 @@ CFrmNodeConfig::gotoRegisterPageMenu(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// saveSelectedRegisterValues
 //
 
 void
@@ -1639,7 +1696,7 @@ CFrmNodeConfig::saveSelectedRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// saveAllRegisterValues
 //
 
 void
