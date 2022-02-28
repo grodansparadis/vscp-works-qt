@@ -117,9 +117,9 @@ jobs:
       #  cd my-project\build
       #  cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\src\vcpkg\scripts\buildsystems\vcpkg.cmake
 
-    # - name: Create Build Environment
-    #   run: |
-    #     mkdir build && cd build
+    - name: Create Build Environment
+      run: |
+        mkdir build
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
@@ -130,8 +130,6 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        mkdir build
-        cd build
         ls ../vcpkg
         cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{env.GITHUB_WORKSPACE}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="../vscp/"
 
