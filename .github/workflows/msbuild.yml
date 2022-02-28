@@ -92,8 +92,8 @@ jobs:
       shell: cmd
       working-directory: ${{ github.workspace }}/vcpkg
       run: |
-        call bootstrap-vcpkg.bat
-        .\vcpkg.exe integrate install 
+        call ${{ github.workspace }}\vcpkg\bootstrap-vcpkg.bat
+        ${{ github.workspace }}\vcpkg.exe integrate install 
         ${{ github.workspace }}vcpkg\vcpkg.exe install curl:x64-windows
         ${{ github.workspace }}vcpkg\vcpkg.exe install expat:x64-windows
         ${{ github.workspace }}vcpkg\vcpkg.exe install spdlog:x64-windows
@@ -114,7 +114,7 @@ jobs:
     #     vcpkg\bootstrap-vcpkg.bat
       #  vcpkg\vcpkg install cpprestsdk:x64-windows
       #  cd my-project\build
-      #  cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\src\vcpkg\scripts\buildsystems\vcpkg.cmake
+      #  cmake .. -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake
 
     - name: Create Build Environment
       run: |
@@ -129,7 +129,7 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{ github.workspace }}/vscp/"
+        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{ github.workspace }}/vscp/"
 
     - name: Build
       #working-directory: ${{ github.workspace }}/build
