@@ -395,6 +395,12 @@ class CFrmNodeConfig : public QMainWindow
 
     // Contains interface information
     QComboBox *m_comboInterface;   
+
+    /*! 
+      Set to true when the stem updates a cell. Prevents
+      value cells from being marked red.
+    */
+    bool m_bInternalChange;
     
 };
 

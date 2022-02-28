@@ -139,6 +139,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_StandardRegTopPage = nullptr;   // No standard registers
   ui->treeWidgetRegisters->clear(); // Clear the tree
   m_mapRegTopPages.clear();         // Clear the page map
+  m_bInternalChange = false;
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -991,6 +992,8 @@ CFrmNodeConfig::disableColors(bool bColors)
   vscpworks* pworks               = (vscpworks*)QCoreApplication::instance();
   pworks->m_config_bDisableColors = bColors;
 
+  m_bInternalChange = true;
+
   // Disable/Enable colors for standard registers
   if (bColors) {
     for (int i = 0; i < m_StandardRegTopPage->childCount(); i++) {
@@ -1014,6 +1017,8 @@ CFrmNodeConfig::disableColors(bool bColors)
       }
     }
   }
+
+  m_bInternalChange = false;
   
 }
 
@@ -1116,34 +1121,20 @@ CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
 //
 
 void
-CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item,
-                                                int column)
+CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   QString strValue  = item->text(column);
   uint32_t value    = vscp_readStringValue(strValue.toStdString());
 
-  strValue =
-    pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex());
-
-  // switch(static_cast<numerical_base>(m_baseComboBox->currentIndex()) ) {
-  //   case numerical_base::HEX:
-  //     strvalue = vscpworks::decimalToStringInBase(value,
-  //     m_baseComboBox->currentIndex()); break;
-  //   case numerical_base::DECIMAL:
-  //     value = vscp_readStringValue(item->text(column).toStdString());
-  //     break;
-  //   case numerical_base::OCTAL:
-  //     value = vscp_readStringValue(item->text(column).toStdString());
-  //     break;
-  //   case numerical_base::BINARY:
-  //     value = vscp_readStringValue(item->text(column).toStdString());
-  //     break;
-  //   default:
-  //     break;
-  // }
-  item->setForeground(column, QBrush(Qt::red));
+  strValue = pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex());  
   item->setText(column, strValue);
+
+  // If not an internal change we should mark as red to 
+  // indicate a changed valur
+  if (!m_bInternalChange) {
+    item->setForeground(column, QBrush(Qt::red));
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1394,6 +1385,7 @@ CFrmNodeConfig::renderRegisters(void)
 void
 CFrmNodeConfig::updateChanged(void)
 {
+  ;
 }
 
 static void
@@ -1527,9 +1519,7 @@ CFrmNodeConfig::updateFull(void)
 
   // Fill register data
   renderRegisters();
-
   fillDeviceHtmlInfo();
-
   pbar->setValue(100);
 
   QApplication::restoreOverrideCursor();
@@ -1545,14 +1535,15 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+
   // CAN4VSCP interface
   std::string str = m_comboInterface->currentText().toStdString();
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
-  guidNode = guidInterface;
-  // node id
-  guidNode.setLSB(m_nodeidConfig->value());
+  guidNode = guidInterface;  
+  guidNode.setLSB(m_nodeidConfig->value());  // Set node id
 
   QList<QTreeWidgetItem *>listSelected = ui->treeWidgetRegisters->selectedItems();
   for (auto item: listSelected) {
@@ -1565,18 +1556,23 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
                                                           itemReg->m_regPage,
                                                           itemReg->m_regOffset,
                                                           value )) {                                                           
+        m_bInternalChange = true;
         item->setText( REG_COL_VALUE,
-                          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-                          .toStdString().c_str()); 
-        for (int i=0; i<4; i++) {
-          item->setForeground(i, QBrush(Qt::black));
-        }                            
+                        pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                        .toStdString().c_str()); 
+        item->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+        m_bInternalChange = false;                                                  
       }
       else {
-        spdlog::error("Failed to read register");
+        spdlog::error("Failed to read register(s)");
+        ui->statusBar->showMessage(tr("Failed to read register(s)"));
+        return;
       }
-    }  
+    }
   }
+
+  ui->statusBar->showMessage(tr("Register(s) read OK"));
+  QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

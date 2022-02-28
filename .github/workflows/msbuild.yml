@@ -58,8 +58,15 @@ jobs:
           # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
           additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
 
+    - name: Add Component
+      shell: cmd
+      run: |
+        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --channelId VisualStudio.16.Release --productId Microsoft.VisualStudio.Product.Enterprise -q --includeRecommended --add "Microsoft.VisualStudio.Component.VC.14.25.x86.x64"
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1
+      with:
+        msbuild-architecture: x64
 
     - name: Install 7Zip PowerShell Module
       shell: powershell
