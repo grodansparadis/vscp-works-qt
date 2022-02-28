@@ -92,8 +92,8 @@ jobs:
       shell: cmd
       working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
-        ${{env.GITHUB_WORKSPACE}}vcpkg\bootstrap-vcpkg.bat
-        ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe integrate install 
+        call bootstrap-vcpkg.bat
+        .\vcpkg.exe integrate install 
         ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install curl:x64-windows
         ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install expat:x64-windows
         ${{env.GITHUB_WORKSPACE}}vcpkg\vcpkg.exe install spdlog:x64-windows
