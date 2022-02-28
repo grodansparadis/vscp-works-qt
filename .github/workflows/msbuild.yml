@@ -90,9 +90,10 @@ jobs:
 
     - name: Integrate with development environment and install
       shell: cmd
-      working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
+      #working-directory: ${{env.GITHUB_WORKSPACE}}/vcpkg
       run: |
         git clone https://github.com/microsoft/vcpkg
+        cd vcpkg
         vcpkg\bootstrap-vcpkg.bat
         vcpkg\vcpkg.exe integrate install 
         vcpkg\vcpkg.exe install curl:x64-windows
@@ -130,7 +131,6 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        ls vcpkg
         cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE="${{env.GITHUB_WORKSPACE}}/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="../vscp/"
 
     - name: Build
