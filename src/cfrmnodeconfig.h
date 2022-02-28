@@ -287,6 +287,11 @@ class CFrmNodeConfig : public QMainWindow
     void updateFull(void);
 
     /*!
+      Update all registers and use local MDF
+    */
+    void updateLocal(void);
+
+    /*!
       Read selected registers 
     */
     void readSelectedRegisterValues(void);

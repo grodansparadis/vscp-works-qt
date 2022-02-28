@@ -528,6 +528,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   // Update has been clicked
   connect(ui->actionUpdate, SIGNAL(triggered()), this, SLOT(update()));
 
+  // Full update has been clicked
+  connect(ui->actionUpdateFull, SIGNAL(triggered()), this, SLOT(updateFull()));
+
+  // Full update has been clicked
+  connect(ui->actionUpdateLocal, SIGNAL(triggered()), this, SLOT(updateLocal()));
+
   connect(ui->actionDisableColors,
           SIGNAL(triggered(bool)),
           this,
@@ -627,7 +633,9 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
 
   menu->addAction(QString(tr("Update")), this, SLOT(update()));
 
-  menu->addAction(QString(tr("Full Update")), this, SLOT(updateFull()));
+  menu->addAction(QString(tr("Full ipdate")), this, SLOT(updateFull()));
+
+  menu->addAction(QString(tr("Full update with local MDF")), this, SLOT(updateLocal()));
 
   menu->addSeparator();
 
@@ -1125,6 +1133,17 @@ CFrmNodeConfig::update(void)
 
 void
 CFrmNodeConfig::updateFull(void)
+{
+  m_nUpdates = 0;
+  update(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateLocal
+//
+
+void
+CFrmNodeConfig::updateLocal(void)
 {
   m_nUpdates = 0;
   update(); 
