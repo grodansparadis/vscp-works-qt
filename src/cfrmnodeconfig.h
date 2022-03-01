@@ -67,6 +67,7 @@ class QToolBox;
 class QSpinBox;
 class QComboBox;
 class QTreeWidgetItem;
+class QShortcut;
 QT_END_NAMESPACE
 
 #include <QMainWindow>
@@ -248,14 +249,26 @@ class CFrmNodeConfig : public QMainWindow
     void onNodeIdChange(int nodeid);
 
     /*!
+      Single click on register line. Show help text about register
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onRegisterTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+
+
+    /*!
       Double click on register line. This juste select the row for all columns except 
       the value column. Double clicking on this column edit's the value.
+      @param item Widget item clicked.
+      @param column Column clicked
     */
     void onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
 
     /*!
       Register value changed. If use edits the register value and it is changed
       then this method is called.
+      @param item Widget item clicked.
+      @param column Column clicked
     */
     void onRegisterTreeWidgetCellChanged(QTreeWidgetItem *item, int column);
 
@@ -342,6 +355,11 @@ class CFrmNodeConfig : public QMainWindow
     void loadRegisterValues(void);
 
     /*!
+      Fill register HTML help info
+    */
+    void fillRegisterHtmlInfo(QTreeWidgetItem* item, int column);
+
+    /*!
       Fill HTML area with MDF information from
       the selected device
     */
@@ -415,6 +433,10 @@ class CFrmNodeConfig : public QMainWindow
     */
     bool m_bInternalChange;
     
+    /*!
+      Shortcut for ctrl + i - Show MDF info in info area
+    */
+    //QShortcut *m_shortcut_info;
 };
 
 #endif // CFrmNodeConfig_H

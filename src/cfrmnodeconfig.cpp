@@ -535,45 +535,58 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionUpdateLocal, SIGNAL(triggered()), this, SLOT(updateLocal()));
 
   connect(ui->actionDisableColors,
-          SIGNAL(triggered(bool)),
-          this,
-          SLOT(disableColors(bool)));
+            SIGNAL(triggered(bool)),
+            this,
+            SLOT(disableColors(bool)));
 
   // Base change
   connect(m_baseComboBox,
-          SIGNAL(currentIndexChanged(int)),
-          this,
-          SLOT(onBaseChange(int)));
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(onBaseChange(int)));
 
   // Interface change
   connect(m_comboInterface,
-          SIGNAL(currentIndexChanged(int)),
-          this,
-          SLOT(onInterfaceChange(int)));
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(onInterfaceChange(int)));
 
   // Node id change
   connect(m_nodeidConfig,
-          SIGNAL(valueChanged(int)),
-          this,
-          SLOT(onNodeIdChange(int)));
+            SIGNAL(valueChanged(int)),
+            this,
+            SLOT(onNodeIdChange(int)));
 
   // Register row has been double clicked.
   connect(ui->treeWidgetRegisters,
-          &QTreeWidget::itemDoubleClicked,
-          this,
-          &CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked);
+            &QTreeWidget::itemClicked,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetItemClicked);
+
+  // Register row has been double clicked.
+  connect(ui->treeWidgetRegisters,
+            &QTreeWidget::itemDoubleClicked,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked);
 
   // Register item value has changed.
   connect(ui->treeWidgetRegisters,
-          &QTreeWidget::itemChanged,
-          this,
-          &CFrmNodeConfig::onRegisterTreeWidgetCellChanged);
+            &QTreeWidget::itemChanged,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetCellChanged);
 
   // Open pop up menu on right click on VSCP type listbox
   connect(ui->treeWidgetRegisters,
-          &QTreeWidget::customContextMenuRequested,
-          this,
-          &CFrmNodeConfig::showRegisterContextMenu);
+            &QTreeWidget::customContextMenuRequested,
+            this,
+            &CFrmNodeConfig::showRegisterContextMenu);
+
+  // m_shortcut_info = new QShortcut(QKeySequence(tr("Ctrl+I")), this);
+  // connect(m_shortcut_info,
+  //           &QShortcut::activated,
+  //           this,
+  //           &CFrmNodeConfig::fillDeviceHtmlInfo);
+  connect(ui->actionShowMdfInfo, &QAction::triggered, this, &CFrmNodeConfig::fillDeviceHtmlInfo);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1147,6 +1160,21 @@ CFrmNodeConfig::updateLocal(void)
 {
   m_nUpdates = 0;
   update(); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRegisterTreeWidgetItemDoubleClicked
+//
+
+void
+CFrmNodeConfig::onRegisterTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
+{
+  if ((item->type() != TREE_LIST_REGISTER_TYPE) /*&& item->isSelected()*/) {    
+    fillDeviceHtmlInfo();
+  }
+  else {
+    fillRegisterHtmlInfo(item, column); 
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1807,6 +1835,64 @@ CFrmNodeConfig::saveAllRegisterValues(void)
 void
 CFrmNodeConfig::loadRegisterValues(void)
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillRegisterHtmlInfo
+//
+
+void
+CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
+{
+  int idx;
+  std::string html;
+  std::string str;
+  CRegisterWidgetItem *pitem = (CRegisterWidgetItem *)item;
+
+  html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+         "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
+  html += "<html><head>";
+  html += "<meta name=\"qrichtext\" content=\"1\" />";
+  html += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
+  html += "</head>";
+  html += "<body style=\"font-family:'Ubuntu'; font-size:11pt; "
+          "font-weight:400; font-style:normal;\">";
+  str += pitem->text(REG_COL_NAME).toStdString();        
+  html += "<h1>";
+  html += str;
+  html += "</h1>";
+  html += "<p><b>";
+  html += pitem->text(REG_COL_POS).toStdString();
+  html += "</b> [";
+  html += pitem->text(REG_COL_ACCESS).toStdString();
+  html += "] ";
+  html += "</p>";
+  html += "<p>";
+  CMDF_Register *preg = m_mdf.getRegister(pitem->m_regPage, pitem->m_regOffset);
+  if (nullptr == preg) {
+    html += tr("Register not found in MDF").toStdString();
+  }
+  else {
+    str = preg->getDescription();
+    html += m_mdf.format(str);
+    // str = "# test\n";
+    // str += "This _is_ som **test** text\n\nAnd some more text\n\n";
+    // str += "1. First item\n";
+    // str += "2. Second item\n";
+    // str += "3. Third item\n";
+    // str += "4. Fourth item\n\n";
+    // str += "* One\n";
+    // str += "* Two\n";
+    // str += "* Three\n";
+    // str += "* Four\n\n";
+    // html = m_mdf.format(str);
+  }
+  html += "<p>";
+  html += "</font>";
+  html += "</body></html>";
+
+  // Set the HTML
+  ui->infoArea->setHtml(html.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

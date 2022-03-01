@@ -581,8 +581,9 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
-     <string>Settings</string>
+     <string>Tools</string>
     </property>
+    <addaction name="actionShowMdfInfo"/>
     <addaction name="actionDisableColors"/>
    </widget>
    <widget class="QMenu" name="menuNavigate">
@@ -784,6 +785,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>F3</string>
+   </property>
+  </action>
+  <action name="actionShowMdfInfo">
+   <property name="text">
+    <string>Show MDF &amp;info</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
  </widget>
