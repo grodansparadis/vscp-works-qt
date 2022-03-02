@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
+    <width>858</width>
     <height>832</height>
    </rect>
   </property>
@@ -104,7 +104,7 @@ selection-background-color: rgb(154, 153, 150);
              <enum>QTabWidget::Rounded</enum>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideNone</enum>
@@ -250,13 +250,13 @@ selection-background-color: rgb(154, 153, 150);
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QTreeWidget" name="treeWidget_2">
+               <widget class="QTreeWidget" name="treeWidgetRemoteVariables">
                 <property name="selectionMode">
                  <enum>QAbstractItemView::ExtendedSelection</enum>
                 </property>
                 <column>
                  <property name="text">
-                  <string notr="true">Name</string>
+                  <string notr="true">Value</string>
                  </property>
                  <property name="font">
                   <font>
@@ -289,7 +289,7 @@ selection-background-color: rgb(154, 153, 150);
                 </column>
                 <column>
                  <property name="text">
-                  <string>Value</string>
+                  <string>Name</string>
                  </property>
                  <property name="toolTip">
                   <string/>
@@ -331,14 +331,14 @@ selection-background-color: rgb(154, 153, 150);
                <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
              </attribute>
              <attribute name="title">
-              <string>Decission Matrix</string>
+              <string>Decision Matrix</string>
              </attribute>
              <attribute name="toolTip">
               <string>Decission matrix of device</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QTreeWidget" name="treeWidget_3">
+               <widget class="QTreeWidget" name="treeWidgetDecisionMatrix">
                 <property name="selectionMode">
                  <enum>QAbstractItemView::ExtendedSelection</enum>
                 </property>
@@ -473,7 +473,7 @@ selection-background-color: rgb(154, 153, 150);
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <widget class="QTreeWidget" name="treeWidget_4">
+               <widget class="QTreeWidget" name="treeWidgetMdfFiles">
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
@@ -547,7 +547,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>861</width>
+     <width>858</width>
      <height>22</height>
     </rect>
    </property>

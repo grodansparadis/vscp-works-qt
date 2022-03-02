@@ -129,7 +129,7 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -DVSCP_PATH="${{ github.workspace }}/vscp/"
+        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH="${{ github.workspace }}/vscp/"
 
     - name: Build
       #working-directory: ${{ github.workspace }}/build

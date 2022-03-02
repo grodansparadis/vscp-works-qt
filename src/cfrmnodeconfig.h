@@ -86,10 +86,10 @@ enum registerColumns {
 };
 
 enum remotevarColumns {
-  REMOTEVAR_COL_NAME = 0,
+  REMOTEVAR_COL_VALUE = 0,
   REMOTEVAR_COL_ACCESS,
   REMOTEVAR_COL_TYPE,
-  REMOTEVAR_COL_VALUE
+  REMOTEVAR_COL_NAME
 };
 
 enum dmColumns {
@@ -282,6 +282,21 @@ class CFrmNodeConfig : public QMainWindow
       Fill register data from already loaded registers
     */
     void renderRegisters(void);
+
+    /*!
+      Fill remote variable data from already loaded MDF data
+    */
+    void renderRemoteVariables(void);
+
+    /*!
+      Fill decsin matrix info from already loaded MDF data
+    */
+    void renderDecionMatrix(void);
+
+    /*!
+      Fill file data from already loaded MDF data
+    */
+    void renderFiles(void);
 
     /*!
       Write all changed registers to the device

@@ -146,16 +146,43 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
   // tabBar->addTab("Skogig tab");
 
-  QHeaderView* regTreeViewHeader = ui->treeWidgetRegisters->header();
-  regTreeViewHeader->setDefaultAlignment(Qt::AlignCenter);
-  // Enable context menu
+  // Setup register tab
+  QHeaderView* treeViewHeaderRegisters = ui->treeWidgetRegisters->header();
+  treeViewHeaderRegisters->setDefaultAlignment(Qt::AlignCenter);
   ui->treeWidgetRegisters->setContextMenuPolicy(Qt::CustomContextMenu);
+  ui->treeWidgetRegisters->clear();
+  ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 200);
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_ACCESS, 80);
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 160);
 
-  ui->treeWidgetRegisters->clear();
-  ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  // Setup remote variable tab
+  QHeaderView* treeViewHeaderRemoteVariables = ui->treeWidgetRemoteVariables->header();
+  treeViewHeaderRemoteVariables->setDefaultAlignment(Qt::AlignCenter);
+  ui->treeWidgetRemoteVariables->clear();
+  ui->treeWidgetRemoteVariables->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_VALUE, 200);  
+  ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_ACCESS, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_TYPE, 150);
+  
+
+  // Setup decision matrix tab
+  QHeaderView* treeViewHeaderDecisionMatrix = ui->treeWidgetDecisionMatrix->header();
+  treeViewHeaderDecisionMatrix->setDefaultAlignment(Qt::AlignCenter);
+  ui->treeWidgetDecisionMatrix->clear();
+  ui->treeWidgetDecisionMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ORIGIN, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_FLAGS, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_CLASS_MASK, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_CLASS_FILTER, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_MASK, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_FILTER, 80);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ACTION, 300);
+  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 300);
+
+  QHeaderView* treeViewHeaderMdfFiles = ui->treeWidgetMdfFiles->header();
+  //treeViewHeaderMdfFiles->setDefaultAlignment(Qt::AlignCenter);
+  ui->treeViewHeaderMdfFiles->clear();
 
   // Numerical base from settings
   m_baseComboBox = new QComboBox;
@@ -1450,6 +1477,45 @@ CFrmNodeConfig::renderRegisters(void)
   }
 
   m_nUpdates++; // Another update
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderRemoteVariables
+//
+
+void
+CFrmNodeConfig::renderRemoteVariables(void)
+{
+  int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  ui->treeWidgetRemoteVariables->clear(); // Clear the tree
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderDecionMatrix
+//
+
+void
+CFrmNodeConfig::renderDecionMatrix(void)
+{
+  int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  ui->treeWidgetDecisionMatrix->clear(); // Clear the tree
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderFiles
+//
+
+void
+CFrmNodeConfig::renderFiles(void)
+{
+  int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  ui->treeWidgetMdfFiles->clear(); // Clear the tree
 }
 
 ///////////////////////////////////////////////////////////////////////////////
