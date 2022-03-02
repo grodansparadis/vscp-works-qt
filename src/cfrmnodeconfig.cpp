@@ -177,12 +177,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_CLASS_FILTER, 80);
   ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_MASK, 80);
   ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_FILTER, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ACTION, 300);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 300);
+  //ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ACTION, 300);
+  //ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 300);
 
   QHeaderView* treeViewHeaderMdfFiles = ui->treeWidgetMdfFiles->header();
   //treeViewHeaderMdfFiles->setDefaultAlignment(Qt::AlignCenter);
-  ui->treeViewHeaderMdfFiles->clear();
+  ui->treeWidgetMdfFiles->clear();
 
   // Numerical base from settings
   m_baseComboBox = new QComboBox;
