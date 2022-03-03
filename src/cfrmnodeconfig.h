@@ -108,12 +108,13 @@ enum filesColumns {
 };
 
 #define TREE_LIST_REGISTER_TYPE (QTreeWidgetItem::UserType + 1)
-
+#define TREE_LIST_REMOTEVAR_TYPE (QTreeWidgetItem::UserType + 2)
+#define TREE_LIST_DM_TYPE (QTreeWidgetItem::UserType + 3)
 // ----------------------------------------------------------------------------
 
 
 /*!
-    Class that represent a row in the TX list
+    Class that represent a row in the register list
 */
 class CRegisterWidgetItem : public QTreeWidgetItem
 {
@@ -138,6 +139,43 @@ class CRegisterWidgetItem : public QTreeWidgetItem
     uint32_t m_regOffset;
 };
 
+/*!
+    Class that represent a row in the remote variable list
+*/
+class CRemoteVariableWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+    CRemoteVariableWidgetItem(const QString& text);
+    virtual ~CRemoteVariableWidgetItem();
+
+    /*!
+      Holds a pointer to the remote variable
+      MDF info
+    */
+    CMDF_RemoteVariable *m_pRemoteVariable;
+};
+
+/*!
+    Class that represent a row in the DM list
+*/
+class CDMWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+    CDMWidgetItem(const QString& text);
+    virtual ~CDMWidgetItem();
+
+    /*!
+      Holds index for the DM row
+    */
+    uint16_t m_row;
+    /*!
+      Pointer to DM MDF item
+    */
+    CMDF_DecisionMatrix *m_pDM;
+
+};
 
 // ----------------------------------------------------------------------------
 
@@ -265,6 +303,40 @@ class CFrmNodeConfig : public QMainWindow
     void onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
 
     /*!
+      Single click on remote variable line. Show help text about remote variable
+      @param item Widget item clicked.
+      @param column Column clicked
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onRemoteVariableTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+
+    /*!
+      Double click on remote variable line. This juste select the row for all columns except 
+      the value column. Double clicking on this column edit's the value.
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onRemoteVariableTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    /*!
+      Single click on DM line. Show help text about remote variable
+      @param item Widget item clicked.
+      @param column Column clicked
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onDMTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+
+    /*!
+      Double click on DM line. This juste select the row for all columns except 
+      the value column. Double clicking on this column edit's the value.
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
+
+    /*!
       Register value changed. If use edits the register value and it is changed
       then this method is called.
       @param item Widget item clicked.
@@ -291,12 +363,12 @@ class CFrmNodeConfig : public QMainWindow
     /*!
       Fill decsin matrix info from already loaded MDF data
     */
-    void renderDecionMatrix(void);
+    void renderDecisionMatrix(void);
 
     /*!
       Fill file data from already loaded MDF data
     */
-    void renderFiles(void);
+    void renderMdfFiles(void);
 
     /*!
       Write all changed registers to the device
@@ -375,6 +447,16 @@ class CFrmNodeConfig : public QMainWindow
     void fillRegisterHtmlInfo(QTreeWidgetItem* item, int column);
 
     /*!
+      Fill remote variable HTML help info
+    */
+    void fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column);
+
+    /*!
+      Fill DM HTML help info
+    */
+    void fillDMHtmlInfo(QTreeWidgetItem* item, int column);
+
+    /*!
       Fill HTML area with MDF information from
       the selected device
     */
@@ -399,7 +481,7 @@ class CFrmNodeConfig : public QMainWindow
     /// Number of updates. Cleared after a full update
     uint32_t m_nUpdates;
 
-    // Points to top item for standar registers
+    // Points to top widget  item for standar registers
     QTreeWidgetItem *m_StandardRegTopPage;
 
     // Holds widget items for register page headers

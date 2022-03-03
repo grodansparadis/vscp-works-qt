@@ -101,7 +101,7 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QCheckBox" name="chkAskOnDelete">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -114,7 +114,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -126,6 +126,16 @@
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="editLanguage"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>Prefered language:</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -680,7 +690,7 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="2" column="1">
          <widget class="QCheckBox" name="chkConfigDisableColors">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -693,7 +703,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="4" column="1">
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -706,10 +716,17 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QCheckBox" name="chkExpandOnLoad">
           <property name="text">
            <string>Expand on load</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QCheckBox" name="chkConnectOnOpen">
+          <property name="text">
+           <string>Connect on open</string>
           </property>
          </widget>
         </item>

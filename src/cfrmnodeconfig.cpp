@@ -87,7 +87,7 @@
 // ----------------------------------------------------------------------------
 
 CRegisterWidgetItem::CRegisterWidgetItem(const QString& text)
-  : QTreeWidgetItem(QTreeWidgetItem::UserType + 1)
+  : QTreeWidgetItem(TREE_LIST_REGISTER_TYPE)
 {
   m_regPage = 0;
   m_regOffset = 0;
@@ -97,6 +97,33 @@ CRegisterWidgetItem::~CRegisterWidgetItem()
 {
   ;
 }
+
+// ----------------------------------------------------------------------------
+
+CRemoteVariableWidgetItem::CRemoteVariableWidgetItem(const QString& text)
+  : QTreeWidgetItem(TREE_LIST_REMOTEVAR_TYPE)
+{
+  m_pRemoteVariable = nullptr;
+}
+
+CRemoteVariableWidgetItem::~CRemoteVariableWidgetItem()
+{
+  ;
+}
+
+// ----------------------------------------------------------------------------
+
+CDMWidgetItem::CDMWidgetItem(const QString& text)
+  : QTreeWidgetItem(TREE_LIST_DM_TYPE)
+{
+  m_pDM = nullptr;
+}
+
+CDMWidgetItem::~CDMWidgetItem()
+{
+  ;
+}
+
 
 // ----------------------------------------------------------------------------
 
@@ -146,9 +173,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
   // tabBar->addTab("Skogig tab");
 
+  // Select register tab
+  tabBar->setCurrentIndex(0);
+
   // Setup register tab
   QHeaderView* treeViewHeaderRegisters = ui->treeWidgetRegisters->header();
-  treeViewHeaderRegisters->setDefaultAlignment(Qt::AlignCenter);
+  //treeViewHeaderRegisters->setDefaultAlignment(Qt::AlignCenter);
+  //treeViewHeaderRegisters->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
   ui->treeWidgetRegisters->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeWidgetRegisters->clear();
   ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -158,27 +189,28 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   // Setup remote variable tab
   QHeaderView* treeViewHeaderRemoteVariables = ui->treeWidgetRemoteVariables->header();
-  treeViewHeaderRemoteVariables->setDefaultAlignment(Qt::AlignCenter);
+  //treeViewHeaderRemoteVariables->setDefaultAlignment(Qt::AlignCenter);
+  //treeViewHeaderRemoteVariables->setTextAlignment(REMOTEVAR_COL_LEFT, Qt::AlignLeft);
+  //treeViewHeaderRemoteVariables->setAlignment(REMOTEVAR_COL_NAME, Qt::AlignCenter);
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetRemoteVariables->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_VALUE, 200);  
   ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_ACCESS, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_TYPE, 150);
+  ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_TYPE, 170);
   
-
   // Setup decision matrix tab
   QHeaderView* treeViewHeaderDecisionMatrix = ui->treeWidgetDecisionMatrix->header();
   treeViewHeaderDecisionMatrix->setDefaultAlignment(Qt::AlignCenter);
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetDecisionMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ORIGIN, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_FLAGS, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_CLASS_MASK, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_CLASS_FILTER, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_MASK, 80);
-  ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_TYPE_FILTER, 80);
-  //ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_ACTION, 300);
-  //ui->treeWidgetRemoteVariables->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 300);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_ORIGIN, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_FLAGS, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_CLASS_MASK, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_CLASS_FILTER, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_TYPE_MASK, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_TYPE_FILTER, 120);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_ACTION, 200);
+  ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 200);
 
   QHeaderView* treeViewHeaderMdfFiles = ui->treeWidgetMdfFiles->header();
   //treeViewHeaderMdfFiles->setDefaultAlignment(Qt::AlignCenter);
@@ -607,6 +639,34 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
             &QTreeWidget::customContextMenuRequested,
             this,
             &CFrmNodeConfig::showRegisterContextMenu);
+
+  // Remote variables
+
+  // Register row has been double clicked.
+  connect(ui->treeWidgetRemoteVariables,
+            &QTreeWidget::itemClicked,
+            this,
+            &CFrmNodeConfig::onRemoteVariableTreeWidgetItemClicked);
+
+  // Register row has been double clicked.
+  connect(ui->treeWidgetRemoteVariables,
+            &QTreeWidget::itemDoubleClicked,
+            this,
+            &CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked);   
+
+  // Decision matrix
+  
+  // DM row has been double clicked.
+  connect(ui->treeWidgetDecisionMatrix,
+            &QTreeWidget::itemClicked,
+            this,
+            &CFrmNodeConfig::onDMTreeWidgetItemClicked);
+
+  // DM row has been double clicked.
+  connect(ui->treeWidgetDecisionMatrix,
+            &QTreeWidget::itemDoubleClicked,
+            this,
+            &CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked);                    
 
   // m_shortcut_info = new QShortcut(QKeySequence(tr("Ctrl+I")), this);
   // connect(m_shortcut_info,
@@ -1142,6 +1202,7 @@ CFrmNodeConfig::update(void)
   }
   else {
     if (!m_nUpdates) {
+
       // Read in and render all registers
       if (VSCP_ERROR_SUCCESS != doUpdate("")) {
         spdlog::error("Update: Failed to read and render registers from the remote device.");
@@ -1151,6 +1212,11 @@ CFrmNodeConfig::update(void)
           tr("Failed to read and render registers from the remote device."),
           QMessageBox::Ok);
       }
+
+      renderRemoteVariables();
+      renderDecisionMatrix();
+      renderMdfFiles();
+
     }
     else {
       // Write changes
@@ -1175,7 +1241,7 @@ void
 CFrmNodeConfig::updateFull(void)
 {
   m_nUpdates = 0;
-  update(); 
+  update();   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1214,6 +1280,62 @@ CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
 {
   if (2 == column) {
     ui->treeWidgetRegisters->editItem(item, column);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRemoteVariableTreeWidgetItemDoubleClicked
+//
+
+void
+CFrmNodeConfig::onRemoteVariableTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
+{
+  if ((item->type() != TREE_LIST_REMOTEVAR_TYPE)) {    
+    fillDeviceHtmlInfo();
+  }
+  else {
+    fillRemoteVariableHtmlInfo(item, column); 
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRemoteVariableTreeWidgetItemDoubleClicked
+//
+
+void
+CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
+                                                              int column)
+{
+  if (0 == column) {
+    ui->treeWidgetRemoteVariables->editItem(item, column);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRemoteVariableTreeWidgetItemDoubleClicked
+//
+
+void
+CFrmNodeConfig::onDMTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
+{
+  if ((item->type() != TREE_LIST_DM_TYPE)) {    
+    fillDeviceHtmlInfo();
+  }
+  else {
+    fillDMHtmlInfo(item, column); 
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRemoteVariableTreeWidgetItemDoubleClicked
+//
+
+void
+CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
+                                                              int column)
+{
+  if (0 == column) {
+    ui->treeWidgetRemoteVariables->editItem(item, column);
   }
 }
 
@@ -1311,12 +1433,11 @@ CFrmNodeConfig::renderStandardRegisters(void)
 
     // Value
     value = m_stdregs.getReg(m_stdregs.m_vscp_standard_registers_defs[i].reg);
-    std::cout << "Value: " << QString::number(value, 10).toStdString() << std::endl;
-    itemReg->setText(
-      REG_COL_VALUE,
-      pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-        .toStdString()
-        .c_str());
+    //std::cout << "Value: " << QString::number(value, 10).toStdString() << std::endl;
+    itemReg->setText( REG_COL_VALUE,
+                        pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                        .toStdString()
+                        .c_str());
     itemReg->setTextAlignment(REG_COL_VALUE, Qt::AlignCenter);
 
     str = m_stdregs.m_vscp_standard_registers_defs[i].name;
@@ -1490,32 +1611,365 @@ CFrmNodeConfig::renderRemoteVariables(void)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetRemoteVariables->clear(); // Clear the tree
+  std::deque<CMDF_RemoteVariable *> *listRemoteVariables = m_mdf.getRemoteVariableList();
+  for (auto const &item : *listRemoteVariables) {
+          
+    CMDF_RemoteVariable* prvmdf = item;
+
+    CRemoteVariableWidgetItem* itemWidget = new CRemoteVariableWidgetItem("Remote Variable");
+    if (nullptr == itemWidget) {
+      spdlog::critical("Failed to create remote variable widget item");
+      continue;
+    }
+
+    // Save a pointer to the MDF remote variable item
+    itemWidget->m_pRemoteVariable = item;
+
+    Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
+
+    // Set foreground and background colors from MDF
+    if (!pworks->m_config_bDisableColors) {
+      for (int i = 0; i < 4; i++) {
+        itemWidget->setForeground(i, QBrush(QColor(prvmdf->getForegroundColor())));
+        itemWidget->setBackground(i, QBrush(QColor(prvmdf->getBackgroundColor())));
+      }
+    }
+
+    // Save reister info so we can find info later
+    itemWidget->m_pRemoteVariable = item;
+    //itemWidget->m_regPage = prvmdf->getPage();
+    //itemWidget->m_regOffset = prvmdf->getOffset();
+
+    mdf_access_mode access = prvmdf->getAccess();
+    if (MDF_REG_ACCESS_READ_ONLY == access) {
+      // itemReg->setForeground(2, QBrush(QColor("gray")));
+      itemWidget->setText(REMOTEVAR_COL_ACCESS, "r");
+    }
+    else if (MDF_REG_ACCESS_WRITE_ONLY == access) {
+      // itemReg->setForeground(2, QBrush(QColor("darkgreen")));
+      itemWidget->setText(REMOTEVAR_COL_ACCESS, "w");
+      itemFlags |= Qt::ItemIsEditable;
+    }
+    else if (MDF_REG_ACCESS_READ_WRITE == access) {
+      // itemReg->setForeground(2, QBrush(QColor("red")));
+      itemWidget->setText(REMOTEVAR_COL_ACCESS, "rw");
+      itemFlags |= Qt::ItemIsEditable;
+    }
+    else {
+      // itemReg->setForeground(2, QBrush(QColor("black")));
+      itemWidget->setText(REMOTEVAR_COL_ACCESS, "---");
+    }
+    itemWidget->setTextAlignment(REMOTEVAR_COL_ACCESS, Qt::AlignCenter);
+    itemWidget->setFlags(itemFlags);
+
+    itemWidget->setTextAlignment(REMOTEVAR_COL_TYPE, Qt::AlignCenter);
+    itemWidget->setText(REMOTEVAR_COL_TYPE, prvmdf->getTypeString().c_str());
+
+    itemWidget->setTextAlignment(REMOTEVAR_COL_NAME, Qt::AlignLeft);
+    itemWidget->setText(REMOTEVAR_COL_NAME, prvmdf->getName().c_str());
+
+    std::string str;
+    uint8_t format = FORMAT_REMOTEVAR_DECIMAL;
+
+    if (0 == m_baseComboBox->currentIndex()) {
+      format = FORMAT_REMOTEVAR_HEX;
+    }
+    
+    if (VSCP_ERROR_SUCCESS != m_userregs.remoteVarFromRegToString(*prvmdf, str, format)) {
+      str = "ERROR";
+      itemWidget->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
+    }
+    itemWidget->setTextAlignment(REMOTEVAR_COL_VALUE, Qt::AlignCenter);
+    itemWidget->setText(REMOTEVAR_COL_VALUE, str.c_str());
+
+    // Add item
+    ui->treeWidgetRemoteVariables->addTopLevelItem(itemWidget);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderDecionMatrix
+// renderDecisionMatrix
 //
 
 void
-CFrmNodeConfig::renderDecionMatrix(void)
+CFrmNodeConfig::renderDecisionMatrix(void)
 {
   int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetDecisionMatrix->clear(); // Clear the tree
+
+  CMDF_DecisionMatrix *pdm = m_mdf.getDM();
+  uint16_t startPage = pdm->getStartPage();
+  uint32_t startOffset = pdm->getStartOffset();
+  for (int row=0; row < pdm->getRowCount(); row++) {
+    CDMWidgetItem* itemWidget = new CDMWidgetItem("DM");
+    if (nullptr == itemWidget) {
+      spdlog::critical("Failed to create DM widget item");
+      continue;
+    }
+
+    // Save helper info
+    itemWidget->m_row = row;
+    itemWidget->m_pDM = pdm;
+
+    if (row%2) {
+      for (int i=0; i<8; i++) {
+        itemWidget->setBackground(i, QBrush(QColor("#c0c0c0")));
+      }
+    }
+    else {
+      for (int i=0; i<8; i++) {
+        itemWidget->setBackground(i, QBrush(QColor("#e0e0e0")));
+      }
+    }
+    
+    // Fill in data
+    for (int pos=0; pos < 8; pos++) {
+      int value = m_userregs.getReg(startPage, startOffset + row * 8 + pos);
+      if (-1 == value) {
+        itemWidget->setText(REG_COL_VALUE, "---");
+        itemWidget->setTextAlignment(DM_LEVEL1_COL_ORIGIN + pos, Qt::AlignCenter);
+      }
+      else {
+        //std::string str = pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString();
+        itemWidget->setTextAlignment(DM_LEVEL1_COL_ORIGIN + pos, Qt::AlignCenter);
+        itemWidget->setText(DM_LEVEL1_COL_ORIGIN + pos, 
+                            pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()));
+      }     
+    }
+
+    // Add item
+    ui->treeWidgetDecisionMatrix->addTopLevelItem(itemWidget);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderFiles
+// renderMdfFiles
 //
 
 void
-CFrmNodeConfig::renderFiles(void)
+CFrmNodeConfig::renderMdfFiles(void)
 {
   int rv;
+  CDMWidgetItem *topItemWidget;
+  CDMWidgetItem *itemWidget;
+  
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetMdfFiles->clear(); // Clear the tree
+
+  // Pictures
+  if (m_mdf.getPictureCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Pictures");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for pictures");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Pictures");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getPictureCount(); i++) {
+      
+      itemWidget = new CDMWidgetItem("Pictures");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for pictures");
+        return;
+      }
+
+      QString name(m_mdf.getPictureObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getPictureObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add picture child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
+  // Video
+  if (m_mdf.getVideoCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Video");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for videos");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Video");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getVideoCount(); i++) {
+      itemWidget = new CDMWidgetItem("Video");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for videos");
+        return;
+      }
+
+      QString name(m_mdf.getVideoObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getVideoObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add picture child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
+  // Firmware
+  if (m_mdf.getFirmwareCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Firmware");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for firmware");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Firmware");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getFirmwareCount(); i++) {
+      itemWidget = new CDMWidgetItem("Firmware");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for firmware");
+        return;
+      }
+
+      QString name(m_mdf.getFirmwareObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getFirmwareObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add firmware child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
+  // Driver
+  if (m_mdf.getDriverCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Driver");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for driver");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Driver");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getDriverCount(); i++) {
+      itemWidget = new CDMWidgetItem("Driver");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for driver");
+        return;
+      }
+
+      QString name(m_mdf.getDriverObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getDriverObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add driver child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
+  // Manual
+  if (m_mdf.getDriverCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Manual");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for manual");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Manual");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getManualCount(); i++) {
+      itemWidget = new CDMWidgetItem("Manual");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for Manual");
+        return;
+      }
+
+      QString name(m_mdf.getManualObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getManualObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add driver child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
+  // Setup
+  if (m_mdf.getSetupCount()) {
+    
+    topItemWidget = new CDMWidgetItem("Setup");
+    if (nullptr == topItemWidget) {
+      spdlog::critical("Failed to create MDF file widget top item for setup");
+      return;
+    }
+
+    topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
+    topItemWidget->setText(0, "Setup");
+
+    // Add item
+    ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
+
+    for (int i=0; i<m_mdf.getSetupCount(); i++) {
+      itemWidget = new CDMWidgetItem("Setup");
+      if (nullptr == itemWidget) {
+        spdlog::critical("Failed to create MDF file widget item for setup");
+        return;
+      }
+
+      QString name(m_mdf.getSetupObj(i)->getName().c_str());
+      if (!name.length()) {
+        name = QString::number(i);
+        name += " - ";
+        name += m_mdf.getSetupObj(i)->getDescription().c_str();
+      }
+      itemWidget->setText(0, name);
+
+      // Add driver child
+      topItemWidget->addChild(itemWidget);
+    }
+  }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1628,7 +2082,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
 
   int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface);
   if (VSCP_ERROR_SUCCESS != rv) {
-    ui->statusBar->showMessage(tr("Failed to read standard registers from device."));
+    ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") + QString::number(rv));
     spdlog::error("Failed to init standard registers {0}", rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
@@ -2265,6 +2719,183 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
     idx++;
   }
      
+  html += "</font>";
+  html += "</body></html>";
+
+  // Set the HTML
+  ui->infoArea->setHtml(html.c_str());
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// fillRemoteVariableHtmlInfo
+//
+
+void
+CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
+{
+  int idx;
+  std::string html;
+  std::string str;
+  CRemoteVariableWidgetItem *pitem = (CRemoteVariableWidgetItem *)item;
+
+  html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+         "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
+  html += "<html><head>";
+  html += "<meta name=\"qrichtext\" content=\"1\" />";
+  html += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
+  html += "</head>";
+  html += "<body style=\"font-family:'Ubuntu'; font-size:11pt; "
+          "font-weight:400; font-style:normal;\">";
+  str += pitem->text(REMOTEVAR_COL_NAME).toStdString();        
+  html += "<h1>";
+  html += str;
+  html += "</h1>";
+  html += "<p><b>";
+  html += pitem->text(REG_COL_POS).toStdString();
+  html += "</b> [";
+  html += pitem->text(REMOTEVAR_COL_ACCESS).toStdString();
+  html += "] ";
+  html += pitem->text(REMOTEVAR_COL_TYPE).toStdString();
+  html += "</p>";
+  html += "<p>";
+  CMDF_RemoteVariable *prv = pitem->m_pRemoteVariable;
+  if (nullptr == prv) {
+    html += tr("Remote variable not found in MDF").toStdString();
+  }
+  else {
+    std::string desc = prv->getDescription();
+    html += m_mdf.format(desc);
+  }
+  html += "<p>";
+  html += "</font>";
+  html += "</body></html>";
+
+  // Set the HTML
+  ui->infoArea->setHtml(html.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillDMHtmlInfo
+//
+
+void
+CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
+{
+  int idx;
+  std::string html;
+  std::string str;
+  CDMWidgetItem *pitem = (CDMWidgetItem *)item;
+  CMDF_DecisionMatrix *pDM = pitem->m_pDM;
+
+  html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+         "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
+  html += "<html><head>";
+  html += "<meta name=\"qrichtext\" content=\"1\" />";
+  html += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
+  html += "</head>";
+  html += "<body style=\"font-family:'Ubuntu'; font-size:11pt; "
+          "font-weight:400; font-style:normal;\">";
+  str = "DM Row ";
+  str += QString::number(pitem->m_row + 1).toStdString();   
+  str += "/";
+  str += QString::number(pitem->m_pDM->getRowCount()).toStdString();   
+  html += "<font color=\"#009999\"><b>";
+  html += str;
+  html += "</b></font>";
+  html += "<br>";
+  html += "<b>Origin:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_ORIGIN).toStdString();
+  html += "</font><br>";
+  html += "<b>Flags:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_FLAGS).toStdString();
+  html += "</font> -- ";
+  uint8_t flags = vscp_readStringValue(pitem->text(DM_LEVEL1_COL_FLAGS).toStdString());
+  if (flags & 0x80) {
+    html += "enabled ";
+  }
+  else {
+    html += "disabled ";
+  }
+  if (flags & 0x40) {
+    html += ", oaddr should match nickname ";
+  }
+  else {
+    html += ", oaddr is don't care ";
+  }
+  if (flags & 0x20) {
+    html += ", oaddr should be hard-coded ";
+  }
+  if (flags & 0x10) {
+    html += ", Match zone ";
+  }
+  if (flags & 0x08) {
+    html += ", Match sub-zone ";
+  }
+  html += ", Class-mask bit 9=";
+  if (flags & 0x02) {
+    html += " 1 ";
+  }
+  else {
+    html += " 0 ";
+  }
+  html += ", Type-mask bit 9=";
+  if (flags & 0x01) {
+    html += " 1<br>";
+  }
+  else {
+    html += " 0<br>";
+  }
+
+  html += "<b>Class mask:</b><font color=\"#009900\"> 0x";
+  html += QString::number((flags & 0x02)*512 + vscp_readStringValue(pitem->text(DM_LEVEL1_COL_CLASS_MASK).toStdString()),16).toStdString();
+  html += "</font><br>";
+
+  html += "<b>Class filter:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_CLASS_FILTER).toStdString();
+  html += "</font><br>";
+
+  html += "<b>Type mask:</b><font color=\"#009900\"> 0x";
+  html += QString::number((flags & 0x01)*512 + vscp_readStringValue(pitem->text(DM_LEVEL1_COL_TYPE_MASK).toStdString()),16).toStdString();
+  html += "</font><br>";
+
+  html += "<b>Type filter:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_TYPE_FILTER).toStdString();
+  html += "</font><br>";
+
+  html += "<b>Action:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_ACTION).toStdString();
+  std::deque<CMDF_Action *> *actionlList = pDM->getActionList();
+  CMDF_Action *pAction = actionlList->at(/*pitem->m_row*8 + DM_LEVEL1_COL_ACTION*/1);
+  if (nullptr == pAction) {
+    ;
+  }
+  else {
+    html += "</font>";
+    html += "<br> <b>Name:</b><font color=\"#000099\"> ";
+    str = pAction->getName();
+    html += m_mdf.format(str);
+    html += "</font><br> <b>Description:</b><font color=\"#000099\"> ";
+    str = pAction->getDescription();
+    html += m_mdf.format(str);
+    html += "</font>";
+  }
+  html += "<br>";
+
+  html += "<b>Action Parameter:</b><font color=\"#009900\"> ";
+  html += pitem->text(DM_LEVEL1_COL_PARAMETER).toStdString();  
+  html += "</font><br>";
+
+  html += "<p>";
+  
+  if (nullptr == pDM) {
+    html += tr("DM not found in MDF").toStdString();
+  }
+  else {
+    std::string desc = QString::number(pitem->m_row).toStdString(); 
+    html += m_mdf.format(desc);
+  }
+  html += "<p>";
   html += "</font>";
   html += "</body></html>";
 

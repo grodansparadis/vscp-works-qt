@@ -166,6 +166,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -176,6 +179,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -188,10 +194,13 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
-                  <string>Description</string>
+                  <string>Name</string>
                  </property>
                  <property name="font">
                   <font>
@@ -264,6 +273,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -275,6 +287,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -285,6 +300,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -352,6 +370,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -362,6 +383,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -374,6 +398,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -384,6 +411,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -396,6 +426,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -406,6 +439,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -418,6 +454,9 @@ selection-background-color: rgb(154, 153, 150);
                    <bold>true</bold>
                   </font>
                  </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
                 </column>
                 <column>
                  <property name="text">
@@ -428,6 +467,9 @@ selection-background-color: rgb(154, 153, 150);
                    <weight>75</weight>
                    <bold>true</bold>
                   </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <item>
