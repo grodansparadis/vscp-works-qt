@@ -345,6 +345,9 @@ class vscpworks : public QApplication {
 
     // ---------------------------------------------------
 
+    /// Enable darktheme
+    bool m_bEnableDarkTheme;
+
     /// Numerical base for all numericals in system
     numerical_base m_base;
 

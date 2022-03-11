@@ -307,6 +307,10 @@ add_executable(vscp-works-qt
     src/cfrmnodeconfig.cpp
     src/cfrmnodeconfig.ui
 
+    src/cdlgeditdm.ui
+    src/cdlgeditdm.h
+    src/cdlgeditdm.cpp
+
     src/cfrmnodescan.h
     src/cfrmnodescan.cpp
     src/cfrmnodescan.ui
@@ -572,7 +576,7 @@ endif()
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
 # qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-qt5_add_resources(src/vscpworks.qrc) 
+qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
 
 
 if(WIN32)

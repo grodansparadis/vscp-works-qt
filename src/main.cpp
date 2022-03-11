@@ -113,6 +113,22 @@ int main(int argc, char *argv[])
 
   app.openVscpWorksDatabase();
 
+  // https://github.com/ColinDuquesnoy/QDarkStyleSheet
+  if ( 0 && app.m_bEnableDarkTheme) {
+    //mainWin.setStyleSheet(QString::fromUtf8(qdarkstyle::load_stylesheet_from_file(":/qdarkstyle/style.qss").toStdString().c_str()));
+  
+    QFile f(":style.qss");
+
+    if (!f.exists())   {
+      printf("Unable to set stylesheet, file not found\n");
+    }
+    else   {
+      f.open(QFile::ReadOnly | QFile::Text);
+      QTextStream ts(&f);
+      qApp->setStyleSheet(ts.readAll());
+    }
+  }
+
   mainWin.show(); 
   return app.exec();
 

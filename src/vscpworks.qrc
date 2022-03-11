@@ -88,6 +88,7 @@
     <file>../images/png/128x128/page_search.png</file>
     <file>../images/png/128x128/page_swap.png</file>
     <file>../images/png/128x128/page_up.png</file>
+    <file alias="style.qss">../qdarkstyle/theme/style.qss</file>
   </qresource>
   <qresource prefix="img"/>
 </RCC>

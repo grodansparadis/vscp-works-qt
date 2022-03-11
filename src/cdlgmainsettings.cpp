@@ -70,6 +70,9 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
     //onBaseChange(static_cast<int>(m_baseIndex));
 
+    // Darkthereme
+    ui->chkDarkTheme->setChecked(pworks->m_bEnableDarkTheme);
+
     // Ask befor delete/clear
     ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);    
 
@@ -231,6 +234,7 @@ void CDlgMainSettings::done(int rv)
 
       // General
       pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
+      pworks->m_bEnableDarkTheme = ui->chkDarkTheme->isChecked();
       pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();        
 
       // Session window

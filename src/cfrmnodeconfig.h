@@ -247,11 +247,32 @@ class CFrmNodeConfig : public QMainWindow
     connectToRemoteHost(bool checked);
 
     /*!
-        Show context menu for rx table
+        Show context menu for register table
         @param pos Position where right click took place
     */
     void 
     showRegisterContextMenu(const QPoint& pos);
+
+    /*!
+        Show context menu for remote variable table
+        @param pos Position where right click took place
+    */
+    void 
+    showRemoteVariableContextMenu(const QPoint& pos);
+
+    /*!
+        Show context menu for DM table
+        @param pos Position where right click took place
+    */
+    void 
+    showDMContextMenu(const QPoint& pos);
+
+    /*!
+        Show context menu for files table
+        @param pos Position where right click took place
+    */
+    void 
+    showFilesContextMenu(const QPoint& pos);
 
     /// Open settings dialog
     void 
@@ -461,6 +482,26 @@ class CFrmNodeConfig : public QMainWindow
       the selected device
     */
     void fillDeviceHtmlInfo(void);
+
+    /*!
+      Open edit DM row dialog
+    */
+    void editDMRow();
+
+    /*!
+      Go trough all registers and mark changed 
+    */
+    void updateVisualRegisters(void);
+
+    /*!
+      Go trough all remote variables and mark changed
+    */
+    void updateVisualRemoteVariables(void);
+
+    /*!
+      Go trough DM rows and mark changed
+    */
+    void updateVisualDM(void);
 
  signals:
 

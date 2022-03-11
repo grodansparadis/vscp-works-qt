@@ -78,6 +78,7 @@ vscpworks::vscpworks(int &argc, char **argv) :
 {
     m_base = numerical_base::HEX;        // Numerical base
     m_bAskBeforeDelete = true;  
+    m_bEnableDarkTheme = false;
 
     // Logging defaults
     m_fileLogLevel     = spdlog::level::info;
@@ -301,6 +302,7 @@ void vscpworks::loadSettings(void)
     // ---------------------
     m_base = static_cast<numerical_base>(settings.value("numericBase", "0").toInt());
 
+    m_bEnableDarkTheme = settings.value("bDarkTheme", true).toBool();
     m_bAskBeforeDelete = settings.value("bAskBeforeDelete", true).toBool();
 
     // * * * Logging * * *
@@ -425,6 +427,7 @@ void vscpworks::writeSettings()
     settings.setValue("shareFolder", m_shareFolder);
     settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
     settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
+    settings.setValue("bDarkTheme", m_bEnableDarkTheme);
     settings.setValue("bAskBeforeDelete", m_bAskBeforeDelete);
     settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
 
