@@ -3,8 +3,10 @@
 BasedOnStyle: Mozilla
 IndentWidth: 2
 
+
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 Language: Cpp
+ColumnLimit: 0
 # Force pointers to the type for C++.
 AlignAfterOpenBracket: Align
 DerivePointerAlignment: false

@@ -369,27 +369,27 @@ class CFrmNodeConfig : public QMainWindow
       Fill standard register data for already 
       loaded registers
     */
-    void renderStandardRegisters(void);
+    bool renderStandardRegisters(void);
 
     /*!
       Fill register data from already loaded registers
     */
-    void renderRegisters(void);
+    bool renderRegisters(void);
 
     /*!
       Fill remote variable data from already loaded MDF data
     */
-    void renderRemoteVariables(void);
+    bool renderRemoteVariables(void);
 
     /*!
       Fill decsin matrix info from already loaded MDF data
     */
-    void renderDecisionMatrix(void);
+    bool renderDecisionMatrix(void);
 
     /*!
       Fill file data from already loaded MDF data
     */
-    void renderMdfFiles(void);
+    bool renderMdfFiles(void);
 
     /*!
       Write all changed registers to the device
@@ -503,6 +503,10 @@ class CFrmNodeConfig : public QMainWindow
     */
     void updateVisualDM(void);
 
+    void updateChangeRemoteVariable(uint32_t offset, uint16_t page);
+
+    void updateChangeDM(uint32_t offset, uint16_t page);
+
  signals:
 
     /// Data received from callback
@@ -566,15 +570,25 @@ class CFrmNodeConfig : public QMainWindow
     QComboBox *m_comboInterface;   
 
     /*! 
-      Set to true when the stem updates a cell. Prevents
-      value cells from being marked red.
+      Set to true when the system updates a cell. Prevents
+      value cells from being marked as updated (red).
     */
-    bool m_bInternalChange;
+    //bool m_bInternalChange;
     
     /*!
       Shortcut for ctrl + i - Show MDF info in info area
     */
     //QShortcut *m_shortcut_info;
+
+    /*!
+      Maps registers to remote variables
+    */
+    std::map<uint32_t, CRemoteVariableWidgetItem *> m_mapReg2RemoteVariable;
+    
+    /*!
+      Maps registers to DM
+    */
+    std::map<uint32_t, CDMWidgetItem *> m_mapReg2DM;
 };
 
 #endif // CFrmNodeConfig_H

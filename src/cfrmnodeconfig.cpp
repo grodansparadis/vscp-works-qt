@@ -167,7 +167,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_StandardRegTopPage = nullptr;   // No standard registers
   ui->treeWidgetRegisters->clear(); // Clear the tree
   m_mapRegTopPages.clear();         // Clear the page map
-  m_bInternalChange = false;
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -305,6 +304,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     std::string(tr("Node configuration module opended").toStdString()));
 
   if (nullptr == pconn) {
+    QApplication::beep();
     spdlog::error(std::string(tr("pconn is null").toStdString()));
     QMessageBox::information(this,
                              tr("vscpworks+"),
@@ -319,8 +319,8 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   // Must have a type
   if (m_connObject["type"].isNull()) {
-    spdlog::error(
-      std::string(tr("Type is not define in JSON data").toStdString()));
+    QApplication::beep();
+    spdlog::error(std::string(tr("Type is not define in JSON data").toStdString()));
     QMessageBox::information(this,
                              tr("vscpworks+"),
                              tr("Can't open node configuration  window - The "
@@ -378,23 +378,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
    *  If false the interface combo plus nickname spinnbox is shown.
    */
   bool bFullLevel2 = m_connObject["bfull-l2"].toBool();
-
-  /*
-  std::string _str;
-  size_t sz = json_if_array.size();
-  std::string sss = json_if_array.at(0)["if-item"].toString().toStdString();
-  foreach (const QJsonValue &value, json_if_array) {
-    qDebug() << value.toObject().value("if-item").toString();
-    std::string sss =
-  value.toObject().value("if-item").toString().toStdString(); std::cout << "if =
-  " << sss << std::endl;
-    //_str = value.toObject()["if-item"].toString().toStdString();
-    // if (value.toObject()["name"].toString() == interface) {
-    //   _str = value.toObject();
-    //   //break;
-    // }
-  }
-  */
 
   switch (m_vscpConnType) {
 
@@ -457,10 +440,9 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientCanal();
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
-        QMessageBox::warning(
-          this,
-          tr("VSCP Works +"),
-          tr("Failed to initialize CANAL driver. See log for more details."));
+        QMessageBox::warning(this,
+                              tr(APPNAME),
+                              tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
 
@@ -480,7 +462,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
         QMessageBox::warning(this,
-                             tr("VSCP Works +"),
+                             tr(APPNAME),
                              tr("Failed to initialize SOCKETCAN driver. See "
                                 "log for more details."));
         return;
@@ -767,7 +749,7 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
 
   menu->addAction(QString(tr("Update")), this, SLOT(update()));
 
-  menu->addAction(QString(tr("Full ipdate")), this, SLOT(updateFull()));
+  menu->addAction(QString(tr("Full update")), this, SLOT(updateFull()));
 
   menu->addAction(QString(tr("Full update with local MDF")),
                   this,
@@ -989,9 +971,10 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       break;
 
     case CVscpClient::connType::TCPIP:
+      QApplication::setOverrideCursor(Qt::WaitCursor);
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-        spdlog::error(std::string(
-          tr("Session: Unable to connect to remote host.").toStdString()));
+        QApplication::beep();
+        spdlog::error(std::string(tr("Session: Unable to connect to remote host.").toStdString()));
         QMessageBox::information(this,
                                  tr("vscpworks+"),
                                  tr("Failed to open a connection to the remote "
@@ -1003,13 +986,15 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
           tr("Session: Successful connect to remote client.").toStdString()));
         ui->actionConnect->setChecked(true);
       }
+      QApplication::restoreOverrideCursor();
       break;
 
     case CVscpClient::connType::CANAL:
       QApplication::setOverrideCursor(Qt::WaitCursor);
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
+        QApplication::beep();
         QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
-        str += rv;
+        str += rv;        
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr("vscpworks+"),
@@ -1028,8 +1013,8 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str =
-          tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
+        QApplication::beep();
+        QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
@@ -1110,20 +1095,15 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::TCPIP:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-        spdlog::error(
-          std::string(tr("Session: Unable to disconnect tcp/ip remote client")
-                        .toStdString()));
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the txp/ip remote "
-             "host"),
+        QApplication::beep();
+        spdlog::error(std::string(tr("Session: Unable to disconnect tcp/ip remote client").toStdString()));
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the txp/ip remote host"),
           QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful disconnect from tcp/ip remote host")
-            .toStdString()));
+        spdlog::trace(std::string(tr("Session: Successful disconnect from tcp/ip remote host").toStdString()));
       }
       break;
 
@@ -1134,20 +1114,17 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
-        QString str =
-          tr("Session: Unable to disconnect from the CANAL driver. rv=");
+        QApplication::beep();
+        QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the CANAL driver"),
-          QMessageBox::Ok);
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the CANAL driver"),
+                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(
-          std::string(tr("Session: Successful disconnect from CANAL driver")
-                        .toStdString()));
+        spdlog::trace(std::string(tr("Session: Successful disconnect from CANAL driver").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -1156,8 +1133,8 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
-        QString str = tr("Session: Unable to disconnect from the "
-                         "SOCKETCAN driver. rv=");
+        QApplication::beep();
+        QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(
@@ -1168,9 +1145,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
           QMessageBox::Ok);
       }
       else {
-        spdlog::error(
-          std::string(tr("Session: Successful disconnect from SOCKETCAN driver")
-                        .toStdString()));
+        spdlog::trace(std::string(tr("Session: Successful disconnect from SOCKETCAN driver").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -1183,20 +1158,16 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::MQTT:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-        spdlog::error(std::string(
-          tr("Session: Unable to disconnect from MQTT remote client")
-            .toStdString()));
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the MQTT remote "
-             "host"),
-          QMessageBox::Ok);
-      }
+        QApplication::beep();
+        spdlog::error(std::string(tr("Session: Unable to disconnect from MQTT remote client").toStdString()));
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the MQTT remote "
+                                    "host"),
+                                  QMessageBox::Ok);
+                              }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful disconnect from the MQTT remote host")
-            .toStdString()));
+        spdlog::trace(std::string(tr("Session: Successful disconnect from the MQTT remote host").toStdString()));
       }
       break;
 
@@ -1265,8 +1236,6 @@ CFrmNodeConfig::disableColors(bool bColors)
   vscpworks* pworks               = (vscpworks*)QCoreApplication::instance();
   pworks->m_config_bDisableColors = bColors;
 
-  m_bInternalChange = true;
-
   // Disable/Enable colors for standard registers
   if (bColors) {
     for (int i = 0; i < m_StandardRegTopPage->childCount(); i++) {
@@ -1295,8 +1264,6 @@ CFrmNodeConfig::disableColors(bool bColors)
       }
     }
   }
-
-  m_bInternalChange = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1310,8 +1277,6 @@ CFrmNodeConfig::onBaseChange(int index)
   QString qstr;
   QString prefix;
   numerical_base numbase = static_cast<numerical_base>(index);
-
-  QApplication::setOverrideCursor(Qt::WaitCursor);
 
   switch (numbase) {
     case numerical_base::HEX:
@@ -1333,7 +1298,6 @@ CFrmNodeConfig::onBaseChange(int index)
       break;
   }
 
-  QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1366,19 +1330,20 @@ void
 CFrmNodeConfig::update(void)
 {
   if (m_connObject["bfull-l2"].toBool()) {
+    ;
   }
   else {
     if (!m_nUpdates) {
 
       // Read in and render all registers
       if (VSCP_ERROR_SUCCESS != doUpdate("")) {
+        QApplication::beep();
         spdlog::error("Update: Failed to read and render registers from the "
                       "remote device.");
-        QMessageBox::information(
-          this,
-          tr(APPNAME),
-          tr("Failed to read and render registers from the remote device."),
-          QMessageBox::Ok);
+        QMessageBox::information(this,
+                                  tr(APPNAME),
+                                  tr("Failed to read and render registers from the remote device."),
+                                  QMessageBox::Ok);
       }
 
       renderRemoteVariables();
@@ -1388,6 +1353,7 @@ CFrmNodeConfig::update(void)
     else {
       // Write changes
       if (VSCP_ERROR_SUCCESS != writeChanges()) {
+        QApplication::beep();
         spdlog::error("Update: Failed to write changes to remote device.");
         int ret = QMessageBox::warning(this,
                                        tr(APPNAME),
@@ -1502,10 +1468,20 @@ CFrmNodeConfig::onDMTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
 //
 
 void
-CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
-                                                int column)
+CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-  ui->treeWidgetDecisionMatrix->editItem(item, column);
+  // SHIFT    = Qt::ShiftModifier
+  // CTRL     = Qt::ControlModifier
+  // ALT      = Qt::AltModifier
+  Qt::KeyboardModifiers modifiers = QApplication::queryKeyboardModifiers();
+  if (modifiers.testFlag(Qt::ControlModifier)) {
+    // CTRL was hold when this function was called
+    ui->treeWidgetDecisionMatrix->editItem(item, column);
+  }
+  else {
+    // CTRL wasn't hold
+    editDMRow();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1513,21 +1489,26 @@ CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem* item,
 //
 
 void
-CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item,
-                                                int column)
+CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  QString strValue  = item->text(column);
-  uint32_t value    = vscp_readStringValue(strValue.toStdString());
+  vscpworks* pworks            = (vscpworks*)QCoreApplication::instance();
+  CRegisterWidgetItem* regItem = (CRegisterWidgetItem*)item;
+  QString strValue             = item->text(column);
+  uint8_t value                = vscp_readStringValue(strValue.toStdString());
 
-  strValue =
-    pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex());
+  strValue = pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex());
   item->setText(column, strValue);
 
+  // Write new register value
+  m_userregs.putReg(regItem->m_regOffset, regItem->m_regPage, value);
+
   // If not an internal change we should mark as red to
-  // indicate a changed valur
-  if (!m_bInternalChange) {
-    item->setForeground(column, QBrush(Qt::red));
+  // indicate a changed value
+  if (m_nUpdates) {
+    if (m_userregs.isChanged(regItem->m_regOffset, regItem->m_regPage)) {
+      item->setForeground(column, QBrush(Qt::red));
+      updateChangeDM(regItem->m_regOffset, regItem->m_regPage);
+    }
   }
 }
 
@@ -1535,7 +1516,7 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item,
 // renderStandardRegisters
 //
 
-void
+bool
 CFrmNodeConfig::renderStandardRegisters(void)
 {
   int rv;
@@ -1563,7 +1544,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
     itemReg = new CRegisterWidgetItem("Register");
     if (nullptr == itemReg) {
       spdlog::critical("Failed to create standard register widget item");
-      return;
+      return false;
     }
 
     // Save register pos for later reference
@@ -1626,13 +1607,15 @@ CFrmNodeConfig::renderStandardRegisters(void)
 
     itemTopStdReg->addChild(itemReg);
   }
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderRegisters
 //
 
-void
+bool
 CFrmNodeConfig::renderRegisters(void)
 {
   int rv;
@@ -1654,7 +1637,10 @@ CFrmNodeConfig::renderRegisters(void)
   // Fill status info
   // ----------------------------------------------------------
 
-  renderStandardRegisters();
+  if (!renderStandardRegisters()) {
+    spdlog::critical("Failed to render standard registers");
+    return false;
+  }
 
   // ----------------------------------------------------------
   // Fill register info
@@ -1670,8 +1656,9 @@ CFrmNodeConfig::renderRegisters(void)
   rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages);
   if (VSCP_ERROR_SUCCESS != rv) {
     std::cout << "Failed to read user regs: " << rv << std::endl;
+    QApplication::beep();
     spdlog::error("Failed to init user registers");
-    return;
+    return false;
   }
 
   for (auto page : pages) {
@@ -1700,6 +1687,10 @@ CFrmNodeConfig::renderRegisters(void)
     for (auto item : mapRegs) {
 
       CMDF_Register* pregmdf = item.second;
+      if (NULL == pregmdf) {
+        spdlog::critical("MDF register definition is missing");
+        continue;
+      }
 
       CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("Register");
       if (nullptr == itemReg) {
@@ -1778,13 +1769,15 @@ CFrmNodeConfig::renderRegisters(void)
   }
 
   m_nUpdates++; // Another update
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderRemoteVariables
 //
 
-void
+bool
 CFrmNodeConfig::renderRemoteVariables(void)
 {
   int rv;
@@ -1807,8 +1800,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
     // Save a pointer to the MDF remote variable item
     itemWidget->m_pRemoteVariable = item;
 
-    Qt::ItemFlags itemFlags =
-      Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
+    Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
     // Set foreground and background colors from MDF
     if (!pworks->m_config_bDisableColors) {
@@ -1820,7 +1812,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
       }
     }
 
-    // Save reister info so we can find info later
+    // Save register info so we can find info later
     itemWidget->m_pRemoteVariable = item;
     // itemWidget->m_regPage = prvmdf->getPage();
     // itemWidget->m_regOffset = prvmdf->getOffset();
@@ -1871,13 +1863,15 @@ CFrmNodeConfig::renderRemoteVariables(void)
     // Add item
     ui->treeWidgetRemoteVariables->addTopLevelItem(itemWidget);
   }
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderDecisionMatrix
 //
 
-void
+bool
 CFrmNodeConfig::renderDecisionMatrix(void)
 {
   int rv;
@@ -1888,16 +1882,17 @@ CFrmNodeConfig::renderDecisionMatrix(void)
   CMDF_DecisionMatrix* pdm = m_mdf.getDM();
   uint16_t startPage       = pdm->getStartPage();
   uint32_t startOffset     = pdm->getStartOffset();
-  for (int row = 0; row < pdm->getRowCount(); row++) {
 
+  for (int row = 0; row < pdm->getRowCount(); row++) {
     CDMWidgetItem* itemWidget = new CDMWidgetItem("DM");
     if (nullptr == itemWidget) {
       spdlog::critical("Failed to create DM widget item");
       continue;
     }
 
-    Qt::ItemFlags itemFlags =
-      Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
+    Qt::ItemFlags itemFlags = Qt::ItemIsEnabled |
+                              Qt::ItemIsSelectable |
+                              Qt::ItemNeverHasChildren;
     itemFlags |= Qt::ItemIsEditable;
 
     // Save helper info
@@ -1917,7 +1912,7 @@ CFrmNodeConfig::renderDecisionMatrix(void)
 
     // Fill in data
     for (int pos = 0; pos < 8; pos++) {
-      int value = m_userregs.getReg(startOffset + row * 8 + pos, startPage);
+      int value     = m_userregs.getReg(startOffset + row * 8 + pos, startPage);
       bool bChanged = m_userregs.isChanged(startOffset + row * 8 + pos,
                                            startPage);
       if (-1 == value) {
@@ -1954,13 +1949,15 @@ CFrmNodeConfig::renderDecisionMatrix(void)
     // Add item
     ui->treeWidgetDecisionMatrix->addTopLevelItem(itemWidget);
   }
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderMdfFiles
 //
 
-void
+bool
 CFrmNodeConfig::renderMdfFiles(void)
 {
   int rv;
@@ -1978,7 +1975,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     if (nullptr == topItemWidget) {
       spdlog::critical(
         "Failed to create MDF file widget top item for pictures");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -1992,7 +1989,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Pictures");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for pictures");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getPictureObj(i)->getName().c_str());
@@ -2014,7 +2011,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     topItemWidget = new CDMWidgetItem("Video");
     if (nullptr == topItemWidget) {
       spdlog::critical("Failed to create MDF file widget top item for videos");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -2027,7 +2024,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Video");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for videos");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getVideoObj(i)->getName().c_str());
@@ -2050,7 +2047,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     if (nullptr == topItemWidget) {
       spdlog::critical(
         "Failed to create MDF file widget top item for firmware");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -2063,7 +2060,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Firmware");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for firmware");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getFirmwareObj(i)->getName().c_str());
@@ -2085,7 +2082,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     topItemWidget = new CDMWidgetItem("Driver");
     if (nullptr == topItemWidget) {
       spdlog::critical("Failed to create MDF file widget top item for driver");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -2098,7 +2095,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Driver");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for driver");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getDriverObj(i)->getName().c_str());
@@ -2120,7 +2117,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     topItemWidget = new CDMWidgetItem("Manual");
     if (nullptr == topItemWidget) {
       spdlog::critical("Failed to create MDF file widget top item for manual");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -2133,7 +2130,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Manual");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for Manual");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getManualObj(i)->getName().c_str());
@@ -2155,7 +2152,7 @@ CFrmNodeConfig::renderMdfFiles(void)
     topItemWidget = new CDMWidgetItem("Setup");
     if (nullptr == topItemWidget) {
       spdlog::critical("Failed to create MDF file widget top item for setup");
-      return;
+      return false;
     }
 
     topItemWidget->setFont(0, QFont("Arial", 12, QFont::Bold));
@@ -2168,7 +2165,7 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget = new CDMWidgetItem("Setup");
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for setup");
-        return;
+        return false;
       }
 
       QString name(m_mdf.getSetupObj(i)->getName().c_str());
@@ -2183,6 +2180,8 @@ CFrmNodeConfig::renderMdfFiles(void)
       topItemWidget->addChild(itemWidget);
     }
   }
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2191,11 +2190,12 @@ CFrmNodeConfig::renderMdfFiles(void)
 
 int
 CFrmNodeConfig::writeChanges(void)
-
 {
+  int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (!m_vscpClient->isConnected()) {
+    QApplication::beep();
     spdlog::error("Aborted write changed register(s) due to no connection.");
     return VSCP_ERROR_CONNECTION;
   }
@@ -2212,29 +2212,42 @@ CFrmNodeConfig::writeChanges(void)
 
   QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
   while (*item) {
-    if ((*item)->type() == TREE_LIST_REGISTER_TYPE &&
-        QBrush(QColor("red")) == (*item)->foreground(REG_COL_VALUE)) {
+
+    if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
+
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
-      uint8_t value =
-        vscp_readStringValue((*item)->text(REG_COL_VALUE).toStdString());
-      if (VSCP_ERROR_SUCCESS == vscp_writeLevel1Register(*m_vscpClient,
-                                                         guidNode,
-                                                         guidInterface,
-                                                         itemReg->m_regPage,
-                                                         itemReg->m_regOffset,
-                                                         value)) {
-        m_bInternalChange = true;
-        (*item)->setText(
-          REG_COL_VALUE,
-          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-            .toStdString()
-            .c_str());
+
+      // Only interested in changed registers
+      if (!m_userregs.isChanged(itemReg->m_regOffset, itemReg->m_regPage)) {
+        ++item;
+        continue;
+      }
+
+      uint8_t value = vscp_readStringValue((*item)->text(REG_COL_VALUE).toStdString());
+      if (VSCP_ERROR_SUCCESS == (rv = vscp_writeLevel1Register(*m_vscpClient,
+                                                               guidNode,
+                                                               guidInterface,
+                                                               itemReg->m_regPage,
+                                                               itemReg->m_regOffset,
+                                                               value))) {
+        
+        m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
+        
+        (*item)->setText(REG_COL_VALUE,
+                         pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                           .toStdString()
+                           .c_str());
         (*item)->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
-        m_bInternalChange = false;
+
+        //  Update DM info
+        updateChangeDM(itemReg->m_regOffset, itemReg->m_regPage);
       }
       else {
-        spdlog::error("Failed to write changed registers");
-        ui->statusBar->showMessage(tr("Failed to write changed registers"));
+        QApplication::beep();
+        spdlog::error("Failed to write register(s) rv = {}", rv);
+        QString str = tr("Failed to write register(s) rv = ") + QString::number(rv);
+        ui->statusBar->showMessage(str);
+        QApplication::restoreOverrideCursor();
         return VSCP_ERROR_COMMUNICATION;
       }
     }
@@ -2298,9 +2311,9 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
 
   int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface);
   if (VSCP_ERROR_SUCCESS != rv) {
-    ui->statusBar->showMessage(
-      tr("Failed to read standard registers from device. rv=") +
-      QString::number(rv));
+    QApplication::beep();
+    ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") +
+                               QString::number(rv));
     spdlog::error("Failed to init standard registers {0}", rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
@@ -2347,6 +2360,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   CURLcode curl_rv;
   curl_rv = m_mdf.downLoadMDF(url, tempPath);
   if (CURLE_OK != curl_rv) {
+    QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to download MDF file for device."));
     spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
     QApplication::restoreOverrideCursor();
@@ -2364,6 +2378,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   ui->statusBar->showMessage(tr("Parsing MDF file..."));
   rv = m_mdf.parseMDF(tempPath);
   if (VSCP_ERROR_SUCCESS != rv) {
+    QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
     QApplication::restoreOverrideCursor();
@@ -2378,7 +2393,14 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   spdlog::trace("Parsing MDF OK");
 
   // Fill register data
-  renderRegisters();
+  if (!renderRegisters()) {
+    QApplication::beep();
+    ui->statusBar->showMessage(tr("Failed to render registers"));
+    spdlog::error("Failed to render registers");
+    QApplication::restoreOverrideCursor();
+    ui->statusBar->removeWidget(pbar);
+    return VSCP_ERROR_PARSING;
+  }
   fillDeviceHtmlInfo();
   pbar->setValue(100);
 
@@ -2395,14 +2417,14 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
 void
 CFrmNodeConfig::readSelectedRegisterValues(void)
 {
+  int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (!m_vscpClient->isConnected()) {
-    int ret = QMessageBox::warning(
-      this,
-      tr(APPNAME),
-      tr("Need to be connected to perform this operation."),
-      QMessageBox::Ok);
+    int ret = QMessageBox::warning(this,
+                                    tr(APPNAME),
+                                    tr("Need to be connected to perform this operation."),
+                                    QMessageBox::Ok);
     spdlog::error("Aborted read register(s) due to no connection.");
     return;
   }
@@ -2422,26 +2444,24 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
   for (auto item : listSelected) {
     if (item->type() == TREE_LIST_REGISTER_TYPE) {
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
-      uint8_t value =
-        vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
-      if (VSCP_ERROR_SUCCESS == vscp_readLevel1Register(*m_vscpClient,
-                                                        guidNode,
-                                                        guidInterface,
-                                                        itemReg->m_regPage,
-                                                        itemReg->m_regOffset,
-                                                        value)) {
-        m_bInternalChange = true;
-        item->setText(
-          REG_COL_VALUE,
-          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-            .toStdString()
-            .c_str());
-        item->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
-        m_bInternalChange = false;
+      uint8_t value = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
+      if (VSCP_ERROR_SUCCESS == (rv = vscp_readLevel1Register(*m_vscpClient,
+                                                                guidNode,
+                                                                guidInterface,
+                                                                itemReg->m_regPage,
+                                                                itemReg->m_regOffset,
+                                                                value))) {
+        item->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                                      .toStdString()
+                                      .c_str());
+        item->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
       }
       else {
-        spdlog::error("Failed to read register(s)");
-        ui->statusBar->showMessage(tr("Failed to read register(s)"));
+        QApplication::beep();
+        spdlog::error("Failed to read register(s) rv = {}", rv);
+        QString str = tr("Failed to read register(s) rv = ") + QString::number(rv);
+        ui->statusBar->showMessage(str);
+        QApplication::restoreOverrideCursor();        
         return;
       }
     }
@@ -2452,20 +2472,21 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// readSelectedRegisterValues
+// writeSelectedRegisterValues
 //
 
 void
 CFrmNodeConfig::writeSelectedRegisterValues(void)
 {
+  int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (!m_vscpClient->isConnected()) {
-    int ret = QMessageBox::warning(
-      this,
-      tr(APPNAME),
-      tr("Need to be connected to perform this operation."),
-      QMessageBox::Ok);
+    QApplication::beep();
+    int ret = QMessageBox::warning(this,
+                                    tr(APPNAME),
+                                    tr("Need to be connected to perform this operation."),
+                                    QMessageBox::Ok);
     spdlog::error("Aborted read register(s) due to no connection.");
     return;
   }
@@ -2480,31 +2501,37 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
   guidNode = guidInterface;
   guidNode.setLSB(m_nodeidConfig->value()); // Set node id
 
-  QList<QTreeWidgetItem*> listSelected =
-    ui->treeWidgetRegisters->selectedItems();
+  // Walk through selected items
+  QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
   for (auto item : listSelected) {
     if (item->type() == TREE_LIST_REGISTER_TYPE) {
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
-      uint8_t value =
-        vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
-      if (VSCP_ERROR_SUCCESS == vscp_writeLevel1Register(*m_vscpClient,
-                                                         guidNode,
-                                                         guidInterface,
-                                                         itemReg->m_regPage,
-                                                         itemReg->m_regOffset,
-                                                         value)) {
-        m_bInternalChange = true;
-        item->setText(
-          REG_COL_VALUE,
-          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-            .toStdString()
-            .c_str());
+      uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
+      if (VSCP_ERROR_SUCCESS == (rv = vscp_writeLevel1Register(*m_vscpClient,
+                                                               guidNode,
+                                                               guidInterface,
+                                                               itemReg->m_regPage,
+                                                               itemReg->m_regOffset,
+                                                               value))) {
+        // Certain that read value is the same as the one we just wrote here
+        m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
+        m_userregs.putReg(itemReg->m_regOffset,
+                          itemReg->m_regPage,
+                          value);
+        item->setText(REG_COL_VALUE,
+                      pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
+                        .toStdString()
+                        .c_str());
         item->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
-        m_bInternalChange = false;
+
+        updateChangeDM(itemReg->m_regOffset, itemReg->m_regPage);
       }
       else {
-        spdlog::error("Failed to write register(s)");
-        ui->statusBar->showMessage(tr("Failed to write register(s)"));
+        QApplication::beep();
+        spdlog::error("Failed to write register(s) rv = {}", rv);
+        QString str = tr("Failed to write register(s) rv = ") + QString::number(rv);
+        ui->statusBar->showMessage(str);
+        QApplication::restoreOverrideCursor();
         return;
       }
     }
@@ -2618,7 +2645,7 @@ CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
   html += "] ";
   html += "</p>";
   html += "<p>";
-  CMDF_Register* preg = m_mdf.getRegister(pitem->m_regPage, pitem->m_regOffset);
+  CMDF_Register* preg = m_mdf.getRegister(pitem->m_regOffset, pitem->m_regPage);
   if (nullptr == preg) {
     html += tr("Register not found in MDF").toStdString();
   }
@@ -3280,9 +3307,9 @@ CFrmNodeConfig::editDMRow()
                       item->m_pDM->getStartPage(),
                       pDlg->getDmAddressOrigin());
     // If changed mark as changed in visual interface
-    // if (m_userregs.isChanged(item->m_pDM->getStartPage(),
-    //                       (item->m_row * item->m_pDM->getRowSize()) +
-    //                       CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN) {
+    // if (m_userregs.isChanged( (item->m_row * item->m_pDM->getRowSize()) +
+    //                       CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
+    //                       item->m_pDM->getStartPage()) {
 
     // }
 
@@ -3338,19 +3365,40 @@ CFrmNodeConfig::updateVisualRegisters(void)
   QTreeWidgetItemIterator it(ui->treeWidgetRegisters);
   while (*it) {
     CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*it);
-    // std::cout << "Item: " << itemReg->m_regPage << " " <<
-    // itemReg->m_regOffset << std::endl;
-    if ((itemReg->type() == TREE_LIST_REGISTER_TYPE) &&
-        m_userregs.isChanged(itemReg->m_regOffset, itemReg->m_regPage)) {
-      itemReg->setText(
-        REG_COL_VALUE,
-        pworks
-          ->decimalToStringInBase(
-            m_userregs.getReg(itemReg->m_regOffset,itemReg->m_regPage),
-            m_baseComboBox->currentIndex())
-          .toStdString()
-          .c_str());
+    std::cout << "Item: " << itemReg->m_regPage << " " << itemReg->m_regOffset << std::endl;
+
+    if (itemReg->type() != TREE_LIST_REGISTER_TYPE) {
+      ++it;
+      continue;
+    }
+
+    // No update of standard registers
+    if ((0 == itemReg->m_regPage) && (itemReg->m_regOffset >= 128)) {
+      ++it;
+      continue;
+    }
+
+    // Write value
+    itemReg->setText(
+      REG_COL_VALUE,
+      pworks
+        ->decimalToStringInBase(
+          m_userregs.getReg(itemReg->m_regOffset, itemReg->m_regPage),
+          m_baseComboBox->currentIndex())
+        .toStdString()
+        .c_str());
+
+    // Set forecolor
+    if (m_userregs.isChanged(itemReg->m_regOffset, itemReg->m_regPage)) {
       itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("red")));
+    }
+    // Blue if changed some time but written
+    else if (m_userregs.hasWrittenChange(itemReg->m_regOffset, itemReg->m_regPage)) {
+      itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+    }
+    // Black if never changed
+    else {
+      itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
     }
     ++it;
     // CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
@@ -3366,6 +3414,8 @@ CFrmNodeConfig::updateVisualRegisters(void)
     // m_userregs.markChanged(item->m_pDM->getStartPage(),
     //                         (item->m_row * item->m_pDM->getRowSize()) + i);
   }
+  updateVisualRemoteVariables();
+  updateVisualDM();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3380,6 +3430,7 @@ CFrmNodeConfig::updateVisualRemoteVariables(void)
   QTreeWidgetItemIterator it(ui->treeWidgetRegisters);
   while (*it) {
     CRemoteVariableWidgetItem* itemReg = (CRemoteVariableWidgetItem*)(*it);
+    ++it;
   }
 }
 
@@ -3395,13 +3446,76 @@ CFrmNodeConfig::updateVisualDM(void)
   QTreeWidgetItemIterator it(ui->treeWidgetDecisionMatrix);
   while (*it) {
     CDMWidgetItem* itemDM = (CDMWidgetItem*)(*it);
-    for (int i = itemDM->m_pDM->getStartOffset();
-         i < (itemDM->m_pDM->getStartOffset() +
-              itemDM->m_row * itemDM->m_pDM->getRowSize());
-         i++) {
+    int pos               = itemDM->m_pDM->getStartOffset() + itemDM->m_row * itemDM->m_pDM->getRowSize();
+    for (int i = pos; i < (pos + 8); i++) {
       if (m_userregs.isChanged(i, itemDM->m_pDM->getStartPage())) {
+        itemDM->setText(i % 8, pworks->decimalToStringInBase(m_userregs.getReg(i, itemDM->m_pDM->getStartPage()), m_baseComboBox->currentIndex()).toStdString().c_str());
+        itemDM->setForeground(i % 8, QBrush(QColor("red")));
       }
     }
+    ++it;
   }
-  renderDecisionMatrix();
+
+  // renderDecisionMatrix();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateChangeRemoteVariable
+//
+
+void
+CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateChangeDM
+//
+
+void
+CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page)
+{
+  // Check if register is use by the DM
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // Should be the same page
+  if (page != m_mdf.getDM()->getStartPage()) {
+    return;
+  }
+
+  // Find the change positions in the DM
+  int row = (offset - m_mdf.getDM()->getStartOffset()) / m_mdf.getDM()->getRowSize();
+  int pos = ((offset - m_mdf.getDM()->getStartOffset()) + row * m_mdf.getDM()->getRowSize()) % m_mdf.getDM()->getRowSize();
+  //std::cout << "Change DM: " << offset << " " << page << " " << row << " " << pos << std::endl;
+
+  // offset is in the range of the DM
+  if ((offset < m_mdf.getDM()->getStartOffset()) ||
+      (offset > (m_mdf.getDM()->getStartOffset() + row * m_mdf.getDM()->getRowSize() + 8))) {
+    return;
+  }
+
+  CDMWidgetItem* itemDM = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->topLevelItem(row);
+  if (NULL == itemDM) {
+    return;
+  }
+
+  // Write value
+  itemDM->setText(pos,
+                  pworks->decimalToStringInBase(m_userregs.getReg(offset, page),
+                                                m_baseComboBox->currentIndex())
+                    .toStdString()
+                    .c_str());
+
+  // If marked as changed: red
+  if (m_userregs.isChanged(offset, page)) {
+    itemDM->setForeground(pos, QBrush(QColor("red")));
+  }
+  // If changed but already written: blue
+  else if (m_userregs.hasWrittenChange(offset, page)) {
+    itemDM->setForeground(pos, QBrush(QColor("royalblue")));
+  }
+  // black
+  else {
+    itemDM->setForeground(pos, QBrush(QColor("black")));
+  }
 }
