@@ -170,15 +170,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
-  // tabBar->addTab("Skogig tab");
 
   // Select register tab
   tabBar->setCurrentIndex(0);
 
   // Setup register tab
   QHeaderView* treeViewHeaderRegisters = ui->treeWidgetRegisters->header();
-  // treeViewHeaderRegisters->setDefaultAlignment(Qt::AlignCenter);
-  // treeViewHeaderRegisters->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
   ui->treeWidgetRegisters->clear();
   ui->treeWidgetRegisters->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -187,29 +184,20 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 160);
 
   // Setup remote variable tab
-  QHeaderView* treeViewHeaderRemoteVariables =
-    ui->treeWidgetRemoteVariables->header();
-  // treeViewHeaderRemoteVariables->setDefaultAlignment(Qt::AlignCenter);
-  // treeViewHeaderRemoteVariables->setTextAlignment(REMOTEVAR_COL_LEFT,
-  // Qt::AlignLeft);
-  // treeViewHeaderRemoteVariables->setAlignment(REMOTEVAR_COL_NAME,
-  // Qt::AlignCenter);
+  QHeaderView* treeViewHeaderRemoteVariables = ui->treeWidgetRemoteVariables->header();
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetRemoteVariables->setContextMenuPolicy(Qt::CustomContextMenu);
-  ui->treeWidgetRemoteVariables->setEditTriggers(
-    QAbstractItemView::NoEditTriggers);
+  ui->treeWidgetRemoteVariables->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_VALUE, 200);
   ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_ACCESS, 80);
   ui->treeWidgetRemoteVariables->setColumnWidth(REMOTEVAR_COL_TYPE, 170);
 
   // Setup decision matrix tab
-  QHeaderView* treeViewHeaderDecisionMatrix =
-    ui->treeWidgetDecisionMatrix->header();
+  QHeaderView* treeViewHeaderDecisionMatrix = ui->treeWidgetDecisionMatrix->header();
   treeViewHeaderDecisionMatrix->setDefaultAlignment(Qt::AlignCenter);
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetDecisionMatrix->setContextMenuPolicy(Qt::CustomContextMenu);
-  ui->treeWidgetDecisionMatrix->setEditTriggers(
-    QAbstractItemView::NoEditTriggers);
+  ui->treeWidgetDecisionMatrix->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_ORIGIN, 120);
   ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_FLAGS, 120);
   ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_CLASS_MASK, 120);
@@ -220,7 +208,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   ui->treeWidgetDecisionMatrix->setColumnWidth(DM_LEVEL1_COL_PARAMETER, 200);
 
   QHeaderView* treeViewHeaderMdfFiles = ui->treeWidgetMdfFiles->header();
-  // treeViewHeaderMdfFiles->setDefaultAlignment(Qt::AlignCenter);
   ui->treeWidgetMdfFiles->clear();
   ui->treeWidgetMdfFiles->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -237,71 +224,15 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   // MDF colors from settings
   ui->actionDisableColors->setChecked(pworks->m_config_bDisableColors);
 
-  // QStringList headers;
-  // for (int i = 0; i < ui->treeView->model()->columnCount(); i++) {
-  //     headers.append(ui->treeView->model()->headerData(i,
-  //     Qt::Horizontal).toString());
-  // }
-  // void QTreeWidgetItem::setForeground(int column, const QBrush &brush)
-
-  // Add page top item
-  // QTreeWidgetItem* itemTopReg1 = new
-  // QTreeWidgetItem(QTreeWidgetItem::UserType); itemTopReg1->setText(0, "Page
-  // 0"); itemTopReg1->setFont(0, QFont("Arial", 12, QFont::Bold));
-  // itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
-  // itemTopReg1->get  setStyleSheet("background-color: red");
-  // itemTopReg1->setForeground(0, QBrush(QColor("#0000FF")));
-  // itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
-  // itemTopReg1->setBackground(0, QBrush(QColor(Qt::black)));
-  // QList<QTableWidgetItem*>::iterator it;
-  // for (it = sellist.begin(); it != sellist.end(); it++) {
-  //     if (QBrush(Qt::cyan) == (*it)->background()) {
-  //         (*it)->setBackground(Qt::white);
-  //     }
-  //     else {
-  //         (*it)->setBackground(Qt::cyan);
-  //     }
-  // }
-  // ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
-
-  // // Add register sub item
-  // CRegisterWidgetItem* itemReg = new CRegisterWidgetItem("trttttt");
-  // itemReg->setText(0, "0000:0000");
-  // itemReg->setTextAlignment(0, Qt::AlignCenter);
-  // itemReg->setText(1, "rw");
-  // itemReg->setTextAlignment(1, Qt::AlignCenter);
-  // itemReg->setText(2, "0x55");
-  // itemReg->setTextAlignment(2, Qt::AlignCenter);
-  // itemReg->setText(3, "This is a test");
-  // itemReg->setTextAlignment(0, Qt::AlignLeft);
-  // itemTopReg1->addChild(itemReg);
-
   m_nodeidConfig   = nullptr;
   m_guidConfig     = nullptr;
   m_comboInterface = nullptr;
-
-  /*
-    m_nodeidConfig = new QSpinBox();
-    m_nodeidConfig->setRange(0, 0xff);
-    ui->mainToolBar->addWidget(new QLabel("node id:"));
-    ui->mainToolBar->addWidget(m_nodeidConfig);
-
-    m_guidConfig = new QLineEdit();
-    ui->mainToolBar->addWidget(new QLabel("GUID: "));
-    ui->mainToolBar->addWidget(m_guidConfig);
-
-    m_comboInterface = new QComboBox();
-    ui->mainToolBar->addWidget(new QLabel("Interface: "));
-    ui->mainToolBar->addWidget(m_comboInterface);
-  */
 
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
 
-  // vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  spdlog::debug(
-    std::string(tr("Node configuration module opended").toStdString()));
+  spdlog::debug(std::string(tr("Node configuration module opended").toStdString()));
 
   if (nullptr == pconn) {
     QApplication::beep();
@@ -329,8 +260,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     return;
   }
 
-  m_vscpConnType =
-    static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
 
   QString str;
   str += pworks->getConnectionName(m_vscpConnType);
@@ -388,10 +318,10 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       break;
 
-    case CVscpClient::connType::TCPIP: {
-      std::string interface =
-        m_connObject["selected-interface"].toString().toStdString();
-    }
+    case CVscpClient::connType::TCPIP: 
+      // {
+      //   std::string interface = m_connObject["selected-interface"].toString().toStdString();
+      // }
 
       if (bFullLevel2) {
         // GUID
@@ -461,9 +391,9 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientSocketCan();
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
-        QMessageBox::warning(this,
-                             tr(APPNAME),
-                             tr("Failed to initialize SOCKETCAN driver. See "
+        QMessageBox::warning(this, 
+                              tr(APPNAME),
+                              tr("Failed to initialize SOCKETCAN driver. See "
                                 "log for more details."));
         return;
       }
@@ -568,6 +498,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       break;
   }
 
+  // CONNECTIONS
   // Menu and toolbar commands
 
   // Connect has been clicked
@@ -635,11 +566,23 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
           this,
           &CFrmNodeConfig::showRegisterContextMenu);
 
+  // Remote variable item value has changed.
+  connect(ui->treeWidgetRemoteVariables,
+          &QTreeWidget::itemChanged,
+          this,
+          &CFrmNodeConfig::onRemoteVarTreeWidgetCellChanged);
+
   // Open pop up menu on right click on remote variable list
   connect(ui->treeWidgetRemoteVariables,
           &QTreeWidget::customContextMenuRequested,
           this,
           &CFrmNodeConfig::showRemoteVariableContextMenu);
+
+  // DM item value has changed.
+  connect(ui->treeWidgetDecisionMatrix,
+          &QTreeWidget::itemChanged,
+          this,
+          &CFrmNodeConfig::onDMTreeWidgetCellChanged);          
 
   // Open pop up menu on right click on DM list
   connect(ui->treeWidgetDecisionMatrix,
@@ -718,7 +661,6 @@ void
 CFrmNodeConfig::done(int rv)
 {
   if (QDialog::Accepted == rv) { // ok was pressed
-
     vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
     // Session window
@@ -1508,9 +1450,12 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
     if (m_userregs.isChanged(regItem->m_regOffset, regItem->m_regPage)) {
       item->setForeground(column, QBrush(Qt::red));
       updateChangeDM(regItem->m_regOffset, regItem->m_regPage);
+      updateChangeRemoteVariable(regItem->m_regOffset, regItem->m_regPage);
     }
   }
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderStandardRegisters
@@ -1524,8 +1469,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QTreeWidgetItem* itemTopStdReg =
-    new QTreeWidgetItem(QTreeWidgetItem::UserType);
+  QTreeWidgetItem* itemTopStdReg = new QTreeWidgetItem(QTreeWidgetItem::UserType);
   itemTopStdReg->setText(REG_COL_POS, "Standard registers");
   itemTopStdReg->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
   itemTopStdReg->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
@@ -1768,6 +1712,10 @@ CFrmNodeConfig::renderRegisters(void)
     }
   }
 
+  // Clear changes and history as this is the first load.
+  m_userregs.clearChanges();
+  m_userregs.clearHistory();
+
   m_nUpdates++; // Another update
 
   return true;
@@ -1784,14 +1732,12 @@ CFrmNodeConfig::renderRemoteVariables(void)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetRemoteVariables->clear(); // Clear the tree
-  std::deque<CMDF_RemoteVariable*>* listRemoteVariables =
-    m_mdf.getRemoteVariableList();
+  std::deque<CMDF_RemoteVariable*>* listRemoteVariables = m_mdf.getRemoteVariableList();
   for (auto const& item : *listRemoteVariables) {
 
     CMDF_RemoteVariable* prvmdf = item;
 
-    CRemoteVariableWidgetItem* itemWidget =
-      new CRemoteVariableWidgetItem("Remote Variable");
+    CRemoteVariableWidgetItem* itemWidget = new CRemoteVariableWidgetItem("Remote Variable");
     if (nullptr == itemWidget) {
       spdlog::critical("Failed to create remote variable widget item");
       continue;
@@ -1805,10 +1751,8 @@ CFrmNodeConfig::renderRemoteVariables(void)
     // Set foreground and background colors from MDF
     if (!pworks->m_config_bDisableColors) {
       for (int i = 0; i < 4; i++) {
-        itemWidget->setForeground(i,
-                                  QBrush(QColor(prvmdf->getForegroundColor())));
-        itemWidget->setBackground(i,
-                                  QBrush(QColor(prvmdf->getBackgroundColor())));
+        itemWidget->setForeground(i, QBrush(QColor(prvmdf->getForegroundColor())));
+        itemWidget->setBackground(i, QBrush(QColor(prvmdf->getBackgroundColor())));
       }
     }
 
@@ -1852,13 +1796,27 @@ CFrmNodeConfig::renderRemoteVariables(void)
       format = FORMAT_REMOTEVAR_HEX;
     }
 
-    if (VSCP_ERROR_SUCCESS !=
-        m_userregs.remoteVarFromRegToString(*prvmdf, str, format)) {
+    if (VSCP_ERROR_SUCCESS != m_userregs.remoteVarFromRegToString(*prvmdf, str, format)) {
       str = "ERROR";
       itemWidget->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
     }
     itemWidget->setTextAlignment(REMOTEVAR_COL_VALUE, Qt::AlignCenter);
     itemWidget->setText(REMOTEVAR_COL_VALUE, str.c_str());
+
+    bool bChanged = false;
+    for (int pos=prvmdf->getOffset(); pos<prvmdf->getOffset()+prvmdf->getTypeByteCount(); pos++) {
+      if (m_userregs.isChanged(pos)) {
+        bChanged = true;
+        break;
+      }
+    }
+
+    if (bChanged) {
+      itemWidget->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
+    }
+    else {
+      itemWidget->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("black")));
+    }
 
     // Add item
     ui->treeWidgetRemoteVariables->addTopLevelItem(itemWidget);
@@ -1929,12 +1887,10 @@ CFrmNodeConfig::renderDecisionMatrix(void)
           DM_LEVEL1_COL_ORIGIN + pos,
           pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()));
         if (bChanged) {
-          itemWidget->setForeground(DM_LEVEL1_COL_ORIGIN + pos,
-                                    QBrush(QColor("red")));
+          itemWidget->setForeground(DM_LEVEL1_COL_ORIGIN + pos, QBrush(QColor("red")));
         }
         else {
-          itemWidget->setForeground(DM_LEVEL1_COL_ORIGIN + pos,
-                                    QBrush(QColor("black")));
+          itemWidget->setForeground(DM_LEVEL1_COL_ORIGIN + pos, QBrush(QColor("black")));
         }
       }
     }
@@ -2239,8 +2195,8 @@ CFrmNodeConfig::writeChanges(void)
                            .c_str());
         (*item)->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
 
-        //  Update DM info
         updateChangeDM(itemReg->m_regOffset, itemReg->m_regPage);
+        updateChangeRemoteVariable(itemReg->m_regOffset, itemReg->m_regPage);
       }
       else {
         QApplication::beep();
@@ -2525,6 +2481,7 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
         item->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
 
         updateChangeDM(itemReg->m_regOffset, itemReg->m_regPage);
+        updateChangeRemoteVariable(itemReg->m_regOffset, itemReg->m_regPage);
       }
       else {
         QApplication::beep();
@@ -3192,35 +3149,75 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   ui->infoArea->setHtml(html.c_str());
 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
-// fillDMHtmlInfo
+// onRemoteVarTreeWidgetCellChanged
+//
+
+void
+CFrmNodeConfig::onRemoteVarTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
+{
+  int rv;
+  vscpworks* pworks                  = (vscpworks*)QCoreApplication::instance();
+  CRemoteVariableWidgetItem* rvItem = (CRemoteVariableWidgetItem*)item;
+  std::string strValue                   = item->text(column).toStdString();
+  if (VSCP_ERROR_SUCCESS != (rv = m_userregs.remoteVarFromStringToReg(*rvItem->m_pRemoteVariable, strValue))) {
+    QApplication::beep();
+    std::string strError = tr("Failed to write remote variable to registers. rv=").toStdString();
+    strError.append(QString::number(rv).toStdString());
+    spdlog::error(strError);
+    ui->statusBar->showMessage(strError.c_str());
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             strError.c_str(),
+                             QMessageBox::Ok);
+  }
+  updateVisualRegisters();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onDMTreeWidgetCellChanged
+//
+
+void
+CFrmNodeConfig::onDMTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
+{
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* itemDM = (CDMWidgetItem*)item;
+  QString strValue    = itemDM->text(column);
+  uint8_t value       = vscp_readStringValue(strValue.toStdString());
+  m_userregs.putReg((itemDM->m_row * itemDM->m_pDM->getRowSize()) + column,
+                        itemDM->m_pDM->getStartPage(),
+                        value);
+  updateVisualRegisters();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editDMRow
 //
 
 void
 CFrmNodeConfig::editDMRow()
 {
   int reg;
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item =
-    (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
-  uint16_t page = item->m_pDM->getStartPage();
-  std::map<uint32_t, uint8_t>* map =
-    m_userregs.getRegisterMap(item->m_pDM->getStartPage());
+  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  uint16_t page                    = item->m_pDM->getStartPage();
+  //std::map<uint32_t, uint8_t>* map = m_userregs.getRegisterMap(item->m_pDM->getStartPage());
 
   CDlgEditDm* pDlg = new CDlgEditDm(this);
   pDlg->setWindowTitle(tr("Edit Decision Matrix Row"));
   pDlg->setDm(item->m_pDM);
 
   // Address origin
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) + CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
   pDlg->setDmAddressOrigin(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Flags
   reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
@@ -3466,6 +3463,86 @@ CFrmNodeConfig::updateVisualDM(void)
 void
 CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page)
 {
+  // Check if register is use by the DM
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QTreeWidgetItemIterator it(ui->treeWidgetRemoteVariables);
+  while (*it) {
+
+    // Get row item for remote variable
+    CRemoteVariableWidgetItem* itemRV = (CRemoteVariableWidgetItem*)(*it);
+    if (nullptr == itemRV) {
+      ++it;
+      continue;
+    }
+
+    // Get remote variable definition
+    CMDF_RemoteVariable *pRemoteVariable = itemRV->m_pRemoteVariable;
+    if (nullptr == pRemoteVariable) {
+      ++it;
+      continue;
+    }
+
+    // Must be on the correct page
+    if (pRemoteVariable->getPage() != page) {
+      ++it;
+      continue;
+    }
+
+    // Register part of this remote variable
+    if ((offset >= pRemoteVariable->getOffset()) && 
+        (offset < (pRemoteVariable->getOffset()+ pRemoteVariable->getTypeByteCount()))) {
+
+      std::string str;
+      uint8_t format = FORMAT_REMOTEVAR_DECIMAL;
+      if (0 == m_baseComboBox->currentIndex()) {
+        format = FORMAT_REMOTEVAR_HEX;
+      }
+      if (VSCP_ERROR_SUCCESS != m_userregs.remoteVarFromRegToString(*pRemoteVariable, str, format)) {
+        str = "ERROR";
+        itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
+      }
+      itemRV->setText(REMOTEVAR_COL_VALUE, str.c_str());                        
+      //itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
+      // Set forecolor
+      if (m_userregs.isChanged(offset, page)) {
+        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("red")));
+      }
+      // Blue if changed some time but written
+      else if (m_userregs.hasWrittenChange(offset, page)) {
+        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+      }
+      // Black if never changed
+      else {
+        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
+      }
+    }
+
+    /* if ((itemReg->m_regOffset == offset) && (itemReg->m_regPage == page)) {
+      itemReg->setText(
+        REG_COL_VALUE,
+        pworks
+          ->decimalToStringInBase(
+            m_userregs.getReg(itemReg->m_regOffset, itemReg->m_regPage),
+            m_baseComboBox->currentIndex())
+          .toStdString()
+          .c_str());
+
+      // Set forecolor
+      if (m_userregs.isChanged(itemReg->m_regOffset, itemReg->m_regPage)) {
+        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("red")));
+      }
+      // Blue if changed some time but written
+      else if (m_userregs.hasWrittenChange(itemReg->m_regOffset, itemReg->m_regPage)) {
+        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+      }
+      // Black if never changed
+      else {
+        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
+      }
+    } */
+    ++it;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

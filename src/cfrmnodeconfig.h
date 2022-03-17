@@ -124,11 +124,6 @@ class CRegisterWidgetItem : public QTreeWidgetItem
     virtual ~CRegisterWidgetItem();
 
     /*!
-      Pointer to MDF register row for this tree item
-    */
-    //CMDF_Register *m_pmdfreg;
-
-    /*!
       Register page
     */
     uint16_t m_regPage;
@@ -358,12 +353,28 @@ class CFrmNodeConfig : public QMainWindow
     void onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem *item, int column);
 
     /*!
-      Register value changed. If use edits the register value and it is changed
+      Register value changed. If user edits the register value and it is changed
       then this method is called.
       @param item Widget item clicked.
       @param column Column clicked
     */
     void onRegisterTreeWidgetCellChanged(QTreeWidgetItem *item, int column);
+
+    /*!
+      Remote variable value changed. If user edits the remote variable value and it is changed
+      then this method is called.
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onRemoteVarTreeWidgetCellChanged(QTreeWidgetItem* item, int column);
+
+    /*!
+      DM value changed. If use edits the DM value and it is changed
+      then this method is called.
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onDMTreeWidgetCellChanged(QTreeWidgetItem* item, int column);
 
     /*!
       Fill standard register data for already 

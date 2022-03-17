@@ -1827,17 +1827,19 @@ MainWindow::newSession()
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
 
-      CFrmSession* w = new CFrmSession(nullptr, pconn);
+      QJsonObject* pconn = itemConn->getJson();
+      CFrmSession* w = new CFrmSession(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
-      w->setWindowState((windowState() & ~Qt::WindowMinimized) |
-                        Qt::WindowActive);
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
       w->raise();
       // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
       w->activateWindow();
+      // Qt::WindowFlags eFlags = windowFlags();
+      // eFlags |= Qt::WindowStaysOnTopHint;
+      // setWindowFlags(eFlags);
     }
   }
 }
@@ -3037,10 +3039,9 @@ MainWindow::newNodeConfiguration()
       // Get the connection object
       QJsonObject* pconn = itemConn->getJson();
 
-      CFrmNodeConfig* w = new CFrmNodeConfig(nullptr, pconn);
-      w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
-      w->setWindowState((windowState() & ~Qt::WindowMinimized) |
-                        Qt::WindowActive);
+      CFrmNodeConfig* w = new CFrmNodeConfig(this, pconn);
+      w->setAttribute(Qt::WA_DeleteOnClose);    // Make window close on exit
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
       w->raise();
@@ -3086,8 +3087,7 @@ MainWindow::newNodeScan()
 
       CFrmNodeScan* w = new CFrmNodeScan(nullptr, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
-      w->setWindowState((windowState() & ~Qt::WindowMinimized) |
-                        Qt::WindowActive);
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
       w->raise();
