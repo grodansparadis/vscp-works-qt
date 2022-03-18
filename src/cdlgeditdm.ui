@@ -16,6 +16,10 @@
   <property name="windowOpacity">
    <double>-2.000000000000000</double>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(222, 221, 218);
+border-color: rgb(0, 0, 0);</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>

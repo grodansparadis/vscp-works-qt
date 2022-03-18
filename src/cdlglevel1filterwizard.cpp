@@ -1267,3 +1267,47 @@ CDlgLevel1FilterWizard::onVscpTypeItemClicked(QListWidgetItem *item)
         }
     }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// disablePriorityFields
+//
+
+void CDlgLevel1FilterWizard::disablePriorityFields(void)
+{
+    ui->editVscpPriorityFilter->setEnabled(false);
+    ui->editVscpPriorityMask->setEnabled(false);
+    ui->listPriority->setEnabled(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enablePriorityFields
+//
+
+void CDlgLevel1FilterWizard::enablePriorityFields(void)
+{
+    ui->editVscpPriorityFilter->setEnabled(true);
+    ui->editVscpPriorityMask->setEnabled(true);
+    ui->listPriority->setEnabled(true);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// disableNodeIdFields
+//
+
+void CDlgLevel1FilterWizard::disableNodeIdFields(void)
+{
+    ui->editVscpNodeIdFilter->setEnabled(false);
+    ui->editVscpNodeIdMask->setEnabled(false);
+    ui->listNodeId->setEnabled(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enablePriorityFields
+//
+
+void CDlgLevel1FilterWizard::enableNodeIdFields(void)
+{
+    ui->editVscpNodeIdFilter->setEnabled(true);
+    ui->editVscpNodeIdMask->setEnabled(true);
+    ui->listNodeId->setEnabled(true);
+}

@@ -3364,6 +3364,7 @@ CFrmNodeConfig::editDMRow()
                       pDlg->getDmActionParameter());
 
     updateVisualRegisters();
+    fillDMHtmlInfo(item, 0);  
   }
 }
 

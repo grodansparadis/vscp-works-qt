@@ -530,3 +530,5 @@ void CDlgLevel1Filter::enableDescriptionField(void)
 {
     ui->editDescription->setEnabled(true);
 }
+
+

@@ -35,6 +35,7 @@
 
 #include "cdlgeditdm.h"
 #include "ui_cdlgeditdm.h"
+#include "cdlglevel1filterwizard.h"
 
 #include <QMessageBox>
 
@@ -101,7 +102,17 @@ CDlgEditDm::CDlgEditDm(QWidget *parent) :
     connect(ui->chkClassFilterBit8,
           SIGNAL(stateChanged(int)),
           this,
-          SLOT(classFilterBit8_stateChanged(int)));                                                  
+          SLOT(classFilterBit8_stateChanged(int)));       
+  
+    connect(ui->btnFilterWizard,
+            SIGNAL(clicked(bool)),
+            this,
+            SLOT(filterWizard(void)));
+
+    connect(ui->btnActionParameterWizard,
+            SIGNAL(clicked()),
+            this,
+            SLOT(actionParameterWizard()));
     
     setInitialFocus();
 }
@@ -507,3 +518,57 @@ void CDlgEditDm::reject(void)
   reject();  
 } */
 
+///////////////////////////////////////////////////////////////////////////////
+// filterWizard
+//
+
+void 
+CDlgEditDm::filterWizard(void)
+{
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  CDlgLevel1FilterWizard dlg(this);
+
+  dlg.setVscpPriorityFilter(0);
+  dlg.setVscpPriorityMask(0);
+  dlg.disablePriorityFields();
+
+  dlg.setVscpClassFilter(vscp_readStringValue(ui->editClassMask->text().toStdString()));
+  dlg.setVscpClassMask(vscp_readStringValue(ui->editClassFilter->text().toStdString()));
+    
+  dlg.setVscpTypeFilter(vscp_readStringValue(ui->editTypeFilter->text().toStdString()));
+  dlg.setVscpTypeMask(vscp_readStringValue(ui->editTypeMask->text().toStdString()));
+    
+  dlg.setVscpNodeIdFilter(0);
+  dlg.setVscpNodeIdMask(0);
+  dlg.disableNodeIdFields();
+
+  //dlg.setNumBaseComboIndex(parent()->ui->m_baseComboBox->currentIndex());
+    
+  if (QDialog::Accepted == dlg.exec()) {
+
+    //setVscpPriorityFilter( dlg.getVscpPriorityFilter() );
+    //setVscpPriorityMask( dlg.getVscpPriorityMask() );
+
+    ui->editClassFilter->setText(pworks->decimalToStringInBase(dlg.getVscpClassFilter()));
+    ui->editClassMask->setText(pworks->decimalToStringInBase(dlg.getVscpClassMask()));
+
+    ui->editTypeFilter->setText(pworks->decimalToStringInBase(dlg.getVscpTypeFilter()));
+    ui->editTypeMask->setText(pworks->decimalToStringInBase(dlg.getVscpTypeMask()));
+
+    //setVscpNodeIdFilter( dlg.getVscpNodeIdFilter() );
+    //setVscpNodeIdMask( dlg.getVscpNodeIdMask() );
+
+    //ui->m_baseComboBox->setCurrentIndex(dlg.getNumComboIndex());
+  
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// actionParameterWizard
+//
+
+void 
+CDlgEditDm::actionParameterWizard(void)
+{
+
+}

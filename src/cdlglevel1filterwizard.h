@@ -149,6 +149,18 @@ public slots:
     */
     void calculateNodeIdValues(void);
 
+    /*!
+        Enable disable the priority field
+    */
+    void disablePriorityFields(void);
+    void enablePriorityFields(void);
+
+    /*!
+        Enable disable the node id field
+    */
+    void disableNodeIdFields(void);
+    void enableNodeIdFields(void);
+
 
     // ----------------------------------------------------------------------------
     //                             Getters & Setters

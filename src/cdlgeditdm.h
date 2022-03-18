@@ -130,6 +130,9 @@ public slots:
     void classMaskBit8_stateChanged(int state);
     void classFilterBit8_stateChanged(int state);
 
+    void filterWizard(void);
+    void actionParameterWizard(void);
+
     void accept(void);
     //void reject(void);
 
