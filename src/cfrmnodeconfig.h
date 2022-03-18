@@ -514,9 +514,21 @@ class CFrmNodeConfig : public QMainWindow
     */
     void updateVisualDM(void);
 
-    void updateChangeRemoteVariable(uint32_t offset, uint16_t page);
+    /*!
+      Update remote variable listing
+      @param offset Offset for register to update
+      @param page Page for register to update
+      @param bFromRegUpdate True if called from register update
+    */
+    void updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool bFromRegUpdate=false);
 
-    void updateChangeDM(uint32_t offset, uint16_t page);
+    /*!
+      Update DM listing
+      @param offset Offset for register to update
+      @param page Page for register to update
+      @param bFromRegUpdate True if called from register update
+    */
+    void updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpdate=false);
 
  signals:
 
@@ -581,10 +593,10 @@ class CFrmNodeConfig : public QMainWindow
     QComboBox *m_comboInterface;   
 
     /*! 
-      Set to true when the system updates a cell. Prevents
-      value cells from being marked as updated (red).
+      Can be set to true when the system updates a register cell. Prevents
+      value cells cell change evnts from doing stuff
     */
-    //bool m_bInternalChange;
+    bool m_bInternalChange;
     
     /*!
       Shortcut for ctrl + i - Show MDF info in info area

@@ -167,6 +167,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_StandardRegTopPage = nullptr;   // No standard registers
   ui->treeWidgetRegisters->clear(); // Clear the tree
   m_mapRegTopPages.clear();         // Clear the page map
+  m_bInternalChange = false;        // Cell update works as normal
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -1449,8 +1450,10 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
   if (m_nUpdates) {
     if (m_userregs.isChanged(regItem->m_regOffset, regItem->m_regPage)) {
       item->setForeground(column, QBrush(Qt::red));
-      updateChangeDM(regItem->m_regOffset, regItem->m_regPage);
-      updateChangeRemoteVariable(regItem->m_regOffset, regItem->m_regPage);
+      m_bInternalChange = true;
+      updateChangeDM(regItem->m_regOffset, regItem->m_regPage, true);
+      updateChangeRemoteVariable(regItem->m_regOffset, regItem->m_regPage, true);
+      m_bInternalChange = false;
     }
   }
 }
@@ -1612,8 +1615,7 @@ CFrmNodeConfig::renderRegisters(void)
 
     // CRegisterPage *preg = m_userregs.getPage(page);
 
-    QTreeWidgetItem* itemTopReg1 =
-      new QTreeWidgetItem(QTreeWidgetItem::UserType);
+    QTreeWidgetItem* itemTopReg1 = new QTreeWidgetItem(QTreeWidgetItem::UserType);
     itemTopReg1->setText(REG_COL_POS, "Page " + QString::number(page));
     itemTopReg1->setFont(REG_COL_POS, QFont("Arial", 12, QFont::Bold));
     itemTopReg1->setTextAlignment(REG_COL_POS, Qt::AlignLeft);
@@ -3158,6 +3160,11 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
 void
 CFrmNodeConfig::onRemoteVarTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
 {
+  // Don't do anything if updated from register cell edit
+  if (m_bInternalChange) {
+    return;
+  }
+
   int rv;
   vscpworks* pworks                  = (vscpworks*)QCoreApplication::instance();
   CRemoteVariableWidgetItem* rvItem = (CRemoteVariableWidgetItem*)item;
@@ -3183,6 +3190,11 @@ CFrmNodeConfig::onRemoteVarTreeWidgetCellChanged(QTreeWidgetItem* item, int colu
 void
 CFrmNodeConfig::onDMTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
 {
+  // Don't do anything if updated from register cell edit
+  if (m_bInternalChange) {
+    return;
+  }
+
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* itemDM = (CDMWidgetItem*)item;
   QString strValue    = itemDM->text(column);
@@ -3361,8 +3373,9 @@ CFrmNodeConfig::updateVisualRegisters(void)
   // Mark all changed registers
   QTreeWidgetItemIterator it(ui->treeWidgetRegisters);
   while (*it) {
+    
     CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*it);
-    std::cout << "Item: " << itemReg->m_regPage << " " << itemReg->m_regOffset << std::endl;
+    //std::cout << "Item: " << itemReg->m_regPage << " " << itemReg->m_regOffset << std::endl;
 
     if (itemReg->type() != TREE_LIST_REGISTER_TYPE) {
       ++it;
@@ -3422,11 +3435,30 @@ CFrmNodeConfig::updateVisualRegisters(void)
 void
 CFrmNodeConfig::updateVisualRemoteVariables(void)
 {
+  std::string str;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QTreeWidgetItemIterator it(ui->treeWidgetRegisters);
+  uint8_t format = FORMAT_REMOTEVAR_DECIMAL;
+  if (0 == m_baseComboBox->currentIndex()) {
+    format = FORMAT_REMOTEVAR_HEX;
+  }
+
+  QTreeWidgetItemIterator it(ui->treeWidgetRemoteVariables);
   while (*it) {
-    CRemoteVariableWidgetItem* itemReg = (CRemoteVariableWidgetItem*)(*it);
+    CRemoteVariableWidgetItem* itemRV = (CRemoteVariableWidgetItem*)(*it);
+    if ((nullptr == itemRV) || (nullptr == itemRV->m_pRemoteVariable) ) {
+      ++it;
+      continue;
+    }
+    int pos = itemRV->m_pRemoteVariable->getOffset();
+    for (int i = pos; i < (pos + itemRV->m_pRemoteVariable->getTypeByteCount()); i++) {
+      if (m_userregs.isChanged(i, itemRV->m_pRemoteVariable->getPage())) {
+        if (VSCP_ERROR_SUCCESS != m_userregs.remoteVarFromRegToString(*itemRV->m_pRemoteVariable, str, format)) {
+          itemRV->setText(REMOTEVAR_COL_VALUE, pworks->decimalToStringInBase(m_userregs.getReg(i, itemRV->m_pRemoteVariable->getPage()), m_baseComboBox->currentIndex()).toStdString().c_str());
+          itemRV->setForeground(i % 8, QBrush(QColor("red")));
+        }
+      }
+    }
     ++it;
   }
 }
@@ -3461,7 +3493,7 @@ CFrmNodeConfig::updateVisualDM(void)
 //
 
 void
-CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page)
+CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool bFromRegUpdate)
 {
   // Check if register is use by the DM
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3502,45 +3534,24 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page)
         str = "ERROR";
         itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
       }
+      
+      m_bInternalChange = true;
       itemRV->setText(REMOTEVAR_COL_VALUE, str.c_str());                        
-      //itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
+      m_bInternalChange = false;
+
       // Set forecolor
       if (m_userregs.isChanged(offset, page)) {
-        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("red")));
+        itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
       }
       // Blue if changed some time but written
       else if (m_userregs.hasWrittenChange(offset, page)) {
-        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
+        itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("royalblue")));
       }
       // Black if never changed
       else {
-        itemRV->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
+        itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("black")));
       }
     }
-
-    /* if ((itemReg->m_regOffset == offset) && (itemReg->m_regPage == page)) {
-      itemReg->setText(
-        REG_COL_VALUE,
-        pworks
-          ->decimalToStringInBase(
-            m_userregs.getReg(itemReg->m_regOffset, itemReg->m_regPage),
-            m_baseComboBox->currentIndex())
-          .toStdString()
-          .c_str());
-
-      // Set forecolor
-      if (m_userregs.isChanged(itemReg->m_regOffset, itemReg->m_regPage)) {
-        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("red")));
-      }
-      // Blue if changed some time but written
-      else if (m_userregs.hasWrittenChange(itemReg->m_regOffset, itemReg->m_regPage)) {
-        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("royalblue")));
-      }
-      // Black if never changed
-      else {
-        itemReg->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
-      }
-    } */
     ++it;
   }
 }
@@ -3550,7 +3561,7 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page)
 //
 
 void
-CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page)
+CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpdate)
 {
   // Check if register is use by the DM
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
