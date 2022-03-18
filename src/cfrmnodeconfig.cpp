@@ -2686,12 +2686,18 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   html += guidNode.toString();
   html += "<br>";
 
+  std::string prefix = "http://";
+  if (std::string::npos != m_stdregs.getMDF().find("http://")) {
+    prefix = "";
+  }
+
   html += "</font><b>MDF URL</b>:<font color=\"#009900\"> ";
   html += "<a href=\"";
+  html += prefix;
   html += m_stdregs.getMDF();
   html += "\" target=\"ext\">";
+  html += prefix;
   html += m_stdregs.getMDF();
-  ;
   html += "</a>";
   html += "<br>";
 

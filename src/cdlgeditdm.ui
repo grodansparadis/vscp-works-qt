@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>719</width>
-    <height>550</height>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>480</y>
+     <x>580</x>
+     <y>490</y>
      <width>81</width>
      <height>61</height>
     </rect>
@@ -38,7 +38,7 @@
      <x>9</x>
      <y>19</y>
      <width>511</width>
-     <height>532</height>
+     <height>550</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -250,13 +250,25 @@
     </item>
     <item row="9" column="1">
      <widget class="QPushButton" name="btnActionParameterWizard">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Action parameter wizard</string>
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
+    <item row="12" column="1">
      <widget class="QCheckBox" name="chkSaveNow">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Write to remote device on exit</string>
       </property>
@@ -264,8 +276,28 @@
     </item>
     <item row="6" column="1">
      <widget class="QPushButton" name="btnFilterWizard">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Filter wizard</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>

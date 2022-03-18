@@ -97,15 +97,15 @@ jobs:
         ${{ github.workspace }}/vcpkg/vcpkg.exe install curl:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install spdlog:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install libmosquitto:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5:x64-windows 
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5-charts:x64-windows
+        ${{ github.workspace }}/vcpkg/vcpkg.exe install libmosquitto:x64-windows        
         ${{ github.workspace }}/vcpkg/vcpkg.exe install pthread:x64-windows 
         ${{ github.workspace }}/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows 
         ${{ github.workspace }}/vcpkg/vcpkg.exe install openssl:x64-windows 
         ${{ github.workspace }}/vcpkg/vcpkg.exe install paho-mqtt:x64-windows 
         ${{ github.workspace }}/vcpkg/vcpkg.exe install spdlog:x64-windows
 
+    # ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5:x64-windows 
+    # ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5-charts:x64-windows
     # - name: Setup cmake
     #   uses: jwlawson/actions-setup-cmake@v1.12
     # - name: Cmake
