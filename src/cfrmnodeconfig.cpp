@@ -168,6 +168,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   ui->treeWidgetRegisters->clear(); // Clear the tree
   m_mapRegTopPages.clear();         // Clear the page map
   m_bInternalChange = false;        // Cell update works as normal
+  m_bMainInfo = false;              // No main MDF info written yet to the info area
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -543,11 +544,23 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
           this,
           SLOT(onNodeIdChange(int)));
 
+  // Tab bar clicked
+  connect(ui->session_tabWidget,
+            SIGNAL(tabBarClicked(int)),
+            this,
+            SLOT(onMainTabBarClicked(int)));        
+
+  // Tab bar changed
+  connect(ui->session_tabWidget,
+            SIGNAL(currentChanged(int)),
+            this,
+            SLOT(onMainTabBarChanged(int)));
+
   // Register row has been double clicked.
   connect(ui->treeWidgetRegisters,
-          &QTreeWidget::itemClicked,
-          this,
-          &CFrmNodeConfig::onRegisterTreeWidgetItemClicked);
+            &QTreeWidget::itemClicked,
+            this,
+            &CFrmNodeConfig::onRegisterTreeWidgetItemClicked);
 
   // Register row has been double clicked.
   connect(ui->treeWidgetRegisters,
@@ -726,10 +739,9 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
 
   menu->addSeparator();
 
-  menu->addAction(
-    QString(tr("Save register value(s) for selected row(s) to disk")),
-    this,
-    SLOT(saveSelectedRegisterValues()));
+  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")),
+                  this,
+                  SLOT(saveSelectedRegisterValues()));
 
   menu->addAction(QString(tr("Save ALL register values to disk")),
                   this,
@@ -1251,6 +1263,9 @@ void
 CFrmNodeConfig::onInterfaceChange(int index)
 {
   ui->treeWidgetRegisters->clear();
+  ui->treeWidgetRemoteVariables->clear();
+  ui->treeWidgetDecisionMatrix->clear();
+  ui->treeWidgetMdfFiles->clear();
   m_nUpdates = 0;
 }
 
@@ -1262,6 +1277,9 @@ void
 CFrmNodeConfig::onNodeIdChange(int nodeid)
 {
   ui->treeWidgetRegisters->clear();
+  ui->treeWidgetRemoteVariables->clear();
+  ui->treeWidgetDecisionMatrix->clear();
+  ui->treeWidgetMdfFiles->clear();
   m_nUpdates = 0;
 }
 
@@ -1342,9 +1360,11 @@ CFrmNodeConfig::onRegisterTreeWidgetItemClicked(QTreeWidgetItem* item,
 {
   if ((item->type() != TREE_LIST_REGISTER_TYPE) /*&& item->isSelected()*/) {
     fillDeviceHtmlInfo();
+    m_bMainInfo = true;
   }
   else {
     fillRegisterHtmlInfo(item, column);
+    m_bMainInfo = false;
   }
 }
 
@@ -1371,9 +1391,11 @@ CFrmNodeConfig::onRemoteVariableTreeWidgetItemClicked(QTreeWidgetItem* item,
 {
   if ((item->type() != TREE_LIST_REMOTEVAR_TYPE)) {
     fillDeviceHtmlInfo();
+    m_bMainInfo = true;
   }
   else {
     fillRemoteVariableHtmlInfo(item, column);
+    m_bMainInfo = false;
   }
 }
 
@@ -1400,9 +1422,11 @@ CFrmNodeConfig::onDMTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
 {
   if ((item->type() != TREE_LIST_DM_TYPE)) {
     fillDeviceHtmlInfo();
+    m_bMainInfo = true;
   }
   else {
     fillDMHtmlInfo(item, column);
+    m_bMainInfo = false;
   }
 }
 
@@ -1600,7 +1624,7 @@ CFrmNodeConfig::renderRegisters(void)
   spdlog::trace("MDF page count = {}", nPages);
 
   // Get user registers for all pages
-  rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages);
+  rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
     std::cout << "Failed to read user regs: " << rv << std::endl;
     QApplication::beep();
@@ -2187,7 +2211,8 @@ CFrmNodeConfig::writeChanges(void)
                                                                guidInterface,
                                                                itemReg->m_regPage,
                                                                itemReg->m_regOffset,
-                                                               value))) {
+                                                               value,
+                                                               pworks->m_config_timeout))) {
         
         m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
         
@@ -2267,7 +2292,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
 
   ui->statusBar->showMessage(tr("Reading standard registers from device..."));
 
-  int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface);
+  int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") +
@@ -2360,6 +2385,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
     return VSCP_ERROR_PARSING;
   }
   fillDeviceHtmlInfo();
+  m_bMainInfo = true;
   pbar->setValue(100);
 
   QApplication::restoreOverrideCursor();
@@ -2408,7 +2434,8 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
                                                                 guidInterface,
                                                                 itemReg->m_regPage,
                                                                 itemReg->m_regOffset,
-                                                                value))) {
+                                                                value,
+                                                                pworks->m_config_timeout))) {
         item->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
                                       .toStdString()
                                       .c_str());
@@ -2466,11 +2493,12 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
       uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
       if (VSCP_ERROR_SUCCESS == (rv = vscp_writeLevel1Register(*m_vscpClient,
-                                                               guidNode,
-                                                               guidInterface,
-                                                               itemReg->m_regPage,
-                                                               itemReg->m_regOffset,
-                                                               value))) {
+                                                                  guidNode,
+                                                                  guidInterface,
+                                                                  itemReg->m_regPage,
+                                                                  itemReg->m_regOffset,
+                                                                  value,
+                                                                  pworks->m_config_timeout))) {
         // Certain that read value is the same as the one we just wrote here
         m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
         m_userregs.putReg(itemReg->m_regOffset,
@@ -3094,8 +3122,8 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   html +=
     QString::number((flags & 0x02) * 512 +
                       vscp_readStringValue(
-                        pitem->text(DM_LEVEL1_COL_CLASS_MASK).toStdString()),
-                    16)
+                      pitem->text(DM_LEVEL1_COL_CLASS_MASK).toStdString()),
+                      16)
       .toStdString();
   html += "</font><br>";
 
@@ -3107,8 +3135,8 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   html +=
     QString::number((flags & 0x01) * 512 +
                       vscp_readStringValue(
-                        pitem->text(DM_LEVEL1_COL_TYPE_MASK).toStdString()),
-                    16)
+                      pitem->text(DM_LEVEL1_COL_TYPE_MASK).toStdString()),
+                      16)
       .toStdString();
   html += "</font><br>";
 
@@ -3226,7 +3254,7 @@ CFrmNodeConfig::editDMRow()
 
   CDlgEditDm* pDlg = new CDlgEditDm(this);
   pDlg->setWindowTitle(tr("Edit Decision Matrix Row"));
-  pDlg->setDm(item->m_pDM);
+  pDlg->setMDF(&m_mdf);
 
   // Address origin
   reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) + CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
@@ -3426,7 +3454,8 @@ CFrmNodeConfig::updateVisualRegisters(void)
     //                                                    guidInterface,
     //                                                    itemReg->m_regPage,
     //                                                    itemReg->m_regOffset,
-    //                                                    value)) {
+    //                                                    value,
+    //                                                    pworks->m_config_timeout)) {
     //  QBrush(QColor("red")) == (*item)->foreground(REG_COL_VALUE)
     // m_userregs.markChanged(item->m_pDM->getStartPage(),
     //                         (item->m_row * item->m_pDM->getRowSize()) + i);
@@ -3613,4 +3642,52 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
   else {
     itemDM->setForeground(pos, QBrush(QColor("black")));
   }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// onMainTabBarChanged
+//
+
+void
+CFrmNodeConfig::onMainTabBarChanged(int index)
+{
+  // save previous info area
+  if (m_saveInfoArea[index].length()) {
+    // Set new info areatext
+    ui->infoArea->setHtml(m_saveInfoArea[index].c_str());
+  }
+  else {
+    fillDeviceHtmlInfo();
+    // switch (index) {
+    //   case TABBAR_INDEX_REMOTEVARS:
+    //     ;
+    //     break;
+    //   case TABBAR_INDEX_DM:
+    //     ;
+    //     break;
+    //   case TABBAR_INDEX_FILES:
+    //     ;
+    //     break;
+    //   case TABBAR_INDEX_REGISTERS:
+    //   default:
+    //     ;
+    //     break;
+    // }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onMainTabBarClicked
+//
+
+void
+CFrmNodeConfig::onMainTabBarClicked(int index)
+{
+  // Get current index
+  int current_index = ui->session_tabWidget->currentIndex();
+  if (-1 == current_index) return;
+  
+  // Save content of info area
+  m_saveInfoArea[current_index] = ui->infoArea->toHtml().toStdString();
 }

@@ -91,6 +91,7 @@ vscpworks::vscpworks(int &argc, char **argv) :
     m_consoleLogLevel   = spdlog::level::info;
     m_consoleLogPattern = "[vscpd] [%^%l%$] %v";
 
+    m_session_timeout = 1000;
     m_session_maxEvents = -1;
 
     m_session_ClassDisplayFormat = CFrmSession::classDisplayFormat::symbolic;
@@ -100,6 +101,8 @@ vscpworks::vscpworks(int &argc, char **argv) :
     m_session_bAutoConnect = true;
     m_session_bShowFullTypeToken = false;
     m_session_bAutoSaveTxRows = true;
+
+    m_config_timeout = 1000;
 
     // Logging defaults
     m_fileLogLevel    = spdlog::level::info;
@@ -367,14 +370,13 @@ void vscpworks::loadSettings(void)
     // * * * Session * * *
 
     m_session_maxEvents = settings.value("maxSessionEvents", -1).toInt();
-
+    m_session_timeout = settings.value("sessionTimeout", "1000").toUInt(); 
     m_session_ClassDisplayFormat = static_cast<CFrmSession::classDisplayFormat>(settings.value("sessionClassDisplayFormat", 
             static_cast<int>(CFrmSession::classDisplayFormat::symbolic)).toInt());
     m_session_TypeDisplayFormat = static_cast<CFrmSession::typeDisplayFormat>(settings.value("sessionTypeDisplayFormat", 
             static_cast<int>(CFrmSession::typeDisplayFormat::symbolic)).toInt());
     m_session_GuidDisplayFormat = static_cast<CFrmSession::guidDisplayFormat>(settings.value("sessionGuidDisplayFormat", 
             static_cast<int>(CFrmSession::guidDisplayFormat::guid)).toInt());
-
     m_session_bAutoConnect =  settings.value("sessionAutoConnect", true).toBool();    
     m_session_bShowFullTypeToken =  settings.value("sessionShowFullTypeToken", true).toBool(); 
     m_session_bAutoSaveTxRows =  settings.value("sessionAutoSaveTxRows", true).toBool(); 
@@ -382,6 +384,7 @@ void vscpworks::loadSettings(void)
     // * * * Config * * * 
     m_config_base = static_cast<numerical_base>(settings.value("configNumericBase", "1").toInt());     
     m_config_bDisableColors =  settings.value("configDisableColors", false).toBool(); 
+    m_config_timeout = settings.value("configTimeout", "1000").toUInt(); 
 
     // VSCP event database last load date/time
     // ---------------------------------------
@@ -497,6 +500,7 @@ void vscpworks::writeSettings()
 
     // * * * Session * * *
 
+    settings.setValue("sessionTimeout", m_session_timeout);
     settings.setValue("maxSessionEvents", m_session_maxEvents);
 
     settings.setValue("sessionClassDisplayFormat", static_cast<int>(m_session_ClassDisplayFormat));
@@ -510,6 +514,7 @@ void vscpworks::writeSettings()
     // * * * Config * * * 
     settings.setValue("configNumericBase", static_cast<int>(m_config_base));
     settings.setValue("configDisableColors", m_config_bDisableColors);
+    settings.setValue("configTimeout", m_config_timeout);
 
     writeConnections();
 

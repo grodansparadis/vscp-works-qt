@@ -118,7 +118,13 @@ public:
       Set DM definitions
       @param pDM Pointer to DM definition object
     */
-    void setDm(CMDF_DecisionMatrix *pDM);
+    //void setDm(CMDF_DecisionMatrix *pDM);
+    void setMDF(CMDF *pMDF);
+
+    /*!
+      Fill in HTML info
+    */
+    void fillHtmlInfo(void);
 
 
 public slots:
@@ -129,6 +135,8 @@ public slots:
     void matchSubzone_stateChanged(int state);
     void classMaskBit8_stateChanged(int state);
     void classFilterBit8_stateChanged(int state);
+
+    void currentIndexChangedActions(int index);
 
     void filterWizard(void);
     void actionParameterWizard(void);
@@ -143,7 +151,8 @@ private:
     /*!
       Pointer to decision matrix object
     */
-    CMDF_DecisionMatrix *m_pDM;
+    //CMDF_DecisionMatrix *m_pDM;
+    CMDF *m_pMDF;
 
     /*!
       Data block for DM row transfere

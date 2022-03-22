@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
-    <height>574</height>
+    <width>923</width>
+    <height>653</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,17 +23,17 @@ border-color: rgb(0, 0, 0);</string>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>490</y>
-     <width>81</width>
-     <height>61</height>
+     <x>10</x>
+     <y>610</y>
+     <width>901</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Vertical</enum>
+    <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -42,7 +42,7 @@ border-color: rgb(0, 0, 0);</string>
      <x>9</x>
      <y>19</y>
      <width>511</width>
-     <height>550</height>
+     <height>581</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -64,6 +64,9 @@ border-color: rgb(0, 0, 0);</string>
     </item>
     <item row="0" column="1">
      <widget class="QLineEdit" name="editAddressOrigin">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
       <property name="text">
        <string>0x00</string>
       </property>
@@ -95,6 +98,9 @@ border-color: rgb(0, 0, 0);</string>
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(53, 132, 228);</string>
         </property>
         <property name="text">
          <string>0</string>
@@ -148,22 +154,18 @@ border-color: rgb(0, 0, 0);</string>
       </item>
      </layout>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Class Mask:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="editClassMask">
-      <property name="text">
-       <string>0x000</string>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
-     </widget>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_3">
@@ -177,15 +179,21 @@ border-color: rgb(0, 0, 0);</string>
     </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="editClassFilter">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
       <property name="text">
        <string>0x000</string>
       </property>
      </widget>
     </item>
     <item row="4" column="0">
-     <widget class="QLabel" name="label_5">
+     <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Type Mask:</string>
+       <string>Class Mask:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -193,9 +201,12 @@ border-color: rgb(0, 0, 0);</string>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QLineEdit" name="editTypeMask">
+     <widget class="QLineEdit" name="editClassMask">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
       <property name="text">
-       <string>0x00</string>
+       <string>0x000</string>
       </property>
      </widget>
     </item>
@@ -211,12 +222,61 @@ border-color: rgb(0, 0, 0);</string>
     </item>
     <item row="5" column="1">
      <widget class="QLineEdit" name="editTypeFilter">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 153);</string>
+      </property>
       <property name="text">
        <string>0x00</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Type Mask:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="editTypeMask">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(204, 255, 204);</string>
+      </property>
+      <property name="text">
+       <string>0x00</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QPushButton" name="btnFilterWizard">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Filter wizard</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="9" column="0">
      <widget class="QLabel" name="label_7">
       <property name="text">
        <string>Action :</string>
@@ -226,8 +286,11 @@ border-color: rgb(0, 0, 0);</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="9" column="1">
      <widget class="QComboBox" name="comboAction">
+      <property name="styleSheet">
+       <string notr="true">selection-color: rgb(98, 160, 234);</string>
+      </property>
       <item>
        <property name="text">
         <string>NOOP</string>
@@ -235,7 +298,7 @@ border-color: rgb(0, 0, 0);</string>
       </item>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="10" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
        <string>Action parameter :</string>
@@ -245,14 +308,17 @@ border-color: rgb(0, 0, 0);</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
+    <item row="10" column="1">
      <widget class="QLineEdit" name="editActionParameter">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 255);</string>
+      </property>
       <property name="text">
        <string>0x00</string>
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
+    <item row="11" column="1">
      <widget class="QPushButton" name="btnActionParameterWizard">
       <property name="font">
        <font>
@@ -266,39 +332,13 @@ border-color: rgb(0, 0, 0);</string>
      </widget>
     </item>
     <item row="12" column="1">
-     <widget class="QCheckBox" name="chkSaveNow">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Write to remote device on exit</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QPushButton" name="btnFilterWizard">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Filter wizard</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="1">
      <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="11" column="1">
+    <item row="13" column="1">
      <widget class="Line" name="line_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -312,13 +352,17 @@ border-color: rgb(0, 0, 0);</string>
     <rect>
      <x>530</x>
      <y>20</y>
-     <width>181</width>
-     <height>441</height>
+     <width>381</width>
+     <height>581</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTextBrowser" name="infoArea">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+      </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;

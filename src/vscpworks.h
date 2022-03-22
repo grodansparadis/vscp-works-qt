@@ -376,6 +376,9 @@ class vscpworks : public QApplication {
     // Session
     // ------------------------------------------------------------------------
 
+    /// Response timeout used for session window
+    uint32_t m_session_timeout;
+
     /*! 
         Maximum number of events in a session receive list
         -1 is no limit (default)
@@ -415,6 +418,9 @@ class vscpworks : public QApplication {
 
     /// Disable colors in configuration
     bool m_config_bDisableColors;
+
+    /// Response timeout used for configuration window
+    uint32_t m_config_timeout;
 
     // ------------------------------------------------------------------------
 

@@ -78,6 +78,9 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
     // * * * Session Window tab * * *
 
+    // Session response timeout
+    ui->spinSessionTimeout->setValue(pworks->m_session_timeout);
+
     // Max number of session events
     ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
 
@@ -97,6 +100,9 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
 
     // * * * config tab * * *
+
+    // Config response timeout
+    ui->spinConfigTimeout->setValue(pworks->m_config_timeout);
 
     // Base for config values
     ui->comboNumberBaseConfig->setCurrentIndex(static_cast<int>(pworks->m_config_base));
@@ -238,6 +244,7 @@ void CDlgMainSettings::done(int rv)
       pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();        
 
       // Session window
+      pworks->m_session_timeout = ui->spinSessionTimeout->value();
       pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
       pworks->m_session_ClassDisplayFormat = 
           static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
@@ -249,6 +256,7 @@ void CDlgMainSettings::done(int rv)
       pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
 
       // Config window
+      pworks->m_config_timeout = ui->spinConfigTimeout->value();
       pworks->m_config_base = static_cast<numerical_base>(ui->comboNumberBaseConfig->currentIndex());
       pworks->m_config_bDisableColors = ui->chkConfigDisableColors->isChecked();
       

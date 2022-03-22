@@ -39,7 +39,7 @@
       <string>General settings</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -461,7 +461,7 @@
          <x>10</x>
          <y>10</y>
          <width>441</width>
-         <height>262</height>
+         <height>283</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_4">
@@ -472,14 +472,14 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="label_8">
           <property name="text">
            <string>Max number of events</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="4" column="1">
          <widget class="QLineEdit" name="editMaxSessionEvents">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max number of events that will be received. Set to -1 for no limit.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -489,14 +489,14 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="5" column="0">
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>Class display format</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="5" column="1">
          <widget class="QComboBox" name="comboClassDisplayFormat">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP class data is displayed in&lt;span style=&quot; color:#cc0000;&quot;&gt; rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -523,14 +523,14 @@
           </item>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="6" column="0">
          <widget class="QLabel" name="label_11">
           <property name="text">
            <string>Type display format</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="6" column="1">
          <widget class="QComboBox" name="comboTypeDisplayFormat">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP type data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -557,14 +557,14 @@
           </item>
          </widget>
         </item>
-        <item row="4" column="0">
+        <item row="7" column="0">
          <widget class="QLabel" name="label_9">
           <property name="text">
            <string>GUID display format</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="7" column="1">
          <widget class="QComboBox" name="comboGuidDisplayFormat">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set how VSCP GUID data is displayed in &lt;span style=&quot; color:#cc0000;&quot;&gt;rx rows&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -591,7 +591,7 @@
           </item>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="8" column="1">
          <widget class="QCheckBox" name="chkAutomaticConnect">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Automatically connect to remote host when session window is opended.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -604,7 +604,7 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
+        <item row="9" column="1">
          <widget class="QCheckBox" name="chkShowFullToken">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show full type token (&lt;span style=&quot; color:#3465a4;&quot;&gt;&amp;quot;VSCP_TYPE_&amp;quot;&lt;/span&gt; is not removed from front of token)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -614,7 +614,20 @@
           </property>
          </widget>
         </item>
-        <item row="8" column="1">
+        <item row="10" column="1">
+         <widget class="QCheckBox" name="chkAutoSaveTxRows">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tx &lt;span style=&quot; color:#000000;&quot;&gt;rows&lt;/span&gt; from &lt;span style=&quot; font-weight:600;&quot;&gt;last session&lt;/span&gt; loads when session opens and rows are saved when session closes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Autosave/autoload tx rows</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="1">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -627,16 +640,20 @@
           </property>
          </spacer>
         </item>
-        <item row="7" column="1">
-         <widget class="QCheckBox" name="chkAutoSaveTxRows">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tx &lt;span style=&quot; color:#000000;&quot;&gt;rows&lt;/span&gt; from &lt;span style=&quot; font-weight:600;&quot;&gt;last session&lt;/span&gt; loads when session opens and rows are saved when session closes.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_22">
           <property name="text">
-           <string>Autosave/autoload tx rows</string>
+           <string>Response timout</string>
           </property>
-          <property name="checked">
-           <bool>true</bool>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QSpinBox" name="spinSessionTimeout">
+          <property name="minimum">
+           <number>500</number>
+          </property>
+          <property name="maximum">
+           <number>10000</number>
           </property>
          </widget>
         </item>
@@ -700,7 +717,24 @@
           </item>
          </widget>
         </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="spinConfigTimeout">
+          <property name="minimum">
+           <number>500</number>
+          </property>
+          <property name="maximum">
+           <number>10000</number>
+          </property>
+         </widget>
+        </item>
         <item row="2" column="1">
+         <widget class="QCheckBox" name="chkConnectOnOpen">
+          <property name="text">
+           <string>Connect on open</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
          <widget class="QCheckBox" name="chkConfigDisableColors">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ask for user confirmation before deleting items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -714,6 +748,13 @@
          </widget>
         </item>
         <item row="4" column="1">
+         <widget class="QCheckBox" name="chkExpandOnLoad">
+          <property name="text">
+           <string>Expand on load</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -726,17 +767,10 @@
           </property>
          </spacer>
         </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="chkExpandOnLoad">
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_21">
           <property name="text">
-           <string>Expand on load</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QCheckBox" name="chkConnectOnOpen">
-          <property name="text">
-           <string>Connect on open</string>
+           <string>Response timout</string>
           </property>
          </widget>
         </item>

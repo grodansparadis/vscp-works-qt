@@ -77,6 +77,13 @@ namespace Ui {
 class CFrmNodeConfig;
 }
 
+enum tabbarindex {
+  TABBAR_INDEX_REGISTERS = 0,
+  TABBAR_INDEX_REMOTEVARS,
+  TABBAR_INDEX_DM,
+  TABBAR_INDEX_FILES
+};
+
 
 enum registerColumns {
   REG_COL_POS = 0,
@@ -530,6 +537,16 @@ class CFrmNodeConfig : public QMainWindow
     */
     void updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpdate=false);
 
+    /*!
+      A main tab has been clicked
+    */
+    void onMainTabBarClicked(int index);
+
+    /*!
+      The main tab bar has changed
+    */
+    void onMainTabBarChanged(int index);
+
  signals:
 
     /// Data received from callback
@@ -594,9 +611,20 @@ class CFrmNodeConfig : public QMainWindow
 
     /*! 
       Can be set to true when the system updates a register cell. Prevents
-      value cells cell change evnts from doing stuff
+      value cells cell change events from doing stuff
     */
     bool m_bInternalChange;
+
+    /*!
+      True when the main HTML info has been written,
+      false if specific info written to the info area.
+    */
+    bool m_bMainInfo;
+
+    /*!
+      Save positions for the info area for each tab
+    */
+    std::string m_saveInfoArea[4];
     
     /*!
       Shortcut for ctrl + i - Show MDF info in info area

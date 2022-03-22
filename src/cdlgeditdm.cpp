@@ -36,6 +36,7 @@
 #include "cdlgeditdm.h"
 #include "ui_cdlgeditdm.h"
 #include "cdlglevel1filterwizard.h"
+#include "cdlgactionparam.h"
 
 #include <QMessageBox>
 
@@ -54,7 +55,8 @@ CDlgEditDm::CDlgEditDm(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_pDM = nullptr;
+    //m_pDM = nullptr;
+    m_pMDF = nullptr;
 
     // Node id change
     connect(ui->chkEnableRow,
@@ -113,6 +115,11 @@ CDlgEditDm::CDlgEditDm(QWidget *parent) :
             SIGNAL(clicked()),
             this,
             SLOT(actionParameterWizard()));
+
+    connect(ui->comboAction,
+            SIGNAL(currentIndexChanged(int)),
+            this,
+            SLOT(currentIndexChangedActions(int)));            
     
     setInitialFocus();
 }
@@ -197,10 +204,10 @@ CDlgEditDm::valueToFlags(void)
 
   // Origin address match
   if (value & VSCP_LEVEL1_DM_FLAG_ORIGIN_MATCH) {
-    ui->chkEnableRow->setChecked(true);
+    ui->chkOriginAddressMatch->setChecked(true);
   }
   else {
-    ui->chkEnableRow->setChecked(false);
+    ui->chkOriginAddressMatch->setChecked(false);
   }
 
   // Origin hard coded
@@ -249,17 +256,23 @@ CDlgEditDm::valueToFlags(void)
 //
 
 void 
-CDlgEditDm::setDm(CMDF_DecisionMatrix *pDM)
+//CDlgEditDm::setDm(CMDF_DecisionMatrix *pDM)
+CDlgEditDm::setMDF(CMDF *pMDF)
 {
+  if (nullptr == pMDF) {
+    return;
+  }
 
-  m_pDM = pDM;
+  m_pMDF = pMDF;
+  //m_pDM = pDM;
 
   // Fill in action combo box
-  if (nullptr != pDM) {
+  if (nullptr != pMDF->getDM()) {
     ui->comboAction->clear();
-    for (auto const& item : *pDM->getActionList()) {
+    for (auto const& item : *pMDF->getDM()->getActionList()) {
       ui->comboAction->addItem(item->getName().c_str(),QVariant(item->getCode()));
     }  
+    fillHtmlInfo();
   }
   else {
     ui->comboAction->clear();
@@ -499,10 +512,28 @@ void CDlgEditDm::setDmActionParameter(const std::string& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// currentIndexChangedActions
+//
+
+void 
+CDlgEditDm::currentIndexChangedActions(int index)
+{
+  if (-1 == index) {
+    return;
+  }
+  
+  std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
+  CMDF_Action *pAction = actionList->at(ui->comboAction->currentIndex());
+  std::deque<CMDF_ActionParameter *> *pActionParams = pAction->getListActionParameter();
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // accept
 //
 
-void CDlgEditDm::accept(void)
+void 
+CDlgEditDm::accept(void)
 {
   //saveData();
   done(QDialog::Accepted);
@@ -564,11 +595,155 @@ CDlgEditDm::filterWizard(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// actionParameterWizard
+// fillHtmlInfo
 //
+
+void 
+CDlgEditDm::fillHtmlInfo(void)
+{  
+  QString html;
+  std::string str;
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+  html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
+         "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
+  html += "<html><head>";
+  html += "<meta name=\"qrichtext\" content=\"1\" />";
+  html += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
+  html += "</head>";
+  html += "<body style=\"font-family:'Ubuntu'; font-size:11pt; "
+          "font-weight:400; font-style:normal;\">";
+  html += "<h2>";
+  html += tr("Decision Matrix");
+  html += "</h2>";
+
+  if (nullptr == m_pMDF->getDM()) {
+    html += "<p>There is no decsion matrix data.</p>";
+  }
+  else {
+    // rows
+    html += "<p><b>";
+    html += tr("Number of rows : </b><font color=\"#009900\">");
+    html += QString::number((int)m_pMDF->getDM()->getRowCount());
+    html += "</font><br>";
+
+    // row size
+    html += "<b>";
+    html += tr("Row size : </b><font color=\"#009900\">");
+    html += QString::number((int)m_pMDF->getDM()->getRowSize());
+    html += "</font></p>";
+
+
+    // Actions
+    html += "<h2><font color=\"#1a53ff\">Actions</font></h2>";
+    std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
+    if (nullptr == actionList) {
+      html += "<p>No actions defined.</p>";
+    }
+    else {
+      html += "<p>";
+      for (auto const& item : *actionList) {      
+        html += "<p><b><font color=\"#009900\">";               
+        html += QString::number((int)item->getCode());
+        html += " -- ";
+        html += item->getName().c_str();
+        html += "</font></b><br>";
+        str = item->getDescription();
+        str = m_pMDF->format(str);
+        html += str.c_str();
+        if (item->getListActionParameter()->size()) {
+          html += "<br><b>Parameters</b><br>";
+          for (auto const& itemParam : *item->getListActionParameter()) { 
+            html += "<b><font color=\"#cc8800\">";
+            html += itemParam->getName().c_str();
+            html += "</font></b><br>";
+            if (itemParam->getListValues()->size()) {
+              for (auto const& itemValue : *itemParam->getListValues()) { 
+                html += "<b><font color=\"#8585ad\"> ";
+                html += itemValue->getValue().c_str();
+                html += " -- ";
+                html += itemValue->getName().c_str();
+                html += "</font></b><br>";
+              }
+            }
+            if (itemParam->getListBits()->size()) {
+              for (auto const& itemBit : *itemParam->getListBits()) { 
+                html += "<b><font color=\"#8585ad\">";
+                html += itemBit->getName().c_str();
+                html += "</font></b><br>";
+              }
+            }
+          }          
+        }
+        html += "</p>";
+      }
+      html += "</p>";
+    }
+  }
+
+  html += "</body></html>";
+
+  
+  // Write the HTML to the text browser
+  ui->infoArea->setHtml(html);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// actionParameterWizard
+//  for (auto const& itemParam : *item->getListActionParameter()) { 
 
 void 
 CDlgEditDm::actionParameterWizard(void)
 {
+  CDlgActionParam dlg(this);
 
+  std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
+  CMDF_Action *pAction = actionList->at(ui->comboAction->currentIndex());
+  std::deque<CMDF_ActionParameter *> *pActionParams = pAction->getListActionParameter();
+  
+  if (pActionParams->size()) {
+
+    // Level I has only one parameter
+    CMDF_ActionParameter *pActionParam = pActionParams->at(0);
+  
+    if (pActionParam->getListValues()->size()) {
+      dlg.showValues(true);
+      dlg.showBits(false);
+      for (auto const& itemValue : *pActionParam->getListValues()) {
+        std::string strvalue = itemValue->getValue().c_str();
+        std::string name = itemValue->getName().c_str();
+        uint32_t value = vscp_readStringValue(strvalue);
+        dlg.addValue(value, name);
+      }
+    }
+    else if (pActionParam->getListBits()->size()) {
+      dlg.showBits(true);
+      dlg.showValues(false);
+      for (auto const& itemBit : *pActionParam->getListBits()) { 
+        uint8_t pos = itemBit->getPos();
+        uint8_t width = itemBit->getWidth();
+      }
+    }
+    else  {
+      QMessageBox::information(
+          this,
+          tr(APPNAME),
+          tr("This action does not have any paramerters defined."),
+          QMessageBox::Ok);
+      return;    
+    }
+  }
+  else {
+    // No parameters
+    QMessageBox::information(
+          this,
+          tr(APPNAME),
+          tr("This action does not have any paramerters defined."),
+          QMessageBox::Ok);
+      return; 
+  }
+
+  if (QDialog::Accepted == dlg.exec()) {
+    
+  }
 }

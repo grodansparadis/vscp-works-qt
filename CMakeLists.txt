@@ -192,6 +192,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgselectconstraint.ui
     src/cfrmnodeconfig.ui
     src/cfrmnodescan.ui
+    src/cdlgactionparam.ui
 )
 
 add_executable(vscp-works-qt
@@ -310,6 +311,10 @@ add_executable(vscp-works-qt
     src/cdlgeditdm.ui
     src/cdlgeditdm.h
     src/cdlgeditdm.cpp
+
+    src/cdlgactionparam.ui
+    src/cdlgactionparam.h
+    src/cdlgactionparam.cpp
 
     src/cfrmnodescan.h
     src/cfrmnodescan.cpp
