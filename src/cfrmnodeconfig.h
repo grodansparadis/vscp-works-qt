@@ -77,6 +77,8 @@ namespace Ui {
 class CFrmNodeConfig;
 }
 
+#define NUMBER_OF_TABS 4
+
 enum tabbarindex {
   TABBAR_INDEX_REGISTERS = 0,
   TABBAR_INDEX_REMOTEVARS,

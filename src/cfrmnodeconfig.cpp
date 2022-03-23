@@ -1266,6 +1266,9 @@ CFrmNodeConfig::onInterfaceChange(int index)
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetMdfFiles->clear();
+  for (int i=0; i<NUMBER_OF_TABS; i++) {
+    m_saveInfoArea[i].clear();
+  }
   m_nUpdates = 0;
 }
 
@@ -1280,6 +1283,9 @@ CFrmNodeConfig::onNodeIdChange(int nodeid)
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetMdfFiles->clear();
+  for (int i=0; i<NUMBER_OF_TABS; i++) {
+    m_saveInfoArea[i].clear();
+  }
   m_nUpdates = 0;
 }
 
@@ -1336,6 +1342,9 @@ void
 CFrmNodeConfig::updateFull(void)
 {
   m_nUpdates = 0;
+  for (int i=0; i<NUMBER_OF_TABS; i++) {
+    m_saveInfoArea[i].clear();
+  }
   update();
 }
 
@@ -1347,6 +1356,9 @@ void
 CFrmNodeConfig::updateLocal(void)
 {
   m_nUpdates = 0;
+  for (int i=0; i<NUMBER_OF_TABS; i++) {
+    m_saveInfoArea[i].clear();
+  }
   update();
 }
 
@@ -2259,8 +2271,6 @@ delay(uint16_t n)
 int
 CFrmNodeConfig::doUpdate(std::string mdfpath)
 {
-  // m_nUpdates = 0;
-
   QApplication::setOverrideCursor(Qt::WaitCursor);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
