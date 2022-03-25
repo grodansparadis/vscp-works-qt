@@ -38,13 +38,28 @@ namespace Ui {
 class CDlgActionParam;
 }
 
+class CParamBitItem : public QTableWidgetItem {
+
+public:  
+
+  CParamBitItem(void);
+  ~CParamBitItem(void);
+
+private:
+
+  uint8_t m_pos;
+
+  uint8_t m_width;
+
+  int m_value;
+
+  std::string m_strName;  
+};
+
 
 class CDlgActionParam : public QDialog
 {
     Q_OBJECT
-
-public:
-    
 
 public:
     explicit CDlgActionParam(QWidget *parent = nullptr);
@@ -61,6 +76,14 @@ public:
       @param name Parameter name to add
     */
     void addValue(int value, std::string& name);
+
+    /*!
+      Set the value
+      @param pos Value bit position
+      @param width Value bit width
+      @param value Value to set
+    */
+    void addBitValue(std::deque<CMDF_Bit *> *pbitlist);
 
     /*!
       Disable value part

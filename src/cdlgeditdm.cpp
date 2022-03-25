@@ -264,13 +264,12 @@ CDlgEditDm::setMDF(CMDF *pMDF)
   }
 
   m_pMDF = pMDF;
-  //m_pDM = pDM;
 
   // Fill in action combo box
   if (nullptr != pMDF->getDM()) {
     ui->comboAction->clear();
     for (auto const& item : *pMDF->getDM()->getActionList()) {
-      ui->comboAction->addItem(item->getName().c_str(),QVariant(item->getCode()));
+      ui->comboAction->addItem(item->getName().c_str(), QVariant(item->getCode()));
     }  
     fillHtmlInfo();
   }
@@ -668,7 +667,9 @@ CDlgEditDm::fillHtmlInfo(void)
             }
             if (itemParam->getListBits()->size()) {
               for (auto const& itemBit : *itemParam->getListBits()) { 
-                html += "<b><font color=\"#8585ad\">";
+                html += " -- bit ";
+                html += QString::number(itemBit->getPos());
+                html += " - <b><font color=\"#8585ad\">";
                 html += itemBit->getName().c_str();
                 html += "</font></b><br>";
               }
@@ -718,11 +719,8 @@ CDlgEditDm::actionParameterWizard(void)
     }
     else if (pActionParam->getListBits()->size()) {
       dlg.showBits(true);
-      dlg.showValues(false);
-      for (auto const& itemBit : *pActionParam->getListBits()) { 
-        uint8_t pos = itemBit->getPos();
-        uint8_t width = itemBit->getWidth();
-      }
+      dlg.showValues(false);      
+      dlg.addBitValue(pActionParam->getListBits());
     }
     else  {
       QMessageBox::information(
@@ -744,6 +742,11 @@ CDlgEditDm::actionParameterWizard(void)
   }
 
   if (QDialog::Accepted == dlg.exec()) {
-    
+      if (pActionParam->getListValues()->size()) {
+      xxxxx  TODO
+      }
+      else if (pActionParam->getListBits()->size()) {
+      
+      }
   }
 }

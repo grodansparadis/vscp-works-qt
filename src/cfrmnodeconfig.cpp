@@ -3267,80 +3267,78 @@ CFrmNodeConfig::editDMRow()
   pDlg->setMDF(&m_mdf);
 
   // Address origin
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) + CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) + 
+                              CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
                             item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmAddressOrigin(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
+  pDlg->setDmAddressOrigin(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Flags
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmFlags(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+  pDlg->setDmFlags(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Class mask
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_MASK,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_MASK,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmClassMask(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+  pDlg->setDmClassMask(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Class filter
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_FILTER,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_FILTER,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmClassFilter(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+  pDlg->setDmClassFilter(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Type mask
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_MASK,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_MASK,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmTypeMask(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+  pDlg->setDmTypeMask(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Type filter
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_FILTER,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_FILTER,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
-  pDlg->setDmTypeFilter(
-    pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex())
-      .toStdString());
+  pDlg->setDmTypeFilter(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Action
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
-                            CMDF_DecisionMatrix::IDX_ADDRESS_ACTION,
-                          item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() + 
+                              (item->m_row * item->m_pDM->getRowSize()) +
+                              CMDF_DecisionMatrix::IDX_ADDRESS_ACTION,
+                            item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
   pDlg->setDmActionFromCode(reg);
 
   // Action Parameter
-  reg = m_userregs.getReg((item->m_row * item->m_pDM->getRowSize()) +
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() + 
+                            (item->m_row * item->m_pDM->getRowSize()) +
                             CMDF_DecisionMatrix::IDX_ADDRESS_ACTION_PARAMETER,
                           item->m_pDM->getStartPage());
   if (reg < 0) {
@@ -3355,7 +3353,8 @@ CFrmNodeConfig::editDMRow()
 
     // Save data
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmAddressOrigin());
@@ -3366,37 +3365,44 @@ CFrmNodeConfig::editDMRow()
 
     // }
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmFlags());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_MASK,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmClassMask());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_FILTER,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmClassFilter());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_MASK,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmTypeMask());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_FILTER,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmTypeFilter());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_ACTION,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmAction());
 
-    m_userregs.putReg((item->m_row * item->m_pDM->getRowSize()) +
+    m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_ACTION_PARAMETER,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmActionParameter());

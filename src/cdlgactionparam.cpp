@@ -99,6 +99,31 @@ CDlgActionParam::addValue(int value, std::string& name)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// addBitValue
+//
+
+void 
+CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
+{
+  QTableWidgetItem *pitem;
+  std::string str;
+  for (int i=0; i<pbitlist->size(); i++) {
+    ui->tableWidgetBits->insertRow(i);
+    str = QString::number(pbitlist->at(i)->getPos()).toStdString();
+    if (pbitlist->at(i)->getWidth()) {
+      str += "-";
+      str += QString::number(pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth() - 1 ).toStdString();
+    }
+    pitem = new QTableWidgetItem(str.c_str());
+    pitem->setTextAlignment(Qt::AlignCenter);
+    ui->tableWidgetBits->setItem(i, 0, pitem);
+    pitem = new QTableWidgetItem(pbitlist->at(i)->getName().c_str());
+    pitem->setToolTip(QString::fromStdString(pbitlist->at(i)->getDescription()));
+    ui->tableWidgetBits->setItem(i, 2, pitem);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // showValues
 //
 
