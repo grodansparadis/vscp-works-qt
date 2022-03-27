@@ -38,22 +38,23 @@ namespace Ui {
 class CDlgActionParam;
 }
 
-class CParamBitItem : public QTableWidgetItem {
+
+// ----------------------------------------------------------------------------
+
+
+class QTableWidgetItemBits : public QTableWidgetItem {
 
 public:  
 
-  CParamBitItem(void);
-  ~CParamBitItem(void);
+  QTableWidgetItemBits(const QString &text);
+  ~QTableWidgetItemBits(void);
 
-private:
+//private:
 
   uint8_t m_pos;
-
   uint8_t m_width;
-
-  int m_value;
-
-  std::string m_strName;  
+  uint8_t m_mask;
+  int m_value; 
 };
 
 
@@ -95,15 +96,35 @@ public:
     */
     void showBits(bool bShow);
 
+    /*!
+      Setter for action parameter
+      @param param Action parameter to set
+    */
+    void setActionParameter(uint8_t param) { m_actionParam = param; };
+
+    /*!
+      Getter for action parameter
+      @return Action parameter
+    */
+    uint8_t getActionParameter(void) { return m_actionParam; };
+
 
 public slots:
    
     //void accept(void);
     //void reject(void);
 
+    /*!
+      Values has been edited
+    */
+    void valueChanged(int row, int column);
+
 private:
 
     Ui::CDlgActionParam *ui;
+
+    /// Level I action parameter value
+    uint8_t m_actionParam;
 
 };
 

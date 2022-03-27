@@ -701,6 +701,8 @@ CDlgEditDm::actionParameterWizard(void)
   std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
   CMDF_Action *pAction = actionList->at(ui->comboAction->currentIndex());
   std::deque<CMDF_ActionParameter *> *pActionParams = pAction->getListActionParameter();
+
+  dlg.setActionParameter(vscp_readStringValue(ui->editActionParameter->text().toStdString()));
   
   if (pActionParams->size()) {
 
@@ -742,11 +744,17 @@ CDlgEditDm::actionParameterWizard(void)
   }
 
   if (QDialog::Accepted == dlg.exec()) {
-      if (pActionParam->getListValues()->size()) {
-      xxxxx  TODO
-      }
-      else if (pActionParam->getListBits()->size()) {
+
+    // Level I has only one parameter
+    CMDF_ActionParameter *pActionParam = pActionParams->at(0);
+
+    if (pActionParam->getListValues()->size()) {
       
-      }
+    }
+    else if (pActionParam->getListBits()->size()) {
+      
+    }
+
   }
+
 }

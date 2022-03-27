@@ -44,6 +44,28 @@
 #include <spdlog/spdlog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
+// QTableWidgetItemBits
+//
+
+QTableWidgetItemBits::QTableWidgetItemBits(const QString &text)
+                                            : QTableWidgetItem(text)
+{
+    m_pos = 0;
+    m_width = 0;
+    m_mask = 0;
+    m_value = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// QTableWidgetItemBits
+//
+
+QTableWidgetItemBits::~QTableWidgetItemBits(void)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // CTor
 //
 
@@ -61,10 +83,10 @@ CDlgActionParam::CDlgActionParam(QWidget *parent) :
     //       this,
     //       SLOT(enableRow_stateChanged(int)));
 
-    // connect(ui->btnFilterWizard,
-    //         SIGNAL(clicked(bool)),
-    //         this,
-    //         SLOT(filterWizard(void)));
+    connect(ui->tableWidgetBits,
+            SIGNAL(cellChanged(int, int)),
+            this,
+            SLOT(valueChanged(int,int)));
     
     setInitialFocus();
 }
@@ -108,17 +130,49 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
   QTableWidgetItem *pitem;
   std::string str;
   for (int i=0; i<pbitlist->size(); i++) {
+
     ui->tableWidgetBits->insertRow(i);
     str = QString::number(pbitlist->at(i)->getPos()).toStdString();
-    if (pbitlist->at(i)->getWidth()) {
+    if (pbitlist->at(i)->getWidth() > 1) {
       str += "-";
       str += QString::number(pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth() - 1 ).toStdString();
     }
+    // Bits
     pitem = new QTableWidgetItem(str.c_str());
     pitem->setTextAlignment(Qt::AlignCenter);
+    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled );
     ui->tableWidgetBits->setItem(i, 0, pitem);
+
+    // Value
+    uint8_t mask = 0;
+    for (int k=pbitlist->at(i)->getPos(); k<pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth(); k++) {
+      mask |= (1 << k);
+    }
+
+    uint8_t value = (m_actionParam & mask) >> pbitlist->at(i)->getPos();
+
+    QTableWidgetItemBits *pitemValue = new QTableWidgetItemBits(QString::number(value));
+    pitemValue->m_value = value;
+    pitemValue->m_pos = pbitlist->at(i)->getPos();
+    pitemValue->m_width = pbitlist->at(i)->getWidth();
+    pitemValue->m_mask = mask;
+    pitemValue->setTextAlignment(Qt::AlignCenter);
+    pitemValue->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+    std::string str = tr("Value can be 0 ").toStdString();
+    if (1 == pbitlist->at(i)->getWidth()) {
+      str += "or 1";
+    }
+    else {
+      str += " - ";
+      str += QString::number((1 << pbitlist->at(i)->getWidth())-1).toStdString();
+    }    
+    pitemValue->setToolTip(str.c_str());
+    ui->tableWidgetBits->setItem(i, 1, pitemValue);
+
+    // Name
     pitem = new QTableWidgetItem(pbitlist->at(i)->getName().c_str());
     pitem->setToolTip(QString::fromStdString(pbitlist->at(i)->getDescription()));
+    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled );
     ui->tableWidgetBits->setItem(i, 2, pitem);
   }
 }
@@ -144,3 +198,23 @@ CDlgActionParam::showBits(bool bShow)
   ui->labelBitList->setVisible(bShow); 
   ui->tableWidgetBits->setVisible(bShow); 
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// valueChanged
+//
+
+void 
+CDlgActionParam::valueChanged(int row, int column)
+{
+  QTableWidgetItemBits *pitem = (QTableWidgetItemBits *)ui->tableWidgetBits->item(row, column);
+  if (NULL != pitem) {
+    //uint8_t value = pitem->m_value;
+    uint8_t mask = pitem->m_mask >> pitem->m_pos;
+    uint8_t pos = pitem->m_pos;
+    uint8_t width = pitem->m_width;
+    uint8_t value = pitem->text().toUInt();
+    value &= mask;
+    pitem->setText(QString::number(value));
+  }
+}
+

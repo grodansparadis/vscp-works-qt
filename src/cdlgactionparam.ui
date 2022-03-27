@@ -67,6 +67,9 @@
       <property name="selectionMode">
        <enum>QAbstractItemView::SingleSelection</enum>
       </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
       <property name="showGrid">
        <bool>true</bool>
       </property>
@@ -75,7 +78,7 @@
       </attribute>
       <column>
        <property name="text">
-        <string>Bits</string>
+        <string>Bit(s)</string>
        </property>
        <property name="textAlignment">
         <set>AlignCenter</set>
