@@ -62,6 +62,11 @@ class CDlgActionParam : public QDialog
 {
     Q_OBJECT
 
+private:
+    const int BIT_COLUMN_POS = 0;
+    const int BIT_COLUMN_VALUE = 1;
+    const int BIT_COLUMN_NAME = 2;
+
 public:
     explicit CDlgActionParam(QWidget *parent = nullptr);
     ~CDlgActionParam();
@@ -106,13 +111,18 @@ public:
       Getter for action parameter
       @return Action parameter
     */
-    uint8_t getActionParameter(void) { return m_actionParam; };
+    uint8_t getActionParameter(void);
 
 
 public slots:
    
     //void accept(void);
     //void reject(void);
+
+    /*!
+      A cell has been clicked
+    */
+    void cellClicked(int row, int column);
 
     /*!
       Values has been edited

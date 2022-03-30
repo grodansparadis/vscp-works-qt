@@ -709,6 +709,7 @@ CDlgEditDm::actionParameterWizard(void)
     // Level I has only one parameter
     CMDF_ActionParameter *pActionParam = pActionParams->at(0);
   
+    // -- values
     if (pActionParam->getListValues()->size()) {
       dlg.showValues(true);
       dlg.showBits(false);
@@ -719,6 +720,7 @@ CDlgEditDm::actionParameterWizard(void)
         dlg.addValue(value, name);
       }
     }
+    // -- bits
     else if (pActionParam->getListBits()->size()) {
       dlg.showBits(true);
       dlg.showValues(false);      
@@ -752,7 +754,7 @@ CDlgEditDm::actionParameterWizard(void)
       
     }
     else if (pActionParam->getListBits()->size()) {
-      
+      ui->editActionParameter->setText(QString::number(dlg.getActionParameter()));  
     }
 
   }
