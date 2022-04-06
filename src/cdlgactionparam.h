@@ -51,8 +51,9 @@ public:
 
 //private:
 
-  uint8_t m_pos;
-  uint8_t m_width;
+  CMDF_Bit *m_pBit;
+  //uint8_t m_pos;
+  //uint8_t m_width;
   uint8_t m_mask;
   int m_value; 
 };

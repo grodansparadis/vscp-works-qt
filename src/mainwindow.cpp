@@ -1830,7 +1830,7 @@ MainWindow::newSession()
 
       QJsonObject* pconn = itemConn->getJson();
       CFrmSession* w = new CFrmSession(this, pconn);
-      w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
+      w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
@@ -3040,7 +3040,7 @@ MainWindow::newNodeConfiguration()
       QJsonObject* pconn = itemConn->getJson();
 
       CFrmNodeConfig* w = new CFrmNodeConfig(this, pconn);
-      w->setAttribute(Qt::WA_DeleteOnClose);    // Make window close on exit
+      w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
@@ -3086,7 +3086,7 @@ MainWindow::newNodeScan()
       QJsonObject* pconn = itemConn->getJson();
 
       CFrmNodeScan* w = new CFrmNodeScan(nullptr, pconn);
-      w->setAttribute(Qt::WA_DeleteOnClose); // Make window close on exit
+      w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
@@ -3105,5 +3105,7 @@ void
 MainWindow::newNodeBootload()
 {
 }
+
+
 
 #endif

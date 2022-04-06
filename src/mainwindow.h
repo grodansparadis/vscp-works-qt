@@ -206,39 +206,40 @@ protected:
         Fill in loaded connections to the tree
         at correct positions
     */
-    void addLoadedConnections(void);                                        
+    void addLoadedConnections(void);          
 
 private:
 
-    void createActions();
-    void createStatusBar();
-    void readSettings();
-    void writeSettings();
-    bool maybeSave();
-    bool saveFile(const QString &fileName);
-    void setCurrentFile(const QString &fileName);
-    QString strippedName(const QString &fullFileName);
+  void createActions();
+  void createStatusBar();
+  void readSettings();
+  void writeSettings();
+  bool maybeSave();
+  bool saveFile(const QString &fileName);
+  void setCurrentFile(const QString &fileName);
+  QString strippedName(const QString &fullFileName);
 
-    //QPlainTextEdit *m_textEdit;
-    //QTableWidget *m_connTable;
-    QTreeWidget *m_connTreeTable;
+  //QPlainTextEdit *m_textEdit;
+  //QTableWidget *m_connTable;
+  QTreeWidget *m_connTreeTable;
 
-    QString curFile;    
+  QString curFile;    
 
-    // Top items in tree control
-    QTreeWidgetItem *m_topitem_local;
-    QTreeWidgetItem *m_topitem_canal;
-    QTreeWidgetItem *m_topitem_socketcan;
-    QTreeWidgetItem *m_topitem_tcpip;
-    QTreeWidgetItem *m_topitem_mqtt;
-    QTreeWidgetItem *m_topitem_ws1;
-    QTreeWidgetItem *m_topitem_ws2;
-    QTreeWidgetItem *m_topitem_udp;
-    QTreeWidgetItem *m_topitem_multicast;
-    QTreeWidgetItem *m_topitem_rest;
-    QTreeWidgetItem *m_topitem_rawcan;
-    QTreeWidgetItem *m_topitem_rawmqtt;
+  // Top items in tree control
+  QTreeWidgetItem *m_topitem_local;
+  QTreeWidgetItem *m_topitem_canal;
+  QTreeWidgetItem *m_topitem_socketcan;
+  QTreeWidgetItem *m_topitem_tcpip;
+  QTreeWidgetItem *m_topitem_mqtt;
+  QTreeWidgetItem *m_topitem_ws1;
+  QTreeWidgetItem *m_topitem_ws2;
+  QTreeWidgetItem *m_topitem_udp;
+  QTreeWidgetItem *m_topitem_multicast;
+  QTreeWidgetItem *m_topitem_rest;
+  QTreeWidgetItem *m_topitem_rawcan;
+  QTreeWidgetItem *m_topitem_rawmqtt;
  
+  
 };
 
 #endif // MAINWINDOW_H

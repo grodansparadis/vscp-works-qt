@@ -632,7 +632,6 @@ CDlgEditDm::fillHtmlInfo(void)
     html += QString::number((int)m_pMDF->getDM()->getRowSize());
     html += "</font></p>";
 
-
     // Actions
     html += "<h2><font color=\"#1a53ff\">Actions</font></h2>";
     std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
@@ -646,7 +645,13 @@ CDlgEditDm::fillHtmlInfo(void)
         html += QString::number((int)item->getCode());
         html += " -- ";
         html += item->getName().c_str();
-        html += "</font></b><br>";
+        html += "</font></b> ";
+        html += " <a href=\"";
+        html += item->getInfoURL().c_str();
+        html += "\">";
+        html += item->getInfoURL().c_str();
+        html += "</a>";
+        html += "<br>";
         str = item->getDescription();
         str = m_pMDF->format(str);
         html += str.c_str();
@@ -662,7 +667,12 @@ CDlgEditDm::fillHtmlInfo(void)
                 html += itemValue->getValue().c_str();
                 html += " -- ";
                 html += itemValue->getName().c_str();
-                html += "</font></b><br>";
+                html += "</font></b> ";
+                html += " <a href=\"";
+                html += itemValue->getInfoURL().c_str();
+                html += "\">";
+                html += itemValue->getInfoURL().c_str();
+                html += "</a><br>";
               }
             }
             if (itemParam->getListBits()->size()) {
@@ -671,7 +681,12 @@ CDlgEditDm::fillHtmlInfo(void)
                 html += QString::number(itemBit->getPos());
                 html += " - <b><font color=\"#8585ad\">";
                 html += itemBit->getName().c_str();
-                html += "</font></b><br>";
+                html += "</font></b> ";
+                html += " <a href=\"";
+                html += itemBit->getInfoURL().c_str();
+                html += "\">";
+                html += itemBit->getInfoURL().c_str();
+                html += "</a><br>";
               }
             }
           }          
@@ -691,7 +706,7 @@ CDlgEditDm::fillHtmlInfo(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 // actionParameterWizard
-//  for (auto const& itemParam : *item->getListActionParameter()) { 
+//  
 
 void 
 CDlgEditDm::actionParameterWizard(void)

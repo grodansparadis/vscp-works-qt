@@ -86,7 +86,6 @@ enum tabbarindex {
   TABBAR_INDEX_FILES
 };
 
-
 enum registerColumns {
   REG_COL_POS = 0,
   REG_COL_ACCESS,
@@ -116,9 +115,13 @@ enum filesColumns {
   FILE_COL_NAME = 0
 };
 
+
+
 #define TREE_LIST_REGISTER_TYPE (QTreeWidgetItem::UserType + 1)
 #define TREE_LIST_REMOTEVAR_TYPE (QTreeWidgetItem::UserType + 2)
 #define TREE_LIST_DM_TYPE (QTreeWidgetItem::UserType + 3)
+#define TREE_LIST_MDF_FILE_TYPE (QTreeWidgetItem::UserType + 4)   // 4,5,6,7,8,9,10
+
 // ----------------------------------------------------------------------------
 
 
@@ -143,6 +146,10 @@ class CRegisterWidgetItem : public QTreeWidgetItem
     uint32_t m_regOffset;
 };
 
+
+// ----------------------------------------------------------------------------
+
+
 /*!
     Class that represent a row in the remote variable list
 */
@@ -160,6 +167,10 @@ class CRemoteVariableWidgetItem : public QTreeWidgetItem
     CMDF_RemoteVariable *m_pRemoteVariable;
 };
 
+
+// ----------------------------------------------------------------------------
+
+
 /*!
     Class that represent a row in the DM list
 */
@@ -174,12 +185,45 @@ class CDMWidgetItem : public QTreeWidgetItem
       Holds index for the DM row
     */
     uint16_t m_row;
+
     /*!
       Pointer to DM MDF item
     */
     CMDF_DecisionMatrix *m_pDM;
+};
+
+
+// ----------------------------------------------------------------------------
+
+
+/*!
+    Class that represent a row in the MDF file list
+*/
+class CMdfFileWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+    CMdfFileWidgetItem(const QString& text, int type=0);
+    virtual ~CMdfFileWidgetItem();
+
+    static const int ITEM_OFFSET = 1000;
+
+    /*!
+      Holds index for the DM row
+    */
+    mdf_file_type m_mdfFileType;
+    /*!
+      Pointer to DM MDF item
+    */
+    CMDF_Picture *m_picture_obj;            // Picture file(s)
+    CMDF_Video *m_video_obj;                // Video file(s)
+    CMDF_Firmware *m_firmware_obj;          // Firmware file(s)
+    CMDF_Driver *m_driver_obj;              // Picture file(s)
+    CMDF_Manual *m_manual_obj;              // Manual file(s)
+    CMDF_Setup *m_setup_obj;                // Setup file(s)
 
 };
+
 
 // ----------------------------------------------------------------------------
 
@@ -502,6 +546,29 @@ class CFrmNodeConfig : public QMainWindow
       the selected device
     */
     void fillDeviceHtmlInfo(void);
+
+    /*!
+      Either heading or an item has been clicked in the MDF file
+      tree
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onMdfFileTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+
+    /*!
+      Either heading or an item has been double clicked in the MDF file
+      tree
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void onMdfFileTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int column);
+
+    /*!
+      Double click on MDF file line. Fill info in info area
+      @param item Widget item clicked.
+      @param column Column clicked
+    */
+    void fillMdfFileHtmlInfo(QTreeWidgetItem *item, int column);
 
     /*!
       Open edit DM row dialog

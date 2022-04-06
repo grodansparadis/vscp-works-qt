@@ -51,10 +51,11 @@
 QTableWidgetItemBits::QTableWidgetItemBits(const QString &text)
                                             : QTableWidgetItem(text)
 {
-    m_pos = 0;
-    m_width = 0;
-    m_mask = 0;
-    m_value = 0;
+  m_pBit = nullptr;
+  //m_pos = 0;
+  //m_width = 0;
+  m_mask = 0;
+  m_value = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,7 +64,7 @@ QTableWidgetItemBits::QTableWidgetItemBits(const QString &text)
 
 QTableWidgetItemBits::~QTableWidgetItemBits(void)
 {
-
+  ;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,27 +75,27 @@ CDlgActionParam::CDlgActionParam(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::CDlgActionParam)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    ui->comboValues->hide();
-    ui->labelValueList->hide();
-    // Node id change
-    // connect(ui->chkEnableRow,
-    //       SIGNAL(stateChanged(int)),
-    //       this,
-    //       SLOT(enableRow_stateChanged(int)));
+  ui->comboValues->hide();
+  ui->labelValueList->hide();
+  // Node id change
+  // connect(ui->chkEnableRow,
+  //       SIGNAL(stateChanged(int)),
+  //       this,
+  //       SLOT(enableRow_stateChanged(int)));
 
-    connect(ui->tableWidgetBits,
-            SIGNAL(cellClicked(int, int)),
-            this,
-            SLOT(cellClicked(int,int)));
+  connect(ui->tableWidgetBits,
+          SIGNAL(cellClicked(int, int)),
+          this,
+          SLOT(cellClicked(int,int)));
 
-    connect(ui->tableWidgetBits,
-            SIGNAL(cellChanged(int, int)),
-            this,
-            SLOT(valueChanged(int,int)));
-    
-    setInitialFocus();
+  connect(ui->tableWidgetBits,
+          SIGNAL(cellChanged(int, int)),
+          this,
+          SLOT(valueChanged(int,int)));
+  
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,7 +104,7 @@ CDlgActionParam::CDlgActionParam(QWidget *parent) :
 
 CDlgActionParam::~CDlgActionParam()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +146,7 @@ CDlgActionParam::showBits(bool bShow)
 void 
 CDlgActionParam::addValue(int value, std::string& name)
 {
-    ui->comboValues->addItem(QString::fromStdString(name), value);
+  ui->comboValues->addItem(QString::fromStdString(name), value);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,9 +184,10 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
     uint8_t value = (m_actionParam & mask) >> pbitlist->at(i)->getPos();
 
     QTableWidgetItemBits *pitemValue = new QTableWidgetItemBits(QString::number(value));
+    pitemValue->m_pBit = pbitlist->at(i);
     pitemValue->m_value = value;
-    pitemValue->m_pos = pbitlist->at(i)->getPos();
-    pitemValue->m_width = pbitlist->at(i)->getWidth();
+    //pitemValue->m_pos = pbitlist->at(i)->getPos();
+    //pitemValue->m_width = pbitlist->at(i)->getWidth();
     pitemValue->m_mask = mask;
     pitemValue->setTextAlignment(Qt::AlignCenter);
     pitemValue->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -232,18 +234,60 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
 void 
 CDlgActionParam::cellClicked(int row, int column)
 {
-  ui->infoArea->setText(tr("Cell clicked: %1, %2").arg(row).arg(column));
-  std::string str;
   QTableWidgetItemBits *pitem = (QTableWidgetItemBits *)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
+  if (NULL == pitem) {
+    ui->infoArea->setText("INTERNAL ERROR: No bit defintion.");
+    return;
+  }
+
+  //ui->infoArea->setText(tr("Cell clicked: %1, %2").arg(row).arg(column));
+  std::string str;
   str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head>";
   str += "<meta name=\"qrichtext\" content=\"1\" />";
   str += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
-  str += "</head>";
-  str += "<body style=\"font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">";
-  str += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">";
-  str += "<br /></p><p>";
-  str += tr("Cell clicked: %1, %2").arg(row).arg(column).toStdString();
-  str += "</p></body></html>";
+  str += "</head><body>";
+  //str += "<body style=\"font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">";
+  //str += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">";
+  //str += "<br /></p><p>";
+  str += "<h4>";
+  str += pitem->m_pBit->getName();
+  str += "</h4>";
+  str += "<p>";
+  str += pitem->m_pBit->getDescription();
+  str += "</p>";
+  //str += tr("<b>Cell clicked:</b> %1, %2<br>").arg(row).arg(column).toStdString();
+  str += tr("<b>Pos:</b> %1<br>").arg(pitem->m_pBit->getPos()).toStdString();
+  str += tr("<b>Width:</b> %1<br>").arg(pitem->m_pBit->getWidth()).toStdString();
+  str += tr("<b>Min:</b> %1<br>").arg(pitem->m_pBit->getMin()).toStdString();
+  str += tr("<b>Max:</b> %1<br>").arg(pitem->m_pBit->getMax()).toStdString();
+  str += tr("<b>Mask:</b> 0x%1<br>").arg(pitem->m_mask, 2, 16, QLatin1Char('0')).toStdString();
+  str += tr("<b>Value in pos:</b> %1<br>").arg(pitem->m_value).toStdString();
+  str += "</p>";
+  str += "<p><a href=\"";
+  str += pitem->m_pBit->getInfoURL();
+  str += "\">";
+  str += pitem->m_pBit->getInfoURL();
+  str += "</a></p>";
+  str += "<p>";
+  std::deque<CMDF_Value *> *plistValues = pitem->m_pBit->getListValues();
+  if (nullptr != plistValues) {
+    for (int i=0; i<pitem->m_pBit->getListValues()->size(); i++) {
+      str += "<b>";
+      str += plistValues->at(i)->getValue();
+      str += "</b> - ";
+      str += plistValues->at(i)->getName();
+      str += "<br>";
+      str += plistValues->at(i)->getDescription();
+      str += "<br>";
+      str += plistValues->at(i)->getInfoURL();
+      str += "\">";
+      str += plistValues->at(i)->getInfoURL();
+      str += "</a></p>";
+    }
+  }
+  str += "</p>";
+  str += "</body></html>";
+  ui->infoArea->setHtml(str.c_str());
 }
 
 
@@ -260,12 +304,12 @@ CDlgActionParam::valueChanged(int row, int column)
 
   QTableWidgetItemBits *pitem = (QTableWidgetItemBits *)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
   if (NULL != pitem) {
-    uint8_t mask = pitem->m_mask >> pitem->m_pos;
+    uint8_t mask = pitem->m_mask >> pitem->m_pBit->getPos();
     //std::cout << "Row: " << row << "Value: " << pitem->text().toStdString() << std::endl;
     uint8_t value = vscp_readStringValue(pitem->text().toStdString());
     value &= mask;
     pitem->setText(QString::number(value));
-    pitem->m_value = (value << pitem->m_pos);
+    pitem->m_value = (value << pitem->m_pBit->getPos());
   }
 }
 

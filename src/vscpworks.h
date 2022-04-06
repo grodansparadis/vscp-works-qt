@@ -38,6 +38,7 @@
 #include "cfrmsession.h"
 
 #include <QApplication>
+#include <QMainWindow>
 #include <QMutex>
 #include <QObject>
 #include <QByteArray>
@@ -317,6 +318,18 @@ class vscpworks : public QApplication {
     */
     bool addVscpEventToJsRenderFunction(QJSEngine& engine, vscpEvent* pev); 
 
+    /*!
+      A client adds itself to the list of child windows
+      so the main window can delete the if needed.
+    */
+    void newChildWindow(QMainWindow* pwnd);
+
+    /*!
+      A client removes itself from the list of child windows when
+      it destroys itself.
+    */
+    void clearChildWindow(QMainWindow* pwnd);
+
     // ------------------------------------------------------------------------
     // Global Configuration information below
     //   This info is read from a configuration file 
@@ -483,6 +496,8 @@ class vscpworks : public QApplication {
     /// Event database
     QSqlDatabase m_evdb;
     
+    // List with open childwindows
+    std::list<QMainWindow*> m_childWindows;
 };
 
 

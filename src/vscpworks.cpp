@@ -57,6 +57,7 @@
 #include <QJSEngine>
 #include <QUuid>
 #include <QTextDocument>
+#include <QMainWindow>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -127,8 +128,17 @@ vscpworks::vscpworks(int &argc, char **argv) :
 
 vscpworks::~vscpworks()
 {
-    writeSettings();
-    m_worksdb.close();
+  writeSettings();
+
+  for (QMainWindow* pwnd : m_childWindows) {
+    if (nullptr != pwnd) {
+      pwnd->close();
+      m_childWindows.remove(pwnd);
+      delete pwnd;
+      break;
+    }
+  }
+  m_worksdb.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1109,3 +1119,29 @@ std::string vscpworks::renderVscpDataTemplate(std::map<std::string,std::string>&
 
     return strResult;
 } 
+
+///////////////////////////////////////////////////////////////////////////////
+// newClientWindow
+//
+
+void
+vscpworks::newChildWindow(QMainWindow* pwnd)
+{
+  m_childWindows.push_back(pwnd);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// clearChildWindow
+//
+
+void 
+vscpworks::clearChildWindow(QMainWindow* pwnd)
+{
+  for (QMainWindow* pitem : m_childWindows) {
+    if (pitem == pwnd) {
+      pwnd->close();
+      m_childWindows.remove(pwnd);
+      break;
+    }
+  }
+}
