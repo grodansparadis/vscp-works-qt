@@ -773,10 +773,13 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Navigate</string>
     </property>
+    <addaction name="actionGoto_register_page"/>
     <addaction name="actionGoto_page_register"/>
     <addaction name="actionGoto_page_0"/>
-    <addaction name="actionGor_standard_registers"/>
+    <addaction name="actionGoto_standard_registers"/>
     <addaction name="actionGoto_decsion_matrix"/>
+    <addaction name="actionCollapse_registers"/>
+    <addaction name="actionCollapse_files"/>
    </widget>
    <addaction name="menuCalls"/>
    <addaction name="menuNavigate"/>
@@ -927,7 +930,7 @@ p, li { white-space: pre-wrap; }
     <string>Goto page 0</string>
    </property>
   </action>
-  <action name="actionGor_standard_registers">
+  <action name="actionGoto_standard_registers">
    <property name="text">
     <string>Goto standard registers</string>
    </property>
@@ -976,6 +979,21 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionGoto_register_page">
+   <property name="text">
+    <string>Goto register page...</string>
+   </property>
+  </action>
+  <action name="actionCollapse_registers">
+   <property name="text">
+    <string>Collapse registers</string>
+   </property>
+  </action>
+  <action name="actionCollapse_files">
+   <property name="text">
+    <string>Collapse files</string>
    </property>
   </action>
  </widget>

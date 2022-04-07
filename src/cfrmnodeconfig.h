@@ -120,7 +120,7 @@ enum filesColumns {
 #define TREE_LIST_REGISTER_TYPE (QTreeWidgetItem::UserType + 1)
 #define TREE_LIST_REMOTEVAR_TYPE (QTreeWidgetItem::UserType + 2)
 #define TREE_LIST_DM_TYPE (QTreeWidgetItem::UserType + 3)
-#define TREE_LIST_MDF_FILE_TYPE (QTreeWidgetItem::UserType + 4)   // 4,5,6,7,8,9,10
+#define TREE_LIST_MDF_FILE_TYPE (QTreeWidgetItem::UserType + 4)   
 
 // ----------------------------------------------------------------------------
 
@@ -320,7 +320,7 @@ class CFrmNodeConfig : public QMainWindow
         @param pos Position where right click took place
     */
     void 
-    showFilesContextMenu(const QPoint& pos);
+    showMdfFilesContextMenu(const QPoint& pos);
 
     /// Open settings dialog
     void 
@@ -508,8 +508,41 @@ class CFrmNodeConfig : public QMainWindow
 
     /*!
       Show menu to select register page
+      @param page Page to go to. Set to -1 to open choice dialog.
     */
-    void gotoRegisterPageMenu(void);
+    void gotoRegisterPage(int page = -1);
+
+    /*!
+      Got register on page
+      @param page Page to go to. Set to -1 to open choice dialog.
+      @param reg Register to go to. Set to -1 to open choice dialog.
+    */
+    void gotoRegisterOnPage(int page = -1, int reg = -1);
+
+    /*!
+      Goto register page 0
+    */
+    void gotoRegisterPage0(void);
+
+    /*!
+      Goto standard register page
+    */
+    void gotoRegisterPageStdReg(void);
+
+    /*!
+      Collapse all register items
+    */
+    void collapseAllRegisterTopItems(void);
+
+    /*!
+      Collapse all register items
+    */
+    void collapseAllFileTopItems(void);
+
+    /*!
+      Goto page and pos for DM
+    */
+    void gotoRegisterPageDM(int row = 0);
 
     /*!
       Save selected register values
@@ -639,8 +672,8 @@ class CFrmNodeConfig : public QMainWindow
     QTreeWidgetItem *m_StandardRegTopPage;
 
     // Holds widget items for register page headers
-    // register -> header
-    std::map<uint32_t, QTreeWidgetItem *> m_mapRegTopPages;
+    // page -> register item header
+    std::map<uint16_t, QTreeWidgetItem *> m_mapRegTopPages;
 
     /// The VSCP client type
     CVscpClient::connType m_vscpConnType;
@@ -708,7 +741,7 @@ class CFrmNodeConfig : public QMainWindow
     /*!
       Maps registers to DM
     */
-    std::map<uint32_t, CDMWidgetItem *> m_mapReg2DM;
+    //std::map<uint32_t, CDMWidgetItem *> m_mapReg2DM;
 };
 
 #endif // CFrmNodeConfig_H

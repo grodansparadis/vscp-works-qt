@@ -84,6 +84,7 @@
 #include <QXmlStreamReader>
 #include <QtSql>
 #include <QtWidgets>
+#include <QInputDialog>
 
 // ----------------------------------------------------------------------------
 
@@ -536,11 +537,53 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   // Full update has been clicked
   connect(ui->actionUpdateFull, SIGNAL(triggered()), this, SLOT(updateFull()));
 
-  // Full update has been clicked
+  // Navigation: Goto register page
+  connect(ui->actionGoto_register_page,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage()));
+
+  // Navigation: Goto register on register page
+  connect(ui->actionGoto_page_register,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterOnPage()));  
+
+  // Navigation: Goto register page 0
+  connect(ui->actionGoto_page_0,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage0()));
+
+  // Navigation: Goto standard registers register page
+  connect(ui->actionGoto_standard_registers,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPageStdReg()));       
+
+  // Navigation: Goto DM register page
+  connect(ui->actionGoto_decsion_matrix,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPageDM()));      
+
+  // Navigation: Collapse all register top levels
+  connect(ui->actionCollapse_registers,
+          SIGNAL(triggered()),
+          this,
+          SLOT(collapseAllRegisterTopItems()));  
+
+  // Navigation: Collapse all file top levels
+  connect(ui->actionCollapse_files,
+          SIGNAL(triggered()),
+          this,
+          SLOT(collapseAllFileTopItems()));                         
+
+  // Go to page
   connect(ui->actionUpdateLocal,
           SIGNAL(triggered()),
           this,
-          SLOT(updateLocal()));
+          SLOT(updateLocal()));          
 
   connect(ui->actionDisableColors,
           SIGNAL(triggered(bool)),
@@ -629,7 +672,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->treeWidgetMdfFiles,
           &QTreeWidget::customContextMenuRequested,
           this,
-          &CFrmNodeConfig::showFilesContextMenu);
+          &CFrmNodeConfig::showMdfFilesContextMenu);
 
   // Remote variables
 
@@ -738,199 +781,6 @@ CFrmNodeConfig::menu_open_main_settings(void)
   // dlg->exec();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// showRegisterContextMenu
-//
-
-void
-CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
-{
-  QMenu* menu = new QMenu(this);
-
-  menu->addAction(QString(tr("Update")), this, SLOT(update()));
-
-  menu->addAction(QString(tr("Full update")), this, SLOT(updateFull()));
-
-  menu->addAction(QString(tr("Full update with local MDF")),
-                  this,
-                  SLOT(updateLocal()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Read value(s) for selected row(s)")),
-                  this,
-                  SLOT(readSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Write value(s) for selected row(s)")),
-                  this,
-                  SLOT(writeSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Write default value(s) for selected row(s)")),
-                  this,
-                  SLOT(defaultSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Set default values for ALL rows")),
-                  this,
-                  SLOT(defaultRegisterAll()));
-
-  menu->addAction(QString(tr("Undo value(s) for selected row(s)")),
-                  this,
-                  SLOT(undoSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Redo value(s) for selected row(s)")),
-                  this,
-                  SLOT(redoSelectedRegisterValues()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")),
-                  this,
-                  SLOT(saveSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Save ALL register values to disk")),
-                  this,
-                  SLOT(saveAllRegisterValues()));
-
-  menu->addAction(QString(tr("Load register values from disk")),
-                  this,
-                  SLOT(loadRegisterValues()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Goto register page...")),
-                  this,
-                  SLOT(gotoRegisterPageMenu()));
-
-  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// showRemoteVariableContextMenu
-//
-
-void
-CFrmNodeConfig::showRemoteVariableContextMenu(const QPoint& pos)
-{
-  QMenu* menu = new QMenu(this);
-
-  menu->addAction(QString(tr("Read value(s) for selected row(s)")),
-                  this,
-                  SLOT(readSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Write value(s) for selected row(s)")),
-                  this,
-                  SLOT(writeSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Write default value(s) for selected row(s)")),
-                  this,
-                  SLOT(defaultSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Set default values for ALL rows")),
-                  this,
-                  SLOT(defaultRegisterAll()));
-
-  menu->addAction(QString(tr("Undo value(s) for selected row(s)")),
-                  this,
-                  SLOT(undoSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Redo value(s) for selected row(s)")),
-                  this,
-                  SLOT(redoSelectedRegisterValues()));
-
-  menu->addSeparator();
-
-  menu->addAction(
-    QString(tr("Save register value(s) for selected row(s) to disk")),
-    this,
-    SLOT(saveSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Save ALL register values to disk")),
-                  this,
-                  SLOT(saveAllRegisterValues()));
-
-  menu->addAction(QString(tr("Load register values from disk")),
-                  this,
-                  SLOT(loadRegisterValues()));
-
-  menu->addAction(QString(tr("Full update with local MDF")),
-                  this,
-                  SLOT(updateLocal()));
-  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// showDMContextMenu
-//
-
-void
-CFrmNodeConfig::showDMContextMenu(const QPoint& pos)
-{
-  QMenu* menu = new QMenu(this);
-
-  menu->addAction(QString(tr("Edit row")), this, SLOT(editDMRow()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Enable/Disable selected row(s)")),
-                  this,
-                  SLOT(update()));
-
-  menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(update()));
-
-  menu->addAction(QString(tr("Write selected DM row(s)")),
-                  this,
-                  SLOT(updateFull()));
-
-  menu->addAction(QString(tr("Set action for selected row(s)")),
-                  this,
-                  SLOT(updateLocal()));
-
-  menu->addAction(QString(tr("Set action parameter for selected row(s)")),
-                  this,
-                  SLOT(updateLocal()));
-
-  menu->addSeparator();
-
-  menu->addAction(QString(tr("Undo value(s) for selected row(s)")),
-                  this,
-                  SLOT(undoSelectedRegisterValues()));
-  menu->addAction(QString(tr("Redo value(s) for selected row(s)")),
-                  this,
-                  SLOT(redoSelectedRegisterValues()));
-  menu->addSeparator();
-  menu->addAction(QString(tr("Save DM value(s) for selected row(s) to disk")),
-                  this,
-                  SLOT(saveSelectedRegisterValues()));
-
-  menu->addAction(QString(tr("Save ALL DM values to disk")),
-                  this,
-                  SLOT(saveAllRegisterValues()));
-
-  menu->addAction(QString(tr("Load DM values from disk")),
-                  this,
-                  SLOT(loadRegisterValues()));
-
-  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// showFilesContextMenu
-//
-
-void
-CFrmNodeConfig::showFilesContextMenu(const QPoint& pos)
-{
-  QMenu* menu = new QMenu(this);
-
-  menu->addAction(QString(tr("Update")), this, SLOT(update()));
-
-  menu->addAction(QString(tr("Full ipdate")), this, SLOT(updateFull()));
-
-  menu->addAction(QString(tr("Full update with local MDF")),
-                  this,
-                  SLOT(updateLocal()));
-  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // connectToHost
@@ -2197,12 +2047,196 @@ CFrmNodeConfig::redoSelectedRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// gotoRegisterPageMenu
+// collapseAllRegisterTopItems
 //
 
 void
-CFrmNodeConfig::gotoRegisterPageMenu(void)
+CFrmNodeConfig::collapseAllRegisterTopItems(void)
 {
+  ui->treeWidgetRegisters->collapseAll();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// collapseAllFileTopItems
+//
+
+void
+CFrmNodeConfig::collapseAllFileTopItems(void)
+{
+  ui->treeWidgetMdfFiles->collapseAll();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage(int page)
+{
+  // Collapse all
+  collapseAllRegisterTopItems();
+
+  if (!m_stdregs.getMDF().size()) {
+    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
+    return;
+  }
+
+  // if page is -1 open choice dialog
+  if (-1 == page) {
+
+    bool ok;
+
+    QStringList items;
+    items << tr("Standard register page"); 
+    std::set<long> *ppages = m_userregs.getPages();
+    for (auto it = ppages->begin(); it != ppages->end(); ++it) {
+      items << tr("Register page ") + QString::number(*it);
+    }
+    
+    QString strpage = QInputDialog::getItem(this, tr("Select register page"), tr("Register page:"), 
+                                              items, 0, false, &ok);
+    if (ok && !items.isEmpty()) {
+
+      // Go to register tab
+      ui->session_tabWidget->setCurrentIndex(0);
+
+      if (strpage == tr("Standard register page")) {
+        m_StandardRegTopPage->setSelected(true);
+        m_StandardRegTopPage->setExpanded(true);  
+      }
+      else {
+        std::string str = strpage.right(strpage.size()-13)  .toStdString();
+        page = vscp_readStringValue(str);
+        m_mapRegTopPages[page]->setSelected(true);
+        m_mapRegTopPages[page]->setExpanded(true);
+      }
+    }
+    else {
+      return;
+    }
+  }
+  else {
+    // Must be a valid page
+    std::set<long> *ppages = m_userregs.getPages();
+    auto search = ppages->find(page);
+    if (search == ppages->end()) {
+      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok); 
+      return;
+    }
+
+    // Go to register tab
+    ui->session_tabWidget->setCurrentIndex(0);
+
+    m_mapRegTopPages[page]->setSelected(true);
+    m_mapRegTopPages[page]->setExpanded(true);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterOnPage
+//
+
+void
+CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
+{
+  // Collapse all
+  collapseAllRegisterTopItems();
+
+  if (!m_stdregs.getMDF().size()) {
+    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
+    return;
+  }
+
+  // Must be a valid page
+  if (-1 != page) {
+    std::set<long> *ppages = m_userregs.getPages();
+    auto search = ppages->find(page);
+    if (search == ppages->end()) {
+      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok); 
+      return;
+    }
+  }
+
+  gotoRegisterPage(page);
+
+  if (-1 == reg) {
+    bool ok;
+    reg = QInputDialog::getInt(this, tr("Select register"),
+                                          tr("Register:"),
+                                          0,0,2147483647,1, &ok);
+    if (!ok) {                                          
+      return;
+    }
+  }
+
+  QList<QTreeWidgetItem *> selected =	ui->treeWidgetRegisters->selectedItems();
+  if (!selected.size() ) {
+    QMessageBox::information(this, tr(APPNAME), tr("No register page item selected (it should be!)"), QMessageBox::Ok); 
+    return;
+  }
+
+  for (int i=0; i<selected[0]->childCount(); i++) {
+    QTreeWidgetItem* item = selected[0]->child(i);
+    if (item->type() == TREE_LIST_REGISTER_TYPE) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
+      if (itemReg->m_regOffset == reg) {
+        itemReg->setSelected(true);
+        itemReg->setExpanded(true);
+        break;
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage0
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage0(void)
+{
+  // Collapse all
+  collapseAllRegisterTopItems();
+
+  gotoRegisterPage(0);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPageStdReg
+//
+
+void
+CFrmNodeConfig::gotoRegisterPageStdReg(void)
+{
+  // Collapse all
+  collapseAllRegisterTopItems();
+
+  ui->session_tabWidget->setCurrentIndex(0);
+  if (nullptr != m_StandardRegTopPage) {
+    m_StandardRegTopPage->setSelected(true);
+    m_StandardRegTopPage->setExpanded(true);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPageDM
+//
+
+void
+CFrmNodeConfig::gotoRegisterPageDM(int row)
+{
+  // Collapse all
+  collapseAllRegisterTopItems();
+
+  QTreeWidgetItemIterator it(ui->treeWidgetDecisionMatrix);
+  while (*it) {
+    CDMWidgetItem *pdmItem = (CDMWidgetItem *)*it;
+    if ((nullptr != pdmItem) && (nullptr != pdmItem->m_pDM) && (pdmItem->m_row == row)) {
+       gotoRegisterOnPage(pdmItem->m_pDM->getStartPage(), pdmItem->m_pDM->getStartOffset());
+       break;
+    }
+    **it;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2259,6 +2293,34 @@ CFrmNodeConfig::onRegisterTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int
   if (2 == column) {
     ui->treeWidgetRegisters->editItem(item, column);
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showRegisterContextMenu
+//
+
+void
+CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
+{
+  QMenu* menu = new QMenu(this);
+  menu->addAction(QString(tr("Update")), this, SLOT(update()));
+  menu->addAction(QString(tr("Full update")), this, SLOT(updateFull()));
+  menu->addAction(QString(tr("Full update with local MDF")), this, SLOT(updateLocal()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Read value(s) for selected row(s)")), this, SLOT(readSelectedRegisterValues()));
+  menu->addAction(QString(tr("Write value(s) for selected row(s)")), this, SLOT(writeSelectedRegisterValues()));
+  menu->addAction(QString(tr("Write default value(s) for selected row(s)")), this, SLOT(defaultSelectedRegisterValues()));
+  menu->addAction(QString(tr("Set default values for ALL rows")), this, SLOT(defaultRegisterAll()));
+  menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")), this, SLOT(saveSelectedRegisterValues()));
+  menu->addAction(QString(tr("Save ALL register values to disk")), this, SLOT(saveAllRegisterValues()));
+  menu->addAction(QString(tr("Load register values from disk")), this, SLOT(loadRegisterValues()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Goto register page...")), this, SLOT(gotoRegisterPage()));
+
+  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2715,6 +2777,31 @@ CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked( QTreeWidgetItem* it
   }
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// showRemoteVariableContextMenu
+//
+
+void
+CFrmNodeConfig::showRemoteVariableContextMenu(const QPoint& pos)
+{
+  QMenu* menu = new QMenu(this);
+  menu->addAction(QString(tr("Read value(s) for selected row(s)")), this, SLOT(readSelectedRegisterValues()));
+  menu->addAction(QString(tr("Write value(s) for selected row(s)")), this, SLOT(writeSelectedRegisterValues()));
+  menu->addAction(QString(tr("Write default value(s) for selected row(s)")), this, SLOT(defaultSelectedRegisterValues()));
+  menu->addAction(QString(tr("Set default values for ALL rows")), this, SLOT(defaultRegisterAll()));
+  // TODO
+  // menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  // menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  // TODO go to register
+  menu->addSeparator();
+  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")), this, SLOT(saveSelectedRegisterValues()));
+  menu->addAction(QString(tr("Save ALL register values to disk")), this, SLOT(saveAllRegisterValues()));
+  menu->addAction(QString(tr("Load register values from disk")), this, SLOT(loadRegisterValues()));
+
+  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // onRemoteVarTreeWidgetCellChanged
 //
@@ -3045,6 +3132,32 @@ CFrmNodeConfig::onDMTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int colum
     // CTRL wasn't hold
     editDMRow();
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showDMContextMenu
+//
+
+void
+CFrmNodeConfig::showDMContextMenu(const QPoint& pos)
+{
+  QMenu* menu = new QMenu(this);
+  menu->addAction(QString(tr("Edit row")), this, SLOT(editDMRow()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Enable/Disable selected row(s)")), this, SLOT(update()));
+  menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(update()));
+  menu->addAction(QString(tr("Write selected DM row(s)")), this, SLOT(updateFull()));
+  //menu->addSeparator();   TODO
+  //menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  //menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  // TODO Defaults
+  // TODO go to register
+  menu->addSeparator();
+  menu->addAction(QString(tr("Save DM values for selected row(s) to disk")), this, SLOT(saveSelectedRegisterValues()));
+  menu->addAction(QString(tr("Save DM registers to disk")), this, SLOT(saveAllRegisterValues()));
+  menu->addAction(QString(tr("Load DM values from disk")), this, SLOT(loadRegisterValues()));
+
+  menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3636,7 +3749,8 @@ CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int 
       break;
     
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_driver)):
-      if (nullptr != pitem->m_manual_obj) {      
+      if (nullptr != pitem->m_manual_obj) {    
+        // TODO  
         QDesktopServices::openUrl(QUrl(pitem->m_manual_obj->getUrl().c_str()));
       }
       else {
@@ -3666,6 +3780,20 @@ CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_none)):
       break;          
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showMdfFilesContextMenu
+//
+
+void
+CFrmNodeConfig::showMdfFilesContextMenu(const QPoint& pos)
+{
+  // QMenu* menu = new QMenu(this);
+  // menu->addAction(QString(tr("Update")), this, SLOT(update()));
+  // menu->addAction(QString(tr("Full ipdate")), this, SLOT(updateFull()));
+  // menu->addAction(QString(tr("Full update with local MDF")), this, SLOT(updateLocal()));
+  // menu->popup(ui->treeWidgetRegisters->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
