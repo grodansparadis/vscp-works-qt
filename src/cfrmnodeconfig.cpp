@@ -549,11 +549,83 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
           this,
           SLOT(gotoRegisterOnPage()));  
 
+  // Navigation: Goto selected DM or remote variable register
+  connect(ui->actionGoto_related_register,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterForSelected()));
+
   // Navigation: Goto register page 0
   connect(ui->actionGoto_page_0,
           SIGNAL(triggered()),
           this,
           SLOT(gotoRegisterPage0()));
+
+  // Navigation: Goto register page 1
+  connect(ui->actionGoto_page_1,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage1()));
+
+  // Navigation: Goto register page 2
+  connect(ui->actionGoto_page_2,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage2()));                    
+
+  // Navigation: Goto register page 3
+  connect(ui->actionGoto_page_3,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage3()));        
+
+  // Navigation: Goto register page 4
+  connect(ui->actionGoto_page_4,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage4()));
+
+  // Navigation: Goto register page 5
+  connect(ui->actionGoto_page_5,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage5()));
+
+  // Navigation: Goto register page 6
+  connect(ui->actionGoto_page_6,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage6()));
+
+  // Navigation: Goto register page 7
+  connect(ui->actionGoto_page_7,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage7()));
+
+  // Navigation: Goto register page 8
+  connect(ui->actionGoto_page_8,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage8()));
+
+  // Navigation: Goto register page 9
+  connect(ui->actionGoto_page_9,
+          SIGNAL(triggered()),
+          this,
+          SLOT(gotoRegisterPage9()));
+
+  // Edit selected DM row
+  QAction *actEditDM = new QAction(tr("Edit DM row"), this);  
+  actEditDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));                                                                         
+  connect(actEditDM, &QAction::triggered, this, &CFrmNodeConfig::editDMRow);
+  ui->treeWidgetDecisionMatrix->addAction(actEditDM); 
+
+  // Toggle active state for selected DM row
+  QAction *actToggleDM = new QAction(tr("Toggle active state for DM row"), this);  
+  actToggleDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));                                                                         
+  connect(actToggleDM, &QAction::triggered, this, &CFrmNodeConfig::toggleDMRow);
+  ui->treeWidgetDecisionMatrix->addAction(actToggleDM); 
 
   // Navigation: Goto standard registers register page
   connect(ui->actionGoto_standard_registers,
@@ -741,14 +813,6 @@ CFrmNodeConfig::~CFrmNodeConfig()
 
   // Make sure we are disconnected
   doDisconnectFromRemoteHost();
-
-  // Remove receive events
-  while (m_rxEvents.size()) {
-    vscpEvent* pev = m_rxEvents.front();
-    m_rxEvents.pop_front();
-    vscp_deleteEvent(pev);
-    pev = nullptr;
-  }
   
   pworks->clearChildWindow(this);
 }
@@ -2076,6 +2140,9 @@ CFrmNodeConfig::gotoRegisterPage(int page)
   // Collapse all
   collapseAllRegisterTopItems();
 
+  // Unselect all
+  ui->treeWidgetRegisters->selectionModel()->clearSelection();
+
   if (!m_stdregs.getMDF().size()) {
     QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
     return;
@@ -2109,6 +2176,7 @@ CFrmNodeConfig::gotoRegisterPage(int page)
         page = vscp_readStringValue(str);
         m_mapRegTopPages[page]->setSelected(true);
         m_mapRegTopPages[page]->setExpanded(true);
+        ui->treeWidgetRegisters->scrollToItem(m_mapRegTopPages[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
       }
     }
     else {
@@ -2126,10 +2194,100 @@ CFrmNodeConfig::gotoRegisterPage(int page)
 
     // Go to register tab
     ui->session_tabWidget->setCurrentIndex(0);
-
     m_mapRegTopPages[page]->setSelected(true);
     m_mapRegTopPages[page]->setExpanded(true);
+    ui->treeWidgetRegisters->scrollToItem(m_mapRegTopPages[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage1
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage1(void)
+{
+  gotoRegisterPage(1);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage2
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage2(void)
+{
+  gotoRegisterPage(2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage3
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage3(void)
+{
+  gotoRegisterPage(3);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage4
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage4(void)
+{
+  gotoRegisterPage(4);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage5
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage5(void)
+{
+  gotoRegisterPage(5);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage6
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage6(void)
+{
+  gotoRegisterPage(6);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage7
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage7(void)
+{
+  gotoRegisterPage(7);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage8
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage8(void)
+{
+  gotoRegisterPage(8);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterPage9
+//
+
+void
+CFrmNodeConfig::gotoRegisterPage9(void)
+{
+  gotoRegisterPage(9);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2141,6 +2299,9 @@ CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
 {
   // Collapse all
   collapseAllRegisterTopItems();
+
+  // Unselect all
+  ui->treeWidgetRegisters->selectionModel()->clearSelection();
 
   if (!m_stdregs.getMDF().size()) {
     QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
@@ -2182,9 +2343,31 @@ CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
       if (itemReg->m_regOffset == reg) {
         itemReg->setSelected(true);
         itemReg->setExpanded(true);
+        ui->treeWidgetRegisters->scrollToItem(item, QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
+        onRegisterTreeWidgetItemClicked(itemReg, 0);
         break;
       }
-    }
+    }    
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoRegisterForSelected
+//
+
+void
+CFrmNodeConfig::gotoRegisterForSelected(void)
+{
+  switch (ui->session_tabWidget->currentIndex()) {
+    
+    case TABBAR_INDEX_REMOTEVARS:
+      gotoRemoteVarRegisterPos();
+      break;
+
+    case TABBAR_INDEX_DM:
+      gotoDMRegisterPos();
+      break; 
+       
   }
 }
 
@@ -2777,6 +2960,26 @@ CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked( QTreeWidgetItem* it
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// gotoRemoteVarRegisterPos
+//
+
+void
+CFrmNodeConfig::gotoRemoteVarRegisterPos(void)
+{
+  CRemoteVariableWidgetItem *item = (CRemoteVariableWidgetItem*)ui->treeWidgetRemoteVariables->currentItem();
+  if (nullptr == item) {
+    return;
+  }
+
+  CMDF_RemoteVariable *prv = item->m_pRemoteVariable;
+  if (nullptr == item) {
+    spdlog::error("gotoRemoteVarRegisterPos: No remote variable stored in item");
+    return;
+  }
+
+  gotoRegisterOnPage(prv->getPage(), prv->getOffset());
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // showRemoteVariableContextMenu
@@ -2786,6 +2989,8 @@ void
 CFrmNodeConfig::showRemoteVariableContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
+  menu->addAction(QString(tr("Go to register(s) for this remote variable")), this, SLOT(gotoRemoteVarRegisterPos()));
+  menu->addSeparator();
   menu->addAction(QString(tr("Read value(s) for selected row(s)")), this, SLOT(readSelectedRegisterValues()));
   menu->addAction(QString(tr("Write value(s) for selected row(s)")), this, SLOT(writeSelectedRegisterValues()));
   menu->addAction(QString(tr("Write default value(s) for selected row(s)")), this, SLOT(defaultSelectedRegisterValues()));
@@ -3143,8 +3348,9 @@ CFrmNodeConfig::showDMContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
   menu->addAction(QString(tr("Edit row")), this, SLOT(editDMRow()));
+  menu->addAction(QString(tr("Go to register position for row")), this, SLOT(gotoDMRegisterPos()));
   menu->addSeparator();
-  menu->addAction(QString(tr("Enable/Disable selected row(s)")), this, SLOT(update()));
+  menu->addAction(QString(tr("Enable/Disable selected row(s)")), this, SLOT(toggleDMRow()));
   menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(update()));
   menu->addAction(QString(tr("Write selected DM row(s)")), this, SLOT(updateFull()));
   //menu->addSeparator();   TODO
@@ -3192,6 +3398,11 @@ CFrmNodeConfig::editDMRow()
   int reg;
   vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  if (nullptr == item) {
+    spdlog::error("editDMRow: Item for DM register row is null");
+    return;
+  }
+
   uint16_t page                    = item->m_pDM->getStartPage();
   //std::map<uint32_t, uint8_t>* map = m_userregs.getRegisterMap(item->m_pDM->getStartPage());
 
@@ -3343,6 +3554,62 @@ CFrmNodeConfig::editDMRow()
     updateVisualRegisters();
     fillDMHtmlInfo(item, 0);  
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// toggleDMRow
+//
+
+void
+CFrmNodeConfig::toggleDMRow(void)
+{
+  int reg;
+  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  if (nullptr == item) {
+    spdlog::error("editDMRow: Item for DM register row is null");
+    return;
+  }
+
+  uint8_t value = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
+                        CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                      item->m_pDM->getStartPage());
+
+  if (value & 0x80) {
+    value &= 0x7f;
+  }
+  else {
+    value |= 0x80;
+  }                      
+
+  m_userregs.putReg(item->m_pDM->getStartOffset() +
+                        (item->m_row * item->m_pDM->getRowSize()) +
+                        CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                      item->m_pDM->getStartPage(),
+                      value );
+
+  updateVisualRegisters();
+  fillDMHtmlInfo(item, 0);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// gotoDMRegisterPos
+//
+
+void
+CFrmNodeConfig::gotoDMRegisterPos(void)
+{
+  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  if (nullptr == item) {
+    spdlog::error("gotoDMRegisterPos: Item for DM register row is null");
+    return;
+  }
+
+  uint16_t page                    = item->m_pDM->getStartPage();
+  gotoRegisterOnPage(item->m_pDM->getStartPage(), item->m_pDM->getStartOffset() +
+                                                    (item->m_row * item->m_pDM->getRowSize()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

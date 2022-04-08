@@ -362,7 +362,6 @@ class CFrmNodeConfig : public QMainWindow
     */
     void onRegisterTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
 
-
     /*!
       Double click on register line. This juste select the row for all columns except 
       the value column. Double clicking on this column edit's the value.
@@ -456,6 +455,11 @@ class CFrmNodeConfig : public QMainWindow
     bool renderMdfFiles(void);
 
     /*!
+      go to register for selected remote variable
+    */
+    void gotoRemoteVarRegisterPos(void);
+
+    /*!
       Write all changed registers to the device
       @return VSCP_ERROR_SUCCESS on success, error code on failure.
     */
@@ -520,9 +524,59 @@ class CFrmNodeConfig : public QMainWindow
     void gotoRegisterOnPage(int page = -1, int reg = -1);
 
     /*!
+      Go to DM or remote variable register for selected item
+    */
+    void gotoRegisterForSelected(void);
+
+    /*!
       Goto register page 0
     */
     void gotoRegisterPage0(void);
+
+    /*!
+      Go to register page 1
+    */
+    void gotoRegisterPage1(void);
+
+    /*!
+      Go to register page 2
+    */
+    void gotoRegisterPage2(void);
+
+    /*!
+      Go to register page 3
+    */
+    void gotoRegisterPage3(void);
+
+    /*!
+      Go to register page 4
+    */
+    void gotoRegisterPage4(void);
+
+    /*!
+      Go to register page 5
+    */
+    void gotoRegisterPage5(void);
+
+    /*!
+      Go to register page 6
+    */
+    void gotoRegisterPage6(void);
+
+    /*!
+      Go to register page 7
+    */
+    void gotoRegisterPage7(void);
+
+    /*!
+      Go to register page 8
+    */
+    void gotoRegisterPage8(void);
+
+    /*!
+      Go to register page 9
+    */
+    void gotoRegisterPage9(void);
 
     /*!
       Goto standard register page
@@ -543,6 +597,11 @@ class CFrmNodeConfig : public QMainWindow
       Goto page and pos for DM
     */
     void gotoRegisterPageDM(int row = 0);
+
+    /*!
+      Go to register position for selected DM row
+    */
+    void gotoDMRegisterPos(void);
 
     /*!
       Save selected register values
@@ -606,7 +665,12 @@ class CFrmNodeConfig : public QMainWindow
     /*!
       Open edit DM row dialog
     */
-    void editDMRow();
+    void editDMRow(void);
+
+    /*!
+      Toggle active state for DM row dialog
+    */
+    void toggleDMRow(void);
 
     /*!
       Go trough all registers and mark changed 
@@ -683,15 +747,6 @@ class CFrmNodeConfig : public QMainWindow
 
     /// A pointer to a VSCP Client 
     CVscpClient *m_vscpClient;
-
-    /// List for received events
-    QTableWidget *m_rxTable;
-
-    /// Mutex that protect the rx -lists
-    QMutex m_mutexRxList;
-
-    /// Queue that holds received events
-    std::deque<vscpEvent *> m_rxEvents;
 
     // The UI definition
     Ui::CFrmNodeConfig *ui;

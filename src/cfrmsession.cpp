@@ -522,8 +522,8 @@ CFrmSession::createMenu()
     m_deleteRxCommentAct    = m_editMenu->addAction(tr("Remove RX comment"),
                                                         this,
                                                         &CFrmSession::removeEventNote);
-    m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
-    m_toggleRxTypeMarkAct->setStatusTip(tr("Remove a comment from selected RX row(s)")); 
+    m_deleteRxCommentAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+    m_deleteRxCommentAct->setStatusTip(tr("Remove a comment from selected RX row(s)")); 
 
     m_menuBar->addMenu(m_editMenu);
 
