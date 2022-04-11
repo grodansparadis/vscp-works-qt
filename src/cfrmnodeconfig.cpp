@@ -2443,8 +2443,8 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
 void
 CFrmNodeConfig::saveSelectedRegisterValues(void)
 {
-  bool bJSON = true;
-  saveRegisterValues(bJSON, false);
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  saveRegisterValues(pworks->m_bSaveAlwaysJSON, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2454,8 +2454,8 @@ CFrmNodeConfig::saveSelectedRegisterValues(void)
 void
 CFrmNodeConfig::saveAllRegisterValues(void)
 {
-  bool bJSON = true;
-  saveRegisterValues(bJSON, true);
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  saveRegisterValues(pworks->m_bSaveAlwaysJSON, true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2465,7 +2465,123 @@ CFrmNodeConfig::saveAllRegisterValues(void)
 void
 CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 {
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
 
+  // Check if we should save on JSON format
+  if (!bJSON) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, tr(APPNAME), "Save in JSON format?",
+                                    QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+      bJSON = true;
+    }   
+  }
+
+  // QFileDialog dlg(this);
+  // dlg.setFileMode(QFileDialog::AnyFile);
+
+  QString fileName = QFileDialog::getSaveFileName(this,
+                                    tr("Save registers to file"),
+                                    /*"~/.vscpworks/device-registers.reg"*/"/tmp/device-registers.reg",
+                                    tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
+  //std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  // Open the file
+  QFile file(fileName);
+  if (!file.open(QIODevice::WriteOnly)) {
+    QMessageBox::information(this, tr(APPNAME),
+                             tr("Cannot write file %1:\n%2.")
+                             .arg(fileName)
+                             .arg(file.errorString()));
+    return;
+  }
+
+  // Check if we should save on JSON format
+  if (bJSON) {
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();    
+
+    file.write(QString("{\n\t\"registers\": [\n").toUtf8());  // Start of JSON
+
+    if (bAll) {
+      // Write all registers
+      //QList<QTreeWidgetItem *> selected =	ui->treeWidgetRegisters->selectedItems();
+      QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
+      while (*item) {
+        if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
+          CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
+          uint8_t value                = vscp_readStringValue((*item)->text(REG_COL_VALUE).toStdString());
+          QString strName          = itemReg->text(REG_COL_NAME);
+          file.write(QString("\t\t{\n").toUtf8());
+          file.write(QString("\t\t\t\"page:\": ").toUtf8());
+          file.write(QString::number(itemReg->m_regPage).toUtf8());
+          file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
+          file.write(QString::number(itemReg->m_regOffset).toUtf8());
+          file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
+          file.write(QString::number(value).toUtf8());
+          file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
+          file.write(strName.toUtf8());
+          file.write(QString("\"\n\t\t},\n").toUtf8());
+        }
+        ++item;
+      }
+    }
+    else {
+      // Write selected registers
+      QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
+      // TODO: sort option
+
+      for (auto item : listSelected) {
+        if (item->type() == TREE_LIST_REGISTER_TYPE) {
+          CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
+          uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
+          QString strName          = itemReg->text(REG_COL_NAME);
+          file.write(QString("\t\t{\n").toUtf8());
+          file.write(QString("\t\t\t\"page:\": ").toUtf8());
+          file.write(QString::number(itemReg->m_regPage).toUtf8());
+          file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
+          file.write(QString::number(itemReg->m_regOffset).toUtf8());
+          file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
+          file.write(QString::number(value).toUtf8());
+          file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
+          file.write(strName.toUtf8());
+          file.write(QString("\"\n\t\t},\n").toUtf8());
+        }
+        else {
+          // Save all children on page
+          for (int i=0; i<item->childCount(); i++) {
+            CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
+            uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
+            QString strName          = itemReg->text(REG_COL_NAME);
+            file.write(QString("\t\t{\n").toUtf8());
+            file.write(QString("\t\t\t\"page:\": ").toUtf8());
+            file.write(QString::number(itemReg->m_regPage).toUtf8());
+            file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
+            file.write(QString::number(itemReg->m_regOffset).toUtf8());
+            file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
+            file.write(QString::number(value).toUtf8());
+            file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
+            file.write(strName.toUtf8());
+            file.write(QString("\"\n\t\t},\n").toUtf8());
+          }
+        }
+      }
+    }
+
+    QApplication::restoreOverrideCursor();  
+    QApplication::processEvents();
+
+    file.write(QString("\n\t]\n").toUtf8());
+    file.write(QString("}\n").toUtf8());  
+  }
+  else {
+    // XML format
+        
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
