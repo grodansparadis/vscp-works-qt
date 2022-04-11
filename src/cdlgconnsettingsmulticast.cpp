@@ -311,6 +311,7 @@ void
 CDlgConnSettingsMulticast::onTestConnection(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     // // Initialize host connection
     // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),

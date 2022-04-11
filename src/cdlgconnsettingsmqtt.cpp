@@ -716,6 +716,7 @@ void
 CDlgConnSettingsMqtt::onTestConnection(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     std::string str = getBroker().toStdString();
     m_client.setHost(str);

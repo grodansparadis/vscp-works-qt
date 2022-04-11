@@ -262,7 +262,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     QApplication::beep();
     spdlog::error(std::string(tr("pconn is null").toStdString()));
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Can't open node configuration window - "
                                 "application configuration data is missing"),
                              QMessageBox::Ok);
@@ -277,7 +277,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     QApplication::beep();
     spdlog::error(std::string(tr("Type is not define in JSON data").toStdString()));
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Can't open node configuration  window - The "
                                 "connection type is unknown"),
                              QMessageBox::Ok);
@@ -885,11 +885,12 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::TCPIP:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to connect to remote host.").toStdString()));
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the remote "
                                     "host (see log for more info)."),
                                  QMessageBox::Ok);
@@ -904,13 +905,14 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::CANAL:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QApplication::beep();
         QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
         str += rv;        
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the CANAL "
                                     "driver (see log for more info)."),
                                  QMessageBox::Ok);
@@ -925,13 +927,14 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QApplication::beep();
         QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to SOCKETCAN "
                                     "(see log for more info)."),
                                  QMessageBox::Ok);
@@ -954,7 +957,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
         spdlog::info(std::string(
           tr("Session: Unable to connect to remote host").toStdString()));
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the remote "
                                     "host (see log for more info)."),
                                  QMessageBox::Ok);
@@ -1011,7 +1014,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to disconnect tcp/ip remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
+                                  tr(APPNAME),
                                   tr("Failed to disconnect the connection to the txp/ip remote host"),
           QMessageBox::Ok);
       }
@@ -1025,6 +1028,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       // Remove callback
 
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QApplication::beep();
@@ -1032,7 +1036,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
+                                  tr(APPNAME),
                                   tr("Failed to disconnect the connection to the CANAL driver"),
                                   QMessageBox::Ok);
       }
@@ -1044,6 +1048,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QApplication::beep();
@@ -1052,7 +1057,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         spdlog::error(str.toStdString());
         QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Failed to disconnect the connection to the SOCKETCAN "
              "driver"),
           QMessageBox::Ok);
@@ -1074,7 +1079,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to disconnect from MQTT remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
+                                  tr(APPNAME),
                                   tr("Failed to disconnect the connection to the MQTT remote "
                                     "host"),
                                   QMessageBox::Ok);
@@ -1258,9 +1263,10 @@ CFrmNodeConfig::update(void)
     ;
   }
   else {
+    
     if (!m_nUpdates) {
 
-      // Read in and render all registers
+      // First read: Read in and render all registers
       if (VSCP_ERROR_SUCCESS != doUpdate("")) {
         QApplication::beep();
         spdlog::error("Update: Failed to read and render registers from the "
@@ -1337,6 +1343,7 @@ CFrmNodeConfig::writeChanges(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 
   // CAN4VSCP interface
   std::string str = m_comboInterface->currentText().toStdString();
@@ -1414,12 +1421,15 @@ int
 CFrmNodeConfig::doUpdate(std::string mdfpath)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Show a progress bar
   QProgressBar* pbar = new QProgressBar(this);
-  // ui->statusBar->addWidget(pbar);
+  ui->statusBar->addWidget(pbar);
   pbar->setMaximum(100);
+  QApplication::processEvents();
 
   // Must be connected to a remote host
   if (m_vscpConnType == CVscpClient::connType::NONE) {
@@ -1455,9 +1465,9 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
     return VSCP_ERROR_COMMUNICATION;
   }
 
-  QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-
   pbar->setValue(25);
+  QApplication::processEvents();
+
   spdlog::trace("Standard register read");
 
   // * * * Download MDF * * *
@@ -1504,7 +1514,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   }
 
   pbar->setValue(75);
-  QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  QApplication::processEvents();
 
   spdlog::trace("MDF Downloader", tempPath);
 
@@ -1522,7 +1532,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   }
 
   pbar->setValue(80);
-  QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  QApplication::processEvents();
 
   ui->statusBar->showMessage(tr("MDF read from device and parsed OK"));
   spdlog::trace("Parsing MDF OK");
@@ -1539,9 +1549,11 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   fillDeviceHtmlInfo();
   m_bMainInfo = true;
   pbar->setValue(100);
+  QApplication::processEvents();
 
   QApplication::restoreOverrideCursor();
   ui->statusBar->removeWidget(pbar);
+  QApplication::processEvents();
 
   return VSCP_ERROR_SUCCESS;
 }
@@ -1959,6 +1971,7 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 
   // CAN4VSCP interface
   std::string str = m_comboInterface->currentText().toStdString();
@@ -2022,6 +2035,7 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 
   // CAN4VSCP interface
   std::string str = m_comboInterface->currentText().toStdString();
@@ -2429,6 +2443,8 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
 void
 CFrmNodeConfig::saveSelectedRegisterValues(void)
 {
+  bool bJSON = true;
+  saveRegisterValues(bJSON, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2438,6 +2454,18 @@ CFrmNodeConfig::saveSelectedRegisterValues(void)
 void
 CFrmNodeConfig::saveAllRegisterValues(void)
 {
+  bool bJSON = true;
+  saveRegisterValues(bJSON, true);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveRegisterValues
+//
+
+void
+CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2727,10 +2755,8 @@ CFrmNodeConfig::renderRegisters(void)
       // Set foreground and background colors from MDF
       if (!pworks->m_config_bDisableColors) {
         for (int i = 0; i < 4; i++) {
-          itemReg->setForeground(i,
-                                 QBrush(QColor(pregmdf->getForegroundColor())));
-          itemReg->setBackground(i,
-                                 QBrush(QColor(pregmdf->getBackgroundColor())));
+          itemReg->setForeground(i, QBrush(QColor(pregmdf->getForegroundColor())));
+          itemReg->setBackground(i, QBrush(QColor(pregmdf->getBackgroundColor())));
         }
       }
 
@@ -3351,8 +3377,8 @@ CFrmNodeConfig::showDMContextMenu(const QPoint& pos)
   menu->addAction(QString(tr("Go to register position for row")), this, SLOT(gotoDMRegisterPos()));
   menu->addSeparator();
   menu->addAction(QString(tr("Enable/Disable selected row(s)")), this, SLOT(toggleDMRow()));
-  menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(update()));
-  menu->addAction(QString(tr("Write selected DM row(s)")), this, SLOT(updateFull()));
+  menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(readSelectedDMRow()));
+  menu->addAction(QString(tr("Write selected DM row(s)")), this, SLOT(writeSelectedDMRow()));
   //menu->addSeparator();   TODO
   //menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
   //menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
@@ -3502,12 +3528,6 @@ CFrmNodeConfig::editDMRow()
                         CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
                       item->m_pDM->getStartPage(),
                       pDlg->getDmAddressOrigin());
-    // If changed mark as changed in visual interface
-    // if (m_userregs.isChanged( (item->m_row * item->m_pDM->getRowSize()) +
-    //                       CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
-    //                       item->m_pDM->getStartPage()) {
-
-    // }
 
     m_userregs.putReg(item->m_pDM->getStartOffset() +
                         (item->m_row * item->m_pDM->getRowSize()) +
@@ -3571,6 +3591,11 @@ CFrmNodeConfig::toggleDMRow(void)
     return;
   }
 
+  if (item->m_pDM == nullptr) {
+    spdlog::error("editDMRow: Item for DM register row has no DM");
+    return;
+  }
+
   uint8_t value = m_userregs.getReg(item->m_pDM->getStartOffset() +
                         (item->m_row * item->m_pDM->getRowSize()) +
                         CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
@@ -3591,6 +3616,152 @@ CFrmNodeConfig::toggleDMRow(void)
 
   updateVisualRegisters();
   fillDMHtmlInfo(item, 0);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// readSelectedDMRow
+//
+
+void
+CFrmNodeConfig::readSelectedDMRow(void)
+{
+  int rv;
+  int reg;
+  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  if (nullptr == item) {
+    spdlog::error("readSelectedDMRow: Item for DM register row is null");
+    return;
+  }
+
+  if (item->m_pDM == nullptr) {
+    spdlog::error("readSelectedDMRow: Item for DM register row has no DM");
+    return;
+  }
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+
+  // CAN4VSCP interface
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;
+
+  // node id
+  guidNode.setLSB(m_nodeidConfig->value());
+
+  std::map<uint8_t,uint8_t> values;
+  if (VSCP_ERROR_SUCCESS != (rv = vscp_readLevel1RegisterBlock(*m_vscpClient,
+                                      guidNode,
+                                      guidInterface,
+                                      item->m_pDM->getStartPage(), 
+                                      item->m_pDM->getStartOffset() + (item->m_row * item->m_pDM->getRowSize()),
+                                      item->m_pDM->getRowSize(),
+                                      values,
+                                      pworks->m_config_timeout))) {
+    
+    QApplication::restoreOverrideCursor();  
+    QApplication::processEvents();
+
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to read DM row from node.\n"
+                                "Error code: %1").arg(rv),
+                             QMessageBox::Ok);   
+    return;                                                              
+  }
+
+  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+    uint8_t pos = item->m_pDM->getStartOffset() +
+                    (item->m_row * item->m_pDM->getRowSize()) +
+                    i;
+    m_userregs.putReg( pos,
+                        item->m_pDM->getStartPage(),
+                        values[pos] );
+  }
+
+  updateVisualRegisters();
+  fillDMHtmlInfo(item, 0);
+
+  QApplication::restoreOverrideCursor();
+  QApplication::processEvents();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// writeSelectedDMRow
+//
+
+void
+CFrmNodeConfig::writeSelectedDMRow(void)
+{
+  int rv;
+  int reg;
+  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  if (nullptr == item) {
+    spdlog::error("writeSelectedDMRow: Item for DM register row is null");
+    return;
+  }
+
+  if (item->m_pDM == nullptr) {
+    spdlog::error("writeSelectedDMRow: Item for DM register row has no DM");
+    return;
+  }
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+
+  // CAN4VSCP interface
+  std::string str = m_comboInterface->currentText().toStdString();
+  cguid guidInterface;
+  cguid guidNode;
+  guidInterface.getFromString(str);
+  guidNode = guidInterface;
+  
+  // node id
+  guidNode.setLSB(m_nodeidConfig->value());
+
+  std::map<uint8_t,uint8_t> values;
+  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+    uint8_t pos = item->m_pDM->getStartOffset() +
+                    (item->m_row * item->m_pDM->getRowSize()) +
+                    i;
+    values[pos] = m_userregs.getReg(pos, item->m_pDM->getStartPage());
+  }
+
+  if (VSCP_ERROR_SUCCESS != (rv = vscp_writeLevel1RegisterBlock(*m_vscpClient,
+                                    guidNode,
+                                    guidInterface,
+                                    item->m_pDM->getStartPage(),                                    
+                                    values,
+                                    pworks->m_config_timeout))) {
+    
+    QApplication::restoreOverrideCursor();
+    QApplication::processEvents();
+
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to write DM row from node.\n"
+                                "Error code: %1").arg(rv),
+                             QMessageBox::Ok);  
+    return;                                                              
+  }
+
+  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+    uint8_t pos = item->m_pDM->getStartOffset() +
+                    (item->m_row * item->m_pDM->getRowSize()) +
+                    i;
+    // Mark register as written                
+    m_userregs.setChangedState(pos, item->m_pDM->getStartPage(), false);
+    updateChangeDM(pos, item->m_pDM->getStartPage());
+  }
+                  
+  updateVisualRegisters();
+  updateVisualDM();
+  fillDMHtmlInfo(item, 0);
+  QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

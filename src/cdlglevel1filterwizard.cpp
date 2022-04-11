@@ -210,6 +210,7 @@ CDlgLevel1FilterWizard::onBaseChange(int index)
     numerical_base numbase = static_cast<numerical_base>(index);
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     switch (numbase) {
         case numerical_base::HEX:
@@ -519,6 +520,7 @@ void CDlgLevel1FilterWizard::showVscpTypeContextMenu(const QPoint& pos)
 void CDlgLevel1FilterWizard::clrAllVscpTypeSelections(void) 
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
     for (int i = 0; i < ui->listType->count(); ++i) {
         QListWidgetItem* item = ui->listType->item(i);
         item->setSelected(false);
@@ -533,6 +535,7 @@ void CDlgLevel1FilterWizard::clrAllVscpTypeSelections(void)
 void CDlgLevel1FilterWizard::selectAllVscpTypeSelections(void) 
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
     for (int i = 0; i < ui->listType->count(); ++i) {
         QListWidgetItem* item = ui->listType->item(i);
         item->setSelected(true);        
@@ -606,6 +609,7 @@ void
 CDlgLevel1FilterWizard::transferFromVisual(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
     calculatePriorityValues();
     calculateVscpClassValues();
     calculateVscpTypeValues();

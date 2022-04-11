@@ -70,11 +70,17 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
     ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
     //onBaseChange(static_cast<int>(m_baseIndex));
 
+    // Preferred language
+    ui->editPreferredLanguage->setText(pworks->m_preferredLanguage.c_str());
+
     // Darkthereme
     ui->chkDarkTheme->setChecked(pworks->m_bEnableDarkTheme);
 
     // Ask befor delete/clear
-    ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);    
+    ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);
+
+    // Save format
+    ui->chkAlwaysJSON->setChecked(pworks->m_bSaveAlwaysJSON);
 
     // * * * Session Window tab * * *
 
@@ -241,7 +247,9 @@ void CDlgMainSettings::done(int rv)
       // General
       pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
       pworks->m_bEnableDarkTheme = ui->chkDarkTheme->isChecked();
-      pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();        
+      pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();   
+      pworks->m_bSaveAlwaysJSON = ui->chkAlwaysJSON->isChecked();   
+      pworks->m_preferredLanguage = ui->editPreferredLanguage->text().toStdString();   
 
       // Session window
       pworks->m_session_timeout = ui->spinSessionTimeout->value();

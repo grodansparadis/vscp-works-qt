@@ -614,6 +614,14 @@ class CFrmNodeConfig : public QMainWindow
     void saveAllRegisterValues(void);
 
     /*!
+      Save all or selected register values to disk.
+      Format is JSON or XML as set in settings.
+      @param bJSON True if save format should be JSON, else XML.
+      @param bAll If true save all registers, else save selected registers
+    */
+    void saveRegisterValues(bool bJSON = true, bool bAll = false);
+
+    /*!
       Save selected register values
     */
     void loadRegisterValues(void);
@@ -671,6 +679,16 @@ class CFrmNodeConfig : public QMainWindow
       Toggle active state for DM row dialog
     */
     void toggleDMRow(void);
+
+    /*!
+      Read selected DM row from device
+    */
+    void readSelectedDMRow(void);
+
+    /*!
+      Write selected DM row to device
+    */
+    void writeSelectedDMRow(void);
 
     /*!
       Go trough all registers and mark changed 

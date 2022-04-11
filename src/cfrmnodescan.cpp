@@ -460,6 +460,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::CANAL:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
         str += rv;
@@ -480,6 +481,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QString str =
           tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
@@ -585,6 +587,7 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       // Remove callback
 
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QString str =
@@ -606,7 +609,9 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::SOCKETCAN:
+
       QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QString str = tr("Session: Unable to disconnect from the "

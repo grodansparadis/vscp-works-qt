@@ -1713,6 +1713,7 @@ MainWindow::loadConfiguration(const QString& fileName)
   QTextStream in(&file);
 #ifndef QT_NO_CURSOR
   QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 #endif
   // m_textEdit->setPlainText(in.readAll());
 #ifndef QT_NO_CURSOR
@@ -1734,6 +1735,7 @@ MainWindow::saveFile(const QString& fileName)
   QString errorMessage;
 
   QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents()
   QSaveFile file(fileName);
   if (file.open(QFile::WriteOnly | QFile::Text)) {
       QTextStream out(&file);

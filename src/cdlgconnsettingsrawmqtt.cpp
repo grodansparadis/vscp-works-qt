@@ -617,6 +617,7 @@ void
 CDlgConnSettingsRawMqtt::onTestConnection(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     // Initialize host connection
     // if (VSCP_ERROR_SUCCESS !=

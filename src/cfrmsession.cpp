@@ -908,6 +908,7 @@ void
 CFrmSession::menu_clear_rxlist(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     m_rxTable->setCurrentCell(-1, -1); // unselect all
 
@@ -1150,6 +1151,7 @@ void
 CFrmSession::menu_clear_txlist(void)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
 
     m_txTable->setCurrentCell(-1, -1); // unselect all
 
@@ -1956,6 +1958,7 @@ CFrmSession::doConnectToRemoteHost(void)
 
         case CVscpClient::connType::CANAL:
             QApplication::setOverrideCursor(Qt::WaitCursor);
+            QApplication::processEvents();
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
                 QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
                 str += rv;
@@ -1974,6 +1977,7 @@ CFrmSession::doConnectToRemoteHost(void)
 
         case CVscpClient::connType::SOCKETCAN:
             QApplication::setOverrideCursor(Qt::WaitCursor);
+            QApplication::processEvents();
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
                 QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
                 str += rv;
@@ -2070,6 +2074,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             // Remove callback
 
             QApplication::setOverrideCursor(Qt::WaitCursor);
+            QApplication::processEvents();
 
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
                 QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
@@ -2087,7 +2092,9 @@ CFrmSession::doDisconnectFromRemoteHost(void)
             break;
 
         case CVscpClient::connType::SOCKETCAN:
+
             QApplication::setOverrideCursor(Qt::WaitCursor);
+            QApplication::processEvents();
 
             if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
                 QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");

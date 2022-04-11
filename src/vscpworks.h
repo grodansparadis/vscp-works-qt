@@ -364,11 +364,21 @@ class vscpworks : public QApplication {
     /// Numerical base for all numericals in system
     numerical_base m_base;
 
+    /*!
+      Prefered language to use for MDF information
+    */
+    std::string m_preferredLanguage;
+
     /*! 
         If true (default) ask before deleting or 
         clearing data
     */
     bool m_bAskBeforeDelete;
+
+    /*!
+      If set to true will not ask for save format
+    */
+    bool m_bSaveAlwaysJSON;
 
     //**************************************************************************
     //                            LOGGER (SPDLOG)
