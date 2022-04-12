@@ -2459,6 +2459,46 @@ CFrmNodeConfig::saveAllRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// writeRegisterRecord
+//
+
+void
+CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* itemReg, bool bJSON)
+{
+  if (nullptr == itemReg) {
+    return;
+  }
+
+  uint8_t value                = vscp_readStringValue(itemReg->text(REG_COL_VALUE).toStdString());
+  QString strName              = itemReg->text(REG_COL_NAME);
+
+  if (bJSON) {
+    file.write(QString("\t\t{\n").toUtf8());
+    file.write(QString("\t\t\t\"page:\": ").toUtf8());
+    file.write(QString::number(itemReg->m_regPage).toUtf8());
+    file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
+    file.write(QString::number(itemReg->m_regOffset).toUtf8());
+    file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
+    file.write(QString::number(value).toUtf8());
+    file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
+    file.write(strName.toUtf8());
+    file.write(QString("\"\n\t\t},\n").toUtf8());
+  }
+  else {
+    
+    file.write(QString("<reg page=\"").toUtf8());
+    file.write(QString::number(itemReg->m_regPage).toUtf8());
+    file.write(QString("\" offset=\"").toUtf8());
+    file.write(QString::number(itemReg->m_regOffset).toUtf8());
+    file.write(QString("\" value=\"").toUtf8());
+    file.write(QString::number(value).toUtf8());
+    file.write(QString("\" name=\"").toUtf8());
+    file.write(strName.toUtf8());
+    file.write(QString("\" />\n").toUtf8());    
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // saveRegisterValues
 //
 
@@ -2514,18 +2554,54 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
       while (*item) {
         if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
           CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
-          uint8_t value                = vscp_readStringValue((*item)->text(REG_COL_VALUE).toStdString());
-          QString strName          = itemReg->text(REG_COL_NAME);
-          file.write(QString("\t\t{\n").toUtf8());
-          file.write(QString("\t\t\t\"page:\": ").toUtf8());
-          file.write(QString::number(itemReg->m_regPage).toUtf8());
-          file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
-          file.write(QString::number(itemReg->m_regOffset).toUtf8());
-          file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
-          file.write(QString::number(value).toUtf8());
-          file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
-          file.write(strName.toUtf8());
-          file.write(QString("\"\n\t\t},\n").toUtf8());
+          writeRegisterRecord(file, itemReg, true);
+        }
+        ++item;
+      }
+    }
+    else {
+
+      // Write selected registers
+      QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
+      // TODO: sort option
+
+      for (auto item : listSelected) {
+        if (item->type() == TREE_LIST_REGISTER_TYPE) {
+          CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
+          writeRegisterRecord(file, itemReg, true);
+        }
+        else {
+          // Save all children on page
+          for (int i=0; i<item->childCount(); i++) {
+            CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
+            writeRegisterRecord(file, itemReg, true);
+          }
+        }
+      }
+    }
+
+    file.write(QString("\n\t]\n").toUtf8());
+    file.write(QString("}\n").toUtf8()); 
+
+    QApplication::restoreOverrideCursor();  
+    QApplication::processEvents(); 
+  }
+  else {
+    // XML format
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents(); 
+
+    file.write(QString("<?xml version = \"1.0\" encoding =  \"UTF-8\" ?>\n").toUtf8());
+    file.write(QString("<registerset>\n").toUtf8());    
+
+    if (bAll) {
+      // Write all registers
+      QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
+      while (*item) {
+        if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
+          CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
+          writeRegisterRecord(file, itemReg, false);
         }
         ++item;
       }
@@ -2538,49 +2614,22 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
       for (auto item : listSelected) {
         if (item->type() == TREE_LIST_REGISTER_TYPE) {
           CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
-          uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
-          QString strName          = itemReg->text(REG_COL_NAME);
-          file.write(QString("\t\t{\n").toUtf8());
-          file.write(QString("\t\t\t\"page:\": ").toUtf8());
-          file.write(QString::number(itemReg->m_regPage).toUtf8());
-          file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
-          file.write(QString::number(itemReg->m_regOffset).toUtf8());
-          file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
-          file.write(QString::number(value).toUtf8());
-          file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
-          file.write(strName.toUtf8());
-          file.write(QString("\"\n\t\t},\n").toUtf8());
+          writeRegisterRecord(file, itemReg, false);
         }
         else {
           // Save all children on page
           for (int i=0; i<item->childCount(); i++) {
             CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
-            uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
-            QString strName          = itemReg->text(REG_COL_NAME);
-            file.write(QString("\t\t{\n").toUtf8());
-            file.write(QString("\t\t\t\"page:\": ").toUtf8());
-            file.write(QString::number(itemReg->m_regPage).toUtf8());
-            file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
-            file.write(QString::number(itemReg->m_regOffset).toUtf8());
-            file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
-            file.write(QString::number(value).toUtf8());
-            file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
-            file.write(strName.toUtf8());
-            file.write(QString("\"\n\t\t},\n").toUtf8());
+            writeRegisterRecord(file, itemReg, false);
           }
         }
       }
-    }
+    }  
+
+    file.write(QString("</registerset>\n").toUtf8());
 
     QApplication::restoreOverrideCursor();  
     QApplication::processEvents();
-
-    file.write(QString("\n\t]\n").toUtf8());
-    file.write(QString("}\n").toUtf8());  
-  }
-  else {
-    // XML format
-        
   }
 }
 

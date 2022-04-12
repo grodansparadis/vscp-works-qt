@@ -604,6 +604,15 @@ class CFrmNodeConfig : public QMainWindow
     void gotoDMRegisterPos(void);
 
     /*!
+      Save register record
+      @param file Open file to save to
+      @param itemReg Pointer to register treewidgetitem item
+      @param bJSON true to write record as a JSON record (deafult) and 
+              false to write record as a XML record
+    */
+    void writeRegisterRecord(QFile &file, const CRegisterWidgetItem* itemReg, bool bJSON = true);
+
+    /*!
       Save selected register values
     */
     void saveSelectedRegisterValues(void);
