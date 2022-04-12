@@ -631,6 +631,20 @@ class CFrmNodeConfig : public QMainWindow
     void saveRegisterValues(bool bJSON = true, bool bAll = false);
 
     /*!
+      Load registers from XML file
+      @param path Filename to load from
+      @return VSCP_ERROR_SUCCESS on success, error code on failure.
+    */
+    int loadXMLRegs(const std::string &path);
+
+    /*!
+      Load registers from JSON file
+      @param path Filename to load from
+      @return VSCP_ERROR_SUCCESS on success, error code on failure.
+    */
+    int loadJSONRegs(const std::string &path);
+
+    /*!
       Save selected register values
     */
     void loadRegisterValues(void);

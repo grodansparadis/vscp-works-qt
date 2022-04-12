@@ -68,6 +68,10 @@
 
 #include <mdf.h>
 
+#include <string>
+#include <fstream>
+#include <iostream>
+
 #include <QByteArray>
 #include <QClipboard>
 #include <QFile>
@@ -85,6 +89,13 @@
 #include <QtSql>
 #include <QtWidgets>
 #include <QInputDialog>
+
+#include <expat.h>
+#include <json.hpp>         // Needs C++11  -std=c++11
+#include <mustache.hpp>
+#include <maddy/parser.h>   // Markdown -> HTML
+
+#define XML_BUFF_SIZE 0xffff
 
 // ----------------------------------------------------------------------------
 
@@ -2587,6 +2598,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     QApplication::processEvents(); 
   }
   else {
+
     // XML format
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -2633,6 +2645,299 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
   }
 }
 
+// ----------------------------------------------------------------------------
+//                             XML register parser 
+// ----------------------------------------------------------------------------
+
+struct __xml_register_struct__ {
+  uint8_t page;
+  uint8_t offset;
+  uint8_t value;
+};
+
+struct __xml_parser_struct__ {
+  
+  // Parser variables
+  int depth_xml_parser;
+  std::deque<std::string> tokenList;
+
+  // Parser errors
+  uint16_t errors;
+  std::string errorStr;
+
+  // Holds found register writes for later handling
+  std::deque<__xml_register_struct__ *> registerList;
+
+  // Temporary values
+  uint8_t page;
+  uint8_t offset;
+  uint8_t value;
+};
+
+static void
+__startSetupRegisterParser(void *data, const char *name, const char **attr)
+{
+  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  if (nullptr == parsestruct) {
+    spdlog::trace("Parse-XML: ---> startSetupMDFParser: Data object is invalid");
+    return;
+  }
+
+  spdlog::trace("Parse-XML: <--- startSetupMDFParser: Tag: {0} Depth: {1}", name, parsestruct->depth_xml_parser);
+
+  // Save token
+  std::string currentToken = name;
+  vscp_trim(currentToken);
+  vscp_makeLower(currentToken);
+  parsestruct->tokenList.push_front(currentToken);
+
+  // Verify structure <vscp><module>.....</module></vscp>
+  // if (parsestruct->depth_xml_parser >= 2 && 
+  //       (parsestruct->tokenList.at(parsestruct->tokenList.size() - 2) != "registerset") || 
+  //       (parsestruct->tokenList.front() != "reg")) {
+  //   spdlog::error("Parse-XML: startSetupMDFParser: Syntax error in XML file");
+  //   parsestruct->errors++;
+  //   parsestruct->errorStr += "Syntax error in XML file\n";
+  //   return;
+  // }
+
+  switch (parsestruct->depth_xml_parser) {
+    
+    case 0:
+      // Nothing to do
+      break;
+
+    case 1:
+      if (((currentToken == "reg") || (currentToken == "register")) && 
+            (parsestruct->tokenList.back() == "registerset")) {
+
+        for (int i = 0; attr[i]; i += 2) {
+          std::string attribute = attr[i + 1];
+          vscp_trim(attribute);
+          vscp_makeLower(attribute);
+          if (0 == strcasecmp(attr[i], "page")) {
+            if (!attribute.empty()) {
+              parsestruct->page = vscp_readStringValue(attribute);
+            }
+          }
+          else if (0 == strcasecmp(attr[i], "offset")) {
+            if (!attribute.empty()) {
+              parsestruct->offset = vscp_readStringValue(attribute);
+            }
+          }
+          else if (0 == strcasecmp(attr[i], "value")) {
+            if (!attribute.empty()) {
+              parsestruct->value = vscp_readStringValue(attribute);
+            }
+          }
+        }
+      }
+      break;
+
+    // Old form  
+    // <registerset>
+    // <reg page="0" offset="2" >
+    //   <value>0</value>
+    //   <description>sub zone i/o 0</name>
+    // </registerset>
+    case 2: // value or description
+      break; 
+
+  }
+
+  parsestruct->depth_xml_parser++;
+}
+
+
+static void
+__handleRegisterParserData(void *data, const XML_Char *content, int length)
+{
+  // Get the pointer to the CMDF object
+  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  if (nullptr == parsestruct) {
+    spdlog::error("Parse-XML: ---> handleMDFParserData: Data object is invalid");
+    return;
+  }
+
+  // Must be some content to work on
+  if (!content) {
+    spdlog::error("Parse-RegisterXML: ---> handleMDFParserData: No content");
+    parsestruct->errors++;
+    parsestruct->errorStr += "Null length data content in XML file\n";
+    return;
+  }
+
+  std::string strContent = std::string(content, length);
+  vscp_trim(strContent);
+  if (strContent.empty()) {
+    spdlog::error("Parse-RegisterXML: ---> handleMDFParserData: No content 2");
+    parsestruct->errors++;
+    parsestruct->errorStr += "Null length data content 2 in XML file\n";
+    return;
+  }
+
+  // No use to work without the <vscp> tag
+  if (!(parsestruct->tokenList.back() == "registerset")) {
+    spdlog::error("Parse-RegisterXML: ---> handleMDFParserData: No registerset tag");
+    parsestruct->errors++;
+    parsestruct->errorStr += "Syntax error in XML file (no <registerset> tag)\n";
+    return;
+  }
+
+  // Old form has value and description here
+  if (2 == parsestruct->depth_xml_parser) {
+    // Get value
+    if (!(parsestruct->tokenList.front() == "value")) {
+      parsestruct->value = vscp_readStringValue(strContent);
+    }
+  }
+
+}
+ 
+ static void
+__endSetupRegisterParser(void *data, const char *name)
+{
+  // Get the pointer to the CMDF object
+  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  if (nullptr == parsestruct) {
+    spdlog::trace("Parse-XML: ---> endSetupMDFParser: Data object is invalid");
+    return;
+  }
+
+  spdlog::trace("Parse-XML: ---> End: Tag: {0} Depth: {1}", name, parsestruct->depth_xml_parser);
+
+  std::string currentToken = name;
+  vscp_trim(currentToken);
+  vscp_makeLower(currentToken);
+
+  switch (parsestruct->depth_xml_parser) {
+
+    case 2:  // reg/register
+      if ((currentToken == "reg") || (currentToken == "register")) {
+        // Save for later handling
+        __xml_register_struct__ *preg = new __xml_register_struct__;
+        if (nullptr == preg) {
+          spdlog::error("Parse-XML: ---> endSetupMDFParser: Failed to allocate memory");
+          parsestruct->errors++;
+          parsestruct->errorStr += "Failed to allocate memory for register structure\n";
+          return;
+        }
+        preg->page = parsestruct->page;
+        preg->offset = parsestruct->offset;
+        preg->value = parsestruct->value;
+        parsestruct->registerList.push_back(preg);
+      }
+      break;
+  }
+
+  parsestruct->depth_xml_parser--;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// loadXMLRegs
+//
+
+int 
+CFrmNodeConfig::loadXMLRegs(const std::string &path)
+{
+  int rv = VSCP_ERROR_SUCCESS;
+  std::ifstream ifs;
+  __xml_parser_struct__ parsestruct;
+  parsestruct.depth_xml_parser = 0;
+
+  try {
+    ifs.open(path, std::ifstream::in);
+  }
+  catch (...) {
+    spdlog::error("ParseRegisterXML: Failed to parse register XML file.");
+    return VSCP_ERROR_PARSING;
+  }
+
+  XML_Parser xmlParser = XML_ParserCreate("UTF-8");
+  XML_SetUserData(xmlParser, &parsestruct);
+  XML_SetElementHandler(xmlParser, __startSetupRegisterParser, __endSetupRegisterParser);
+  XML_SetCharacterDataHandler(xmlParser, __handleRegisterParserData);
+
+  int bytes_read;
+  void *buf = XML_GetBuffer(xmlParser, XML_BUFF_SIZE);
+
+  while (ifs.good()) {
+    ifs.read((char *) buf, XML_BUFF_SIZE);
+    bytes_read = ifs.gcount();
+    if (bytes_read > 0) {
+      if (!XML_ParseBuffer(xmlParser, bytes_read, bytes_read == 0)) {
+        spdlog::error("ParseRegisterXML: Failed parse register XML file at line {0} [{1}].",
+                      XML_GetCurrentLineNumber(xmlParser),
+                      XML_ErrorString(XML_GetErrorCode(xmlParser)));
+        rv = VSCP_ERROR_PARSING;
+        break;
+      }
+    }
+  }
+
+  XML_ParserFree(xmlParser);
+
+  return rv;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadJSONRegs
+//
+
+int 
+CFrmNodeConfig::loadJSONRegs(const std::string &path)
+{
+  int rv = VSCP_ERROR_SUCCESS;
+  json j;
+
+  try {
+    std::ifstream ifs(path, std::ifstream::in);
+    ifs >> j;
+    ifs.close();
+  }
+  catch (...) {
+    spdlog::error("Parse-JSON: Failed to parse JSON register file.");
+    return false;
+  }
+
+  if (!(j.contains("registers") && j["registers"].is_array())) {
+    spdlog::error("Parse-JSON registers: module info is not found. <<{}>>", j.dump());
+    return VSCP_ERROR_PARSING;
+  }
+  else {
+    for (auto& reg : j["registers"]) {
+
+      // name is optional, page, offset, value must be present
+      if (!reg.contains("page") || !reg.contains("offset") || !reg.contains("value")) {
+        spdlog::error("Parse-JSON registers: module info is not found. <<{}>>", reg.dump());
+        return VSCP_ERROR_PARSING;
+      }
+      else {
+        int page = reg["page"];
+        int offset = reg["offset"];
+        int value = reg["value"];
+        std::string name = reg["name"];
+        if (page < 0 || page > 0xffff) {
+          spdlog::error("Parse-JSON registers: page is out of range. <<{}>>", reg.dump());
+          return VSCP_ERROR_PARSING;
+        }
+        if (offset < 0 || offset > 255) {
+          spdlog::error("Parse-JSON registers: register is out of range. <<{}>>", reg.dump());
+          return VSCP_ERROR_PARSING;
+        }
+        if (value < 0 || value > 255) {
+          spdlog::error("Parse-JSON registers: value is out of range. <<{}>>", reg.dump());
+          return VSCP_ERROR_PARSING;
+        }
+        //m_pctrlDevice->setRegister(page, regnum, value);
+      }
+    }
+  }
+
+  return rv;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // loadRegisterValues
 //
@@ -2640,6 +2945,77 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 void
 CFrmNodeConfig::loadRegisterValues(void)
 {
+  int rv = VSCP_ERROR_SUCCESS;
+  std::ifstream ifs;
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+  QString path = QFileDialog::getOpenFileName(this,
+                                    tr("Load registers from file"),
+                                    /*"~/.vscpworks/device-registers.reg"*/"/tmp/device-registers.reg",
+                                    tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
+  //std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
+  if (path.isEmpty()) {
+    return;
+  }
+
+  // Check format
+  // ------------
+  // If the file is a JSON file we will parse it
+  // as JSON else we will parse it as XML. The first
+  // character determines the type "{" for JSON or "<"
+  // for XML. Whitespace is ignored.
+
+  try {
+    ifs.open(path.toStdString(), std::ifstream::in);
+  }
+  catch (...) {
+    spdlog::error("Load registers: Failed to open file {}", path.toStdString());
+    return;
+  }
+
+  size_t pos;
+  std::string str;
+
+  while (std::getline(ifs, str)) {
+
+    vscp_trim(str);
+    if ((pos = str.find('{')) != std::string::npos) {
+      spdlog::debug("Load registers: Register file format is JSON");
+      ifs.close();
+      rv = loadJSONRegs(path.toStdString());
+      if (VSCP_ERROR_SUCCESS != rv) {
+        spdlog::error("Load registers: Failed to load registers from file {}", path.toStdString());
+        QMessageBox::information(this, tr(APPNAME),
+                             tr("Failed to parse JSON file %1:\n%2.")
+                             .arg(path)
+                             .arg(rv));
+      }
+      break;
+    }
+    else if ((pos = str.find('<')) != std::string::npos) {
+      spdlog::debug("Load registers: MDF file format is XML");
+      ifs.close();
+      rv = loadXMLRegs(path.toStdString());
+      if (VSCP_ERROR_SUCCESS != rv) {
+        spdlog::error("Load registers: Failed to load registers from file {}", path.toStdString());
+        QMessageBox::information(this, tr(APPNAME),
+                             tr("Failed to parse XML file %1:\n%2.")
+                             .arg(path)
+                             .arg(rv));
+      }
+      break;
+    }
+    else {
+      ifs.close();
+      rv = VSCP_ERROR_INVALID_SYNTAX;
+      spdlog::error("Load registers: Failed to load registers from file {} - Invalid syntax", path.toStdString());
+      QMessageBox::information(this, tr(APPNAME),
+                             tr("Syntax error in register file %1:\n%2.")
+                             .arg(path)
+                             .arg(rv));
+      break;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
