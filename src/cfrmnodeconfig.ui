@@ -104,7 +104,7 @@ selection-background-color: rgb(154, 153, 150);
              <enum>QTabWidget::Rounded</enum>
             </property>
             <property name="currentIndex">
-             <number>2</number>
+             <number>0</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideNone</enum>
@@ -752,6 +752,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSelectedSave"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
@@ -982,12 +983,12 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>Save registers</string>
    </property>
   </action>
   <action name="actionLoad">
    <property name="text">
-    <string>Load</string>
+    <string>Load registers</string>
    </property>
   </action>
   <action name="actionSearch">
@@ -1111,6 +1112,11 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Alt+.</string>
+   </property>
+  </action>
+  <action name="actionSelectedSave">
+   <property name="text">
+    <string>Save selecte register(s)</string>
    </property>
   </action>
  </widget>

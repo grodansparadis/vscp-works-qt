@@ -786,27 +786,6 @@ class CFrmNodeConfig : public QMainWindow
     /// Configuration data for the session
     QJsonObject m_connObject;
 
-    /// A pointer to a VSCP Client 
-    CVscpClient *m_vscpClient;
-
-    // The UI definition
-    Ui::CFrmNodeConfig *ui;
-
-    /// Combo box for numerical base
-    QComboBox *m_baseComboBox;
-
-    /// Text box for configuration GUID
-    QLineEdit *m_guidConfig;
-
-    /// Button to open GUID selections dialog
-    QPushButton *m_btnSetGUID;
-
-    /// Spin box for configuration nodeid
-    QSpinBox *m_nodeidConfig;
-
-    // Contains interface information
-    QComboBox *m_comboInterface;   
-
     /*! 
       Can be set to true when the system updates a register cell. Prevents
       value cells cell change events from doing stuff
@@ -838,6 +817,27 @@ class CFrmNodeConfig : public QMainWindow
       Maps registers to DM
     */
     //std::map<uint32_t, CDMWidgetItem *> m_mapReg2DM;
+
+    /// A pointer to a VSCP Client 
+    CVscpClient *m_vscpClient;
+
+    // The UI definition
+    Ui::CFrmNodeConfig *ui;
+
+    /// Combo box for numerical base
+    QComboBox *m_baseComboBox;
+
+    /// Text box for configuration GUID
+    QLineEdit *m_guidConfig;
+
+    /// Button to open GUID selections dialog
+    QPushButton *m_btnSetGUID;
+
+    /// Spin box for configuration nodeid
+    QSpinBox *m_nodeidConfig;
+
+    // Contains interface information
+    QComboBox *m_comboInterface; 
 };
 
 #endif // CFrmNodeConfig_H

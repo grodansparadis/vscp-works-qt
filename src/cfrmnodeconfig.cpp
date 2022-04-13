@@ -548,6 +548,15 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   // Full update has been clicked
   connect(ui->actionUpdateFull, SIGNAL(triggered()), this, SLOT(updateFull()));
 
+  // Load registers
+  connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(loadRegisterValues()));
+
+  // Save registers
+  connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(saveAllRegisterValues()));
+
+  // Save selected registers
+  connect(ui->actionSelectedSave, SIGNAL(triggered()), this, SLOT(saveSelectedRegisterValues()));
+
   // Navigation: Goto register page
   connect(ui->actionGoto_register_page,
           SIGNAL(triggered()),
@@ -2485,15 +2494,15 @@ CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* item
 
   if (bJSON) {
     file.write(QString("\t\t{\n").toUtf8());
-    file.write(QString("\t\t\t\"page:\": ").toUtf8());
+    file.write(QString("\t\t\t\"page\": ").toUtf8());
     file.write(QString::number(itemReg->m_regPage).toUtf8());
-    file.write(QString(",\n\t\t\t\"offset:\": ").toUtf8());
+    file.write(QString(",\n\t\t\t\"offset\": ").toUtf8());
     file.write(QString::number(itemReg->m_regOffset).toUtf8());
-    file.write(QString(",\n\t\t\t\"value:\": ").toUtf8());
+    file.write(QString(",\n\t\t\t\"value\": ").toUtf8());
     file.write(QString::number(value).toUtf8());
-    file.write(QString(",\n\t\t\t\"name:\": \"").toUtf8());
+    file.write(QString(",\n\t\t\t\"name\": \"").toUtf8());
     file.write(strName.toUtf8());
-    file.write(QString("\"\n\t\t},\n").toUtf8());
+    file.write(QString("\"\n\t\t}").toUtf8());
   }
   else {
     
@@ -2560,11 +2569,17 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 
     if (bAll) {
       // Write all registers
-      //QList<QTreeWidgetItem *> selected =	ui->treeWidgetRegisters->selectedItems();
       QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
+      bool bFirst = true;
       while (*item) {
         if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
           CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
+          if (bFirst) {
+            bFirst = false;
+          }
+          else {  
+            file.write(QString(",\n").toUtf8());
+          }
           writeRegisterRecord(file, itemReg, true);
         }
         ++item;
@@ -2576,9 +2591,16 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
       QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
       // TODO: sort option
 
+      bool bFirst = true;
       for (auto item : listSelected) {
         if (item->type() == TREE_LIST_REGISTER_TYPE) {
           CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
+          if (bFirst) {
+            bFirst = false;
+          }
+          else {  
+            file.write(QString(",\n").toUtf8());
+          }
           writeRegisterRecord(file, itemReg, true);
         }
         else {
@@ -2596,6 +2618,8 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 
     QApplication::restoreOverrideCursor();  
     QApplication::processEvents(); 
+
+    ui->statusBar->showMessage(tr("Saved registers."));
   }
   else {
 
@@ -2642,6 +2666,8 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 
     QApplication::restoreOverrideCursor();  
     QApplication::processEvents();
+
+    ui->statusBar->showMessage(tr("Saved registers."));
   }
 }
 
@@ -2770,13 +2796,10 @@ __handleRegisterParserData(void *data, const XML_Char *content, int length)
   std::string strContent = std::string(content, length);
   vscp_trim(strContent);
   if (strContent.empty()) {
-    spdlog::error("Parse-RegisterXML: ---> handleMDFParserData: No content 2");
-    parsestruct->errors++;
-    parsestruct->errorStr += "Null length data content 2 in XML file\n";
     return;
   }
 
-  // No use to work without the <vscp> tag
+  // No use to work without the <registerset> tag
   if (!(parsestruct->tokenList.back() == "registerset")) {
     spdlog::error("Parse-RegisterXML: ---> handleMDFParserData: No registerset tag");
     parsestruct->errors++;
@@ -2785,9 +2808,9 @@ __handleRegisterParserData(void *data, const XML_Char *content, int length)
   }
 
   // Old form has value and description here
-  if (2 == parsestruct->depth_xml_parser) {
+  if (3 == parsestruct->depth_xml_parser) {
     // Get value
-    if (!(parsestruct->tokenList.front() == "value")) {
+    if (parsestruct->tokenList.front() == "value") {
       parsestruct->value = vscp_readStringValue(strContent);
     }
   }
@@ -2800,11 +2823,11 @@ __endSetupRegisterParser(void *data, const char *name)
   // Get the pointer to the CMDF object
   __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
   if (nullptr == parsestruct) {
-    spdlog::trace("Parse-XML: ---> endSetupMDFParser: Data object is invalid");
+    spdlog::trace("Parse-RegisterXML: ---> endSetupMDFParser: Data object is invalid");
     return;
   }
 
-  spdlog::trace("Parse-XML: ---> End: Tag: {0} Depth: {1}", name, parsestruct->depth_xml_parser);
+  spdlog::trace("Parse-RegisterXML: ---> End: Tag: {0} Depth: {1}", name, parsestruct->depth_xml_parser);
 
   std::string currentToken = name;
   vscp_trim(currentToken);
@@ -2817,7 +2840,7 @@ __endSetupRegisterParser(void *data, const char *name)
         // Save for later handling
         __xml_register_struct__ *preg = new __xml_register_struct__;
         if (nullptr == preg) {
-          spdlog::error("Parse-XML: ---> endSetupMDFParser: Failed to allocate memory");
+          spdlog::error("Parse-RegisterXML: ---> endSetupMDFParser: Failed to allocate memory");
           parsestruct->errors++;
           parsestruct->errorStr += "Failed to allocate memory for register structure\n";
           return;
@@ -2844,13 +2867,15 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
   int rv = VSCP_ERROR_SUCCESS;
   std::ifstream ifs;
   __xml_parser_struct__ parsestruct;
+  parsestruct.errors = 0;
   parsestruct.depth_xml_parser = 0;
 
   try {
     ifs.open(path, std::ifstream::in);
   }
   catch (...) {
-    spdlog::error("ParseRegisterXML: Failed to parse register XML file.");
+    spdlog::error("Parse-RegisterXML: Failed to open register XML file.");
+    ui->statusBar->showMessage(tr("Failed to open register XML file %1.").arg(path.c_str()));
     return VSCP_ERROR_PARSING;
   }
 
@@ -2867,9 +2892,10 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
     bytes_read = ifs.gcount();
     if (bytes_read > 0) {
       if (!XML_ParseBuffer(xmlParser, bytes_read, bytes_read == 0)) {
-        spdlog::error("ParseRegisterXML: Failed parse register XML file at line {0} [{1}].",
+        spdlog::error("Parse-RegisterXML: Failed parse register XML file at line {0} [{1}].",
                       XML_GetCurrentLineNumber(xmlParser),
                       XML_ErrorString(XML_GetErrorCode(xmlParser)));
+        ui->statusBar->showMessage(tr("Loaded registers failed due to parser error."));              
         rv = VSCP_ERROR_PARSING;
         break;
       }
@@ -2877,6 +2903,37 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
   }
 
   XML_ParserFree(xmlParser);
+
+  if (parsestruct.errors) {
+    if (QMessageBox::Yes != QMessageBox::question(this, "XML Parser register load", "There was errors during load, continue anyway?")) {
+      ui->statusBar->showMessage(tr("Aborted loaded %1 registers due to errors (errors = %1).").arg(parsestruct.errors));
+      return VSCP_ERROR_SUCCESS;
+    }
+  }
+
+  // Write to registers
+  size_t regcnt = parsestruct.registerList.size();
+  uint16_t regskipped = 0;  // Regs skipped
+  for (auto &reg : parsestruct.registerList) {
+
+    // Invalid level I register offsets (standard registers)
+    if (reg->offset >= 0x80) {
+      regskipped++;
+      spdlog::info("Parse-JSON registers: Offset ({0}:{1}) is out of range for a level I device. Skipped", reg->page, reg->offset);
+      continue;
+    }
+
+    if (!m_userregs.putReg(reg->offset, reg->page, reg->value)) {
+      spdlog::error("Parse-RegisterXML: Failed to write register {0}:{1}.", reg->page, reg->offset);
+      rv = VSCP_ERROR_PARSING;
+      parsestruct.errors++;
+      parsestruct.errorStr += tr("Failed to write register  %1:%2 = %3\n").arg(reg->page).arg(reg->offset).arg(reg->value).toStdString();
+    }
+    delete reg;
+  }
+
+  ui->statusBar->showMessage(tr("Loaded %1 registers, %2 skipped (errors = %3).").arg(regcnt).arg(regskipped).arg(parsestruct.errors));
+  updateVisualRegisters();
 
   return rv;
 }
@@ -2890,6 +2947,8 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
 {
   int rv = VSCP_ERROR_SUCCESS;
   json j;
+  uint16_t regcnt = 0;      // Regs written
+  uint16_t regskipped = 0;  // Regs skipped
 
   try {
     std::ifstream ifs(path, std::ifstream::in);
@@ -2898,39 +2957,73 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
   }
   catch (...) {
     spdlog::error("Parse-JSON: Failed to parse JSON register file.");
+    ui->statusBar->showMessage(tr("Failed to open JSON register file %1.").arg(path.c_str()));
     return false;
   }
 
   if (!(j.contains("registers") && j["registers"].is_array())) {
     spdlog::error("Parse-JSON registers: module info is not found. <<{}>>", j.dump());
+    ui->statusBar->showMessage(tr("JSON register load aborted: Parse-JSON registers: module info is not found.").arg(path.c_str()));
     return VSCP_ERROR_PARSING;
   }
   else {
-    for (auto& reg : j["registers"]) {
+    for (const auto &item : j["registers"].items()) {
 
-      // name is optional, page, offset, value must be present
-      if (!reg.contains("page") || !reg.contains("offset") || !reg.contains("value")) {
-        spdlog::error("Parse-JSON registers: module info is not found. <<{}>>", reg.dump());
-        return VSCP_ERROR_PARSING;
+      if (item.value().is_object()) {
+
+        json jreg(item.value());
+
+        // name is optional, page, offset, value must be present
+        if (!(jreg.contains("page") && jreg.contains("offset") && jreg.contains("value"))) {
+          spdlog::error("Parse-JSON registers: module info is not found. <<{}>>", jreg.dump());
+          ui->statusBar->showMessage(tr("JSON register load aborted: Format of JSON file is not correct."));
+          return VSCP_ERROR_PARSING;
+        }
+        else {
+
+          int page = jreg["page"];
+          int offset = jreg["offset"];
+          int value = jreg["value"];
+
+          if (offset >= 128) {
+            regskipped++;
+            spdlog::info("Parse-JSON registers: Offset ({0}:{1}) is out of range for a level I device. Skipped", page, offset);
+            continue;
+          }
+
+          regcnt++;          
+
+          if (page < 0 || page > 0xffff) {
+            spdlog::error("Parse-JSON registers: page is out of range. <<{}>>", jreg.dump());
+            ui->statusBar->showMessage(tr("JSON register load aborted: 'page' parameter is out of range."));
+            return VSCP_ERROR_PARSING;
+          }
+          if (offset < 0 || offset > 255) {
+            spdlog::error("Parse-JSON registers: register is out of range. <<{}>>", jreg.dump());
+            ui->statusBar->showMessage(tr("JSON register load aborted: 'offset' parameter is out of range."));
+            return VSCP_ERROR_PARSING;
+          }
+          if (value < 0 || value > 255) {
+            spdlog::error("Parse-JSON registers: value is out of range. <<{}>>", jreg.dump());
+            ui->statusBar->showMessage(tr("JSON register load aborted: 'value' parameter is out of range."));
+            return VSCP_ERROR_PARSING;
+          }
+          
+          if (!m_userregs.putReg(offset, page, value)) {
+            spdlog::error("Parse-JSON registers: Failed to write register.");
+            ui->statusBar->showMessage(tr("JSON register load aborted: Unable to write register data."));
+            rv = VSCP_ERROR_PARSING;
+          }
+
+          ui->statusBar->showMessage(tr("Loaded %1 registers. %2 skipped").arg(regcnt).arg(regskipped));
+          updateVisualRegisters();
+
+        }
       }
       else {
-        int page = reg["page"];
-        int offset = reg["offset"];
-        int value = reg["value"];
-        std::string name = reg["name"];
-        if (page < 0 || page > 0xffff) {
-          spdlog::error("Parse-JSON registers: page is out of range. <<{}>>", reg.dump());
-          return VSCP_ERROR_PARSING;
-        }
-        if (offset < 0 || offset > 255) {
-          spdlog::error("Parse-JSON registers: register is out of range. <<{}>>", reg.dump());
-          return VSCP_ERROR_PARSING;
-        }
-        if (value < 0 || value > 255) {
-          spdlog::error("Parse-JSON registers: value is out of range. <<{}>>", reg.dump());
-          return VSCP_ERROR_PARSING;
-        }
-        //m_pctrlDevice->setRegister(page, regnum, value);
+        spdlog::error("Parse-JSON registers: Register object invalid. <<{}>>", item.value().dump());
+        ui->statusBar->showMessage(tr("JSON register load aborted: Format of JSON file is not correct. Register object invalid."));
+        return VSCP_ERROR_PARSING;
       }
     }
   }
@@ -3066,9 +3159,9 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
   menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
   menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
   menu->addSeparator();
-  menu->addAction(QString(tr("Save register value(s) for selected row(s) to disk")), this, SLOT(saveSelectedRegisterValues()));
-  menu->addAction(QString(tr("Save ALL register values to disk")), this, SLOT(saveAllRegisterValues()));
-  menu->addAction(QString(tr("Load register values from disk")), this, SLOT(loadRegisterValues()));
+  menu->addAction(QString(tr("Save selected registers")), this, SLOT(saveSelectedRegisterValues()));
+  menu->addAction(QString(tr("Save ALL registers")), this, SLOT(saveAllRegisterValues()));
+  menu->addAction(QString(tr("Load registers")), this, SLOT(loadRegisterValues()));
   menu->addSeparator();
   menu->addAction(QString(tr("Goto register page...")), this, SLOT(gotoRegisterPage()));
 
