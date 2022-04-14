@@ -754,6 +754,9 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSave"/>
     <addaction name="actionSelectedSave"/>
     <addaction name="separator"/>
+    <addaction name="actionLoadDefaultsAll"/>
+    <addaction name="actionLoadDefaultsSelected"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -1117,6 +1120,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionSelectedSave">
    <property name="text">
     <string>Save selecte register(s)</string>
+   </property>
+  </action>
+  <action name="actionLoadDefaultsAll">
+   <property name="text">
+    <string>Load defaults to all registers</string>
+   </property>
+  </action>
+  <action name="actionLoadDefaultsSelected">
+   <property name="text">
+    <string>Load defaults to selected register(s)</string>
    </property>
   </action>
  </widget>

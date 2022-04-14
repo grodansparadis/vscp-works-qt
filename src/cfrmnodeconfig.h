@@ -650,6 +650,16 @@ class CFrmNodeConfig : public QMainWindow
     void loadRegisterValues(void);
 
     /*!
+      Load MDF default 
+    */
+    void loadDefaults(void);
+
+    /*!
+      Load MDF default to selected items
+    */
+    void loadDefaultsSelected(void);
+
+    /*!
       Fill register HTML help info
     */
     void fillRegisterHtmlInfo(QTreeWidgetItem* item, int column);

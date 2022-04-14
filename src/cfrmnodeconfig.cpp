@@ -557,6 +557,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   // Save selected registers
   connect(ui->actionSelectedSave, SIGNAL(triggered()), this, SLOT(saveSelectedRegisterValues()));
 
+  // Load defaults to all registers
+  connect(ui->actionLoadDefaultsAll, SIGNAL(triggered()), this, SLOT(loadDefaults()));
+
+  // Load defaults to selected registers
+  connect(ui->actionLoadDefaultsSelected, SIGNAL(triggered()), this, SLOT(loadDefaultsSelected()));
+
   // Navigation: Goto register page
   connect(ui->actionGoto_register_page,
           SIGNAL(triggered()),
@@ -2537,9 +2543,6 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     }   
   }
 
-  // QFileDialog dlg(this);
-  // dlg.setFileMode(QFileDialog::AnyFile);
-
   QString fileName = QFileDialog::getSaveFileName(this,
                                     tr("Save registers to file"),
                                     /*"~/.vscpworks/device-registers.reg"*/"/tmp/device-registers.reg",
@@ -2565,7 +2568,29 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QApplication::processEvents();    
 
-    file.write(QString("{\n\t\"registers\": [\n").toUtf8());  // Start of JSON
+    file.write(QString("{\n").toUtf8());
+
+    // Write identification data for module
+
+    file.write(QString("\t\"module-name\":\"").toUtf8());
+    file.write(QString(m_mdf.getModuleName().c_str()).toUtf8());
+    file.write(QString("\",\n").toUtf8());
+
+    file.write(QString("\t\"module-model\":\"").toUtf8());
+    file.write(QString(m_mdf.getModuleModel().c_str()).toUtf8());
+    file.write(QString("\",\n").toUtf8());
+
+    file.write(QString("\t\"module-version\":\"").toUtf8());
+    file.write(QString(m_mdf.getModuleVersion().c_str()).toUtf8());
+    file.write(QString("\",\n").toUtf8());
+
+    file.write(QString("\t\"module-date\":\"").toUtf8());
+    file.write(QString(m_mdf.getModuleChangeDate().c_str()).toUtf8());
+    file.write(QString("\",\n").toUtf8());
+
+    // Write registers
+
+    file.write(QString("\t\"registers\": [\n").toUtf8());
 
     if (bAll) {
       // Write all registers
@@ -2629,7 +2654,29 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     QApplication::processEvents(); 
 
     file.write(QString("<?xml version = \"1.0\" encoding =  \"UTF-8\" ?>\n").toUtf8());
-    file.write(QString("<registerset>\n").toUtf8());    
+
+
+    file.write(QString("<registerset ").toUtf8());
+
+    // Save module info
+    file.write(QString("module-name=\"").toUtf8());
+    file.write(QString(m_mdf.getModuleName().c_str()).toUtf8());
+    file.write(QString("\" ").toUtf8());
+
+    file.write(QString("module-model=\"").toUtf8());
+    file.write(QString(m_mdf.getModuleModel().c_str()).toUtf8());
+    file.write(QString("\" ").toUtf8());
+
+    file.write(QString("module-version=\"").toUtf8());
+    file.write(QString(m_mdf.getModuleVersion().c_str()).toUtf8());
+    file.write(QString("\" ").toUtf8());
+
+    file.write(QString("module-date=\"").toUtf8());
+    file.write(QString(m_mdf.getModuleChangeDate().c_str()).toUtf8());
+    file.write(QString("\" ").toUtf8());
+
+
+    file.write(QString(">\n").toUtf8());
 
     if (bAll) {
       // Write all registers
@@ -2660,7 +2707,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
           }
         }
       }
-    }  
+    }
 
     file.write(QString("</registerset>\n").toUtf8());
 
@@ -2698,6 +2745,12 @@ struct __xml_parser_struct__ {
   uint8_t page;
   uint8_t offset;
   uint8_t value;
+
+  // Module information
+  std::string moduleName;
+  std::string moduleModel;
+  std::string moduleVersion;
+  std::string moduleChangeDate;
 };
 
 static void
@@ -2717,20 +2770,34 @@ __startSetupRegisterParser(void *data, const char *name, const char **attr)
   vscp_makeLower(currentToken);
   parsestruct->tokenList.push_front(currentToken);
 
-  // Verify structure <vscp><module>.....</module></vscp>
-  // if (parsestruct->depth_xml_parser >= 2 && 
-  //       (parsestruct->tokenList.at(parsestruct->tokenList.size() - 2) != "registerset") || 
-  //       (parsestruct->tokenList.front() != "reg")) {
-  //   spdlog::error("Parse-XML: startSetupMDFParser: Syntax error in XML file");
-  //   parsestruct->errors++;
-  //   parsestruct->errorStr += "Syntax error in XML file\n";
-  //   return;
-  // }
-
   switch (parsestruct->depth_xml_parser) {
     
     case 0:
-      // Nothing to do
+      if (currentToken == "registerset") {
+        for (int i = 0; attr[i]; i += 2) {
+          std::string attribute = attr[i + 1];
+          if (0 == strcasecmp(attr[i], "module-name")) {
+            if (!attribute.empty()) {
+              parsestruct->moduleName = attribute;
+            }
+          }
+          else if (0 == strcasecmp(attr[i], "module-model")) {
+            if (!attribute.empty()) {
+              parsestruct->moduleModel = attribute;
+            }
+          }
+          else if (0 == strcasecmp(attr[i], "module-version")) {
+            if (!attribute.empty()) {
+              parsestruct->moduleVersion = attribute;
+            }
+          }
+          else if (0 == strcasecmp(attr[i], "module-date")) {
+            if (!attribute.empty()) {
+              parsestruct->moduleChangeDate = attribute;
+            }
+          }
+        }
+      }
       break;
 
     case 1:
@@ -2911,6 +2978,43 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
     }
   }
 
+  if (parsestruct.moduleName.size() && (parsestruct.moduleName != m_mdf.getModuleName())) {
+    int rv = QMessageBox::warning(this, 
+                tr(APPNAME), tr("Module name does not match. Continue anyway?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (rv == QMessageBox::No) {
+      return false;
+    }
+  }
+
+  if (parsestruct.moduleModel.size() && (parsestruct.moduleModel != m_mdf.getModuleModel())) {
+    int rv = QMessageBox::warning(this, 
+                tr(APPNAME), tr("Module model does not match. Continue anyway?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (rv == QMessageBox::No) {
+      return false;
+    }
+  }
+
+  if (parsestruct.moduleVersion.size() && (parsestruct.moduleVersion != m_mdf.getModuleVersion())) {
+    int rv = QMessageBox::warning(this, 
+                tr(APPNAME), tr("Module version does not match. Continue anyway?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    if (rv == QMessageBox::No) {
+      return false;
+    }
+  }
+
+  // If model information is missing warn about it
+  if (!parsestruct.moduleName.size() && !parsestruct.moduleModel.size() && !parsestruct.moduleVersion.size()) {
+    int rv = QMessageBox::warning(this, 
+                  tr(APPNAME), tr("There is no module information in the register file. Continue anyway?"),
+                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (rv == QMessageBox::No) {
+        return false;
+      }
+  }
+
   // Write to registers
   size_t regcnt = parsestruct.registerList.size();
   uint16_t regskipped = 0;  // Regs skipped
@@ -2920,6 +3024,13 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
     if (reg->offset >= 0x80) {
       regskipped++;
       spdlog::info("Parse-JSON registers: Offset ({0}:{1}) is out of range for a level I device. Skipped", reg->page, reg->offset);
+      continue;
+    }
+
+    if (m_mdf.isRegisterWriteable(reg->offset, reg->page)) {
+      parsestruct.errors++;
+      spdlog::error("Parse-JSON registers: Register is not writeable. {0}:{1}", reg->page, reg->offset);
+      parsestruct.errorStr += tr("Register is not writeable  %1:%2 = %3\n").arg(reg->page).arg(reg->offset).arg(reg->value).toStdString();
       continue;
     }
 
@@ -2935,6 +3046,10 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
   ui->statusBar->showMessage(tr("Loaded %1 registers, %2 skipped (errors = %3).").arg(regcnt).arg(regskipped).arg(parsestruct.errors));
   updateVisualRegisters();
 
+  if (parsestruct.errors) {
+    spdlog::info(parsestruct.errorStr);
+  }
+
   return rv;
 }
 
@@ -2949,6 +3064,11 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
   json j;
   uint16_t regcnt = 0;      // Regs written
   uint16_t regskipped = 0;  // Regs skipped
+  // Module information
+  std::string moduleName;
+  std::string moduleModel;
+  std::string moduleVersion;
+  std::string moduleChangeDate;
 
   try {
     std::ifstream ifs(path, std::ifstream::in);
@@ -2956,9 +3076,61 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
     ifs.close();
   }
   catch (...) {
-    spdlog::error("Parse-JSON: Failed to parse JSON register file.");
-    ui->statusBar->showMessage(tr("Failed to open JSON register file %1.").arg(path.c_str()));
+    spdlog::error("Parse-JSON: Failed to load and  parse JSON register file.");
+    QMessageBox::warning(this, 
+                  tr(APPNAME), tr("Failed to load and parse JSON register file %1.").arg(path.c_str()),
+                  QMessageBox::Yes);
     return false;
+  }
+
+  if (j.contains("module-name") && j["module-name"].is_string()) {
+    moduleName = j["module-name"];
+    if (moduleName.size() && (moduleName != m_mdf.getModuleName())) {
+      int rv = QMessageBox::warning(this, 
+                  tr(APPNAME), tr("Module name does not match. Continue anyway?"),
+                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (rv == QMessageBox::No) {
+        return false;
+      }
+    }
+  }
+
+  if (j.contains("module-model") && j["module-model"].is_string()) {
+    moduleModel = j["module-model"];
+    if (moduleModel.size() && (moduleModel != m_mdf.getModuleModel())) {
+      int rv = QMessageBox::warning(this, 
+                  tr(APPNAME), tr("Module model does not match. Continue anyway?"),
+                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (rv == QMessageBox::No) {
+        return false;
+      }
+    }
+  }
+
+  if (j.contains("module-version") && j["module-version"].is_string()) {
+    moduleVersion = j["module-version"];
+    if (moduleVersion.size() && (moduleVersion != m_mdf.getModuleVersion())) {
+      int rv = QMessageBox::warning(this, 
+                  tr(APPNAME), tr("Module version does not match. Continue anyway?"),
+                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (rv == QMessageBox::No) {
+        return false;
+      }
+    }
+  }
+
+  if (j.contains("module-date") && j["module-date"].is_string()) {
+    moduleChangeDate = j["module-date"];
+  }
+
+  // If model information is missing warn about it
+  if (!moduleName.size() && !moduleModel.size() && !moduleVersion.size()) {
+    int rv = QMessageBox::warning(this, 
+                  tr(APPNAME), tr("There is no module information in the register file. Continue anyway?"),
+                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      if (rv == QMessageBox::No) {
+        return false;
+      }
   }
 
   if (!(j.contains("registers") && j["registers"].is_array())) {
@@ -3009,6 +3181,12 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
             return VSCP_ERROR_PARSING;
           }
           
+          if (m_mdf.isRegisterWriteable(offset,page)) {
+            regskipped++;
+            spdlog::error("Parse-JSON registers: Register is not writeable. {0}:{1}", page, offset);
+            continue;
+          }
+
           if (!m_userregs.putReg(offset, page, value)) {
             spdlog::error("Parse-JSON registers: Failed to write register.");
             ui->statusBar->showMessage(tr("JSON register load aborted: Unable to write register data."));
@@ -3112,6 +3290,83 @@ CFrmNodeConfig::loadRegisterValues(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// loadDefaults
+//
+
+void
+CFrmNodeConfig::loadDefaults(void)
+{
+  int rv = VSCP_ERROR_SUCCESS;
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+  // Write all registers
+  QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
+  while (*item) {
+    if ((*item)->type() == TREE_LIST_REGISTER_TYPE) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*item);
+      if (m_mdf.isRegisterWriteable(itemReg->m_regOffset, itemReg->m_regPage)) {
+        int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
+        if (-1 == val) {
+          spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
+          continue;;
+        }
+	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+          spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
+        }
+      } 
+    }
+    ++item;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadDefaultsSelected
+//
+
+void
+CFrmNodeConfig::loadDefaultsSelected(void)
+{
+  int rv = VSCP_ERROR_SUCCESS;
+  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+
+  // Write selected registers
+  QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
+  // TODO: sort option
+
+  for (auto item : listSelected) {
+    if (item->type() == TREE_LIST_REGISTER_TYPE) {
+      CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
+      if (m_mdf.isRegisterWriteable(itemReg->m_regOffset, itemReg->m_regPage)) {
+        int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
+        if (-1 == val) {
+          spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
+          continue;;
+        }
+	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+          spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
+        }
+      }
+    }
+    else {
+      // Save all children on page
+      for (int i=0; i<item->childCount(); i++) {
+        CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
+        if (m_mdf.isRegisterWriteable(itemReg->m_regOffset, itemReg->m_regPage)) {
+        int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
+        if (-1 == val) {
+          spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
+          continue;;
+        }
+	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+          spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
+        }
+      }
+      }
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // onRegisterTreeWidgetItemClicked
 //
 
@@ -3154,10 +3409,13 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
   menu->addSeparator();
   menu->addAction(QString(tr("Read value(s) for selected row(s)")), this, SLOT(readSelectedRegisterValues()));
   menu->addAction(QString(tr("Write value(s) for selected row(s)")), this, SLOT(writeSelectedRegisterValues()));
+  menu->addSeparator();
   menu->addAction(QString(tr("Write default value(s) for selected row(s)")), this, SLOT(defaultSelectedRegisterValues()));
   menu->addAction(QString(tr("Set default values for ALL rows")), this, SLOT(defaultRegisterAll()));
-  menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
-  menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  // TODO
+  //menu->addSeparator();
+  //menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  //menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
   menu->addSeparator();
   menu->addAction(QString(tr("Save selected registers")), this, SLOT(saveSelectedRegisterValues()));
   menu->addAction(QString(tr("Save ALL registers")), this, SLOT(saveAllRegisterValues()));
