@@ -33,7 +33,11 @@
 #endif
 
 #include <vscp.h>
+#include <mdf.h>
+#include <register.h>
 #include <vscp_client_base.h>
+
+#include <set>
 
 #include <QObject>
 #include <QDialog>
@@ -109,6 +113,13 @@ class CFrmNodeScan : public QMainWindow
         indicate this
     */
     void doDisconnectFromRemoteHost(void);
+
+    /*!
+      Parse nodes to search. Format can be a comma separated list
+      of nodes or ranges of nodes (x-y) or a combination of both.
+      @return True on success, error on failure to parse string
+    */
+    bool parseNodes(void);
     
  public slots:
     
@@ -141,6 +152,9 @@ class CFrmNodeScan : public QMainWindow
     /// Open settings dialog
     void 
     menu_open_main_settings(void);
+
+    /// Do the scan operation
+    void doScan(void);
  
  signals:
 
@@ -166,6 +180,11 @@ class CFrmNodeScan : public QMainWindow
 
     /// Queue that holds received events
     std::deque<vscpEvent *> m_rxEvents;
+
+    /*!
+      This is a sorted list with the nodeid's to search for.
+    */
+    std::set<uint8_t> m_nodeList;
 
     // The UI definition
     Ui::CFrmNodeScan *ui;

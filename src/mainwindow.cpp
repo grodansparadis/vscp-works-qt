@@ -3087,7 +3087,7 @@ MainWindow::newNodeScan()
       // Get the connection object
       QJsonObject* pconn = itemConn->getJson();
 
-      CFrmNodeScan* w = new CFrmNodeScan(nullptr, pconn);
+      CFrmNodeScan* w = new CFrmNodeScan(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);

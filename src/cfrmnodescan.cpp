@@ -40,6 +40,8 @@
 #include <vscp.h>
 #include <vscpworks.h>
 
+#include <mdf.h>
+
 #include <mustache.hpp>
 
 #include <vscp_client_canal.h>
@@ -82,7 +84,7 @@
 // void CVscpClientCallback::eventReceived(vscpEvent *pev)
 // {
 //     vscpEvent ev;
-//     //emit CFrmSession::receiveRow(pev, true);
+//     //emit CFrmNode Scan::receiveRow(pev, true);
 // }
 
 static void
@@ -114,8 +116,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   m_vscpClient   = NULL;
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  spdlog::debug(
-    std::string(tr("Node configuration module opended").toStdString()));
+  spdlog::debug(std::string(tr("Node configuration module opended").toStdString()));
 
   if (nullptr == pconn) {
     spdlog::error(std::string(tr("pconn is null").toStdString()));
@@ -132,8 +133,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
   // Must have a type
   if (m_connObject["type"].isNull()) {
-    spdlog::error(
-      std::string(tr("Type is not define in JSON data").toStdString()));
+    spdlog::error( std::string(tr("Type is not defined in JSON data").toStdString()));
     QMessageBox::information(this,
                              tr("vscpworks+"),
                              tr("Can't open node configuration  window - The "
@@ -142,8 +142,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     return;
   }
 
-  m_vscpConnType =
-    static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
 
   QString str; // = tr("VSCP Client Session - ");
   str += pworks->getConnectionName(m_vscpConnType);
@@ -158,9 +157,10 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   setWindowTitle(str);
 
   // Initial default size of window
-  int nWidth  = 1200;
-  int nHeight = 800;
+  int nWidth  = ui->centralwidget->width();
+  int nHeight = ui->centralwidget->height();
 
+/*
   if (parent != NULL) {
     setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
                 parent->y() + parent->height() / 2 - nHeight / 2,
@@ -170,6 +170,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   else {
     resize(nWidth, nHeight);
   }
+*/  
 
   QJsonDocument doc(m_connObject);
   QString strJson(doc.toJson(QJsonDocument::Compact));
@@ -300,6 +301,15 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       connectToRemoteHost(true);
       break;
   }
+
+  // Connect has been clicked
+  connect(ui->actionConnect,
+          SIGNAL(triggered(bool)),
+          this,
+          SLOT(connectToRemoteHost(bool)));
+
+  // Update has been clicked
+  connect(ui->actionScan, SIGNAL(triggered()), this, SLOT(doScan()));
 }
 
 
@@ -328,11 +338,8 @@ CFrmNodeScan::~CFrmNodeScan()
 
 void CFrmNodeScan::done(int rv)
 {
-    if (QDialog::Accepted == rv) { // ok was pressed
-        
+    if (QDialog::Accepted == rv) { // ok was pressed        
         vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-
-
         // Session window
         //pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
         
@@ -359,49 +366,35 @@ void
 CFrmNodeScan::showRegisterContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
-
   menu->addAction(QString(tr("Send event")), this, SLOT(sendTxEvent()));
-
   menu->addSeparator();
-
   menu->addAction(QString(tr("Copy TX event to clipboard")),
                   this,
                   SLOT(copyTxToClipboard()));
-
   menu->addSeparator();
-
   menu->addAction(QString(tr("Add transmission row...")),
                   this,
                   SLOT(addTxEvent()));
-
   menu->addAction(QString(tr("Edit selected transmission row...")),
                   this,
                   SLOT(editTxEvent()));
-
   menu->addAction(QString(tr("Clone selected transmission row...")),
                   this,
                   SLOT(cloneTxEvent()));
-
   menu->addAction(QString(tr("Delete selected transmission row...")),
                   this,
                   SLOT(deleteTxEvent()));
-
   menu->addSeparator();
-
   menu->addAction(QString(tr("Save transmission rows...")),
                   this,
                   SLOT(saveTxEvents()));
-
   menu->addAction(QString(tr("Load transmission rows...")),
                   this,
                   SLOT(loadTxEvents()));
-
   menu->addSeparator();
-
   menu->addAction(QString(tr("Clear selections...")),
                   this,
                   SLOT(clrSelectionsTxEvent()));
-
   // menu->popup(m_txTable->viewport()->mapToGlobal(pos));
 }
 
@@ -444,8 +437,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::TCPIP:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-        spdlog::error(std::string(
-          tr("Session: Unable to connect to remote host.").toStdString()));
+        spdlog::error(std::string(tr("Node Scan: Unable to connect to remote host.").toStdString()));
         QMessageBox::information(this,
                                  tr("vscpworks+"),
                                  tr("Failed to open a connection to the remote "
@@ -453,8 +445,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful connect to remote client.").toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful connect to remote client.").toStdString()));
       }
       break;
 
@@ -462,7 +453,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
+        QString str = tr("Node Scan: Unable to connect to the CANAL driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
@@ -472,9 +463,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(
-          std::string(tr("Session: Successful connected to the CANAL driver.")
-                        .toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful connected to the CANAL driver.").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -483,8 +472,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str =
-          tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
+        QString str = tr("Node Scan: Unable to connect to the SOCKETCAN driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
@@ -494,8 +482,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful connected to SOCKETCAN.").toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful connected to SOCKETCAN.").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -508,8 +495,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::MQTT:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
-        spdlog::error(std::string(
-          tr("Session: Unable to connect to remote host").toStdString()));
+        spdlog::error(std::string(tr("Node Scan: Unable to connect to remote host").toStdString()));
         QMessageBox::information(this,
                                  tr("vscpworks+"),
                                  tr("Failed to open a connection to the remote "
@@ -517,8 +503,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful connect to remote host").toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful connect to remote host").toStdString()));
       }
       break;
 
@@ -565,20 +550,14 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::TCPIP:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-        spdlog::error(
-          std::string(tr("Session: Unable to disconnect tcp/ip remote client")
-                        .toStdString()));
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the txp/ip remote "
-             "host"),
+        spdlog::error(std::string(tr("Node Scan: Unable to disconnect tcp/ip remote client").toStdString()));
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the txp/ip remote host"),
           QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful disconnect from tcp/ip remote host")
-            .toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from tcp/ip remote host").toStdString()));
       }
       break;
 
@@ -590,20 +569,16 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
-        QString str =
-          tr("Session: Unable to disconnect from the CANAL driver. rv=");
+        QString str = tr("Node Scan: Unable to disconnect from the CANAL driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the CANAL driver"),
-          QMessageBox::Ok);
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the CANAL driver"),
+                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(
-          std::string(tr("Session: Successful disconnect from CANAL driver")
-                        .toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from CANAL driver").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -614,21 +589,17 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
-        QString str = tr("Session: Unable to disconnect from the "
+        QString str = tr("Node Scan: Unable to disconnect from the "
                          "SOCKETCAN driver. rv=");
         str += rv;
         spdlog::error(str.toStdString());
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the SOCKETCAN "
-             "driver"),
-          QMessageBox::Ok);
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the SOCKETCAN driver"),
+                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(
-          std::string(tr("Session: Successful disconnect from SOCKETCAN driver")
-                        .toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from SOCKETCAN driver").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;
@@ -641,20 +612,14 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::MQTT:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
-        spdlog::error(std::string(
-          tr("Session: Unable to disconnect from MQTT remote client")
-            .toStdString()));
-        QMessageBox::information(
-          this,
-          tr("vscpworks+"),
-          tr("Failed to disconnect the connection to the MQTT remote "
-             "host"),
-          QMessageBox::Ok);
+        spdlog::error(std::string(tr("Node Scan: Unable to disconnect from MQTT remote client").toStdString()));
+        QMessageBox::information(this,
+                                  tr("vscpworks+"),
+                                  tr("Failed to disconnect the connection to the MQTT remote host"),
+                                  QMessageBox::Ok);
       }
       else {
-        spdlog::error(std::string(
-          tr("Session: Successful disconnect from the MQTT remote host")
-            .toStdString()));
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from the MQTT remote host").toStdString()));
       }
       break;
 
@@ -696,3 +661,120 @@ CFrmNodeScan::threadReceive(vscpEvent* pev)
 {
   emit dataReceived(pev);
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// parseNodes
+//
+
+bool
+CFrmNodeScan::parseNodes(void)
+{
+  std::string str = ui->editSearchNodes->text().toStdString();
+  vscp_trim(str);
+  if (str.empty()) {
+    return false;
+  }
+
+  std::deque<std::string> tokens;
+  vscp_split(tokens, str, ",");
+  if (tokens.empty()) {
+    return false;
+  }
+
+  m_nodeList.clear();
+
+  // Go through the tokens
+  for (auto const& item : tokens) {
+    std::string str = item;
+    vscp_trim(str);
+    if (str.empty()) {
+      continue;
+    }
+
+    // Check if it is a range (x-y)
+    std::deque<std::string> tokens2;
+    vscp_split(tokens2, str, "-");
+    if (tokens2.size() == 2) {
+      std::string str1 = tokens2[0];
+      std::string str2 = tokens2[1];
+      vscp_trim(str1);
+      vscp_trim(str2);
+      if (!str1.empty() && !str2.empty()) {
+        uint8_t nodeid1 = vscp_readStringValue(str1);
+        uint8_t nodeid2 = vscp_readStringValue(str2);
+        if (nodeid1 > 0 && nodeid2 > 0 && nodeid1 < nodeid2 && nodeid2 < 254) {
+          for (uint8_t nodeid = nodeid1; nodeid <= nodeid2; nodeid++) {
+            m_nodeList.insert(nodeid);
+          }
+        }
+        else {
+          spdlog::error(std::string(tr("Node Scan: Invalid node range").toStdString()));
+        }
+      }
+    }
+    else {
+      uint8_t nodeid = vscp_readStringValue(str);
+      if (nodeid > 0 && nodeid < 254) {
+        m_nodeList.insert(nodeid);
+      }
+      else {
+        spdlog::error(std::string(tr("Node Scan: Invalid node id").toStdString()));
+      }
+    }
+  }
+
+  return true;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// doScan
+//
+
+void 
+CFrmNodeScan::doScan(void)
+{
+  if (!parseNodes()) {
+    QMessageBox::information(this,
+                             tr("vscpworks+"),
+                             tr("Failed to parse nodes"),
+                             QMessageBox::Ok);
+    return;                             
+  }
+
+  std::string str = "Searching nodes : ";
+  for (auto const& item : m_nodeList) {
+    str += QString::number(item).toStdString();
+    str += " ";
+  }
+
+  ui->textBrowserInfo->setText(QString::fromStdString(str));
+
+  // CAN4VSCP interface
+  // std::string str = m_comboInterface->currentText().toStdString();
+  // cguid guidInterface;
+  // cguid guidNode;
+  // guidInterface.getFromString(str);
+  // guidNode = guidInterface;
+  // guidNode.setLSB(m_nodeidConfig->value()); // Set node id
+  cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
+
+  std::set<uint8_t> found;
+  if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
+                                                    guidInterface,
+                                                    found,
+                                                    2000) ) {
+    spdlog::error(std::string(tr("Node Scan: Failed to scan for devices").toStdString()));
+    QMessageBox::information(this,
+                             tr("vscpworks+"),
+                             tr("Failed to scan nodes"),
+                             QMessageBox::Ok);
+  }
+
+  str += "\nFound nodes : ";
+  str += QString::number(found.size()).toStdString();
+  ui->textBrowserInfo->setText(QString::fromStdString(str));
+
+}
+

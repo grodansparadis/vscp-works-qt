@@ -922,8 +922,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
                                  QMessageBox::Ok);
       }
       else {
-        spdlog::info(std::string(
-          tr("Session: Successful connect to remote client.").toStdString()));
+        spdlog::info(std::string(tr("Session: Successful connect to remote client.").toStdString()));
         ui->actionConnect->setChecked(true);
       }
       QApplication::restoreOverrideCursor();
@@ -3352,15 +3351,15 @@ CFrmNodeConfig::loadDefaultsSelected(void)
       for (int i=0; i<item->childCount(); i++) {
         CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
         if (m_mdf.isRegisterWriteable(itemReg->m_regOffset, itemReg->m_regPage)) {
-        int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
-        if (-1 == val) {
-          spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
-          continue;;
+          int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
+          if (-1 == val) {
+            spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
+            continue;
+          }
+          if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+            spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
+          }
         }
-	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
-          spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
-        }
-      }
       }
     }
   }
