@@ -330,14 +330,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     The selected interface is the interface we should select in the combo box
     when we open the window.
   */
-  std::string interface =
-    m_connObject["selected-interface"].toString().toStdString();
+  std::string interface = m_connObject["selected-interface"].toString().toStdString();
 
   /*!
     Interfaced at the time of configuration.
   */
   QJsonArray json_if_array = m_connObject["interfaces"].toArray();
-
+  
   /*!
    *  If bFullLevel2 is true only GUID textbox is shown.
    *  If false the interface combo plus nickname spinnbox is shown.
@@ -354,9 +353,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       break;
 
     case CVscpClient::connType::TCPIP: 
-      // {
-      //   std::string interface = m_connObject["selected-interface"].toString().toStdString();
-      // }
 
       if (bFullLevel2) {
         // GUID
@@ -375,16 +371,14 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
         ui->mainToolBar->addWidget(m_comboInterface);
         m_comboInterface->addItem(tr("---"));
 
-        QJsonArray json_if_array = m_connObject["interfaces"].toArray();
         std::string _str;
         size_t sz = json_if_array.size();
         foreach (const QJsonValue& value, json_if_array) {
-          m_comboInterface->addItem(
-            value.toObject().value("if-item").toString());
+          m_comboInterface->addItem(value.toObject().value("if-item").toString());
         }
 
         m_comboInterface->setCurrentText(interface.c_str());
-        std::cout << "interface = " << interface << std::endl;
+        //std::cout << "interface = " << interface << std::endl;
 
         // Nickname
         m_nodeidConfig = new QSpinBox();
@@ -839,7 +833,7 @@ CFrmNodeConfig::~CFrmNodeConfig()
 
   // Make sure we are disconnected
   doDisconnectFromRemoteHost();
-  
+ 
   pworks->clearChildWindow(this);
 }
 

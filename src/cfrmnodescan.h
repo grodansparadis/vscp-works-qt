@@ -154,9 +154,11 @@ class CFrmNodeScan : public QMainWindow
     /*!
       Parse nodes to search. Format can be a comma separated list
       of nodes or ranges of nodes (x-y) or a combination of both.
+      @param[out] nodelist Set of number with nodes that should be parsed which
+                  is returned on success.
       @return True on success, error on failure to parse string
     */
-    bool parseNodes(void);
+    bool parseNodes(std::set<uint16_t>& nodelist);
     
  public slots:
     
@@ -202,8 +204,11 @@ class CFrmNodeScan : public QMainWindow
     /// Load MDF for selected node
     void loadSelectedMdf(void);
 
+    /// Load MDF for all found nodes
+    void loadAllMdf(void);
+
     /// Load mdf for node
-    void doLoadMdf(uint16_t nodeid);
+    void doLoadMdf(uint16_t nodeid);    
 
     /// Find nodes item clicked -> Display device info
     void onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
@@ -231,12 +236,7 @@ class CFrmNodeScan : public QMainWindow
     QMutex m_mutexRxList;
 
     /// Queue that holds received events
-    std::deque<vscpEvent *> m_rxEvents;
-
-    /*!
-      This is a sorted list with the nodeid's to search for.
-    */
-    std::set<uint8_t> m_nodeList;
+    std::deque<vscpEvent *> m_rxEvents;    
 
     // The UI definition
     Ui::CFrmNodeScan *ui;

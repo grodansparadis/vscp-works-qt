@@ -709,7 +709,7 @@ CFrmNodeScan::threadReceive(vscpEvent* pev)
 //
 
 bool
-CFrmNodeScan::parseNodes(void)
+CFrmNodeScan::parseNodes(std::set<uint16_t>& nodelist)
 {
   std::string str = ui->editSearchNodes->text().toStdString();
   vscp_trim(str);
@@ -723,7 +723,7 @@ CFrmNodeScan::parseNodes(void)
     return false;
   }
 
-  m_nodeList.clear();
+  nodelist.clear();
 
   // Go through the tokens
   for (auto const& item : tokens) {
@@ -742,11 +742,11 @@ CFrmNodeScan::parseNodes(void)
       vscp_trim(str1);
       vscp_trim(str2);
       if (!str1.empty() && !str2.empty()) {
-        uint8_t nodeid1 = vscp_readStringValue(str1);
-        uint8_t nodeid2 = vscp_readStringValue(str2);
-        if (nodeid1 > 0 && nodeid2 > 0 && nodeid1 < nodeid2 && nodeid2 < 254) {
-          for (uint8_t nodeid = nodeid1; nodeid <= nodeid2; nodeid++) {
-            m_nodeList.insert(nodeid);
+        uint16_t nodeid1 = vscp_readStringValue(str1);
+        uint16_t nodeid2 = vscp_readStringValue(str2);
+        if ((nodeid1 > 0) && (nodeid2 > 0) && (nodeid1 < nodeid2) && (nodeid2 < 0xffff)) {
+          for (uint16_t nodeid = nodeid1; nodeid <= nodeid2; nodeid++) {
+            nodelist.insert(nodeid);
           }
         }
         else {
@@ -755,9 +755,9 @@ CFrmNodeScan::parseNodes(void)
       }
     }
     else {
-      uint8_t nodeid = vscp_readStringValue(str);
-      if (nodeid > 0 && nodeid < 254) {
-        m_nodeList.insert(nodeid);
+      uint16_t nodeid = vscp_readStringValue(str);
+      if ((nodeid > 0) && (nodeid < 0xffff)) {
+        nodelist.insert(nodeid);
       }
       else {
         spdlog::error(std::string(tr("Node Scan: Invalid node id").toStdString()));
@@ -776,51 +776,84 @@ CFrmNodeScan::parseNodes(void)
 void 
 CFrmNodeScan::doScan(void)
 {
-  if (!parseNodes()) {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  ui->btnScan->setEnabled(false);
+
+  // This is a sorted list with the nodeid's to search for.
+  std::set<uint16_t> nodelist;
+
+  if (!parseNodes(nodelist)) {
     QMessageBox::information(this,
                              tr("vscpworks+"),
                              tr("Failed to parse nodes"),
                              QMessageBox::Ok);
+    ui->btnScan->setEnabled(true);                             
     return;                             
   }
 
   ui->progressBarScan->setValue(0);
   ui->treeFound->clear();
+  ui->infoArea->clear();
 
-  std::string str = "Searching nodes : ";
-  for (auto const& item : m_nodeList) {
-    str += QString::number(item).toStdString();
-    str += " ";
+  if (ui->chkSlowScan->isChecked()) {
+    std::string str = "Searching nodes : ";
+    for (auto const& item : nodelist) {
+      str += QString::number(item).toStdString();
+      str += " ";
+    }
+    ui->infoArea->setText(QString::fromStdString(str));
   }
 
-  QApplication::setOverrideCursor(Qt::WaitCursor);
-  ui->infoArea->clear();
+  QApplication::setOverrideCursor(Qt::WaitCursor);  
   QApplication::processEvents();
-  ui->infoArea->setText(QString::fromStdString(str));
 
-  // CAN4VSCP interface
-  // std::string str = m_comboInterface->currentText().toStdString();
-  // cguid guidInterface;
-  // cguid guidNode;
-  // guidInterface.getFromString(str);
-  // guidNode = guidInterface;
-  // guidNode.setLSB(m_nodeidConfig->value()); // Set node id
-  cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
+  std::string interface = m_connObject["selected-interface"].toString().toStdString();
+  cguid guidInterface(interface);
 
   ui->progressBarScan->setValue(30);
 
-  std::set<uint8_t> found;
-  if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
-                                                    guidInterface,
-                                                    found,
-                                                    2000) ) {
-    ui->progressBarScan->setValue(0);                                                  
-    spdlog::error(std::string(tr("Node Scan: Failed to scan for devices").toStdString()));
-    QApplication::restoreOverrideCursor();
-    QMessageBox::information(this,
-                             tr("vscpworks+"),
-                             tr("Failed to scan nodes"),
-                             QMessageBox::Ok);
+  std::set<uint16_t> found;
+  if (ui->chkSlowScan->isChecked()) {
+    
+    // Slow scan
+
+    uint32_t delay = vscp_readStringValue(ui->editDelay->text().toStdString());
+    uint32_t timeout = vscp_readStringValue(ui->editTimeout->text().toStdString());
+
+    if ( VSCP_ERROR_SUCCESS != vscp_scanSlowForDevices(*m_vscpClient,
+                                                        guidInterface,
+                                                        nodelist,
+                                                        found,                              
+                                                        delay,
+                                                        timeout)) {
+      ui->progressBarScan->setValue(0);                                                  
+      spdlog::error(std::string(tr("Node Slow Scan: Failed to scan for devices").toStdString()));
+      QApplication::restoreOverrideCursor();
+      QMessageBox::information(this,
+                              tr("vscpworks+"),
+                              tr("Failed to scan nodes"),
+                              QMessageBox::Ok); 
+      ui->btnScan->setEnabled(true);                          
+      return;               
+    }            
+  }
+  else {
+    // Normal scan
+    if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
+                                                      guidInterface,
+                                                      found,
+                                                      pworks->m_config_timeout) ) {
+      ui->progressBarScan->setValue(0);                                                  
+      spdlog::error(std::string(tr("Node Fast Scan: Failed to scan for devices").toStdString()));
+      QApplication::restoreOverrideCursor();
+      QMessageBox::information(this,
+                              tr("vscpworks+"),
+                              tr("Failed to scan nodes"),
+                              QMessageBox::Ok);
+      ui->btnScan->setEnabled(true);
+      return;
+    }
   }
 
   int additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
@@ -840,16 +873,20 @@ CFrmNodeScan::doScan(void)
     }
   }
 
-  str = "Found nodes : ";
-  str += QString::number(found.size()).toStdString();
-  str += "\n";
-  str += ui->infoArea->toPlainText().toStdString();
-  ui->infoArea->setText(QString::fromStdString(str));
+  if (ui->chkSlowScan->isChecked()) {
+    std::string str = "Found nodes : ";
+    str += QString::number(found.size()).toStdString();
+    str += "\n";
+    str += ui->infoArea->toPlainText().toStdString();
+    ui->infoArea->setText(QString::fromStdString(str));
+  }
 
   ui->progressBarScan->setValue(100);
 
   QApplication::restoreOverrideCursor();  
   QApplication::processEvents();
+
+  ui->btnScan->setEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -861,9 +898,13 @@ CFrmNodeScan::slowScanStateChange(int state)
 {
   if ( state == Qt::Checked ) {
     ui->editSearchNodes->setEnabled(true);
+    ui->editDelay->setEnabled(true);
+    ui->editTimeout->setEnabled(true);
   }
   else {
     ui->editSearchNodes->setEnabled(false);
+    ui->editDelay->setEnabled(false);
+    ui->editTimeout->setEnabled(false);
   }
 }
 
@@ -878,7 +919,7 @@ CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
 
   QMenu* menu = new QMenu(this);
   menu->addAction(QString(tr("Fetch MDF")), this, SLOT(loadSelectedMdf()));
-  menu->addAction(QString(tr("Fetch ALL MDF")), this, SLOT(loadSelectedMdf()));
+  menu->addAction(QString(tr("Fetch ALL MDF")), this, SLOT(loadAllMdf()));
   menu->addSeparator();
   menu->addAction(QString(tr("Rescan")), this, SLOT(doScan()));
   menu->addSeparator();
@@ -894,15 +935,18 @@ CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
 void
 CFrmNodeScan::loadSelectedMdf(void)
 {
+  ui->btnScan->setEnabled(false);
   QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
   
   // Must be selected items
   if (!selected.size()) {
+    ui->btnScan->setEnabled(true);
     return;
   }
 
   CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
   if (nullptr == pitem) {
+    ui->btnScan->setEnabled(true);
     return;
   }
 
@@ -913,6 +957,26 @@ CFrmNodeScan::loadSelectedMdf(void)
 
   QApplication::restoreOverrideCursor();
   QApplication::processEvents();
+
+  ui->btnScan->setEnabled(true);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadMdf
+//
+
+void
+CFrmNodeScan::loadAllMdf(void)
+{
+  ui->btnScan->setEnabled(false);
+  CFoundNodeWidgetItem *pItem;
+  QTreeWidgetItemIterator it(ui->treeFound);
+  while (*it) {
+    pItem = (CFoundNodeWidgetItem *)(*it);
+    doLoadMdf(pItem->m_nodeid);
+    ++it;
+  }
+  ui->btnScan->setEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -943,15 +1007,12 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   pItem->m_bStdRegs = false;
   pItem->m_bMdf = false;
 
-  // CAN4VSCP interface
-  cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
-  // std::string str = m_comboInterface->currentText().toStdString();
-  // cguid guidInterface;
+  std::string interface = m_connObject["selected-interface"].toString().toStdString();
+  cguid guidInterface(interface);
+  
   cguid guidNode;
-  // guidInterface.getFromString(str);
   guidNode = guidInterface;
   guidNode.setLSB(pItem->m_nodeid); // Set node id
-  
 
   // Get MDF
   std::string str = "Fetching MDF for node " + QString::number(pItem->m_nodeid).toStdString();

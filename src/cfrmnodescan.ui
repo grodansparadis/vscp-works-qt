@@ -47,6 +47,13 @@
          </property>
         </widget>
        </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Delay:</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="1">
         <widget class="QTreeWidget" name="treeFound">
          <property name="sizePolicy">
@@ -68,7 +75,14 @@
          </column>
         </widget>
        </item>
-       <item row="8" column="0" colspan="2">
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Timeout:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0" colspan="2">
         <widget class="QProgressBar" name="progressBarScan">
          <property name="value">
           <number>100</number>
@@ -92,7 +106,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
+       <item row="7" column="1">
         <widget class="QPushButton" name="btnScan">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -113,6 +127,13 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="chkSlowScan">
+         <property name="text">
+          <string>Slow scan</string>
+         </property>
+        </widget>
+       </item>
        <item row="4" column="1">
         <widget class="QLineEdit" name="editSearchNodes">
          <property name="enabled">
@@ -126,7 +147,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="0" colspan="2">
+       <item row="9" column="0" colspan="2">
         <widget class="QTextBrowser" name="infoArea">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -142,17 +163,36 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="8" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
           <string>Node Info</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QCheckBox" name="chkSlowScan">
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="editDelay">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Delay between slow scan probes in microseconds</string>
+         </property>
          <property name="text">
-          <string>Slow scan</string>
+          <string>10000</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="editTimeout">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="toolTip">
+          <string>Timoeut for slow scan in milliseconds</string>
+         </property>
+         <property name="text">
+          <string>2000</string>
          </property>
         </widget>
        </item>
@@ -180,7 +220,14 @@
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionScan">
@@ -212,6 +259,11 @@
    </property>
    <property name="text">
     <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
