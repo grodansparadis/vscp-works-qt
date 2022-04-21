@@ -915,6 +915,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to connect to remote host.").toStdString()));
+        QApplication::restoreOverrideCursor();
         QMessageBox::information(this,
                                  tr(APPNAME),
                                  tr("Failed to open a connection to the remote "

@@ -37,13 +37,6 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="chkSlowScan">
-         <property name="text">
-          <string>Slow scan</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="1">
         <widget class="QCheckBox" name="chkFetchInfo">
          <property name="text">
@@ -54,25 +47,8 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Found nodes</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" colspan="2">
-        <widget class="QProgressBar" name="progressBarScan">
-         <property name="value">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
-        <widget class="QTreeView" name="treeViewFound">
+        <widget class="QTreeWidget" name="treeFound">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>10</horstretch>
@@ -85,39 +61,38 @@
          <property name="alternatingRowColors">
           <bool>true</bool>
          </property>
+         <column>
+          <property name="text">
+           <string>Discovered nodes</string>
+          </property>
+         </column>
         </widget>
        </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QTextBrowser" name="textBrowserInfo">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="statusTip">
-          <string>Information about current selected node</string>
+       <item row="8" column="0" colspan="2">
+        <widget class="QProgressBar" name="progressBarScan">
+         <property name="value">
+          <number>100</number>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="editSearchNodes">
-         <property name="statusTip">
-          <string>Enter id's for node range  to be searched for (1-254 or 1,2,3 or a combination of both)</string>
-         </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>1-253</string>
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_8">
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Node Info</string>
+          <string>Nodes :</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="5" column="1">
         <widget class="QPushButton" name="btnScan">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -138,10 +113,46 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_7">
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="editSearchNodes">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="statusTip">
+          <string>Enter id's for node range  to be searched for (1-254 or 1,2,3 or a combination of both)</string>
+         </property>
          <property name="text">
-          <string>Nodes :</string>
+          <string>1-253</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QTextBrowser" name="infoArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Information about current selected node</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Node Info</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="chkSlowScan">
+         <property name="text">
+          <string>Slow scan</string>
          </property>
         </widget>
        </item>
@@ -171,7 +182,7 @@
    </widget>
    <addaction name="menuTools"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionScan">
    <property name="icon">
     <iconset>
@@ -180,6 +191,9 @@
    </property>
    <property name="text">
     <string>Scan</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionClose">

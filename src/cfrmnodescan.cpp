@@ -38,6 +38,7 @@
 #include <stdlib.h>
 
 #include <vscp.h>
+#include <vscphelper.h>
 #include <vscpworks.h>
 
 #include <mdf.h>
@@ -77,6 +78,24 @@
 
 // ----------------------------------------------------------------------------
 
+CFoundNodeWidgetItem::CFoundNodeWidgetItem(QTreeWidget *parent)
+  : QTreeWidgetItem(parent, TREE_LIST_FOUND_NODE_TYPE)
+{
+  m_nodeid = 0;
+  m_bStdRegs = false;
+  m_bMdf = false;
+}
+
+CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
+{
+  // if (nullptr != m_pmdf) {
+  //   delete m_pmdf;
+  //   m_pmdf = nullptr;
+  // }
+}
+
+// ----------------------------------------------------------------------------
+
 ///////////////////////////////////////////////////////////////////////////////
 // vscp_client_ack
 //
@@ -110,6 +129,9 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   , ui(new Ui::CFrmNodeScan)
 {
   ui->setupUi(this);
+
+  ui->treeFound->setContextMenuPolicy(Qt::CustomContextMenu);
+  ui->treeFound->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;
@@ -308,8 +330,27 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
           this,
           SLOT(connectToRemoteHost(bool)));
 
-  // Update has been clicked
+  // Scan has been selected in the menu
   connect(ui->actionScan, SIGNAL(triggered()), this, SLOT(doScan()));
+
+  // Scan button has been clicked
+  connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
+
+
+  // Enable/disable slow scan
+  connect(ui->chkSlowScan, SIGNAL(stateChanged(int)), this, SLOT(slowScanStateChange(int)));
+
+  // Open pop up menu on right click on register list
+  connect(ui->treeFound,
+          &QTreeWidget::customContextMenuRequested,
+          this,
+          &CFrmNodeScan::showFindNodesContextMenu);
+
+  // Register row has been clicked.
+  connect(ui->treeFound,
+            &QTreeWidget::itemClicked,
+            this,
+            &CFrmNodeScan::onFindNodesTreeWidgetItemClicked);        
 }
 
 
@@ -743,13 +784,19 @@ CFrmNodeScan::doScan(void)
     return;                             
   }
 
+  ui->progressBarScan->setValue(0);
+  ui->treeFound->clear();
+
   std::string str = "Searching nodes : ";
   for (auto const& item : m_nodeList) {
     str += QString::number(item).toStdString();
     str += " ";
   }
 
-  ui->textBrowserInfo->setText(QString::fromStdString(str));
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  ui->infoArea->clear();
+  QApplication::processEvents();
+  ui->infoArea->setText(QString::fromStdString(str));
 
   // CAN4VSCP interface
   // std::string str = m_comboInterface->currentText().toStdString();
@@ -760,21 +807,253 @@ CFrmNodeScan::doScan(void)
   // guidNode.setLSB(m_nodeidConfig->value()); // Set node id
   cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
 
+  ui->progressBarScan->setValue(30);
+
   std::set<uint8_t> found;
   if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
                                                     guidInterface,
                                                     found,
                                                     2000) ) {
+    ui->progressBarScan->setValue(0);                                                  
     spdlog::error(std::string(tr("Node Scan: Failed to scan for devices").toStdString()));
+    QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr("vscpworks+"),
                              tr("Failed to scan nodes"),
                              QMessageBox::Ok);
   }
 
-  str += "\nFound nodes : ";
-  str += QString::number(found.size()).toStdString();
-  ui->textBrowserInfo->setText(QString::fromStdString(str));
+  int additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
+  if (!ui->chkFetchInfo->isChecked()) {
+    ui->progressBarScan->setValue(90);
+  }
 
+  for (auto const& item : found) {
+    QString str = "node " + QString::number(item);
+    CFoundNodeWidgetItem *top = new CFoundNodeWidgetItem(ui->treeFound);
+    top->setText(0, tr("Node with id = ") + QString::number(item));
+    top->m_nodeid = item;  // Save nodeid
+    // Load mdf and standard registers if requested to do so
+    if (ui->chkFetchInfo->isChecked()) {
+      doLoadMdf(item);
+      ui->progressBarScan->setValue(ui->progressBarScan->value() + additem);
+    }
+  }
+
+  str = "Found nodes : ";
+  str += QString::number(found.size()).toStdString();
+  str += "\n";
+  str += ui->infoArea->toPlainText().toStdString();
+  ui->infoArea->setText(QString::fromStdString(str));
+
+  ui->progressBarScan->setValue(100);
+
+  QApplication::restoreOverrideCursor();  
+  QApplication::processEvents();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// slowScanStateChange
+//
+
+void 
+CFrmNodeScan::slowScanStateChange(int state)
+{
+  if ( state == Qt::Checked ) {
+    ui->editSearchNodes->setEnabled(true);
+  }
+  else {
+    ui->editSearchNodes->setEnabled(false);
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// showRegisterContextMenu
+// 
+
+void
+CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
+{
+
+  QMenu* menu = new QMenu(this);
+  menu->addAction(QString(tr("Fetch MDF")), this, SLOT(loadSelectedMdf()));
+  menu->addAction(QString(tr("Fetch ALL MDF")), this, SLOT(loadSelectedMdf()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Rescan")), this, SLOT(doScan()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Configure")), this, SLOT(doScan()));
+  menu->addAction(QString(tr("Session")), this, SLOT(doScan()));
+  menu->popup(ui->treeFound->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadSelectedMdf
+//
+
+void
+CFrmNodeScan::loadSelectedMdf(void)
+{
+  QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
+  
+  // Must be selected items
+  if (!selected.size()) {
+    return;
+  }
+
+  CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
+  if (nullptr == pitem) {
+    return;
+  }
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+
+  doLoadMdf(pitem->m_nodeid);
+
+  QApplication::restoreOverrideCursor();
+  QApplication::processEvents();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadMdf
+//
+
+void
+CFrmNodeScan::doLoadMdf(uint16_t nodeid)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  CFoundNodeWidgetItem *pItem;
+  QTreeWidgetItemIterator it(ui->treeFound);
+  while (*it) {
+    pItem = (CFoundNodeWidgetItem *)(*it);
+    if (pItem->m_nodeid == nodeid) {
+      break;
+    }
+    pItem = nullptr;
+    ++it;
+  }
+
+  // Check if item found
+  if (nullptr == pItem) {
+    return;
+  }
+
+  pItem->m_bStdRegs = false;
+  pItem->m_bMdf = false;
+
+  // CAN4VSCP interface
+  cguid guidInterface("FF:FF:FF:FF:FF:FF:FF:F5:01:00:00:00:00:00:00:00");
+  // std::string str = m_comboInterface->currentText().toStdString();
+  // cguid guidInterface;
+  cguid guidNode;
+  // guidInterface.getFromString(str);
+  guidNode = guidInterface;
+  guidNode.setLSB(pItem->m_nodeid); // Set node id
+  
+
+  // Get MDF
+  std::string str = "Fetching MDF for node " + QString::number(pItem->m_nodeid).toStdString();
+  ui->infoArea->setText(QString::fromStdString(str));
+  QApplication::processEvents();
+
+  ui->statusBar->showMessage(tr("Reading standard registers from device..."));
+
+  // Get standard registers
+  int rv = pItem->m_stdregs.init(*m_vscpClient, guidNode, guidInterface, pworks->m_config_timeout);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") + QString::number(rv));
+    spdlog::error("Failed to init standard registers {0}", rv);
+    return;
+  }
+
+  // Standard registers downloaded
+  pItem->m_bStdRegs = false;
+
+  // Get GUID
+  cguid guid;
+  pItem->m_stdregs.getGUID(guid);
+  spdlog::trace("Standard register getGUID = {}", guid.toString());
+
+  std::string url = pItem->m_stdregs.getMDF();
+  spdlog::trace("Standard register getMDF = {}", url);
+
+  // create a temporary file name for remote MDF
+  std::string tempMdfFileName;
+  for (int i = 0; i < url.length(); i++) {
+    if ((url[i] == '/') || (url[i] == '\\')) {
+      tempMdfFileName += "_";
+    }
+    else {
+      tempMdfFileName += url[i];
+    }
+  }
+
+  // mkstemp()
+  std::string tempPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation).toStdString();
+  tempPath += "/";
+  tempPath += tempMdfFileName;
+  pItem->m_tempMdfFile = tempPath;
+
+  spdlog::debug("Temporary path: {}", tempPath);
+
+  ui->statusBar->showMessage(tr("Downloading MDF file..."));
+
+  CURLcode curl_rv;
+  curl_rv = pItem->m_mdf.downLoadMDF(url, tempPath);
+  if (CURLE_OK != curl_rv) {
+    ui->statusBar->showMessage(tr("Failed to download MDF file for device."));
+    spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
+    return;
+  }
+
+  // * * * Parse  MDF * * *
+
+  ui->statusBar->showMessage(tr("Parsing MDF file..."));
+  rv = pItem->m_mdf.parseMDF(tempPath);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
+    spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
+    return;
+  }
+
+  // MDF downloaded & parsed
+  pItem->m_bMdf = true;
+
+  // Replace item string
+  std::string strItem = tr("Node: ").toStdString();
+  strItem += QString::number(pItem->m_nodeid).toStdString();
+  strItem += " - ";
+  strItem += pItem->m_mdf.getModuleName();
+  strItem += ", Ver: ";
+  strItem += pItem->m_mdf.getModuleVersion();
+  pItem->setText(0, QString::fromStdString(strItem));
+
+  // Set the HTML
+  std::string html = vscp_getDeviceInfoHtml(pItem->m_mdf, pItem->m_stdregs);
+  ui->infoArea->setHtml(html.c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onFindNodesTreeWidgetItemClicked
+//
+
+void
+CFrmNodeScan::onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
+{
+  CFoundNodeWidgetItem *pItem = (CFoundNodeWidgetItem *)item;
+  if (nullptr == pItem) {
+    return;
+  }
+
+  if ((pItem->type() == TREE_LIST_FOUND_NODE_TYPE) && pItem->m_bMdf && !pItem->m_bStdRegs) {
+
+    // Set the HTML
+    std::string html = vscp_getDeviceInfoHtml(pItem->m_mdf, pItem->m_stdregs);
+    ui->infoArea->setHtml(html.c_str());
+  }
+  else {
+    ui->infoArea->setText(tr("MDF info should be loaded before device info can be viewed"));
+  }
+}

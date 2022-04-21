@@ -41,10 +41,8 @@
 
 #include <QObject>
 #include <QDialog>
-#include <QTableView>
-#include <QTableWidgetItem>
-#include <QtSql>
-#include <QLCDNumber>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -61,8 +59,8 @@ class QTextBrowser;
 class QToolBar;
 class QVBoxLayout;
 class QAction;
-class QTableWidgetItem;
-class QTableWidget;
+class QTreeWidgetItem;
+class QTreeWidget;
 class QToolBox;
 QT_END_NAMESPACE
 
@@ -72,6 +70,45 @@ QT_END_NAMESPACE
 namespace Ui {
 class CFrmNodeScan;
 }
+
+#define TREE_LIST_FOUND_NODE_TYPE (QTreeWidgetItem::UserType + 1)
+
+// ----------------------------------------------------------------------------
+
+
+/*!
+    Class that represent a row in the found node list
+*/
+class CFoundNodeWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+    CFoundNodeWidgetItem(QTreeWidget *parent);
+    virtual ~CFoundNodeWidgetItem();
+
+    /*!
+      nodeid
+    */
+    uint16_t m_nodeid;
+
+    /*! 
+      True when standard registers has been loaded
+    */
+    bool m_bStdRegs;
+
+    /// True when MDF has been loaded
+    bool m_bMdf;
+
+    /// MDF definitions
+    CMDF m_mdf;
+
+    /// MDF path for downloaded file
+    std::string m_tempMdfFile;
+
+    /// VSCP standard registers
+    CStandardRegisters m_stdregs;
+   
+};
 
 
 // ----------------------------------------------------------------------------
@@ -155,6 +192,21 @@ class CFrmNodeScan : public QMainWindow
 
     /// Do the scan operation
     void doScan(void);
+
+    /// Slowscan checkbox state has changed
+    void slowScanStateChange(int state);
+
+    /// Show find nodes context menu 
+    void showFindNodesContextMenu(const QPoint& pos);
+
+    /// Load MDF for selected node
+    void loadSelectedMdf(void);
+
+    /// Load mdf for node
+    void doLoadMdf(uint16_t nodeid);
+
+    /// Find nodes item clicked -> Display device info
+    void onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
  
  signals:
 
