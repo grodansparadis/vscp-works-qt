@@ -59,6 +59,8 @@
 #include <vscp_client_ws1.h>
 #include <vscp_client_ws2.h>
 
+#include "cfrmnodeconfig.h"
+
 #include "cfrmnodescan.h"
 #include "ui_cfrmnodescan.h"
 //#include "cdlgmainsettings.h"
@@ -336,6 +338,17 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   // Scan button has been clicked
   connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
 
+  // Load MDF has been selected in the menu
+  connect(ui->actionLoadMdf, SIGNAL(triggered()), this, SLOT(loadSelectedMdf()));
+
+  // Load MDF has been selected in the menu
+  connect(ui->actionLoadMdfAll, SIGNAL(triggered()), this, SLOT(loadAllMdf()));
+
+  // Session has been selected in the menu
+  connect(ui->actionSession, SIGNAL(triggered()), this, SLOT(goSession()));
+
+  // Config has been selected in the menu
+  connect(ui->actionConfigure, SIGNAL(triggered()), this, SLOT(goConfig()));
 
   // Enable/disable slow scan
   connect(ui->chkSlowScan, SIGNAL(stateChanged(int)), this, SLOT(slowScanStateChange(int)));
@@ -399,45 +412,6 @@ CFrmNodeScan::menu_open_main_settings(void)
   // dlg->exec();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// showRegisterContextMenu
-//
-
-void
-CFrmNodeScan::showRegisterContextMenu(const QPoint& pos)
-{
-  QMenu* menu = new QMenu(this);
-  menu->addAction(QString(tr("Send event")), this, SLOT(sendTxEvent()));
-  menu->addSeparator();
-  menu->addAction(QString(tr("Copy TX event to clipboard")),
-                  this,
-                  SLOT(copyTxToClipboard()));
-  menu->addSeparator();
-  menu->addAction(QString(tr("Add transmission row...")),
-                  this,
-                  SLOT(addTxEvent()));
-  menu->addAction(QString(tr("Edit selected transmission row...")),
-                  this,
-                  SLOT(editTxEvent()));
-  menu->addAction(QString(tr("Clone selected transmission row...")),
-                  this,
-                  SLOT(cloneTxEvent()));
-  menu->addAction(QString(tr("Delete selected transmission row...")),
-                  this,
-                  SLOT(deleteTxEvent()));
-  menu->addSeparator();
-  menu->addAction(QString(tr("Save transmission rows...")),
-                  this,
-                  SLOT(saveTxEvents()));
-  menu->addAction(QString(tr("Load transmission rows...")),
-                  this,
-                  SLOT(loadTxEvents()));
-  menu->addSeparator();
-  menu->addAction(QString(tr("Clear selections...")),
-                  this,
-                  SLOT(clrSelectionsTxEvent()));
-  // menu->popup(m_txTable->viewport()->mapToGlobal(pos));
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // connectToHost
@@ -910,7 +884,7 @@ CFrmNodeScan::slowScanStateChange(int state)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// showRegisterContextMenu
+// showFindNodesContextMenu
 // 
 
 void
@@ -923,8 +897,8 @@ CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
   menu->addSeparator();
   menu->addAction(QString(tr("Rescan")), this, SLOT(doScan()));
   menu->addSeparator();
-  menu->addAction(QString(tr("Configure")), this, SLOT(doScan()));
-  menu->addAction(QString(tr("Session")), this, SLOT(doScan()));
+  menu->addAction(QString(tr("Configure")), this, SLOT(goConfig()));
+  menu->addAction(QString(tr("Session")), this, SLOT(goSession()));
   menu->popup(ui->treeFound->viewport()->mapToGlobal(pos));
 }
 
@@ -940,12 +914,20 @@ CFrmNodeScan::loadSelectedMdf(void)
   
   // Must be selected items
   if (!selected.size()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Must select a node to use operation."),
+                             QMessageBox::Ok);
     ui->btnScan->setEnabled(true);
     return;
   }
 
   CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
   if (nullptr == pitem) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to get node."),
+                             QMessageBox::Ok);
     ui->btnScan->setEnabled(true);
     return;
   }
@@ -1117,4 +1099,63 @@ CFrmNodeScan::onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column
   else {
     ui->infoArea->setText(tr("MDF info should be loaded before device info can be viewed"));
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// goSession
+//
+
+void
+CFrmNodeScan::goSession(void)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    
+  CFrmSession* w = new CFrmSession(parentWidget(), &m_connObject);
+  w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
+  w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+  w->setWindowFlags(Qt::Window);
+  w->show();
+  w->raise();
+  // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+  w->activateWindow();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// goConfig
+//
+
+void
+CFrmNodeScan::goConfig(void)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
+  // Must be selected items
+  if (!selected.size()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Must select a node to use operation."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
+  if (nullptr == pitem) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to get node."),
+                             QMessageBox::Ok);
+    return;
+  }
+    
+  CFrmNodeConfig* w = new CFrmNodeConfig(parentWidget(), &m_connObject);
+  w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
+  w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+  w->setWindowFlags(Qt::Window);
+  w->show();
+  w->setNodeId(pitem->m_nodeid);
+  w->update();
+  w->raise();
+  // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+  w->activateWindow();
 }

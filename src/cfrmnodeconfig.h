@@ -43,7 +43,7 @@
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QtSql>
-#include <QLCDNumber>
+#include <QSpinBox>
 #include <QTreeWidget>
 
 QT_BEGIN_NAMESPACE
@@ -53,6 +53,7 @@ class QDialogButtonBox;
 class QGroupBox;
 class QLabel;
 class QLineEdit;
+class QSpinBox;
 class QMenu;
 class QMenuBar;
 class QPushButton;
@@ -272,6 +273,12 @@ class CFrmNodeConfig : public QMainWindow
       @return VSCP_ERROR_SUCCESS on success or error code on failure.
     */
     int doUpdate(std::string mdfpath);
+
+    /*!
+      Set the selected node id
+      @param nodeid Value to set
+    */
+    void setNodeId(uint16_t nodeid) { if (nullptr != m_nodeidConfig) m_nodeidConfig->setValue(nodeid); };
     
  public slots:
     

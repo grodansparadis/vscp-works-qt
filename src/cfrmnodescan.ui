@@ -37,75 +37,6 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="1">
-        <widget class="QCheckBox" name="chkFetchInfo">
-         <property name="text">
-          <string>Fetch node info</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Delay:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QTreeWidget" name="treeFound">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>10</horstretch>
-           <verstretch>10</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="statusTip">
-          <string>Nodes found from search</string>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Discovered nodes</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Timeout:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0" colspan="2">
-        <widget class="QProgressBar" name="progressBarScan">
-         <property name="value">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Nodes :</string>
-         </property>
-        </widget>
-       </item>
        <item row="7" column="1">
         <widget class="QPushButton" name="btnScan">
          <property name="sizePolicy">
@@ -127,46 +58,20 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QCheckBox" name="chkSlowScan">
+       <item row="2" column="1">
+        <widget class="QCheckBox" name="chkFetchInfo">
          <property name="text">
-          <string>Slow scan</string>
+          <string>Fetch node info</string>
          </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="editSearchNodes">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="statusTip">
-          <string>Enter id's for node range  to be searched for (1-254 or 1,2,3 or a combination of both)</string>
-         </property>
-         <property name="text">
-          <string>1-253</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="2">
-        <widget class="QTextBrowser" name="infoArea">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="statusTip">
-          <string>Information about current selected node</string>
-         </property>
-         <property name="openExternalLinks">
+         <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_8">
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Node Info</string>
+          <string>Timeout:</string>
          </property>
         </widget>
        </item>
@@ -196,6 +101,101 @@
          </property>
         </widget>
        </item>
+       <item row="10" column="0" colspan="2">
+        <widget class="QProgressBar" name="progressBarScan">
+         <property name="value">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Nodes :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="chkSlowScan">
+         <property name="text">
+          <string>Slow scan</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" colspan="2">
+        <widget class="QTextBrowser" name="infoArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Information about current selected node</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QTreeWidget" name="treeFound">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>10</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="statusTip">
+          <string>Nodes found from search</string>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text">
+           <string>Discovered nodes</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Delay:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="editSearchNodes">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="statusTip">
+          <string>Enter id's for node range  to be searched for (1-254 or 1,2,3 or a combination of both)</string>
+         </property>
+         <property name="text">
+          <string>1-253</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Node Info</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -218,6 +218,12 @@
     <addaction name="separator"/>
     <addaction name="actionScan"/>
     <addaction name="separator"/>
+    <addaction name="actionLoadMdf"/>
+    <addaction name="actionLoadMdfAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionConfigure"/>
+    <addaction name="actionSession"/>
+    <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -230,6 +236,24 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="separator"/>
+   <addaction name="actionConnect"/>
+   <addaction name="actionScan"/>
+   <addaction name="actionLoadMdf"/>
+   <addaction name="actionLoadMdfAll"/>
+   <addaction name="actionConfigure"/>
+   <addaction name="actionSession"/>
+  </widget>
   <action name="actionScan">
    <property name="icon">
     <iconset>
@@ -240,7 +264,7 @@
     <string>Scan</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="actionClose">
@@ -260,10 +284,61 @@
    <property name="text">
     <string>Connect</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionLoadMdf">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/images/svg/rotate-update-opaque.svg</normaloff>:/images/svg/rotate-update-opaque.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Load MDF</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actionLoadMdfAll">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/images/svg/update-clock-clock.svg</normaloff>:/images/svg/update-clock-clock.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Load MDF all</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/images/png/128x128/page_process.png</normaloff>:/images/png/128x128/page_process.png</iconset>
+   </property>
+   <property name="text">
+    <string>Configure</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="actionSession">
+   <property name="icon">
+    <iconset resource="vscpworks.qrc">
+     <normaloff>:/images/png/128x128/page_down.png</normaloff>:/images/png/128x128/page_down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Session</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
    </property>
   </action>
  </widget>

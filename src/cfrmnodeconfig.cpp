@@ -3635,8 +3635,7 @@ CFrmNodeConfig::renderRegisters(void)
         continue;
       }
 
-      Qt::ItemFlags itemFlags =
-        Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
+      Qt::ItemFlags itemFlags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
       // Set foreground and background colors from MDF
       if (!pworks->m_config_bDisableColors) {

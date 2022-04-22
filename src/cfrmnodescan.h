@@ -181,13 +181,6 @@ class CFrmNodeScan : public QMainWindow
     void 
     connectToRemoteHost(bool checked);
 
-    /*!
-        Show context menu for rx table
-        @param pos Position where right click took place
-    */
-    void 
-    showRegisterContextMenu(const QPoint& pos);
-
     /// Open settings dialog
     void 
     menu_open_main_settings(void);
@@ -212,6 +205,12 @@ class CFrmNodeScan : public QMainWindow
 
     /// Find nodes item clicked -> Display device info
     void onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
+
+    /// Open session window fron selected found node
+    void goSession(void);
+
+    /// Open config window fron selected found node
+    void goConfig(void);
  
  signals:
 
