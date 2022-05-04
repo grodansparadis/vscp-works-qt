@@ -31,6 +31,7 @@ You need expat, mosquitto, openssl to build this project
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
   sudo apt install libpaho-mqtt1.3  
+  sudo apt-get install libcurl4-openssl-dev
 ```
 
 Paho version 1.3 or bigger should be used. Build manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
