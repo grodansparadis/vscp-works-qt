@@ -64,7 +64,7 @@ jobs:
     #     "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify --channelId VisualStudio.16.Release --productId Microsoft.VisualStudio.Product.Enterprise -q --includeRecommended --add "Microsoft.VisualStudio.Component.VC.14.25.x86.x64"
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.1
       with:
         msbuild-architecture: x64
 
@@ -128,8 +128,10 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
+      # cmake .. -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH=${{ github.workspace }}/vscp/"
+
       run: |
-        cmake .. -G "Visual Studio 16 2019" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH=${{ github.workspace }}/vscp/"
+        cmake .. -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH=${{ github.workspace }}/vscp/"
 
     - name: Build
       #working-directory: ${{ github.workspace }}/build
