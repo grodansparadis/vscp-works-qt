@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>638</width>
+    <height>727</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>441</width>
+      <height>661</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+       <column>
+        <property name="text">
+         <string>MDF</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>Redirect</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>129</red>
+           <green>61</green>
+           <blue>156</blue>
+          </color>
+         </brush>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Module</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Manufacturer</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Boot</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Files</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Picture</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Vidoe</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Firmware</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Manual</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Driver</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Setup</string>
+          </property>
+         </item>
+        </item>
+        <item>
+         <property name="text">
+          <string>Register</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Remotevar</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Alarm</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>DMatrix</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Event</string>
+         </property>
+        </item>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>638</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
