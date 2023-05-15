@@ -22,13 +22,13 @@ jobs:
 
     steps:
 
-    - name: ms-dev environment
-    - uses: ilammy/msvc-dev-cmd@v1
+    - name: Install ms-dev environment
+      uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
   
     - name: Prepare Qt Libraries
-    - uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v3
       with:
         version: '5.15.2'
         host: 'windows'
@@ -69,17 +69,17 @@ jobs:
     # Install latest CMake.
     - name: Run vcpkg
       uses: lukka/get-cmake@latest
-      with:
-          # Just install vcpkg for now, do not install any ports in this step yet.
-          setupOnly: true
-          # Location of the vcpkg as submodule of the repository.
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-          # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
-          # compute its hash and append this to the computed cache's key.
-          appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
-          vcpkgTriplet: ${{ matrix.triplet }}
-          # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
-          additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
+      #with:
+        # Just install vcpkg for now, do not install any ports in this step yet.
+      #  setupOnly: true
+        # Location of the vcpkg as submodule of the repository.
+      #  vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
+        # compute its hash and append this to the computed cache's key.
+      #  appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
+      #  vcpkgTriplet: ${{ matrix.triplet }}
+        # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
+      #  additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
 
     # - name: Add Component
     #   shell: cmd
