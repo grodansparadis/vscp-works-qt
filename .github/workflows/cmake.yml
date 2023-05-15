@@ -11,22 +11,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:  
       matrix:
-        os: [ubuntu-18.04, ubuntu-latest]
+        os: [ubuntu-20.04, ubuntu-latest]
 
     steps:
 
     # https://github.com/actions/checkout  
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Checkout vscp repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: grodansparadis/vscp
         path: vscp
         ref: development
 
     - name: Checkout eclipse paho repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: eclipse/paho.mqtt.c
         path: paho
