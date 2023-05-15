@@ -17,11 +17,34 @@ env:
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Windows x64
+    runs-on: windows-2019
 
     steps:
-    - uses: actions/checkout@v3
+
+    - name: ms-dev environment
     - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+  
+    - name: Prepare Qt Libraries
+    - uses: jurplel/install-qt-action@v3
+      with
+        version: '5.15.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        modules: 'qtcharts qtwebengine'
+        archives: 'qtbase qtsvg'
+        cache: 'true'
+        cache-key-prefix: 'install-qt-action'
+        setup-python: 'true'
+        tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
+        set-env: 'true'
+        tools-only: 'false'
+        aqtversion: '==3.1.*'
+        py7zrversion: '==0.20.*'
+        extra: '--external 7z'
 
     - name: Clone
       uses: actions/checkout@v3
@@ -72,8 +95,8 @@ jobs:
       shell: powershell
       run: Install-Module 7Zip4PowerShell -Force -Verbose
 
-    - name: Prepare Qt Libraries
-      uses: jurplel/install-qt-action@v2
+    #- name: Prepare Qt Libraries
+    #  uses: jurplel/install-qt-action@v2
 
     - name: Cache vcpkg
       id: cache-vcpkg
