@@ -2,7 +2,7 @@
 #
 # Build instructions for VSCP Works.
 #
-# Copyright (c) 2000-2021 Åke Hedman, Grodans Paradis AB
+# Copyright (c) 2000-2023 Åke Hedman, Grodans Paradis AB
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ project(vscp-works-qt LANGUAGES CXX C)
 
 option(USE_SSL "Use SSL" TRUE)
 
-## --- C++11 build flags ---
+## --- C++14 build flags ---
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -51,8 +51,8 @@ set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
 endif()
 
 if(WIN32)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    add_definitions(-DWIN32_LEAN_AND_MEANS)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
     add_definitions(-DOPENSSL_API_1_1)
     add_definitions(-D_POSIX_C_SOURCE)    
     add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
@@ -79,7 +79,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
 #find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Charts)
+find_package(Qt5 5.15 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Charts)
 
 # pthreads
 set (THREADS_PREFER_PTHREAD_FLAG ON)
@@ -135,6 +135,8 @@ ENDIF(CURL_FOUND)
 add_definitions(-DUSE_WEBSOCKET)
 add_definitions(-DUSE_IPV6)
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
+
+# 1.1.0 / 1.1.1 / 3.0.0 / 3.1.0
 string(FIND "${OPENSSL_VERSION}" "1.1." SSL_VER_POS)
 if(${SSL_VER_POS})
     #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
@@ -143,6 +145,16 @@ else()
     #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
     add_definitions(-DOPENSSL_API_1_1)
 endif()
+
+string(FIND "${OPENSSL_VERSION}" "3.0" SSL_VER_POS)
+if(${SSL_VER_POS})
+  add_definitions(-DOPENSSL_API_3_0)
+endif()  
+
+string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
+if(${SSL_VER_POS})
+  add_definitions(-DOPENSSL_API_3_1)
+endif() 
 
 # set(UI )
 qt5_wrap_ui(UI src/mainwindow.ui    
