@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:  
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest]
+        os: [ubuntu-latest]
 
     steps:
 
@@ -53,7 +53,7 @@ jobs:
       run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev 
 
     - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v1.9 
+      uses: jwlawson/actions-setup-cmake@v1.14 
     
     - name: Create Build Environment
       run: |
