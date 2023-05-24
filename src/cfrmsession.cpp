@@ -47,7 +47,9 @@
 #include <vscp_client_udp.h>
 #include <vscp_client_ws1.h>
 #include <vscp_client_ws2.h>
+#ifndef WIN32
 #include <vscp_client_socketcan.h>
+#endif
 #include <vscp_client_rest.h>
 #include <vscp_client_mqtt.h>
 #include <vscp_client_rawmqtt.h>
@@ -257,6 +259,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
             connectToRemoteHost(true);
             break;
 
+#ifndef WIN32
         case CVscpClient::connType::SOCKETCAN:
             m_vscpClient = new vscpClientSocketCan();
             if (!m_vscpClient->initFromJson(strJson.toStdString())) {
@@ -269,6 +272,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
             m_connectActToolBar->setChecked(true);
             connectToRemoteHost(true);
             break;
+#endif
 
         case CVscpClient::connType::WS1:
             m_vscpClient = new vscpClientWs1();

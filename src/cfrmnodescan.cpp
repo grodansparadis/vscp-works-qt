@@ -53,7 +53,9 @@
 #include <vscp_client_rest.h>
 #include <vscp_client_rs232.h>
 #include <vscp_client_rs485.h>
+#ifndef WIN32
 #include <vscp_client_socketcan.h>
+#endif
 #include <vscp_client_tcp.h>
 #include <vscp_client_udp.h>
 #include <vscp_client_ws1.h>
@@ -230,6 +232,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       connectToRemoteHost(true);
       break;
 
+#ifndef WIN32
     case CVscpClient::connType::SOCKETCAN:
       m_vscpClient = new vscpClientSocketCan();
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
@@ -244,6 +247,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
+#endif
 
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
@@ -830,7 +834,7 @@ CFrmNodeScan::doScan(void)
     }
   }
 
-  int additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
+  size_t additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
   if (!ui->chkFetchInfo->isChecked()) {
     ui->progressBarScan->setValue(90);
   }

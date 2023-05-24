@@ -89,9 +89,9 @@
     },
     "cmake.configureArgs": [
         "-DVCPKG_TARGET_TRIPLET=x64-windows",
-        "-DCMAKE_TOOLCHAIN_FILE=E:/development/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        "-DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake"
     ],
-    "cmake.generator": "Visual Studio 16 2019",
+    "cmake.generator": "Visual Studio 17 2022",
     "cSpell.language": "sv,en",
     "vsflux.defaultInfluxDBV1URL": null,
     "cSpell.words": [

@@ -27,7 +27,12 @@
 #
 
 cmake_minimum_required(VERSION 3.5)
+
+#include(cmake/app_utils.cmake)
+#setup_vcpkg_before_project()
+
 project(vscp-works-qt LANGUAGES CXX C)
+
 
 option(USE_SSL "Use SSL" TRUE)
 
@@ -53,7 +58,7 @@ endif()
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DWIN32_LEAN_AND_MEANS)
-    add_definitions(-DOPENSSL_API_1_1)
+  #  add_definitions(-DOPENSSL_API_1_1)
     add_definitions(-D_POSIX_C_SOURCE)    
     add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -79,7 +84,8 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
 #find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Charts)
+find_package(Qt5 5.14 REQUIRED COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Charts)
+find_package(Qt5 5.14 COMPONENTS Widgets)
 
 # pthreads
 set (THREADS_PREFER_PTHREAD_FLAG ON)
@@ -195,7 +201,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgactionparam.ui
 )
 
-add_executable(vscp-works-qt
+add_executable(${PROJECT_NAME}
     src/vscpworks.qrc
     src/main.cpp
     src/mainwindow.cpp
@@ -463,8 +469,8 @@ add_executable(vscp-works-qt
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
     ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
     ${VSCP_PATH}/src/common/third_party/mustache.hpp
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include/civetweb.h
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.15/src/civetweb.c
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include/civetweb.h
+    ${VSCP_PATH}/src/common/third_party/civetweb-1.16/src/civetweb.c
     ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
@@ -494,7 +500,7 @@ if (WIN32)
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include
         ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
@@ -522,7 +528,7 @@ else()
         ${VSCP_PATH}/src/common
         ${VSCP_PATH}/src/common/third_party
         ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.15/include
+        ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include
         ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
@@ -542,7 +548,8 @@ else()
 
 if (WIN32)
 
-    target_link_libraries(vscp-works-qt PRIVATE     
+    target_link_libraries(vscp-works-qt PRIVATE  
+    #add_qt_gui_executable(${PROJECT_NAME}   
         Qt5::Widgets
         Qt5::Core 
         Qt5::Network
@@ -604,3 +611,6 @@ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/s
 
 # Event database etc
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/vscp-works-qt/)
+
+# Import qml plugins for static builds.
+#qt5_import_qml_plugins(${PROJECT_NAME})

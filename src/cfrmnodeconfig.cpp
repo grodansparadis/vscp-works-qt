@@ -52,7 +52,9 @@
 #include <vscp_client_rest.h>
 #include <vscp_client_rs232.h>
 #include <vscp_client_rs485.h>
+#ifndef WIN32
 #include <vscp_client_socketcan.h>
+#endif
 #include <vscp_client_tcp.h>
 #include <vscp_client_udp.h>
 #include <vscp_client_ws1.h>
@@ -415,6 +417,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       connectToRemoteHost(true);
       break;
 
+#ifndef WIN32
     case CVscpClient::connType::SOCKETCAN:
       // nodeid
       m_vscpClient = new vscpClientSocketCan();
@@ -436,6 +439,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
+#endif
 
     case CVscpClient::connType::WS1:
       // GUID
