@@ -3462,7 +3462,7 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
 bool
 CFrmNodeConfig::renderStandardRegisters(void)
 {
-  int rv;
+  //int rv;
   std::string str;
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3790,7 +3790,7 @@ CFrmNodeConfig::updateVisualRegisters(void)
 void
 CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  int idx;
+  //int idx;
   std::string html;
   std::string str;
   CRegisterWidgetItem* pitem = (CRegisterWidgetItem*)item;
@@ -4062,7 +4062,7 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
 bool
 CFrmNodeConfig::renderRemoteVariables(void)
 {
-  int rv;
+  //int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetRemoteVariables->clear(); // Clear the tree
@@ -4138,7 +4138,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
     itemWidget->setText(REMOTEVAR_COL_VALUE, str.c_str());
 
     bool bChanged = false;
-    for (int pos=prvmdf->getOffset(); pos<prvmdf->getOffset()+prvmdf->getTypeByteCount(); pos++) {
+    for (uint16_t pos=prvmdf->getOffset(); pos < prvmdf->getOffset()+prvmdf->getTypeByteCount(); pos++) {
       if (m_userregs.isChanged(pos)) {
         bChanged = true;
         break;
@@ -4166,7 +4166,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
 void
 CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  int idx;
+  //int idx;
   std::string html;
   std::string str;
   CRemoteVariableWidgetItem* pitem = (CRemoteVariableWidgetItem*)item;
@@ -4472,7 +4472,7 @@ CFrmNodeConfig::editDMRow()
 void
 CFrmNodeConfig::toggleDMRow(void)
 {
-  int reg;
+  //int reg;
   vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
@@ -4515,7 +4515,7 @@ void
 CFrmNodeConfig::readSelectedDMRow(void)
 {
   int rv;
-  int reg;
+  //int reg;
   vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
@@ -4586,7 +4586,7 @@ void
 CFrmNodeConfig::writeSelectedDMRow(void)
 {
   int rv;
-  int reg;
+  //int reg;
   vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
@@ -4732,7 +4732,7 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
 bool
 CFrmNodeConfig::renderDecisionMatrix(void)
 {
-  int rv;
+  //int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetDecisionMatrix->clear(); // Clear the tree
@@ -4841,7 +4841,7 @@ CFrmNodeConfig::updateVisualDM(void)
 void
 CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  int idx;
+  //int idx;
   std::string html;
   std::string str;
   CDMWidgetItem* pitem     = (CDMWidgetItem*)item;
@@ -5130,7 +5130,7 @@ CFrmNodeConfig::showMdfFilesContextMenu(const QPoint& pos)
 bool
 CFrmNodeConfig::renderMdfFiles(void)
 {
-  int rv;
+  //int rv;
   CMdfFileWidgetItem* topItemWidget;
   CMdfFileWidgetItem* itemWidget;
 
@@ -5411,7 +5411,7 @@ CFrmNodeConfig::renderMdfFiles(void)
 void 
 CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *item, int column)
 {
-  int idx;
+  //int idx;
   std::string html;
   std::string str;
   CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)item;

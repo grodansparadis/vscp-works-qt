@@ -11,7 +11,7 @@ This is the project that eventually will be the next version of **vscpworks**. I
 
 That said a lot of functionality works and it may be a useful tool in some situations (with some patience).
 
-## Build
+## Build on Linux
 If you still want to build this project
 
 ### Install qt 5.0.
@@ -32,7 +32,7 @@ You need expat, mosquitto, openssl to build this project
 ```bash
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
-  sudo apt install libpaho-mqtt1.3  
+  sudo apt install libpaho-mqtt-dev
   sudo apt-get install libcurl4-openssl-dev
 ```
 
@@ -176,12 +176,14 @@ Build as usual but use
 cd vscp-vscp-works
 mkdir build
 cd build
-cmake .. -CMAKE_BUILD_TYPE=Release|Debug -DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake -DVSCP_PATH=path-vscp-repository
+cmake .. -DCMAKE_BUILD_TYPE=Release|Debug -DVCPKG_ROOT=G:/akhe/development/vcpkg/ -DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
 ```
 
-The **CMAKE_TOOLCHAIN_FILE** path may be different in your case
+The **VCPKG_ROOT** and **CMAKE_TOOLCHAIN_FILE** path is most certainly different in your case
 
 Note that *Release|Debug* should be either *Release* or *Debug*
+
+_"Visual Studio 17 2022"_ may be _"Visual Studio 16 2019"_ or some other value depending on what Visual Studio you have installed
 
 The windows build files can now be found in the build folder and all needed files to run the project can  after build - be found in build/release or build/Debug depending on CMAKE_BUILD_TYPE setting.
 
@@ -196,6 +198,12 @@ Building and configuration is simplified with VS Code installed. Configure/build
 to your settings.json file.
 
 To build at the command prompt use
+
+```bash
+cmake --build .
+```
+
+or 
 
 ```bash
 msbuild vscp-works-qt.sln

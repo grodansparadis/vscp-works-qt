@@ -27,10 +27,6 @@
 #
 
 cmake_minimum_required(VERSION 3.5)
-
-#include(cmake/app_utils.cmake)
-#setup_vcpkg_before_project()
-
 project(vscp-works-qt LANGUAGES CXX C)
 
 
@@ -45,7 +41,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # --- System Libraries ---
-include(GNUInstallDirs)
+include(GNUInstallDirs) 
 
 # Added extensions for curl lib find
 list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
@@ -57,14 +53,14 @@ endif()
 
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    add_definitions(-DWIN32_LEAN_AND_MEANS)
-    #add_definitions(-DOPENSSL_API_1_1)
-    add_definitions(-D_POSIX_C_SOURCE)    
-    add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    set(LIBS_SYSTEM ws2_32)
+  add_definitions(-DWIN32_LEAN_AND_MEANS)
+  #add_definitions(-DOPENSSL_API_1_1)
+  add_definitions(-D_POSIX_C_SOURCE)    
+  add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
-    set(LIBS_SYSTEM c stdc++)
+  set(LIBS_SYSTEM c stdc++)
 endif()
 
 if (MSVC)
@@ -97,17 +93,23 @@ find_package(OpenSSL REQUIRED)
 
 # Windows Libs
 if (WIN32)
-    
+
+  #include(g:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake)
+  
   # pthread
-  find_package(pthread REQUIRED)
+  find_package(PThreads4W REQUIRED)
+  #find_package(pthread REQUIRED)
 
   # Paho MQTT
   #find_package(eclipse-paho-mqtt-c CONFIG REQUIRED)
   #get_target_property(PAHO_INCLUDE_DIR eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_INCLUDE_DIRECTORIES)
   #get_target_property(PAHO_LIBRARIES eclipse-paho-mqtt-c::paho-mqtt3cs INTERFACE_LINK_LIBRARIES)
 
+  # Moongose
+  #find_package(unofficial-mongoose CONFIG REQUIRED)
+
   # Mosquitto lib
-  find_package(mosquitto CONFIG REQUIRED)
+  find_package(mosquitto REQUIRED)
 
   # SQLite3
   find_package(unofficial-sqlite3 CONFIG REQUIRED)
@@ -117,7 +119,9 @@ if (WIN32)
 
   # dlfcn
   find_package(dlfcn-win32 CONFIG REQUIRED)
+
 else()
+
     # expat
     include(FindEXPAT)
     find_package(EXPAT REQUIRED)
@@ -126,10 +130,12 @@ else()
     #include(Findpaho-mqtt)
     # Mosquitto lib
     include(FindMosquitto)
+
 endif()
 
 find_package(CURL REQUIRED) 
 IF(CURL_FOUND)
+  message(STATUS Found cURL)
   INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
   SET(requiredlibs ${requiredlibs} ${CURL_LIBRARIES} )
 ELSE(CURL_FOUND)
@@ -141,25 +147,34 @@ add_definitions(-DUSE_WEBSOCKET)
 add_definitions(-DUSE_IPV6)
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
 
+set(OPENSSL_VER "OPENSSL_API_${OPENSSL_VERSION_MAJOR}_${OPENSSL_VERSION_MINOR}")
+message(STATUS "OPENSSL Version: ${OPENSSL_VER}")
+add_definitions(-D${OPENSSL_VER}) 
+
 # 1.1.0 / 1.1.1 / 3.0.0 / 3.1.0
-string(FIND "${OPENSSL_VERSION}" "1.1." SSL_VER_POS)
+string(FIND "${OPENSSL_VERSION}" "1.0" SSL_VER_POS)
 if(${SSL_VER_POS})
-    #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
-    add_definitions(-DOPENSSL_API_1_0)
-else()
-    #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
-    add_definitions(-DOPENSSL_API_1_1)
+  #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
+  #add_definitions(-DOPENSSL_API_1_0)
+endif()    
+
+string(FIND "${OPENSSL_VERSION}" "1.1" SSL_VER_POS)
+if(${SSL_VER_POS})
+  #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
+  #add_definitions(-DOPENSSL_API_1_1)
 endif()
 
 string(FIND "${OPENSSL_VERSION}" "3.0" SSL_VER_POS)
-if(${SSL_VER_POS})
-  add_definitions(-DOPENSSL_API_3_0)
+if(NOT SSL_VER_POS EQUAL -1)
+  #add_definitions(-DOPENSSL_API_3_0)
+  message(STATUS "test ${SSL_VER_POS}")
 endif()  
 
 string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
-if(${SSL_VER_POS})
-  add_definitions(-DOPENSSL_API_3_1)
-endif() 
+if(NOT SSL_VER_POS EQUAL -1)
+  add_definitions(-DOPENSSL_API_3_0)
+  message(STATUS "Open ssl version is 3.1 but set to 3.0 ${SSL_VER_POS}")
+endif()
 
 # set(UI )
 qt5_wrap_ui(UI src/mainwindow.ui    
@@ -497,12 +512,15 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/common/vscpmd5.c
     ${VSCP_PATH}/src/common/fastpbkdf2.h
     ${VSCP_PATH}/src/common/fastpbkdf2.c    
-    install/vscp-works-qt.desktop
+    install/${PROJECT_NAME}.desktop
     ${TS_FILES}    
   ) 
 
 if (WIN32)
+
     #find_path(PTHREAD_INCLUDE_DIR pthread.h)
+    #find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
+    # message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
 
     include_directories( PUBLIC ./src 
         ./build
@@ -558,26 +576,32 @@ else()
  endif()   
 
 if (WIN32)
+    
+    find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+    #message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
 
-    target_link_libraries(vscp-works-qt PRIVATE  
-    #add_qt_gui_executable(${PROJECT_NAME}   
+    target_link_libraries(${PROJECT_NAME} PRIVATE     
         Qt5::Widgets
         Qt5::Core 
         Qt5::Network
         Qt5::Quick 
         Qt5::Sql
         Qt5::Charts
-        PThreads4W::PThreads4W_CXXEXC
+        #Threads::Threads
+        PThreads4W::PThreads4W
         OpenSSL::SSL 
         OpenSSL::Crypto
         OpenSSL::SSL OpenSSL::Crypto
      #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
-        ${MOSQUITTO_LIBRARIES}
+        #${MOSQUITTO_LIBRARIES}
+        #${MOSQUITTO_LIB_DIR}
+        "${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
         expat::expat
-        ${CURL_LIBRARIES}
+        CURL::libcurl
+        #${CURL_LIBRARIES}
         dlfcn-win32::dl)
     else()
-    target_link_libraries(vscp-works-qt PRIVATE     
+    target_link_libraries(${PROJECT_NAME} PRIVATE     
         ${Qt5Widgets_LIBRARIES}
         ${Qt5Core_LIBRARIES}
         Qt5::Network
@@ -611,17 +635,17 @@ elseif(UNIX)
     set(LIBS_SYSTEM c stdc++)
 endif()
 
-install(TARGETS vscp-works-qt
+install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
-install(FILES ${CMAKE_SOURCE_DIR}/install/vscp-works-qt.desktop
+install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
         DESTINATION ${INSTALL_PATH}/share/applications/) 
 
 # icons
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/share/icons/) 
 
 # Event database etc
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/vscp-works-qt/)
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/${PROJECT_NAME}/)
 
 # Import qml plugins for static builds.
 #qt5_import_qml_plugins(${PROJECT_NAME})

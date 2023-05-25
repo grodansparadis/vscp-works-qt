@@ -847,7 +847,7 @@ CFrmNodeScan::doScan(void)
     // Load mdf and standard registers if requested to do so
     if (ui->chkFetchInfo->isChecked()) {
       doLoadMdf(item);
-      ui->progressBarScan->setValue(ui->progressBarScan->value() + additem);
+      ui->progressBarScan->setValue(ui->progressBarScan->value() + (int)additem);
     }
   }
 

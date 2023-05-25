@@ -87,9 +87,12 @@
         "**/.git/subtree-cache/**": true,
         "**/node_modules/**": true
     },
-    "cmake.configureArgs": [
-        "-DVCPKG_TARGET_TRIPLET=x64-windows",
-        "-DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    "cmake.configureArgs": [        
+        "-DVCPKG_HOST_TRIPLET=x64-windows-static",
+        "-DVCPKG_TARGET_TRIPLET=x64-windows-static",
+        "-DQT_PATH=G:/Qt/",
+        "-DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "-DVCPKG_ROOT=G:/akhe/development/vcpkg"
     ],
     "cmake.generator": "Visual Studio 17 2022",
     "cSpell.language": "sv,en",
