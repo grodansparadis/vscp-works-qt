@@ -36,7 +36,7 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2019_64'
         modules: 'qtcharts'
-        archives: 'qtbase qtsvg qttools qtserialbus qtserialport qtquickcontrols qtquickcontrols2'
+        archives: 'qtbase qtsvg qttools qtserialbus qtserialport qtdeclarative'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
