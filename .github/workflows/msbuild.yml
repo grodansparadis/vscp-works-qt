@@ -37,7 +37,7 @@ jobs:
         arch: 'win64_msvc2019_64'
         modules: 'qtcharts'
         archives: 'qtbase qtsvg qttools qtwebsockets qtserialbus qtserialport qtdeclarative'
-        cache: 'true'
+        cache: 'false'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
         #tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
