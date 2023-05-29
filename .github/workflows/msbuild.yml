@@ -35,7 +35,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        modules: 'qtcharts'
+        modules: 'qtcharts qtsql'
         archives: 'qtbase qtsvg qttools qtwebsockets qtserialbus qtserialport qtdeclarative'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
@@ -46,9 +46,6 @@ jobs:
         aqtversion: '==3.1.*'
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
-
-    - name: Install sql driver
-      run: apt install libqt5sql5-sqlite/
          
     - name: Clone
       uses: actions/checkout@v3
