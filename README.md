@@ -176,12 +176,12 @@ Build as usual but use
 cd vscp-vscp-works
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release|Debug -DVCPKG_ROOT=G:/akhe/development/vcpkg/ -DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
+cmake .. -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT=G:/akhe/development/vcpkg/ -DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
 ```
 
 The **VCPKG_ROOT** and **CMAKE_TOOLCHAIN_FILE** path is most certainly different in your case
 
-Note that *Release|Debug* should be either *Release* or *Debug*
+Note that *Release* should be either *Release* or *Debug* as of your preferences
 
 _"Visual Studio 17 2022"_ may be _"Visual Studio 16 2019"_ or some other value depending on what Visual Studio you have installed
 
@@ -213,7 +213,7 @@ Note that you must have a *developer command prompt*
 
 -------------------------------------------------------------------------------
 
-**Internal project Notes below**
+**Internal project Notes and trouble shooting below**
 
 ## config
 
@@ -282,7 +282,7 @@ QSocketNotifier: Can only be used with threads started with QThread
 This is due to GTL_PATH set in Visual Studio Code. Issue
 
 ```
-uset GTK_PATH 
+unset GTK_PATH 
 ```
 
 to solve the problem.

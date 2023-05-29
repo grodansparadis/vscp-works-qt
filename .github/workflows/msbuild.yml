@@ -48,7 +48,7 @@ jobs:
         extra: '--external 7z'
 
     - name: Install sql driver
-      run: sudo apt install libqt5sql5-sqlite/
+      run: apt install libqt5sql5-sqlite/
          
     - name: Clone
       uses: actions/checkout@v3
