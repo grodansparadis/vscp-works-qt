@@ -589,7 +589,7 @@ if (WIN32)
         Qt5::Charts
         #Threads::Threads
         PThreads4W::PThreads4W
-        OpenSSL::SSL 
+        OpenSSL::SSL
         OpenSSL::Crypto
         OpenSSL::SSL OpenSSL::Crypto
      #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs

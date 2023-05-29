@@ -5,6 +5,7 @@ on: [push]
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
+  VSCP_PATH: ${{ github.workspace }}/vscp
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
