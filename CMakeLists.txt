@@ -112,7 +112,7 @@ if (WIN32)
   find_package(mosquitto REQUIRED)
 
   # SQLite3
-  find_package(unofficial-sqlite3 CONFIG REQUIRED)
+  #find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
   # Expat C library
   find_package(expat CONFIG REQUIRED)

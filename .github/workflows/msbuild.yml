@@ -35,7 +35,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        modules: 'qtcharts qtsql'
+        modules: 'qtcharts'
         archives: 'qtbase qtsvg qttools qtwebsockets qtserialbus qtserialport qtdeclarative'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
@@ -68,7 +68,7 @@ jobs:
     #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
 
     # Install latest CMake.
-    - name: Run vcpkg
+    - name: Get cmake
       uses: lukka/get-cmake@latest
       #with:
         # Just install vcpkg for now, do not install any ports in this step yet.
