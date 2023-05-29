@@ -80,7 +80,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
 #find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Charts Quick Sql SerialBus SerialPort)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Charts Quick SerialBus SerialPort)
 
 # pthreads
 set (THREADS_PREFER_PTHREAD_FLAG ON)
@@ -598,9 +598,8 @@ if (WIN32)
         "${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
         expat::expat
         CURL::libcurl
-        #${CURL_LIBRARIES}
         dlfcn-win32::dl)
-    else()
+  else()
     target_link_libraries(${PROJECT_NAME} PRIVATE     
         ${Qt5Widgets_LIBRARIES}
         ${Qt5Core_LIBRARIES}

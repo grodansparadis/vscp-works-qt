@@ -269,6 +269,26 @@ CMake Error at /usr/lib/x86_64-linux-gnu/cmake/Qt5/Qt5Config.cmake:28 (find_pack
 
 Install qttools5-dev, qt5-default and qtdeclarative5-dev
 
+-------------------------------------------------------------------------------
+
+If you try to run vscp-works-qt in the terminal of Visual Studio Code you may get 
+a complaint about an undefined symbol, like below
+
+```
+QSocketNotifier: Can only be used with threads started with QThread
+./vscp-works-qt: symbol lookup error: /snap/core20/current/lib/x86_64-linux-gnu/libpthread.so.0: undefined symbol: __libc_pthread_init, version GLIBC_PRIVATE
+```
+
+This is due to GTL_PATH set in Visual Studio Code. Issue
+
+```
+uset GTK_PATH 
+```
+
+to solve the problem.
+
+-------------------------------------------------------------------------------
+
 git submodule update --init --recursive
 
 git pull --recurse-submodules
