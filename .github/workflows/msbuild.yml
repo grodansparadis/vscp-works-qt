@@ -159,7 +159,7 @@ jobs:
         cd "${{github.workspace}}/build"
         cmake --build .
 
-    - #name: Build
+    #- #name: Build
       #working-directory: ${{ github.workspace }}/build
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
