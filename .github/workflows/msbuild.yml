@@ -58,7 +58,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: grodansparadis/vscp
-        path: ${{env.VSCP_PATH}}
+        path: ${{ github.workspace }}/vscp-works-qt
         ref: development
 
     # - name: Install vcpkg
