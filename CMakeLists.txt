@@ -48,11 +48,11 @@ list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 
 # --- Path to vscp --- 
 if (NOT DEFINED VSCP_PATH)
-set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
+  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
 endif()
 
 file(TO_CMAKE_PATH "${VSCP_PATH}" VSCP_PATH)
-message(STATUS "path = ${VSCP_PATH}")
+message(STATUS "VSCP path = ${VSCP_PATH}")
 
 if(WIN32)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -176,7 +176,7 @@ endif()
 string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
 if(NOT SSL_VER_POS EQUAL -1)
   add_definitions(-DOPENSSL_API_3_0)
-  message(STATUS "Open ssl version is 3.1 but set to 3.0 ${SSL_VER_POS}")
+  message(STATUS "Open ssl version is 3.1 but set to 3.0 ${SSL_VER_POS} fir Civetweb. That is OK")
 endif()
 
 # set(UI )
