@@ -156,6 +156,7 @@ jobs:
       #cd "${{github.workspace}}/build"
 
       run: |        
+        dir D:/a/vscp-works-qt
         cmake .. -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"        
         cmake --build .
 
