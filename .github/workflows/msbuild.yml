@@ -6,6 +6,9 @@ env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: .
   VSCP_PATH: '${{ github.workspace }}/vscp'
+  ENVIRONMENT_SCRIPT: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+  GENERATORS: "Visual Studio 17 2022"
+  BUILD_CONFIGURATION: Release
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
@@ -14,12 +17,10 @@ env:
   # https://github.com/marketplace/actions/run-vcpkg
   # https://github.com/ilammy/msvc-dev-cmd
 
-  BUILD_CONFIGURATION: Release
-
 jobs:
   build:
     name: Windows x64
-    runs-on: windows-2022
+    runs-on: windows-latest
 
     steps:
 
@@ -50,16 +51,16 @@ jobs:
          
     - name: Clone
       uses: actions/checkout@v3
-
-    - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v1.14
+      with:
+        submodules: 'recursive'
 
     - name: Checkout vscp repo
       uses: actions/checkout@v3
       with:
         repository: grodansparadis/vscp
         path: ${{ github.workspace }}/vscp-works-qt
-        ref: development
+        ref: development  
+        submodules: recursive   
 
     # - name: Install vcpkg
     #   uses: lukka/run-vcpkg@v2
@@ -69,7 +70,7 @@ jobs:
     #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
 
     # Install latest CMake.
-    - name: Get cmake
+    - name: Get latest CMake and ninja
       uses: lukka/get-cmake@latest
       #with:
         # Just install vcpkg for now, do not install any ports in this step yet.
@@ -140,10 +141,6 @@ jobs:
       #  cd my-project\build
       #  cmake .. -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-    - name: Create Build Environment
-      run: |
-        mkdir build
-
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system   -G "Visual Studio 16 2019"
@@ -155,10 +152,13 @@ jobs:
       # cmake .. -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH=${{ github.workspace }}/vscp/"
       #cd "${{github.workspace}}/build"
 
-      run: |        
-        dir D:/a/vscp-works-qt
-        cmake .. -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"        
-        cmake --build .
+      run: |    
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -G "${{ env.GENERATORS }}"  -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake --build . --config ${{ env.BUILD_CONFIGURATION }}
+        #msbuild libvscphelper.sln /p:Configuration=Release
+        cpack .
 
     #- #name: Build
       #working-directory: ${{ github.workspace }}/build
