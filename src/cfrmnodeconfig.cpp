@@ -93,7 +93,7 @@
 #include <QInputDialog>
 
 #include <expat.h>
-#include <json.hpp>         // Needs C++11  -std=c++11
+#include <nlohmann/json.hpp>         // Needs C++11  -std=c++11
 #include <mustache.hpp>
 #include <maddy/parser.h>   // Markdown -> HTML
 

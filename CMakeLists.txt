@@ -54,7 +54,7 @@ endif()
 file(TO_CMAKE_PATH "${VSCP_PATH}" VSCP_PATH)
 message(STATUS "VSCP path = ${VSCP_PATH}")
 
-if(WIN32)
+if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DWIN32_LEAN_AND_MEANS)
   #add_definitions(-DOPENSSL_API_1_1)
@@ -95,7 +95,7 @@ find_package(OpenSSL REQUIRED)
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Windows Libs
-if (WIN32)
+if (MSVC)
 
   #include(g:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake)
   
@@ -497,10 +497,12 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
     ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
-    ./third_party/mustache.hpp
+    ./third_party/mustache/mustache.hpp
     ./third_party/civetweb/include/civetweb.h
     ./third_party/civetweb/src/civetweb.c
     ./third_party/spdlog/include/
+    ./third_party/fastpbkdf2/fastpbkdf2.h
+    ./third_party/fastpbkdf2/fastpbkdf2.c 
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -512,14 +514,12 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/common/crc8.h
     ${VSCP_PATH}/src/common/crc8.c
     ${VSCP_PATH}/src/common/vscpmd5.h
-    ${VSCP_PATH}/src/common/vscpmd5.c
-    ${VSCP_PATH}/src/common/fastpbkdf2.h
-    ${VSCP_PATH}/src/common/fastpbkdf2.c    
+    ${VSCP_PATH}/src/common/vscpmd5.c       
     install/${PROJECT_NAME}.desktop
     ${TS_FILES}    
   ) 
 
-if (WIN32)
+if (MSVC)
 
     #find_path(PTHREAD_INCLUDE_DIR pthread.h)
     #find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
@@ -531,9 +531,12 @@ if (WIN32)
         ${VSCP_PATH}/src/vscp/common/  
         ${VSCP_PATH}/src/common
         ./third_party
-        ./third_party/nlohmann
+        ./third_party/nlohmann/include/
         ./third_party/civetweb/include
         ./third_party/spdlog/include/
+        ./third_party/mustache/
+        ./third_party/maddy/include/
+        ./third_party/fastpbkdf2/
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Core_INCLUDE_DIRS}
@@ -559,9 +562,12 @@ else()
         ${VSCP_PATH}/src/vscp/common/
         ${VSCP_PATH}/src/common
         ./third_party
-        ./third_party/nlohmann
-        ./third_party/civetweb/include
+        ./third_party/nlohmann/include/
+        ./third_party/civetweb/include/
         ./third_party/spdlog/include/
+        ./third_party/mustache/
+        ./third_party/maddy/include/
+        ./third_party/fastpbkdf2/
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
         ${Qt5SerialPort_INCLUDE_DIRS}
@@ -578,7 +584,7 @@ else()
         
  endif()   
 
-if (WIN32)
+if (MSVC)
     
     find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
     #message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
@@ -628,7 +634,7 @@ endif()
 qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
 
 
-if(WIN32)
+if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DWIN32_LEAN_AND_MEANS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

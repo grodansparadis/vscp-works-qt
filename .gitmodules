@@ -1,22 +1,22 @@
 
-[submodule "third-party/spdlog"]
-	path = third-party/spdlog
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "third-party/nlohmann"]
-	path = third-party/nlohmann
+[submodule "third_party/nlohmann"]
+	path = third_party/nlohmann
 	url = https://github.com/nlohmann/json.git
-[submodule "third-party/civetweb"]
-	path = third-party/civetweb
+[submodule "third_party/civetweb"]
+	path = third_party/civetweb
 	url = https://github.com/civetweb/civetweb.git
-[submodule "third-party/mustache"]
-	path = third-party/mustache
+[submodule "third_party/mustache"]
+	path = third_party/mustache
 	url = https://github.com/kainjow/Mustache.git
-[submodule "third-party/fastpbkdf2"]
-	path = third-party/fastpbkdf2
+[submodule "third_party/fastpbkdf2"]
+	path = third_party/fastpbkdf2
 	url = https://github.com/ctz/fastpbkdf2.git
-[submodule "third-party/mongoose"]
-	path = third-party/mongoose
+[submodule "third_party/mongoose"]
+	path = third_party/mongoose
 	url = https://github.com/cesanta/mongoose.git
-[submodule "third-party/maddy"]
-	path = third-party/maddy
+[submodule "third_party/maddy"]
+	path = third_party/maddy
 	url = https://github.com/progsource/maddy.git
