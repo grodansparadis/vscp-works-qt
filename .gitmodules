@@ -13,7 +13,7 @@
 	url = https://github.com/kainjow/Mustache.git
 [submodule "third_party/fastpbkdf2"]
 	path = third_party/fastpbkdf2
-	url = https://github.com/ctz/fastpbkdf2.git
+	url = https://github.com/danpashin/fastpbkdf2.git
 [submodule "third_party/mongoose"]
 	path = third_party/mongoose
 	url = https://github.com/cesanta/mongoose.git

@@ -59,9 +59,6 @@ jobs:
     # https://launchpad.net/~beineri/+archive/ubuntu/opt-qt-5.15.2-xenial
     #- name: Set QT repo
     #  run: sudo add-apt-repository ppa:beineri/opt-qt-5.15.2-xenial -y 
-
-    - name: Update apt  
-      run: sudo apt-get update
     
     - name: Install QT
       run: |
@@ -74,7 +71,6 @@ jobs:
         qt6-documentation-tools \
         libqt6uitools6 \
         qt6-tools-dev-tools \
-        qt515quickcontrols \
         libqt6quickcontrols2-6  \
         libqt6widgets6 
     
