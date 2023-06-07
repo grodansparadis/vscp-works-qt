@@ -18,13 +18,16 @@ jobs:
     steps:
     # https://github.com/actions/checkout  
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: Checkout vscp repo
       uses: actions/checkout@v3
       with:
         repository: grodansparadis/vscp
         path: vscp
-        ref: development
+        ref: development  
+        submodules: recursive
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v3
