@@ -497,10 +497,10 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
     ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
-    ${VSCP_PATH}/src/common/third_party/mustache.hpp
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include/civetweb.h
-    ${VSCP_PATH}/src/common/third_party/civetweb-1.16/src/civetweb.c
-    ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
+    ./third_party/mustache.hpp
+    ./third_party/civetweb/include/civetweb.h
+    ./third_party/civetweb/src/civetweb.c
+    ./third_party/spdlog/include/
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -530,10 +530,10 @@ if (WIN32)
         ./ui
         ${VSCP_PATH}/src/vscp/common/  
         ${VSCP_PATH}/src/common
-        ${VSCP_PATH}/src/common/third_party
-        ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include
-        ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
+        ./third_party
+        ./third_party/nlohmann
+        ./third_party/civetweb/include
+        ./third_party/spdlog/include/
         ${PThreads4W_INCLUDE_DIR}
         ${Qt5Widgets_INCLUDE_DIRS}
         ${Qt5Core_INCLUDE_DIRS}
@@ -558,10 +558,10 @@ else()
         third_party/mqtt/clib
         ${VSCP_PATH}/src/vscp/common/
         ${VSCP_PATH}/src/common
-        ${VSCP_PATH}/src/common/third_party
-        ${VSCP_PATH}/src/common/third_party/nlohmann
-        ${VSCP_PATH}/src/common/third_party/civetweb-1.16/include
-        ${VSCP_PATH}/src/common/third_party/spdlog-1.9.2/include/
+        ./third_party
+        ./third_party/nlohmann
+        ./third_party/civetweb/include
+        ./third_party/spdlog/include/
         ${Qt5Core_INCLUDE_DIRS}
         ${Qt5SerialBus_INCLUDE_DIRS}
         ${Qt5SerialPort_INCLUDE_DIRS}
