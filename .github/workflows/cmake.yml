@@ -64,7 +64,7 @@ jobs:
         cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_PATH=vscp/
 
     - name: Build
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |

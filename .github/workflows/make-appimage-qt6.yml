@@ -102,21 +102,21 @@ jobs:
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works/qt/build
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       #run: cmake --build . --config $BUILD_TYPE -DCMAKE_INSTALL_PREFIX=/usr
       run: cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
     - name: Install
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Install files
       run: |
@@ -133,43 +133,43 @@ jobs:
         ldd AppDir/usr/bin/vscp-works-qt
     
     - name: get linuxdeploy
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Install files
       run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
     
     - name: get qt plugin
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Install files
       run: wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
   
     - name: Make appimage files executable
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Install files
       run: chmod +x linuxdeploy*.AppImage
 
     # - name: export path
-    #   working-directory: ${{github.workspace}}/build
+    #   working-directory: ${{github.workspace}}/vscp-works-qt/build
     #   shell: bash
     #   # make sure Qt plugin finds QML sources so it can deploy the imported files
     #   run: export QML_SOURCES_PATHS=${{github.workspace}}/src
 
     - name: prepare AppRun
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
       run: cp ../install/AppRun ./AppDir/ && chmod a+x ./AppDir/AppRun
     
     - name: prepare desktop/icon
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # Prepare content not installed by cmake (desktop/icon)
       run: cp ../install/vscp-works-qt.desktop ./AppDir/  && cp ../icons/vscpworks.png ./AppDir/ 
   
     - name: build appimage
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}/vscp-works-qt/build
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
