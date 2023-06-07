@@ -69,7 +69,7 @@ jobs:
         cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_PATH=vscp/
 
     - name: Build
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
@@ -77,25 +77,25 @@ jobs:
         make install DESTDIR=AppDir
     
     - name: get linuxdeploy
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Install files
       run: wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
     
     - name: get qt plugin
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Install files
       run: wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
   
     - name: Make appimage files executable
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Install files
       run: chmod +x linuxdeploy*.AppImage
 
     - name: prepare AppRun
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (AppRun)
       run: |
@@ -105,13 +105,13 @@ jobs:
         cp ../icons/vscpworks.png AppDir
     
     - name: prepare desktop/icon
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # Prepare content not installed by cmake (desktop/icon)
       run: cp ../install/vscp-works-qt.desktop ./AppDir/  && cp ../icons/vscpworks.png ./AppDir/ 
   
     - name: build appimage
-      working-directory: ${{github.workspace}}/vscp-works-qt/build
+      working-directory: ${{github.workspace}}/build
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
