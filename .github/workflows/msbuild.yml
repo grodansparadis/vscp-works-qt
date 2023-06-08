@@ -126,6 +126,7 @@ jobs:
         ${{ github.workspace }}/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install openssl:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
+        ${{ github.workspace }}/vcpkg/vcpkg.exe install libwebsockets:x64-windows
 
     - name: Configure CMake and build
       run: |    

@@ -49,6 +49,9 @@ jobs:
     - name: Install libcurl4-openssl-dev manually 
       run: sudo apt install libcurl4-openssl-dev  
 
+      - name: Install libwebsockets-dev 
+      run: sudo apt install libwebsockets-dev   
+
     - name: Install paho manually
       run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
        

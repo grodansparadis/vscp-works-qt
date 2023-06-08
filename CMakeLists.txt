@@ -89,8 +89,11 @@ find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Char
 set (THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-#openssl
+# openssl
 find_package(OpenSSL REQUIRED)
+
+# libwebsockets
+find_package(libwebsockets CONFIG REQUIRED)
 
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
@@ -514,8 +517,8 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/common/vscpmd5.h
     ${VSCP_PATH}/src/common/vscpmd5.c    
     ./third_party/mustache/mustache.hpp
-    ./third_party/civetweb/include/civetweb.h
-    ./third_party/civetweb/src/civetweb.c
+    #./third_party/civetweb/include/civetweb.h
+    #./third_party/civetweb/src/civetweb.c
     ./third_party/spdlog/include/
     ./third_party/fastpbkdf2/fastpbkdf2.h
     ./third_party/fastpbkdf2/fastpbkdf2.c   
@@ -536,7 +539,7 @@ if (MSVC)
         ${VSCP_PATH}/src/common
         ./third_party
         ./third_party/nlohmann/include/
-        ./third_party/civetweb/include
+        #./third_party/civetweb/include
         ./third_party/spdlog/include/
         ./third_party/mustache/
         ./third_party/maddy/include/
@@ -567,7 +570,7 @@ else()
         ${VSCP_PATH}/src/common
         ./third_party
         ./third_party/nlohmann/include/
-        ./third_party/civetweb/include/
+        #./third_party/civetweb/include/
         ./third_party/spdlog/include/
         ./third_party/mustache/
         ./third_party/maddy/include/
@@ -625,6 +628,7 @@ if (MSVC)
         Threads::Threads
         OpenSSL::SSL 
         OpenSSL::Crypto
+        websockets_shared
         ${OPENSSL_LIBRARIES}
 #        ${PAHO_LIBRARIES}
         ${MOSQUITTO_LIBRARIES}
