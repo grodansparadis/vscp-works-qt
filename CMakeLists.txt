@@ -112,7 +112,7 @@ if (MSVC)
   #find_package(unofficial-mongoose CONFIG REQUIRED)
 
   # Mosquitto lib
-  find_package(mosquitto REQUIRED)
+  #find_package(mosquitto REQUIRED)
 
   # SQLite3
   #find_package(unofficial-sqlite3 CONFIG REQUIRED)
@@ -587,7 +587,7 @@ else()
 if (MSVC)
     
     find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    #message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
+    message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
 
     target_link_libraries(${PROJECT_NAME} PRIVATE     
         Qt5::Widgets
