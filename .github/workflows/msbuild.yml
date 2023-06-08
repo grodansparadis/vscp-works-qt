@@ -153,10 +153,7 @@ jobs:
       run: |    
         mkdir build
         cd build
-        cmake -S .. -B . -G "${{ env.GENERATORS }}" \
-            -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows \
-            -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" \
-            -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
         # msbuild libvscphelper.sln /p:Configuration=Release
         cpack .
