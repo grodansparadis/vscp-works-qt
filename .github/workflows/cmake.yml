@@ -49,7 +49,7 @@ jobs:
     - name: Install libcurl4-openssl-dev manually 
       run: sudo apt install libcurl4-openssl-dev  
 
-      - name: Install libwebsockets-dev 
+    - name: Install libwebsockets-dev 
       run: sudo apt install libwebsockets-dev   
 
     - name: Install paho manually
