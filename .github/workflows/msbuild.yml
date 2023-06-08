@@ -10,6 +10,7 @@ env:
   ENVIRONMENT_SCRIPT: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
   GENERATORS: "Visual Studio 17 2022"
   BUILD_CONFIGURATION: Release
+  TRIPLET: x64-windows
 
   # Configuration type to build.
   # You can convert this to a build matrix if you need coverage of multiple configuration types.
@@ -73,17 +74,17 @@ jobs:
     # Install latest CMake.
     - name: Get latest CMake and ninja
       uses: lukka/get-cmake@latest
-      #with:
-        # Just install vcpkg for now, do not install any ports in this step yet.
-      #  setupOnly: true
-        # Location of the vcpkg as submodule of the repository.
-      #  vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
-        # compute its hash and append this to the computed cache's key.
-      #  appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
-      #  vcpkgTriplet: ${{ matrix.triplet }}
-        # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
-      #  additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
+        with:
+          # Just install vcpkg for now, do not install any ports in this step yet.
+          setupOnly: true
+          # Location of the vcpkg as submodule of the repository.
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
+          # compute its hash and append this to the computed cache's key.
+          appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
+          vcpkgTriplet: '${{ env.TRIPLET }}'
+          # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
+          additionalCachedPaths: '${{ env.buildDir }}/vcpkg_installed'
 
     # - name: Add Component
     #   shell: cmd
@@ -131,31 +132,12 @@ jobs:
         ${{ github.workspace }}/vcpkg/vcpkg.exe install openssl:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
 
-    # ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5:x64-windows 
-    # ${{ github.workspace }}/vcpkg/vcpkg.exe install qt5-charts:x64-windows
-    # - name: Setup cmake
-    #   uses: jwlawson/actions-setup-cmake@v1.12
-    # - name: Cmake
-    #   run: |
-    #     git clone https://github.com/microsoft/vcpkg
-    #     vcpkg\bootstrap-vcpkg.bat
-      #  vcpkg\vcpkg install cpprestsdk:x64-windows
-      #  cd my-project\build
-      #  cmake .. -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake
-
     - name: Configure CMake and build
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system   
-      #shell: bash
-      # working-directory: "${{github.workspace}}/build"
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |    
         mkdir build
         cd build
         cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
         # msbuild libvscphelper.sln /p:Configuration=Release
-        cpack .
+        #cpack .
 
