@@ -59,7 +59,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: grodansparadis/vscp
-        path: ${{ github.workspace }}/vscp-works-qt
+        path: ${{ github.workspace }}
         ref: development  
         submodules: recursive   
 
@@ -145,18 +145,17 @@ jobs:
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system   
-      shell: bash
+      #shell: bash
       working-directory: "${{github.workspace}}/build"
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-
       run: |    
         cmake .. -DCMAKE_BUILD_TYPE=Release -G "${{ env.GENERATORS }}"  \
             -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows \
-            -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} \
+            -DCMAKE_BUILD_TYPE="${{ env.BUILD_CONFIGURATION }}" \
             -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        cmake --build . --config ${{ env.BUILD_CONFIGURATION }}
+        cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
         #msbuild libvscphelper.sln /p:Configuration=Release
         cpack .
 
