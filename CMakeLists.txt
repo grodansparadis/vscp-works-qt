@@ -152,26 +152,26 @@ add_definitions(-DUSE_IPV6)
 set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
 
 set(OPENSSL_VER "OPENSSL_API_${OPENSSL_VERSION_MAJOR}_${OPENSSL_VERSION_MINOR}")
-message(STATUS "OPENSSL Version: ${OPENSSL_VER}")
+message(STATUS "OPENSSL Version: ${OPENSSL_VER} - ${OPENSSL_VERSION}")
 #add_definitions(-D${OPENSSL_VER}) 
 
 # 1.1.0 / 1.1.1 / 3.0.0 / 3.1.0
 string(FIND "${OPENSSL_VERSION}" "1.0" SSL_VER_POS)
-if(${SSL_VER_POS})
-  #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_0")
+if(NOT ${SSL_VER_POS} EQUAL -1)
   add_definitions(-DOPENSSL_API_1_0)
+  message(STATUS "Open ssl version is 1.0")
 endif()    
 
 string(FIND "${OPENSSL_VERSION}" "1.1" SSL_VER_POS)
-if(${SSL_VER_POS})
-  #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DOPENSSL_API_1_1")
+if(NOT ${SSL_VER_POS} EQUAL -1)
   add_definitions(-DOPENSSL_API_1_1)
+  message(STATUS "Open ssl version is 1.1")
 endif()
 
 string(FIND "${OPENSSL_VERSION}" "3.0" SSL_VER_POS)
 if(NOT SSL_VER_POS EQUAL -1)
   add_definitions(-DOPENSSL_API_3_0)
-  message(STATUS "openssl test ${SSL_VER_POS}")
+  message(STATUS "Open ssl version is 3.0")
 endif()  
 
 string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
