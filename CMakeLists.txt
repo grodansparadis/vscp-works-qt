@@ -112,7 +112,7 @@ if (MSVC)
   #find_package(unofficial-mongoose CONFIG REQUIRED)
 
   # Mosquitto lib
-  #find_package(mosquitto REQUIRED)
+  find_package(mosquitto REQUIRED HINTS "${VCPKG_ROOT}/ports")
 
   # SQLite3
   #find_package(unofficial-sqlite3 CONFIG REQUIRED)
