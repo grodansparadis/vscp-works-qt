@@ -93,7 +93,8 @@ find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 # libwebsockets
-find_package(libwebsockets CONFIG REQUIRED)
+#find_package(libwebsockets CONFIG REQUIRED)
+include(FindLibWebSockets)
 
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
@@ -553,6 +554,7 @@ if (MSVC)
         ${CMAKE_BINARY_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${MOSQUITTO_INCLUDE_DIRS}
+        ${LIBWEBSOCKETS_INCLUDE_DIR}
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
@@ -582,6 +584,7 @@ else()
         ${CMAKE_BINARY_DIR}
         ${OPENSSL_INCLUDE_DIR}
         ${MOSQUITTO_INCLUDE_DIRS}
+        ${LIBWEBSOCKETS_INCLUDE_DIR}
         ${EXPAT_INCLUDE_DIRS}
         ${DLFCN_INCLUDES}
         ${LOCAL_WIN_INCLUDE}
@@ -603,14 +606,13 @@ if (MSVC)
         Qt5::Quick 
         Qt5::Sql
         Qt5::Charts
-        #Threads::Threads
         PThreads4W::PThreads4W
         OpenSSL::SSL
         OpenSSL::Crypto
-        OpenSSL::SSL OpenSSL::Crypto
+        OpenSSL::SSL OpenSSL::Crypto        
      #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
         #${MOSQUITTO_LIBRARIES}
-        #${MOSQUITTO_LIB_DIR}
+        ${LIBWEBSOCKETS_LIBRARIES}
         "${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
         expat::expat
         CURL::libcurl
@@ -628,10 +630,10 @@ if (MSVC)
         Threads::Threads
         OpenSSL::SSL 
         OpenSSL::Crypto
-        websockets_shared
         ${OPENSSL_LIBRARIES}
 #        ${PAHO_LIBRARIES}
         ${MOSQUITTO_LIBRARIES}
+        ${LIBWEBSOCKETS_LIBRARIES}
         ${EXPAT_LIBRARIES}
         ${CURL_LIBRARIES}
         ${DLFCN_LIBS})
