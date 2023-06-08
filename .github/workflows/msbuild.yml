@@ -142,7 +142,7 @@ jobs:
       #  cd my-project\build
       #  cmake .. -DCMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-    - name: Configure CMake
+    - name: Configure CMake and build
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system   
       #shell: bash
@@ -153,19 +153,12 @@ jobs:
       run: |    
         mkdir build
         cd build
-        cmake -S . -B . \
-            -DCMAKE_BUILD_TYPE=Release -G "${{ env.GENERATORS }}"  \
+        cmake -S .. -B . \
+            -G "${{ env.GENERATORS }}" \
             -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows \
-            -DCMAKE_BUILD_TYPE="${{ env.BUILD_CONFIGURATION }}" \
+            -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" \
             -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
-        #msbuild libvscphelper.sln /p:Configuration=Release
+        # msbuild libvscphelper.sln /p:Configuration=Release
         cpack .
 
-    #- #name: Build
-      #working-directory: ${{ github.workspace }}/build
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      #run: |        
-      #  call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      #  msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
