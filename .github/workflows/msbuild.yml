@@ -4,6 +4,7 @@ on: [push]
 
 env:
   # Path to the solution file relative to the root of the project.
+  # -G "Visual Studio 16 2019"
   SOLUTION_FILE_PATH: .
   VSCP_PATH: '${{ github.workspace }}/vscp'
   ENVIRONMENT_SCRIPT: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
@@ -143,17 +144,18 @@ jobs:
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system   -G "Visual Studio 16 2019"
+      # access regardless of the host operating system   
       shell: bash
       working-directory: "${{github.workspace}}/build"
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      # cmake .. -G "Visual Studio 17 2022" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_TOOLCHAIN_FILE=D:/a/vscp-works-qt/vscp-works-qt/vcpkg/scripts/buildsystems/vcpkg.cmake" -D"VSCP_PATH=${{ github.workspace }}/vscp/"
-      #cd "${{github.workspace}}/build"
 
       run: |    
-        cmake .. -DCMAKE_BUILD_TYPE=Release -G "${{ env.GENERATORS }}"  -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake .. -DCMAKE_BUILD_TYPE=Release -G "${{ env.GENERATORS }}"  \
+            -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} \
+            -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
         cmake --build . --config ${{ env.BUILD_CONFIGURATION }}
         #msbuild libvscphelper.sln /p:Configuration=Release
         cpack .
