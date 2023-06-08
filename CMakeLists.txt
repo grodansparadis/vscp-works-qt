@@ -497,13 +497,7 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.h
     ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
     ${VSCP_PATH}/src/vscp/common/vscpunit.h
-    ${VSCP_PATH}/src/vscp/common/vscpunit.cpp
-    ./third_party/mustache/mustache.hpp
-    ./third_party/civetweb/include/civetweb.h
-    ./third_party/civetweb/src/civetweb.c
-    ./third_party/spdlog/include/
-    ./third_party/fastpbkdf2/fastpbkdf2.h
-    ./third_party/fastpbkdf2/fastpbkdf2.c 
+    ${VSCP_PATH}/src/vscp/common/vscpunit.cpp     
     ${VSCP_PATH}/src/common/sockettcp.h
     ${VSCP_PATH}/src/common/sockettcp.c
     ${VSCP_PATH}/src/common/vscpbase64.h
@@ -515,16 +509,22 @@ add_executable(${PROJECT_NAME}
     ${VSCP_PATH}/src/common/crc8.h
     ${VSCP_PATH}/src/common/crc8.c
     ${VSCP_PATH}/src/common/vscpmd5.h
-    ${VSCP_PATH}/src/common/vscpmd5.c       
+    ${VSCP_PATH}/src/common/vscpmd5.c    
+    ./third_party/mustache/mustache.hpp
+    ./third_party/civetweb/include/civetweb.h
+    ./third_party/civetweb/src/civetweb.c
+    ./third_party/spdlog/include/
+    ./third_party/fastpbkdf2/fastpbkdf2.h
+    ./third_party/fastpbkdf2/fastpbkdf2.c   
     install/${PROJECT_NAME}.desktop
     ${TS_FILES}    
   ) 
 
 if (MSVC)
 
-    #find_path(PTHREAD_INCLUDE_DIR pthread.h)
-    #find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
-    # message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
+    find_path(PTHREAD_INCLUDE_DIR pthread.h)
+    find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
+    message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
 
     include_directories( PUBLIC ./src 
         ./build
