@@ -128,6 +128,9 @@ jobs:
         ${{ github.workspace }}/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install libwebsockets:x64-windows
 
+    - name: List content of lib folder
+        run: dir ${{ github.workspace }}/vcpkg/install/x64-windows/lib
+
     - name: Configure CMake and build
       run: |    
         mkdir build
