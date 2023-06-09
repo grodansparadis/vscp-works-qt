@@ -599,6 +599,9 @@ if (MSVC)
     find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
     message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
 
+    find_path(MOSQUITTO_LIB_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+    message(STATUS "lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
+
     target_link_libraries(${PROJECT_NAME} PRIVATE     
         Qt5::Widgets
         Qt5::Core 
