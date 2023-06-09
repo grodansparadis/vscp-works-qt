@@ -597,10 +597,10 @@ else()
 if (MSVC)
     
     find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    message(STATUS "lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
+    message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
 
     find_path(MOSQUITTO_LIB_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    message(STATUS "lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
+    message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
 
     target_link_libraries(${PROJECT_NAME} PRIVATE     
         Qt5::Widgets
@@ -615,7 +615,7 @@ if (MSVC)
         OpenSSL::SSL OpenSSL::Crypto        
      #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
         #${MOSQUITTO_LIBRARIES}
-        ${LIBWEBSOCKETS_LIBRARIES}
+        #${LIBWEBSOCKETS_LIBRARIES}
         "${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
         expat::expat
         CURL::libcurl
@@ -636,7 +636,7 @@ if (MSVC)
         ${OPENSSL_LIBRARIES}
 #        ${PAHO_LIBRARIES}
         ${MOSQUITTO_LIBRARIES}
-        ${LIBWEBSOCKETS_LIBRARIES}
+#        ${LIBWEBSOCKETS_LIBRARIES}
         ${EXPAT_LIBRARIES}
         ${CURL_LIBRARIES}
         ${DLFCN_LIBS})
