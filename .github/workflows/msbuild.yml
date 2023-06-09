@@ -67,8 +67,8 @@ jobs:
     # - name: Install vcpkg
     #   uses: lukka/run-vcpkg@v2
     #   with:
-    #     vcpkgDirectory: 'C:/vcpkg\'
-    #     vcpkgArguments: '@C:/vcpkg\.txt'
+    #     vcpkgDirectory: 'C:/vcpkg/'
+    #     vcpkgArguments: '@C:/vcpkg/.txt'
     #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
 
     # Install latest CMake.
@@ -78,7 +78,7 @@ jobs:
         # Just install vcpkg for now, do not install any ports in this step yet.
         setupOnly: true
         # Location of the vcpkg as submodule of the repository.
-        vcpkgDirectory: 'C:/vcpkg\'
+        vcpkgDirectory: 'C:/vcpkg/'
         # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
         # compute its hash and append this to the computed cache's key.
         appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
@@ -110,10 +110,10 @@ jobs:
     #   with:
     #     repository: microsoft/vcpkg
     #     path: C:/vcpkg   
-C:/vcpkg\
+C:/vcpkg/
     - name: Integrate with development environment and install
       shell: cmd
-      working-directory: C:/vcpkg\
+      working-directory: C:/vcpkg/
       run: |
         call C:/vcpkg/vcpkg.exe/bootstrap-vcpkg.bat
         C:/vcpkg/vcpkg.exe/vcpkg.exe integrate install
