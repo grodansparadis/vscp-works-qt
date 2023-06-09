@@ -117,7 +117,7 @@ jobs:
       run: |
         call ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat
         ${{ github.workspace }}/vcpkg/vcpkg.exe integrate install
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install curl:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install curl:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install spdlog:x64-windows
         ${{ github.workspace }}/vcpkg/vcpkg.exe install libmosquitto:x64-windows
