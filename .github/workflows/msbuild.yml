@@ -110,7 +110,6 @@ jobs:
     #   with:
     #     repository: microsoft/vcpkg
     #     path: C:/vcpkg   
-C:/vcpkg/
     - name: Integrate with development environment and install
       shell: cmd
       working-directory: C:/vcpkg/
