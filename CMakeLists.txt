@@ -598,10 +598,10 @@ if (MSVC)
     
     find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
     message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
+    link_directories(${MOSQUITTO_LIB_DIR})
 
     find_path(MOSQUITTO_LIB_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
     message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
-
     link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
     target_link_libraries(${PROJECT_NAME} PRIVATE     

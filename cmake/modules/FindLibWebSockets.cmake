@@ -5,17 +5,17 @@
 # LIBWEBSOCKETS_LIBRARIES, the library to link against
 # LIBWEBSOCKETS_FOUND, If false, do not try to use libWebSockets
 #
-# This currently works probably only for Linux
+# This currently probably works only for Linux
 
 include(FindPackageHandleStandardArgs)
 SET ( LIBWEBSOCKETS_FOUND FALSE )
 
 FIND_PATH ( LIBWEBSOCKETS_INCLUDE_DIR NAMES libwebsockets.h
-    HINTS /usr/local/include /usr/include
+    HINTS /usr/local/include /usr/include "${VCPKG_ROOT}/installed/x64-windows/include"
 )
 
 FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES NAMES websockets
-    HINTS /usr/local/lib /usr/lib
+    HINTS /usr/local/lib /usr/lib "${VCPKG_ROOT}/installed/x64-windows/lib"
 )
 
 GET_FILENAME_COMPONENT( LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} PATH )
