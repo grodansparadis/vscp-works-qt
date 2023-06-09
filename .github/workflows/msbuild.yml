@@ -67,8 +67,8 @@ jobs:
     # - name: Install vcpkg
     #   uses: lukka/run-vcpkg@v2
     #   with:
-    #     vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-    #     vcpkgArguments: '@${{ github.workspace }}/vcpkg.txt'
+    #     vcpkgDirectory: '${{ env.VCPKG_INSTALLATION_ROOT }}'
+    #     vcpkgArguments: '@${{ env.VCPKG_INSTALLATION_ROOT }}.txt'
     #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
 
     # Install latest CMake.
@@ -78,7 +78,7 @@ jobs:
         # Just install vcpkg for now, do not install any ports in this step yet.
         setupOnly: true
         # Location of the vcpkg as submodule of the repository.
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgDirectory: '${{ env.VCPKG_INSTALLATION_ROOT }}'
         # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
         # compute its hash and append this to the computed cache's key.
         appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
@@ -98,44 +98,44 @@ jobs:
     #- name: Prepare Qt Libraries
     #  uses: jurplel/install-qt-action@v2
 
-    - name: Cache vcpkg
-      id: cache-vcpkg
-      uses: actions/cache@v2
-      with:
-        path: vcpkg
-        key: ${{ runner.os }}-vcpkg
+    # - name: Cache vcpkg
+    #   id: cache-vcpkg
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: vcpkg
+    #     key: ${{ runner.os }}-vcpkg
 
-    - name: Checkout vcpkg repo
-      uses: actions/checkout@v3
-      with:
-        repository: microsoft/vcpkg
-        path: ${{ github.workspace }}/vcpkg    
+    # - name: Checkout vcpkg repo
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: microsoft/vcpkg
+    #     path: ${{ env.VCPKG_INSTALLATION_ROOT }}    
 
     - name: Integrate with development environment and install
       shell: cmd
-      working-directory: ${{ github.workspace }}/vcpkg
+      working-directory: ${{ env.VCPKG_INSTALLATION_ROOT }}
       run: |
-        call ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat
-        ${{ github.workspace }}/vcpkg/vcpkg.exe integrate install
+        call ${{ env.VCPKG_INSTALLATION_ROOT }}/bootstrap-vcpkg.bat
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe integrate install
         ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install curl:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install expat:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install spdlog:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install libmosquitto:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install mosquitto:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install pthread:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install openssl:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
-        ${{ github.workspace }}/vcpkg/vcpkg.exe install libwebsockets:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install expat:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install spdlog:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install libmosquitto:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install mosquitto:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install pthread:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install dlfcn-win32:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install openssl:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install paho-mqtt:x64-windows
+        ${{ env.VCPKG_INSTALLATION_ROOT }}/vcpkg.exe install libwebsockets:x64-windows
 
     - name: List content of lib folder
-      run: dir ${{ github.workspace }}/vcpkg/install/x64-windows/lib
+      run: dir ${{ env.VCPKG_INSTALLATION_ROOT }}/install/x64-windows/lib
 
     - name: Configure CMake and build
       run: |    
         mkdir build
         cd build
-        cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_INSTALLATION_ROOT }}/scripts/buildsystems/vcpkg.cmake"
         cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
         # msbuild libvscphelper.sln /p:Configuration=Release
         #cpack .
