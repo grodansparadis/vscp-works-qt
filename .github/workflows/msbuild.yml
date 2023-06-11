@@ -127,6 +127,7 @@ jobs:
         C:/vcpkg/vcpkg.exe install openssl:x64-windows
         C:/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
         C:/vcpkg/vcpkg.exe install libwebsockets:x64-windows
+        cp C:/vcpkg/installed/x64-windows/lib/websockets.lib C:/vcpkg/installed/x64-windows/lib/websockets_shared.lib
 
     - name: Configure CMake and build
       run: |    
