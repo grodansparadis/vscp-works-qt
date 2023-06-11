@@ -127,13 +127,12 @@ jobs:
         C:/vcpkg/vcpkg.exe install openssl:x64-windows
         C:/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
         C:/vcpkg/vcpkg.exe install libwebsockets:x64-windows
-        cp C:/vcpkg/installed/x64-windows/lib/websockets.lib C:/vcpkg/installed/x64-windows/lib/websockets_shared.lib
 
     - name: Configure CMake and build
       run: |    
         mkdir build
         cd build
-        cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        cmake -S .. -B . -G "${{ env.GENERATORS }}" -A x64 -DVCPKG_TARGET_TRIPLET=x64-windows -D"CMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }}" -D"CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"        
         cmake --build . --config "${{ env.BUILD_CONFIGURATION }}"
         # msbuild libvscphelper.sln /p:Configuration=Release
         #cpack .

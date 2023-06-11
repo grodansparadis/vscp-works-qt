@@ -17,3 +17,6 @@
 [submodule "third_party/maddy"]
 	path = third_party/maddy
 	url = https://github.com/progsource/maddy.git
+[submodule "third_party/libwebsockets"]
+	path = third_party/libwebsockets
+	url = https://github.com/warmcat/libwebsockets.git

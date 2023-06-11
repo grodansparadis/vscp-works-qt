@@ -29,6 +29,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(vscp-works-qt LANGUAGES CXX C)
 
+add_subdirectory(./third_party/spdlog/)
+add_subdirectory(./third_party/libwebsockets/)
 
 option(USE_SSL "Use SSL" TRUE)
 
@@ -94,7 +96,7 @@ find_package(OpenSSL REQUIRED)
 
 # libwebsockets
 #find_package(libwebsockets CONFIG REQUIRED)
-include(FindLibWebSockets)
+#include(FindLibWebSockets)
 
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
@@ -151,9 +153,9 @@ ELSE(CURL_FOUND)
 ENDIF(CURL_FOUND)
 
 # Set civetweb build flags
-add_definitions(-DUSE_WEBSOCKET)
-add_definitions(-DUSE_IPV6)
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
+#add_definitions(-DUSE_WEBSOCKET)
+#add_definitions(-DUSE_IPV6)
+#set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -DUSE_IPV6 -DUSE_WEBSOCKET ")
 
 set(OPENSSL_VER "OPENSSL_API_${OPENSSL_VERSION_MAJOR}_${OPENSSL_VERSION_MINOR}")
 message(STATUS "OPENSSL Version: ${OPENSSL_VER} - ${OPENSSL_VERSION}")
@@ -180,11 +182,8 @@ endif()
 
 string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
 if(NOT SSL_VER_POS EQUAL -1)
-  remove_definitions(-DOPENSSL_API_1_0)
-  remove_definitions(-DOPENSSL_API_1_1)
-  remove_definitions(-DOPENSSL_API_3_1)
-  remove_definitions(-DOPENSSL_API_3_0)
-  message(STATUS "Open ssl version is 3.1 but set to 3.0 ${SSL_VER_POS} for Civetweb. That is OK")
+  add_definitions(-DOPENSSL_API_3_1)
+  message(STATUS "Open ssl version is 3.1")
 endif()
 
 # set(UI )
