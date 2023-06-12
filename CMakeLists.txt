@@ -30,7 +30,7 @@ cmake_minimum_required(VERSION 3.5)
 project(vscp-works-qt LANGUAGES CXX C)
 
 add_subdirectory(./third_party/spdlog/)
-add_subdirectory(./third_party/libwebsockets/)
+#add_subdirectory(./third_party/libwebsockets/)
 
 option(USE_SSL "Use SSL" TRUE)
 
@@ -96,7 +96,7 @@ find_package(OpenSSL REQUIRED)
 
 # libwebsockets
 #find_package(libwebsockets CONFIG REQUIRED)
-#include(FindLibWebSockets)
+include(FindLibWebSockets)
 
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
@@ -599,15 +599,16 @@ if (MSVC)
     message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
     link_directories(${MOSQUITTO_LIB_DIR})
 
-    find_path(LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+    #find_path(LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+    #find_path(LIBWEBSOCKETS_LIBRARY_DIR libwebsockets.lib websockets.lib websockets_shared.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
     message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
     link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
     target_link_libraries(${PROJECT_NAME} PRIVATE     
         Qt5::Widgets
-        Qt5::Core 
+        Qt5::Core
         Qt5::Network
-        Qt5::Quick 
+        Qt5::Quick
         Qt5::Sql
         Qt5::Charts
         PThreads4W::PThreads4W
