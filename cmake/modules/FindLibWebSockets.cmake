@@ -14,7 +14,7 @@ FIND_PATH ( LIBWEBSOCKETS_INCLUDE_DIR NAMES libwebsockets.h
     HINTS /usr/local/include /usr/include "${VCPKG_ROOT}/installed/x64-windows/include"
 )
 
-FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES NAMES websockets websockets_static
+FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES NAMES websockets websockets_shared
     HINTS /usr/local/lib /usr/lib "${VCPKG_ROOT}/installed/x64-windows/lib"
 )
 
