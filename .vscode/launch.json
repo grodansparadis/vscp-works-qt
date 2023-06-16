@@ -4,48 +4,48 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/vscp-works-qt",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "build",
-            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/c0af39e9134d98c8547df8ffed915c4e/tonka3000.qtvsctools/qt.natvis.xml"
-        },
-        {
-            "name": "g++ build and debug active file",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "/home/akhe/development/VSCP/vscpworks/src/vscpworks",
-            "args": [],
-            "stopAtEntry": true,
-            "cwd": "${workspaceFolder}/vscpworks/",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "g++ build active file",
-            "miDebuggerPath": "/usr/bin/gdb",
-            "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/c0af39e9134d98c8547df8ffed915c4e/tonka3000.qtvsctools/qt.natvis.xml"
-        }
+      {
+        "name": "(gdb) Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/vscp-works-qt",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ],
+        "preLaunchTask": "build",
+        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/b3a88788bb1e8a32eb6392485a993de5/tonka3000.qtvsctools/qt.natvis.xml"
+      },
+      {
+        "name": "g++ build and debug active file",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "/home/akhe/development/VSCP/vscpworks/src/vscpworks",
+        "args": [],
+        "stopAtEntry": true,
+        "cwd": "${workspaceFolder}/vscpworks/",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ],
+        "preLaunchTask": "g++ build active file",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/b3a88788bb1e8a32eb6392485a993de5/tonka3000.qtvsctools/qt.natvis.xml"
+      }
     ]
 }

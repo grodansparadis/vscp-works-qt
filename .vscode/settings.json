@@ -94,9 +94,7 @@
         "-DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake",
         "-DVCPKG_ROOT=G:/akhe/development/vcpkg"
     ],
-    "cmake.generator": "Visual Studio 17 2022",
     "cSpell.language": "sv,en",
-    "vsflux.defaultInfluxDBV1URL": null,
     "cSpell.words": [
       "MQTT"
     ]

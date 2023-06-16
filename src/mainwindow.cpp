@@ -43,11 +43,11 @@
 #include <QMessageBox>
 #include <QtWidgets>
 
-//#include <QtSerialPort/QSerialPort>
-//#include <QCanBus>
-// #include <QCanBusDevice>6
-// #include <QCanBusFactory>
-// #include <QCanBusFrame>
+// #include <QtSerialPort/QSerialPort>
+// #include <QCanBus>
+//  #include <QCanBusDevice>6
+//  #include <QCanBusFactory>
+//  #include <QCanBusFrame>
 
 #include "filedownloader.h"
 #include "vscpworks.h"
@@ -68,9 +68,10 @@
 #include "cdlgmainsettings.h"
 #include "cdlgnewconnection.h"
 #include "cdlgsessionfilter.h"
-#include "cfrmnodescan.h"
 #include "cfrmnodeconfig.h"
+#include "cfrmnodescan.h"
 #include "cfrmsession.h"
+#include "cfrmmdf.h"
 #include "filedownloader.h"
 #include "version.h"
 #include "vscp_client_base.h"
@@ -1505,8 +1506,8 @@ MainWindow::createActions()
   QAction* newMdfEditorAct =
     new QAction(newMdfEditorIcon, tr("&MDF editor..."), this);
   newMdfEditorAct->setShortcut(Qt::Key_M | Qt::CTRL);
-  newMdfEditorAct->setStatusTip(tr("Open a new NDF editor"));
-  connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::save);
+  newMdfEditorAct->setStatusTip(tr("Open a new MDF editor"));
+  connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::mdfEdit);
   fileMenu->addAction(newMdfEditorAct);
   fileToolBar->addAction(newMdfEditorAct);
 
@@ -1831,7 +1832,7 @@ MainWindow::newSession()
       // Get the connection object
 
       QJsonObject* pconn = itemConn->getJson();
-      CFrmSession* w = new CFrmSession(this, pconn);
+      CFrmSession* w     = new CFrmSession(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
@@ -3042,7 +3043,7 @@ MainWindow::newNodeConfiguration()
       QJsonObject* pconn = itemConn->getJson();
 
       CFrmNodeConfig* w = new CFrmNodeConfig(this, pconn);
-      w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
+      w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
       w->show();
@@ -3099,6 +3100,7 @@ MainWindow::newNodeScan()
   }
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // newNodeBootload
 //
@@ -3108,6 +3110,23 @@ MainWindow::newNodeBootload()
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// mdfEdit
+//
 
+void
+MainWindow::mdfEdit()
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  CFrmMdf* w = new CFrmMdf(this, nullptr);
+  w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
+  w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+  w->setWindowFlags(Qt::Window);
+  w->show();
+  w->raise();
+  // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+  w->activateWindow();
+}
 
 #endif

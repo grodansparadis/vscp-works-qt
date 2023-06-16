@@ -235,6 +235,23 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cfrmnodeconfig.ui
     src/cfrmnodescan.ui
     src/cdlgactionparam.ui
+    src/cfrmmdf.ui
+    src/cdlgmdfbitlist.ui      
+    src/cdlgmdfdm.ui	       
+    src/cdlgmdffilepicture.ui  
+    src/cdlgmdfmodule.ui
+    src/cdlgmdfbit.ui	       
+    src/cdlgmdfevent.ui	       
+    src/cdlgmdffilesetup.ui    
+    src/cdlgmdfregister.ui
+    src/cdlgmdfbootloader.ui   
+    src/cdlgmdffiledriver.ui    
+    src/cdlgmdffile.ui	      
+    src/cdlgmdfremotevar.ui
+    src/cdlgmdfdescription.ui  
+    src/cdlgmdffilefirmware.ui  
+    src/cdlgmdffilevideo.ui    
+    src/cdlgmdfvaluelist.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -449,6 +466,10 @@ add_executable(${PROJECT_NAME}
 
     src/xyseries.h
     src/xyseries.cpp
+
+    src/cfrmmdf.ui
+    src/cfrmmdf.h
+    src/cfrmmdf.cpp
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h
