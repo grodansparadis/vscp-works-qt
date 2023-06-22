@@ -32,15 +32,15 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <vscp.h>
 #include <mdf.h>
 #include <register.h>
+#include <vscp.h>
 #include <vscp_client_base.h>
 
 #include <set>
 
-#include <QObject>
 #include <QDialog>
+#include <QObject>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -71,62 +71,71 @@ namespace Ui {
 class CFrmMdf;
 }
 
-//#define TREE_LIST_FOUND_NODE_TYPE (QTreeWidgetItem::UserType + 1)
+// #define TREE_LIST_FOUND_NODE_TYPE (QTreeWidgetItem::UserType + 1)
 
 // ----------------------------------------------------------------------------
 
-
 // ----------------------------------------------------------------------------
-
 
 /*!
     The session window
 */
 
-class CFrmMdf : public QMainWindow
-{
+class CFrmMdf : public QMainWindow {
   Q_OBJECT
 
- public:
+public:
+  explicit CFrmMdf(QWidget* parent = nullptr, const char* path = nullptr);
+  virtual ~CFrmMdf();
 
-    explicit CFrmMdf(QWidget *parent = nullptr, const char *path = nullptr);
-    virtual ~CFrmMdf();
+  /*!
+      set Initial focus
+  */
+  void setInitialFocus(void);
 
-    /*!
-        set Initial focus
-    */
-    void setInitialFocus(void);
+public slots:
 
-    
- public slots:
-    
-    /// Dialog return
-    void done(int r); 
+  /// Dialog return
+  void done(int r);
 
-    /// Open settings dialog
-    void menu_open_main_settings(void);
+  /// Open settings dialog
+  void menu_open_main_settings(void);
 
-    /// Show find nodes context menu 
-    void showMdfContextMenu(const QPoint& pos);
+  /// Show find nodes context menu
+  void showMdfContextMenu(const QPoint& pos);
 
-    /// Do the new operation
-    void newMdf(void);
-    
-    /// Do the open operation
-    void openMdf(void);
+  /*!
+    Fill in data from info map as children to parent item
+  */
+  void
+  fillDescriptionItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
 
-    /// Load MDF for selected node
-    void loadMdf(void);
+  /*!
+    Fill in data from help URL map as children to parent item
+  */
+  void
+  fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
 
- 
- signals:
-    
-    
- private:
+  void
+  fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register *preg);
 
-    // The UI definition
-    Ui::CFrmMdf *ui;
+  /// Do the new operation
+  void newMdf(void);
 
+  /// Do the open operation
+  void openMdf(void);
+
+  /// Load MDF for selected node
+  void loadMdf(void);
+
+signals:
+
+private:
+  // The UI definition
+  Ui::CFrmMdf* ui;
+
+  // Object that holds mdf definition in parsed form
+  CMDF m_mdf;
 };
 
 #endif // CFrmMdf_H

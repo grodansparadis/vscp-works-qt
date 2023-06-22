@@ -1531,7 +1531,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   if (CURLE_OK != curl_rv) {
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to download MDF file for device."));
-    spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
+    spdlog::error("Failed to download MDF {0} curl rv={1}", url, (int)curl_rv);
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return VSCP_ERROR_COMMUNICATION;

@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MDF Editor</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="horizontalLayoutWidget">
@@ -219,6 +219,7 @@
      <string>File</string>
     </property>
     <addaction name="actionNew"/>
+    <addaction name="actionDownload_MDF"/>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
@@ -228,7 +229,14 @@
      <string>Help</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionE_xpand_all"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu_Edit"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -239,7 +247,7 @@
   </action>
   <action name="actionNew">
    <property name="text">
-    <string>New</string>
+    <string>New MDF...</string>
    </property>
    <property name="toolTip">
     <string>Create new MDF</string>
@@ -250,7 +258,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open...</string>
+    <string>Open MDF...</string>
    </property>
    <property name="toolTip">
     <string>Open existing MDF</string>
@@ -268,6 +276,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionDownload_MDF">
+   <property name="text">
+    <string>Download MDF...</string>
+   </property>
+  </action>
+  <action name="actionE_xpand_all">
+   <property name="text">
+    <string>E&amp;xpand all</string>
    </property>
   </action>
  </widget>

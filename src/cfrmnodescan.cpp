@@ -1051,7 +1051,7 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   curl_rv = pItem->m_mdf.downLoadMDF(url, tempPath);
   if (CURLE_OK != curl_rv) {
     ui->statusBar->showMessage(tr("Failed to download MDF file for device."));
-    spdlog::error("Failed to download MDF {0} curl rv={1}", url, curl_rv);
+    spdlog::error("Failed to download MDF {0} curl rv={1}", url, (int)curl_rv);
     return;
   }
 
