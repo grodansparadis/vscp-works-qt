@@ -395,7 +395,7 @@
 			Bit 0 - Direction for I/O channel 8 - (RA1). 0=output. 1=input.\n
 			</description>
 			<access>rw</access>
-			<bit pos="0" default="false" >
+			<bit pos="0" default="true" >
 				<name lang="en">Direction 8</name>
 				<description lang="en">Direction for I/O channel 8 - (RA1). 0=output. 1=input.</description> 
         	</bit>
@@ -447,35 +447,147 @@
 			<bit pos="0" default="false" >
 				<name lang="en">Direction 0</name>
 				<description lang="en">Direction for I/O channel 0 - (RB0). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 0 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 0 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="1" default="false" >
 				<name lang="en">Direction 1</name>
 				<description lang="en">Direction for I/O channel 1 - (RB1). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 1 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 1 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="2" default="false" >
 				<name lang="en">Direction 2</name>
 				<description lang="en">Direction for I/O channel 2 - (RC3). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 2 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 2 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="3" default="false" >
 				<name lang="en">Direction 3</name>
 				<description lang="en">Direction for I/O channel 3 - (RC4). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 3 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 3 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="4" default="false" >
 				<name lang="en">Direction 4</name>
 				<description lang="en">Direction for I/O channel 4 - (RC5). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 4 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 4 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="5" default="false" >
 				<name lang="en">Direction 5</name>
 				<description lang="en">Direction for I/O channel 5 - ((RC6). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 5 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 5 set as input.
+					  </description>
+				  </item>
+        </valuelist>  
+      </bit>
+			<bit pos="6" default="false" >
 				<name lang="en">Direction 6</name>
 				<description lang="en">Direction for I/O channel 6 - ((RC7). 0=output. 1=input.</description> 
-        	</bit>
-			<bit pos="0" default="false" >
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 6 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 6 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
+			<bit pos="7" default="false" >
 				<name lang="en">Direction 7</name>
 				<description lang="en">Direction for I/O channel 7 - (RA2). 0=output. 1=input.</description> 
-        	</bit>
+        <valuelist>
+          <item value = "0x0">
+        	  <name lang="en">Output</name>
+					  <description lang="en">
+					    Channel 7 set as output.
+					  </description>
+				  </item>
+          <item value = "0x1">
+        	  <name lang="en">Input</name>
+					  <description lang="en">
+					    Channel 7 set as input.
+					  </description>
+				  </item>
+        </valuelist>
+      </bit>
 		</reg>
 		
 		<reg page="0" offset="14" bgcolor="0x99FF99" >
@@ -488,7 +600,7 @@
 			<access>rw</access>
 			<valuelist>
 				<item value = "0x0">
-        			<name lang="en">Off</name>
+        	<name lang="en">Off</name>
 					<description lang="en">
 					Read: channel is in low state. Write: set output channel to its low state.
 					</description>
@@ -3909,7 +4021,7 @@
 			Set the output of the I/O channel given by the argument to its low state. 
 			The argument is an integer where 0 is output 0 and so on and can be in the range 0-9.\n     	
         	</description>
-        	<param>							
+        	<param>
       		<name lang="en">Channel to set state low on</name> 
       	    <description lang="en">
 			Integer representing I/O channel to set state low on.	      	   

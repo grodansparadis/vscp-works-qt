@@ -106,16 +106,45 @@ public slots:
 
   /*!
     Fill in data from info map as children to parent item
+
+    @param parent Pointer to parent treewidget
+    @param pObjMap Pointer to map holding descriptions in different languages
   */
   void
   fillDescriptionItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
 
   /*!
     Fill in data from help URL map as children to parent item
+
+    @param parent Pointer to parent treewidget
+    @param pObjMap Pointer to map holding indo URL's in different languages
   */
   void
   fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
 
+  /*!
+    Fill bit list info
+    @param parent Pointer to parent treewidget
+    @param dequebits Reference for std:deque holding bit infor objects
+  */
+  void
+  fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit *> &dequebits);
+
+  /*!
+    Fill value list info
+
+    @param parent Pointer to parent treewidget
+    @param dequevalues Reference for std:deque holding bit infor objects
+  */
+  void
+  fillValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues);
+
+  /*!
+    Fill in register info
+
+    @parent Pointer to parent treewidget
+    @preg Pointer to register definition
+  */
   void
   fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register *preg);
 
