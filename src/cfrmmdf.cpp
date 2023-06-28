@@ -231,14 +231,14 @@ CFrmMdf::fillDescriptionItems(QTreeWidgetItem* pParent, std::map<std::string, st
     return;
   }
 
-  // Must be items
-  if (!pObjMap->size()) {
-    return;
-  }
-
   QTreeWidgetItem* pItemModuleDescription = new QTreeWidgetItem(pParent, 0);
   pItemModuleDescription->setText(0, "Description");
   pParent->addChild(pItemModuleDescription);
+
+  // Must be items to fill in childs
+  if (!pObjMap->size()) {
+    return;
+  }
 
   std::map<std::string, std::string>* pmap = pObjMap;
   for (auto const& x : *pmap) {
@@ -268,14 +268,14 @@ CFrmMdf::fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::s
     return;
   }
 
-  // Must be items
-  if (!pObjMap->size()) {
-    return;
-  }
-
   QTreeWidgetItem* pItemModuleHelpUrl = new QTreeWidgetItem(pParent, 0);
   pItemModuleHelpUrl->setText(0, "Help/Info URL");
   pParent->addChild(pItemModuleHelpUrl);
+
+  // Must be items to fill in childs
+  if (!pObjMap->size()) {
+    return;
+  }
 
   std::map<std::string, std::string>* pmap = pObjMap;
   for (auto const& x : *pmap) {
@@ -301,20 +301,20 @@ CFrmMdf::fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits)
     return;
   }
 
-  // Must be items
-  if (!dequebits.size()) {
-    return;
-  }
-
   QTreeWidgetItem* pItemBitDefs = new QTreeWidgetItem(pParent, 0);
   pItemBitDefs->setText(0, "Bit definitions");
   pParent->addChild(pItemBitDefs);
+
+  // Must be items to fill in childs
+  if (!dequebits.size()) {
+    return;
+  }
 
   for (int i = 0; i < dequebits.size(); i++) {
 
     CMDF_Bit* pbit = dequebits[i];
 
-    str = QString("Bitfield %1 {").arg(i);
+    str = QString("Bitfield no %1 Bits:{").arg(/*dequebits.size()-*/ i);
     for (int j = pbit->getPos(); j < qMin(8, pbit->getPos() + pbit->getWidth()); j++) {
       str += QString(" %1 ").arg(j);
     }
@@ -401,6 +401,11 @@ CFrmMdf::fillValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequev
   pItemValue->setText(0, "Valid values");
   pParent->addChild(pItemValue);
 
+  // Must be items to fill in childs
+  if (!dequevalues.size()) {
+    return;
+  }
+
   for (int i = 0; i < dequevalues.size(); i++) {
 
     CMDF_Value* pvalue = dequevalues[i];
@@ -409,7 +414,7 @@ CFrmMdf::fillValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequev
     // for (int j = pvalue->getPos(); j < qMin(8, pvalue->getPos() + pvalue->getWidth()); j++) {
     //   str += QString(" %1 ").arg(j);
     // }
-    //str += "}";
+    // str += "}";
     QTreeWidgetItem* pItemParent = new QTreeWidgetItem(pItemValue, 0);
     pItemParent->setText(0, str);
     pItemValue->addChild(pItemParent);
@@ -443,10 +448,12 @@ CFrmMdf::fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg)
   QTreeWidgetItem* pItem;
 
   // Check pointers
-  if (nullptr == pParent)
+  if (nullptr == pParent) {
     return;
-  if (nullptr == preg)
+  }
+  if (nullptr == preg) {
     return;
+  }
 
   pItem = new QTreeWidgetItem(pParent, 1);
   if (nullptr != pItem) {
@@ -1269,7 +1276,7 @@ CFrmMdf::loadMdf(void)
           if (itr == (*it)->getPage()) {
             pSubItem = new QTreeWidgetItem(pItem, 1);
             if (nullptr != pSubItem) {
-              str = QString("Register  %1").arg((*it)->getOffset());
+              str = QString("Register  %1 %2").arg((*it)->getOffset()).arg((*it)->getName().c_str());
               pSubItem->setText(0, str);
               pItem->addChild(pSubItem);
               fillRegisterInfo(pSubItem, *it);
@@ -1279,11 +1286,14 @@ CFrmMdf::loadMdf(void)
       }
     }
   }
+  // We only have one page
   else {
+    std::map<uint32_t, CMDF_Register*> mapRegs;
+    m_mdf.getRegisterMap(0, mapRegs);
+    fillRegisterInfo(pItem, mapRegs[0]);
   }
 
-  if (m_mdf.getRegisterCount()) {
-  }
+  // * * * Remote variables * * *
 
   QTreeWidgetItem* pItemRemoteVar = new QTreeWidgetItem(pItemModule, 1);
   pItemRemoteVar->setFont(0, fontTopItem);
@@ -1291,11 +1301,127 @@ CFrmMdf::loadMdf(void)
   pItemRemoteVar->setText(0, tr("Remote Variables"));
   ui->treeMDF->addTopLevelItem(pItemRemoteVar);
 
+  std::deque<CMDF_RemoteVariable*>* pRemoteVarList = m_mdf.getRemoteVariableList();
+  if (nullptr != pRemoteVarList) {
+
+    QString str;
+    QTreeWidgetItem* pItem;
+
+    for (int i = 0; i < pRemoteVarList->size(); i++) {
+      CMDF_RemoteVariable* pvar = (*pRemoteVarList)[i];
+      pSubItem                  = new QTreeWidgetItem(pItemRemoteVar, 1);
+      if (nullptr != pSubItem) {
+        str = QString("Remote variable: %1 -- %2").arg(i).arg(pvar->getName().c_str());
+        pSubItem->setText(0, str);
+        pItemRemoteVar->addChild(pSubItem);
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Name: %1").arg(pvar->getName().c_str());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Type: %1 (%2)").arg(pvar->getType()).arg(pvar->getTypeString().c_str());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Byte count: %1").arg(pvar->getTypeByteCount());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Default: %1").arg(pvar->getDefault().c_str());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Offset: %1").arg(pvar->getOffset());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Page: %1").arg(pvar->getPage());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Bit position: %1").arg(pvar->getBitPos());
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Access: %1 (").arg(pvar->getAccess());
+          if (2 & pvar->getAccess()) {
+            str += "r";
+          }
+          if (1 & pvar->getAccess()) {
+            str += "w";
+          }
+          str += ")";
+
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Foreground color: 0x%1").arg(pvar->getForegroundColor(), 1, 16);
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        pItem = new QTreeWidgetItem(pSubItem, 1);
+        if (nullptr != pItem) {
+          str = QString("Background color: 0x%1").arg(pvar->getBackgroundColor(), 1, 16);
+          pItem->setText(0, str);
+          pSubItem->addChild(pItem);
+        }
+
+        // Fill in bit field info
+        fillBitInfo(pSubItem, *pvar->getListBits());
+
+        // Fill in valid values
+        fillValueInfo(pSubItem, *pvar->getListValues());
+
+        // Descriptions
+        fillDescriptionItems(pSubItem, pvar->getMapDescription());
+
+        // Info URL's
+        fillHelpUrlItems(pSubItem, pvar->getMapDescription());
+      }
+    }
+  }
+
+  // * * * Alarm * * *
+
   QTreeWidgetItem* pItemAlarm = new QTreeWidgetItem(pItemModule, 1);
   pItemAlarm->setFont(0, fontTopItem);
   pItemAlarm->setForeground(0, greenBrush);
   pItemAlarm->setText(0, tr("Alarm"));
   ui->treeMDF->addTopLevelItem(pItemAlarm);
+
+  std::deque<CMDF_Bit*>* palarm = m_mdf.getAlarmList();
+
+  // Fill in bit field info
+  fillBitInfo(pItemAlarm, *palarm);
+
+  // * * * Decision Matrix * * *
 
   QTreeWidgetItem* pItemDM = new QTreeWidgetItem(pItemModule, 1);
   pItemDM->setFont(0, fontTopItem);
@@ -1303,12 +1429,274 @@ CFrmMdf::loadMdf(void)
   pItemDM->setText(0, tr("Decision Matrix"));
   ui->treeMDF->addTopLevelItem(pItemDM);
 
-  // Events
-  QTreeWidgetItem* pItemEvent = new QTreeWidgetItem(pItemModule, 1);
-  pItemEvent->setFont(0, fontTopItem);
-  pItemEvent->setForeground(0, greenBrush);
-  pItemEvent->setText(0, tr("Events"));
-  ui->treeMDF->addTopLevelItem(pItemEvent);
+  CMDF_DecisionMatrix* pdm = m_mdf.getDM();
+  if (nullptr != pdm) {
+
+    pItem = new QTreeWidgetItem(pItemDM, 1);
+    if (nullptr != pItem) {
+      str = QString("Level: %1").arg(pdm->getLevel());
+      pItem->setText(0, str);
+      pItemDM->addChild(pItem);
+    }
+
+    pItem = new QTreeWidgetItem(pItemDM, 1);
+    if (nullptr != pItem) {
+      str = QString("Start page: %1").arg(pdm->getStartPage());
+      pItem->setText(0, str);
+      pItemDM->addChild(pItem);
+    }
+
+    pItem = new QTreeWidgetItem(pItemDM, 1);
+    if (nullptr != pItem) {
+      str = QString("Start offset: %1").arg(pdm->getStartOffset());
+      pItem->setText(0, str);
+      pItemDM->addChild(pItem);
+    }
+
+    pItem = new QTreeWidgetItem(pItemDM, 1);
+    if (nullptr != pItem) {
+      str = QString("Row count: %1 rows").arg(pdm->getRowCount());
+      pItem->setText(0, str);
+      pItemDM->addChild(pItem);
+    }
+
+    pItem = new QTreeWidgetItem(pItemDM, 1);
+    if (nullptr != pItem) {
+      str = QString("Row size: %1 bytes").arg(pdm->getRowSize());
+      pItem->setText(0, str);
+      pItemDM->addChild(pItem);
+    }
+
+    std::deque<CMDF_Action*>* pActionList = pdm->getActionList();
+
+    if (nullptr != pActionList) {
+
+      QString str;
+      QTreeWidgetItem* pSubItem;
+
+      QTreeWidgetItem* pItemAction = new QTreeWidgetItem(pItemDM, 1);
+      if (nullptr != pItemAction) {
+        str = QString("Actions").arg(pdm->getRowSize());
+        pItemAction->setText(0, str);
+        pItemDM->addChild(pItemAction);
+      }
+
+      for (int i = 0; i < pActionList->size(); i++) {
+
+        CMDF_Action* paction            = (*pActionList)[i];
+        QTreeWidgetItem* pSubItemAction = new QTreeWidgetItem(pItemAction, 1);
+
+        if (nullptr != pSubItemAction) {
+
+          str = QString("Action: %1 %2").arg(paction->getCode()).arg(paction->getName().c_str());
+          pSubItemAction->setText(0, str);
+          pItemAction->addChild(pSubItemAction);
+
+          pItem = new QTreeWidgetItem(pSubItemAction, 1);
+          if (nullptr != pItem) {
+            str = QString("Code: %1").arg(paction->getCode());
+            pItem->setText(0, str);
+            pSubItemAction->addChild(pItem);
+          }
+
+          pItem = new QTreeWidgetItem(pSubItemAction, 1);
+          if (nullptr != pItem) {
+            str = QString("Name: %1").arg(paction->getName().c_str());
+            pItem->setText(0, str);
+            pSubItemAction->addChild(pItem);
+          }
+
+          std::deque<CMDF_ActionParameter*>* pActionParamList = paction->getListActionParameter();
+          if (nullptr != pActionParamList) {
+
+            QTreeWidgetItem* pActionParamItem = new QTreeWidgetItem(pSubItemAction, 1);
+            str                               = QString("Action Parameters");
+            pActionParamItem->setText(0, str);
+            pSubItemAction->addChild(pActionParamItem);
+
+            for (int j = 0; j < pActionParamList->size(); j++) {
+
+              CMDF_ActionParameter* pactionparam = (*pActionParamList)[j];
+              if (nullptr != pSubItemAction) {
+
+                QString str;
+
+                pItem = new QTreeWidgetItem(pActionParamItem, 1);
+                if (nullptr != pItem) {
+                  str = QString("Name: %1 - %2").arg(j).arg(pactionparam->getName().c_str());
+                  pItem->setText(0, str);
+                  pActionParamItem->addChild(pItem);
+                }
+
+                pItem = new QTreeWidgetItem(pActionParamItem, 1);
+                if (nullptr != pItem) {
+                  str = QString("Offset: %1").arg(pactionparam->getOffset());
+                  pItem->setText(0, str);
+                  pActionParamItem->addChild(pItem);
+                }
+
+                pItem = new QTreeWidgetItem(pActionParamItem, 1);
+                if (nullptr != pItem) {
+                  str = QString("Min: %1").arg(pactionparam->getMin());
+                  pItem->setText(0, str);
+                  pActionParamItem->addChild(pItem);
+                }
+
+                pItem = new QTreeWidgetItem(pActionParamItem, 1);
+                if (nullptr != pItem) {
+                  str = QString("Max: %1").arg(pactionparam->getMax());
+                  pItem->setText(0, str);
+                  pActionParamItem->addChild(pItem);
+                }
+
+                // Fill in bit field info
+                fillBitInfo(pActionParamItem, *pactionparam->getListBits());
+
+                // Fill in valid values
+                fillValueInfo(pActionParamItem, *pactionparam->getListValues());
+
+                // Descriptions
+                fillDescriptionItems(pActionParamItem, pactionparam->getMapDescription());
+
+                // Info URL's
+                fillHelpUrlItems(pActionParamItem, pactionparam->getMapDescription());
+              }
+            }
+          }
+
+          // Descriptions
+          fillDescriptionItems(pSubItemAction, paction->getMapDescription());
+
+          // Info URL's
+          fillHelpUrlItems(pSubItemAction, paction->getMapDescription());
+        }
+      }
+
+      // * * * Events * * *
+
+      QTreeWidgetItem* pItemEvent = new QTreeWidgetItem(pItemModule, 1);
+      pItemEvent->setFont(0, fontTopItem);
+      pItemEvent->setForeground(0, greenBrush);
+      pItemEvent->setText(0, tr("Events"));
+      ui->treeMDF->addTopLevelItem(pItemEvent);
+
+      std::deque<CMDF_Event*>* pEventList = m_mdf.getEventList();
+
+      if (nullptr != pEventList) {
+
+        QString str;
+        QTreeWidgetItem* pItem;
+
+        for (int i = 0; i < pEventList->size(); i++) {
+
+          CMDF_Event* pevent = (*pEventList)[i];
+          pSubItem           = new QTreeWidgetItem(pItemEvent, 1);
+          if (nullptr != pSubItem) {
+
+            str = QString("Event: %1 -- %2").arg(i).arg(pevent->getName().c_str());
+            pSubItem->setText(0, str);
+            pItemEvent->addChild(pSubItem);
+
+            pItem = new QTreeWidgetItem(pSubItem, 1);
+            if (nullptr != pItem) {
+              str = QString("Name: %1").arg(pevent->getName().c_str());
+              pItem->setText(0, str);
+              pSubItem->addChild(pItem);
+            }
+
+            pItem = new QTreeWidgetItem(pSubItem, 1);
+            if (nullptr != pItem) {
+              str = QString("VSCP Class: %1").arg(pevent->getClass());
+              pItem->setText(0, str);
+              pSubItem->addChild(pItem);
+            }
+
+            pItem = new QTreeWidgetItem(pSubItem, 1);
+            if (nullptr != pItem) {
+              str = QString("VSCP Type: %1").arg(pevent->getType());
+              pItem->setText(0, str);
+              pSubItem->addChild(pItem);
+            }
+
+            pItem = new QTreeWidgetItem(pSubItem, 1);
+            if (nullptr != pItem) {
+              str = QString("VSCP Priority: %1").arg(pevent->getPriority());
+              pItem->setText(0, str);
+              pSubItem->addChild(pItem);
+            }
+
+            pItem = new QTreeWidgetItem(pSubItem, 1);
+            if (nullptr != pItem) {
+              str = QString("Direction: %1 (%2)").arg((MDF_EVENT_DIR_IN == pevent->getDirection()) ? "In" : "Out").arg(pevent->getDirection());
+              pItem->setText(0, str);
+              pSubItem->addChild(pItem);
+            }
+
+            // Event Data
+            QTreeWidgetItem* pItemEventData = new QTreeWidgetItem(pSubItem, 1);
+            // pItemEvent->setFont(0, fontTopItem);
+            // pItemEvent->setForeground(0, greenBrush);
+            pItemEventData->setText(0, tr("Event data"));
+            pSubItem->addChild(pItemEventData);
+
+            std::deque<CMDF_EventData*>* pEventDataList = pevent->getListEventData();
+            if (nullptr != pEventDataList) {
+
+              QString str;
+              QTreeWidgetItem* pEventSubItem;
+              QTreeWidgetItem* pItem;
+
+              for (int j = 0; j < pEventDataList->size(); j++) {
+
+                CMDF_EventData* pEventData = (*pEventDataList)[j];
+
+                pEventSubItem = new QTreeWidgetItem(pItemEventData, 1);
+                if (nullptr != pEventSubItem) {
+
+                  // Event data
+                  str = QString("Event data: %1 -- %2").arg(j).arg(pEventData->getName().c_str());
+                  pEventSubItem->setText(0, str);
+                  pItemEventData->addChild(pEventSubItem);
+
+                  pItem = new QTreeWidgetItem(pEventSubItem, 1);
+                  if (nullptr != pItem) {
+                    str = QString("Name: %1").arg(pEventData->getName().c_str());
+                    pItem->setText(0, str);
+                    pEventSubItem->addChild(pItem);
+                  }
+
+                  pItem = new QTreeWidgetItem(pEventSubItem, 1);
+                  if (nullptr != pItem) {
+                    str = QString("Offset: %1").arg(pEventData->getOffset());
+                    pItem->setText(0, str);
+                    pEventSubItem->addChild(pItem);
+                  }
+
+                  // Fill in bit field info
+                  fillBitInfo(pEventSubItem, *pEventData->getListBits());
+
+                  // Fill in valid values
+                  fillValueInfo(pEventSubItem, *pEventData->getListValues());
+
+                  // Descriptions
+                  fillDescriptionItems(pEventSubItem, pEventData->getMapDescription());
+
+                  // Info URL's
+                  fillHelpUrlItems(pEventSubItem, pEventData->getMapDescription());
+                }
+              } // EventDataList
+            }   // list exist
+
+            // Descriptions
+            fillDescriptionItems(pSubItem, pevent->getMapDescription());
+
+            // Info URL's
+            fillHelpUrlItems(pSubItem, pevent->getMapDescription());
+          }
+        }
+      } // EventList
+    }
+  }
 
   // Recipes
   // QTreeWidgetItem *pItemRecipes = new QTreeWidgetItem(pItemModule, 1);

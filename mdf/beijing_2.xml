@@ -3455,7 +3455,7 @@
 			<bit pos="1" default="0" >
 				<name lang="en">Class mask bit 8</name>
       	   <description lang="en">Defines the ninth bit of the class mask.</description> 
-			</bit>			
+			</bit>
 			<bit pos="2" default="false" >
 				<name lang="en">Reserved bit</name>
       	   <description lang="en">This bit is not used.</description> 

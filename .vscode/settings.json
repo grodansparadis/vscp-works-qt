@@ -72,7 +72,8 @@
       "cfloat": "cpp",
       "climits": "cpp",
       "regex": "cpp",
-      "any": "cpp"
+      "any": "cpp",
+      "numbers": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {
