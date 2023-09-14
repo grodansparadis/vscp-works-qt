@@ -1,0 +1,65 @@
+MDF tree codes
+--------------
+
+MSB | MSB+1 | MSB+2 | MSB+3
+
+MSB
+---
+0   Redirect
+1   Module
+
+MSB+1
+-----
+0   Description
+1   Info URL
+2	Name
+3   Change Date
+4   VSCP Level
+5   Model
+6   Version
+7   Buffer size
+9   MANUFACTURER
+10  BOOT
+11  FILES
+12  REGISTER
+13  REMOTE VARIABLES
+14  ALARM
+15  DECISION MATRIX
+16  EVENTS
+
+Manufacturer
+-----
+0   Description (Reserved)
+1   Info URL (Reserved)
+2   Name
+3   Street
+4   City
+5   Town
+6   Post Code
+7   Region
+8   State
+9   Country
+10  Email
+11  Phone
+12  Fax
+13  Web
+14  Social
+
+Boot
+----
+0   Description (Reserved)
+1   Info URL (Reserved)
+2   Algorithm
+3   Block size
+4   Block count
+
+Files
+-----
+0   Description (Reserved)
+1   Info URL (Reserved)
+2   Manuals
+3   Pictures
+4   Videos
+5   Firmware
+6   Drivers
+7   Setup scripts

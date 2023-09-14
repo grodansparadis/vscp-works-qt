@@ -235,7 +235,9 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cfrmnodeconfig.ui
     src/cfrmnodescan.ui
     src/cdlgactionparam.ui
+    srd/cdlgdatepicker.ui
     src/cfrmmdf.ui
+    src/cdlgmdfmodule.ui
     src/cdlgmdfbitlist.ui      
     src/cdlgmdfdm.ui	       
     src/cdlgmdffilepicture.ui  
@@ -467,9 +469,20 @@ add_executable(${PROJECT_NAME}
     src/xyseries.h
     src/xyseries.cpp
 
+    build/ui_cdlgdatepicker.h
+    src/cdlgdatepicker.ui
+    src/cdlgdatepicker.cpp 
+    src/cdlgdatepicker.h 
+
+    build/ui_cfrmmdf.h
     src/cfrmmdf.ui
     src/cfrmmdf.h
     src/cfrmmdf.cpp
+
+    build/ui_cdlgmdfmodule.h
+    src/cdlgmdfmodule.ui
+    src/cdlgmdfmodule.cpp 
+    src/cdlgmdfmodule.h 
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

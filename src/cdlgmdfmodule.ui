@@ -23,29 +23,6 @@
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Copyright</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="m_description">
-      <property name="focusPolicy">
-       <enum>Qt::WheelFocus</enum>
-      </property>
-      <property name="toolTip">
-       <string>Description for  connection used in connection table</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
@@ -57,7 +34,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="m_path">
+     <widget class="QLineEdit" name="editName">
       <property name="toolTip">
        <string>Path to file containg VSCP events</string>
       </property>
@@ -67,7 +44,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="m_path_2">
+     <widget class="QLineEdit" name="editModel">
       <property name="toolTip">
        <string>Path to file containg VSCP events</string>
       </property>
@@ -106,7 +83,7 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Description</string>
@@ -116,7 +93,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="8" column="0">
      <widget class="QLabel" name="label_7">
       <property name="text">
        <string>Info.URL</string>
@@ -126,7 +103,17 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editVersion">
+      <property name="toolTip">
+       <string>Path to file containg VSCP events</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
        <string>Buffer size</string>
@@ -136,30 +123,23 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="m_path_3">
-      <property name="toolTip">
-       <string>Path to file containg VSCP events</string>
-      </property>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label">
       <property name="text">
-       <string/>
+       <string>Copyright</string>
       </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="m_path_4">
-      <property name="toolTip">
-       <string>Path to file containg VSCP events</string>
-      </property>
-      <property name="text">
-       <string/>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QLineEdit" name="m_path_6">
+     <widget class="QLineEdit" name="editCopyright">
+      <property name="focusPolicy">
+       <enum>Qt::WheelFocus</enum>
+      </property>
       <property name="toolTip">
-       <string>Path to file containg VSCP events</string>
+       <string>Description for  connection used in connection table</string>
       </property>
       <property name="text">
        <string/>
@@ -167,17 +147,16 @@
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QLineEdit" name="m_path_7">
-      <property name="toolTip">
-       <string>Path to file containg VSCP events</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
+     <widget class="QListWidget" name="listDescription"/>
+    </item>
+    <item row="8" column="1">
+     <widget class="QListWidget" name="listInfo"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QDateEdit" name="editDate"/>
     </item>
     <item row="5" column="1">
-     <widget class="QTableView" name="tableView"/>
+     <widget class="QSpinBox" name="editBufferSize"/>
     </item>
    </layout>
   </widget>

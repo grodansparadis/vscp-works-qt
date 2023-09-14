@@ -75,10 +75,79 @@ class CFrmMdf;
 
 // ----------------------------------------------------------------------------
 
+/*!
+    Class that represent a row in the TX list
+*/
+class QMdfTreeWidgetItem : public QTreeWidgetItem
+{
+
+ public:
+
+    QMdfTreeWidgetItem(const QString& text);
+    QMdfTreeWidgetItem(mdf_record_type objtype);
+    QMdfTreeWidgetItem(CMDF_Object *pobj, mdf_record_type objtype);
+    QMdfTreeWidgetItem(QTreeWidgetItem* parent, mdf_record_type objtype);
+    QMdfTreeWidgetItem(QTreeWidgetItem* parent, CMDF_Object *pobj, mdf_record_type objtype);
+    virtual ~QMdfTreeWidgetItem();
+
+    /*!
+      Get MDF object type
+      @return Return MDF object type
+    */
+    mdf_record_type getObjectType(void) { return m_objType; /*(type() - QTreeWidgetItem::UserType);*/ };
+
+    /*!
+      Set MDF object type
+      @param type MDF object type
+    */
+    void setObjectType(mdf_record_type objtype) { m_objType = objtype;};
+
+    /*!
+      Get index for element
+      @return Return element index
+    */
+    uint16_t getElementIndex(void) { return m_fieldIndex; };
+
+    /*!
+      Set index for element
+      @param idx Element index used or direct editing
+    */
+    void setElementIndex(uint16_t idx) { m_fieldIndex = idx;};
+
+    /*!
+      Get MDF object
+      @return Return pointer to MDF object
+    */
+    CMDF_Object *getObject(void) { return m_pMdfRecord; };
+
+    /*!
+      Set pointer to MDF object
+      @param pobj Pointer to MDF object
+    */
+    void setObject(CMDF_Object *pobj) { m_pMdfRecord = pobj;};
+
+ private:
+
+  /*!
+    This is the index for fields of a record.
+  */
+  uint16_t m_fieldIndex;
+
+  /*!
+    Pointer to MDF record
+  */
+  CMDF_Object *m_pMdfRecord;
+
+  /*!
+    Pointer to MDF record
+  */
+  mdf_record_type m_objType;
+};
+
 // ----------------------------------------------------------------------------
 
 /*!
-    The session window
+  The session window
 */
 
 class CFrmMdf : public QMainWindow {
@@ -103,6 +172,12 @@ public slots:
 
   /// Show find nodes context menu
   void showMdfContextMenu(const QPoint& pos);
+
+  /// Item has been clicked
+  void onItemClicked(QTreeWidgetItem *item, int column);
+
+  /// Item has been double clicked
+  void onItemDoubleClicked(QTreeWidgetItem *item, int column);
 
   /*!
     Fill in data from info map as children to parent item
@@ -165,6 +240,9 @@ private:
 
   // Object that holds mdf definition in parsed form
   CMDF m_mdf;
+
+  // The statusbar
+  QStatusBar *m_bar;
 };
 
 #endif // CFrmMdf_H

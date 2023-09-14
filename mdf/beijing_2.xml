@@ -3,6 +3,7 @@
 <vscp>
 <module>
 	<name>Beijing IO controller</name>
+  <copyright>(C) 2000-2023 Grodans Paradis AB</copyright>
   <level>1</level>
 	<model>B</model>
 	<version>9</version>

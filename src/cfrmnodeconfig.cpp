@@ -5002,7 +5002,7 @@ CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int 
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)item;
-  if (nullptr == item) {
+  if (nullptr != item) {
     spdlog::critical("Doubleclick: MDF file item is NULL {0}", pitem->text(0).toStdString());
     ui->infoArea->setHtml(tr("Doubleclick: MDF file item is NULL"));
     return;    
@@ -5415,7 +5415,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *item, int column)
   std::string html;
   std::string str;
   CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)item;
-  if (nullptr == item) {
+  if (nullptr != item) {
     spdlog::critical("MDF file item is NULL {0}", pitem->text(0).toStdString());
     ui->infoArea->setHtml(tr("MDF file item is NULL"));
     return;    
