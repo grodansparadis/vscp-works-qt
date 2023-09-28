@@ -32,52 +32,37 @@
 #include <vscpworks.h>
 
 #include <QDialog>
-
+#include <QDate>
 
 namespace Ui {
 class CDlgDatePicker;
 }
 
-
-class CDlgDatePicker : public QDialog
-{
-    Q_OBJECT
+class CDlgDatePicker : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgDatePicker(QWidget *parent = nullptr);
-    ~CDlgDatePicker();
+  explicit CDlgDatePicker(QWidget* parent = nullptr);
+  ~CDlgDatePicker();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Set edit mode. 
-        GUID will be READ ONLY
-    */
-    void setEditMode(void);
+  // ----------------------------------------------------------------------------
+  //                             Getters & Setters
+  // ----------------------------------------------------------------------------
 
-  
+  // Date
+  QDate getDate(void);
+  void setDate(const QDate& date);
 
-
-    // ----------------------------------------------------------------------------
-    //                             Getters & Setters
-    // ----------------------------------------------------------------------------
-
- 
-
- public slots:
-
+public slots:
 
 private:
-
-    Ui::CDlgDatePicker *ui;
-
+  Ui::CDlgDatePicker* ui;
 };
-
 
 #endif // CDLGDATEPICKER_H

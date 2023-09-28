@@ -234,6 +234,7 @@
      <string>&amp;Edit</string>
     </property>
     <addaction name="actionE_xpand_all"/>
+    <addaction name="actionEdit_item"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Edit"/>
@@ -286,6 +287,17 @@
   <action name="actionE_xpand_all">
    <property name="text">
     <string>E&amp;xpand all</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionEdit_item">
+   <property name="text">
+    <string>Edit item</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
  </widget>

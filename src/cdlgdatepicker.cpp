@@ -40,6 +40,7 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QDate>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -81,92 +82,28 @@ void CDlgDatePicker::setInitialFocus(void)
     // ui->editGuid->setFocus();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// setEditMode
-//
-
-void CDlgDatePicker::setEditMode(void)
-{
-    // ui->editGuid->setReadOnly(true);
-    // ui->btnSetDummyGuid->setVisible(false);
-    // ui->editName->setFocus();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// setDummyGuid
-//
-
-// void cdlgdatepicker::setDummyGuid(void)
-// {
-//     //ui->editGuid->setText("00:00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx");
-// }
-
-
 // ----------------------------------------------------------------------------
 //                             Getters & Setters
 // ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-// getGuid
+// getDate
 //
 
-// QString cdlgdatepicker::getGuid(void)
-// {
-//     //return (ui->editGuid->text()); 
-// }
+QDate CDlgDatePicker::getDate(void)
+{
+  return ui->calendar->selectedDate(); 
+}
 
 ///////////////////////////////////////////////////////////////////////////////
-// setGuid
+// setDate
 //
 
-// void cdlgdatepicker::setGuid(const QString& str)
-// {
-//     //ui->editGuid->setText(str);
-// }
+void CDlgDatePicker::setDate(const QDate& date)
+{
+    ui->calendar->setSelectedDate(date);
+}
 
-///////////////////////////////////////////////////////////////////////////////
-// getName
-//
 
-// QString cdlgdatepicker::getName(void)
-// {
-//     return (ui->editName->text()); 
-// }
-
-///////////////////////////////////////////////////////////////////////////////
-// setName
-//
-
-// void cdlgdatepicker::setName(const QString& str)
-// {
-//     ui->editName->setText(str);
-// }
-
-///////////////////////////////////////////////////////////////////////////////
-// getDescription
-//
-
-// QString cdlgdatepicker::getDescription(void)
-// {
-// #if QT_VERSION >= 0x050E00     
-//     //return (ui->editDescription->toMarkdown());
-//     return (ui->editDescription->toPlainText());
-// #else
-//     return (ui->editDescription->toPlainText());
-// #endif    
-// }
-
-///////////////////////////////////////////////////////////////////////////////
-// setDescription
-//
-
-// void cdlgdatepicker::setDescription(const QString& str)
-// {
-// #if QT_VERSION >= 0x050E00    
-//     ui->editDescription->setMarkdown(str);
-// #else
-//     ui->editDescription->setText(str);
-// #endif    
-// }
 
 

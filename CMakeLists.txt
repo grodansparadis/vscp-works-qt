@@ -250,10 +250,12 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmdffiledriver.ui    
     src/cdlgmdffile.ui	      
     src/cdlgmdfremotevar.ui
-    src/cdlgmdfdescription.ui  
+    src/cdlgmdfdescription.ui
+    src/cdlgmdfinfourl.ui
     src/cdlgmdffilefirmware.ui  
     src/cdlgmdffilevideo.ui    
     src/cdlgmdfvaluelist.ui
+    src/cdlgeditmap.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -483,6 +485,21 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfmodule.ui
     src/cdlgmdfmodule.cpp 
     src/cdlgmdfmodule.h 
+
+    build/ui_cdlgmdfdescription.h
+    src/cdlgmdfdescription.ui
+    src/cdlgmdfdescription.cpp
+    src/cdlgmdfdescription.h
+
+    build/ui_cdlgmdfinfourl.h
+    src/cdlgmdfinfourl.ui
+    src/cdlgmdfinfourl.cpp
+    src/cdlgmdfinfourl.h
+
+    build/ui_cdlgeditmap.h
+    src/cdlgeditmap.ui
+    src/cdlgeditmap.cpp
+    src/cdlgeditmap.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

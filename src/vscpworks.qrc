@@ -1,6 +1,11 @@
 <RCC>
   <qresource>
     <file>../images/svg/search.svg</file>
+    <file>../images/svg/copy.svg</file>
+    <file alias="clone.svg">../images/svg/clone.svg</file>
+    <file alias="pen.svg">../images/svg/pen.svg</file>
+    <file alias="pencil.svg">../images/svg/pencil.svg</file>
+    <file>../images/svg/circle-check.svg</file>
     <file>../images/svg/nodes.svg</file>
     <file>../images/svg/plug-disconnected-black.svg</file>
     <file>../images/svg/plug-disconnected-white.svg</file>

@@ -47,6 +47,9 @@
 #include "cfrmmdf.h"
 #include "ui_cfrmmdf.h"
 
+#include "cdlgeditmap.h"
+#include "cdlgmdfmodule.h"
+
 #include <QClipboard>
 #include <QFile>
 #include <QJSEngine>
@@ -80,11 +83,11 @@ QMdfTreeWidgetItem::QMdfTreeWidgetItem(mdf_record_type objtype)
   m_pMdfRecord = nullptr;
 }
 
-QMdfTreeWidgetItem::QMdfTreeWidgetItem(CMDF_Object* pobj, mdf_record_type objtype)
+QMdfTreeWidgetItem::QMdfTreeWidgetItem(CMDF_Object* pobj, mdf_record_type objtype, uint16_t index)
   : QTreeWidgetItem(QTreeWidgetItem::Type)
 {
   m_objType    = objtype;
-  m_fieldIndex = 0;
+  m_fieldIndex = index;
   m_pMdfRecord = pobj;
 }
 
@@ -96,12 +99,15 @@ QMdfTreeWidgetItem::QMdfTreeWidgetItem(QTreeWidgetItem* parent, mdf_record_type 
   m_pMdfRecord = nullptr;
 }
 
-QMdfTreeWidgetItem::QMdfTreeWidgetItem(QTreeWidgetItem* parent, CMDF_Object* pobj, mdf_record_type objtype)
+QMdfTreeWidgetItem::QMdfTreeWidgetItem(QTreeWidgetItem* parent,
+                                       CMDF_Object* pobj,
+                                       mdf_record_type objtype,
+                                       uint16_t index)
   : QTreeWidgetItem(parent, QTreeWidgetItem::Type)
 {
   m_objType    = objtype;
-  m_fieldIndex = 0;
-  m_pMdfRecord = nullptr;
+  m_fieldIndex = index;
+  m_pMdfRecord = pobj;
 }
 
 QMdfTreeWidgetItem::~QMdfTreeWidgetItem()
@@ -159,11 +165,14 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
           this,
           &CFrmMdf::showMdfContextMenu);
 
-  // New has been selected in the menu
+  // New has been selected in the menu - Create new MDF file
   connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newMdf()));
 
-  // Open has been selected in the menu
+  // Open has been selected in the menu - Open new MDF file
   connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openMdf()));
+
+  // Open has been selected in the menu - Edit Module info
+  connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editModuleData()));
 
   // Register row has been clicked.
   connect(ui->treeMDF,
@@ -262,6 +271,7 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
   QMenu* menu = new QMenu(this);
 
   QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+
   if (nullptr == pItem) {
     menu->addAction(QString(tr("Fetch MDF")), this, SLOT(loadSelectedMdf()));
     menu->addAction(QString(tr("Fetch ALL MDF")), this, SLOT(loadAllMdf()));
@@ -282,7 +292,11 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_mdf:
-        menu->addAction(QString(tr("MDF")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit")), this, SLOT(editModuleData()));
+        break;
+
+      case mdf_type_mdf_item:
+        menu->addAction(QString(tr("Edit")), this, SLOT(editModuleData()));
         break;
 
       case mdf_type_value:
@@ -462,19 +476,19 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_generic_description:
-        menu->addAction(QString(tr("description")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit Descriptions")), this, SLOT(editDescription()));
         break;
 
       case mdf_type_generic_description_item:
-        menu->addAction(QString(tr("description item")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit Description")), this, SLOT(editDescription()));
         break;
 
       case mdf_type_generic_help_url:
-        menu->addAction(QString(tr("help url")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit Info URL's")), this, SLOT(editInfoUrl()));
         break;
 
       case mdf_type_generic_help_url_item:
-        menu->addAction(QString(tr("help url item")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit Info URL")), this, SLOT(editInfoUrl()));
         break;
 
       default:
@@ -491,14 +505,18 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
 //
 
 void
-CFrmMdf::fillDescriptionItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap)
+CFrmMdf::fillDescriptionItems(QTreeWidgetItem* pParent, CMDF_Object* pobj, std::map<std::string, std::string>* pObjMap, bool bChildIsKnown)
 {
   QString str;
+  QMdfTreeWidgetItem* pItemModuleDescription;
   QMdfTreeWidgetItem* pItem;
-https: // www.facebook.com/v10.0/dialog/share?app_id=69103156693&channel_url=https%3A%2F%2Fstaticxx.facebook.com%2Fx%2Fconnect%2Fxd_arbiter%2F%3Fversion%3D46%23cb%3Df150d58de1db8e4%26domain%3Dwww.kickstarter.com%26is_canvas%3Dfalse%26origin%3Dhttps%253A%252F%252Fwww.kickstarter.com%252Ffe4a197826998%26relation%3Dopener&display=popup&e2e=%7B%7D&fallback_redirect_uri=https%3A%2F%2Fwww.kickstarter.com%2Fprojects%2Ffolkparksminnen60-99%2Ffolkparksminnen%3Ffbclid%3DIwAR2INbiHAcN1yOkmITEWLu_t0m3KC6et_gZUFpPQhuqO9UhYd_Xr1dLzW4Q&href=https%3A%2F%2Fwww.kickstarter.com%2Fprojects%2Ffolkparksminnen60-99%2Ffolkparksminnen%3Fref%3Dproject_facebook&locale=en_US&next=https%3A%2F%2Fstaticxx.facebook.com%2Fx%2Fconnect%2Fxd_arbiter%2F%3Fversion%3D46%23cb%3Df293d257f56a6d8%26domain%3Dwww.kickstarter.com%26is_canvas%3Dfalse%26origin%3Dhttps%253A%252F%252Fwww.kickstarter.com%252Ffe4a197826998%26relation%3Dopener%26frame%3Df133ebcd98d41c8%26result%3D%2522xxRESULTTOKENxx%2522&sdk=joey&version=v10.0
 
   // Must be valid pointer
   if (nullptr == pParent) {
+    return;
+  }
+
+  if (nullptr == pobj) {
     return;
   }
 
@@ -506,9 +524,14 @@ https: // www.facebook.com/v10.0/dialog/share?app_id=69103156693&channel_url=htt
     return;
   }
 
-  QMdfTreeWidgetItem* pItemModuleDescription = new QMdfTreeWidgetItem(pParent, mdf_type_generic_description);
-  pItemModuleDescription->setText(0, "Description");
-  pParent->addChild(pItemModuleDescription);
+  if (!bChildIsKnown) {
+    pItemModuleDescription = new QMdfTreeWidgetItem(pParent, pobj, mdf_type_generic_description);
+    pItemModuleDescription->setText(0, "Description");
+    pParent->addChild(pItemModuleDescription);
+  }
+  else {
+    pItemModuleDescription = (QMdfTreeWidgetItem*)pParent;
+  }
 
   // Must be items to fill in childs
   if (!pObjMap->size()) {
@@ -518,7 +541,7 @@ https: // www.facebook.com/v10.0/dialog/share?app_id=69103156693&channel_url=htt
   std::map<std::string, std::string>* pmap = pObjMap;
   for (auto const& x : *pmap) {
     str   = x.first.c_str() + QString(": ") + x.second.c_str();
-    pItem = new QMdfTreeWidgetItem(pItemModuleDescription, mdf_type_generic_description_item);
+    pItem = new QMdfTreeWidgetItem(pItemModuleDescription, pobj, mdf_type_generic_description_item);
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
@@ -529,9 +552,10 @@ https: // www.facebook.com/v10.0/dialog/share?app_id=69103156693&channel_url=htt
 //
 
 void
-CFrmMdf::fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap)
+CFrmMdf::fillHelpUrlItems(QTreeWidgetItem* pParent, CMDF_Object* pobj, std::map<std::string, std::string>* pObjMap, bool bChildIsKnown)
 {
   QString str;
+  QMdfTreeWidgetItem* pItemModuleHelpUrl;
   QMdfTreeWidgetItem* pItem;
 
   // Must be valid pointer
@@ -539,13 +563,22 @@ CFrmMdf::fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::s
     return;
   }
 
+  if (nullptr == pobj) {
+    return;
+  }
+
   if (nullptr == pObjMap) {
     return;
   }
 
-  QMdfTreeWidgetItem* pItemModuleHelpUrl = new QMdfTreeWidgetItem(pParent, mdf_type_generic_help_url);
-  pItemModuleHelpUrl->setText(0, "Help/Info URL");
-  pParent->addChild(pItemModuleHelpUrl);
+  if (!bChildIsKnown) {
+    pItemModuleHelpUrl = new QMdfTreeWidgetItem(pParent, pobj, mdf_type_generic_help_url);
+    pItemModuleHelpUrl->setText(0, "Help/Info URL");
+    pParent->addChild(pItemModuleHelpUrl);
+  }
+  else {
+    pItemModuleHelpUrl = (QMdfTreeWidgetItem*)pParent;
+  }
 
   // Must be items to fill in childs
   if (!pObjMap->size()) {
@@ -555,7 +588,7 @@ CFrmMdf::fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::s
   std::map<std::string, std::string>* pmap = pObjMap;
   for (auto const& x : *pmap) {
     str   = x.first.c_str() + QString(": ") + x.second.c_str();
-    pItem = new QMdfTreeWidgetItem(pItemModuleHelpUrl, mdf_type_generic_help_url_item);
+    pItem = new QMdfTreeWidgetItem(pItemModuleHelpUrl, pobj, mdf_type_generic_help_url_item);
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
@@ -650,10 +683,10 @@ CFrmMdf::fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits)
     fillValueInfo(pItemParent, *pbit->getListValues());
 
     // Descriptions
-    fillDescriptionItems(pItemParent, pbit->getMapDescription());
+    fillDescriptionItems(pItemParent, pbit, pbit->getMapDescription());
 
     // Info URL's
-    fillHelpUrlItems(pItemParent, pbit->getMapDescription());
+    fillHelpUrlItems(pItemParent, pbit, pbit->getMapDescription());
   }
 }
 
@@ -705,10 +738,10 @@ CFrmMdf::fillValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequev
     pItemValue->addChild(pItem);
 
     // Descriptions
-    fillDescriptionItems(pItemParent, pvalue->getMapDescription());
+    fillDescriptionItems(pItemParent, pvalue, pvalue->getMapDescription());
 
     // Info URL's
-    fillHelpUrlItems(pItemParent, pvalue->getMapDescription());
+    fillHelpUrlItems(pItemParent, pvalue, pvalue->getMapDescription());
   }
 }
 
@@ -849,10 +882,10 @@ CFrmMdf::fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg)
   fillValueInfo(pParent, *preg->getListValues());
 
   // Descriptions
-  fillDescriptionItems(pParent, preg->getMapDescription());
+  fillDescriptionItems(pParent, preg, preg->getMapDescription());
 
   // Info URL's
-  fillHelpUrlItems(pParent, preg->getMapDescription());
+  fillHelpUrlItems(pParent, preg, preg->getMapDescription());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -886,46 +919,47 @@ CFrmMdf::loadMdf(void)
   pItemModule->setFont(0, fontTopItem);
   pItemModule->setForeground(0, blueBrush);
   pItemModule->setText(0, tr("Module"));
-  pItemModule->setObject(&m_mdf);
+  // pItemModule->setObject(&m_mdf);
   ui->treeMDF->addTopLevelItem(pItemModule);
+  pItemModule->setExpanded(true);
 
   // Module information
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_string);
-  pItem->setText(0, QString("Name: ") + m_mdf.getModuleName().c_str());
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_name);
+  pItem->setText(0, PREFIX_MDF_MODULE_NAME + m_mdf.getModuleName().c_str());
   pItemModule->addChild(pItem);
 
-  str   = QString("Copyright: ") + m_mdf.getModuleCopyright().c_str();
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_string);
+  str   = PREFIX_MDF_MODULE_MODEL + QString(m_mdf.getModuleModel().c_str());
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_model);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = QString("Change Date: ") + m_mdf.getModuleChangeDate().c_str();
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_string);
+  str   = PREFIX_MDF_MODULE_LEVEL + QString::number(m_mdf.getModuleLevel() + 1);
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_level);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = "VSCP Level: " + QString::number(m_mdf.getModuleLevel() + 1);
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_number);
+  str   = PREFIX_MDF_MODULE_VERSION + QString(m_mdf.getModuleVersion().c_str());
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_version);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = "Model: " + QString(m_mdf.getModuleModel().c_str());
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_string);
+  str   = PREFIX_MDF_MODULE_CHANGE_DATE + m_mdf.getModuleChangeDate().c_str();
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_change_date);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = "Version: " + QString(m_mdf.getModuleVersion().c_str());
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_string);
+  str   = PREFIX_MDF_MODULE_BUFFER_SIZE + QString::number(m_mdf.getModuleBufferSize());
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_buffer_size);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = "Buffer size: " + QString::number(m_mdf.getModuleBufferSize());
-  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_generic_number);
+  str   = PREFIX_MDF_MODULE_COPYRIGHT + m_mdf.getModuleCopyright().c_str();
+  pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_copyright);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  fillDescriptionItems(pItemModule, m_mdf.getModuleDescriptionMap());
-  fillHelpUrlItems(pItemModule, m_mdf.getModuleHelpUrlMap());
+  fillDescriptionItems(pItemModule, &m_mdf, m_mdf.getModuleDescriptionMap());
+  fillHelpUrlItems(pItemModule, &m_mdf, m_mdf.getModuleHelpUrlMap());
 
   // * * * Manufacturer info * * *
 
@@ -988,8 +1022,8 @@ CFrmMdf::loadMdf(void)
         pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_email);
         pItem->setText(0, str);
         pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getEmailObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getEmailObj()->getInfoUrlMap());
+        fillDescriptionItems(pItem, pManufacturer->getEmailObj(), pManufacturer->getEmailObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem, pManufacturer->getEmailObj(), pManufacturer->getEmailObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemEmail);
 
@@ -1003,8 +1037,8 @@ CFrmMdf::loadMdf(void)
         pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_phone);
         pItem->setText(0, str);
         pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getPhoneObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getPhoneObj()->getInfoUrlMap());
+        fillDescriptionItems(pItem, pManufacturer->getPhoneObj(), pManufacturer->getPhoneObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem, pManufacturer->getPhoneObj(), pManufacturer->getPhoneObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemPhone);
 
@@ -1018,8 +1052,8 @@ CFrmMdf::loadMdf(void)
         pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_fax);
         pItem->setText(0, str);
         pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getFaxObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getFaxObj()->getInfoUrlMap());
+        fillDescriptionItems(pItem, pManufacturer->getFaxObj(), pManufacturer->getFaxObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem, pManufacturer->getFaxObj(), pManufacturer->getFaxObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemFax);
 
@@ -1033,8 +1067,8 @@ CFrmMdf::loadMdf(void)
         pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_web);
         pItem->setText(0, str);
         pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getWebObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getWebObj()->getInfoUrlMap());
+        fillDescriptionItems(pItem, pManufacturer->getWebObj(), pManufacturer->getWebObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem, pManufacturer->getWebObj(), pManufacturer->getWebObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemWeb);
 
@@ -1048,8 +1082,8 @@ CFrmMdf::loadMdf(void)
         pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_social);
         pItem->setText(0, str);
         pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getSocialObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getSocialObj()->getInfoUrlMap());
+        fillDescriptionItems(pItem, pManufacturer->getSocialObj(), pManufacturer->getSocialObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem, pManufacturer->getSocialObj(), pManufacturer->getSocialObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemSocial);
   }
@@ -1138,8 +1172,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pManualObj->getMapDescription());
-        fillHelpUrlItems(pItem, pManualObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pManualObj, pManualObj->getMapDescription());
+        fillHelpUrlItems(pItem, pManualObj, pManualObj->getMapInfoUrl());
       }
 
       index++;
@@ -1191,8 +1225,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pPictureObj->getMapDescription());
-        fillHelpUrlItems(pItem, pPictureObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pPictureObj, pPictureObj->getMapDescription());
+        fillHelpUrlItems(pItem, pPictureObj, pPictureObj->getMapInfoUrl());
       }
 
       index++;
@@ -1244,8 +1278,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pVideoObj->getMapDescription());
-        fillHelpUrlItems(pItem, pVideoObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pVideoObj, pVideoObj->getMapDescription());
+        fillHelpUrlItems(pItem, pVideoObj, pVideoObj->getMapInfoUrl());
       }
 
       index++;
@@ -1339,8 +1373,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pFirmwareObj->getMapDescription());
-        fillHelpUrlItems(pItem, pFirmwareObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pFirmwareObj, pFirmwareObj->getMapDescription());
+        fillHelpUrlItems(pItem, pFirmwareObj, pFirmwareObj->getMapInfoUrl());
       }
 
       index++;
@@ -1434,8 +1468,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pDriverObj->getMapDescription());
-        fillHelpUrlItems(pItem, pDriverObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pDriverObj, pDriverObj->getMapDescription());
+        fillHelpUrlItems(pItem, pDriverObj, pDriverObj->getMapInfoUrl());
       }
 
       index++;
@@ -1489,8 +1523,8 @@ CFrmMdf::loadMdf(void)
           pItem->addChild(pSubItem);
         }
 
-        fillDescriptionItems(pItem, pSetupObj->getMapDescription());
-        fillHelpUrlItems(pItem, pSetupObj->getMapInfoUrl());
+        fillDescriptionItems(pItem, pSetupObj, pSetupObj->getMapDescription());
+        fillHelpUrlItems(pItem, pSetupObj, pSetupObj->getMapInfoUrl());
       }
 
       index++;
@@ -1654,10 +1688,10 @@ CFrmMdf::loadMdf(void)
         fillValueInfo(pSubItem, *pvar->getListValues());
 
         // Descriptions
-        fillDescriptionItems(pSubItem, pvar->getMapDescription());
+        fillDescriptionItems(pSubItem, pvar, pvar->getMapDescription());
 
         // Info URL's
-        fillHelpUrlItems(pSubItem, pvar->getMapDescription());
+        fillHelpUrlItems(pSubItem, pvar, pvar->getMapDescription());
       }
     }
   }
@@ -1810,19 +1844,19 @@ CFrmMdf::loadMdf(void)
                 fillValueInfo(pActionParamItem, *pactionparam->getListValues());
 
                 // Descriptions
-                fillDescriptionItems(pActionParamItem, pactionparam->getMapDescription());
+                fillDescriptionItems(pActionParamItem, pactionparam, pactionparam->getMapDescription());
 
                 // Info URL's
-                fillHelpUrlItems(pActionParamItem, pactionparam->getMapDescription());
+                fillHelpUrlItems(pActionParamItem, pactionparam, pactionparam->getMapDescription());
               }
             }
           }
 
           // Descriptions
-          fillDescriptionItems(pSubItemAction, paction->getMapDescription());
+          fillDescriptionItems(pSubItemAction, paction, paction->getMapDescription());
 
           // Info URL's
-          fillHelpUrlItems(pSubItemAction, paction->getMapDescription());
+          fillHelpUrlItems(pSubItemAction, paction, paction->getMapDescription());
         }
       }
 
@@ -1933,19 +1967,19 @@ CFrmMdf::loadMdf(void)
                   fillValueInfo(pEventSubItem, *pEventData->getListValues());
 
                   // Descriptions
-                  fillDescriptionItems(pEventSubItem, pEventData->getMapDescription());
+                  fillDescriptionItems(pEventSubItem, pEventData, pEventData->getMapDescription());
 
                   // Info URL's
-                  fillHelpUrlItems(pEventSubItem, pEventData->getMapDescription());
+                  fillHelpUrlItems(pEventSubItem, pEventData, pEventData->getMapDescription());
                 }
               } // EventDataList
             }   // list exist
 
             // Descriptions
-            fillDescriptionItems(pSubItem, pevent->getMapDescription());
+            fillDescriptionItems(pSubItem, pevent, pevent->getMapDescription());
 
             // Info URL's
-            fillHelpUrlItems(pSubItem, pevent->getMapDescription());
+            fillHelpUrlItems(pSubItem, pevent, pevent->getMapDescription());
           }
         }
       } // EventList
@@ -2046,7 +2080,10 @@ CFrmMdf::onItemDoubleClicked(QTreeWidgetItem* item, int column)
 
     case mdf_type_mdf:
       str = tr("MDF");
-      
+      break;
+
+    case mdf_type_mdf_item:
+      str = tr("MDF item");
       break;
 
     case mdf_type_value:
@@ -2246,7 +2283,357 @@ CFrmMdf::onItemDoubleClicked(QTreeWidgetItem* item, int column)
       break;
   }
 
-  QMessageBox msgBox;
-  msgBox.setText(str);
-  msgBox.exec();
+  // QMessageBox msgBox;
+  // msgBox.setText(str);
+  // msgBox.exec();
+  ui->statusbar->showMessage(str, 1000);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// findMdfWidgetItem
+//
+
+QMdfTreeWidgetItem*
+CFrmMdf::findMdfWidgetItem(QMdfTreeWidgetItem* pItem, mdf_record_type type)
+{
+  QMdfTreeWidgetItem* piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem);
+  while (nullptr != piter) {
+
+    if (type == piter->getObjectType()) {
+      return piter;
+    }
+
+    piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(piter);
+  }
+
+  return nullptr;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// findDocumentType
+//
+
+int
+CFrmMdf::deleteMdfWidgetChildItems(QMdfTreeWidgetItem* pItem, mdf_record_type type)
+{
+  bool bExpanded;
+  int cnt = 0;
+
+  // Check pointer
+  if (nullptr == pItem) {
+    return 0;
+  }
+
+  // Save expansion state
+  bExpanded = pItem->isExpanded();
+
+  // Expand to make traversion possible
+  pItem->setExpanded(true);
+
+  QMdfTreeWidgetItem* piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem);
+  while (type == piter->getObjectType()) {
+    pItem->removeChild(piter);
+    delete piter;
+    cnt++;
+    piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem);
+  }
+
+  // Restore expansion
+  pItem->setExpanded(bExpanded);
+
+  return cnt;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editModuleData
+//
+
+void
+CFrmMdf::editModuleData()
+{
+  QMdfTreeWidgetItem* pItemModule      = nullptr; // Pointer to module top item
+  QMdfTreeWidgetItem* pItemDescription = nullptr; // Pointer to description top item
+  QMdfTreeWidgetItem* pItemItemInfoURL = nullptr; // Pointer to info URL top item
+  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+
+  // Item must be selected
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("No MDF module item selected"));
+    return;
+  }
+
+  // Must have an object
+  if (nullptr == pItem->getObject()) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Internal error: Invalid module object"));
+    spdlog::error("MDF module edit - object has nullptr");
+    return;
+  }
+
+  // Must be correct object type
+  if ((mdf_type_mdf != pItem->getObjectType()) && (mdf_type_mdf_item != pItem->getObjectType())) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("This is not a module item"));
+    spdlog::error("MDF module edit - Not a module item");
+    return;
+  }
+
+  // Set pointer to module top item
+  if (mdf_type_mdf == pItem->getObjectType()) {
+
+    pItemModule = pItem;
+
+    // Make sure it is expanded
+    pItem->setExpanded(true);
+  }
+  else if (mdf_type_mdf_item == pItem->getObjectType()) {
+    pItemModule = (QMdfTreeWidgetItem*)pItem->parent();
+  }
+  else {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid module top item object type"));
+    spdlog::error("MDF module edit - Invalid module top item object type");
+    return;
+  }
+
+  //     piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItemModule);
+  //     do {
+  //       if (nullptr == piter)
+  //         return nullptr;
+  //   if( (mdf_type_generic_description == piter->getObjectType()) {
+  //         return piter;
+  //   }
+  //   piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(piter);
+  // while (mdf_type_mdf_item == piter->getObjectType());
+
+  pItemDescription = findMdfWidgetItem(pItemModule, mdf_type_generic_description); // findDocumentItem(pItemModule);
+  pItemItemInfoURL = findMdfWidgetItem(pItemModule, mdf_type_generic_help_url);    // findInfoUrlItem(pItemModule);
+
+  CDlgMdfModule dlg(this);
+  dlg.initDialogData(pItem->getObject(), static_cast<mdf_module_index>(pItem->getElementIndex()));
+
+  if (QDialog::Accepted == dlg.exec()) {
+    // Update Module items
+
+    QMdfTreeWidgetItem* piter = nullptr;
+    // if (nullptr != pItem->parent()) {
+
+    //   // Module sub item selected
+    //   piter = (QMdfTreeWidgetItem*)pItem->parent();
+
+    //   // QMdfTreeWidgetItem* pitemBelow = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem->parent());
+    //   // if (nullptr != pitemBelow) {
+    //   //   ui->statusbar->showMessage(pitemBelow->text(0), 3000);
+    //   //   piter = (QMdfTreeWidgetItem*)pItem->parent();
+    //   // }
+    // }
+    // else {
+
+    //   // Module top item selected
+    //   // ui->statusbar->showMessage(pItem->text(0), 3000);
+    //   piter = (QMdfTreeWidgetItem*)pItem;
+
+    //   // QMdfTreeWidgetItem* pitemBelow = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem);
+    //   // if (nullptr != pitemBelow) {
+    //   //   ui->statusbar->showMessage(pitemBelow->text(0), 3000);
+    //   //   piter = (QMdfTreeWidgetItem*)pItem->parent();
+    //   // }
+    // }
+
+    // Protect against a null pointer
+    // if (nullptr == piter) {
+    //   int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid NULL module item"));
+    //   spdlog::error("MDF module edit - module item has nullptr");
+    //   return;
+    // }
+
+    // Iterate over module items and update ui
+    piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItemModule);
+    do {
+
+      switch (piter->getElementIndex()) {
+
+        case index_module_name:
+          piter->setText(0, PREFIX_MDF_MODULE_NAME + m_mdf.getModuleName().c_str());
+          break;
+
+        case index_module_model:
+          piter->setText(0, PREFIX_MDF_MODULE_MODEL + m_mdf.getModuleModel().c_str());
+          break;
+
+        case index_module_level: {
+          QString str = "%1";
+          str         = PREFIX_MDF_MODULE_LEVEL + str.arg(m_mdf.getModuleLevel() + 1);
+          piter->setText(0, str);
+        } break;
+
+        case index_module_version:
+          piter->setText(0, PREFIX_MDF_MODULE_VERSION + m_mdf.getModuleVersion().c_str());
+          break;
+
+        case index_module_change_date:
+          piter->setText(0, PREFIX_MDF_MODULE_CHANGE_DATE + m_mdf.getModuleChangeDate().c_str());
+          break;
+
+        case index_module_buffer_size: {
+          QString str;
+          str = PREFIX_MDF_MODULE_BUFFER_SIZE + str.arg(m_mdf.getModuleBufferSize());
+          piter->setText(0, str);
+        } break;
+
+        case index_module_copyright: // Copyright
+          piter->setText(0, PREFIX_MDF_MODULE_COPYRIGHT + m_mdf.getModuleCopyright().c_str());
+          break;
+
+        default: // Hmmmm.-.. unkown field index
+          break;
+      }
+
+      piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(piter);
+    } while (mdf_type_mdf_item == piter->getObjectType());
+
+    // Find module descriptions
+    int n = piter->childCount();
+    if (mdf_type_generic_description == piter->getObjectType()) {
+      piter->setExpanded(false);
+      n = ui->treeMDF->indexOfTopLevelItem(piter);
+      n = ui->treeMDF->topLevelItemCount();
+      n = n + 1;
+    }
+
+    deleteMdfWidgetChildItems(pItemDescription, mdf_type_generic_description_item);
+    fillDescriptionItems(pItemDescription, &m_mdf, m_mdf.getModuleDescriptionMap(), true);
+
+    deleteMdfWidgetChildItems(pItemItemInfoURL, mdf_type_generic_help_url_item);
+    fillHelpUrlItems(pItemItemInfoURL, &m_mdf, m_mdf.getModuleHelpUrlMap(), true);
+
+  } // accept
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editDescription
+//
+
+void
+CFrmMdf::editDescription()
+{
+  QString selstr = "";
+  QMdfTreeWidgetItem* pItemDescription = nullptr; // Pointer to description top item
+  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();  
+
+  // Item must be selected
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("No MDF description item selected"));
+    return;
+  }
+
+  // Must have an object
+  if (nullptr == pItem->getObject()) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Internal error: Invalid module object"));
+    spdlog::error("MDF module edit - object has nullptr");
+    return;
+  }
+
+  // Must be correct object type
+  if ((mdf_type_generic_description != pItem->getObjectType()) && (mdf_type_generic_description_item != pItem->getObjectType())) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("This is not a module description item"));
+    spdlog::error("MDF module edit - Not a module item");
+    return;
+  }
+
+  // Set pointer to module top item
+  if (mdf_type_generic_description == pItem->getObjectType()) {
+
+    pItemDescription = pItem;
+
+    // Make sure it is expanded
+    pItemDescription->setExpanded(true);
+  }
+  else if (mdf_type_generic_description_item == pItem->getObjectType()) {
+    pItemDescription = (QMdfTreeWidgetItem*)pItem->parent();
+    selstr         = pItem->text(0).split('_').first().left(2);
+  }
+  else {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid module top item object type"));
+    spdlog::error("MDF module edit - Invalid module top item object type");
+    return;
+  }
+
+  // Iterate over module items and update ui
+  QMdfTreeWidgetItem* piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItemDescription);
+
+  CDlgEditMap dlg(this);
+  dlg.initDialogData(m_mdf.getModuleDescriptionMap(), map_type_description, &selstr);
+
+  if (QDialog::Accepted == dlg.exec()) {
+    // Update Module items
+    deleteMdfWidgetChildItems(pItemDescription, mdf_type_generic_description_item);
+    fillDescriptionItems(pItemDescription, &m_mdf, m_mdf.getModuleDescriptionMap(), true);
+
+    QMdfTreeWidgetItem* piter = nullptr;
+
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editInfoUrl
+//
+
+void
+CFrmMdf::editInfoUrl()
+{
+  QString selstr = "";
+  QMdfTreeWidgetItem* pItemInfoUrl = nullptr; // Pointer to info url top item
+  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();  
+
+  // Item must be selected
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("No MDF info url item selected"));
+    return;
+  }
+
+  // Must have an object
+  if (nullptr == pItem->getObject()) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Internal error: Invalid module object"));
+    spdlog::error("MDF module edit - object has nullptr");
+    return;
+  }
+
+  // Must be correct object type
+  if ((mdf_type_generic_help_url!= pItem->getObjectType()) && (mdf_type_generic_help_url_item != pItem->getObjectType())) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("This is not a module help url item"));
+    spdlog::error("MDF module edit - Not a module item");
+    return;
+  }
+
+  // Set pointer to module top item
+  if (mdf_type_generic_help_url== pItem->getObjectType()) {
+
+    pItemInfoUrl = pItem;
+
+    // Make sure it is expanded
+    pItemInfoUrl->setExpanded(true);
+  }
+  else if (mdf_type_generic_help_url_item == pItem->getObjectType()) {
+    pItemInfoUrl = (QMdfTreeWidgetItem*)pItem->parent();
+    selstr         = pItem->text(0).split('_').first().left(2);
+  }
+  else {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid module top item object type"));
+    spdlog::error("MDF module edit - Invalid module top item object type");
+    return;
+  }
+
+  // Iterate over module items and update ui
+  QMdfTreeWidgetItem* piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItemInfoUrl);
+
+  CDlgEditMap dlg(this);
+  dlg.initDialogData(m_mdf.getModuleHelpUrlMap(), map_type_info_url, &selstr);
+
+  if (QDialog::Accepted == dlg.exec()) {
+
+    // Update Module items
+    deleteMdfWidgetChildItems(pItemInfoUrl, mdf_type_generic_help_url_item);
+    fillHelpUrlItems(pItemInfoUrl, &m_mdf, m_mdf.getModuleHelpUrlMap(), true);
+    
+    QMdfTreeWidgetItem* piter = nullptr;
+
+  }
 }

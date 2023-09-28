@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>819</width>
-    <height>545</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>MDF Module information</string>
   </property>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>30</y>
      <width>781</width>
-     <height>441</height>
+     <height>547</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -43,16 +43,6 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="editModel">
-      <property name="toolTip">
-       <string>Path to file containg VSCP events</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
@@ -63,7 +53,44 @@
       </property>
      </widget>
     </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editModel">
+      <property name="toolTip">
+       <string>Path to file containg VSCP events</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Level</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="comboModuleLevel">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <item>
+       <property name="text">
+        <string>Level 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Level 2</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="5" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Version</string>
@@ -73,37 +100,7 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Changed</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Description</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Info.URL</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
+    <item row="5" column="1">
      <widget class="QLineEdit" name="editVersion">
       <property name="toolTip">
        <string>Path to file containg VSCP events</string>
@@ -113,7 +110,7 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="9" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
        <string>Buffer size</string>
@@ -123,7 +120,17 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="9" column="1">
+     <widget class="QSpinBox" name="editBufferSize">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Copyright</string>
@@ -133,7 +140,7 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="10" column="1">
      <widget class="QLineEdit" name="editCopyright">
       <property name="focusPolicy">
        <enum>Qt::WheelFocus</enum>
@@ -146,26 +153,263 @@
       </property>
      </widget>
     </item>
+    <item row="11" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>Description</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QListWidget" name="listDescription"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QToolButton" name="btnAddDesc">
+            <property name="toolTip">
+             <string>Add description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/add.png</normaloff>:/add.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnEditDesc">
+            <property name="toolTip">
+             <string>Edit description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+E</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDupDesc">
+            <property name="toolTip">
+             <string>Duplicate description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/images/svg/copy.svg</normaloff>:/images/svg/copy.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+D</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDelDesc">
+            <property name="toolTip">
+             <string>Delete Description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/remove.png</normaloff>:/remove.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+X</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Info.URL</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QListWidget" name="listInfo"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QToolButton" name="btnAddInfo">
+            <property name="toolTip">
+             <string>Add Info URL item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/add.png</normaloff>:/add.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnEditInfo">
+            <property name="toolTip">
+             <string>Edit Info URL item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+E</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDupInfo">
+            <property name="toolTip">
+             <string>Duplicate Info URL item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/images/svg/copy.svg</normaloff>:/images/svg/copy.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+D</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDelInfo">
+            <property name="toolTip">
+             <string>Delete Info URL item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/remove.png</normaloff>:/remove.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+X</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
     <item row="7" column="1">
-     <widget class="QListWidget" name="listDescription"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QDateEdit" name="editDate">
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
-    <item row="8" column="1">
-     <widget class="QListWidget" name="listInfo"/>
-    </item>
-    <item row="4" column="1">
-     <widget class="QDateEdit" name="editDate"/>
-    </item>
-    <item row="5" column="1">
-     <widget class="QSpinBox" name="editBufferSize"/>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Changed</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>500</y>
-     <width>801</width>
+     <y>590</y>
+     <width>781</width>
      <height>32</height>
     </rect>
    </property>
@@ -180,6 +424,41 @@
    </property>
   </widget>
  </widget>
- <resources/>
- <connections/>
+ <resources>
+  <include location="vscpworks.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfModule</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>515</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>409</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfModule</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>515</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>409</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

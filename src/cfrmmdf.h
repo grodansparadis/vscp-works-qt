@@ -78,55 +78,57 @@ class CFrmMdf;
 /*!
     Class that represent a row in the TX list
 */
-class QMdfTreeWidgetItem : public QTreeWidgetItem
-{
+class QMdfTreeWidgetItem : public QTreeWidgetItem {
 
- public:
+public:
+  QMdfTreeWidgetItem(const QString& text);
+  QMdfTreeWidgetItem(mdf_record_type objtype);
+  QMdfTreeWidgetItem(CMDF_Object* pobj, mdf_record_type objtype, uint16_t index = 0);
+  QMdfTreeWidgetItem(QTreeWidgetItem* parent, mdf_record_type objtype);
+  QMdfTreeWidgetItem(QTreeWidgetItem* parent, CMDF_Object* pobj, mdf_record_type objtype, uint16_t index = 0);
+  virtual ~QMdfTreeWidgetItem();
 
-    QMdfTreeWidgetItem(const QString& text);
-    QMdfTreeWidgetItem(mdf_record_type objtype);
-    QMdfTreeWidgetItem(CMDF_Object *pobj, mdf_record_type objtype);
-    QMdfTreeWidgetItem(QTreeWidgetItem* parent, mdf_record_type objtype);
-    QMdfTreeWidgetItem(QTreeWidgetItem* parent, CMDF_Object *pobj, mdf_record_type objtype);
-    virtual ~QMdfTreeWidgetItem();
+  /*!
+    Get MDF object type
+    @return Return MDF object type
+  */
+  mdf_record_type getObjectType(void) { return m_objType; };
 
-    /*!
-      Get MDF object type
-      @return Return MDF object type
-    */
-    mdf_record_type getObjectType(void) { return m_objType; /*(type() - QTreeWidgetItem::UserType);*/ };
+  /*!
+    Set MDF object type
+    @param type MDF object type
+  */
+  void setObjectType(mdf_record_type objtype) { m_objType = objtype; };
 
-    /*!
-      Set MDF object type
-      @param type MDF object type
-    */
-    void setObjectType(mdf_record_type objtype) { m_objType = objtype;};
+  /*!
+    Get index for element
+    @return Return element index
+  */
+  uint16_t getElementIndex(void) { return m_fieldIndex; };
 
-    /*!
-      Get index for element
-      @return Return element index
-    */
-    uint16_t getElementIndex(void) { return m_fieldIndex; };
+  /*!
+    Set index for element
+    @param idx Element index used or direct editing
+  */
+  void setElementIndex(uint16_t idx) { m_fieldIndex = idx; };
 
-    /*!
-      Set index for element
-      @param idx Element index used or direct editing
-    */
-    void setElementIndex(uint16_t idx) { m_fieldIndex = idx;};
+  /*!
+    Get MDF object
+    @return Return pointer to MDF object
+  */
+  CMDF_Object* getObject(void) { return m_pMdfRecord; };
 
-    /*!
-      Get MDF object
-      @return Return pointer to MDF object
-    */
-    CMDF_Object *getObject(void) { return m_pMdfRecord; };
+  /*!
+    Set pointer to MDF object
+    @param pobj Pointer to MDF object
+  */
+  void setObject(CMDF_Object* pobj) { m_pMdfRecord = pobj; };
 
-    /*!
-      Set pointer to MDF object
-      @param pobj Pointer to MDF object
-    */
-    void setObject(CMDF_Object *pobj) { m_pMdfRecord = pobj;};
-
- private:
+private:
+  /*!
+    This is a pointer to a special object for certain types
+  */
+  // void *m_pSpecialObj;
 
   /*!
     This is the index for fields of a record.
@@ -136,7 +138,7 @@ class QMdfTreeWidgetItem : public QTreeWidgetItem
   /*!
     Pointer to MDF record
   */
-  CMDF_Object *m_pMdfRecord;
+  CMDF_Object* m_pMdfRecord;
 
   /*!
     Pointer to MDF record
@@ -174,28 +176,47 @@ public slots:
   void showMdfContextMenu(const QPoint& pos);
 
   /// Item has been clicked
-  void onItemClicked(QTreeWidgetItem *item, int column);
+  void onItemClicked(QTreeWidgetItem* item, int column);
 
   /// Item has been double clicked
-  void onItemDoubleClicked(QTreeWidgetItem *item, int column);
+  void onItemDoubleClicked(QTreeWidgetItem* item, int column);
+
+  /// Edit MDF module data
+  void editModuleData(void);
+
+  /// Edit MDF descriptions
+  void editDescription(void);
+
+  /// Edit MDF info URL's
+  void editInfoUrl(void);
 
   /*!
     Fill in data from info map as children to parent item
 
-    @param parent Pointer to parent treewidget
+    @param parent Pointer to parent treewidget (or description head)
+    @param pobj MDF object
     @param pObjMap Pointer to map holding descriptions in different languages
+    @param bChildIsKnown Set to true of pParent points to description head
   */
   void
-  fillDescriptionItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
+  fillDescriptionItems(QTreeWidgetItem* pParent, 
+                          CMDF_Object* pobj, 
+                          std::map<std::string, std::string>* pObjMap, 
+                          bool bChildIsKnown = false);
 
   /*!
     Fill in data from help URL map as children to parent item
 
-    @param parent Pointer to parent treewidget
-    @param pObjMap Pointer to map holding indo URL's in different languages
+    @param parent Pointer to parent treewidget (or ino URL head)
+    @param pobj MDF object
+    @param pObjMap Pointer to map holding info URL's in different languages
+    @param bChildIsKnown Set to true of pParent points to info URL head
   */
   void
-  fillHelpUrlItems(QTreeWidgetItem* pParent, std::map<std::string, std::string>* pObjMap);
+  fillHelpUrlItems(QTreeWidgetItem* pParent, 
+                      CMDF_Object* pobj, 
+                      std::map<std::string, std::string>* pObjMap, 
+                      bool bChildIsKnown = false);
 
   /*!
     Fill bit list info
@@ -203,7 +224,7 @@ public slots:
     @param dequebits Reference for std:deque holding bit infor objects
   */
   void
-  fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit *> &dequebits);
+  fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
 
   /*!
     Fill value list info
@@ -221,7 +242,7 @@ public slots:
     @preg Pointer to register definition
   */
   void
-  fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register *preg);
+  fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
 
   /// Do the new operation
   void newMdf(void);
@@ -231,6 +252,24 @@ public slots:
 
   /// Load MDF for selected node
   void loadMdf(void);
+
+  /*!
+    Find next MDF type item in tree
+    @param Pointer to MDF widget item
+    @param type MDF item type to search for
+    @return Pointer to item if found or
+      null pointer if not found.
+  */
+  QMdfTreeWidgetItem* findMdfWidgetItem(QMdfTreeWidgetItem* pItem, mdf_record_type type);
+
+  /*!
+    Delete all child items of a specific MDF type
+    @param Pointer to MDF widget item
+    @param type MDF item type to search for
+    @return Return number of items that been deleted.
+  */
+
+  int deleteMdfWidgetChildItems(QMdfTreeWidgetItem* pItem, mdf_record_type type);
 
 signals:
 
@@ -242,7 +281,7 @@ private:
   CMDF m_mdf;
 
   // The statusbar
-  QStatusBar *m_bar;
+  QStatusBar* m_bar;
 };
 
 #endif // CFrmMdf_H
