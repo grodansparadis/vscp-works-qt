@@ -48,6 +48,8 @@
 #include "ui_cfrmmdf.h"
 
 #include "cdlgeditmap.h"
+#include "cdlgmdfcontact.h"
+#include "cdlgmdfmanufacturer.h"
 #include "cdlgmdfmodule.h"
 
 #include <QClipboard>
@@ -138,7 +140,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   ui->treeMDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  spdlog::debug(std::string(tr("Node configuration module opended").toStdString()));
+  spdlog::debug(std::string(tr("Node configuration module opened").toStdString()));
 
   if (nullptr == path) {
     //   spdlog::trace(std::string(tr("path is null").toStdString()));
@@ -172,7 +174,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openMdf()));
 
   // Open has been selected in the menu - Edit Module info
-  connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editModuleData()));
+  connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editData()));
 
   // Register row has been clicked.
   connect(ui->treeMDF,
@@ -380,7 +382,13 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_manufacturer:
-        menu->addAction(QString(tr("Manufacturer")), this, SLOT(loadSelectedMdf()));
+        // menu->addAction(QString(tr("Manufacturer")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit")), this, SLOT(editManufacturerData()));
+        break;
+
+      case mdf_type_manufacturer_item:
+        // menu->addAction(QString(tr("Manufacturer")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Edit")), this, SLOT(editManufacturerData()));
         break;
 
       case mdf_type_file:
@@ -904,6 +912,13 @@ CFrmMdf::loadMdf(void)
 
   QBrush greenBrush(QColor("green"));
   QBrush blueBrush(QColor("blue"));
+  QBrush redBrush(QColor("red"));
+  QBrush yellowBrush(QColor("yellow"));
+  QBrush cyanBrush(QColor("cyan"));
+  QBrush magentaBrush(QColor("magenta"));
+  QBrush greyBrush(QColor("grey"));
+  QBrush darkGreyBrush(QColor("darkGrey"));
+  QBrush darkMagentaBrush(QColor("darkMagenta"));
 
   QFont fontTopItem;
   fontTopItem.setBold(true);
@@ -963,7 +978,9 @@ CFrmMdf::loadMdf(void)
 
   // * * * Manufacturer info * * *
 
-  QMdfTreeWidgetItem* pItemManufacturer = new QMdfTreeWidgetItem(pItemModule, mdf_type_manufacturer);
+  QMdfTreeWidgetItem* pItemManufacturer = new QMdfTreeWidgetItem(pItemModule, 
+                                                                    m_mdf.getManufacturer(), 
+                                                                    mdf_type_manufacturer);
   pItemManufacturer->setFont(0, fontTopItem);
   pItemManufacturer->setForeground(0, greenBrush);
   pItemManufacturer->setText(0, tr("Manufacturer"));
@@ -973,44 +990,78 @@ CFrmMdf::loadMdf(void)
   if (nullptr != pManufacturer) {
 
     str   = QString("Name: ") + m_mdf.getManufacturerName().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_name);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("Street: ") + m_mdf.getManufacturerStreetAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_street);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("City: ") + m_mdf.getManufacturerCityAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_city);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("Town: ") + m_mdf.getManufacturerTownAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_town);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("Post Code: ") + m_mdf.getManufacturerPostCodeAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_post_code);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("Region: ") + m_mdf.getManufacturerRegionAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_region);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("State: ") + m_mdf.getManufacturerStateAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_state);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
 
     str   = QString("Country: ") + m_mdf.getManufacturerCountryAddress().c_str();
-    pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_generic_string);
+    pItem = new QMdfTreeWidgetItem(pItemManufacturer, 
+                                    m_mdf.getManufacturer(), 
+                                    mdf_type_manufacturer_item,
+                                    index_manufacturer_country);
     pItem->setText(0, str);
     pItemModule->addChild(pItem);
+
+    // * * * Manufacturer - email * * *
+
+    QMdfTreeWidgetItem* pItemEmailHead = new QMdfTreeWidgetItem(pItemManufacturer,
+                                                                m_mdf.getManufacturer(),
+                                                                mdf_type_email);
+    // pItemEmailHead->setFont(0, fontTopItem);
+    // pItemEmailHead->setForeground(0, darkMagentaBrush);
+    pItemEmailHead->setText(0, tr("Email"));
+    pItemModule->addChild(pItemEmailHead);
 
     index = 0;
     CMDF_Item* pItemEmail;
@@ -1018,14 +1069,26 @@ CFrmMdf::loadMdf(void)
     do {
       pItemEmail = pManufacturer->getEmailObj(index++);
       if (nullptr != pItemEmail) {
-        str   = QString("Email ") + QString::number(index) + ": " + pItemEmail->getName().c_str();
-        pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_email);
-        pItem->setText(0, str);
-        pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getEmailObj(), pManufacturer->getEmailObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getEmailObj(), pManufacturer->getEmailObj()->getInfoUrlMap());
+        // str   = QString("Email ") + QString::number(index) + ": " + pItemEmail->getName().c_str();
+        pItem = new QMdfTreeWidgetItem(pItemEmailHead, mdf_type_email_item);
+        pItem->setText(0, pItemEmail->getName().c_str());
+        pItemEmailHead->addChild(pItem);
+        fillDescriptionItems(pItem,
+                             pManufacturer->getEmailObj(),
+                             pManufacturer->getEmailObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem,
+                         pManufacturer->getEmailObj(),
+                         pManufacturer->getEmailObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemEmail);
+
+    QMdfTreeWidgetItem* pItemPhoneHead = new QMdfTreeWidgetItem(pItemManufacturer,
+                                                                m_mdf.getManufacturer(),
+                                                                mdf_type_phone);
+    // pItemPhoneHead->setFont(0, fontTopItem);
+    // pItemEmailHead->setForeground(0, darkMagentaBrush);
+    pItemPhoneHead->setText(0, tr("Phone"));
+    pItemModule->addChild(pItemPhoneHead);
 
     CMDF_Item* pItemPhone;
     index = 0;
@@ -1033,14 +1096,26 @@ CFrmMdf::loadMdf(void)
     do {
       pItemPhone = pManufacturer->getPhoneObj(index++);
       if (nullptr != pItemPhone) {
-        str   = QString("Phone ") + QString::number(index) + ": " + pItemPhone->getName().c_str();
-        pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_phone);
-        pItem->setText(0, str);
-        pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getPhoneObj(), pManufacturer->getPhoneObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getPhoneObj(), pManufacturer->getPhoneObj()->getInfoUrlMap());
+        // str   = QString("Phone ") + QString::number(index) + ": " + pItemPhone->getName().c_str();
+        pItem = new QMdfTreeWidgetItem(pItemPhoneHead, mdf_type_phone_item);
+        pItem->setText(0, pItemPhone->getName().c_str());
+        pItemPhoneHead->addChild(pItem);
+        fillDescriptionItems(pItem,
+                             pManufacturer->getPhoneObj(),
+                             pManufacturer->getPhoneObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem,
+                         pManufacturer->getPhoneObj(),
+                         pManufacturer->getPhoneObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemPhone);
+
+    QMdfTreeWidgetItem* pItemFaxHead = new QMdfTreeWidgetItem(pItemManufacturer,
+                                                              m_mdf.getManufacturer(),
+                                                              mdf_type_fax);
+    // pItemFaxHead->setFont(0, fontTopItem);
+    // pItemEmailHead->setForeground(0, darkMagentaBrush);
+    pItemFaxHead->setText(0, tr("Fax"));
+    pItemModule->addChild(pItemFaxHead);
 
     CMDF_Item* pItemFax;
     index = 0;
@@ -1048,14 +1123,26 @@ CFrmMdf::loadMdf(void)
     do {
       pItemFax = pManufacturer->getFaxObj(index++);
       if (nullptr != pItemFax) {
-        str   = QString("Fax ") + QString::number(index) + ": " + pItemFax->getName().c_str();
-        pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_fax);
-        pItem->setText(0, str);
-        pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getFaxObj(), pManufacturer->getFaxObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getFaxObj(), pManufacturer->getFaxObj()->getInfoUrlMap());
+        // str   = QString("Fax ") + QString::number(index) + ": " + pItemFax->getName().c_str();
+        pItem = new QMdfTreeWidgetItem(pItemFaxHead, mdf_type_fax_item);
+        pItem->setText(0, pItemFax->getName().c_str());
+        pItemFaxHead->addChild(pItem);
+        fillDescriptionItems(pItem,
+                             pManufacturer->getFaxObj(),
+                             pManufacturer->getFaxObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem,
+                         pManufacturer->getFaxObj(),
+                         pManufacturer->getFaxObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemFax);
+
+    QMdfTreeWidgetItem* pItemWebHead = new QMdfTreeWidgetItem(pItemManufacturer,
+                                                              m_mdf.getManufacturer(),
+                                                              mdf_type_web);
+    // pItemWebHead->setFont(0, fontTopItem);
+    // pItemEmailHead->setForeground(0, darkMagentaBrush);
+    pItemWebHead->setText(0, tr("Web"));
+    pItemModule->addChild(pItemWebHead);
 
     CMDF_Item* pItemWeb;
     index = 0;
@@ -1063,14 +1150,26 @@ CFrmMdf::loadMdf(void)
     do {
       pItemWeb = pManufacturer->getWebObj(index++);
       if (nullptr != pItemWeb) {
-        str   = QString("Web ") + QString::number(index) + ": " + pItemWeb->getName().c_str();
-        pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_web);
-        pItem->setText(0, str);
-        pItemModule->addChild(pItem);
-        fillDescriptionItems(pItem, pManufacturer->getWebObj(), pManufacturer->getWebObj()->getDescriptionMap());
-        fillHelpUrlItems(pItem, pManufacturer->getWebObj(), pManufacturer->getWebObj()->getInfoUrlMap());
+        // str   = QString("Web ") + QString::number(index) + ": " + pItemWeb->getName().c_str();
+        pItem = new QMdfTreeWidgetItem(pItemWebHead, mdf_type_web);
+        pItem->setText(0, pItemWeb->getName().c_str());
+        pItemWebHead->addChild(pItem);
+        fillDescriptionItems(pItem,
+                             pManufacturer->getWebObj(),
+                             pManufacturer->getWebObj()->getDescriptionMap());
+        fillHelpUrlItems(pItem,
+                         pManufacturer->getWebObj(),
+                         pManufacturer->getWebObj()->getInfoUrlMap());
       }
     } while (nullptr != pItemWeb);
+
+    QMdfTreeWidgetItem* pItemSocialHead = new QMdfTreeWidgetItem(pItemManufacturer,
+                                                                 m_mdf.getManufacturer(),
+                                                                 mdf_type_social);
+    // pItemSocialHead->setFont(0, fontTopItem);
+    // pItemEmailHead->setForeground(0, darkMagentaBrush);
+    pItemSocialHead->setText(0, tr("Social"));
+    pItemModule->addChild(pItemSocialHead);
 
     CMDF_Item* pItemSocial;
     index = 0;
@@ -1078,10 +1177,10 @@ CFrmMdf::loadMdf(void)
     do {
       pItemSocial = pManufacturer->getSocialObj(index++);
       if (nullptr != pItemSocial) {
-        str   = QString("Social ") + QString::number(index) + ": " + pItemSocial->getName().c_str();
-        pItem = new QMdfTreeWidgetItem(pItemManufacturer, mdf_type_social);
-        pItem->setText(0, str);
-        pItemModule->addChild(pItem);
+        // str = QString("Social ") + QString::number(index) + ": " + pItemSocial->getName().c_str();
+        pItem = new QMdfTreeWidgetItem(pItemSocialHead, mdf_type_social_item);
+        pItem->setText(0, pItemSocial->getName().c_str());
+        pItemSocialHead->addChild(pItem);
         fillDescriptionItems(pItem, pManufacturer->getSocialObj(), pManufacturer->getSocialObj()->getDescriptionMap());
         fillHelpUrlItems(pItem, pManufacturer->getSocialObj(), pManufacturer->getSocialObj()->getInfoUrlMap());
       }
@@ -2345,6 +2444,186 @@ CFrmMdf::deleteMdfWidgetChildItems(QMdfTreeWidgetItem* pItem, mdf_record_type ty
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// editData
+//
+
+void
+CFrmMdf::editData()
+{
+  QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+
+  switch (pItem->getObjectType() /*pItem->type() - QTreeWidgetItem::UserType*/) {
+    case mdf_type_unknown:
+
+      break;
+
+    case mdf_type_redirection:
+
+      break;
+
+    case mdf_type_mdf:
+      editModuleData();
+      break;
+
+    case mdf_type_mdf_item:
+      editModuleData();
+      break;
+
+    case mdf_type_value:
+      break;
+
+    case mdf_type_bit:
+      break;
+
+    case mdf_type_bit_item:
+      break;
+
+    case mdf_type_register_page:
+      break;
+
+    case mdf_type_register:
+      break;
+
+    case mdf_type_register_item:
+      break;
+
+    case mdf_type_remotevar:
+      break;
+
+    case mdf_type_remotevar_item:
+      break;
+
+    case mdf_type_action_param:
+      break;
+
+    case mdf_type_action:
+      break;
+
+    case mdf_type_action_item:
+      break;
+
+    case mdf_type_decision_matrix:
+      break;
+
+    case mdf_type_event_data:
+      break;
+
+    case mdf_type_event_data_item:
+      break;
+
+    case mdf_type_event:
+      break;
+
+    case mdf_type_event_item:
+      break;
+
+    case mdf_type_value_item:
+      break;
+
+    case mdf_type_bootloader:
+      break;
+
+    case mdf_type_alarm:
+      break;
+
+    case mdf_type_address:
+      break;
+
+    case mdf_type_manufacturer:
+      editManufacturerData();
+      break;
+
+    case mdf_type_manufacturer_item:
+      editManufacturerData();
+      break;
+
+    case mdf_type_file:
+      break;
+
+    case mdf_type_picture:
+      break;
+
+    case mdf_type_picture_item:
+      break;
+
+    case mdf_type_video:
+      break;
+
+    case mdf_type_video_item:
+      break;
+
+    case mdf_type_firmware:
+      break;
+
+    case mdf_type_firmware_item:
+      break;
+
+    case mdf_type_driver:
+      break;
+
+    case mdf_type_driver_item:
+      break;
+
+    case mdf_type_setup:
+      break;
+
+    case mdf_type_setup_item:
+      break;
+
+    case mdf_type_manual:
+      break;
+
+    case mdf_type_manual_item:
+      break;
+
+    case mdf_type_email:
+      break;
+
+    case mdf_type_phone:
+      break;
+
+    case mdf_type_fax:
+      break;
+
+    case mdf_type_web:
+      break;
+
+    case mdf_type_social:
+      break;
+
+    case mdf_type_generic_string:
+      break;
+
+    case mdf_type_generic_number:
+      break;
+
+    case mdf_type_generic_url:
+      break;
+
+    case mdf_type_generic_date:
+      break;
+
+    case mdf_type_generic_access:
+      break;
+
+    case mdf_type_generic_description:
+      break;
+
+    case mdf_type_generic_description_item:
+      break;
+
+    case mdf_type_generic_help_url:
+      break;
+
+    case mdf_type_generic_help_url_item:
+      break;
+
+    default:
+      break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // editModuleData
 //
 
@@ -2490,13 +2769,13 @@ CFrmMdf::editModuleData()
     } while (mdf_type_mdf_item == piter->getObjectType());
 
     // Find module descriptions
-    int n = piter->childCount();
-    if (mdf_type_generic_description == piter->getObjectType()) {
-      piter->setExpanded(false);
-      n = ui->treeMDF->indexOfTopLevelItem(piter);
-      n = ui->treeMDF->topLevelItemCount();
-      n = n + 1;
-    }
+    // int n = piter->childCount();
+    // if (mdf_type_generic_description == piter->getObjectType()) {
+    //   piter->setExpanded(false);
+    //   n = ui->treeMDF->indexOfTopLevelItem(piter);
+    //   n = ui->treeMDF->topLevelItemCount();
+    //   n = n + 1;
+    // }
 
     deleteMdfWidgetChildItems(pItemDescription, mdf_type_generic_description_item);
     fillDescriptionItems(pItemDescription, &m_mdf, m_mdf.getModuleDescriptionMap(), true);
@@ -2514,9 +2793,9 @@ CFrmMdf::editModuleData()
 void
 CFrmMdf::editDescription()
 {
-  QString selstr = "";
+  QString selstr                       = "";
   QMdfTreeWidgetItem* pItemDescription = nullptr; // Pointer to description top item
-  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();  
+  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
 
   // Item must be selected
   if (nullptr == pItem) {
@@ -2548,7 +2827,7 @@ CFrmMdf::editDescription()
   }
   else if (mdf_type_generic_description_item == pItem->getObjectType()) {
     pItemDescription = (QMdfTreeWidgetItem*)pItem->parent();
-    selstr         = pItem->text(0).split('_').first().left(2);
+    selstr           = pItem->text(0).split('_').first().left(2);
   }
   else {
     int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid module top item object type"));
@@ -2568,7 +2847,6 @@ CFrmMdf::editDescription()
     fillDescriptionItems(pItemDescription, &m_mdf, m_mdf.getModuleDescriptionMap(), true);
 
     QMdfTreeWidgetItem* piter = nullptr;
-
   }
 }
 
@@ -2579,9 +2857,9 @@ CFrmMdf::editDescription()
 void
 CFrmMdf::editInfoUrl()
 {
-  QString selstr = "";
+  QString selstr                   = "";
   QMdfTreeWidgetItem* pItemInfoUrl = nullptr; // Pointer to info url top item
-  QMdfTreeWidgetItem* pItem            = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();  
+  QMdfTreeWidgetItem* pItem        = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
 
   // Item must be selected
   if (nullptr == pItem) {
@@ -2597,14 +2875,14 @@ CFrmMdf::editInfoUrl()
   }
 
   // Must be correct object type
-  if ((mdf_type_generic_help_url!= pItem->getObjectType()) && (mdf_type_generic_help_url_item != pItem->getObjectType())) {
+  if ((mdf_type_generic_help_url != pItem->getObjectType()) && (mdf_type_generic_help_url_item != pItem->getObjectType())) {
     int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("This is not a module help url item"));
     spdlog::error("MDF module edit - Not a module item");
     return;
   }
 
   // Set pointer to module top item
-  if (mdf_type_generic_help_url== pItem->getObjectType()) {
+  if (mdf_type_generic_help_url == pItem->getObjectType()) {
 
     pItemInfoUrl = pItem;
 
@@ -2613,7 +2891,7 @@ CFrmMdf::editInfoUrl()
   }
   else if (mdf_type_generic_help_url_item == pItem->getObjectType()) {
     pItemInfoUrl = (QMdfTreeWidgetItem*)pItem->parent();
-    selstr         = pItem->text(0).split('_').first().left(2);
+    selstr       = pItem->text(0).split('_').first().left(2);
   }
   else {
     int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Invalid module top item object type"));
@@ -2632,8 +2910,118 @@ CFrmMdf::editInfoUrl()
     // Update Module items
     deleteMdfWidgetChildItems(pItemInfoUrl, mdf_type_generic_help_url_item);
     fillHelpUrlItems(pItemInfoUrl, &m_mdf, m_mdf.getModuleHelpUrlMap(), true);
-    
-    QMdfTreeWidgetItem* piter = nullptr;
 
+    QMdfTreeWidgetItem* piter = nullptr;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editManufacturerData
+//
+
+void
+CFrmMdf::editManufacturerData()
+{
+  QMdfTreeWidgetItem* pItemManufacturer = nullptr; // Pointer to module top item
+  QMdfTreeWidgetItem* pItemEmail        = nullptr; // Pointer to description top item
+  QMdfTreeWidgetItem* pItemWeb          = nullptr; // Pointer to info URL top item
+  QMdfTreeWidgetItem* pItem             = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+
+  // Item must be selected
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("No MDF module item selected"));
+    return;
+  }
+
+  // Must have an object
+  if (nullptr == pItem->getObject()) {
+    int ret = QMessageBox::critical(this, tr("MDF module edit"), tr("Internal error: Invalid module object"));
+    spdlog::error("MDF module edit - object has nullptr");
+    return;
+  }
+
+  // Must be correct object type
+  if ((mdf_type_manufacturer != pItem->getObjectType()) && (mdf_type_manufacturer_item != pItem->getObjectType())) {
+    int ret = QMessageBox::critical(this, tr("MDF manufacturer edit"), tr("This is not a manufacturer item"));
+    spdlog::error("MDF manufacturer edit - Not a manufacturer item");
+    return;
+  }
+
+  // Set pointer to module top item
+  if (mdf_type_manufacturer == pItem->getObjectType()) {
+
+    pItemManufacturer = pItem;
+
+    // Make sure it is expanded
+    pItem->setExpanded(true);
+  }
+  else if (mdf_type_manufacturer_item == pItem->getObjectType()) {
+    pItemManufacturer = (QMdfTreeWidgetItem*)pItem->parent();
+  }
+  else {
+    int ret = QMessageBox::critical(this, tr("MDF manufacturer edit"), tr("Invalid manufacturer top item object type"));
+    spdlog::error("MDF manufacturer edit - Invalid manufacturer top item object type");
+    return;
+  }
+
+  CDlgMdfManufacturer dlg(this);
+  dlg.initDialogData(pItem->getObject(), static_cast<mdf_manufacturer_index>(pItem->getElementIndex()));
+
+  if (QDialog::Accepted == dlg.exec()) {
+
+    // Update Module items
+    
+    CMDF_Manufacturer *pmanufacturer = (CMDF_Manufacturer*)pItem->getObject();
+    pmanufacturer->setName(dlg.getName().toStdString());
+    pmanufacturer->getAddressObj()->setStreet(dlg.getStreet().toStdString());
+    pmanufacturer->getAddressObj()->setTown(dlg.getTown().toStdString());
+    pmanufacturer->getAddressObj()->setCity(dlg.getCity().toStdString());
+    pmanufacturer->getAddressObj()->setPostCode(dlg.getPostCode().toStdString());
+    pmanufacturer->getAddressObj()->setState(dlg.getState().toStdString());
+    pmanufacturer->getAddressObj()->setRegion(dlg.getRegion().toStdString());
+    pmanufacturer->getAddressObj()->setCountry(dlg.getCountry().toStdString());
+
+    QMdfTreeWidgetItem* piter = nullptr;
+    piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItemManufacturer);
+    do {
+
+      switch (piter->getElementIndex()) {
+
+        case index_manufacturer_name:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_NAME + pmanufacturer->getName().c_str());
+          break;
+
+        case index_manufacturer_street:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_STREET + pmanufacturer->getAddressObj()->getStreet().c_str());
+          break;  
+
+        case index_manufacturer_town:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_TOWN + pmanufacturer->getAddressObj()->getTown().c_str());
+          break;  
+
+        case index_manufacturer_city:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_CITY + pmanufacturer->getAddressObj()->getCity().c_str());
+          break;  
+
+        case index_manufacturer_post_code:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_POST_CODE + pmanufacturer->getAddressObj()->getPostCode().c_str());
+          break;  
+
+        case index_manufacturer_state:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_STATE + pmanufacturer->getAddressObj()->getState().c_str());
+          break;  
+
+        case index_manufacturer_region:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_REGION + pmanufacturer->getAddressObj()->getRegion().c_str());
+          break;  
+
+        case index_manufacturer_country:
+          piter->setText(0, PREFIX_MDF_MANUFACTURER_COUNTRY + pmanufacturer->getAddressObj()->getCountry().c_str());
+          break;  
+      }
+
+      piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(piter);
+      
+    } while (mdf_type_manufacturer_item == piter->getObjectType());
   }
 }

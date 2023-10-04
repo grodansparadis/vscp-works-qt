@@ -181,6 +181,9 @@ public slots:
   /// Item has been double clicked
   void onItemDoubleClicked(QTreeWidgetItem* item, int column);
 
+  /// Edit MDF data
+  void editData(void);
+
   /// Edit MDF module data
   void editModuleData(void);
 
@@ -189,6 +192,9 @@ public slots:
 
   /// Edit MDF info URL's
   void editInfoUrl(void);
+
+  /// Edit MDF manufacturer data
+  void editManufacturerData(void);
 
   /*!
     Fill in data from info map as children to parent item
