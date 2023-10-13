@@ -5409,13 +5409,12 @@ CFrmNodeConfig::renderMdfFiles(void)
 //
 
 void 
-CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *item, int column)
+CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
 {
-  //int idx;
   std::string html;
-  std::string str;
-  CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)item;
-  if (nullptr != item) {
+  
+  CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)widgetItem;
+  if (nullptr != pitem) {
     spdlog::critical("MDF file item is NULL {0}", pitem->text(0).toStdString());
     ui->infoArea->setHtml(tr("MDF file item is NULL"));
     return;    
@@ -5435,7 +5434,6 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *item, int column)
   html += "</head>";
   html += "<body>";
 
-  str += pitem->text(0).toStdString();
   switch (/*pitem->m_mdfFileType*/pitem->type()) {
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_picture)):

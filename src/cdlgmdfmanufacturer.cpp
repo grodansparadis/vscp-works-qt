@@ -146,31 +146,6 @@ CDlgMdfManufacturer::initDialogData(const CMDF_Object* pmdfobj, mdf_manufacturer
       ui->editName->setFocus();
       break;
   }
-
-  // Fill in descriptions
-  //fillDescription();
-
-  // std::map<std::string, std::string>* pmapDescription = m_pmdf->getModuleDescriptionMap();
-  // std::map<std::string, std::string>::iterator itDesc = pmapDescription->begin();
-  // while (itDesc != pmapDescription->end()) {
-  //   std::string lang        = itDesc->first; // key
-  //   std::string description = itDesc->second;
-  //   str                     = lang.c_str() + tr(" - ") + description.c_str();
-  //   ui->listDescription->addItem(str);
-  //   itDesc++;
-  // }
-
-  // Fill in help URL's
-  //fillInfoUrl();
-  // std::map<std::string, std::string>* pmapHelpUrl     = m_pmdf->getModuleHelpUrlMap();
-  // std::map<std::string, std::string>::iterator itInfo = pmapHelpUrl->begin();
-  // while (itInfo != pmapHelpUrl->end()) {
-  //   std::string lang = itInfo->first; // key
-  //   std::string info = itInfo->second;
-  //   str              = lang.c_str() + tr(" - ") + info.c_str();
-  //   ui->listInfo->addItem(str);
-  //   itInfo++;
-  // }
 }
 
 

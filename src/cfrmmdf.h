@@ -37,6 +37,8 @@
 #include <vscp.h>
 #include <vscp_client_base.h>
 
+#include "cdlgmdfcontact.h"
+
 #include <set>
 
 #include <QDialog>
@@ -197,6 +199,17 @@ public slots:
   void editManufacturerData(void);
 
   /*!
+    Show contact dialog (alow editing)
+    @param pItem Pointer to selected item
+    @param type Type of contact (phone/fax/email/web/social)
+    @param title Title text on dialog
+  */
+  void showContactDialog(QMdfTreeWidgetItem* pItem, mdf_dlg_contact_type type, QString title);
+
+  /// Edit phone/fax/email/web/social data
+  void editContact(void);
+
+  /*!
     Fill in data from info map as children to parent item
 
     @param parent Pointer to parent treewidget (or description head)
@@ -249,6 +262,54 @@ public slots:
   */
   void
   fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
+
+  /*!
+    Remove all subitems of a head item that have a speciified type.
+    @param pItem Pointer to head item
+    @param type Type subitems should have
+  */
+  void
+  removeSubItems(QMdfTreeWidgetItem* pItem, mdf_record_type type);
+
+  /*!
+    Render manufacturer email info
+    @param pItemEmailHead Pointer to header item
+  */
+
+  void
+  renderManufacturerEmail(QMdfTreeWidgetItem *pItemEmailHead);
+
+  /*!
+    Render manufacturer phone info
+    @param pItemPhoneHead Pointer to header item
+  */
+
+  void
+  renderManufacturerPhone(QMdfTreeWidgetItem *pItemPhoneHead);
+
+  /*!
+    Render manufacturer fax info
+    @param pItemPhoneHead Pointer to fax item
+  */
+
+  void
+  renderManufacturerFax(QMdfTreeWidgetItem *pItemFaxHead);
+
+  /*!
+    Render manufacturer web info
+    @param pItemWebHead Pointer to fax item
+  */
+
+  void
+  renderManufacturerWeb(QMdfTreeWidgetItem *pItemWebHead);
+
+  /*!
+    Render manufacturer social info
+    @param pItemSocialHead Pointer to fax item
+  */
+
+  void
+  renderManufacturerSocial(QMdfTreeWidgetItem *pItemSocialHead);
 
   /// Do the new operation
   void newMdf(void);

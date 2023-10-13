@@ -38,6 +38,9 @@
 #include "cdlgmdfcontact.h"
 #include "ui_cdlgmdfcontact.h"
 
+#include "cdlgmdfdescription.h"
+#include "cdlgmdfinfourl.h"
+
 #include <QDebug>
 #include <QMessageBox>
 #include <QShortcut>
@@ -59,8 +62,15 @@ CDlgMdfContact::CDlgMdfContact(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  // QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
-  // connect(shortcut, &QShortcut::activated, this, &CDlgMdfContact::editDesc);
+  connect(ui->btnAddDesc, &QToolButton::clicked, this, &CDlgMdfContact::addDesc);
+  connect(ui->btnEditDesc, &QToolButton::clicked, this, &CDlgMdfContact::editDesc);
+  connect(ui->btnDupDesc, &QToolButton::clicked, this, &CDlgMdfContact::dupDesc);
+  connect(ui->btnDelDesc, &QToolButton::clicked, this, &CDlgMdfContact::deleteDesc);
+
+  connect(ui->btnAddInfo, &QToolButton::clicked, this, &CDlgMdfContact::addInfo);
+  connect(ui->btnEditInfo, &QToolButton::clicked, this, &CDlgMdfContact::editInfo);
+  connect(ui->btnDupInfo, &QToolButton::clicked, this, &CDlgMdfContact::dupInfo);
+  connect(ui->btnDelInfo, &QToolButton::clicked, this, &CDlgMdfContact::deleteInfo);
 
   setInitialFocus();
 }
@@ -79,83 +89,67 @@ CDlgMdfContact::~CDlgMdfContact()
 //
 
 void
-CDlgMdfContact::initDialogData(const CMDF_Object* pmdfobj)
+CDlgMdfContact::initDialogData(const CMDF_Object* pitemobj, mdf_dlg_contact_type type, QString title)
 {
   QString str;
 
-  if (nullptr == pmdfobj) {
-    spdlog::error("MDF module information - Invalid MDF object (initDialogData)");
+  if (nullptr == pitemobj) {
+    spdlog::error("MDF contact information - Invalid MDF object (initDialogData)");
     return;
   }
 
-  m_pmdf = (CMDF*)pmdfobj;
+  setWindowTitle(title);
 
-  // ui->editName->setText(m_pmdf->getModuleName().c_str());
-  // ui->editModel->setText(m_pmdf->getModuleModel().c_str());
-  // ui->comboModuleLevel->setCurrentIndex(m_pmdf->getModuleLevel());
-  // ui->editVersion->setText(m_pmdf->getModuleVersion().c_str());
-  // str = m_pmdf->getModuleChangeDate().c_str();
-  // ui->editDate->setDate(QDate::fromString(str, Qt::ISODate));
-  // ui->editBufferSize->setValue(m_pmdf->getModuleBufferSize());
-  // ui->editCopyright->setText(m_pmdf->getModuleCopyright().c_str());
+  m_pitemobj = (CMDF_Item*)pitemobj;
 
-  // switch (index) {
-  //   case index_module_model:
-  //     ui->editModel->setFocus();
-  //     break;
+  int idx = static_cast<int>(type);
+  ui->comboType->setCurrentIndex(idx);
+  ui->comboType->setEnabled(false);
 
-  //   case index_module_version:
-  //     ui->editVersion->setFocus();
-  //     break;
-
-  //   case index_module_level:
-  //     ui->comboModuleLevel->setFocus();
-  //     break;
-
-  //   case index_module_change_date:
-  //     ui->editDate->setFocus();
-  //     break;
-
-  //   case index_module_buffer_size:
-  //     ui->editBufferSize->setFocus();
-  //     break;
-
-  //   case index_module_copyright:
-  //     ui->editCopyright->setFocus();
-  //     break;
-
-  //   case index_module_name:
-  //   default:
-  //     ui->editName->setFocus();
-  //     break;
-  // }
+  ui->editValue->setText(m_pitemobj->getName().c_str());
 
   // Fill in descriptions
-  //fillDescription();
-
-  // std::map<std::string, std::string>* pmapDescription = m_pmdf->getModuleDescriptionMap();
-  // std::map<std::string, std::string>::iterator itDesc = pmapDescription->begin();
-  // while (itDesc != pmapDescription->end()) {
-  //   std::string lang        = itDesc->first; // key
-  //   std::string description = itDesc->second;
-  //   str                     = lang.c_str() + tr(" - ") + description.c_str();
-  //   ui->listDescription->addItem(str);
-  //   itDesc++;
-  // }
+  fillDescription();
 
   // Fill in help URL's
-  //fillInfoUrl();
-  // std::map<std::string, std::string>* pmapHelpUrl     = m_pmdf->getModuleHelpUrlMap();
-  // std::map<std::string, std::string>::iterator itInfo = pmapHelpUrl->begin();
-  // while (itInfo != pmapHelpUrl->end()) {
-  //   std::string lang = itInfo->first; // key
-  //   std::string info = itInfo->second;
-  //   str              = lang.c_str() + tr(" - ") + info.c_str();
-  //   ui->listInfo->addItem(str);
-  //   itInfo++;
-  // }
+  fillInfoUrl();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// fillDescription
+//
+
+void
+CDlgMdfContact::fillDescription(void)
+{
+  std::map<std::string, std::string>* pmapDescription = m_pitemobj->getDescriptionMap();
+  std::map<std::string, std::string>::iterator itDesc = pmapDescription->begin();
+  while (itDesc != pmapDescription->end()) {
+    std::string lang        = itDesc->first; // key
+    std::string description = itDesc->second;
+    QString str             = lang.c_str() + tr(" - ") + description.c_str();
+    ui->listDescription->addItem(str);
+    itDesc++;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillInfoUrl
+//
+
+void
+CDlgMdfContact::fillInfoUrl(void)
+{
+  std::map<std::string, std::string>* pmapHelpUrl     = m_pitemobj->getInfoUrlMap();
+  std::map<std::string, std::string>::iterator itInfo = pmapHelpUrl->begin();
+  while (itInfo != pmapHelpUrl->end()) {
+    std::string lang = itInfo->first; // key
+    std::string info = itInfo->second;
+    QString str      = lang.c_str() + tr(" - ") + info.c_str();
+    ui->listInfo->addItem(str);
+    itInfo++;
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
@@ -167,7 +161,6 @@ CDlgMdfContact::setInitialFocus(void)
   // ui->editGuid->setFocus();
 }
 
-
 // ----------------------------------------------------------------------------
 //                             Getters & Setters
 // ----------------------------------------------------------------------------
@@ -177,7 +170,7 @@ CDlgMdfContact::setInitialFocus(void)
 //
 
 QString
-CDlgMdfContact::getName(void)
+CDlgMdfContact::getValue(void)
 {
   return (ui->editValue->text());
 }
@@ -187,11 +180,182 @@ CDlgMdfContact::getName(void)
 //
 
 void
-CDlgMdfContact::setName(const QString& str)
+CDlgMdfContact::setValue(const QString& str)
 {
   ui->editValue->setText(str);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// addDesc
+//
+
+void
+CDlgMdfContact::addDesc(void)
+{
+  QString selstr = "en"; // Default language
+
+  CDlgMdfDescription dlg(this);
+  dlg.initDialogData(m_pitemobj->getDescriptionMap() /*, &selstr*/);
+  if (QDialog::Accepted == dlg.exec()) {
+    ui->listDescription->clear();
+    fillDescription();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editDesc
+//
+
+void
+CDlgMdfContact::editDesc(void)
+{
+  if (-1 != ui->listDescription->currentRow()) {
+
+    // Save the row
+    int idx = ui->listDescription->currentRow();
+
+    QListWidgetItem* pitem = ui->listDescription->currentItem();
+    QString selstr         = pitem->text().split('_').first().left(2);
+
+    CDlgMdfDescription dlg(this);
+    dlg.initDialogData(m_pitemobj->getDescriptionMap(), &selstr);
+    if (QDialog::Accepted == dlg.exec()) {
+      ui->listDescription->clear();
+      fillDescription();
+      ui->listDescription->setCurrentRow(idx);
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// dupDesc
+//
+
+void
+CDlgMdfContact::dupDesc(void)
+{
+  if (-1 != ui->listDescription->currentRow()) {
+    CDlgMdfDescription dlg(this);
+    dlg.initDialogData(m_pitemobj->getDescriptionMap());
+    if (QDialog::Accepted == dlg.exec()) {
+      ui->listDescription->clear();
+      fillDescription();
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// deleteDesc
+//
+
+void
+CDlgMdfContact::deleteDesc(void)
+{
+  if (-1 != ui->listDescription->currentRow()) {
+
+    // Save the row
+    int idx = ui->listDescription->currentRow();
+
+    QListWidgetItem* pitem = ui->listDescription->currentItem();
+    QString selstr         = pitem->text().split('_').first().left(2);
+
+    m_pitemobj->getDescriptionMap()->erase(selstr.toStdString());
+    ui->listDescription->clear();
+    fillDescription();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addInfo
+//
+
+void
+CDlgMdfContact::addInfo(void)
+{
+  QString selstr = "en"; // Default language
+
+  CDlgMdfInfoUrl dlg(this);
+  dlg.initDialogData(m_pitemobj->getInfoUrlMap() /*, &selstr*/);
+  if (QDialog::Accepted == dlg.exec()) {
+    ui->listInfo->clear();
+    fillInfoUrl();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editInfo
+//
+
+void
+CDlgMdfContact::editInfo(void)
+{
+  if (-1 != ui->listInfo->currentRow()) {
+
+    // Save the row
+    int idx = ui->listInfo->currentRow();
+
+    QListWidgetItem* pitem = ui->listInfo->currentItem();
+    QString selstr         = pitem->text().split('_').first().left(2);
+
+    CDlgMdfInfoUrl dlg(this);
+    dlg.initDialogData(m_pitemobj->getInfoUrlMap(), &selstr);
+    if (QDialog::Accepted == dlg.exec()) {
+      ui->listInfo->clear();
+      fillInfoUrl();
+      ui->listInfo->setCurrentRow(idx);
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// dupInfo
+//
+
+void
+CDlgMdfContact::dupInfo(void)
+{
+  if (-1 != ui->listInfo->currentRow()) {
+    CDlgMdfInfoUrl dlg(this);
+    dlg.initDialogData(m_pitemobj->getInfoUrlMap());
+    if (QDialog::Accepted == dlg.exec()) {
+      ui->listInfo->clear();
+      fillInfoUrl();
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// deleteInfo
+//
+
+void
+CDlgMdfContact::deleteInfo(void)
+{
+  if (-1 != ui->listInfo->currentRow()) {
+
+    // Save the row
+    int idx = ui->listInfo->currentRow();
+
+    QListWidgetItem* pitem = ui->listInfo->currentItem();
+    QString selstr         = pitem->text().split('_').first().left(2);
+
+    m_pitemobj->getInfoUrlMap()->erase(selstr.toStdString());
+    ui->listInfo->clear();
+    fillInfoUrl();
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // accept
@@ -201,7 +365,7 @@ void
 CDlgMdfContact::accept()
 {
   std::string str;
-  if (nullptr != m_pmdf) {
+  if (nullptr != m_pitemobj) {
 
     // str = ui->editName->text().toStdString();
     // m_pmdf->setModuleName(str);

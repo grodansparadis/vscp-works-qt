@@ -73,7 +73,8 @@
       "climits": "cpp",
       "regex": "cpp",
       "any": "cpp",
-      "numbers": "cpp"
+      "numbers": "cpp",
+      "span": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {
@@ -86,9 +87,10 @@
         "**/.firebase": true
     },
     "files.watcherExclude": {
-        "**/.git/objects/**": true,
-        "**/.git/subtree-cache/**": true,
-        "**/node_modules/**": true
+      "**/.git/objects/**": true,
+      "**/.git/subtree-cache/**": true,
+      "**/node_modules/*/**": true,
+      "**/.hg/store/**": true
     },
     "cmake.configureArgs": [        
         "-DVCPKG_HOST_TRIPLET=x64-windows-static",

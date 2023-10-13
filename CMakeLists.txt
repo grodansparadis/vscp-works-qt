@@ -258,6 +258,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgeditmap.ui
     src/cdlgmdfmanufacturer.ui
     src/cdlgmdfcontact.ui
+    src/cdlgmdfcontactlist.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -512,6 +513,12 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfcontact.ui
     src/cdlgmdfcontact.cpp 
     src/cdlgmdfcontact.h
+
+    build/ui_cdlgmdfcontactlist.h
+    src/cdlgmdfcontactlist.ui
+    src/cdlgmdfcontactlist.cpp 
+    src/cdlgmdfcontactlist.h
+
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

@@ -1,4 +1,4 @@
-// cdlgmdfcontact.h
+// cdlgmdfcontactlist.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,35 +26,36 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFCONTACT_H
-#define CDLGMDFCONTACT_H
+#ifndef CDLGMDFCONTACTLIST_H
+#define CDLGMDFCONTACTLIST_H
 
 #include <vscpworks.h>
 #include <mdf.h>
 
+#include "cdlgmdfcontact.h"
+
 #include <QDialog>
 
-typedef enum mdf_dlg_contact_type {
-  dlg_type_contact_none,
-  dlg_type_contact_phone,
-  dlg_type_contact_fax,
-  dlg_type_contact_email,
-  dlg_type_contact_web,
-  dlg_type_contact_social,
-} mdf_dlg_contact_type;
+// typedef enum mdf_dlg_contact_type {
+//   dlg_type_contact_none,
+//   dlg_type_contact_phone,
+//   dlg_type_contact_fax,
+//   dlg_type_contact_email,
+//   dlg_type_contact_web,
+//   dlg_type_contact_social,
+// } mdf_dlg_contact_type;
 
 
 namespace Ui {
-class CDlgMdfContact;
+class CDlgMdfContactList;
 }
 
-class CDlgMdfContact : public QDialog {
+class CDlgMdfContactList : public QDialog {
   Q_OBJECT
 
 public:
-public:
-  explicit CDlgMdfContact(QWidget* parent = nullptr);
-  ~CDlgMdfContact();
+  explicit CDlgMdfContactList(QWidget* parent = nullptr);
+  ~CDlgMdfContactList();
 
   /*!
       Set inital focus to description
@@ -73,19 +74,15 @@ public:
     @param type Contact type
     @param title Dialog title
   */
-  void initDialogData(const CMDF_Object* pitemobj, 
+  void initDialogData(CMDF_Manufacturer* pManufacturer,
                         mdf_dlg_contact_type type,
                         QString title);
 
   /*!
-    Fill in contact descriptions
+    Fill in contact items
   */
-  void fillDescription(void);
+  void fillContactItems(void);
 
-  /*!
-    Fill in contact info URL's
-  */
-  void fillInfoUrl(void);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -94,27 +91,29 @@ public:
   /*!
       Name getter/setters
   */
-  void setValue(const QString& name);
-  QString getValue(void);
+  // void setValue(const QString& name);
+  // QString getValue(void);
 
 public slots:
   void accept(void);
 
   // Description buttons
-  void addDesc(void);
-  void editDesc(void);
-  void dupDesc(void);
-  void deleteDesc(void);
-
-  // Info URL buttons
-  void addInfo(void);
-  void editInfo(void);
-  void dupInfo(void);
-  void deleteInfo(void);
+  void addContact(void);
+  void editContact(void);
+  void dupContact(void);
+  void deleteContact(void);
 
 private:
-  Ui::CDlgMdfContact* ui;
-  CMDF_Item* m_pitemobj;
+  Ui::CDlgMdfContactList* ui;
+
+  /// Type of contact item in this list
+  mdf_dlg_contact_type m_type;
+
+  /// Holds pointer to manufacturer item
+  CMDF_Manufacturer* m_pManufacturer;
+
+  /// Hold pointer to contact item
+  std::deque<CMDF_Item *> *m_pContactList;
 };
 
-#endif // CDLGMDFCONTACT_H
+#endif // CDLGMDFCONTACTList_H
