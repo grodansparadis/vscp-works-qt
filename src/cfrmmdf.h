@@ -232,7 +232,7 @@ public slots:
     @param bChildIsKnown Set to true of pParent points to info URL head
   */
   void
-  fillHelpUrlItems(QTreeWidgetItem* pParent, 
+  fillInfoUrlItems(QTreeWidgetItem* pParent, 
                       CMDF_Object* pobj, 
                       std::map<std::string, std::string>* pObjMap, 
                       bool bChildIsKnown = false);

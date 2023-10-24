@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>660</width>
-    <height>591</height>
+    <width>423</width>
+    <height>309</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Contact</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>550</y>
-     <width>631</width>
+     <y>270</y>
+     <width>401</width>
      <height>32</height>
     </rect>
    </property>
@@ -37,8 +37,8 @@
     <rect>
      <x>9</x>
      <y>9</y>
-     <width>641</width>
-     <height>531</height>
+     <width>401</width>
+     <height>252</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -122,108 +122,8 @@
     <item row="7" column="1">
      <widget class="QLineEdit" name="editCountry"/>
     </item>
-    <item row="8" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Contact</string>
-      </property>
-     </widget>
-    </item>
     <item row="8" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QListWidget" name="listContact"/>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QToolButton" name="btnAddDesc">
-            <property name="toolTip">
-             <string>Add description item</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset resource="vscpworks.qrc">
-              <normaloff>:/add.png</normaloff>:/add.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+A</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="btnEditDesc">
-            <property name="toolTip">
-             <string>Edit description item</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset resource="vscpworks.qrc">
-              <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+E</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="btnDupDesc">
-            <property name="toolTip">
-             <string>Duplicate description item</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset resource="vscpworks.qrc">
-              <normaloff>:/images/svg/copy.svg</normaloff>:/images/svg/copy.svg</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+D</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QToolButton" name="btnDelDesc">
-            <property name="toolTip">
-             <string>Delete Description item</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset resource="vscpworks.qrc">
-              <normaloff>:/remove.png</normaloff>:/remove.png</iconset>
-            </property>
-            <property name="shortcut">
-             <string>Ctrl+X</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-     </layout>
+     <layout class="QHBoxLayout" name="horizontalLayout"/>
     </item>
    </layout>
   </widget>

@@ -233,6 +233,8 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionReload"/>
+    <addaction name="separator"/>
     <addaction name="actionE_xpand_all"/>
     <addaction name="actionEdit_item"/>
    </widget>
@@ -294,10 +296,15 @@
   </action>
   <action name="actionEdit_item">
    <property name="text">
-    <string>Edit item</string>
+    <string>&amp;Edit item</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="text">
+    <string>&amp;Redraw MDF tree</string>
    </property>
   </action>
  </widget>

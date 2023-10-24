@@ -182,7 +182,7 @@ CDlgMdfModule::fillDescription()
   QString str;
 
   // Fill in descriptions
-  std::map<std::string, std::string>* pmapDescription = m_pmdf->getDescriptionMap();
+  std::map<std::string, std::string>* pmapDescription = m_pmdf->getMapDescription();
   std::map<std::string, std::string>::iterator itDesc = pmapDescription->begin();
   while (itDesc != pmapDescription->end()) {
     std::string lang        = itDesc->first; // key
@@ -306,7 +306,7 @@ CDlgMdfModule::addDesc(void)
   QString selstr = "en"; // Default language
 
   CDlgMdfDescription dlg(this);
-  dlg.initDialogData(m_pmdf->getDescriptionMap()/*, &selstr*/);
+  dlg.initDialogData(m_pmdf->getMapDescription()/*, &selstr*/);
   if (QDialog::Accepted == dlg.exec()) {
     ui->listDescription->clear();
     fillDescription();
@@ -329,7 +329,7 @@ CDlgMdfModule::editDesc(void)
     QString selstr         = pitem->text().split('_').first().left(2);
 
     CDlgMdfDescription dlg(this);
-    dlg.initDialogData(m_pmdf->getDescriptionMap(), &selstr);
+    dlg.initDialogData(m_pmdf->getMapDescription(), &selstr);
     if (QDialog::Accepted == dlg.exec()) {
       ui->listDescription->clear();
       fillDescription();
@@ -350,7 +350,7 @@ CDlgMdfModule::dupDesc(void)
 {
   if (-1 != ui->listDescription->currentRow()) {
     CDlgMdfDescription dlg(this);
-    dlg.initDialogData(m_pmdf->getDescriptionMap());
+    dlg.initDialogData(m_pmdf->getMapDescription());
     if (QDialog::Accepted == dlg.exec()) {
       ui->listDescription->clear();
       fillDescription();
@@ -376,7 +376,7 @@ CDlgMdfModule::deleteDesc(void)
     QListWidgetItem* pitem = ui->listDescription->currentItem();
     QString selstr         = pitem->text().split('_').first().left(2);
 
-    m_pmdf->getDescriptionMap()->erase(selstr.toStdString());
+    m_pmdf->getMapDescription()->erase(selstr.toStdString());
     ui->listDescription->clear();
     fillDescription();
 

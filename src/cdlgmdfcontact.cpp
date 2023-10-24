@@ -122,7 +122,7 @@ CDlgMdfContact::initDialogData(const CMDF_Object* pitemobj, mdf_dlg_contact_type
 void
 CDlgMdfContact::fillDescription(void)
 {
-  std::map<std::string, std::string>* pmapDescription = m_pitemobj->getDescriptionMap();
+  std::map<std::string, std::string>* pmapDescription = m_pitemobj->getMapDescription();
   std::map<std::string, std::string>::iterator itDesc = pmapDescription->begin();
   while (itDesc != pmapDescription->end()) {
     std::string lang        = itDesc->first; // key
@@ -140,7 +140,7 @@ CDlgMdfContact::fillDescription(void)
 void
 CDlgMdfContact::fillInfoUrl(void)
 {
-  std::map<std::string, std::string>* pmapHelpUrl     = m_pitemobj->getInfoUrlMap();
+  std::map<std::string, std::string>* pmapHelpUrl     = m_pitemobj->getMapInfoUrl();
   std::map<std::string, std::string>::iterator itInfo = pmapHelpUrl->begin();
   while (itInfo != pmapHelpUrl->end()) {
     std::string lang = itInfo->first; // key
@@ -195,7 +195,7 @@ CDlgMdfContact::addDesc(void)
   QString selstr = "en"; // Default language
 
   CDlgMdfDescription dlg(this);
-  dlg.initDialogData(m_pitemobj->getDescriptionMap() /*, &selstr*/);
+  dlg.initDialogData(m_pitemobj->getMapDescription() /*, &selstr*/);
   if (QDialog::Accepted == dlg.exec()) {
     ui->listDescription->clear();
     fillDescription();
@@ -218,7 +218,7 @@ CDlgMdfContact::editDesc(void)
     QString selstr         = pitem->text().split('_').first().left(2);
 
     CDlgMdfDescription dlg(this);
-    dlg.initDialogData(m_pitemobj->getDescriptionMap(), &selstr);
+    dlg.initDialogData(m_pitemobj->getMapDescription(), &selstr);
     if (QDialog::Accepted == dlg.exec()) {
       ui->listDescription->clear();
       fillDescription();
@@ -239,7 +239,7 @@ CDlgMdfContact::dupDesc(void)
 {
   if (-1 != ui->listDescription->currentRow()) {
     CDlgMdfDescription dlg(this);
-    dlg.initDialogData(m_pitemobj->getDescriptionMap());
+    dlg.initDialogData(m_pitemobj->getMapDescription());
     if (QDialog::Accepted == dlg.exec()) {
       ui->listDescription->clear();
       fillDescription();
@@ -265,7 +265,7 @@ CDlgMdfContact::deleteDesc(void)
     QListWidgetItem* pitem = ui->listDescription->currentItem();
     QString selstr         = pitem->text().split('_').first().left(2);
 
-    m_pitemobj->getDescriptionMap()->erase(selstr.toStdString());
+    m_pitemobj->getMapDescription()->erase(selstr.toStdString());
     ui->listDescription->clear();
     fillDescription();
   }
@@ -281,7 +281,7 @@ CDlgMdfContact::addInfo(void)
   QString selstr = "en"; // Default language
 
   CDlgMdfInfoUrl dlg(this);
-  dlg.initDialogData(m_pitemobj->getInfoUrlMap() /*, &selstr*/);
+  dlg.initDialogData(m_pitemobj->getMapInfoUrl() /*, &selstr*/);
   if (QDialog::Accepted == dlg.exec()) {
     ui->listInfo->clear();
     fillInfoUrl();
@@ -304,7 +304,7 @@ CDlgMdfContact::editInfo(void)
     QString selstr         = pitem->text().split('_').first().left(2);
 
     CDlgMdfInfoUrl dlg(this);
-    dlg.initDialogData(m_pitemobj->getInfoUrlMap(), &selstr);
+    dlg.initDialogData(m_pitemobj->getMapInfoUrl(), &selstr);
     if (QDialog::Accepted == dlg.exec()) {
       ui->listInfo->clear();
       fillInfoUrl();
@@ -325,7 +325,7 @@ CDlgMdfContact::dupInfo(void)
 {
   if (-1 != ui->listInfo->currentRow()) {
     CDlgMdfInfoUrl dlg(this);
-    dlg.initDialogData(m_pitemobj->getInfoUrlMap());
+    dlg.initDialogData(m_pitemobj->getMapInfoUrl());
     if (QDialog::Accepted == dlg.exec()) {
       ui->listInfo->clear();
       fillInfoUrl();
@@ -351,7 +351,7 @@ CDlgMdfContact::deleteInfo(void)
     QListWidgetItem* pitem = ui->listInfo->currentItem();
     QString selstr         = pitem->text().split('_').first().left(2);
 
-    m_pitemobj->getInfoUrlMap()->erase(selstr.toStdString());
+    m_pitemobj->getMapInfoUrl()->erase(selstr.toStdString());
     ui->listInfo->clear();
     fillInfoUrl();
   }
