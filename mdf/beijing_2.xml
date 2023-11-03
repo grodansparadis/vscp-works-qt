@@ -86,116 +86,116 @@
 		Picture 1 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing2.png" 
+	<picture name="aaaaaa" path="http://www.grodansparadis.com/beijing/images/beijing2.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 2 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing3.png" 
+	<picture name="bbbbbbb" path="http://www.grodansparadis.com/beijing/images/beijing3.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 3 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing4.png" 
+	<picture name="ccccccc" path="http://www.grodansparadis.com/beijing/images/beijing4.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 4 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing5.png" 
+	<picture name="ddddddd" path="http://www.grodansparadis.com/beijing/images/beijing5.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 5 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing6.png" 
+	<picture name="eeeeeee" path="http://www.grodansparadis.com/beijing/images/beijing6.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 6 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing7.png" 
+	<picture name="ffffff" path="http://www.grodansparadis.com/beijing/images/beijing7.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 7 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing8.png" 
+	<picture name="ggggggg" path="http://www.grodansparadis.com/beijing/images/beijing8.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 8 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing9.png" 
+	<picture name="hhhhhh" path="http://www.grodansparadis.com/beijing/images/beijing9.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 9 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing10.png" 
+	<picture name="iiiiiiiiii" path="http://www.grodansparadis.com/beijing/images/beijing10.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 10 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing11.png" 
+	<picture name="jjjjjjjjjjj" path="http://www.grodansparadis.com/beijing/images/beijing11.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 11 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing11_connectors.png" 
+	<picture name="kkkkkkkkkk" path="http://www.grodansparadis.com/beijing/images/beijing11_connectors.png" 
 		format="png" >
 		<description lang="en" >
 		Picture of Beijing module connectors.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing12.png" 
+	<picture name="llllllll" path="http://www.grodansparadis.com/beijing/images/beijing12.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 12 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing13.png" 
+	<picture name="mmmmmmmmmmm" path="http://www.grodansparadis.com/beijing/images/beijing13.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 13 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing14.png" 
+	<picture name="nnnnnnnnnn" path="http://www.grodansparadis.com/beijing/images/beijing14.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 14 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing15.png" 
+	<picture name="oooooooooooooo" path="http://www.grodansparadis.com/beijing/images/beijing15.png" 
 		format="png" >
 		<description lang="en" >
 		Picture 15 of Beijing module.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing15_terminal_block.png" 
+	<picture name="ppppppp" path="http://www.grodansparadis.com/beijing/images/beijing15_terminal_block.png" 
 		format="png" >
 		<description lang="en" >
 		Picture of Beijing module terminal block.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing_sch_rev_B.png" 
+	<picture name="qqqqqqqqq" path="http://www.grodansparadis.com/beijing/images/beijing_sch_rev_B.png" 
 		format="png" >
 		<description lang="en" >
 		Beijing schema for reversion B.
 		</description>
 	</picture>
-	<picture path="http://www.grodansparadis.com/beijing/images/beijing_brd_rev_B.png" 
+	<picture name="rrrrrrrrrrrr" path="http://www.grodansparadis.com/beijing/images/beijing_brd_rev_B.png" 
 		format="png" >
 		<description lang="en" >
 		Beijing PCB board layout for reversion B.
 		</description>
 	</picture>
 	
-  <video path="https://www.youtube.com/watch?v=T6eMvXFfOrU"
+  <video name="video1" path="https://www.youtube.com/watch?v=T6eMvXFfOrU"
     format="mpeg4" >
     <description lang="en" >
 		Metallica 2023-06-18 - Ullevi, Gothenburg, Sweden 

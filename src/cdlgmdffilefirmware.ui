@@ -7,18 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>597</width>
-    <height>320</height>
+    <height>292</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>MDF Firmware</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>280</y>
-     <width>591</width>
+     <x>10</x>
+     <y>260</y>
+     <width>581</width>
      <height>32</height>
     </rect>
    </property>
@@ -38,143 +38,115 @@
      <x>9</x>
      <y>9</y>
      <width>581</width>
-     <height>267</height>
+     <height>251</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Name</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit">
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="editName">
       <property name="text">
        <string>name-for-firmware</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Target code</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_2">
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="editTargetCode">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>URL</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_3">
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editUrl">
       <property name="text">
        <string>1</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="3" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Format</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editFormat"/>
+    </item>
+    <item row="4" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Date</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QLineEdit" name="lineEdit_4">
-      <property name="text">
-       <string>true</string>
+    <item row="4" column="1">
+     <widget class="QDateEdit" name="date">
+      <property name="calendarPopup">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="5" column="0">
      <widget class="QLabel" name="label_7">
       <property name="text">
        <string>Version</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QLineEdit" name="lineEdit_6">
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="editVersion">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
+    <item row="6" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>Max</string>
+       <string>Size</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
-     <widget class="QLineEdit" name="lineEdit_5">
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="editSize">
       <property name="text">
        <string>1</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
-     <widget class="QComboBox" name="comboBox_2">
-      <item>
-       <property name="text">
-        <string>Read/Write</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Read Only</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Write Only</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="8" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
-       <string>Access</string>
+       <string>MD5</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QComboBox" name="comboBox">
-      <item>
-       <property name="text">
-        <string>Binary</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Inte Hex 8</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>INtel Hex 16</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label">
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="editMd5">
       <property name="text">
-       <string>Format</string>
+       <string>1</string>
       </property>
      </widget>
     </item>
@@ -182,5 +154,38 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfFileFirmware</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfFileFirmware</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

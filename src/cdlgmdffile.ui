@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMdfBit</class>
- <widget class="QDialog" name="CDlgMdfBit">
+ <class>CDlgMdfFile</class>
+ <widget class="QDialog" name="CDlgMdfFile">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>320</height>
+    <width>660</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Contact</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>280</y>
-     <width>591</width>
+     <x>10</x>
+     <y>350</y>
+     <width>641</width>
      <height>32</height>
     </rect>
    </property>
@@ -37,8 +37,8 @@
     <rect>
      <x>9</x>
      <y>9</y>
-     <width>581</width>
-     <height>261</height>
+     <width>641</width>
+     <height>331</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -50,132 +50,180 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QComboBox" name="comboBox">
+     <widget class="QComboBox" name="comboFileType">
       <item>
        <property name="text">
-        <string>Value</string>
+        <string>Picture</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Value List</string>
+        <string>Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Firmware</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Driver</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Setup Script</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Manual</string>
        </property>
       </item>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Name</string>
+       <string>Files</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit">
-      <property name="text">
-       <string>name-of-bit</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Pos</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_2">
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Width</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="lineEdit_3">
-      <property name="text">
-       <string>1</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Default</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="lineEdit_4">
-      <property name="text">
-       <string>true</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Min</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QLineEdit" name="lineEdit_6">
-      <property name="text">
-       <string>0</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Max</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QLineEdit" name="lineEdit_5">
-      <property name="text">
-       <string>1</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="1">
-     <widget class="QComboBox" name="comboBox_2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <property name="text">
-        <string>Read/Write</string>
-       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QListWidget" name="listFile"/>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QToolButton" name="btnAddFile">
+            <property name="toolTip">
+             <string>Add description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/add.png</normaloff>:/add.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+A</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnEditFile">
+            <property name="toolTip">
+             <string>Edit description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+E</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDupFile">
+            <property name="toolTip">
+             <string>Duplicate description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/images/svg/copy.svg</normaloff>:/images/svg/copy.svg</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+D</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="btnDelFile">
+            <property name="toolTip">
+             <string>Delete Description item</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset resource="vscpworks.qrc">
+              <normaloff>:/remove.png</normaloff>:/remove.png</iconset>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+X</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
-      <item>
-       <property name="text">
-        <string>Read Only</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Write Only</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="label_8">
-      <property name="text">
-       <string>Access</string>
-      </property>
-     </widget>
+     </layout>
     </item>
    </layout>
   </widget>
  </widget>
- <resources/>
- <connections/>
+ <resources>
+  <include location="vscpworks.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfFile</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>505</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfFile</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>325</x>
+     <y>505</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

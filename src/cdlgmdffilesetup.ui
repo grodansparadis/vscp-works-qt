@@ -7,17 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>604</width>
-    <height>222</height>
+    <height>187</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>MDF Setup Script</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>180</y>
+     <y>150</y>
      <width>581</width>
      <height>32</height>
     </rect>
@@ -38,79 +38,59 @@
      <x>9</x>
      <y>9</y>
      <width>581</width>
-     <height>161</height>
+     <height>131</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Name</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit">
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="editName">
       <property name="text">
        <string>name-of-setup</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>URL</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_3">
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="editUrl">
       <property name="text">
-       <string>https://www.somewhere.com/driver.zip</string>
+       <string>https://www.somewhere.com/manual.pdf</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Format</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QComboBox" name="comboBox">
-      <item>
-       <property name="text">
-        <string>vscpjs</string>
-       </property>
-      </item>
-     </widget>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="editFormat"/>
     </item>
-    <item row="4" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Date</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QLineEdit" name="lineEdit_4">
-      <property name="text">
-       <string>ISO-date</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Version</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QLineEdit" name="lineEdit_6">
-      <property name="text">
-       <string>0</string>
+    <item row="3" column="1">
+     <widget class="QDateEdit" name="date">
+      <property name="calendarPopup">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -118,5 +98,38 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfFileSetup</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfFileSetup</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>110</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

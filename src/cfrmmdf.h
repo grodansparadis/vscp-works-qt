@@ -209,6 +209,15 @@ public slots:
   /// Edit phone/fax/email/web/social data
   void editContact(void);
 
+  /// Edit bootloader data
+  void editBootLoader(void);
+
+  /// Edit file list (top item file header)
+  void editFileList(void);
+
+  /// Edit file objects
+  void editFile(void);
+
   /*!
     Fill in data from info map as children to parent item
 
@@ -310,6 +319,64 @@ public slots:
 
   void
   renderManufacturerSocial(QMdfTreeWidgetItem *pItemSocialHead);
+
+
+  /*!
+    Render bootloader info
+    @param pItemBootHead Pointer to boot info head
+  */
+  void
+  renderBootLoadInfo(QMdfTreeWidgetItem* pItemBootHead, uint16_t selectedIndex = 0);
+
+  
+
+  /*!
+    Render picture items
+    @param pItemPicture Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderPictureItems(QMdfTreeWidgetItem* pItemPicture, uint16_t selectedIndex = 0);
+
+  /*!
+    Render video items
+    @param pItemVideo Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderVideoItems(QMdfTreeWidgetItem* pItemVideo, uint16_t selectedIndex = 0);
+
+  /*!
+    Render manual items
+    @param pItemManual Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderManualItems(QMdfTreeWidgetItem* pItemManual, uint16_t selectedIndex = 0);
+
+  /*!
+    Render driver items
+    @param pItemDriver Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderDriverItems(QMdfTreeWidgetItem* pItemDriver, uint16_t selectedIndex = 0);
+
+  /*!
+    Render setup items
+    @param pItemSetup Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderSetupItems(QMdfTreeWidgetItem* pItemSetup, uint16_t selectedIndex = 0);
+
+  /*!
+    Render firmware items
+    @param pItemFirmware Pointer to header item in tree for sub items
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderFirmwareItems(QMdfTreeWidgetItem* pItemFirmware, uint16_t selectedIndex = 0);
 
   /// Do the new operation
   void newMdf(void);

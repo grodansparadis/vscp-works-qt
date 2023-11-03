@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMdfFilePicture</class>
- <widget class="QDialog" name="CDlgMdfFilePicture">
+ <class>CDlgMdfFileManual</class>
+ <widget class="QDialog" name="CDlgMdfFileManual">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>597</width>
-    <height>186</height>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MDF Picture</string>
+   <string>MDF Manual</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
+     <y>180</y>
      <width>581</width>
      <height>32</height>
     </rect>
@@ -38,61 +38,75 @@
      <x>9</x>
      <y>9</y>
      <width>581</width>
-     <height>131</height>
+     <height>158</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
        <string>Name</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="1" column="1">
      <widget class="QLineEdit" name="editName">
       <property name="text">
-       <string>name-for-picture</string>
+       <string>name-of-manual</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>URL</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="2" column="1">
      <widget class="QLineEdit" name="editUrl">
       <property name="text">
-       <string>https://www.somewhere.com/picture.jpg</string>
+       <string>https://www.somewhere.com/video.mpeg4</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Format</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="editFormat"/>
-    </item>
-    <item row="3" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Date</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Language</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="editLanguage">
+      <property name="text">
+       <string>en</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
      <widget class="QDateEdit" name="date">
       <property name="calendarPopup">
        <bool>true</bool>
       </property>
      </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editFormat"/>
     </item>
    </layout>
   </widget>
@@ -102,7 +116,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgMdfFilePicture</receiver>
+   <receiver>CDlgMdfFileManual</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -118,7 +132,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgMdfFilePicture</receiver>
+   <receiver>CDlgMdfFileManual</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

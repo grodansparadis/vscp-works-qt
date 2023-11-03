@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMdfFileVideo</class>
- <widget class="QDialog" name="CDlgMdfFileVideo">
+ <class>CDlgMdfFileDriver</class>
+ <widget class="QDialog" name="CDlgMdfFileDriver">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>604</width>
-    <height>315</height>
+    <height>304</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>MDF Driver</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -50,7 +50,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="editName">
       <property name="text">
        <string>name-of-driver</string>
       </property>
@@ -64,7 +64,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_3">
+     <widget class="QLineEdit" name="editUrl">
       <property name="text">
        <string>https://www.somewhere.com/driver.zip</string>
       </property>
@@ -77,18 +77,38 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QComboBox" name="comboBox">
-      <item>
-       <property name="text">
-        <string>VSCP Daemon</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>CANAL</string>
-       </property>
-      </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>OS</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="editOs"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>Architecture</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="editArchitecture"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>OS Version</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="editOsVersion">
+      <property name="text">
+       <string>10</string>
+      </property>
      </widget>
     </item>
     <item row="7" column="0">
@@ -99,9 +119,9 @@
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QLineEdit" name="lineEdit_4">
-      <property name="text">
-       <string>ISO-date</string>
+     <widget class="QDateEdit" name="date">
+      <property name="calendarPopup">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -113,91 +133,51 @@
      </widget>
     </item>
     <item row="8" column="1">
-     <widget class="QLineEdit" name="lineEdit_6">
+     <widget class="QLineEdit" name="editVersion">
       <property name="text">
        <string>0</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>OS</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QComboBox" name="comboBox_2">
-      <item>
-       <property name="text">
-        <string>Windows</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Linux</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>IOS</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Android</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>OS Version</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QLineEdit" name="lineEdit_5">
-      <property name="text">
-       <string>10</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_8">
-      <property name="text">
-       <string>Architecture</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
-     <widget class="QComboBox" name="comboBox_3">
-      <item>
-       <property name="text">
-        <string>X86</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>AMD64</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>ARM64</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Android</string>
-       </property>
-      </item>
-     </widget>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="editType"/>
     </item>
    </layout>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfFileDriver</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfFileDriver</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

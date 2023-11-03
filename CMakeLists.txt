@@ -254,6 +254,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmdfinfourl.ui
     src/cdlgmdffilefirmware.ui
     src/cdlgmdffilevideo.ui
+    src/cdlgmdffilemanual.ui
     src/cdlgmdfvaluelist.ui
     src/cdlgeditmap.ui
     src/cdlgmdfmanufacturer.ui
@@ -519,6 +520,45 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfcontactlist.cpp 
     src/cdlgmdfcontactlist.h
 
+    build/ui_cdlgmdfbootloader.h
+    src/cdlgmdfbootloader.ui
+    src/cdlgmdfbootloader.cpp 
+    src/cdlgmdfbootloader.h
+
+    build/ui_cdlgmdffilepicture.h
+    src/cdlgmdffilepicture.ui
+    src/cdlgmdffilepicture.cpp 
+    src/cdlgmdffilepicture.h
+
+    build/ui_cdlgmdffilevideo.h
+    src/cdlgmdffilevideo.ui
+    src/cdlgmdffilevideo.cpp 
+    src/cdlgmdffilevideo.h
+
+    build/ui_cdlgmdffilesetup.h
+    src/cdlgmdffilesetup.ui
+    src/cdlgmdffilesetup.cpp 
+    src/cdlgmdffilesetup.h
+
+    build/ui_cdlgmdffilemanual.h
+    src/cdlgmdffilemanual.ui
+    src/cdlgmdffilemanual.cpp
+    src/cdlgmdffilemanual.h
+
+    build/ui_cdlgmdffilefirmware.h
+    src/cdlgmdffilefirmware.ui
+    src/cdlgmdffilefirmware.cpp
+    src/cdlgmdffilefirmware.h
+
+    build/ui_cdlgmdffiledriver.h
+    src/cdlgmdffiledriver.ui
+    src/cdlgmdffiledriver.cpp
+    src/cdlgmdffiledriver.h
+
+    build/ui_cdlgmdffile.h
+    src/cdlgmdffile.ui
+    src/cdlgmdffile.cpp
+    src/cdlgmdffile.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h
