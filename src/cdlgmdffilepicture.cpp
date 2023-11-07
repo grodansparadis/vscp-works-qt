@@ -105,6 +105,7 @@ CDlgMdfFilePicture::initDialogData(const CMDF_Object* pmdfobj, mdf_file_picture_
     ui->date->setDate(dd); 
 
   switch (index) {
+
     case index_file_picture_url:
       ui->editUrl->setFocus();
       break;
@@ -241,7 +242,7 @@ CDlgMdfFilePicture::accept()
     m_ppicture->setFormat(str);
 
     QDate dd = ui->date->date(); 
-    m_ppicture->setDate(dd.toString("YY-MM-DD").toStdString());
+    m_ppicture->setDate(dd.toString("yyyy-MM-dd").toStdString());
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

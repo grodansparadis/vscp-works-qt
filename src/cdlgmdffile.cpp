@@ -35,12 +35,12 @@
 
 #include <vscpworks.h>
 
-#include "cdlgmdffilepicture.h"
-#include "cdlgmdffilevideo.h"
-#include "cdlgmdffilefirmware.h"
 #include "cdlgmdffiledriver.h"
-#include "cdlgmdffilesetup.h"
+#include "cdlgmdffilefirmware.h"
 #include "cdlgmdffilemanual.h"
+#include "cdlgmdffilepicture.h"
+#include "cdlgmdffilesetup.h"
+#include "cdlgmdffilevideo.h"
 
 #include "cdlgmdffile.h"
 #include "ui_cdlgmdffile.h"
@@ -54,6 +54,13 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
+
+const char CDlgMdfFile:: pre_str_picture[] = "Picture: ";
+const char CDlgMdfFile:: pre_str_video[] = "Video: ";
+const char CDlgMdfFile:: pre_str_firmware[] = "Firmware: ";
+const char CDlgMdfFile:: pre_str_driver[] = "Driver: ";
+const char CDlgMdfFile:: pre_str_setup[] = "Setup script: ";
+const char CDlgMdfFile:: pre_str_manual[] = "Manual: ";
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -122,7 +129,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pPictureObj = m_pmdf->getPictureObj(index);
         if (nullptr != pPictureObj) {
-          ui->listFile->addItem(QString("Picture %1 - ").arg(index) + pPictureObj->getName().c_str());
+          ui->listFile->addItem(QString("Picture: - ") + pPictureObj->getName().c_str());
         }
 
         index++;
@@ -149,7 +156,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pVideoObj = m_pmdf->getVideoObj(index);
         if (nullptr != pVideoObj) {
-          ui->listFile->addItem(QString("Video %1 - ").arg(index) + pVideoObj->getName().c_str());
+          ui->listFile->addItem(QString("Video - ") + pVideoObj->getName().c_str());
         }
 
         index++;
@@ -176,7 +183,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pFirmwareObj = m_pmdf->getFirmwareObj(index);
         if (nullptr != pFirmwareObj) {
-          ui->listFile->addItem(QString("Firmware %1 - ").arg(index) + pFirmwareObj->getName().c_str());
+          ui->listFile->addItem(QString("Firmware - ") + pFirmwareObj->getName().c_str());
         }
 
         index++;
@@ -203,7 +210,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pDriverObj = m_pmdf->getDriverObj(index);
         if (nullptr != pDriverObj) {
-          ui->listFile->addItem(QString("Driver %1 - ").arg(index) + pDriverObj->getName().c_str());
+          ui->listFile->addItem(QString("Driver - ") + pDriverObj->getName().c_str());
         }
 
         index++;
@@ -230,7 +237,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pSetupObj = m_pmdf->getSetupObj(index);
         if (nullptr != pSetupObj) {
-          ui->listFile->addItem(QString("Setup %1 - ").arg(index) + pSetupObj->getName().c_str());
+          ui->listFile->addItem(QString("Setup - ") + pSetupObj->getName().c_str());
         }
 
         index++;
@@ -257,7 +264,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       do {
         pManualObj = m_pmdf->getManualObj(index);
         if (nullptr != pManualObj) {
-          ui->listFile->addItem(QString("Manual %1 - ").arg(index) + pManualObj->getName().c_str());
+          ui->listFile->addItem(QString("Manual - ") + pManualObj->getName().c_str());
         }
 
         index++;
@@ -327,7 +334,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
 void
 CDlgMdfFile::setInitialFocus(void)
 {
-  // ui->editGuid->setFocus();
+  //ui->editName->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -340,66 +347,119 @@ CDlgMdfFile::addFileItem(void)
   switch (m_type) {
 
     case mdf_type_picture: {
-      CMDF_Picture *pobj = m_pmdf->getPictureObj(ui->listFile->currentRow());
+
+      CMDF_Picture* pobjnew = new CMDF_Picture();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
       CDlgMdfFilePicture dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getPictureObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_picture) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
 
     case mdf_type_video: {
-      CMDF_Video *pobj = m_pmdf->getVideoObj(ui->listFile->currentRow());
+
+      CMDF_Video* pobjnew = new CMDF_Video();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
+      CMDF_Video* pobj = m_pmdf->getVideoObj(ui->listFile->currentRow());
       CDlgMdfFileVideo dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getVideoObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_video) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
 
     case mdf_type_firmware: {
-      CMDF_Firmware *pobj = m_pmdf->getFirmwareObj(ui->listFile->currentRow());
+
+      CMDF_Firmware* pobjnew = new CMDF_Firmware();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
       CDlgMdfFileFirmware dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getFirmwareObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_firmware) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
 
-
     case mdf_type_driver: {
-      CMDF_Driver *pobj = m_pmdf->getDriverObj(ui->listFile->currentRow());
+
+      CMDF_Driver* pobjnew = new CMDF_Driver();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
       CDlgMdfFileDriver dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getDriverObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_driver) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
 
     case mdf_type_setup: {
-      CMDF_Setup *pobj = m_pmdf->getSetupObj(ui->listFile->currentRow());
+
+      CMDF_Setup* pobjnew = new CMDF_Setup();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
       CDlgMdfFileSetup dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getSetupObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_setup) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
 
     case mdf_type_manual: {
-      CMDF_Manual *pobj = m_pmdf->getManualObj(ui->listFile->currentRow());
+
+      CMDF_Manual* pobjnew = new CMDF_Manual();
+      if (nullptr == pobjnew) {
+        QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+         return;
+      }
+
       CDlgMdfFileManual dlg(this);
-      dlg.initDialogData(pobj /*, &selstr*/);
+      dlg.initDialogData(pobjnew);
       if (QDialog::Accepted == dlg.exec()) {
-        // ui->listDescription->clear();
-        // fillDescription();
+        m_pmdf->getManualObjList()->push_back(pobjnew);
+        ui->listFile->addItem(QString(pre_str_manual) + QString(" ") + pobjnew->getName().c_str());
+      }
+      else {
+        delete pobjnew;
       }
     } break;
-
   }
 }
 
@@ -410,25 +470,72 @@ CDlgMdfFile::addFileItem(void)
 void
 CDlgMdfFile::editFileItem(void)
 {
-  // if (-1 != ui->listDescription->currentRow()) {
+  if (-1 != ui->listFile->currentRow()) {
 
-  //   // Save the row
-  //   int idx = ui->listDescription->currentRow();
+    // Save the row
+    int idx = ui->listFile->currentRow();
 
-  //   QListWidgetItem* pitem = ui->listDescription->currentItem();
-  //   QString selstr         = pitem->text().split('_').first().left(2);
+    switch (m_type) {
 
-  //   CDlgMdfDescription dlg(this);
-  //   dlg.initDialogData(m_pitemobj->getMapDescription(), &selstr);
-  //   if (QDialog::Accepted == dlg.exec()) {
-  //     ui->listDescription->clear();
-  //     fillDescription();
-  //     ui->listDescription->setCurrentRow(idx);
-  //   }
-  // }
-  // else {
-  //   QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
-  // }
+      case mdf_type_picture: {
+        CMDF_Picture* pobj = m_pmdf->getPictureObj(ui->listFile->currentRow());
+        CDlgMdfFilePicture dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          ui->listFile->currentItem()->setText(QString(pre_str_picture) + QString("- ") + pobj->getName().c_str());
+        }
+      } break;
+
+      case mdf_type_video: {
+        CMDF_Video* pobj = m_pmdf->getVideoObj(ui->listFile->currentRow());
+        CDlgMdfFileVideo dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          ui->listFile->currentItem()->setText(QString(pre_str_video) + QString(" ") + pobj->getName().c_str());
+        }
+      } break;
+
+      case mdf_type_firmware: {
+        CMDF_Firmware* pobj = m_pmdf->getFirmwareObj(ui->listFile->currentRow());
+        CDlgMdfFileFirmware dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          ui->listFile->currentItem()->setText(QString(pre_str_firmware) + QString(" ") + pobj->getName().c_str());
+        }
+      } break;
+
+      case mdf_type_driver: {
+        CMDF_Driver* pobj = m_pmdf->getDriverObj(ui->listFile->currentRow());
+        CDlgMdfFileDriver dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          ui->listFile->currentItem()->setText(QString(pre_str_driver) + QString(" ") + pobj->getName().c_str());
+        }
+      } break;
+
+      case mdf_type_setup: {
+        CMDF_Setup* pobj = m_pmdf->getSetupObj(ui->listFile->currentRow());
+        CDlgMdfFileSetup dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          // ui->listDescription->clear();
+          // fillDescription();
+        }
+      } break;
+
+      case mdf_type_manual: {
+        CMDF_Manual* pobj = m_pmdf->getManualObj(ui->listFile->currentRow());
+        CDlgMdfFileManual dlg(this);
+        dlg.initDialogData(pobj /*, &selstr*/);
+        if (QDialog::Accepted == dlg.exec()) {
+          ui->listFile->currentItem()->setText(QString(pre_str_manual) + QString(" ") + pobj->getName().c_str());
+        }
+      } break;
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -438,17 +545,175 @@ CDlgMdfFile::editFileItem(void)
 void
 CDlgMdfFile::dupFileItem(void)
 {
-  // if (-1 != ui->listDescription->currentRow()) {
-  //   CDlgMdfDescription dlg(this);
-  //   dlg.initDialogData(m_pitemobj->getMapDescription());
-  //   if (QDialog::Accepted == dlg.exec()) {
-  //     ui->listDescription->clear();
-  //     fillDescription();
-  //   }
-  // }
-  // else {
-  //   QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
-  // }
+  if (-1 != ui->listFile->currentRow()) {
+
+    // Save the row
+    int idx = ui->listFile->currentRow();
+
+    switch (m_type) {
+
+      case mdf_type_picture: {
+
+        CMDF_Picture* pobj = m_pmdf->getPictureObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Picture* pobjnew = new CMDF_Picture();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFilePicture dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getPictureObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_picture) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+
+      } break;
+
+      case mdf_type_video: {
+        CMDF_Video* pobj = m_pmdf->getVideoObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Video* pobjnew = new CMDF_Video();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFileVideo dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getVideoObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_video) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+      } break;
+
+      case mdf_type_firmware: {
+        CMDF_Firmware* pobj = m_pmdf->getFirmwareObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Firmware* pobjnew = new CMDF_Firmware();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFileFirmware dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getFirmwareObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_firmware) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+      } break;
+
+      case mdf_type_driver: {
+        CMDF_Driver* pobj = m_pmdf->getDriverObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Driver* pobjnew = new CMDF_Driver();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFileDriver dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getDriverObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_driver) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+      } break;
+
+      case mdf_type_setup: {
+        CMDF_Setup* pobj = m_pmdf->getSetupObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Setup* pobjnew = new CMDF_Setup();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFileSetup dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getSetupObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_setup) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+      } break;
+
+      case mdf_type_manual: {
+        CMDF_Manual* pobj = m_pmdf->getManualObj(ui->listFile->currentRow());
+        if (nullptr == pobj) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Invalid object"), QMessageBox::Ok);
+          return;
+        }
+
+        CMDF_Manual* pobjnew = new CMDF_Manual();
+        if (nullptr == pobjnew) {
+          QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
+          return;
+        }
+
+        *pobjnew = *pobj;
+
+        CDlgMdfFileManual dlg(this);
+        dlg.initDialogData(pobjnew);
+        if (QDialog::Accepted == dlg.exec()) {
+          m_pmdf->getManualObjList()->push_back(pobjnew);
+          ui->listFile->addItem(QString(pre_str_manual) + QString(" ") + pobjnew->getName().c_str());
+        }
+        else {
+          delete pobjnew;
+        }
+      } break;
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -458,18 +723,54 @@ CDlgMdfFile::dupFileItem(void)
 void
 CDlgMdfFile::deleteFileItem(void)
 {
-  // if (-1 != ui->listDescription->currentRow()) {
+  if (-1 != ui->listFile->currentRow()) {
 
-  //   // Save the row
-  //   int idx = ui->listDescription->currentRow();
+    // Save the row
+    int idx = ui->listFile->currentRow();
 
-  //   QListWidgetItem* pitem = ui->listDescription->currentItem();
-  //   QString selstr         = pitem->text().split('_').first().left(2);
+    switch (m_type) {
 
-  //   m_pitemobj->getMapDescription()->erase(selstr.toStdString());
-  //   ui->listDescription->clear();
-  //   fillDescription();
-  // }
+      case mdf_type_picture: {
+        std::deque<CMDF_Picture*>* pPictureList = m_pmdf->getPictureObjList();
+        pPictureList->erase(pPictureList->begin() + idx);
+        ui->listFile->takeItem(idx);
+      } break;
+
+      case mdf_type_video: {
+        std::deque<CMDF_Video*>* pVideoList = m_pmdf->getVideoObjList();
+        pVideoList->erase(pVideoList->begin() + idx);
+        ui->listFile->takeItem(idx);
+
+      } break;
+
+      case mdf_type_firmware: {
+        std::deque<CMDF_Firmware*>* pFirmwareList = m_pmdf->getFirmwareObjList();
+        pFirmwareList->erase(pFirmwareList->begin() + idx);
+        ui->listFile->takeItem(idx);
+      } break;
+
+      case mdf_type_driver: {
+        std::deque<CMDF_Driver*>* pDriverList = m_pmdf->getDriverObjList();
+        pDriverList->erase(pDriverList->begin() + idx);
+        ui->listFile->takeItem(idx);
+      } break;
+
+      case mdf_type_setup: {
+        std::deque<CMDF_Setup*>* pSetupList = m_pmdf->getSetupObjList();
+        pSetupList->erase(pSetupList->begin() + idx);
+        ui->listFile->takeItem(idx);
+      } break;
+
+      case mdf_type_manual: {
+        std::deque<CMDF_Manual*>* pManualList = m_pmdf->getManualObjList();
+        pManualList->erase(pManualList->begin() + idx);
+        ui->listFile->takeItem(idx);
+      } break;
+    }
+  }
+  else {
+    QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
+  }
 }
 
 // ----------------------------------------------------------------------------

@@ -339,12 +339,30 @@ public slots:
   renderPictureItems(QMdfTreeWidgetItem* pItemPicture, uint16_t selectedIndex = 0);
 
   /*!
+    Render picture subitems
+    @param pItemPicture Pointer to picture item to render
+    @param pPictureObj Pointer to picture object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderPictureSubItems(QMdfTreeWidgetItem* pItemPicture, CMDF_Picture* pPictureObj, uint16_t selectedIndex = 0);
+
+  /*!
     Render video items
     @param pItemVideo Pointer to header item in tree for sub items
     @param selectedIndex Item that should be selected
   */
   void
   renderVideoItems(QMdfTreeWidgetItem* pItemVideo, uint16_t selectedIndex = 0);
+
+  /*!
+    Render video subitems
+    @param pItemVideo Pointer to picture item to render
+    @param pVideoObj Pointer to picture object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderVideoSubItems(QMdfTreeWidgetItem* pItemVideo, CMDF_Video* pVideoObj, uint16_t selectedIndex = 0);
 
   /*!
     Render manual items
@@ -355,12 +373,30 @@ public slots:
   renderManualItems(QMdfTreeWidgetItem* pItemManual, uint16_t selectedIndex = 0);
 
   /*!
+    Render manual subitems
+    @param pItemManual Pointer to manual item to render
+    @param pManualObj Pointer to manaul object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderManualSubItems(QMdfTreeWidgetItem* pItemManual, CMDF_Manual* pManualObj, uint16_t selectedIndex = 0);
+
+  /*!
     Render driver items
     @param pItemDriver Pointer to header item in tree for sub items
     @param selectedIndex Item that should be selected
   */
   void
   renderDriverItems(QMdfTreeWidgetItem* pItemDriver, uint16_t selectedIndex = 0);
+
+  /*!
+    Render driver subitems
+    @param pItemDriver Pointer to driver item to render
+    @param pDriverObj Pointer to driver object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderDriverSubItems(QMdfTreeWidgetItem* pItemDriver, CMDF_Driver* pDriverObj, uint16_t selectedIndex = 0);
 
   /*!
     Render setup items
@@ -371,12 +407,30 @@ public slots:
   renderSetupItems(QMdfTreeWidgetItem* pItemSetup, uint16_t selectedIndex = 0);
 
   /*!
+    Render setup subitems
+    @param pItemSetup Pointer to setup item to render
+    @param pSetupObj Pointer to setup object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderSetupSubItems(QMdfTreeWidgetItem* pItemSetup, CMDF_Setup* pSetupObj, uint16_t selectedIndex = 0);
+
+  /*!
     Render firmware items
     @param pItemFirmware Pointer to header item in tree for sub items
     @param selectedIndex Item that should be selected
   */
   void
   renderFirmwareItems(QMdfTreeWidgetItem* pItemFirmware, uint16_t selectedIndex = 0);
+
+  /*!
+    Render firmware subitems
+    @param pItemFirmware Pointer to firmware item to render
+    @param pFirmwareObj Pointer to firmware object
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderFirmwareSubItems(QMdfTreeWidgetItem* pItemFirmware, CMDF_Firmware* pFirmwareObj, uint16_t selectedIndex = 0);
 
   /// Do the new operation
   void newMdf(void);
@@ -416,6 +470,26 @@ private:
 
   // The statusbar
   QStatusBar* m_bar;
+
+  /*!
+    Headers in the tree that are used as reference for updates.
+    The following pointers are always valid and set.
+  */
+  QMdfTreeWidgetItem* m_headModule;
+  QMdfTreeWidgetItem* m_headManufacturer;
+  QMdfTreeWidgetItem* m_headBootLoader;
+  QMdfTreeWidgetItem* m_headFile;
+  QMdfTreeWidgetItem* m_headFilePicture;
+  QMdfTreeWidgetItem* m_headFileVideo;
+  QMdfTreeWidgetItem* m_headFileManual;
+  QMdfTreeWidgetItem* m_headFileFirmware;
+  QMdfTreeWidgetItem* m_headFileDriver;
+  QMdfTreeWidgetItem* m_headFileSetupScript;
+  QMdfTreeWidgetItem* m_headRegister;
+  QMdfTreeWidgetItem* m_headRemoteVariabel;
+  QMdfTreeWidgetItem* m_headAlarm;
+  QMdfTreeWidgetItem* m_headDecisionMatrix;
+  QMdfTreeWidgetItem* m_headEvent;
 };
 
 #endif // CFrmMdf_H

@@ -74,7 +74,8 @@
       "regex": "cpp",
       "any": "cpp",
       "numbers": "cpp",
-      "span": "cpp"
+      "span": "cpp",
+      "bitset": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

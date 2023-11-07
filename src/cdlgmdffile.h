@@ -48,12 +48,19 @@ public:
   explicit CDlgMdfFile(QWidget* parent = nullptr);
   ~CDlgMdfFile();
 
-  const int index_picture = 0;
-  const int index_video = 1;
-  const int index_firmware = 2;
-  const int index_driver = 3;
-  const int index_setup = 4;
-  const int index_manual = 5;
+  static const int index_picture = 0;
+  static const int index_video = 1;
+  static const int index_firmware = 2;
+  static const int index_driver = 3;
+  static const int index_setup = 4;
+  static const int index_manual = 5;
+
+  static const char pre_str_picture[];
+  static const char pre_str_video[];
+  static const char pre_str_firmware[];
+  static const char pre_str_driver[];
+  static const char pre_str_setup[];
+  static const char pre_str_manual[];
 
   /*!
       Set inital focus to description
