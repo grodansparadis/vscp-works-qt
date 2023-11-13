@@ -61,8 +61,7 @@ CDlgMdfFileManual::CDlgMdfFileManual(QWidget* parent)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Fill combo with predefined bootloader algorithms (vscp.h)
-  //ui->comboBoxAlgorithm->addItem("VSCP", VSCP_BOOTLOADER_VSCP); // VSCP boot loader algorithm
-  
+  // ui->comboBoxAlgorithm->addItem("VSCP", VSCP_BOOTLOADER_VSCP); // VSCP boot loader algorithm
 
   // QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
   // connect(shortcut, &QShortcut::activated, this, &CDlgMdfFileManual::editDesc);
@@ -102,8 +101,8 @@ CDlgMdfFileManual::initDialogData(const CMDF_Object* pmdfobj, mdf_file_manual_in
   ui->editFormat->setText(m_pmanual->getFormat().c_str());
   ui->editLanguage->setText(m_pmanual->getLanguage().c_str());
 
-  QDate dd = QDate::fromString(m_pmanual->getDate().c_str(),"YY-MM_DD");
-    ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(m_pmanual->getDate().c_str(), "YY-MM_DD");
+  ui->date->setDate(dd);
 
   switch (index) {
     case index_file_manual_url:
@@ -120,7 +119,7 @@ CDlgMdfFileManual::initDialogData(const CMDF_Object* pmdfobj, mdf_file_manual_in
 
     case index_file_manual_language:
       ui->editLanguage->setFocus();
-      break;  
+      break;
 
     case index_file_manual_name:
     default:
@@ -230,8 +229,8 @@ CDlgMdfFileManual::getLanguage(void)
 void
 CDlgMdfFileManual::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate,"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
+  ui->date->setDate(dd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -241,7 +240,7 @@ CDlgMdfFileManual::setDate(const QString& strdate)
 QString
 CDlgMdfFileManual::getDate(void)
 {
-  QDate dd = ui->date->date(); 
+  QDate dd = ui->date->date();
   return dd.toString("YY-MM-DD");
 }
 
@@ -267,7 +266,7 @@ CDlgMdfFileManual::accept()
     str = ui->editLanguage->text().toStdString();
     m_pmanual->setLanguage(str);
 
-    QDate dd = ui->date->date(); 
+    QDate dd = ui->date->date();
     m_pmanual->setDate(dd.toString("YY-MM-DD").toStdString());
   }
   else {

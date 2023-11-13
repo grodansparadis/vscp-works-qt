@@ -37,17 +37,18 @@
 // Id for fields to identify them in the UI.
 // Use to set focus on edit and to write changed values 
 // in correct position among other things.
-typedef enum mdf_firmware_index {
-  index_firmware_none = 0,
-  index_firmware_name,
-  index_firmware_target_code,
-  index_firmware_url,
-  index_firmware_format,
-  index_firmware_date,
-  index_firmware_version,
-  index_firmware_size,
-  index_firmware_md5,
-} mdf_firmware_index;
+typedef enum mdf_file_firmware_index {
+  index_file_firmware_none = 0,
+  index_file_firmware_name,
+  index_file_firmware_target,
+  index_file_firmware_target_code,
+  index_file_firmware_url,
+  index_file_firmware_format,
+  index_file_firmware_date,
+  index_file_firmware_version,
+  index_file_firmware_size,
+  index_file_firmware_md5,
+} mdf_file_firmware_index;
 
 // Tree prefixes (Text before value in tree table)
 #define PREFIX_MDF_FIRMWARE_NAME tr("Name: ")
@@ -82,7 +83,7 @@ public:
     @param index The index for the field that will get focus
       
   */
-  void initDialogData(const CMDF_Object* pmdfobj, mdf_firmware_index index = index_firmware_none);
+  void initDialogData(const CMDF_Object* pmdfobj, mdf_file_firmware_index index = index_file_firmware_none);
 
 
   // ----------------------------------------------------------------------------
@@ -94,6 +95,12 @@ public:
   */
   void setName(const QString& name);
   QString getName(void);
+
+  /*!
+      Target getter/setters
+  */
+  void setTarget(const QString& url);
+  QString getTarget(void);
 
   /*!
       target code getter/setters

@@ -38,16 +38,17 @@
 // Use to set focus on edit and to write changed values 
 // in correct position among other things.
 typedef enum mdf_driver_index {
-  index_driver_none = 0,
-  index_driver_name,
-  index_driver_url,
-  index_driver_type,
-  index_driver_os,
-  index_driver_architecture,
-  index_driver_os_version,
-  index_driver_date,
-  index_driver_version,
-} mdf_driver_index;
+  index_file_driver_none = 0,
+  index_file_driver_name,
+  index_file_driver_url,
+  index_file_driver_type,
+  index_file_driver_os,
+  index_file_driver_architecture,
+  index_file_driver_os_version,
+  index_file_driver_date,
+  index_file_driver_version,
+  index_file_driver_md5,
+} mdf_file_driver_index;
 
 // Tree prefixes (Text before value in tree table)
 #define PREFIX_MDF_DRIVER_NAME tr("Name: ")
@@ -80,7 +81,7 @@ public:
     @param index The index for the field that will get focus
       
   */
-  void initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index index = index_driver_none);
+  void initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index index = index_file_driver_none);
 
 
   // ----------------------------------------------------------------------------

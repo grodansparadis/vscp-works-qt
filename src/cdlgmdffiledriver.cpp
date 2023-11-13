@@ -60,8 +60,6 @@ CDlgMdfFileDriver::CDlgMdfFileDriver(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
- 
-
   setInitialFocus();
 }
 
@@ -98,44 +96,47 @@ CDlgMdfFileDriver::initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index i
   ui->editOsVersion->setText(m_pdriver->getOSVer().c_str());
   ui->editVersion->setText(m_pdriver->getVersion().c_str());
 
-  QDate dd = QDate::fromString(m_pdriver->getDate().c_str(),"YY-MM_DD");
-  ui->date->setDate(dd); 
-
+  QDate dd = QDate::fromString(m_pdriver->getDate().c_str(), "YY-MM_DD");
+  ui->date->setDate(dd);
 
   switch (index) {
-    case index_driver_name:
+    case index_file_driver_name:
       ui->editName->setFocus();
       break;
 
-    case index_driver_url:
+    case index_file_driver_url:
       ui->editUrl->setFocus();
       break;
 
-    case index_driver_type:
+    case index_file_driver_type:
       ui->editType->setFocus();
-      break;  
+      break;
 
-    case index_driver_os:
+    case index_file_driver_os:
       ui->editOs->setFocus();
       break;
 
-    case index_driver_architecture:
+    case index_file_driver_architecture:
       ui->editArchitecture->setFocus();
-      break;  
+      break;
 
-    case index_driver_os_version:
+    case index_file_driver_os_version:
       ui->editOsVersion->setFocus();
-      break;  
+      break;
 
-    case index_driver_date:
+    case index_file_driver_date:
       ui->date->setFocus();
-      break;  
+      break;
 
-    case index_driver_version:
+    case index_file_driver_version:
       ui->editVersion->setFocus();
+      break;
+
+    case index_file_driver_md5:
+      ui->editMd5->setFocus();
       break;  
 
-    case index_driver_none:
+    case index_file_driver_none:
     default:
       ui->editName->setFocus();
       break;
@@ -283,8 +284,8 @@ CDlgMdfFileDriver::getOsVersion(void)
 void
 CDlgMdfFileDriver::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate,"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
+  ui->date->setDate(dd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -294,7 +295,7 @@ CDlgMdfFileDriver::setDate(const QString& strdate)
 QString
 CDlgMdfFileDriver::getDate(void)
 {
-  QDate dd = ui->date->date(); 
+  QDate dd = ui->date->date();
   return dd.toString("YY-MM-DD");
 }
 
@@ -328,16 +329,29 @@ CDlgMdfFileDriver::accept()
   std::string str;
   if (nullptr != m_pdriver) {
 
-   /*  str = ui->editBlockSize->text().toStdString();
-    m_pbootinfo->setBlocksize(vscp_readStringValue(str));
+    str = ui->editName->text().toStdString();
+    m_pdriver->setName(str);
 
-    str = ui->editBlockCount->text().toStdString();
-    m_pbootinfo->setBlockCount(vscp_readStringValue(str));
+    str = ui->editUrl->text().toStdString();
+    m_pdriver->setUrl(str);
 
-    // m_pbootinfo->setModuleLevel(ui->comboModuleLevel->currentIndex());
+    str = ui->editType->text().toStdString();
+    m_pdriver->setType(str);
 
-    int idx = ui->comboBoxAlgorithm->currentIndex(); //  ->text().toStdString();
-    m_pbootinfo->setAlgorithm(idx); */
+    str = ui->editOs->text().toStdString();
+    m_pdriver->setOS(str);
+
+    str = ui->editArchitecture->text().toStdString();
+    m_pdriver->setArchitecture(str);
+
+    str = ui->editOsVersion->text().toStdString();
+    m_pdriver->setVersion(str);
+
+    str = ui->editMd5->text().toStdString();
+    m_pdriver->setMd5(str);
+
+    QDate dd = ui->date->date();
+    m_pdriver->setDate(dd.toString("YY-MM-DD").toStdString());
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

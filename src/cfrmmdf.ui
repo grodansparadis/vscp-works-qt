@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>635</width>
-    <height>716</height>
+    <height>703</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -233,10 +233,13 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionEdit_item"/>
+    <addaction name="actionDelete_item"/>
+    <addaction name="separator"/>
     <addaction name="actionReload"/>
     <addaction name="separator"/>
     <addaction name="actionE_xpand_all"/>
-    <addaction name="actionEdit_item"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Edit"/>
@@ -305,6 +308,17 @@
   <action name="actionReload">
    <property name="text">
     <string>&amp;Redraw MDF tree</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionDelete_item">
+   <property name="text">
+    <string>&amp;Delete Item</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
  </widget>

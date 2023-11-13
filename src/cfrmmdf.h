@@ -184,7 +184,10 @@ public slots:
   void onItemDoubleClicked(QTreeWidgetItem* item, int column);
 
   /// Edit MDF data
-  void editData(void);
+  void editItem(void);
+
+  /// Delete MDF data
+  void deleteItem(void);
 
   /// Edit MDF module data
   void editModuleData(void);
@@ -192,8 +195,14 @@ public slots:
   /// Edit MDF descriptions
   void editDescription(void);
 
+  /// Delete MDF descriptions
+  void deleteDescription(void);
+
   /// Edit MDF info URL's
   void editInfoUrl(void);
+
+  /// Delete MDF info URL's
+  void deleteInfoUrl(void);
 
   /// Edit MDF manufacturer data
   void editManufacturerData(void);
@@ -207,7 +216,10 @@ public slots:
   void showContactDialog(QMdfTreeWidgetItem* pItem, mdf_dlg_contact_type type, QString title);
 
   /// Edit phone/fax/email/web/social data
-  void editContact(void);
+  void editContact(void);  
+
+  /// Delete phone/fax/email/web/social data
+  void deleteContact(void);
 
   /// Edit bootloader data
   void editBootLoader(void);
@@ -215,8 +227,17 @@ public slots:
   /// Edit file list (top item file header)
   void editFileList(void);
 
-  /// Edit file objects
+  /// Edit file object
   void editFile(void);
+
+  /// Delete file object
+  void deleteFile(void);
+
+  /// Edit register info
+  void editRegister();
+
+  /// Delete register item
+  void deleteRegister();
 
   /*!
     Fill in data from info map as children to parent item
@@ -227,7 +248,7 @@ public slots:
     @param bChildIsKnown Set to true of pParent points to description head
   */
   void
-  fillDescriptionItems(QTreeWidgetItem* pParent, 
+  renderDescriptionItems(QTreeWidgetItem* pParent, 
                           CMDF_Object* pobj, 
                           std::map<std::string, std::string>* pObjMap, 
                           bool bChildIsKnown = false);
@@ -241,7 +262,7 @@ public slots:
     @param bChildIsKnown Set to true of pParent points to info URL head
   */
   void
-  fillInfoUrlItems(QTreeWidgetItem* pParent, 
+  renderInfoUrlItems(QTreeWidgetItem* pParent, 
                       CMDF_Object* pobj, 
                       std::map<std::string, std::string>* pObjMap, 
                       bool bChildIsKnown = false);
@@ -252,7 +273,7 @@ public slots:
     @param dequebits Reference for std:deque holding bit infor objects
   */
   void
-  fillBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
+  renderBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
 
   /*!
     Fill value list info
@@ -261,7 +282,7 @@ public slots:
     @param dequevalues Reference for std:deque holding bit infor objects
   */
   void
-  fillValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues);
+  renderValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues);
 
   /*!
     Fill in register info
@@ -270,7 +291,7 @@ public slots:
     @preg Pointer to register definition
   */
   void
-  fillRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
+  renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
 
   /*!
     Remove all subitems of a head item that have a speciified type.
@@ -477,6 +498,11 @@ private:
   */
   QMdfTreeWidgetItem* m_headModule;
   QMdfTreeWidgetItem* m_headManufacturer;
+  QMdfTreeWidgetItem* m_headManufacturerPhone;
+  QMdfTreeWidgetItem* m_headManufacturerFax;
+  QMdfTreeWidgetItem* m_headManufacturerEmail;
+  QMdfTreeWidgetItem* m_headManufacturerWeb;
+  QMdfTreeWidgetItem* m_headManufacturerSocial;
   QMdfTreeWidgetItem* m_headBootLoader;
   QMdfTreeWidgetItem* m_headFile;
   QMdfTreeWidgetItem* m_headFilePicture;

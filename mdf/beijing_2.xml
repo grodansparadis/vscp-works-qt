@@ -882,13 +882,13 @@
       	    <description lang="en">
       	    Reserved
       	    </description> 
-        	</bit>    
-  			<bit pos="7" default="true" >
+      </bit>    
+  		<bit pos="7" default="true" >
       	    <name lang="en">Enable channel</name>
       	    <description lang="en">
       	    Set this bit to make the output controllable.
       	    </description> 
-        	</bit>        	  	       	      	     	
+      </bit>        	  	       	      	     	
 		</reg>
 		
 		<reg page="0" offset="25" default="0x98" bgcolor="0xF0F5F5" >

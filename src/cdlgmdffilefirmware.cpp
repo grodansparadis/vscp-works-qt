@@ -82,7 +82,7 @@ CDlgMdfFileFirmware::~CDlgMdfFileFirmware()
 //
 
 void
-CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_firmware_index index)
+CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_file_firmware_index index)
 {
   QString str;
 
@@ -94,6 +94,7 @@ CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_firmware_ind
   m_pfirmware = (CMDF_Firmware*)pmdfobj;
 
   ui->editName->setText(m_pfirmware->getName().c_str());
+  ui->editTarget->setText(m_pfirmware->getTarget().c_str());
   ui->editTargetCode->setText(QString::number(m_pfirmware->getTargetCode()));
   ui->editUrl->setText(m_pfirmware->getUrl().c_str());
   ui->editFormat->setText(m_pfirmware->getFormat().c_str());
@@ -106,35 +107,39 @@ CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_firmware_ind
   ui->editMd5->setText(m_pfirmware->getMd5().c_str());
 
   switch (index) {
-    case index_firmware_name:
+    case index_file_firmware_name:
       ui->editName->setFocus();
       break;
 
-    case index_firmware_target_code:
+    case index_file_firmware_target_code:
       ui->editTargetCode->setFocus();
       break;
 
-    case index_firmware_format:
+    case index_file_firmware_target:
+      ui->editTarget->setFocus();
+      break;  
+
+    case index_file_firmware_format:
       ui->editFormat->setFocus();
       break;  
 
-    case index_firmware_date:
+    case index_file_firmware_date:
       ui->date->setFocus();
       break;  
 
-    case index_firmware_version:
+    case index_file_firmware_version:
       ui->editVersion->setFocus();
       break;  
 
-    case index_firmware_size:
+    case index_file_firmware_size:
       ui->editSize->setFocus();
       break;  
 
-    case index_firmware_md5:
+    case index_file_firmware_md5:
       ui->editMd5->setFocus();
       break;  
 
-    case index_firmware_none:
+    case index_file_firmware_none:
     default:
       ui->editName->setFocus();
       break;
@@ -193,6 +198,26 @@ uint16_t
 CDlgMdfFileFirmware::getTargetCode(void)
 {
   return vscp_readStringValue(ui->editTargetCode->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setTarget
+//
+
+void
+CDlgMdfFileFirmware::setTarget(const QString& target)
+{
+  ui->editTarget->setText(target);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getTarget
+//
+
+QString
+CDlgMdfFileFirmware::getTarget(void)
+{
+  return ui->editTarget->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -349,13 +374,6 @@ CDlgMdfFileFirmware::accept()
     str = ui->editMd5->text().toStdString();
     m_pfirmware->setMd5(str);
 
-    // str = ui->editBlockCount->text().toStdString();
-    // m_pbootinfo->setBlockCount(vscp_readStringValue(str));
-
-    // // m_pbootinfo->setModuleLevel(ui->comboModuleLevel->currentIndex());
-
-    // int idx = ui->comboBoxAlgorithm->currentIndex(); //  ->text().toStdString();
-    // m_pbootinfo->setAlgorithm(idx);
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

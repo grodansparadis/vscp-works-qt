@@ -237,12 +237,10 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgactionparam.ui
     srd/cdlgdatepicker.ui
     src/cfrmmdf.ui
-    src/cdlgmdfmodule.ui
-    src/cdlgmdfbitlist.ui      
+    src/cdlgmdfmodule.ui      
     src/cdlgmdfdm.ui	       
     src/cdlgmdffilepicture.ui  
     src/cdlgmdfmodule.ui
-    src/cdlgmdfbit.ui	       
     src/cdlgmdfevent.ui	       
     src/cdlgmdffilesetup.ui    
     src/cdlgmdfregister.ui
@@ -260,6 +258,21 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmdfmanufacturer.ui
     src/cdlgmdfcontact.ui
     src/cdlgmdfcontactlist.ui
+
+    src/cdlgmdfregister.ui
+    src/cdlgmdfregisterlist.ui
+    src/cdlgmdfregisterbitlist.ui
+    src/cdlgmdfregisterbit.ui
+    src/cdlgmdfregistervaluelist.ui
+    src/cdlgmdfregistervalue.ui
+
+    src/cdlgmdfregistermapping.ui
+    
+    src/cdlgmdfremotevar.ui
+    src/cdlgmdfremotevarbitlist.ui
+    src/cdlgmdfremotevarbit.ui
+    src/cdlgmdfremotevarvaluelist.ui
+    src/cdlgmdfremotevarvalue.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -559,6 +572,16 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdffile.ui
     src/cdlgmdffile.cpp
     src/cdlgmdffile.h
+
+    build/ui_cdlgmdfregister.h 
+    src/cdlgmdfregister.ui
+    src/cdlgmdfregister.cpp
+    src/cdlgmdfregister.h
+
+    build/ui_cdlgmdfregisterlist.h 
+    src/cdlgmdfregisterlist.ui
+    src/cdlgmdfregisterlist.cpp
+    src/cdlgmdfregisterlist.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h
