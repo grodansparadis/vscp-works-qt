@@ -1,4 +1,4 @@
-// cdlgmdfregisterlist.h
+// cdlgmdfregisterbitlist.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERLIST_H
-#define CDLGMDFREGISTERLIST_H
+#ifndef CDLGMDFREGISTERBITLIST_H
+#define CDLGMDFREGISTERBITLIST_H
 
 #include <vscpworks.h>
 #include <mdf.h>
@@ -40,15 +40,15 @@
 
 
 namespace Ui {
-class CDlgMdfRegisterList;
+class CDlgMdfRegisterBitList;
 }
 
-class CDlgMdfRegisterList : public QDialog {
+class CDlgMdfRegisterBitList : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CDlgMdfRegisterList(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterList();
+  explicit CDlgMdfRegisterBitList(QWidget* parent = nullptr);
+  ~CDlgMdfRegisterBitList();
 
   /*!
       Set inital focus to description
@@ -91,17 +91,14 @@ public:
 public slots:
   void accept(void);
 
-  // Called wehen page combo changes
-  void onPageComboChange(int idx);
-
   // Description buttons
-  void addRegister(void);
-  void editRegister(void);
-  void dupRegister(void);
-  void deleteRegister(void);
+  void addRegisterBit(void);
+  void editRegisterBit(void);
+  void dupRegisterBit(void);
+  void deleteRegisterBit(void);
 
 private:
-  Ui::CDlgMdfRegisterList* ui;
+  Ui::CDlgMdfRegisterBitList* ui;
 
   // MDF
   CMDF *m_pmdf;
@@ -113,4 +110,4 @@ private:
   std::set<uint32_t> m_registersSet ;
 };
 
-#endif // CDLGMDFREGISTERLIST_H
+#endif // CDLGMDFREGISTERBITLIST_H

@@ -67,6 +67,7 @@ CDlgMdfRegister::CDlgMdfRegister(QWidget* parent)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   setInitialFocus();
+  this->setFixedSize(this->size());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,6 +202,19 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
       ui->editName->setFocus();
       break;
   }
+
+  this->setFixedSize(this->size());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setReadOnly
+//
+
+void
+CDlgMdfRegister::setReadOnly(void)
+{
+  ui->comboPage->setEnabled(false);
+  ui->editOffset->setEnabled(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

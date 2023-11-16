@@ -7,35 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>692</width>
-    <height>257</height>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>220</y>
-     <width>671</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
      <x>9</x>
      <y>19</y>
      <width>671</width>
-     <height>191</height>
+     <height>221</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -64,7 +48,11 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QSpinBox" name="spinPos"/>
+     <widget class="QSpinBox" name="spinPos">
+      <property name="maximum">
+       <number>7</number>
+      </property>
+     </widget>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_28">
@@ -74,7 +62,14 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QSpinBox" name="SpinWidth"/>
+     <widget class="QSpinBox" name="spinWidth">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>8</number>
+      </property>
+     </widget>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_27">
@@ -83,12 +78,18 @@
       </property>
      </widget>
     </item>
+    <item row="3" column="1">
+     <widget class="QSpinBox" name="spinDefault"/>
+    </item>
     <item row="4" column="0">
      <widget class="QLabel" name="label_31">
       <property name="text">
        <string>Min</string>
       </property>
      </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QSpinBox" name="spinMin"/>
     </item>
     <item row="5" column="0">
      <widget class="QLabel" name="label_32">
@@ -97,16 +98,64 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QSpinBox" name="spinDefault"/>
-    </item>
-    <item row="4" column="1">
-     <widget class="QSpinBox" name="spinMin"/>
-    </item>
     <item row="5" column="1">
-     <widget class="QSpinBox" name="spinMax"/>
+     <widget class="QSpinBox" name="spinMax">
+      <property name="maximum">
+       <number>255</number>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_33">
+      <property name="text">
+       <string>Access</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QComboBox" name="comboAccess">
+      <property name="toolTip">
+       <string>Access right for register</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>None</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Write Only</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Read Only</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Read/Write</string>
+       </property>
+      </item>
+     </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>250</y>
+     <width>671</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+   </property>
   </widget>
  </widget>
  <resources/>
@@ -118,12 +167,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>345</x>
+     <y>255</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>345</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>
@@ -134,12 +183,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>345</x>
+     <y>255</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>345</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>

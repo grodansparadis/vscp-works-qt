@@ -234,10 +234,22 @@ public slots:
   void deleteFile(void);
 
   /// Edit register info
-  void editRegister();
+  void editRegister(void);
 
   /// Delete register item
-  void deleteRegister();
+  void deleteRegister(void);
+
+  /// Edit register info
+  void editRegisterBit(void);
+
+  /// Delete register item
+  void deleteRegisterBit(void);
+
+  /// Edit register info
+  void editRegisterValue(void);
+
+  /// Delete register item
+  void deleteRegisterValue(void);
 
   /*!
     Fill in data from info map as children to parent item
@@ -273,7 +285,15 @@ public slots:
     @param dequebits Reference for std:deque holding bit infor objects
   */
   void
-  renderBitInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
+  renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
+
+  /*!
+    Render info for one bit
+    @param pItemParent Pointer to parent item for bit
+    @param pbit Object holding bit info
+  */
+  void
+  renderBitInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit);
 
   /*!
     Fill value list info
@@ -292,6 +312,21 @@ public slots:
   */
   void
   renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
+
+  /*!
+    Render all registers
+    @param Header item to draw them as subitems under
+  */
+  void
+  renderRegisters(QTreeWidgetItem* pParent);
+
+
+/*!
+    Render all remote variables
+    @param Header item to draw them as subitems under
+  */
+  void
+  renderRemoteVariables(QTreeWidgetItem* pParent);
 
   /*!
     Remove all subitems of a head item that have a speciified type.

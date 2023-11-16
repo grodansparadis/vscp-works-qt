@@ -261,11 +261,11 @@ qt5_wrap_ui(UI src/mainwindow.ui
 
     src/cdlgmdfregister.ui
     src/cdlgmdfregisterlist.ui
-    src/cdlgmdfregisterbitlist.ui
     src/cdlgmdfregisterbit.ui
-    src/cdlgmdfregistervaluelist.ui
+    src/cdlgmdfregisterbitlist.ui
     src/cdlgmdfregistervalue.ui
-
+    src/cdlgmdfregistervaluelist.ui
+   
     src/cdlgmdfregistermapping.ui
     
     src/cdlgmdfremotevar.ui
@@ -582,6 +582,16 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfregisterlist.ui
     src/cdlgmdfregisterlist.cpp
     src/cdlgmdfregisterlist.h
+
+    build/ui_cdlgmdfregisterbit.h 
+    src/cdlgmdfregisterbit.ui
+    src/cdlgmdfregisterbit.cpp
+    src/cdlgmdfregisterbit.h
+
+    build/ui_cdlgmdfregisterbitlist.h 
+    src/cdlgmdfregisterbitlist.ui
+    src/cdlgmdfregisterbitlist.cpp
+    src/cdlgmdfregisterbitlist.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

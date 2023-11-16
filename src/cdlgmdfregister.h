@@ -77,6 +77,12 @@ public:
   */
   void initDialogData(CMDF *pmdf, CMDF_Register* preg, int index = 0);
 
+  /*!
+    Prevent page and offset from being edited
+  */
+  void setReadOnly(void);
+
+  
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters

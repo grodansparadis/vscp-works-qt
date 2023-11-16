@@ -47,12 +47,12 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QListWidget" name="listMap"/>
+         <widget class="QListWidget" name="listRegisterBit"/>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QToolButton" name="btnAddMapItem">
+           <widget class="QToolButton" name="btnAddRegisterBit">
             <property name="toolTip">
              <string>Add description item</string>
             </property>
@@ -69,7 +69,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnEditMapItem">
+           <widget class="QToolButton" name="btnEditRegisterBit">
             <property name="toolTip">
              <string>Edit description item</string>
             </property>
@@ -86,7 +86,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnDupMapItem">
+           <widget class="QToolButton" name="btnDupRegisterBit">
             <property name="toolTip">
              <string>Duplicate description item</string>
             </property>
@@ -103,7 +103,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnDelMapItem">
+           <widget class="QToolButton" name="btnDelRegisterBit">
             <property name="toolTip">
              <string>Delete Description item</string>
             </property>

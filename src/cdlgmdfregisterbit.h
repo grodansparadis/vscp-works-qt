@@ -1,4 +1,4 @@
-// cdlgmdfregisterlist.h
+// cdlgmdfregisterbit.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,29 +26,35 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERLIST_H
-#define CDLGMDFREGISTERLIST_H
+#ifndef CDLGMDFREGISTERBIT_H
+#define CDLGMDFREGISTERBIT_H
 
-#include <vscpworks.h>
 #include <mdf.h>
-
-#include "cdlgmdfregister.h"
+#include <vscpworks.h>
 
 #include <QDialog>
 
-
-
-
 namespace Ui {
-class CDlgMdfRegisterList;
+class CDlgMdfRegisterBit;
 }
 
-class CDlgMdfRegisterList : public QDialog {
+class CDlgMdfRegisterBit : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CDlgMdfRegisterList(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterList();
+public:
+  explicit CDlgMdfRegisterBit(QWidget* parent = nullptr);
+  ~CDlgMdfRegisterBit();
+
+  static const int index_name    = 0;
+  static const int index_pos     = 1;
+  static const int index_width   = 2;
+  static const int index_default = 3;
+  static const int index_min     = 4;
+  static const int index_max     = 5;
+  static const int index_access  = 6;
+
+  static const char pre_str_registerbit[];
 
   /*!
       Set inital focus to description
@@ -56,61 +62,61 @@ public:
   void setInitialFocus(void);
 
   /*!
-      Set edit mode.
-      GUID will be READ ONLY
-  */
-  void setEditMode();
-
-  /*!
     Init dialog data
-    @param pmdf Pointer to MDF object
-  */
-  void initDialogData(CMDF *pmdf, uint16_t page=0);
+    @param CMDF *pmdf Pointer to MDF
+    @param pmdfobject Pointer to MDF object
+    @param index Selected file item
 
-  /*!
-    Fill page combo box with page information
   */
-  void renderComboPage(void);
-
-  /*!
-    Fill in contact items
-  */
-  void renderRegisterItems(void);
-
+  void initDialogData(CMDF* pmdf, CMDF_Bit* pbit, int index = 0);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
   // ----------------------------------------------------------------------------
 
-  /*!
-      Name getter/setters
-  */
-  // void setValue(const QString& name);
-  // QString getValue(void);
+  // name
+  QString getName(void);
+  void setName(const QString& name);
+
+  // pos
+  uint8_t getPos(void);
+  void setPos(uint8_t page);
+
+  // width
+  uint8_t getWidth(void);
+  void setWidth(uint8_t offset);
+
+  // default
+  uint8_t getDefault(void);
+  void setDefault(uint8_t value);
+
+  // min
+  uint8_t getMin(void);
+  void setMin(uint8_t min);
+
+  // max
+  uint8_t getMax(void);
+  void setMax(uint8_t max);
+
+  // access
+  mdf_access_mode getAccess(void);
+  void setAccess(uint8_t access);
 
 public slots:
+
+  /*!
+    Accept dialog data and write to register
+  */
   void accept(void);
 
-  // Called wehen page combo changes
-  void onPageComboChange(int idx);
-
-  // Description buttons
-  void addRegister(void);
-  void editRegister(void);
-  void dupRegister(void);
-  void deleteRegister(void);
-
 private:
-  Ui::CDlgMdfRegisterList* ui;
+  Ui::CDlgMdfRegisterBit* ui;
 
-  // MDF
-  CMDF *m_pmdf;
+  /// Pointer to MDF
+  CMDF* m_pmdf;
 
-  // Register page
-  uint16_t m_page;
-
-  // Used to get a sorted list of registers
-  std::set<uint32_t> m_registersSet ;
+  /// Pointer to bit information
+  CMDF_Bit* m_pbit;
 };
 
-#endif // CDLGMDFREGISTERLIST_H
+#endif // CDLGMDFREGISTERBIT_H

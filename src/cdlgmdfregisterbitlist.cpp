@@ -1,4 +1,4 @@
-// cdlgmdfregisterlist.cpp
+// cdlgmdfregisterbitlist.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -35,10 +35,9 @@
 
 #include <vscpworks.h>
 
-#include "cdlgmdfcontact.h"
-#include "cdlgmdfregister.h"
-#include "cdlgmdfregisterlist.h"
-#include "ui_cdlgmdfregisterlist.h"
+#include "cdlgmdfregisterbit.h"
+#include "cdlgmdfregisterbitlist.h"
+#include "ui_cdlgmdfregisterbitlist.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -54,9 +53,9 @@
 // CTor
 //
 
-CDlgMdfRegisterList::CDlgMdfRegisterList(QWidget* parent)
+CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
   : QDialog(parent)
-  , ui(new Ui::CDlgMdfRegisterList)
+  , ui(new Ui::CDlgMdfRegisterBitList)
 {
   m_pmdf = nullptr;
   m_page = 0;
@@ -65,12 +64,12 @@ CDlgMdfRegisterList::CDlgMdfRegisterList(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  connect(ui->btnAddRegister, &QToolButton::clicked, this, &CDlgMdfRegisterList::addRegister);
-  connect(ui->btnEditRegister, &QToolButton::clicked, this, &CDlgMdfRegisterList::editRegister);
-  connect(ui->btnDupRegister, &QToolButton::clicked, this, &CDlgMdfRegisterList::dupRegister);
-  connect(ui->btnDelRegister, &QToolButton::clicked, this, &CDlgMdfRegisterList::deleteRegister);
+  connect(ui->btnAddRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::addRegisterBit);
+  connect(ui->btnEditRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
+  connect(ui->btnDupRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::dupRegisterBit);
+  connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::deleteRegisterBit);
 
-  connect(ui->listRegister, &QListWidget::doubleClicked, this, &CDlgMdfRegisterList::editRegister);
+  connect(ui->listRegisterBit, &QListWidget::doubleClicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
   
 
   setInitialFocus();
@@ -81,7 +80,7 @@ CDlgMdfRegisterList::CDlgMdfRegisterList(QWidget* parent)
 // DTor
 //
 
-CDlgMdfRegisterList::~CDlgMdfRegisterList()
+CDlgMdfRegisterBitList::~CDlgMdfRegisterBitList()
 {
   delete ui;
 }
@@ -91,7 +90,7 @@ CDlgMdfRegisterList::~CDlgMdfRegisterList()
 //
 
 void
-CDlgMdfRegisterList::initDialogData(CMDF* pmdf, uint16_t page)
+CDlgMdfRegisterBitList::initDialogData(CMDF* pmdf, uint16_t page)
 {
   QString str;
 
@@ -107,44 +106,17 @@ CDlgMdfRegisterList::initDialogData(CMDF* pmdf, uint16_t page)
 
   // m_pmdf->getRegisterMap(m_page, pages);
 
-  // Fill in defined register items
-  renderRegisterItems();
 
-  // Fill the page combo with page information
-  renderComboPage();
-
-  connect(ui->comboPage, SIGNAL(currentIndexChanged(int)), this, SLOT(onPageComboChange(int)));
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// renderComboPage
-//
 
-void
-CDlgMdfRegisterList::renderComboPage(void)
-{
-  setWindowTitle(tr("Registers for %1").arg(m_page));
-
-  // Fill available pages in combo
-  std::set<uint16_t> pages;
-  uint32_t cnt = m_pmdf->getPages(pages);
-  ui->comboPage->clear();
-  int pos = 0;
-  for (std::set<uint16_t>::iterator it = pages.begin(); it != pages.end(); ++it) {
-    ui->comboPage->addItem(QString("Page %1").arg(*it), *it);
-    if (m_page == *it) {
-      ui->comboPage->setCurrentIndex(pos);
-    }
-    pos++;
-  }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderRegisterItems
 //
 
 void
-CDlgMdfRegisterList::renderRegisterItems(void)
+CDlgMdfRegisterBitList::renderRegisterItems(void)
 {
   std::map<uint32_t, CMDF_Register*> pages;
 
@@ -152,7 +124,7 @@ CDlgMdfRegisterList::renderRegisterItems(void)
     return;
   }
 
-  ui->listRegister->clear();
+  ui->listRegisterBit->clear();
 
   // Make sorted set of registers on this page
   std::deque<CMDF_Register*>* regset = m_pmdf->getRegisterObjList();
@@ -171,9 +143,9 @@ CDlgMdfRegisterList::renderRegisterItems(void)
     CMDF_Register* preg = m_pmdf->getRegister(*it, m_page);
     if (nullptr != preg) {
       QString str = QString("Register  %1 -- %2").arg(preg->getOffset()).arg(preg->getName().c_str());
-      ui->listRegister->addItem(str);
+      ui->listRegisterBit->addItem(str);
       // Set data to register index
-      ui->listRegister->item(ui->listRegister->count() - 1)->setData(Qt::UserRole, preg->getOffset());
+      ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, preg->getOffset());
     }
   }
 
@@ -181,9 +153,9 @@ CDlgMdfRegisterList::renderRegisterItems(void)
   //   m_registersSet.insert((*it)->getOffset());
   //   if ((*it)->getPage() == m_page) {
   //     QString str = QString("Register  %1 -- %2").arg((*it)->getOffset()).arg((*it)->getName().c_str());
-  //     ui->listRegister->addItem(str);
+  //     ui->listRegisterBit->addItem(str);
   //     // Set data to register index
-  //     ui->listRegister->item(ui->listRegister->count() - 1)->setData(Qt::UserRole, (*it)->getOffset());
+  //     ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, (*it)->getOffset());
   //   }
   // }
 }
@@ -193,37 +165,26 @@ CDlgMdfRegisterList::renderRegisterItems(void)
 //
 
 void
-CDlgMdfRegisterList::setInitialFocus(void)
+CDlgMdfRegisterBitList::setInitialFocus(void)
 {
-  // ui->editGuid->setFocus();
+  //ui->editName->setFocus();
 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
-// onPageComboChange
+// addRegisterBit
 //
 
 void
-CDlgMdfRegisterList::onPageComboChange(int idx)
-{
-  m_page = ui->comboPage->currentData().toInt();
-  renderRegisterItems();
-  setWindowTitle(tr("Registers for %1").arg(m_page));
-  ui->listRegister->setCurrentRow(0);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// addRegister
-//
-
-void
-CDlgMdfRegisterList::addRegister(void)
+CDlgMdfRegisterBitList::addRegisterBit(void)
 {
   bool ok;
   CMDF_Register* pregnew = new CMDF_Register();
   pregnew->setPage(m_page);
 
   // Save the selected row
-  int idx = ui->listRegister->currentRow();
+  int idx = ui->listRegisterBit->currentRow();
 
   CDlgMdfRegister dlg(this);
   dlg.initDialogData(m_pmdf, pregnew);
@@ -240,10 +201,10 @@ addregdlg:
     if (m_page == pregnew->getPage()) {
       m_registersSet.insert(pregnew->getOffset());
     }
-    ui->listRegister->clear();
+    ui->listRegisterBit->clear();
     renderRegisterItems();
     if (-1 != idx) {
-      ui->listRegister->setCurrentRow(idx);
+      ui->listRegisterBit->setCurrentRow(idx);
     }
 
     // Warn if page is not the same as for dialog
@@ -259,20 +220,20 @@ addregdlg:
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// editRegister
+// editRegisterBit
 //
 
 void
-CDlgMdfRegisterList::editRegister(void)
+CDlgMdfRegisterBitList::editRegisterBit(void)
 {
   bool ok;
 
-  if (-1 != ui->listRegister->currentRow()) {
+  if (-1 != ui->listRegisterBit->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegister->currentRow();
+    int idx = ui->listRegisterBit->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegister->currentItem();
+    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
     CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
 
     CDlgMdfRegister dlg(this);
@@ -280,9 +241,9 @@ CDlgMdfRegisterList::editRegister(void)
     // Don't allow editing of page and offset
     dlg.setReadOnly();
     if (QDialog::Accepted == dlg.exec()) {
-      ui->listRegister->clear();
+      ui->listRegisterBit->clear();
       renderRegisterItems();
-      ui->listRegister->setCurrentRow(idx);
+      ui->listRegisterBit->setCurrentRow(idx);
     }
   }
   else {
@@ -291,18 +252,18 @@ CDlgMdfRegisterList::editRegister(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// dupRegister
+// dupRegisterBit
 //
 
 void
-CDlgMdfRegisterList::dupRegister(void)
+CDlgMdfRegisterBitList::dupRegisterBit(void)
 {
-  if (-1 != ui->listRegister->currentRow()) {
+  if (-1 != ui->listRegisterBit->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegister->currentRow();
+    int idx = ui->listRegisterBit->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegister->currentItem();
+    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
     CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
 
     CMDF_Register* pregnew = new CMDF_Register();
@@ -326,10 +287,10 @@ CDlgMdfRegisterList::dupRegister(void)
       if (m_page == pregnew->getPage()) {
         m_registersSet.insert(pregnew->getOffset());
       }
-      ui->listRegister->clear();
+      ui->listRegisterBit->clear();
       renderRegisterItems();
       if (-1 != idx) {
-        ui->listRegister->setCurrentRow(idx);
+        ui->listRegisterBit->setCurrentRow(idx);
       }
       // Warn if page is not the same as for dialog
       if (pregnew->getPage() != m_page) {
@@ -382,24 +343,24 @@ CDlgMdfRegisterList::dupRegister(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// deleteRegister
+// deleteRegisterBit
 //
 
 void
-CDlgMdfRegisterList::deleteRegister(void)
+CDlgMdfRegisterBitList::deleteRegisterBit(void)
 {
-  if (-1 != ui->listRegister->currentRow()) {
+  if (-1 != ui->listRegisterBit->currentRow()) {
 
     // Save the row
-    int idx = ui->listRegister->currentRow();
+    int idx = ui->listRegisterBit->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegister->currentItem();
+    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
     CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
     m_pmdf->deleteRegister(preg);
     delete preg;
-    ui->listRegister->removeItemWidget(pitem);
+    ui->listRegisterBit->removeItemWidget(pitem);
     renderRegisterItems();
-    ui->listRegister->setCurrentRow(idx);
+    ui->listRegisterBit->setCurrentRow(idx);
   }
 }
 
@@ -408,13 +369,13 @@ CDlgMdfRegisterList::deleteRegister(void)
 //
 
 void
-CDlgMdfRegisterList::accept()
+CDlgMdfRegisterBitList::accept()
 {
   std::string str;
   if (nullptr != m_pmdf) {
 
     // str = ui->editName->text().toStdString();
-    // m_pmdf->setModuleName(str);
+    // m_pmdf->setName(str);
 
     // str = ui->editModel->text().toStdString();
     // m_pmdf->setModuleModel(str);
