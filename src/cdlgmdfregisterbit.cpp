@@ -84,16 +84,9 @@ CDlgMdfRegisterBit::~CDlgMdfRegisterBit()
 //
 
 void
-CDlgMdfRegisterBit::initDialogData(CMDF* pmdf, CMDF_Bit* pbit, int index)
+CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index)
 {
   QString str;
-
-  if (nullptr == pmdf) {
-    spdlog::error("MDF register bit information - Invalid MDF object (initDialogData)");
-    return;
-  }
-
-  m_pmdf = pmdf;
 
   if (nullptr == pbit) {
     spdlog::error("MDF register bit information - Invalid MDF register bit object (initDialogData)");

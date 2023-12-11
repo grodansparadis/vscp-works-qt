@@ -29,15 +29,12 @@
 #ifndef CDLGMDFREGISTERBITLIST_H
 #define CDLGMDFREGISTERBITLIST_H
 
-#include <vscpworks.h>
 #include <mdf.h>
+#include <vscpworks.h>
 
 #include "cdlgmdfregister.h"
 
 #include <QDialog>
-
-
-
 
 namespace Ui {
 class CDlgMdfRegisterBitList;
@@ -51,11 +48,6 @@ public:
   ~CDlgMdfRegisterBitList();
 
   /*!
-      Set inital focus to description
-  */
-  void setInitialFocus(void);
-
-  /*!
       Set edit mode.
       GUID will be READ ONLY
   */
@@ -65,18 +57,36 @@ public:
     Init dialog data
     @param pmdf Pointer to MDF object
   */
-  void initDialogData(CMDF *pmdf, uint16_t page=0);
+  void initDialogData(CMDF_Register* preg);
 
   /*!
-    Fill page combo box with page information
+    Fill in register bit items
   */
-  void renderComboPage(void);
+  void renderBitItems(void);
 
   /*!
-    Fill in contact items
+    Check if bits overlap
+    @param pbit2test pointer to bit to test
+    @param bEdit Edit mode. The bit is already in the list.
+    @return Overlapping bits or zero iof no bits overlap
   */
-  void renderRegisterItems(void);
+  uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false)
+  {
+    uint8_t result               = 0;
+    std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+    for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+      CMDF_Bit* pbit = *it;
+      // Don't test the edited bit of in edit mode
+      if (bEdit && (pbit2test == pbit)) {
+        continue;
+      }
+      if (nullptr != pbit) {
+        result |= pbit->getMask();
+      }
+    }
 
+    return (result & pbit2test->getMask());
+  };
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -101,13 +111,7 @@ private:
   Ui::CDlgMdfRegisterBitList* ui;
 
   // MDF
-  CMDF *m_pmdf;
-
-  // Register page
-  uint16_t m_page;
-
-  // Used to get a sorted list of registers
-  std::set<uint32_t> m_registersSet ;
+  CMDF_Register* m_preg;
 };
 
 #endif // CDLGMDFREGISTERBITLIST_H

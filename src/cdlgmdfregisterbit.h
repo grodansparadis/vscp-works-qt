@@ -64,11 +64,11 @@ public:
   /*!
     Init dialog data
     @param CMDF *pmdf Pointer to MDF
-    @param pmdfobject Pointer to MDF object
+    @param pbit Pointer to MDF bit object
     @param index Selected file item
 
   */
-  void initDialogData(CMDF* pmdf, CMDF_Bit* pbit, int index = 0);
+  void initDialogData(CMDF_Bit* pbit, int index = 0);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters

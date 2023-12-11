@@ -283,9 +283,10 @@ public slots:
     Fill bit list info
     @param parent Pointer to parent treewidget
     @param dequebits Reference for std:deque holding bit infor objects
+    @param bParentKnown If pParent is the head of the bit definitions this should be set to true
   */
   void
-  renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits);
+  renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, bool bParentKnown = false);
 
   /*!
     Render info for one bit

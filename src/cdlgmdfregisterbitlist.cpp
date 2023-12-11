@@ -57,8 +57,7 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgMdfRegisterBitList)
 {
-  m_pmdf = nullptr;
-  m_page = 0;
+  m_preg = nullptr;
 
   ui->setupUi(this);
 
@@ -70,9 +69,7 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
   connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::deleteRegisterBit);
 
   connect(ui->listRegisterBit, &QListWidget::doubleClicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
-  
 
-  setInitialFocus();
   this->setFixedSize(this->size());
 }
 
@@ -90,87 +87,51 @@ CDlgMdfRegisterBitList::~CDlgMdfRegisterBitList()
 //
 
 void
-CDlgMdfRegisterBitList::initDialogData(CMDF* pmdf, uint16_t page)
+CDlgMdfRegisterBitList::initDialogData(CMDF_Register* preg)
 {
   QString str;
 
-  if (nullptr == pmdf) {
-    QMessageBox::critical(this, tr("MDF contact information"), tr("Invalid MDF manufacturing object"));
-    spdlog::error("MDF contact information - Invalid MDF manufacturing object");
+  if (nullptr == preg) {
+    QMessageBox::critical(this, tr("MDF register bit information"), tr("Invalid MDF register object"));
+    spdlog::error("MDF register information - Invalid MDF register object");
     return;
   }
 
-  // Save MDF  and page
-  m_pmdf = pmdf;
-  m_page = page;
+  // Save register pointer and page
+  m_preg = preg;
 
   // m_pmdf->getRegisterMap(m_page, pages);
-
-
+  renderBitItems();
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
-// renderRegisterItems
+// renderBitItems
 //
 
 void
-CDlgMdfRegisterBitList::renderRegisterItems(void)
+CDlgMdfRegisterBitList::renderBitItems(void)
 {
   std::map<uint32_t, CMDF_Register*> pages;
 
-  if (nullptr == m_pmdf) {
+  if (nullptr == m_preg) {
     return;
   }
 
   ui->listRegisterBit->clear();
+  std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
 
-  // Make sorted set of registers on this page
-  std::deque<CMDF_Register*>* regset = m_pmdf->getRegisterObjList();
-  for (auto it = regset->cbegin(); it != regset->cend(); ++it) {
-    if (m_page == (*it)->getPage()) {
-      m_registersSet.insert((*it)->getOffset());
-    }
-  }
-
-  m_pmdf->getRegisterMap(m_page, pages);
-
-  std::deque<CMDF_Register*>* regs = m_pmdf->getRegisterObjList();
-
-  for (auto it = m_registersSet.cbegin(); it != m_registersSet.cend(); ++it) {
-    // m_registersSet.insert((*it)->getOffset());
-    CMDF_Register* preg = m_pmdf->getRegister(*it, m_page);
-    if (nullptr != preg) {
-      QString str = QString("Register  %1 -- %2").arg(preg->getOffset()).arg(preg->getName().c_str());
+  int idx = 0;
+  for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+    CMDF_Bit* pbit = *it;
+    if (nullptr != pbit) {
+      QString str = QString("Bit %1(%2)-- %3").arg(pbit->getPos()).arg(pbit->getWidth()).arg(pbit->getName().c_str());
       ui->listRegisterBit->addItem(str);
       // Set data to register index
-      ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, preg->getOffset());
+      ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, idx);
     }
+    idx++;
   }
-
-  // for (auto it = regs->cbegin(); it != regs->cend(); ++it) {
-  //   m_registersSet.insert((*it)->getOffset());
-  //   if ((*it)->getPage() == m_page) {
-  //     QString str = QString("Register  %1 -- %2").arg((*it)->getOffset()).arg((*it)->getName().c_str());
-  //     ui->listRegisterBit->addItem(str);
-  //     // Set data to register index
-  //     ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, (*it)->getOffset());
-  //   }
-  // }
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setInitialFocus
-//
-
-void
-CDlgMdfRegisterBitList::setInitialFocus(void)
-{
-  //ui->editName->setFocus();
-}
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // addRegisterBit
@@ -180,42 +141,35 @@ void
 CDlgMdfRegisterBitList::addRegisterBit(void)
 {
   bool ok;
-  CMDF_Register* pregnew = new CMDF_Register();
-  pregnew->setPage(m_page);
+  CMDF_Bit* pbitnew = new CMDF_Bit();
+  if (nullptr == pbitnew) {
+    QMessageBox::critical(this, tr("MDF register bit information"), tr("Memory problem"));
+    spdlog::error("MDF register information - Memory problem");
+    return;
+  }
 
   // Save the selected row
   int idx = ui->listRegisterBit->currentRow();
 
-  CDlgMdfRegister dlg(this);
-  dlg.initDialogData(m_pmdf, pregnew);
-addregdlg:
-  if (QDialog::Accepted == dlg.exec()) {
-    // Check if register is already defined
-    CMDF_Register* preg = m_pmdf->getRegister(pregnew->getOffset(), pregnew->getPage());
-    if (nullptr != preg) {
-      QMessageBox::warning(this, tr("MDF add new register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
-      goto addregdlg;
-    }
-    qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
-    m_pmdf->getRegisterObjList()->push_back(pregnew);
-    if (m_page == pregnew->getPage()) {
-      m_registersSet.insert(pregnew->getOffset());
-    }
-    ui->listRegisterBit->clear();
-    renderRegisterItems();
-    if (-1 != idx) {
-      ui->listRegisterBit->setCurrentRow(idx);
-    }
+  CDlgMdfRegisterBit dlg(this);
+  dlg.initDialogData(pbitnew);
+  dlg.setWindowTitle(tr("Add register bit definition"));
 
-    // Warn if page is not the same as for dialog
-    if (pregnew->getPage() != m_page) {
-      QMessageBox::information(this,
-                               tr("MDF duplicate register"),
-                               tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pregnew->getPage()).arg(pregnew->getOffset()).arg(m_page));
+addbitdlg:
+
+  if (QDialog::Accepted == dlg.exec()) {
+
+    uint8_t mask;
+    if ((mask = checkIfBitsOverlap(pbitnew))) {
+      QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+      goto addbitdlg;
     }
+    std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+    pbits->push_back(pbitnew);
+    renderBitItems();
   }
   else {
-    delete pregnew;
+    delete pbitnew;
   }
 }
 
@@ -234,15 +188,21 @@ CDlgMdfRegisterBitList::editRegisterBit(void)
     int idx = ui->listRegisterBit->currentRow();
 
     QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
 
-    CDlgMdfRegister dlg(this);
-    dlg.initDialogData(m_pmdf, preg);
-    // Don't allow editing of page and offset
-    dlg.setReadOnly();
+    CDlgMdfRegisterBit dlg(this);
+    dlg.initDialogData(pbit);
+
+  editbitdlg:
+
     if (QDialog::Accepted == dlg.exec()) {
+      uint8_t mask;
+      if ((mask = checkIfBitsOverlap(pbit, true))) {
+        QMessageBox::warning(this, tr("Edit bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+        goto editbitdlg;
+      }
       ui->listRegisterBit->clear();
-      renderRegisterItems();
+      renderBitItems();
       ui->listRegisterBit->setCurrentRow(idx);
     }
   }
@@ -263,83 +223,49 @@ CDlgMdfRegisterBitList::dupRegisterBit(void)
     // Save the selected row
     int idx = ui->listRegisterBit->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    //   QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
+    //   CMDF_Bit* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
 
-    CMDF_Register* pregnew = new CMDF_Register();
-    pregnew->setPage(m_page);
+    //   CMDF_Bit* pregnew = new CMDF_Bit();
+    //   pregnew->setPage(m_page);
 
-    // Make copy
-    *pregnew = *preg;
+    //   // Make copy
+    //   *pregnew = *preg;
 
-    CDlgMdfRegister dlg(this);
-    dlg.initDialogData(m_pmdf, pregnew);
-  dupregdlg:
-    if (QDialog::Accepted == dlg.exec()) {
-      // Check if register is already defined
-      CMDF_Register* pregold = m_pmdf->getRegister(pregnew->getOffset(), pregnew->getPage());
-      if (nullptr != pregold) {
-        QMessageBox::warning(this, tr("MDF duplicate register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
-        goto dupregdlg;
-      }
-      qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
-      m_pmdf->getRegisterObjList()->push_back(pregnew);
-      if (m_page == pregnew->getPage()) {
-        m_registersSet.insert(pregnew->getOffset());
-      }
-      ui->listRegisterBit->clear();
-      renderRegisterItems();
-      if (-1 != idx) {
-        ui->listRegisterBit->setCurrentRow(idx);
-      }
-      // Warn if page is not the same as for dialog
-      if (pregnew->getPage() != m_page) {
-        QMessageBox::information(this,
-                                 tr("MDF duplicate register"),
-                                 tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pregnew->getPage()).arg(pregnew->getOffset()).arg(m_page));
-      }
-    }
-    else {
-      delete pregnew;
-    }
+    //   CDlgMdfRegisterBit dlg(this);
+    //   dlg.initDialogData(m_pmdf, pregnew);
+    // dupregdlg:
+    //   if (QDialog::Accepted == dlg.exec()) {
+    //     // Check if register is already defined
+    //     CMDF_Bit* pregold = m_pmdf->getRegister(pregnew->getOffset(), pregnew->getPage());
+    //     if (nullptr != pregold) {
+    //       QMessageBox::warning(this, tr("MDF duplicate register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
+    //       goto dupregdlg;
+    //     }
+    //     qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
+    //     m_pmdf->getRegisterObjList()->push_back(pregnew);
+    //     if (m_page == pregnew->getPage()) {
+    //       m_registersSet.insert(pregnew->getOffset());
+    //     }
+    //     ui->listRegisterBit->clear();
+    //     renderRegisterItems();
+    //     if (-1 != idx) {
+    //       ui->listRegisterBit->setCurrentRow(idx);
+    //     }
+    //     // Warn if page is not the same as for dialog
+    //     if (pregnew->getPage() != m_page) {
+    //       QMessageBox::information(this,
+    //                                tr("MDF duplicate register"),
+    //                                tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pregnew->getPage()).arg(pregnew->getOffset()).arg(m_page));
+    //     }
+    //   }
+    //   else {
+    //     delete pregnew;
+    //   }
   }
   else {
     QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
   }
-
-  // if (-1 != ui->listContact->currentRow()) {
-
-  //   // Save the selected row
-  //   int idx = ui->listContact->currentRow();
-
-  //   QListWidgetItem* pitem = ui->listContact->currentItem();
-  //   QString selstr         = pitem->text().split('_').first().left(2);
-
-  //   std::string str = QInputDialog::getText(this,
-  //                                           tr("Edit contact item"),
-  //                                           tr("Contact value:"),
-  //                                           QLineEdit::Normal,
-  //                                           pitem->text(),
-  //                                           &ok)
-  //                       .toStdString();
-
-  //   if (ok && str.length()) {
-
-  //     CMDF_Item* pitem = new CMDF_Item();
-  //     if (nullptr != pitem) {
-  //       pitem->setValue(str);
-  //       m_pContactList->push_back(pitem);
-  //       ui->listContact->clear();
-  //       fillContactItems();
-  //     }
-  //     else {
-  //       QMessageBox::warning(this, tr(APPNAME), tr("Memory problem could not add item"), QMessageBox::Ok);
-  //     }
-  //   }
-  // }
-  // else {
-  //   QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
-  // }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -355,12 +281,24 @@ CDlgMdfRegisterBitList::deleteRegisterBit(void)
     int idx = ui->listRegisterBit->currentRow();
 
     QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
-    m_pmdf->deleteRegister(preg);
-    delete preg;
-    ui->listRegisterBit->removeItemWidget(pitem);
-    renderRegisterItems();
-    ui->listRegisterBit->setCurrentRow(idx);
+    CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+
+    std::deque<CMDF_Bit*>::iterator it = m_preg->getListBits()->begin() + pitem->data(Qt::UserRole).toUInt();
+    m_preg->getListBits()->erase(it);
+
+    ui->listRegisterBit->clear();
+    renderBitItems();
+    int sel = idx;
+    if (0 == idx) {
+      sel = 0;
+    }
+    else if (m_preg->getListBits()->size() == idx) {
+      sel = m_preg->getListBits()->size() - 1;
+    }
+    else {
+      sel = idx + 1;
+    }
+    ui->listRegisterBit->setCurrentRow(sel);
   }
 }
 
@@ -372,10 +310,10 @@ void
 CDlgMdfRegisterBitList::accept()
 {
   std::string str;
-  if (nullptr != m_pmdf) {
+  if (nullptr != m_preg) {
 
     // str = ui->editName->text().toStdString();
-    // m_pmdf->setName(str);
+    //  m_pmdf->setName(str);
 
     // str = ui->editModel->text().toStdString();
     // m_pmdf->setModuleModel(str);

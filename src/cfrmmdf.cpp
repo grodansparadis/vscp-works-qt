@@ -739,7 +739,7 @@ CFrmMdf::renderInfoUrlItems(QTreeWidgetItem* pParent,
 //
 
 void
-CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits)
+CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, bool bParentKnown)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -749,9 +749,15 @@ CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits)
     return;
   }
 
-  QMdfTreeWidgetItem* pItemBitDefs = new QMdfTreeWidgetItem(pParent, mdf_type_bit);
-  pItemBitDefs->setText(0, "Bit definitions");
-  pParent->addChild(pItemBitDefs);
+  QMdfTreeWidgetItem* pItemBitDefs;
+  if (bParentKnown) {
+    pItemBitDefs = (QMdfTreeWidgetItem*)pParent;
+  }
+  else {
+    pItemBitDefs = new QMdfTreeWidgetItem(pParent, ((QMdfTreeWidgetItem*)pParent)->getObject(), mdf_type_bit);
+    pItemBitDefs->setText(0, "Bit definitions");
+    pParent->addChild(pItemBitDefs);
+  }
 
   // Must be items to fill in childs
   if (!dequebits.size()) {
@@ -5437,42 +5443,50 @@ CFrmMdf::editRegisterBit(void)
   switch (pItem->getObjectType()) {
 
     case mdf_type_bit: {
-      // CDlgMdfRegisterBitList dlg(this);
-      // dlg.initDialogData(&m_mdf, selectedIndex);
-      // if (QDialog::Accepted == dlg.exec()) {
-      //   // Redraw all register items - We do not know changes
-      //   QList<QTreeWidgetItem*> childrenList = m_headRegister->takeChildren();
-      //   // Remove children
-      //   for (qsizetype i = 0; i < childrenList.size(); ++i) {
-      //     QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
-      //     delete item;
-      //   }
-      //   childrenList.clear();
-      //   renderRegisters(m_headRegister);
-      // }
+      CMDF_Register *preg = (CMDF_Register *)pItem->getObject();
+      CDlgMdfRegisterBitList dlg(this);
+      dlg.initDialogData(preg);
+      if (QDialog::Accepted == dlg.exec()) {
+        // Redraw all rbit items - We do not know changes
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderBits(pItem/*->parent()*/, *preg->getListBits(), true);
+        //pParent, *preg->getListBits()
+      }
     } break;
 
     case mdf_type_bit_item: {
-      // CMDF_Bit* pbit = (CMDF_Bit*)pItem->getObject();
-      // if (nullptr == pbit) {
-      //   int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
-      //   spdlog::error("MDF register edit - object has nullptr");
-      //   return;
-      // }
-      // CDlgMdfRegisterBitList dlg(this);
-      // dlg.initDialogData(&m_mdf, pbit, selectedIndex);
-      // if (QDialog::Accepted == dlg.exec()) {
-      //   pItem->setExpanded(true);
-      //   QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
-      //   // Remove children
-      //   for (qsizetype i = 0; i < childrenList.size(); ++i) {
-      //     QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
-      //     delete item;
-      //   }
-      //   childrenList.clear();
-      //   pItem->setText(0, QString("Bitfield %1 Bits:{").arg(pbit->getName().c_str()));
-      //   renderRegisterInfo(pItem, preg);
-      // }
+      CMDF_Bit* pbit = (CMDF_Bit*)pItem->getObject();
+      if (nullptr == pbit) {
+        int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
+        spdlog::error("MDF register edit - object has nullptr");
+        return;
+      }
+      CDlgMdfRegisterBit dlg(this);
+      dlg.initDialogData(pbit, 0);
+      if (QDialog::Accepted == dlg.exec()) {
+        pItemHead->setExpanded(true);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          // qDebug() << item->text(0);
+          delete item;
+        }
+        childrenList.clear();
+        QString str = QString("Bitfield %1 Bits:{").arg(pbit->getName().c_str());
+        for (int j = pbit->getPos(); j < qMin(8, pbit->getPos() + pbit->getWidth()); j++) {
+          str += QString(" %1 ").arg(j);
+        }
+        str += "}";
+        pItem->setText(0, str);
+        renderBitInfo(pItem, pbit);
+      }
     } break;
 
     case mdf_type_bit_sub_item: {
@@ -5483,7 +5497,7 @@ CFrmMdf::editRegisterBit(void)
         return;
       }
       CDlgMdfRegisterBit dlg(this);
-      dlg.initDialogData(&m_mdf, pbit, selectedIndex);
+      dlg.initDialogData(pbit, selectedIndex);
       if (QDialog::Accepted == dlg.exec()) {
         pItemHead->setExpanded(true);
         QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
@@ -5494,7 +5508,7 @@ CFrmMdf::editRegisterBit(void)
           delete item;
         }
         childrenList.clear();
-        QString str = str = QString("Bitfield %1 Bits:{").arg(pbit->getName().c_str());
+        QString str = QString("Bitfield %1 Bits:{").arg(pbit->getName().c_str());
         for (int j = pbit->getPos(); j < qMin(8, pbit->getPos() + pbit->getWidth()); j++) {
           str += QString(" %1 ").arg(j);
         }
