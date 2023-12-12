@@ -593,6 +593,16 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfregisterbitlist.cpp
     src/cdlgmdfregisterbitlist.h
 
+    build/ui_cdlgmdfregistervalue.h 
+    src/cdlgmdfregistervalue.ui
+    src/cdlgmdfregistervalue.cpp
+    src/cdlgmdfregistervalue.h
+
+    build/ui_cdlgmdfregistervaluelist.h
+    src/cdlgmdfregistervaluelist.ui
+    src/cdlgmdfregistervaluelist.cpp
+    src/cdlgmdfregistervaluelist.h
+
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h
     ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h

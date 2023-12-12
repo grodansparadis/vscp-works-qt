@@ -65,6 +65,8 @@
 #include "cdlgmdfregisterbit.h"
 #include "cdlgmdfregisterbitlist.h"
 #include "cdlgmdfregisterlist.h"
+#include "cdlgmdfregistervalue.h"
+#include "cdlgmdfregistervaluelist.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -355,31 +357,31 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_value:
-        menu->addAction(QString(tr("Open list of register bits")), this, SLOT(editRegisterValue()));
+        menu->addAction(QString(tr("Edit register values")), this, SLOT(editRegisterValue()));
         break;
 
       case mdf_type_value_item:
-        menu->addAction(QString(tr("Edit register value item")), this, SLOT(editRegisterValue()));
-        menu->addAction(QString(tr("Delete register value item")), this, SLOT(deleteRegisterValue()));
+        menu->addAction(QString(tr("Edit register value")), this, SLOT(editRegisterValue()));
+        menu->addAction(QString(tr("Delete register value")), this, SLOT(deleteRegisterValue()));
         break;
 
       case mdf_type_value_sub_item:
-        menu->addAction(QString(tr("Edit register value item")), this, SLOT(editRegisterValue()));
-        menu->addAction(QString(tr("Delete register value item")), this, SLOT(deleteRegisterValue()));
+        menu->addAction(QString(tr("Edit register value")), this, SLOT(editRegisterValue()));
+        menu->addAction(QString(tr("Delete register value")), this, SLOT(deleteRegisterValue()));
         break;
 
       case mdf_type_bit:
-        menu->addAction(QString(tr("Open list of register bits")), this, SLOT(editRegisterBit()));
+        menu->addAction(QString(tr("Edit register bits")), this, SLOT(editRegisterBit()));
         break;
 
       case mdf_type_bit_item:
-        menu->addAction(QString(tr("Edit register bit item")), this, SLOT(editRegisterBit()));
-        menu->addAction(QString(tr("Delete register bit item")), this, SLOT(deleteRegisterBit()));
+        menu->addAction(QString(tr("Edit register bit definition")), this, SLOT(editRegisterBit()));
+        menu->addAction(QString(tr("Delete register bit definition")), this, SLOT(deleteRegisterBit()));
         break;
 
       case mdf_type_bit_sub_item:
-        menu->addAction(QString(tr("Edit register bit item")), this, SLOT(editRegisterBit()));
-        menu->addAction(QString(tr("Delete register bit item")), this, SLOT(deleteRegisterBit()));
+        menu->addAction(QString(tr("Edit register bit definition")), this, SLOT(editRegisterBit()));
+        menu->addAction(QString(tr("Delete register bit definition")), this, SLOT(deleteRegisterBit()));
         break;
 
       case mdf_type_remotevar:
@@ -840,7 +842,7 @@ CFrmMdf::renderBitInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit)
   pItemParent->addChild(pItem);
 
   // Valid values
-  renderValueInfo(pItemParent, *pbit->getListValues());
+  renderValues(pItemParent, *pbit->getListValues());
 
   // Descriptions
   renderDescriptionItems(pItemParent, pbit, pbit->getMapDescription());
@@ -850,11 +852,11 @@ CFrmMdf::renderBitInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderValueInfo
+// renderValues
 //
 
 void
-CFrmMdf::renderValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues)
+CFrmMdf::renderValues(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues, bool bParentKnown)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -864,9 +866,16 @@ CFrmMdf::renderValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequ
     return;
   }
 
-  QMdfTreeWidgetItem* pItemValue = new QMdfTreeWidgetItem(pParent, mdf_type_value);
-  pItemValue->setText(0, "Valid values");
-  pParent->addChild(pItemValue);
+  QMdfTreeWidgetItem* pItemValueDefs;
+
+  if (bParentKnown) {
+    pItemValueDefs = (QMdfTreeWidgetItem*)pParent;
+  }
+  else {
+    pItemValueDefs = new QMdfTreeWidgetItem(pParent, ((QMdfTreeWidgetItem*)pParent)->getObject(), mdf_type_value);
+    pItemValueDefs->setText(0, "Values");
+    pParent->addChild(pItemValueDefs);
+  }
 
   // Must be items to fill in childs
   if (!dequevalues.size()) {
@@ -877,31 +886,40 @@ CFrmMdf::renderValueInfo(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequ
 
     CMDF_Value* pvalue = dequevalues[i];
 
-    str = QString("Value %1 (%2)").arg(i).arg(pvalue->getValue().c_str());
-    // for (int j = pvalue->getPos(); j < qMin(8, pvalue->getPos() + pvalue->getWidth()); j++) {
-    //   str += QString(" %1 ").arg(j);
-    // }
-    // str += "}";
-    QMdfTreeWidgetItem* pItemParent = new QMdfTreeWidgetItem(pItemValue, pvalue, mdf_type_value_item);
+    str                             = QString("Value: %1").arg(pvalue->getName().c_str());
+    QMdfTreeWidgetItem* pItemParent = new QMdfTreeWidgetItem(pItemValueDefs, pvalue, mdf_type_value_item);
     pItemParent->setText(0, str);
-    pItemValue->addChild(pItemParent);
+    pItemValueDefs->addChild(pItemParent);
 
-    str   = QString("Name: %1").arg(pvalue->getName().c_str());
-    pItem = new QMdfTreeWidgetItem(pItemParent, pvalue, mdf_type_value_sub_item);
-    pItem->setText(0, str);
-    pItemValue->addChild(pItem);
-
-    str   = QString("Value: %1").arg(pvalue->getValue().c_str());
-    pItem = new QMdfTreeWidgetItem(pItemParent, pvalue, mdf_type_value_sub_item);
-    pItem->setText(0, str);
-    pItemValue->addChild(pItem);
-
-    // Descriptions
-    renderDescriptionItems(pItemParent, pvalue, pvalue->getMapDescription());
-
-    // Info URL's
-    renderInfoUrlItems(pItemParent, pvalue, pvalue->getMapDescription());
+    renderValueInfo(pItemParent, pvalue);
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderValueInfo
+//
+
+void
+CFrmMdf::renderValueInfo(QMdfTreeWidgetItem* pParent, CMDF_Value* pvalue)
+{
+  QString str;
+  QMdfTreeWidgetItem* pItem;
+
+  str   = QString("Name: %1").arg(pvalue->getName().c_str());
+  pItem = new QMdfTreeWidgetItem(pParent, pvalue, mdf_type_value_sub_item, CDlgMdfRegisterValue::index_name);
+  pItem->setText(0, str);
+  pParent->addChild(pItem);
+
+  str   = QString("Value: %1").arg(pvalue->getValue().c_str());
+  pItem = new QMdfTreeWidgetItem(pParent, pvalue, mdf_type_value_sub_item, CDlgMdfRegisterValue::index_value);
+  pItem->setText(0, str);
+  pParent->addChild(pItem);
+
+  // Descriptions
+  renderDescriptionItems(pParent, pvalue, pvalue->getMapDescription());
+
+  // Info URL's
+  renderInfoUrlItems(pParent, pvalue, pvalue->getMapDescription());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1036,7 +1054,7 @@ CFrmMdf::renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg)
   renderBits(pParent, *preg->getListBits());
 
   // Fill in valid values
-  renderValueInfo(pParent, *preg->getListValues());
+  renderValues(pParent, *preg->getListValues());
 
   // Descriptions
   renderDescriptionItems(pParent, preg, preg->getMapDescription());
@@ -2317,7 +2335,7 @@ CFrmMdf::loadMdf(void)
         renderBits(pSubItem, *pvar->getListBits());
 
         // Fill in valid values
-        renderValueInfo(pSubItem, *pvar->getListValues());
+        renderValues(pSubItem, *pvar->getListValues());
 
         // Descriptions
         renderDescriptionItems(pSubItem, pvar, pvar->getMapDescription());
@@ -2475,7 +2493,7 @@ CFrmMdf::loadMdf(void)
                 renderBits(pActionParamItem, *pactionparam->getListBits());
 
                 // Fill in valid values
-                renderValueInfo(pActionParamItem, *pactionparam->getListValues());
+                renderValues(pActionParamItem, *pactionparam->getListValues());
 
                 // Descriptions
                 renderDescriptionItems(pActionParamItem, pactionparam, pactionparam->getMapDescription());
@@ -2599,7 +2617,7 @@ CFrmMdf::loadMdf(void)
                   renderBits(pEventSubItem, *pEventData->getListBits());
 
                   // Fill in valid values
-                  renderValueInfo(pEventSubItem, *pEventData->getListValues());
+                  renderValues(pEventSubItem, *pEventData->getListValues());
 
                   // Descriptions
                   renderDescriptionItems(pEventSubItem, pEventData, pEventData->getMapDescription());
@@ -5443,7 +5461,7 @@ CFrmMdf::editRegisterBit(void)
   switch (pItem->getObjectType()) {
 
     case mdf_type_bit: {
-      CMDF_Register *preg = (CMDF_Register *)pItem->getObject();
+      CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
       CDlgMdfRegisterBitList dlg(this);
       dlg.initDialogData(preg);
       if (QDialog::Accepted == dlg.exec()) {
@@ -5455,8 +5473,7 @@ CFrmMdf::editRegisterBit(void)
           delete item;
         }
         childrenList.clear();
-        renderBits(pItem/*->parent()*/, *preg->getListBits(), true);
-        //pParent, *preg->getListBits()
+        renderBits(pItem, *preg->getListBits(), true);
       }
     } break;
 
@@ -5585,21 +5602,75 @@ CFrmMdf::editRegisterValue(void)
 
   switch (pItem->getObjectType()) {
 
-    case mdf_type_register_page: {
-      CDlgMdfRegisterList dlg(this);
-      dlg.initDialogData(&m_mdf, selectedIndex);
+    case mdf_type_value: {
+      CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
+      CDlgMdfRegisterValueList dlg(this);
+      dlg.initDialogData(preg);
       if (QDialog::Accepted == dlg.exec()) {
         // Redraw all register items - We do not know changes
-        QList<QTreeWidgetItem*> childrenList = m_headRegister->takeChildren();
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
         // Remove children
         for (qsizetype i = 0; i < childrenList.size(); ++i) {
           QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
           delete item;
         }
         childrenList.clear();
-        renderRegisters(m_headRegister);
+        renderValues(pItem, *preg->getListValues(), true);
       }
     } break;
+
+    case mdf_type_value_item: {
+      CMDF_Value* pvalue = (CMDF_Value*)pItem->getObject();
+      if (nullptr == pvalue) {
+        int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
+        spdlog::error("MDF register value edit - object has nullptr");
+        return;
+      }
+      CDlgMdfRegisterValue dlg(this);
+      dlg.initDialogData(pvalue, 0);
+      if (QDialog::Accepted == dlg.exec()) {
+        pItemHead->setExpanded(true);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          // qDebug() << item->text(0);
+          delete item;
+        }
+        childrenList.clear();
+        QString str = QString("Value: %1").arg(pvalue->getName().c_str());
+        pItem->setText(0, str);
+        renderValueInfo(pItem, pvalue);
+      }
+    } break;
+
+    case mdf_type_value_sub_item: {
+      CMDF_Value* pvalue = (CMDF_Value*)pItem->getObject();
+      if (nullptr == pvalue) {
+        int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
+        spdlog::error("MDF register value edit - object has nullptr");
+        return;
+      }
+      CDlgMdfRegisterValue dlg(this);
+      dlg.initDialogData(pvalue, selectedIndex);
+      if (QDialog::Accepted == dlg.exec()) {
+        pItemHead->setExpanded(true);
+        QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          // qDebug() << item->text(0);
+          delete item;
+        }
+        childrenList.clear();
+        QString str = QString("Value: %1").arg(pvalue->getName().c_str());
+        pItemHead->setText(0, str);
+        renderValueInfo(pItemHead, pvalue);
+      }
+    } break;
+
+    default:
+      break;
   }
 }
 

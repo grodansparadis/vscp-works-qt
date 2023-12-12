@@ -75,7 +75,9 @@
       "any": "cpp",
       "numbers": "cpp",
       "span": "cpp",
-      "bitset": "cpp"
+      "bitset": "cpp",
+      "complex": "cpp",
+      "format": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

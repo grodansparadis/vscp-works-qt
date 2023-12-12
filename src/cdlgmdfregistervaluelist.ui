@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Contacts</string>
+   <string>Register values</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -42,24 +42,17 @@
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Contact items </string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QListWidget" name="listContact"/>
+         <widget class="QListWidget" name="listRegisterValues"/>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QToolButton" name="btnAddContact">
+           <widget class="QToolButton" name="btnAddRegisterValue">
             <property name="toolTip">
              <string>Add description item</string>
             </property>
@@ -76,7 +69,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnEditContact">
+           <widget class="QToolButton" name="btnEditRegisterValue">
             <property name="toolTip">
              <string>Edit description item</string>
             </property>
@@ -93,7 +86,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnDupContact">
+           <widget class="QToolButton" name="btnDupRegisterValue">
             <property name="toolTip">
              <string>Duplicate description item</string>
             </property>
@@ -110,7 +103,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QToolButton" name="btnDelContact">
+           <widget class="QToolButton" name="btnDelRegisterValue">
             <property name="toolTip">
              <string>Delete Description item</string>
             </property>

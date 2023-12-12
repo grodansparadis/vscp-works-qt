@@ -7,17 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>692</width>
-    <height>293</height>
+    <height>126</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Register Value</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>250</y>
+     <y>90</y>
      <width>671</width>
      <height>32</height>
     </rect>
@@ -35,7 +35,7 @@
      <x>10</x>
      <y>10</y>
      <width>671</width>
-     <height>231</height>
+     <height>71</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -64,76 +64,7 @@
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QSpinBox" name="spinValue"/>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_27">
-      <property name="text">
-       <string>Default:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QSpinBox" name="SpinDefault"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_53">
-      <property name="text">
-       <string>Width</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_52">
-      <property name="text">
-       <string>Min</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_54">
-      <property name="text">
-       <string>Max</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_55">
-      <property name="text">
-       <string>Access</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QComboBox" name="comboBox_9">
-      <property name="toolTip">
-       <string>Access right for register</string>
-      </property>
-      <item>
-       <property name="text">
-        <string>Read/Write</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Read Only</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Write Only</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QSpinBox" name="spinWidth"/>
-    </item>
-    <item row="4" column="1">
-     <widget class="QSpinBox" name="spinMin"/>
-    </item>
-    <item row="5" column="1">
-     <widget class="QSpinBox" name="spinMax"/>
+     <widget class="QLineEdit" name="editValue"/>
     </item>
    </layout>
   </widget>
