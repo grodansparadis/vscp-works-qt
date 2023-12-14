@@ -120,6 +120,11 @@ CDlgMdfRegisterBitList::renderBitItems(void)
   ui->listRegisterBit->clear();
   std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
 
+  // If no enteries there is nothing to do
+  if (!pbits->size()) {
+    return;
+  }
+
   int idx = 0;
   for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
     CMDF_Bit* pbit = *it;

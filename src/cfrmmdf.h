@@ -216,7 +216,7 @@ public slots:
   void showContactDialog(QMdfTreeWidgetItem* pItem, mdf_dlg_contact_type type, QString title);
 
   /// Edit phone/fax/email/web/social data
-  void editContact(void);  
+  void editContact(void);
 
   /// Delete phone/fax/email/web/social data
   void deleteContact(void);
@@ -251,6 +251,12 @@ public slots:
   /// Delete register item
   void deleteRegisterValue(void);
 
+  /// Edit remote variable
+  void editRemoteVariable(void);
+
+  /// Delete remote variable
+  void deleteRemoteVariable(void);
+
   /*!
     Fill in data from info map as children to parent item
 
@@ -260,10 +266,10 @@ public slots:
     @param bChildIsKnown Set to true of pParent points to description head
   */
   void
-  renderDescriptionItems(QTreeWidgetItem* pParent, 
-                          CMDF_Object* pobj, 
-                          std::map<std::string, std::string>* pObjMap, 
-                          bool bChildIsKnown = false);
+  renderDescriptionItems(QTreeWidgetItem* pParent,
+                         CMDF_Object* pobj,
+                         std::map<std::string, std::string>* pObjMap,
+                         bool bChildIsKnown = false);
 
   /*!
     Fill in data from help URL map as children to parent item
@@ -274,10 +280,10 @@ public slots:
     @param bChildIsKnown Set to true of pParent points to info URL head
   */
   void
-  renderInfoUrlItems(QTreeWidgetItem* pParent, 
-                      CMDF_Object* pobj, 
-                      std::map<std::string, std::string>* pObjMap, 
-                      bool bChildIsKnown = false);
+  renderInfoUrlItems(QTreeWidgetItem* pParent,
+                     CMDF_Object* pobj,
+                     std::map<std::string, std::string>* pObjMap,
+                     bool bChildIsKnown = false);
 
   /*!
     Fill bit list info
@@ -330,11 +336,19 @@ public slots:
   void
   renderRegisters(QTreeWidgetItem* pParent);
 
+  /*!
+    Fill in remote variable info
 
-/*!
-    Render all remote variables
-    @param Header item to draw them as subitems under
+    @parent Pointer to parent treewidget
+    @preg Pointer to remote variable definition
   */
+  void
+  renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable* pvar);
+
+  /*!
+      Render all remote variables
+      @param Header item to draw them as subitems under
+    */
   void
   renderRemoteVariables(QTreeWidgetItem* pParent);
 
@@ -352,7 +366,7 @@ public slots:
   */
 
   void
-  renderManufacturerEmail(QMdfTreeWidgetItem *pItemEmailHead);
+  renderManufacturerEmail(QMdfTreeWidgetItem* pItemEmailHead);
 
   /*!
     Render manufacturer phone info
@@ -360,7 +374,7 @@ public slots:
   */
 
   void
-  renderManufacturerPhone(QMdfTreeWidgetItem *pItemPhoneHead);
+  renderManufacturerPhone(QMdfTreeWidgetItem* pItemPhoneHead);
 
   /*!
     Render manufacturer fax info
@@ -368,7 +382,7 @@ public slots:
   */
 
   void
-  renderManufacturerFax(QMdfTreeWidgetItem *pItemFaxHead);
+  renderManufacturerFax(QMdfTreeWidgetItem* pItemFaxHead);
 
   /*!
     Render manufacturer web info
@@ -376,7 +390,7 @@ public slots:
   */
 
   void
-  renderManufacturerWeb(QMdfTreeWidgetItem *pItemWebHead);
+  renderManufacturerWeb(QMdfTreeWidgetItem* pItemWebHead);
 
   /*!
     Render manufacturer social info
@@ -384,8 +398,7 @@ public slots:
   */
 
   void
-  renderManufacturerSocial(QMdfTreeWidgetItem *pItemSocialHead);
-
+  renderManufacturerSocial(QMdfTreeWidgetItem* pItemSocialHead);
 
   /*!
     Render bootloader info
@@ -393,8 +406,6 @@ public slots:
   */
   void
   renderBootLoadInfo(QMdfTreeWidgetItem* pItemBootHead, uint16_t selectedIndex = 0);
-
-  
 
   /*!
     Render picture items

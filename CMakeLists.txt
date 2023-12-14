@@ -269,6 +269,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmdfregistermapping.ui
     
     src/cdlgmdfremotevar.ui
+    src/cdlgmdfremotevarlist.ui
     src/cdlgmdfremotevarbitlist.ui
     src/cdlgmdfremotevarbit.ui
     src/cdlgmdfremotevarvaluelist.ui
@@ -602,6 +603,16 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfregistervaluelist.ui
     src/cdlgmdfregistervaluelist.cpp
     src/cdlgmdfregistervaluelist.h
+
+    build/ui_cdlgmdfremotevar.h 
+    src/cdlgmdfremotevar.ui
+    src/cdlgmdfremotevar.cpp
+    src/cdlgmdfremotevar.h
+
+    build/ui_cdlgmdfremotevarlist.h 
+    src/cdlgmdfremotevarlist.ui
+    src/cdlgmdfremotevarlist.cpp
+    src/cdlgmdfremotevarlist.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

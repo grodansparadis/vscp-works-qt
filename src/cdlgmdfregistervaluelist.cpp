@@ -111,14 +111,17 @@ CDlgMdfRegisterValueList::initDialogData(CMDF_Register* preg)
 void
 CDlgMdfRegisterValueList::renderValueItems(void)
 {
-  std::map<uint32_t, CMDF_Register*> pages;
-
   if (nullptr == m_preg) {
     return;
   }
 
   ui->listRegisterValues->clear();
   std::deque<CMDF_Value*>* pvalues = m_preg->getListValues();
+
+  // If no enteries there is nothing to do
+  if (!pvalues->size()) {
+    return;
+  }
 
   int idx = 0;
   for (auto it = pvalues->cbegin(); it != pvalues->cend(); ++it) {
