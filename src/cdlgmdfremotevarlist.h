@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2023 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -103,11 +103,8 @@ private:
   // MDF
   CMDF *m_pmdf;
 
-  // Register page
-  uint16_t m_page;
-
   // Used to get a sorted list of registers
-  std::set<uint32_t> m_registersSet ;
+  //std::set<uint32_t> m_remotevarSet ;
 };
 
 #endif // CDLGMDFREGISTERLIST_H

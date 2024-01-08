@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2023 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -59,8 +59,6 @@ CDlgMdfRemoteVarList::CDlgMdfRemoteVarList(QWidget* parent)
   , ui(new Ui::CDlgMdfRemoteVarList)
 {
   m_pmdf = nullptr;
-  m_page = 0;
-
   ui->setupUi(this);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -71,7 +69,6 @@ CDlgMdfRemoteVarList::CDlgMdfRemoteVarList(QWidget* parent)
   connect(ui->btnDelRemoteVar, &QToolButton::clicked, this, &CDlgMdfRemoteVarList::deleteRemoteVar);
 
   connect(ui->listRemoteVar, &QListWidget::doubleClicked, this, &CDlgMdfRemoteVarList::editRemoteVar);
-  
 
   setInitialFocus();
   this->setFixedSize(this->size());
@@ -103,7 +100,6 @@ CDlgMdfRemoteVarList::initDialogData(CMDF* pmdf, uint16_t page)
 
   // Save MDF  and page
   m_pmdf = pmdf;
-  m_page = page;
 
   // m_pmdf->getRegisterMap(m_page, pages);
 
@@ -111,9 +107,9 @@ CDlgMdfRemoteVarList::initDialogData(CMDF* pmdf, uint16_t page)
   renderRemoteVarItems();
 
   // Fill the page combo with page information
-  //renderComboPage();
+  // renderComboPage();
 
-  //connect(ui->comboPage, SIGNAL(currentIndexChanged(int)), this, SLOT(onPageComboChange(int)));
+  // connect(ui->comboPage, SIGNAL(currentIndexChanged(int)), this, SLOT(onPageComboChange(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -146,34 +142,47 @@ CDlgMdfRemoteVarList::initDialogData(CMDF* pmdf, uint16_t page)
 void
 CDlgMdfRemoteVarList::renderRemoteVarItems(void)
 {
-  std::map<uint32_t, CMDF_RemoteVariable*> pages;
+  std::map<uint64_t, CMDF_RemoteVariable*> rvmap;
+  std::set<uint64_t> sortedSet;
 
   if (nullptr == m_pmdf) {
     return;
   }
 
+  std::deque<CMDF_RemoteVariable*>* rvset = m_pmdf->getRemoteVariableList();
+
   ui->listRemoteVar->clear();
 
   // Make sorted set of registers on this page
-  std::deque<CMDF_RemoteVariable*>* regset = m_pmdf->getRemoteVariableList();
-  for (auto it = regset->cbegin(); it != regset->cend(); ++it) {
-    if (m_page == (*it)->getPage()) {
-      m_registersSet.insert((*it)->getOffset());
+  for (auto it = rvset->cbegin(); it != rvset->cend(); ++it) {
+    uint64_t token = ((uint64_t)((*it)->getPage()) << 32) + (*it)->getOffset();
+    //qDebug() << Qt::hex << token << (*it)->getPage() << (*it)->getOffset();
+    sortedSet.insert(token + (*it)->getOffset());
+    rvmap[token + (*it)->getOffset()] = *it;
+  }
+
+  //qDebug() << rvset->size();
+
+  for (auto it1 = sortedSet.cbegin(); it1 != sortedSet.cend(); ++it1) {
+    CMDF_RemoteVariable* prvar = rvmap[*it1];
+    if (nullptr != prvar) {
+      QString str = QString("%1 [%2:%3]").arg(prvar->getName().c_str()).arg(prvar->getPage()).arg(prvar->getOffset());
+      ui->listRemoteVar->addItem(str);
+      // Set data to register index
+      ui->listRemoteVar->item(ui->listRemoteVar->count() - 1)->setData(Qt::UserRole, prvar->getOffset());
+      ui->listRemoteVar->item(ui->listRemoteVar->count() - 1)->setData(Qt::UserRole + 1, prvar->getPage());
     }
   }
 
-  // m_pmdf->getRegisterMap(m_page, pages);
-
-  // std::deque<CMDF_RemoteVariable*>* regs = m_pmdf->getRemoteVariableList();
-
-  // for (auto it = m_registersSet.cbegin(); it != m_registersSet.cend(); ++it) {
+  // for (auto it = rvset->cbegin(); it != rvset->cend(); ++it) {
   //   // m_registersSet.insert((*it)->getOffset());
-  //   CMDF_RemoteVariable* preg = m_pmdf->getRegister(*it, m_page);
-  //   if (nullptr != preg) {
-  //     QString str = QString("Register  %1 -- %2").arg(preg->getOffset()).arg(preg->getName().c_str());
+  //   CMDF_RemoteVariable* prvar = *it;
+  //   if (nullptr != prvar) {
+  //     QString str = QString("%1 [%2:%3]").arg(prvar->getName().c_str()).arg(prvar->getPage()).arg(prvar->getOffset());
   //     ui->listRemoteVar->addItem(str);
   //     // Set data to register index
-  //     ui->listRemoteVar->item(ui->listRemoteVar->count() - 1)->setData(Qt::UserRole, preg->getOffset());
+  //     ui->listRemoteVar->item(ui->listRemoteVar->count() - 1)->setData(Qt::UserRole, prvar->getOffset());
+  //     ui->listRemoteVar->item(ui->listRemoteVar->count() - 1)->setData(Qt::UserRole+1, prvar->getPage());
   //   }
   // }
 
@@ -198,7 +207,6 @@ CDlgMdfRemoteVarList::setInitialFocus(void)
   // ui->editGuid->setFocus();
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // addRemoteVar
 //
@@ -208,7 +216,6 @@ CDlgMdfRemoteVarList::addRemoteVar(void)
 {
   bool ok;
   CMDF_RemoteVariable* pvarnew = new CMDF_RemoteVariable();
-  pvarnew->setPage(m_page);
 
   // Save the selected row
   int idx = ui->listRemoteVar->currentRow();
@@ -224,22 +231,13 @@ addregdlg:
     //   goto addregdlg;
     // }
     // qDebug() << "Page=" << pvarnew->getPage() << " Offset=" << pvarnew->getOffset();
-    // m_pmdf->getRemoteVariableList()->push_back(pvarnew);
-    // if (m_page == pvarnew->getPage()) {
-    //   m_registersSet.insert(pvarnew->getOffset());
-    // }
-    // ui->listRemoteVar->clear();
-    // renderRemoteVarItems();
-    // if (-1 != idx) {
-    //   ui->listRemoteVar->setCurrentRow(idx);
-    // }
-
-    // Warn if page is not the same as for dialog
-    if (pvarnew->getPage() != m_page) {
-      QMessageBox::information(this,
-                               tr("MDF duplicate register"),
-                               tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pvarnew->getPage()).arg(pvarnew->getOffset()).arg(m_page));
+    m_pmdf->getRemoteVariableList()->push_back(pvarnew);
+    ui->listRemoteVar->clear();
+    renderRemoteVarItems();
+    if (-1 != idx) {
+      ui->listRemoteVar->setCurrentRow(idx);
     }
+
   }
   else {
     delete pvarnew;
@@ -260,8 +258,9 @@ CDlgMdfRemoteVarList::editRemoteVar(void)
     // Save the selected row
     int idx = ui->listRemoteVar->currentRow();
 
-    QListWidgetItem* pitem = ui->listRemoteVar->currentItem();
-    CMDF_RemoteVariable* pvar    = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole+1).toUInt());
+    QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
+    CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), 
+                                                            pitem->data(Qt::UserRole + 1).toUInt());
 
     CDlgMdfRemoteVar dlg(this);
     dlg.initDialogData(m_pmdf, pvar);
@@ -290,44 +289,34 @@ CDlgMdfRemoteVarList::dupRemoteVar(void)
     // Save the selected row
     int idx = ui->listRemoteVar->currentRow();
 
-    QListWidgetItem* pitem = ui->listRemoteVar->currentItem();
-    CMDF_RemoteVariable* pvar    = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole+1).toUInt());
-
-    CMDF_RemoteVariable* pvarnew = new CMDF_RemoteVariable();
-    pvarnew->setPage(m_page);
+    QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
+    CMDF_RemoteVariable* prvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
+    CMDF_RemoteVariable* prvarnew = new CMDF_RemoteVariable();
 
     // Make copy
-    *pvarnew = *pvar;
+    *prvarnew = *prvar;
 
     CDlgMdfRemoteVar dlg(this);
-    dlg.initDialogData(m_pmdf, pvarnew);
+    dlg.initDialogData(m_pmdf, prvarnew);
   dupregdlg:
     if (QDialog::Accepted == dlg.exec()) {
       // Check if register is already defined
-      CMDF_RemoteVariable* pvarold = m_pmdf->getRemoteVariable(pvarnew->getOffset(), pvarnew->getPage());
+      CMDF_RemoteVariable* pvarold = m_pmdf->getRemoteVariable(prvarnew->getOffset(), prvarnew->getPage());
       if (nullptr != pvarold) {
-        QMessageBox::warning(this, tr("MDF duplicate register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pvarnew->getPage()).arg(pvarnew->getOffset()));
+        QMessageBox::warning(this, tr("MDF duplicate register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(prvarnew->getPage()).arg(prvarnew->getOffset()));
         goto dupregdlg;
       }
-      qDebug() << "Page=" << pvarnew->getPage() << " Offset=" << pvarnew->getOffset();
-      m_pmdf->getRemoteVariableList()->push_back(pvarnew);
-      if (m_page == pvarnew->getPage()) {
-        m_registersSet.insert(pvarnew->getOffset());
-      }
+      qDebug() << "Page=" << prvarnew->getPage() << " Offset=" << prvarnew->getOffset();
+      m_pmdf->getRemoteVariableList()->push_back(prvarnew);
+
       ui->listRemoteVar->clear();
       renderRemoteVarItems();
       if (-1 != idx) {
         ui->listRemoteVar->setCurrentRow(idx);
       }
-      // Warn if page is not the same as for dialog
-      if (pvarnew->getPage() != m_page) {
-        QMessageBox::information(this,
-                                 tr("MDF duplicate register"),
-                                 tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pvarnew->getPage()).arg(pvarnew->getOffset()).arg(m_page));
-      }
     }
     else {
-      delete pvarnew;
+      delete prvarnew;
     }
   }
   else {
@@ -381,8 +370,8 @@ CDlgMdfRemoteVarList::deleteRemoteVar(void)
     // Save the row
     int idx = ui->listRemoteVar->currentRow();
 
-    QListWidgetItem* pitem = ui->listRemoteVar->currentItem();
-    CMDF_RemoteVariable* pvar    = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole+1).toUInt());
+    QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
+    CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
     m_pmdf->deleteRemoteVariable(pvar);
     delete pvar;
     ui->listRemoteVar->removeItemWidget(pitem);

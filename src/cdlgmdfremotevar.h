@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2023 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,15 +50,14 @@ public:
 
   static const int index_name = 0;
   static const int index_type = 1;
-  static const int index_page = 2;
-  static const int index_offset = 3;
-  static const int index_span = 4;
-  static const int index_min = 5;
-  static const int index_max = 6;
-  static const int index_access = 7;
-  static const int index_default = 8;
-  static const int index_fgcolor = 9;
-  static const int index_bgcolor = 10;
+  static const int index_span = 2;
+  static const int index_page = 3;
+  static const int index_offset = 4;
+  static const int index_bit_offset = 5;
+  static const int index_access = 6;
+  static const int index_default = 7;
+  static const int index_fgcolor = 8;
+  static const int index_bgcolor = 9;
 
   static const char pre_str_remote_variable[];
 
@@ -99,25 +98,21 @@ public:
   uint32_t getOffset(void);
   void setOffset(uint32_t offset);
 
+  // bit offset
+  uint32_t getBitOffset(void);
+  void setBitOffset(uint32_t offset);
+
   // type
-  uint8_t getType(void);
-  void setType(uint8_t type);
+  vscp_remote_variable_type getType(void);
+  void setType(vscp_remote_variable_type type);
 
   // span
   uint16_t getSpan(void);
   void setSpan(uint16_t type);
 
-  // min
-  uint8_t getMin(void);
-  void setMin(uint8_t min);
-
-  // max
-  uint8_t getMax(void);
-  void setMax(uint8_t max);
-
   // access
   mdf_access_mode getAccess(void);
-  void setAccess(uint8_t access);
+  void setAccess(mdf_access_mode access);
 
   // default
   QString getDefault(void);

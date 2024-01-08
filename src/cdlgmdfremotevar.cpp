@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2023 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -89,14 +89,14 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
   QString str;
 
   if (nullptr == pmdf) {
-    spdlog::error("MDF register information - Invalid MDF object (initDialogData)");
+    spdlog::error("MDF remote variable information - Invalid MDF object (initDialogData)");
     return;
   }
 
   m_pmdf = pmdf;
 
   if (nullptr == pvar) {
-    spdlog::error("MDF register information - Invalid MDF register object (initDialogData)");
+    spdlog::error("MDF remote variable information - Invalid MDF remote variable object (initDialogData)");
     return;
   }
 
@@ -118,28 +118,26 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
   connect(ui->btnSetUndef,
           SIGNAL(clicked()),
           this,
-          SLOT(setUndef()));        
+          SLOT(setUndef()));
 
   setName(pvar->getName().c_str());
   setPage(pvar->getPage());
   setOffset(pvar->getOffset());
+  setBitOffset(pvar->getBitPos());
   setType(pvar->getType());
-  // setSpan(pvar->getSpan());
-  // setMin(pvar->getMin());
-  // setMax(pvar->getMax());
+  setSpan(pvar->getTypeByteCount());
   setAccess(pvar->getAccess());
-  uint8_t val;
-  // bool bDefault = pvar->getDefault(val);
-  // str           = pvar->getDefault(val) ? QString("%1").arg(val) : "UNDEF";
+  str = pvar->getDefault().c_str();
   setDefault(str);
   setForegroundColor(pvar->getForegroundColor());
   setBackgroundColor(pvar->getBackgroundColor());
 
+  // Fill page combo box with used pages
   std::set<uint16_t> pages;
   uint32_t cnt = pmdf->getPages(pages);
   ui->comboPage->clear();
   int pos = 0;
-  for (std::set<uint16_t>::iterator it=pages.begin(); it!=pages.end(); ++it) {
+  for (std::set<uint16_t>::iterator it = pages.begin(); it != pages.end(); ++it) {
     ui->comboPage->addItem(QString("Page %1").arg(*it), *it);
     if (pvar->getPage() == *it) {
       ui->comboPage->setCurrentIndex(pos);
@@ -147,39 +145,30 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
     pos++;
   }
 
-
   switch (index) {
     case index_name:
       ui->editName->setFocus();
+      break;
+
+    case index_type:
+      ui->comboType->setFocus();
+      break;
+
+    case index_span:
+      ui->spinSpan->setFocus();
       break;
 
     case index_page:
       ui->comboPage->setFocus();
       break;
 
-    // case index_offset:
-    //   ui->editOffset->setFocus();
-    //   break;
-
-    case index_type:
-      ui->comboType->setFocus();
+    case index_offset:
+      ui->spinOffset->setFocus();
       break;
 
-    // case index_span:
-    //   ui->spinSpan->setFocus();
-    //   break;
-
-    // case index_width:
-    //   ui->spinWidth->setFocus();
-    //   break;
-
-    // case index_min:
-    //   ui->spinMin->setFocus();
-    //   break;
-
-    // case index_max:
-    //   ui->spinMax->setFocus();
-    //   break;
+    case index_bit_offset:
+      ui->spinBitOffset->setFocus();
+      break;
 
     case index_access:
       ui->comboAccess->setFocus();
@@ -195,7 +184,7 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
 
     case index_bgcolor:
       ui->editBgColor->setFocus();
-      break;    
+      break;
 
     default:
       ui->editName->setFocus();
@@ -321,33 +310,45 @@ CDlgMdfRemoteVar::setOffset(uint32_t offset)
 
 // -----------------------------------------------------------------------
 
-uint8_t
-CDlgMdfRemoteVar::getType(void)
+uint32_t
+CDlgMdfRemoteVar::getBitOffset(void)
 {
-  return ui->comboPage->currentIndex();
+  return ui->spinBitOffset->value();
 }
 
 void
-CDlgMdfRemoteVar::setType(uint8_t type)
+CDlgMdfRemoteVar::setBitOffset(uint32_t offset)
 {
-  if (type <= MDF_REG_TYPE_BLOCK) {
-    ui->comboPage->setCurrentIndex(type);
-  }
+  ui->spinBitOffset->setValue(offset);
 }
 
 // -----------------------------------------------------------------------
 
-// uint16_t
-// CDlgMdfRemoteVar::getSpan(void)
-// {
-//   return ui->spinSpan->value();
-// }
+vscp_remote_variable_type
+CDlgMdfRemoteVar::getType(void)
+{
+  return static_cast<vscp_remote_variable_type>(ui->comboType->currentIndex());
+}
 
-// void
-// CDlgMdfRemoteVar::setSpan(uint16_t span)
-// {
-//   ui->spinSpan->setValue(span);
-// }
+void
+CDlgMdfRemoteVar::setType(vscp_remote_variable_type type)
+{
+  ui->comboType->setCurrentIndex(static_cast<int>(type));
+}
+
+// -----------------------------------------------------------------------
+
+uint16_t
+CDlgMdfRemoteVar::getSpan(void)
+{
+  return ui->spinSpan->value();
+}
+
+void
+CDlgMdfRemoteVar::setSpan(uint16_t span)
+{
+  ui->spinSpan->setValue(span);
+}
 
 // -----------------------------------------------------------------------
 
@@ -365,34 +366,6 @@ CDlgMdfRemoteVar::setType(uint8_t type)
 
 // -----------------------------------------------------------------------
 
-// uint8_t
-// CDlgMdfRemoteVar::getMin(void)
-// {
-//   return ui->spinMin->value();
-// }
-
-// void
-// CDlgMdfRemoteVar::setMin(uint8_t min)
-// {
-//   ui->spinMin->setValue(min);
-// }
-
-// -----------------------------------------------------------------------
-
-// uint8_t
-// CDlgMdfRemoteVar::getMax(void)
-// {
-//   return ui->spinMax->value();
-// }
-
-// void
-// CDlgMdfRemoteVar::setMax(uint8_t span)
-// {
-//   ui->spinMax->setValue(span);
-// }
-
-// -----------------------------------------------------------------------
-
 mdf_access_mode
 CDlgMdfRemoteVar::getAccess(void)
 {
@@ -400,11 +373,9 @@ CDlgMdfRemoteVar::getAccess(void)
 }
 
 void
-CDlgMdfRemoteVar::setAccess(uint8_t access)
+CDlgMdfRemoteVar::setAccess(mdf_access_mode access)
 {
-  if (access <= MDF_REG_ACCESS_READ_WRITE) {
-    ui->comboAccess->setCurrentIndex(access);
-  }
+  ui->comboAccess->setCurrentIndex(static_cast<int>(access));
 }
 
 // -----------------------------------------------------------------------
@@ -461,9 +432,9 @@ CDlgMdfRemoteVar::accept()
     m_pvar->setPage(getPage());
     m_pvar->setOffset(getOffset());
     m_pvar->setType(static_cast<vscp_remote_variable_type>(getType()));
-    //m_pvar->setSpan(getSpan());
-    //m_pvar->setMin(getMin());
-    //m_pvar->setMax(getMax());
+    // m_pvar->setSpan(getSpan());
+    // m_pvar->setMin(getMin());
+    // m_pvar->setMax(getMax());
     m_pvar->setAccess(getAccess());
     m_pvar->setDefault(getDefault().toStdString());
     m_pvar->setForegroundColor(getForegroundColor());

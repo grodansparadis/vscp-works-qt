@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Register variable</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox_2">
+  <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -38,7 +38,7 @@
      <x>9</x>
      <y>9</y>
      <width>581</width>
-     <height>323</height>
+     <height>321</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -149,13 +149,23 @@
      </widget>
     </item>
     <item row="2" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Byte Count</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSpinBox" name="spinSpan"/>
+    </item>
+    <item row="3" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
        <string>Register Page</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="3" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QComboBox" name="comboPage"/>
@@ -169,41 +179,41 @@
       </item>
      </layout>
     </item>
-    <item row="3" column="0">
+    <item row="4" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Register Offset</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="4" column="1">
      <widget class="QSpinBox" name="spinOffset"/>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_7">
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>Size</string>
+       <string>Bit Offset</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
-     <widget class="QSpinBox" name="spinPan"/>
+    <item row="5" column="1">
+     <widget class="QSpinBox" name="spinBitOffset"/>
     </item>
-    <item row="7" column="0">
+    <item row="6" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
        <string>Access</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="6" column="1">
      <widget class="QComboBox" name="comboAccess">
       <property name="toolTip">
        <string>Access rights for reemote variable</string>
       </property>
       <item>
        <property name="text">
-        <string>Read/Write</string>
+        <string>None</string>
        </property>
       </item>
       <item>
@@ -216,16 +226,21 @@
         <string>Write Only</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Read/Write</string>
+       </property>
+      </item>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="7" column="0">
      <widget class="QLabel" name="label_12">
       <property name="text">
        <string>Default</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
+    <item row="7" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
        <widget class="QLineEdit" name="editDefault">
@@ -246,14 +261,14 @@
       </item>
      </layout>
     </item>
-    <item row="9" column="0">
+    <item row="8" column="0">
      <widget class="QLabel" name="label_13">
       <property name="text">
        <string>fgcolor</string>
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
+    <item row="8" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLineEdit" name="editFgColor">
@@ -274,14 +289,14 @@
       </item>
      </layout>
     </item>
-    <item row="10" column="0">
+    <item row="9" column="0">
      <widget class="QLabel" name="label_11">
       <property name="text">
        <string>bgcolor</string>
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
+    <item row="9" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QLineEdit" name="editBgColor">
@@ -302,19 +317,42 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Bit Offset</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QSpinBox" name="spinBitOffset"/>
-    </item>
    </layout>
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgMdfRemoteVar</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>355</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgMdfRemoteVar</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>355</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

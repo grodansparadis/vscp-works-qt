@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2023 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -67,6 +67,8 @@
 #include "cdlgmdfregisterlist.h"
 #include "cdlgmdfregistervalue.h"
 #include "cdlgmdfregistervaluelist.h"
+#include "cdlgmdfremotevarlist.h"
+#include "cdlgmdfremotevar.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -1067,7 +1069,7 @@ CFrmMdf::renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg)
   renderDescriptionItems(pParent, preg, preg->getMapDescription());
 
   // Info URL's
-  renderInfoUrlItems(pParent, preg, preg->getMapDescription());
+  renderInfoUrlItems(pParent, preg, preg->getMapInfoUrl());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1130,7 +1132,7 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
 //
 
 void
-CFrmMdf::renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable* pvar)
+CFrmMdf::renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable* prvar)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -1139,66 +1141,66 @@ CFrmMdf::renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable*
   if (nullptr == pParent) {
     return;
   }
-  if (nullptr == pvar) {
+  if (nullptr == prvar) {
     return;
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_string);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_name);
   if (nullptr != pItem) {
-    str = QString("Name: %1").arg(pvar->getName().c_str());
+    str = QString("Name: %1").arg(prvar->getName().c_str());
     pItem->setText(0, str);
     pParent->addChild(pParent);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_string);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_type);
   if (nullptr != pItem) {
-    str = QString("Type: %1 (%2)").arg(pvar->getType()).arg(pvar->getTypeString().c_str());
+    str = QString("Type: %1 (%2)").arg(prvar->getType()).arg(prvar->getTypeString().c_str());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_number);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_span);
   if (nullptr != pItem) {
-    str = QString("Byte count: %1").arg(pvar->getTypeByteCount());
+    str = QString("Byte count: %1").arg(prvar->getTypeByteCount());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_number);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_default);
   if (nullptr != pItem) {
-    str = QString("Default: %1").arg(pvar->getDefault().c_str());
+    str = QString("Default: %1").arg(prvar->getDefault().c_str());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_number);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_offset);
   if (nullptr != pItem) {
-    str = QString("Offset: %1").arg(pvar->getOffset());
+    str = QString("Offset: %1").arg(prvar->getOffset());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_number);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_page);
   if (nullptr != pItem) {
-    str = QString("Page: %1").arg(pvar->getPage());
+    str = QString("Page: %1").arg(prvar->getPage());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_number);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_bit_offset);
   if (nullptr != pItem) {
-    str = QString("Bit position: %1").arg(pvar->getBitPos());
+    str = QString("Bit position: %1").arg(prvar->getBitPos());
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_access);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_access);
   if (nullptr != pItem) {
-    str = QString("Access: %1 (").arg(pvar->getAccess());
-    if (2 & pvar->getAccess()) {
+    str = QString("Access: %1 (").arg(static_cast<int>(prvar->getAccess()));
+    if (1 & prvar->getAccess()) {
       str += "r";
     }
-    if (1 & pvar->getAccess()) {
+    if (2 & prvar->getAccess()) {
       str += "w";
     }
     str += ")";
@@ -1207,31 +1209,31 @@ CFrmMdf::renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable*
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_string);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_fgcolor);
   if (nullptr != pItem) {
-    str = QString("Foreground color: 0x%1").arg(pvar->getForegroundColor(), 1, 16);
+    str = QString("Foreground color: 0x%1").arg(prvar->getForegroundColor(), 1, 16);
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
-  pItem = new QMdfTreeWidgetItem(pParent, mdf_type_generic_string);
+  pItem = new QMdfTreeWidgetItem(pParent, prvar, mdf_type_remotevar_sub_item, CDlgMdfRemoteVar::index_bgcolor);
   if (nullptr != pItem) {
-    str = QString("Background color: 0x%1").arg(pvar->getBackgroundColor(), 1, 16);
+    str = QString("Background color: 0x%1").arg(prvar->getBackgroundColor(), 1, 16);
     pItem->setText(0, str);
     pParent->addChild(pItem);
   }
 
   // Fill in bit field info
-  renderBits(pParent, *pvar->getListBits());
+  renderBits(pParent, *prvar->getListBits());
 
   // Fill in valid values
-  renderValues(pParent, *pvar->getListValues());
+  renderValues(pParent, *prvar->getListValues());
 
   // Descriptions
-  renderDescriptionItems(pParent, pvar, pvar->getMapDescription());
+  renderDescriptionItems(pParent, prvar, prvar->getMapDescription());
 
   // Info URL's
-  renderInfoUrlItems(pParent, pvar, pvar->getMapDescription());
+  renderInfoUrlItems(pParent, prvar, prvar->getMapInfoUrl());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1256,9 +1258,9 @@ CFrmMdf::renderRemoteVariables(QTreeWidgetItem* pParent)
     for (int i = 0; i < pRemoteVarList->size(); i++) {
       CMDF_RemoteVariable* pvar = (*pRemoteVarList)[i];
 
-      pSubItem = new QMdfTreeWidgetItem(pParent, mdf_type_remotevar_item);
+      pSubItem = new QMdfTreeWidgetItem(pParent, pvar, mdf_type_remotevar_item);
       if (nullptr != pSubItem) {
-        str = QString("Remote variable: %1 -- %2").arg(i).arg(pvar->getName().c_str());
+        str = QString("%1 %2").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(pvar->getName().c_str());
         pSubItem->setText(0, str);
         pParent->addChild(pSubItem);
         renderRemoteVariableInfo(pSubItem, pvar);
@@ -2369,7 +2371,7 @@ CFrmMdf::loadMdf(void)
 
   // * * * Remote variables * * *
 
-  QMdfTreeWidgetItem* pItemRemoteVar = new QMdfTreeWidgetItem(pItemModule, mdf_type_remotevar);
+  QMdfTreeWidgetItem* pItemRemoteVar = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_remotevar);
   m_headRemoteVariabel               = pItemRemoteVar;
   pItemRemoteVar->setFont(0, fontTopItem);
   pItemRemoteVar->setForeground(0, greenBrush);
@@ -2380,7 +2382,7 @@ CFrmMdf::loadMdf(void)
 
   // * * * Alarm * * *
 
-  QMdfTreeWidgetItem* pItemAlarm = new QMdfTreeWidgetItem(pItemModule, mdf_type_alarm);
+  QMdfTreeWidgetItem* pItemAlarm = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_alarm);
   m_headAlarm                    = pItemAlarm;
   pItemAlarm->setFont(0, fontTopItem);
   pItemAlarm->setForeground(0, greenBrush);
@@ -2394,7 +2396,7 @@ CFrmMdf::loadMdf(void)
 
   // * * * Decision Matrix * * *
 
-  QMdfTreeWidgetItem* pItemDM = new QMdfTreeWidgetItem(pItemModule, mdf_type_decision_matrix);
+  QMdfTreeWidgetItem* pItemDM = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_decision_matrix);
   m_headDecisionMatrix        = pItemDM;
   pItemDM->setFont(0, fontTopItem);
   pItemDM->setForeground(0, greenBrush);
@@ -2546,7 +2548,7 @@ CFrmMdf::loadMdf(void)
 
       // * * * Events * * *
 
-      QMdfTreeWidgetItem* pItemEvent = new QMdfTreeWidgetItem(pItemModule, mdf_type_event);
+      QMdfTreeWidgetItem* pItemEvent = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_event);
       pItemEvent                     = pItemEvent;
       pItemEvent->setFont(0, fontTopItem);
       pItemEvent->setForeground(0, greenBrush);
@@ -3803,6 +3805,12 @@ CFrmMdf::editDescription(void)
       pmap = pItem->getObject()->getMapDescription();
     } break;
 
+    case mdf_type_remotevar:
+    case mdf_type_remotevar_item:
+    case mdf_type_remotevar_sub_item: {
+      pmap = pItem->getObject()->getMapDescription();
+    } break;
+
     case mdf_type_bit:
     case mdf_type_bit_item:
     case mdf_type_bit_sub_item: {
@@ -3907,6 +3915,10 @@ CFrmMdf::deleteDescription(void)
     case mdf_type_register:
     case mdf_type_register_item:
     case mdf_type_register_sub_item:
+    // Remote variable items
+    case mdf_type_remotevar:
+    case mdf_type_remotevar_item:
+    case mdf_type_remotevar_sub_item:
     // Bit items
     case mdf_type_bit:
     case mdf_type_bit_item:
@@ -4017,6 +4029,10 @@ CFrmMdf::editInfoUrl(void)
     case mdf_type_register:
     case mdf_type_register_item:
     case mdf_type_register_sub_item:
+    // Remote variable items
+    case mdf_type_remotevar:
+    case mdf_type_remotevar_item:
+    case mdf_type_remotevar_sub_item:
     // Bit items
     case mdf_type_bit:
     case mdf_type_bit_item:
@@ -4120,6 +4136,10 @@ CFrmMdf::deleteInfoUrl(void)
     case mdf_type_register:
     case mdf_type_register_item:
     case mdf_type_register_sub_item:
+    // Remote variable items
+    case mdf_type_remotevar:
+    case mdf_type_remotevar_item:
+    case mdf_type_remotevar_sub_item:
     // Bit items
     case mdf_type_bit:
     case mdf_type_bit_item:
@@ -5953,35 +5973,31 @@ CFrmMdf::editRemoteVariable(void)
 
   switch (pItem->getObjectType()) {
 
-    case mdf_type_register_page: {
-      CDlgMdfRegisterList dlg(this);
+    case mdf_type_remotevar: {
+      CDlgMdfRemoteVarList dlg(this);
       dlg.initDialogData(&m_mdf, selectedIndex);
       if (QDialog::Accepted == dlg.exec()) {
         // Redraw all register items - We do not know changes
-        QList<QTreeWidgetItem*> childrenList = m_headRegister->takeChildren();
+        QList<QTreeWidgetItem*> childrenList = m_headRemoteVariabel->takeChildren();
         // Remove children
         for (qsizetype i = 0; i < childrenList.size(); ++i) {
           QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
           delete item;
         }
         childrenList.clear();
-        renderRegisters(m_headRegister);
+        renderRemoteVariables(m_headRemoteVariabel);
       }
-    } break;
-
-    case mdf_type_remotevar: {
-      // Should not come here. But if we do don't do an anything. :))))
     } break;
 
     case mdf_type_remotevar_item: {
-      CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
-      if (nullptr == preg) {
+      CMDF_RemoteVariable* pvar = (CMDF_RemoteVariable*)pItem->getObject();
+      if (nullptr == pvar) {
         int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
-        spdlog::error("MDF register edit - object has nullptr");
+        spdlog::error("MDF remotevar edit - object has nullptr");
         return;
       }
-      CDlgMdfRegister dlg(this);
-      dlg.initDialogData(&m_mdf, preg, selectedIndex);
+      CDlgMdfRemoteVar dlg(this);
+      dlg.initDialogData(&m_mdf, pvar, selectedIndex);
       if (QDialog::Accepted == dlg.exec()) {
         pItem->setExpanded(true);
         QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
@@ -5991,20 +6007,21 @@ CFrmMdf::editRemoteVariable(void)
           delete item;
         }
         childrenList.clear();
-        pItem->setText(0, QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
-        renderRegisterInfo(pItem, preg);
+        QString str = QString("Remote variable: %1").arg(pvar->getName().c_str());
+        pItem->setText(0, str);
+        renderRemoteVariableInfo(pItem, pvar);
       }
     } break;
 
     case mdf_type_remotevar_sub_item: {
-      CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
-      if (nullptr == preg) {
+      CMDF_RemoteVariable* prvar = (CMDF_RemoteVariable*)pItem->getObject();
+      if (nullptr == prvar) {
         int ret = QMessageBox::critical(this, tr("APPNAME"), tr("Internal error: Invalid firmware object"));
-        spdlog::error("MDF register edit - object has nullptr");
+        spdlog::error("MDF remote variable edit - object has nullptr");
         return;
       }
-      CDlgMdfRegister dlg(this);
-      dlg.initDialogData(&m_mdf, preg, selectedIndex);
+      CDlgMdfRemoteVar dlg(this);
+      dlg.initDialogData(&m_mdf, prvar, selectedIndex);
       if (QDialog::Accepted == dlg.exec()) {
         pItemHead->setExpanded(true);
         QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
@@ -6015,8 +6032,8 @@ CFrmMdf::editRemoteVariable(void)
           delete item;
         }
         childrenList.clear();
-        pItemHead->setText(0, QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
-        renderRegisterInfo(pItemHead, preg);
+        pItemHead->setText(0, QString("%1  %2").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(prvar->getName().c_str()));
+        renderRemoteVariableInfo(pItemHead, prvar);
       }
     } break;
   }
