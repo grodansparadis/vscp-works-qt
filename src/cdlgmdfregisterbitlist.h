@@ -57,7 +57,13 @@ public:
     Init dialog data
     @param pmdf Pointer to MDF object
   */
-  void initDialogData(CMDF_Register* preg);
+  void initDialogData(CMDF_Object* preg, mdf_record_type type = mdf_type_register);
+
+  /*!
+    Get bit list for set type
+    @return pointer to bitlist or nullpointer if invalid type
+  */
+  std::deque<CMDF_Bit*>* getBits(void);
 
   /*!
     Fill in register bit items
@@ -72,8 +78,23 @@ public:
   */
   uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false)
   {
-    uint8_t result               = 0;
-    std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+    uint8_t result = 0;
+    std::deque<CMDF_Bit*>* pbits;
+
+    // pbits = m_preg->getListBits();
+    if (mdf_type_register == m_type) {
+      pbits = ((CMDF_Register*)m_pobj)->getListBits();
+    }
+    else if (mdf_type_remotevar == m_type) {
+      pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
+    }
+    else if (mdf_type_alarm == m_type) {
+      pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+    }
+    else {
+      return 0;
+    }
+
     for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
       CMDF_Bit* pbit = *it;
       // Don't test the edited bit of in edit mode
@@ -111,7 +132,11 @@ private:
   Ui::CDlgMdfRegisterBitList* ui;
 
   // MDF
-  CMDF_Register* m_preg;
+  CMDF_Object* m_pobj;
+  // CMDF_Register* m_preg;
+
+  // Object type
+  mdf_record_type m_type;
 };
 
 #endif // CDLGMDFREGISTERBITLIST_H

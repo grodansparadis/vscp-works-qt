@@ -67,8 +67,8 @@
 #include "cdlgmdfregisterlist.h"
 #include "cdlgmdfregistervalue.h"
 #include "cdlgmdfregistervaluelist.h"
-#include "cdlgmdfremotevarlist.h"
 #include "cdlgmdfremotevar.h"
+#include "cdlgmdfremotevarlist.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -443,7 +443,7 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_alarm:
-        menu->addAction(QString(tr("Alarm")), this, SLOT(loadSelectedMdf()));
+        //menu->addAction(QString(tr("Edit alarm bits")), this, SLOT(editRegisterBit()));
         break;
 
       case mdf_type_address:
@@ -1268,7 +1268,6 @@ CFrmMdf::renderRemoteVariables(QTreeWidgetItem* pParent)
     }
   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // renderManufacturerEmail
@@ -5559,6 +5558,24 @@ CFrmMdf::deleteRegister(void)
   // m_headFileSetupScript->removeChild(pItemHead);
 }
 
+mdf_record_type
+getTopParentType(QTreeWidgetItem* pcurrentitem)
+{
+  mdf_record_type type   = mdf_type_unknown;
+  QTreeWidgetItem* pItem = pcurrentitem;
+
+  while (nullptr != pItem) {
+    type = ((QMdfTreeWidgetItem*)pItem)->getObjectType();
+    qDebug() << static_cast<int>(((QMdfTreeWidgetItem*)pItem)->getObjectType());
+    pItem = pItem->parent();
+    if ((nullptr != pItem) && (1 == ((QMdfTreeWidgetItem*)pItem)->getObjectType())) {
+      return type;
+    }
+  }
+
+  return static_cast<mdf_record_type>(0);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // editRegisterBit
 //
@@ -5566,9 +5583,14 @@ CFrmMdf::deleteRegister(void)
 void
 CFrmMdf::editRegisterBit(void)
 {
-  QMdfTreeWidgetItem* pItem     = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
-  QMdfTreeWidgetItem* pItemHead = (QMdfTreeWidgetItem*)pItem->parent();
-  uint16_t selectedIndex        = pItem->getElementIndex();
+  QMdfTreeWidgetItem* pItem             = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  if (nullptr == pItem) return;
+  QMdfTreeWidgetItem* pItemHead         = (nullptr != pItem) ? (QMdfTreeWidgetItem*)pItem->parent() : nullptr;
+  if (nullptr == pItemHead) return;
+  QMdfTreeWidgetItem* pItemHeadHead     = (nullptr != pItemHead) ? (QMdfTreeWidgetItem*)pItemHead->parent() : nullptr;
+  if (nullptr == pItemHeadHead) return;
+  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+  uint16_t selectedIndex                = pItem->getElementIndex();
 
   // Item must be selected
   if (nullptr == pItem) {
@@ -5583,22 +5605,64 @@ CFrmMdf::editRegisterBit(void)
     return;
   }
 
+  bool bAlarm = false;
+  if ((nullptr != pItemHead) && (mdf_type_alarm == pItemHead->getObjectType())) {
+    bAlarm = true;
+  }
+
+  if ((nullptr != pItemHeadHead) && (mdf_type_alarm == pItemHeadHead->getObjectType())) {
+    bAlarm = true;
+  }
+
   switch (pItem->getObjectType()) {
 
     case mdf_type_bit: {
-      CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
-      CDlgMdfRegisterBitList dlg(this);
-      dlg.initDialogData(preg);
-      if (QDialog::Accepted == dlg.exec()) {
-        // Redraw all rbit items - We do not know changes
-        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
-        // Remove children
-        for (qsizetype i = 0; i < childrenList.size(); ++i) {
-          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
-          delete item;
+      if ((nullptr != pItemHeadHeadHead) && (mdf_type_register == pItemHeadHeadHead->getObjectType())) {
+        CMDF_Register* preg = (CMDF_Register*)pItem->getObject();
+        CDlgMdfRegisterBitList dlg(this);
+        dlg.initDialogData(preg, mdf_type_register);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderBits(pItem, *preg->getListBits(), true);
         }
-        childrenList.clear();
-        renderBits(pItem, *preg->getListBits(), true);
+      }
+      else if ((nullptr != pItemHeadHead) && (mdf_type_remotevar == pItemHeadHead->getObjectType())) {
+        CMDF_RemoteVariable* prvar = (CMDF_RemoteVariable*)pItem->getObject();
+        CDlgMdfRegisterBitList dlg(this);
+        dlg.initDialogData(prvar, mdf_type_remotevar);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderBits(pItem, *prvar->getListBits(), true);
+        }
+      }
+      else if ((nullptr != pItemHead) && (mdf_type_alarm == pItemHead->getObjectType())) {
+        CDlgMdfRegisterBitList dlg(this);
+        dlg.initDialogData(&m_mdf, mdf_type_alarm);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderBits(pItem, *m_mdf.getAlarmList(), true);
+        }
       }
     } break;
 
@@ -5610,7 +5674,7 @@ CFrmMdf::editRegisterBit(void)
         return;
       }
       CDlgMdfRegisterBit dlg(this);
-      dlg.initDialogData(pbit, 0);
+      dlg.initDialogData(pbit, 0, getTopParentType(pItem));
       if (QDialog::Accepted == dlg.exec()) {
         pItemHead->setExpanded(true);
         QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
@@ -5639,7 +5703,7 @@ CFrmMdf::editRegisterBit(void)
         return;
       }
       CDlgMdfRegisterBit dlg(this);
-      dlg.initDialogData(pbit, selectedIndex);
+      dlg.initDialogData(pbit, selectedIndex, getTopParentType(pItem));
       if (QDialog::Accepted == dlg.exec()) {
         pItemHead->setExpanded(true);
         QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();

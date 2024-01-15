@@ -47,7 +47,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QListWidget" name="listRegisterBit"/>
+         <widget class="QListWidget" name="listBits"/>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">

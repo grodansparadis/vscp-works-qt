@@ -57,7 +57,8 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgMdfRegisterBitList)
 {
-  m_preg = nullptr;
+  m_pobj = nullptr;
+  m_type = mdf_type_unknown;
 
   ui->setupUi(this);
 
@@ -68,7 +69,7 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
   connect(ui->btnDupRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::dupRegisterBit);
   connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::deleteRegisterBit);
 
-  connect(ui->listRegisterBit, &QListWidget::doubleClicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
+  connect(ui->listBits, &QListWidget::doubleClicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
 
   this->setFixedSize(this->size());
 }
@@ -87,21 +88,53 @@ CDlgMdfRegisterBitList::~CDlgMdfRegisterBitList()
 //
 
 void
-CDlgMdfRegisterBitList::initDialogData(CMDF_Register* preg)
+CDlgMdfRegisterBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
 {
   QString str;
 
-  if (nullptr == preg) {
-    QMessageBox::critical(this, tr("MDF register bit information"), tr("Invalid MDF register object"));
-    spdlog::error("MDF register information - Invalid MDF register object");
+  if (nullptr == pobj) {
+    QMessageBox::critical(this, tr("MDF bit information"), tr("Invalid MDF object"));
+    spdlog::error("MDF bit information - Invalid MDF object");
     return;
   }
 
-  // Save register pointer and page
-  m_preg = preg;
+  // Save object pointer and type
+  m_pobj = pobj;
+  m_type = type;
+
+  // Disable items that are not used
+  if (mdf_type_register == type) {
+    setWindowTitle("Register bit definitionsöööö");
+  }
+  else if (mdf_type_remotevar == type) {
+    setWindowTitle("Remote variable bit definitions");
+  }
+  else if (mdf_type_alarm == type) {
+    setWindowTitle("Alarm bit definitions");
+  }
 
   // m_pmdf->getRegisterMap(m_page, pages);
   renderBitItems();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBits
+//
+
+std::deque<CMDF_Bit*>*
+CDlgMdfRegisterBitList::getBits(void)
+{
+  if (mdf_type_register == m_type) {
+    return ((CMDF_Register*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_remotevar == m_type) {
+    return ((CMDF_RemoteVariable*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_alarm == m_type) {
+    return ((CMDF*)m_pobj)->getAlarmListBits();
+  }
+
+  return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,14 +144,26 @@ CDlgMdfRegisterBitList::initDialogData(CMDF_Register* preg)
 void
 CDlgMdfRegisterBitList::renderBitItems(void)
 {
+  std::deque<CMDF_Bit*>* pbits = nullptr;
   std::map<uint32_t, CMDF_Register*> pages;
 
-  if (nullptr == m_preg) {
+  if (nullptr == m_pobj) {
     return;
   }
 
-  ui->listRegisterBit->clear();
-  std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+  ui->listBits->clear();
+  if (mdf_type_register == m_type) {
+    pbits = ((CMDF_Register*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_remotevar == m_type) {
+    pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_alarm == m_type) {
+    pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+  }
+  else {
+    return;
+  }
 
   // If no enteries there is nothing to do
   if (!pbits->size()) {
@@ -130,9 +175,9 @@ CDlgMdfRegisterBitList::renderBitItems(void)
     CMDF_Bit* pbit = *it;
     if (nullptr != pbit) {
       QString str = QString("Bit %1(%2)-- %3").arg(pbit->getPos()).arg(pbit->getWidth()).arg(pbit->getName().c_str());
-      ui->listRegisterBit->addItem(str);
+      ui->listBits->addItem(str);
       // Set data to register index
-      ui->listRegisterBit->item(ui->listRegisterBit->count() - 1)->setData(Qt::UserRole, idx);
+      ui->listBits->item(ui->listBits->count() - 1)->setData(Qt::UserRole, idx);
     }
     idx++;
   }
@@ -146,6 +191,8 @@ void
 CDlgMdfRegisterBitList::addRegisterBit(void)
 {
   bool ok;
+  std::deque<CMDF_Bit*>* pbits;
+
   CMDF_Bit* pbitnew = new CMDF_Bit();
   if (nullptr == pbitnew) {
     QMessageBox::critical(this, tr("MDF register bit information"), tr("Memory problem"));
@@ -154,7 +201,7 @@ CDlgMdfRegisterBitList::addRegisterBit(void)
   }
 
   // Save the selected row
-  int idx = ui->listRegisterBit->currentRow();
+  int idx = ui->listBits->currentRow();
 
   CDlgMdfRegisterBit dlg(this);
   dlg.initDialogData(pbitnew);
@@ -169,7 +216,19 @@ addbitdlg:
       QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
       goto addbitdlg;
     }
-    std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+    if (mdf_type_register == m_type) {
+      pbits = ((CMDF_Register*)m_pobj)->getListBits();
+    }
+    else if (mdf_type_remotevar == m_type) {
+      pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
+    }
+    else if (mdf_type_alarm == m_type) {
+      pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+    }
+    else {
+      return;
+    }
+
     pbits->push_back(pbitnew);
     renderBitItems();
   }
@@ -186,17 +245,31 @@ void
 CDlgMdfRegisterBitList::editRegisterBit(void)
 {
   bool ok;
+  CMDF_Bit* pbit = nullptr;
 
-  if (-1 != ui->listRegisterBit->currentRow()) {
+  if (-1 != ui->listBits->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegisterBit->currentRow();
+    int idx = ui->listBits->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
-    CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    QListWidgetItem* pitem = ui->listBits->currentItem();
+    // CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+
+    if (mdf_type_register == m_type) {
+      pbit = ((CMDF_Register*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    }
+    else if (mdf_type_remotevar == m_type) {
+      pbit = ((CMDF_RemoteVariable*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    }
+    else if (mdf_type_alarm == m_type) {
+      pbit = ((CMDF*)m_pobj)->getAlarmListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    }
+    else {
+      return;
+    }
 
     CDlgMdfRegisterBit dlg(this);
-    dlg.initDialogData(pbit);
+    dlg.initDialogData(pbit, 0, m_type);
 
   editbitdlg:
 
@@ -206,9 +279,9 @@ CDlgMdfRegisterBitList::editRegisterBit(void)
         QMessageBox::warning(this, tr("Edit bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
         goto editbitdlg;
       }
-      ui->listRegisterBit->clear();
+      ui->listBits->clear();
       renderBitItems();
-      ui->listRegisterBit->setCurrentRow(idx);
+      ui->listBits->setCurrentRow(idx);
     }
   }
   else {
@@ -223,12 +296,12 @@ CDlgMdfRegisterBitList::editRegisterBit(void)
 void
 CDlgMdfRegisterBitList::dupRegisterBit(void)
 {
-  if (-1 != ui->listRegisterBit->currentRow()) {
+  if (-1 != ui->listBits->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegisterBit->currentRow();
+    int idx = ui->listBits->currentRow();
 
-    //   QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
+    //   QListWidgetItem* pitem = ui->listBits->currentItem();
     //   CMDF_Bit* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
 
     //   CMDF_Bit* pregnew = new CMDF_Bit();
@@ -252,10 +325,10 @@ CDlgMdfRegisterBitList::dupRegisterBit(void)
     //     if (m_page == pregnew->getPage()) {
     //       m_registersSet.insert(pregnew->getOffset());
     //     }
-    //     ui->listRegisterBit->clear();
+    //     ui->listBits->clear();
     //     renderRegisterItems();
     //     if (-1 != idx) {
-    //       ui->listRegisterBit->setCurrentRow(idx);
+    //       ui->listBits->setCurrentRow(idx);
     //     }
     //     // Warn if page is not the same as for dialog
     //     if (pregnew->getPage() != m_page) {
@@ -280,30 +353,52 @@ CDlgMdfRegisterBitList::dupRegisterBit(void)
 void
 CDlgMdfRegisterBitList::deleteRegisterBit(void)
 {
-  if (-1 != ui->listRegisterBit->currentRow()) {
+  CMDF_Bit* pbit;
+  std::deque<CMDF_Bit*>::iterator it;
+  std::deque<CMDF_Bit*>* pbits;
+
+  if (mdf_type_register == m_type) {
+    pbits = ((CMDF_Register*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_remotevar == m_type) {
+    pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
+  }
+  else if (mdf_type_alarm == m_type) {
+    pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+  }
+  else {
+    return;
+  }
+
+  if (-1 != ui->listBits->currentRow()) {
 
     // Save the row
-    int idx = ui->listRegisterBit->currentRow();
+    int idx = ui->listBits->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
-    CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    QListWidgetItem* pitem = ui->listBits->currentItem();
+    // CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    pbit = pbits->at(pitem->data(Qt::UserRole).toUInt());
 
-    std::deque<CMDF_Bit*>::iterator it = m_preg->getListBits()->begin() + pitem->data(Qt::UserRole).toUInt();
-    m_preg->getListBits()->erase(it);
+    // std::deque<CMDF_Bit*>::iterator it = m_preg->getListBits()->begin() + pitem->data(Qt::UserRole).toUInt();
 
-    ui->listRegisterBit->clear();
+    it = pbits->begin() + pitem->data(Qt::UserRole).toUInt();
+    pbits->erase(it);
+
+    // m_preg->getListBits()->erase(it);
+
+    ui->listBits->clear();
     renderBitItems();
     int sel = idx;
     if (0 == idx) {
       sel = 0;
     }
-    else if (m_preg->getListBits()->size() == idx) {
-      sel = m_preg->getListBits()->size() - 1;
+    else if (pbits->size() == idx) {
+      sel = pbits->size() - 1;
     }
     else {
       sel = idx + 1;
     }
-    ui->listRegisterBit->setCurrentRow(sel);
+    ui->listBits->setCurrentRow(sel);
   }
 }
 
@@ -315,26 +410,8 @@ void
 CDlgMdfRegisterBitList::accept()
 {
   std::string str;
-  if (nullptr != m_preg) {
-
-    // str = ui->editName->text().toStdString();
-    //  m_pmdf->setName(str);
-
-    // str = ui->editModel->text().toStdString();
-    // m_pmdf->setModuleModel(str);
-
-    // m_pmdf->setModuleLevel(ui->comboModuleLevel->currentIndex());
-
-    // str = ui->editVersion->text().toStdString();
-    // m_pmdf->setModuleVersion(str);
-
-    // str = ui->editDate->text().toStdString();
-    // m_pmdf->setModuleChangeDate(str);
-
-    // m_pmdf->setModuleBufferSize(ui->editBufferSize->value());
-
-    // str = ui->editCopyright->text().toStdString();
-    // m_pmdf->setModuleCopyright(str);
+  if (nullptr != m_pobj) {
+    ;
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

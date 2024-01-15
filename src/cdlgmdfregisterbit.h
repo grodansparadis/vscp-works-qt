@@ -68,7 +68,7 @@ public:
     @param index Selected file item
 
   */
-  void initDialogData(CMDF_Bit* pbit, int index = 0);
+  void initDialogData(CMDF_Bit* pbit, int index = 0, mdf_record_type type = mdf_type_register);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -117,6 +117,12 @@ private:
 
   /// Pointer to bit information
   CMDF_Bit* m_pbit;
+
+  /// Selected field in dialog
+  int m_index;
+
+  /// MDF record owner type we are editing
+  mdf_record_type m_type;
 };
 
 #endif // CDLGMDFREGISTERBIT_H

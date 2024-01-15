@@ -63,7 +63,8 @@ CDlgMdfRegisterBit::CDlgMdfRegisterBit(QWidget* parent)
 
   // m_type = mdf_type_unknown;
   m_pbit = nullptr;
-
+  m_index = 0;
+  m_type = mdf_type_unknown;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   setInitialFocus();
@@ -84,7 +85,7 @@ CDlgMdfRegisterBit::~CDlgMdfRegisterBit()
 //
 
 void
-CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index)
+CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
 {
   QString str;
 
@@ -94,6 +95,8 @@ CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index)
   }
 
   m_pbit = pbit;
+  m_index = index;
+  m_type = type;
 
   setName(pbit->getName().c_str());
   setPos(pbit->getPos());
@@ -136,6 +139,27 @@ CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index)
       ui->editName->setFocus();
       break;
   }
+
+  if (mdf_type_register == type) {
+    setWindowTitle("Register bit definitions");
+  }
+  else if (mdf_type_remotevar == type) {
+    setWindowTitle("Remote variable bit definitions");
+  }
+  else if (mdf_type_alarm == type) {
+    setWindowTitle("Alarm bit definitions");
+    ui->spinWidth->setValue(1);
+    ui->spinWidth->setEnabled(false);
+    ui->spinDefault->setValue(0);
+    ui->spinDefault->setEnabled(false);
+    ui->spinMin->setValue(0);
+    ui->spinMin->setEnabled(false);
+    ui->spinMax->setValue(1);
+    ui->spinMax->setEnabled(false);
+    ui->comboAccess->setCurrentIndex(3);
+    ui->comboAccess->setEnabled(false);
+  }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
