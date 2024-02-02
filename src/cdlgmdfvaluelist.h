@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERVALUELIST_H
-#define CDLGMDFREGISTERVALUELIST_H
+#ifndef CDLGMDFVALUELIST_H
+#define CDLGMDFVALUELIST_H
 
 #include <mdf.h>
 #include <vscpworks.h>
@@ -37,15 +37,15 @@
 #include <QDialog>
 
 namespace Ui {
-class CDlgMdfRegisterValueList;
+class CDlgMdfValueList;
 }
 
-class CDlgMdfRegisterValueList : public QDialog {
+class CDlgMdfValueList : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CDlgMdfRegisterValueList(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterValueList();
+  explicit CDlgMdfValueList(QWidget* parent = nullptr);
+  ~CDlgMdfValueList();
 
   /*!
       Set edit mode.
@@ -108,7 +108,7 @@ public slots:
   void deleteRegisterValue(void);
 
 private:
-  Ui::CDlgMdfRegisterValueList* ui;
+  Ui::CDlgMdfValueList* ui;
 
   // MDF
   CMDF_Register* m_preg;

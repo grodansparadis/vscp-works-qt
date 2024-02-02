@@ -1,4 +1,4 @@
-// cdlgmdfregistervaluelist.cpp
+// cdlgmdfvaluelist.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -35,9 +35,9 @@
 
 #include <vscpworks.h>
 
-#include "cdlgmdfregistervalue.h"
-#include "cdlgmdfregistervaluelist.h"
-#include "ui_cdlgmdfregistervaluelist.h"
+#include "cdlgmdfvalue.h"
+#include "cdlgmdfvaluelist.h"
+#include "ui_cdlgmdfvaluelist.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -53,9 +53,9 @@
 // CTor
 //
 
-CDlgMdfRegisterValueList::CDlgMdfRegisterValueList(QWidget* parent)
+CDlgMdfValueList::CDlgMdfValueList(QWidget* parent)
   : QDialog(parent)
-  , ui(new Ui::CDlgMdfRegisterValueList)
+  , ui(new Ui::CDlgMdfValueList)
 {
   m_preg = nullptr;
 
@@ -63,12 +63,12 @@ CDlgMdfRegisterValueList::CDlgMdfRegisterValueList(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  connect(ui->btnAddRegisterValue, &QToolButton::clicked, this, &CDlgMdfRegisterValueList::addRegisterValue);
-  connect(ui->btnEditRegisterValue, &QToolButton::clicked, this, &CDlgMdfRegisterValueList::editRegisterValue);
-  connect(ui->btnDupRegisterValue, &QToolButton::clicked, this, &CDlgMdfRegisterValueList::dupRegisterValue);
-  connect(ui->btnDelRegisterValue, &QToolButton::clicked, this, &CDlgMdfRegisterValueList::deleteRegisterValue);
+  connect(ui->btnAddRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::addRegisterValue);
+  connect(ui->btnEditRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::editRegisterValue);
+  connect(ui->btnDupRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::dupRegisterValue);
+  connect(ui->btnDelRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::deleteRegisterValue);
 
-  connect(ui->listRegisterValues, &QListWidget::doubleClicked, this, &CDlgMdfRegisterValueList::editRegisterValue);
+  connect(ui->listRegisterValues, &QListWidget::doubleClicked, this, &CDlgMdfValueList::editRegisterValue);
 
   this->setFixedSize(this->size());
 }
@@ -77,7 +77,7 @@ CDlgMdfRegisterValueList::CDlgMdfRegisterValueList(QWidget* parent)
 // DTor
 //
 
-CDlgMdfRegisterValueList::~CDlgMdfRegisterValueList()
+CDlgMdfValueList::~CDlgMdfValueList()
 {
   delete ui;
 }
@@ -87,7 +87,7 @@ CDlgMdfRegisterValueList::~CDlgMdfRegisterValueList()
 //
 
 void
-CDlgMdfRegisterValueList::initDialogData(CMDF_Register* preg)
+CDlgMdfValueList::initDialogData(CMDF_Register* preg)
 {
   QString str;
 
@@ -109,7 +109,7 @@ CDlgMdfRegisterValueList::initDialogData(CMDF_Register* preg)
 //
 
 void
-CDlgMdfRegisterValueList::renderValueItems(void)
+CDlgMdfValueList::renderValueItems(void)
 {
   if (nullptr == m_preg) {
     return;
@@ -141,7 +141,7 @@ CDlgMdfRegisterValueList::renderValueItems(void)
 //
 
 void
-CDlgMdfRegisterValueList::addRegisterValue(void)
+CDlgMdfValueList::addRegisterValue(void)
 {
   bool ok;
   CMDF_Value* pvaluenew = new CMDF_Value();
@@ -154,7 +154,7 @@ CDlgMdfRegisterValueList::addRegisterValue(void)
   // Save the selected row
   int idx = ui->listRegisterValues->currentRow();
 
-  CDlgMdfRegisterValue dlg(this);
+  CDlgMdfValue dlg(this);
   dlg.initDialogData(pvaluenew);
   dlg.setWindowTitle(tr("Add register value"));
 
@@ -181,7 +181,7 @@ addbitdlg:
 //
 
 void
-CDlgMdfRegisterValueList::editRegisterValue(void)
+CDlgMdfValueList::editRegisterValue(void)
 {
   bool ok;
 
@@ -193,7 +193,7 @@ CDlgMdfRegisterValueList::editRegisterValue(void)
     QListWidgetItem* pitem = ui->listRegisterValues->currentItem();
     CMDF_Value* pvalue         = m_preg->getListValues()->at(pitem->data(Qt::UserRole).toUInt());
 
-    CDlgMdfRegisterValue dlg(this);
+    CDlgMdfValue dlg(this);
     dlg.initDialogData(pvalue);
 
   editvaluedlg:
@@ -219,7 +219,7 @@ CDlgMdfRegisterValueList::editRegisterValue(void)
 //
 
 void
-CDlgMdfRegisterValueList::dupRegisterValue(void)
+CDlgMdfValueList::dupRegisterValue(void)
 {
   if (-1 != ui->listRegisterValues->currentRow()) {
 
@@ -276,7 +276,7 @@ CDlgMdfRegisterValueList::dupRegisterValue(void)
 //
 
 void
-CDlgMdfRegisterValueList::deleteRegisterValue(void)
+CDlgMdfValueList::deleteRegisterValue(void)
 {
   if (-1 != ui->listRegisterValues->currentRow()) {
 
@@ -310,7 +310,7 @@ CDlgMdfRegisterValueList::deleteRegisterValue(void)
 //
 
 void
-CDlgMdfRegisterValueList::accept()
+CDlgMdfValueList::accept()
 {
   std::string str;
   if (nullptr != m_preg) {

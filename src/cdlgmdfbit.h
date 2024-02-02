@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERBIT_H
-#define CDLGMDFREGISTERBIT_H
+#ifndef CDLGMDFBIT_H
+#define CDLGMDFBIT_H
 
 #include <mdf.h>
 #include <vscpworks.h>
@@ -35,16 +35,16 @@
 #include <QDialog>
 
 namespace Ui {
-class CDlgMdfRegisterBit;
+class CDlgMdfBit;
 }
 
-class CDlgMdfRegisterBit : public QDialog {
+class CDlgMdfBit : public QDialog {
   Q_OBJECT
 
 public:
 public:
-  explicit CDlgMdfRegisterBit(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterBit();
+  explicit CDlgMdfBit(QWidget* parent = nullptr);
+  ~CDlgMdfBit();
 
   static const int index_name    = 0;
   static const int index_pos     = 1;
@@ -110,7 +110,7 @@ public slots:
   void accept(void);
 
 private:
-  Ui::CDlgMdfRegisterBit* ui;
+  Ui::CDlgMdfBit* ui;
 
   /// Pointer to MDF
   CMDF* m_pmdf;

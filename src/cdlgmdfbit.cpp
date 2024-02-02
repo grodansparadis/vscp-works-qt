@@ -35,8 +35,8 @@
 
 #include <vscpworks.h>
 
-#include "cdlgmdfregisterbit.h"
-#include "ui_cdlgmdfregisterbit.h"
+#include "cdlgmdfbit.h"
+#include "ui_cdlgmdfbit.h"
 
 #include <QColorDialog>
 #include <QDate>
@@ -49,15 +49,15 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-const char CDlgMdfRegisterBit::pre_str_registerbit[] = "Register bit: ";
+const char CDlgMdfBit::pre_str_registerbit[] = "Register bit: ";
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
 //
 
-CDlgMdfRegisterBit::CDlgMdfRegisterBit(QWidget* parent)
+CDlgMdfBit::CDlgMdfBit(QWidget* parent)
   : QDialog(parent)
-  , ui(new Ui::CDlgMdfRegisterBit)
+  , ui(new Ui::CDlgMdfBit)
 {
   ui->setupUi(this);
 
@@ -75,7 +75,7 @@ CDlgMdfRegisterBit::CDlgMdfRegisterBit(QWidget* parent)
 // DTor
 //
 
-CDlgMdfRegisterBit::~CDlgMdfRegisterBit()
+CDlgMdfBit::~CDlgMdfBit()
 {
   delete ui;
 }
@@ -85,7 +85,7 @@ CDlgMdfRegisterBit::~CDlgMdfRegisterBit()
 //
 
 void
-CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
+CDlgMdfBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
 {
   QString str;
 
@@ -167,7 +167,7 @@ CDlgMdfRegisterBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type ty
 //
 
 void
-CDlgMdfRegisterBit::setInitialFocus(void)
+CDlgMdfBit::setInitialFocus(void)
 {
   // ui->editName->setFocus();
 }
@@ -177,13 +177,13 @@ CDlgMdfRegisterBit::setInitialFocus(void)
 // ----------------------------------------------------------------------------
 
 QString
-CDlgMdfRegisterBit::getName(void)
+CDlgMdfBit::getName(void)
 {
   return ui->editName->text();
 };
 
 void
-CDlgMdfRegisterBit::setName(const QString& name)
+CDlgMdfBit::setName(const QString& name)
 {
   ui->editName->setText(name);
 };
@@ -191,13 +191,13 @@ CDlgMdfRegisterBit::setName(const QString& name)
 // -----------------------------------------------------------------------
 
 uint8_t
-CDlgMdfRegisterBit::getPos(void)
+CDlgMdfBit::getPos(void)
 {
   return ui->spinPos->value();
 }
 
 void
-CDlgMdfRegisterBit::setPos(uint8_t span)
+CDlgMdfBit::setPos(uint8_t span)
 {
   ui->spinPos->setValue(span);
 }
@@ -206,13 +206,13 @@ CDlgMdfRegisterBit::setPos(uint8_t span)
 // -----------------------------------------------------------------------
 
 uint8_t
-CDlgMdfRegisterBit::getWidth(void)
+CDlgMdfBit::getWidth(void)
 {
   return ui->spinWidth->value();
 }
 
 void
-CDlgMdfRegisterBit::setWidth(uint8_t span)
+CDlgMdfBit::setWidth(uint8_t span)
 {
   ui->spinWidth->setValue(span);
 }
@@ -220,13 +220,13 @@ CDlgMdfRegisterBit::setWidth(uint8_t span)
 // -----------------------------------------------------------------------
 
 uint8_t
-CDlgMdfRegisterBit::getDefault(void)
+CDlgMdfBit::getDefault(void)
 {
   return ui->spinDefault->value();
 }
 
 void
-CDlgMdfRegisterBit::setDefault(uint8_t span)
+CDlgMdfBit::setDefault(uint8_t span)
 {
   ui->spinDefault->setValue(span);
 }
@@ -234,13 +234,13 @@ CDlgMdfRegisterBit::setDefault(uint8_t span)
 // -----------------------------------------------------------------------
 
 uint8_t
-CDlgMdfRegisterBit::getMin(void)
+CDlgMdfBit::getMin(void)
 {
   return ui->spinMin->value();
 }
 
 void
-CDlgMdfRegisterBit::setMin(uint8_t min)
+CDlgMdfBit::setMin(uint8_t min)
 {
   ui->spinMin->setValue(min);
 }
@@ -248,13 +248,13 @@ CDlgMdfRegisterBit::setMin(uint8_t min)
 // -----------------------------------------------------------------------
 
 uint8_t
-CDlgMdfRegisterBit::getMax(void)
+CDlgMdfBit::getMax(void)
 {
   return ui->spinMax->value();
 }
 
 void
-CDlgMdfRegisterBit::setMax(uint8_t span)
+CDlgMdfBit::setMax(uint8_t span)
 {
   ui->spinMax->setValue(span);
 }
@@ -262,13 +262,13 @@ CDlgMdfRegisterBit::setMax(uint8_t span)
 // -----------------------------------------------------------------------
 
 mdf_access_mode
-CDlgMdfRegisterBit::getAccess(void)
+CDlgMdfBit::getAccess(void)
 {
   return static_cast<mdf_access_mode>(ui->comboAccess->currentIndex());
 }
 
 void
-CDlgMdfRegisterBit::setAccess(uint8_t access)
+CDlgMdfBit::setAccess(uint8_t access)
 {
   if (access <= MDF_REG_ACCESS_READ_WRITE) {
     ui->comboAccess->setCurrentIndex(access);
@@ -282,7 +282,7 @@ CDlgMdfRegisterBit::setAccess(uint8_t access)
 //
 
 void
-CDlgMdfRegisterBit::accept()
+CDlgMdfBit::accept()
 {
   std::string str;
   if (nullptr != m_pbit) {

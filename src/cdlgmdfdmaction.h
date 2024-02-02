@@ -1,4 +1,4 @@
-// cdlgmdfregistervalue.h
+// cdlgmdfaction.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,73 +26,89 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERVALUE_H
-#define CDLGMDFREGISTERVALUE_H
+#ifndef CDLGMDFDM_ACTIONS_H
+#define CDLGMDFDM_ACTIONS_H
 
-#include <mdf.h>
 #include <vscpworks.h>
+#include <mdf.h>
 
 #include <QDialog>
 
+
+
 namespace Ui {
-class CDlgMdfRegisterValue;
+class CDlgMdfDmAction;
 }
 
-class CDlgMdfRegisterValue : public QDialog {
+class CDlgMdfDmAction : public QDialog {
   Q_OBJECT
 
 public:
-public:
-  explicit CDlgMdfRegisterValue(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterValue();
+  explicit CDlgMdfDmAction(QWidget* parent = nullptr);
+  ~CDlgMdfDmAction();
 
-  static const int index_name    = 0;
-  static const int index_value   = 1;
+  static const int index_code = 0;
+  static const int index_name = 1;
 
-
-  static const char pre_str_registerbit[];
-
-  /*!
-      Set inital focus to description
-  */
-  void setInitialFocus(void);
+  static const char pre_str_dm_action[];
 
   /*!
     Init dialog data
     @param CMDF *pmdf Pointer to MDF
-    @param pbit Pointer to MDF bit object
+    @param pmdfobject Pointer to MDF object
     @param index Selected file item
-
+      
   */
-  void initDialogData(CMDF_Value* pvalue, int index = 0);
+  void initDialogData(CMDF *pmdf, CMDF_Action* paction, int index = 0);
+
+  /*!
+    Only enable parameter list
+  */
+  void setReadOnly(void);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
   // ----------------------------------------------------------------------------
 
+  // code
+  uint8_t getCode(void);
+  void setCode(uint8_t code);
+
   // name
   QString getName(void);
   void setName(const QString& name);
 
-  // value
-  QString getValue(void);
-  void setValue(const QString& value);
+  // Render available actions
+  void renderActionParams(void);
 
 public slots:
+
+  // Edit action item
+  void editActionParam(void);
+
+  // Add action item
+  void addActionParam(void);
+
+  // Duplicate action item
+  void dupActionParam(void);
+
+  // Delete action item
+  void deleteActionParam(void);
 
   /*!
     Accept dialog data and write to register
   */
   void accept(void);
 
+
 private:
-  Ui::CDlgMdfRegisterValue* ui;
+  Ui::CDlgMdfDmAction* ui;
 
   /// Pointer to MDF
-  CMDF* m_pmdf;
+  CMDF *m_pmdf;
 
-  /// Pointer to bit information
-  CMDF_Value* m_pvalue;
+  CMDF_Action* m_paction;
+
 };
 
-#endif // CDlgMdfRegisterValue_H
+#endif // CDLGMDFDM_ACTIONS_H

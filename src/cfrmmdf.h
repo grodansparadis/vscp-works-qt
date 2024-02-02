@@ -215,6 +215,13 @@ public slots:
   */
   void showContactDialog(QMdfTreeWidgetItem* pItem, mdf_dlg_contact_type type, QString title);
 
+  /*!
+    Get top item MDF type for a sub MDF item
+    @param pcurrentitem Pointer to item to test
+    @return MDF type for top item or mdf_type_unknown if no top item found.
+  */
+  mdf_record_type getTopParentType(QTreeWidgetItem* pcurrentitem);
+
   /// Edit phone/fax/email/web/social data
   void editContact(void);
 
@@ -239,23 +246,32 @@ public slots:
   /// Delete register item
   void deleteRegister(void);
 
-  /// Edit register info
-  void editRegisterBit(void);
+  /// Edit bit
+  void editBitDefinition(void);
 
-  /// Delete register item
-  void deleteRegisterBit(void);
+  /// Delete bit
+  void deleteBitDefinition(void);
 
-  /// Edit register info
-  void editRegisterValue(void);
+  /// Edit value
+  void editValueDefinition(void);
 
-  /// Delete register item
-  void deleteRegisterValue(void);
+  /// Delete value
+  void deleteValueDefinition(void);
 
   /// Edit remote variable
   void editRemoteVariable(void);
 
   /// Delete remote variable
   void deleteRemoteVariable(void);
+
+  /// Edit alarm bits
+  void editAlarm(void);
+
+  /// Edit decision matrix
+  void editDM(void);
+
+  /// Edit DM action
+  void editAction(void);
 
   /*!
     Fill in data from info map as children to parent item
@@ -456,7 +472,9 @@ public slots:
     @param selectedIndex Item that should be selected
   */
   void
-  renderManualSubItems(QMdfTreeWidgetItem* pItemManual, CMDF_Manual* pManualObj, uint16_t selectedIndex = 0);
+  renderManualSubItems(QMdfTreeWidgetItem* pItemManual,
+                       CMDF_Manual* pManualObj,
+                       uint16_t selectedIndex = 0);
 
   /*!
     Render driver items
@@ -473,7 +491,9 @@ public slots:
     @param selectedIndex Item that should be selected
   */
   void
-  renderDriverSubItems(QMdfTreeWidgetItem* pItemDriver, CMDF_Driver* pDriverObj, uint16_t selectedIndex = 0);
+  renderDriverSubItems(QMdfTreeWidgetItem* pItemDriver,
+                       CMDF_Driver* pDriverObj,
+                       uint16_t selectedIndex = 0);
 
   /*!
     Render setup items
@@ -490,7 +510,9 @@ public slots:
     @param selectedIndex Item that should be selected
   */
   void
-  renderSetupSubItems(QMdfTreeWidgetItem* pItemSetup, CMDF_Setup* pSetupObj, uint16_t selectedIndex = 0);
+  renderSetupSubItems(QMdfTreeWidgetItem* pItemSetup,
+                      CMDF_Setup* pSetupObj,
+                      uint16_t selectedIndex = 0);
 
   /*!
     Render firmware items
@@ -507,7 +529,56 @@ public slots:
     @param selectedIndex Item that should be selected
   */
   void
-  renderFirmwareSubItems(QMdfTreeWidgetItem* pItemFirmware, CMDF_Firmware* pFirmwareObj, uint16_t selectedIndex = 0);
+  renderFirmwareSubItems(QMdfTreeWidgetItem* pItemFirmware,
+                         CMDF_Firmware* pFirmwareObj,
+                         uint16_t selectedIndex = 0);
+
+  /*!
+    Render actions
+    @param pItemAction Action header
+    @param paction Pointer to DM to render
+    @param pSubItemAction Item that should be selected
+  */
+  void
+  renderAction(QMdfTreeWidgetItem* pItemAction,
+                CMDF_Action* paction);
+
+  /*!
+    Render Decision Matrix info
+    @param pItemDM Pointer to DM header
+    @param pdm Pointer to DM to render
+    @param selectedIndex Item that should be selected
+  */
+  void
+  renderDecisionMatrix(QMdfTreeWidgetItem* pItemDM,
+                       CMDF_DecisionMatrix* pdm,
+                       uint16_t selectedIndex = 0);
+
+  /*!
+    Render events
+    @param pItemEvent Event header
+  */
+
+  void
+  renderEvents(QMdfTreeWidgetItem* pItemEvent);
+
+  /*!
+    Render one action parameter
+    @param pActionParamHeadItem Pointer to header for action parameters head item
+    @param pActionParam Pointer to action parameter object that should be rendered
+  */
+  void
+  renderActionParam(QMdfTreeWidgetItem* pActionParamItem,
+                           CMDF_ActionParameter* pactionparam);
+
+  /*!
+    Render action parameters
+    @param pActionParamItem Pointer to header for action parameters
+    @param pAction Pointer to action for wich parameters should be renderd
+  */
+  void
+  renderActionParameters(QMdfTreeWidgetItem* pActionParamItem,
+                         CMDF_Action* pAction);
 
   /// Do the new operation
   void newMdf(void);

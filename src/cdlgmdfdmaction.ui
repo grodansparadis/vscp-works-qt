@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMdfDM</class>
- <widget class="QDialog" name="CDlgMdfDM">
+ <class>CDlgMdfDmAction</class>
+ <widget class="QDialog" name="CDlgMdfDmAction">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>754</width>
-    <height>406</height>
+    <height>336</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Decision Matrix</string>
+   <string>Decsion Matrix Action</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>370</y>
-     <width>741</width>
-     <height>32</height>
+     <y>300</y>
+     <width>731</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="orientation">
@@ -35,106 +35,62 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>741</width>
-     <height>356</height>
+     <x>10</x>
+     <y>10</y>
+     <width>731</width>
+     <height>281</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <item row="0" column="0">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Level</string>
+       <string>Code</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QComboBox" name="comboLevel">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <item>
-       <property name="text">
-        <string>Level I</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Level II</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Start Page</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QSpinBox" name="spinStartPage">
+     <widget class="QSpinBox" name="spinCode">
       <property name="maximum">
        <number>65535</number>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>Start Offset</string>
+       <string>Name</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="editName"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Parameters</string>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="editStartOffset"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Rows</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QSpinBox" name="spinRowCnt">
-      <property name="maximum">
-       <number>255</number>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label_9">
-      <property name="text">
-       <string>Row Size</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QSpinBox" name="spinRowSize"/>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_10">
-      <property name="text">
-       <string>Actions</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QListWidget" name="listActions"/>
+       <widget class="QListWidget" name="listActionParams"/>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QToolButton" name="btnEditAction">
+         <widget class="QToolButton" name="btnEditActionParam">
           <property name="toolTip">
-           <string>Edit action item</string>
+           <string>Edit action parameter item</string>
           </property>
           <property name="text">
            <string>...</string>
@@ -149,9 +105,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="btnAddAction">
+         <widget class="QToolButton" name="btnAddActionParam">
           <property name="toolTip">
-           <string>Add action item</string>
+           <string>Add action parameter  item</string>
           </property>
           <property name="text">
            <string>...</string>
@@ -166,9 +122,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="btnDupAction">
+         <widget class="QToolButton" name="btnDupActionParam">
           <property name="toolTip">
-           <string>Duplicate action item</string>
+           <string>Duplicate action parameter item</string>
           </property>
           <property name="text">
            <string>...</string>
@@ -183,9 +139,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="btnDelAction">
+         <widget class="QToolButton" name="btnDelActionParam">
           <property name="toolTip">
-           <string>Delete action item</string>
+           <string>Delete action parameter item</string>
           </property>
           <property name="text">
            <string>...</string>
@@ -226,7 +182,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgMdfDM</receiver>
+   <receiver>CDlgMdfDmAction</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -242,7 +198,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgMdfDM</receiver>
+   <receiver>CDlgMdfDmAction</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -256,18 +212,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>listActions</sender>
+   <sender>listActionParams</sender>
    <signal>itemDoubleClicked(QListWidgetItem*)</signal>
-   <receiver>btnEditAction</receiver>
+   <receiver>btnEditActionParam</receiver>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>406</x>
-     <y>265</y>
+     <x>382</x>
+     <y>206</y>
     </hint>
     <hint type="destinationlabel">
-     <x>734</x>
-     <y>181</y>
+     <x>725</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>

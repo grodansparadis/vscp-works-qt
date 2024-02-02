@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CDlgMdfRegisterBit</class>
- <widget class="QDialog" name="CDlgMdfRegisterBit">
+ <class>CDlgMdfBit</class>
+ <widget class="QDialog" name="CDlgMdfBit">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -163,7 +163,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>CDlgMdfRegisterBit</receiver>
+   <receiver>CDlgMdfBit</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -179,7 +179,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>CDlgMdfRegisterBit</receiver>
+   <receiver>CDlgMdfBit</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

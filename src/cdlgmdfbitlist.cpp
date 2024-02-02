@@ -1,4 +1,4 @@
-// cdlgmdfregisterbitlist.cpp
+// cdlgmdfbitlist.cpp
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -35,9 +35,9 @@
 
 #include <vscpworks.h>
 
-#include "cdlgmdfregisterbit.h"
-#include "cdlgmdfregisterbitlist.h"
-#include "ui_cdlgmdfregisterbitlist.h"
+#include "cdlgmdfbit.h"
+#include "cdlgmdfbitlist.h"
+#include "ui_cdlgmdfbitlist.h"
 
 #include <QDebug>
 #include <QInputDialog>
@@ -53,9 +53,9 @@
 // CTor
 //
 
-CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
+CDlgMdfBitList::CDlgMdfBitList(QWidget* parent)
   : QDialog(parent)
-  , ui(new Ui::CDlgMdfRegisterBitList)
+  , ui(new Ui::CDlgMdfBitList)
 {
   m_pobj = nullptr;
   m_type = mdf_type_unknown;
@@ -64,12 +64,12 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  connect(ui->btnAddRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::addRegisterBit);
-  connect(ui->btnEditRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
-  connect(ui->btnDupRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::dupRegisterBit);
-  connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfRegisterBitList::deleteRegisterBit);
+  connect(ui->btnAddRegisterBit, &QToolButton::clicked, this, &CDlgMdfBitList::addRegisterBit);
+  connect(ui->btnEditRegisterBit, &QToolButton::clicked, this, &CDlgMdfBitList::editRegisterBit);
+  connect(ui->btnDupRegisterBit, &QToolButton::clicked, this, &CDlgMdfBitList::dupRegisterBit);
+  connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfBitList::deleteRegisterBit);
 
-  connect(ui->listBits, &QListWidget::doubleClicked, this, &CDlgMdfRegisterBitList::editRegisterBit);
+  connect(ui->listBits, &QListWidget::doubleClicked, this, &CDlgMdfBitList::editRegisterBit);
 
   this->setFixedSize(this->size());
 }
@@ -78,7 +78,7 @@ CDlgMdfRegisterBitList::CDlgMdfRegisterBitList(QWidget* parent)
 // DTor
 //
 
-CDlgMdfRegisterBitList::~CDlgMdfRegisterBitList()
+CDlgMdfBitList::~CDlgMdfBitList()
 {
   delete ui;
 }
@@ -88,7 +88,7 @@ CDlgMdfRegisterBitList::~CDlgMdfRegisterBitList()
 //
 
 void
-CDlgMdfRegisterBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
+CDlgMdfBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
 {
   QString str;
 
@@ -112,6 +112,9 @@ CDlgMdfRegisterBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
   else if (mdf_type_alarm == type) {
     setWindowTitle("Alarm bit definitions");
   }
+  else if (mdf_type_action_param == type) {
+    setWindowTitle("Action parameter bit definitions");
+  }
 
   // m_pmdf->getRegisterMap(m_page, pages);
   renderBitItems();
@@ -122,7 +125,7 @@ CDlgMdfRegisterBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
 //
 
 std::deque<CMDF_Bit*>*
-CDlgMdfRegisterBitList::getBits(void)
+CDlgMdfBitList::getBits(void)
 {
   if (mdf_type_register == m_type) {
     return ((CMDF_Register*)m_pobj)->getListBits();
@@ -142,7 +145,7 @@ CDlgMdfRegisterBitList::getBits(void)
 //
 
 void
-CDlgMdfRegisterBitList::renderBitItems(void)
+CDlgMdfBitList::renderBitItems(void)
 {
   std::deque<CMDF_Bit*>* pbits = nullptr;
   std::map<uint32_t, CMDF_Register*> pages;
@@ -160,6 +163,9 @@ CDlgMdfRegisterBitList::renderBitItems(void)
   }
   else if (mdf_type_alarm == m_type) {
     pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+  }
+  else if (mdf_type_action_param == m_type) {
+    pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
   }
   else {
     return;
@@ -188,7 +194,7 @@ CDlgMdfRegisterBitList::renderBitItems(void)
 //
 
 void
-CDlgMdfRegisterBitList::addRegisterBit(void)
+CDlgMdfBitList::addRegisterBit(void)
 {
   bool ok;
   std::deque<CMDF_Bit*>* pbits;
@@ -203,7 +209,7 @@ CDlgMdfRegisterBitList::addRegisterBit(void)
   // Save the selected row
   int idx = ui->listBits->currentRow();
 
-  CDlgMdfRegisterBit dlg(this);
+  CDlgMdfBit dlg(this);
   dlg.initDialogData(pbitnew);
   dlg.setWindowTitle(tr("Add register bit definition"));
 
@@ -225,6 +231,9 @@ addbitdlg:
     else if (mdf_type_alarm == m_type) {
       pbits = ((CMDF*)m_pobj)->getAlarmListBits();
     }
+    else if (mdf_type_action_param == m_type) {
+      pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
+    }
     else {
       return;
     }
@@ -242,7 +251,7 @@ addbitdlg:
 //
 
 void
-CDlgMdfRegisterBitList::editRegisterBit(void)
+CDlgMdfBitList::editRegisterBit(void)
 {
   bool ok;
   CMDF_Bit* pbit = nullptr;
@@ -264,11 +273,14 @@ CDlgMdfRegisterBitList::editRegisterBit(void)
     else if (mdf_type_alarm == m_type) {
       pbit = ((CMDF*)m_pobj)->getAlarmListBits()->at(pitem->data(Qt::UserRole).toUInt());
     }
+    else if (mdf_type_action_param == m_type) {
+      pbit = ((CMDF_ActionParameter*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    }
     else {
       return;
     }
 
-    CDlgMdfRegisterBit dlg(this);
+    CDlgMdfBit dlg(this);
     dlg.initDialogData(pbit, 0, m_type);
 
   editbitdlg:
@@ -294,7 +306,7 @@ CDlgMdfRegisterBitList::editRegisterBit(void)
 //
 
 void
-CDlgMdfRegisterBitList::dupRegisterBit(void)
+CDlgMdfBitList::dupRegisterBit(void)
 {
   if (-1 != ui->listBits->currentRow()) {
 
@@ -310,7 +322,7 @@ CDlgMdfRegisterBitList::dupRegisterBit(void)
     //   // Make copy
     //   *pregnew = *preg;
 
-    //   CDlgMdfRegisterBit dlg(this);
+    //   CDlgMdfBit dlg(this);
     //   dlg.initDialogData(m_pmdf, pregnew);
     // dupregdlg:
     //   if (QDialog::Accepted == dlg.exec()) {
@@ -351,7 +363,7 @@ CDlgMdfRegisterBitList::dupRegisterBit(void)
 //
 
 void
-CDlgMdfRegisterBitList::deleteRegisterBit(void)
+CDlgMdfBitList::deleteRegisterBit(void)
 {
   CMDF_Bit* pbit;
   std::deque<CMDF_Bit*>::iterator it;
@@ -365,6 +377,9 @@ CDlgMdfRegisterBitList::deleteRegisterBit(void)
   }
   else if (mdf_type_alarm == m_type) {
     pbits = ((CMDF*)m_pobj)->getAlarmListBits();
+  }
+  else if (mdf_type_action_param == m_type) {
+    pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
   }
   else {
     return;
@@ -407,7 +422,7 @@ CDlgMdfRegisterBitList::deleteRegisterBit(void)
 //
 
 void
-CDlgMdfRegisterBitList::accept()
+CDlgMdfBitList::accept()
 {
   std::string str;
   if (nullptr != m_pobj) {

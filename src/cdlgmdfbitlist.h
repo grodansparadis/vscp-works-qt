@@ -26,8 +26,8 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGMDFREGISTERBITLIST_H
-#define CDLGMDFREGISTERBITLIST_H
+#ifndef CDLGMDFBITLIST_H
+#define CDLGMDFBITLIST_H
 
 #include <mdf.h>
 #include <vscpworks.h>
@@ -37,15 +37,15 @@
 #include <QDialog>
 
 namespace Ui {
-class CDlgMdfRegisterBitList;
+class CDlgMdfBitList;
 }
 
-class CDlgMdfRegisterBitList : public QDialog {
+class CDlgMdfBitList : public QDialog {
   Q_OBJECT
 
 public:
-  explicit CDlgMdfRegisterBitList(QWidget* parent = nullptr);
-  ~CDlgMdfRegisterBitList();
+  explicit CDlgMdfBitList(QWidget* parent = nullptr);
+  ~CDlgMdfBitList();
 
   /*!
       Set edit mode.
@@ -91,6 +91,9 @@ public:
     else if (mdf_type_alarm == m_type) {
       pbits = ((CMDF*)m_pobj)->getAlarmListBits();
     }
+    else if (mdf_type_action_param == m_type) {
+      pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
+    }
     else {
       return 0;
     }
@@ -129,11 +132,10 @@ public slots:
   void deleteRegisterBit(void);
 
 private:
-  Ui::CDlgMdfRegisterBitList* ui;
+  Ui::CDlgMdfBitList* ui;
 
   // MDF
   CMDF_Object* m_pobj;
-  // CMDF_Register* m_preg;
 
   // Object type
   mdf_record_type m_type;
