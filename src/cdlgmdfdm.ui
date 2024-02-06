@@ -131,7 +131,11 @@
     <item row="5" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QListWidget" name="listActions"/>
+       <widget class="QListWidget" name="listActions">
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">

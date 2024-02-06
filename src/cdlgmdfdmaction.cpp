@@ -290,17 +290,13 @@ CDlgMdfDmAction::addActionParam(void)
   // Save the selected row
   int idx = ui->listActionParams->currentRow();
 
-  // QListWidgetItem* pitem = ui->listActionParams->currentItem();
-  // printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
-  // CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
-
   CMDF_ActionParameter* pactionparam = new (CMDF_ActionParameter);
   if (nullptr == pactionparam) {
     return;
   }
 
-adddlg:
   CDlgMdfDmActionParam dlg(this);
+adddlg:  
   dlg.initDialogData(m_pmdf, pactionparam);
   // If DM is level I only offset 0 is allowd
   if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
@@ -333,7 +329,6 @@ CDlgMdfDmAction::dupActionParam(void)
   int idx = ui->listActionParams->currentRow();
 
   QListWidgetItem* pitem = ui->listActionParams->currentItem();
-  // printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
   CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == pactionparam) {
     return;
