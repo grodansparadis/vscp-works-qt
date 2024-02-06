@@ -64,6 +64,12 @@ public:
   */
   void initDialogData(CMDF *pmdf, CMDF_ActionParameter* pactionparam, int index = 0);
 
+  /*!
+    Set offset input field to read only
+    Used by level I as it is always zero for level I DM's
+  */
+  void setOffsetReadOnly(void);
+
   /// @brief  Rener action parameters
   void renderActionParams(void);
 

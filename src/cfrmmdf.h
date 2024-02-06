@@ -241,6 +241,9 @@ public slots:
   void deleteFile(void);
 
   /// Edit register info
+  void addRegister(void);
+
+  /// Edit register info
   void editRegister(void);
 
   /// Delete register item
@@ -316,7 +319,7 @@ public slots:
     @param pbit Object holding bit info
   */
   void
-  renderBitInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit);
+  renderBitItem(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit);
 
   /*!
     Fill value list info
@@ -334,7 +337,7 @@ public slots:
     @param pvalue Object holding value info
   */
   void
-  renderValueInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Value* pvalue);
+  renderValueItem(QMdfTreeWidgetItem* pItemParent, CMDF_Value* pvalue);
 
   /*!
     Fill in register info
@@ -343,7 +346,7 @@ public slots:
     @preg Pointer to register definition
   */
   void
-  renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg);
+  renderRegisterItem(QTreeWidgetItem* pParent, CMDF_Register* preg);
 
   /*!
     Render all registers
@@ -359,7 +362,7 @@ public slots:
     @preg Pointer to remote variable definition
   */
   void
-  renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable* pvar);
+  renderRemoteVariableItem(QTreeWidgetItem* pParent, CMDF_RemoteVariable* pvar);
 
   /*!
       Render all remote variables

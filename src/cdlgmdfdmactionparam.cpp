@@ -134,7 +134,15 @@ CDlgMdfDmActionParam::initDialogData(CMDF* pmdf, CMDF_ActionParameter* pactionpa
   this->setFixedSize(this->size());
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// setOffsetReadOnly
+//
 
+void CDlgMdfDmActionParam::setOffsetReadOnly(void)
+{
+  ui->spinOffset->setValue(0);
+  ui->spinOffset->setEnabled(false);
+}
 
 // ----------------------------------------------------------------------------
 //                             Getters & Setters

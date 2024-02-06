@@ -41,6 +41,7 @@
 #include <QColorDialog>
 #include <QDate>
 #include <QDebug>
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QShortcut>
 
@@ -102,6 +103,12 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
 
   m_preg = preg;
 
+  // Connect set new register page button
+  connect(ui->btnNewPage,
+          SIGNAL(clicked()),
+          this,
+          SLOT(newPage()));
+
   // Connect set foreground color button
   connect(ui->btnSetFgColor,
           SIGNAL(clicked()),
@@ -118,7 +125,7 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
   connect(ui->btnSetUndef,
           SIGNAL(clicked()),
           this,
-          SLOT(setUndef()));        
+          SLOT(setUndef()));
 
   setName(preg->getName().c_str());
   setPage(preg->getPage());
@@ -136,18 +143,18 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
   setForegroundColor(preg->getForegroundColor());
   setBackgroundColor(preg->getBackgroundColor());
 
-  std::set<uint16_t> pages;
-  uint32_t cnt = pmdf->getPages(pages);
-  ui->comboPage->clear();
-  int pos = 0;
-  for (std::set<uint16_t>::iterator it=pages.begin(); it!=pages.end(); ++it) {
-    ui->comboPage->addItem(QString("Page %1").arg(*it), *it);
-    if (preg->getPage() == *it) {
-      ui->comboPage->setCurrentIndex(pos);
-    }
-    pos++;
+  // Only one page for Level II
+  if (1 == m_pmdf->getLevel()) {
+    ui->comboPage->setEnabled(false);
+    ui->btnNewPage->setEnabled(false);
+    ui->comboPage->addItem(QString("Level II (no pages)"), 0);
   }
+  else {
+    // Find already defined pages
+    uint32_t cnt = m_pmdf->getPages(m_pages);
 
+    renderPages();
+  }
 
   switch (index) {
     case index_name:
@@ -196,7 +203,7 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
 
     case index_bgcolor:
       ui->editBgColor->setFocus();
-      break;    
+      break;
 
     default:
       ui->editName->setFocus();
@@ -215,6 +222,7 @@ CDlgMdfRegister::setReadOnly(void)
 {
   ui->comboPage->setEnabled(false);
   ui->editOffset->setEnabled(false);
+  ui->btnNewPage->setEnabled(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -225,6 +233,55 @@ void
 CDlgMdfRegister::setInitialFocus(void)
 {
   // ui->editName->setFocus();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// renderPages
+//
+
+void
+CDlgMdfRegister::renderPages(void)
+{
+
+  ui->comboPage->clear();
+  int pos = 0;
+  for (std::set<uint16_t>::iterator it = m_pages.begin(); it != m_pages.end(); ++it) {
+    ui->comboPage->addItem(QString("Page %1").arg(*it), *it);
+    if (m_preg->getPage() == *it) {
+      ui->comboPage->setCurrentIndex(pos);
+    }
+    pos++;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newPage
+//
+
+void
+CDlgMdfRegister::newPage(void)
+{
+  uint16_t newpage;
+
+  // m_pmdf->getPages(pages);
+ask_again:
+  QString str = QInputDialog::getText(this, APPNAME, "Input register page number: ");
+  if (!str.length()) {
+    return;
+  }
+  newpage  = vscp_readStringValue(str.toStdString());
+  auto pos = m_pages.find(newpage);
+  if (m_pages.end() != pos) {
+    QMessageBox msgWarning;
+    msgWarning.setText("Register page already exist");
+    msgWarning.setIcon(QMessageBox::Warning);
+    msgWarning.setWindowTitle("Add register page");
+    msgWarning.exec();
+    goto ask_again;
+  }
+  m_pages.insert(newpage);
+  renderPages();
+  ui->comboPage->setCurrentIndex(ui->comboPage->findData(newpage));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -311,12 +368,24 @@ CDlgMdfRegister::setPage(uint16_t page)
 uint32_t
 CDlgMdfRegister::getOffset(void)
 {
-  return vscp_readStringValue(ui->editOffset->text().toStdString());
+  uint32_t offset = vscp_readStringValue(ui->editOffset->text().toStdString());
+
+  // Level I can only have offset 0-127
+  if (1 == m_pmdf->getLevel()) {
+    offset &= 0x7f;
+  }
+
+  return offset;
 }
 
 void
 CDlgMdfRegister::setOffset(uint32_t offset)
 {
+  // Level I can only have offset 0-127
+  if (1 == m_pmdf->getLevel()) {
+    offset &= 0x7f;
+  }
+
   ui->editOffset->setText(QString("%1").arg(offset));
 }
 
@@ -459,7 +528,15 @@ CDlgMdfRegister::accept()
   std::string str;
   if (nullptr != m_preg) {
     m_preg->setName(getName().toStdString());
-    m_preg->setPage(getPage());
+    
+    // Level I can only have offset 0-127
+    if (1 == m_pmdf->getLevel()) {
+      m_preg->setPage(getPage());
+    }
+    else {
+      m_preg->setPage(0);
+    }
+
     m_preg->setOffset(getOffset());
     m_preg->setType(static_cast<mdf_register_type>(getType()));
     m_preg->setSpan(getSpan());

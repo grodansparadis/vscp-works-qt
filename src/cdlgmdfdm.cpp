@@ -127,11 +127,24 @@ CDlgMdfDM::initDialogData(CMDF* pmdf, CMDF_DecisionMatrix* pdm, int index)
           this,
           SLOT(delAction()));
 
-  setLevel(pdm->getLevel());
-  setPage(pdm->getStartPage());
+  setLevel(pmdf->getLevel());
+  ui->comboLevel->setEnabled(false);
+
   setOffset(pdm->getStartOffset());
   setRows(pdm->getRowCount());
-  setSize(pdm->getRowSize());
+
+  if (0 == pmdf->getLevel()) {
+    setPage(pdm->getStartPage());
+    setSize(8);
+    ui->spinRowSize->setEnabled(false);
+  }
+  else {  
+    setPage(0);
+    ui->spinStartPage->setEnabled(false);
+    setSize(pdm->getRowSize());
+  }
+
+  
 
   // Render available actions
   renderActions();

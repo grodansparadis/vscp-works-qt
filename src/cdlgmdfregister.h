@@ -29,12 +29,10 @@
 #ifndef CDLGMDFREGISTER_H
 #define CDLGMDFREGISTER_H
 
-#include <vscpworks.h>
 #include <mdf.h>
+#include <vscpworks.h>
 
 #include <QDialog>
-
-
 
 namespace Ui {
 class CDlgMdfRegister;
@@ -48,15 +46,15 @@ public:
   explicit CDlgMdfRegister(QWidget* parent = nullptr);
   ~CDlgMdfRegister();
 
-  static const int index_name = 0;
-  static const int index_page = 1;
-  static const int index_offset = 2;
-  static const int index_type = 3;
-  static const int index_span = 4;
-  static const int index_width = 5;
-  static const int index_min = 6;
-  static const int index_max = 7;
-  static const int index_access = 8;
+  static const int index_name    = 0;
+  static const int index_page    = 1;
+  static const int index_offset  = 2;
+  static const int index_type    = 3;
+  static const int index_span    = 4;
+  static const int index_width   = 5;
+  static const int index_min     = 6;
+  static const int index_max     = 7;
+  static const int index_access  = 8;
   static const int index_default = 9;
   static const int index_fgcolor = 10;
   static const int index_bgcolor = 11;
@@ -73,16 +71,17 @@ public:
     @param CMDF *pmdf Pointer to MDF
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
+
   */
-  void initDialogData(CMDF *pmdf, CMDF_Register* preg, int index = 0);
+  void initDialogData(CMDF* pmdf, CMDF_Register* preg, int index = 0);
 
   /*!
     Prevent page and offset from being edited
   */
   void setReadOnly(void);
 
-  
+  /// Render pages into page combo box
+  void renderPages(void);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -138,9 +137,14 @@ public:
 
 public slots:
 
-    /*!
-    Show dialog to select foregrund color
+  /*!
+    add/define new register page
   */
+  void newPage(void);
+
+  /*!
+  Show dialog to select foregrund color
+*/
   void showFgColorDlg(void);
 
   /*!
@@ -151,19 +155,21 @@ public slots:
   /*
     Set UNDEF for default value
   */
- void setUndef(void);
+  void setUndef(void);
 
   /*!
     Accept dialog data and write to register
   */
   void accept(void);
 
-
 private:
   Ui::CDlgMdfRegister* ui;
 
+  /// Register pages
+  std::set<uint16_t> m_pages;
+
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   /// Pointer to register information
   CMDF_Register* m_preg;

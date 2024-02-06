@@ -88,7 +88,7 @@ CDlgMdfDmAction::CDlgMdfDmAction(QWidget* parent)
   connect(ui->btnDelActionParam,
           SIGNAL(clicked()),
           this,
-          SLOT(delActionParam()));
+          SLOT(deleteActionParam()));
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -236,10 +236,10 @@ CDlgMdfDmAction::renderActionParams(void)
     for (int i = 0; i < pActionParamList->size(); i++) {
       CMDF_ActionParameter* pactionparam = (*pActionParamList)[i];
       if (nullptr != pactionparam) {
-        QString str = QString("Offset: %1 - %2").arg(pactionparam->getOffset()).arg(pactionparam->getName().c_str());
+        QString str            = QString("Offset: %1 - %2").arg(pactionparam->getOffset()).arg(pactionparam->getName().c_str());
         QListWidgetItem* pitem = new QListWidgetItem(str, ui->listActionParams);
         if (nullptr != pitem) {
-          pitem->setData(QListWidgetItem::UserType,pactionparam->getOffset());
+          pitem->setData(QListWidgetItem::UserType, pactionparam->getOffset());
           ui->listActionParams->addItem(pitem);
         }
       }
@@ -262,8 +262,8 @@ CDlgMdfDmAction::editActionParam(void)
     int idx = ui->listActionParams->currentRow();
 
     QListWidgetItem* pitem = ui->listActionParams->currentItem();
-    printf("data=%d\n",pitem->data(QListWidgetItem::UserType).toUInt());
-    CMDF_ActionParameter* pactionparam   = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+    printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
+    CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
 
     CDlgMdfDmActionParam dlg(this);
     dlg.initDialogData(m_pmdf, pactionparam);
@@ -285,6 +285,39 @@ CDlgMdfDmAction::editActionParam(void)
 void
 CDlgMdfDmAction::addActionParam(void)
 {
+  bool ok;
+
+  // Save the selected row
+  int idx = ui->listActionParams->currentRow();
+
+  // QListWidgetItem* pitem = ui->listActionParams->currentItem();
+  // printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
+  // CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+
+  CMDF_ActionParameter* pactionparam = new (CMDF_ActionParameter);
+  if (nullptr == pactionparam) {
+    return;
+  }
+
+adddlg:
+  CDlgMdfDmActionParam dlg(this);
+  dlg.initDialogData(m_pmdf, pactionparam);
+  // If DM is level I only offset 0 is allowd
+  if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
+    dlg.setOffsetReadOnly();
+  }
+  if (QDialog::Accepted == dlg.exec()) {
+    if (!m_paction->addActionParam(pactionparam)) {
+      QMessageBox::warning(this, tr("MDF add new action parameter"), tr("Action parameter with offset %1 is already define. Must be unique.").arg(pactionparam->getOffset()));
+      goto adddlg;
+    }
+    ui->listActionParams->clear();
+    renderActionParams();
+    ui->listActionParams->setCurrentRow(idx);
+  }
+  else {
+    delete pactionparam;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -294,6 +327,47 @@ CDlgMdfDmAction::addActionParam(void)
 void
 CDlgMdfDmAction::dupActionParam(void)
 {
+  bool ok;
+
+  // Save the selected row
+  int idx = ui->listActionParams->currentRow();
+
+  QListWidgetItem* pitem = ui->listActionParams->currentItem();
+  // printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
+  CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+  if (nullptr == pactionparam) {
+    return;
+  }
+
+  CMDF_ActionParameter* pactionparamnew = new (CMDF_ActionParameter);
+  if (nullptr == pactionparamnew) {
+    return;
+  }
+
+  pactionparamnew->setOffset(pactionparam->getOffset());
+  pactionparamnew->setName(pactionparam->getName());
+  pactionparamnew->setMin(pactionparam->getMin());
+  pactionparamnew->setMax(pactionparam->getMax());
+
+adddlg:
+  CDlgMdfDmActionParam dlg(this);
+  dlg.initDialogData(m_pmdf, pactionparamnew);
+  // If DM is level I only offset 0 is allowd
+  if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
+    dlg.setOffsetReadOnly();
+  }
+  if (QDialog::Accepted == dlg.exec()) {
+    if (!m_paction->addActionParam(pactionparamnew)) {
+      QMessageBox::warning(this, tr("MDF add new action parameter"), tr("Action parameter with offset %1 is already define. Must be unique.").arg(pactionparam->getOffset()));
+      goto adddlg;
+    }
+    ui->listActionParams->clear();
+    renderActionParams();
+    ui->listActionParams->setCurrentRow(idx);
+  }
+  else {
+    delete pactionparam;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -303,6 +377,29 @@ CDlgMdfDmAction::dupActionParam(void)
 void
 CDlgMdfDmAction::deleteActionParam(void)
 {
+  bool ok;
+
+  // Save the selected row
+  int idx = ui->listActionParams->currentRow();
+
+  QListWidgetItem* pitem = ui->listActionParams->currentItem();
+  CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+  if (nullptr == pactionparam) {
+    return;
+  }
+
+  if (QMessageBox::No == QMessageBox::question(this, 
+                          tr("MDF delete action parameter"), 
+                          tr("Delete action parameter with offset %1.").arg(pactionparam->getOffset()))) {
+    return;
+  }
+
+  if (!m_paction->deleteActionParam(pactionparam)) {
+    QMessageBox::warning(this, tr("MDF add new action parameter"), tr("Failed to remove action parameter with offset %1.").arg(pactionparam->getOffset()));      
+  }
+
+  renderActionParams();
+  ui->listActionParams->setCurrentRow(idx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -314,7 +411,7 @@ CDlgMdfDmAction::accept()
 {
   std::string str;
   if (nullptr != m_paction) {
-    m_paction ->setCode(getCode());
+    m_paction->setCode(getCode());
     m_paction->setName(getName().toStdString());
   }
   else {

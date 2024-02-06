@@ -48,6 +48,8 @@
 #include "ui_cfrmmdf.h"
 
 #include "cdlgeditmap.h"
+#include "cdlgmdfbit.h"
+#include "cdlgmdfbitlist.h"
 #include "cdlgmdfbootloader.h"
 #include "cdlgmdfcontact.h"
 #include "cdlgmdfcontactlist.h"
@@ -65,13 +67,11 @@
 #include "cdlgmdfmanufacturer.h"
 #include "cdlgmdfmodule.h"
 #include "cdlgmdfregister.h"
-#include "cdlgmdfbit.h"
-#include "cdlgmdfbitlist.h"
 #include "cdlgmdfregisterlist.h"
-#include "cdlgmdfvalue.h"
-#include "cdlgmdfvaluelist.h"
 #include "cdlgmdfremotevar.h"
 #include "cdlgmdfremotevarlist.h"
+#include "cdlgmdfvalue.h"
+#include "cdlgmdfvaluelist.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -345,6 +345,7 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
 
       case mdf_type_register_page:
         menu->addAction(QString(tr("Register list for page")), this, SLOT(editRegister()));
+        menu->addAction(QString(tr("Add register on page")), this, SLOT(addRegister()));
         break;
 
       case mdf_type_register:
@@ -390,7 +391,7 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_remotevar:
-        menu->addAction(QString(tr("Edit remote variables")), this, SLOT(editRemoteVariable()));
+        menu->addAction(QString(tr("Remote variables")), this, SLOT(editRemoteVariable()));
         break;
 
       case mdf_type_remotevar_item:
@@ -803,16 +804,16 @@ CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, 
     pItemParent->setText(0, str);
     pItemBitDefs->addChild(pItemParent);
 
-    renderBitInfo(pItemParent, pbit);
+    renderBitItem(pItemParent, pbit);
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderBitInfo
+// renderBitItem
 //
 
 void
-CFrmMdf::renderBitInfo(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit)
+CFrmMdf::renderBitItem(QMdfTreeWidgetItem* pItemParent, CMDF_Bit* pbit)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -916,16 +917,16 @@ CFrmMdf::renderValues(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequeva
     pItemParent->setText(0, str);
     pItemValueDefs->addChild(pItemParent);
 
-    renderValueInfo(pItemParent, pvalue);
+    renderValueItem(pItemParent, pvalue);
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderValueInfo
+// renderValueItem
 //
 
 void
-CFrmMdf::renderValueInfo(QMdfTreeWidgetItem* pParent, CMDF_Value* pvalue)
+CFrmMdf::renderValueItem(QMdfTreeWidgetItem* pParent, CMDF_Value* pvalue)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -948,11 +949,11 @@ CFrmMdf::renderValueInfo(QMdfTreeWidgetItem* pParent, CMDF_Value* pvalue)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderRegisterInfo
+// renderRegisterItem
 //
 
 void
-CFrmMdf::renderRegisterInfo(QTreeWidgetItem* pParent, CMDF_Register* preg)
+CFrmMdf::renderRegisterItem(QTreeWidgetItem* pParent, CMDF_Register* preg)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -1121,17 +1122,31 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
         pParent->addChild(pItem);
 
         // Add registers for page
+        std::set<uint32_t> regset;
+        std::map<uint32_t, CMDF_Register*> regmap;
+
+        // Create set with sorted register offsets and a map
+        // to help find corresponding register pointer
         for (auto it = regs->cbegin(); it != regs->cend(); ++it) {
           if (itr == (*it)->getPage()) {
-            pSubItem = new QMdfTreeWidgetItem(pItem, (*it), mdf_type_register_item);
-            if (nullptr != pSubItem) {
-              str = QString("Register  %1 %2").arg((*it)->getOffset()).arg((*it)->getName().c_str());
-              pSubItem->setText(0, str);
-              pItem->addChild(pSubItem);
-              renderRegisterInfo(pSubItem, *it);
-            }
+            regset.insert((*it)->getOffset());
+            regmap[(*it)->getOffset()] = *it;
           }
         }
+
+        // Render register sorted on offset for a register page
+        for (auto it = regset.cbegin(); it != regset.cend(); ++it) {
+          CMDF_Register* preg = regmap[*it];
+          pSubItem            = new QMdfTreeWidgetItem(pItem, preg, mdf_type_register_item);
+          if (nullptr != pSubItem) {
+            str = QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str());
+            pSubItem->setText(0, str);
+            pItem->addChild(pSubItem);
+            renderRegisterItem(pSubItem, preg);
+          }
+        }
+
+        // pItem->sortChildren(0,Qt::AscendingOrder);
       }
     }
   }
@@ -1139,16 +1154,16 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
   else {
     std::map<uint32_t, CMDF_Register*> mapRegs;
     m_mdf.getRegisterMap(0, mapRegs);
-    renderRegisterInfo(pItem, mapRegs[0]);
+    renderRegisterItem(pItem, mapRegs[0]);
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// renderRemoteVariableInfo
+// renderRemoteVariableItem
 //
 
 void
-CFrmMdf::renderRemoteVariableInfo(QTreeWidgetItem* pParent, CMDF_RemoteVariable* prvar)
+CFrmMdf::renderRemoteVariableItem(QTreeWidgetItem* pParent, CMDF_RemoteVariable* prvar)
 {
   QString str;
   QMdfTreeWidgetItem* pItem;
@@ -1276,12 +1291,14 @@ CFrmMdf::renderRemoteVariables(QTreeWidgetItem* pParent)
 
       pSubItem = new QMdfTreeWidgetItem(pParent, pvar, mdf_type_remotevar_item);
       if (nullptr != pSubItem) {
-        str = QString("%1 %2").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(pvar->getName().c_str());
+        str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(i).arg(pvar->getName().c_str());
         pSubItem->setText(0, str);
         pParent->addChild(pSubItem);
-        renderRemoteVariableInfo(pSubItem, pvar);
+        renderRemoteVariableItem(pSubItem, pvar);
       }
     }
+
+    // pParent->sortChildren(0,Qt::AscendingOrder);
   }
 }
 
@@ -5551,6 +5568,88 @@ CFrmMdf::deleteFile(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// addRegister
+//
+
+void
+CFrmMdf::addRegister(void)
+{
+  QMdfTreeWidgetItem* pItem     = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  QMdfTreeWidgetItem* pItemHead = (QMdfTreeWidgetItem*)pItem->parent();
+  uint16_t selectedIndex        = pItem->getElementIndex();
+
+  // Item must be selected
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF register add"), tr("No MDF register item selected"));
+    return;
+  }
+
+  // Must have an object
+  if (nullptr == pItem->getObject()) {
+    int ret = QMessageBox::critical(this, tr("MDF register add"), tr("Internal error: Invalid register object"));
+    spdlog::error("MDF register edit - object has nullptr");
+    return;
+  }
+
+  switch (pItem->getObjectType()) {
+
+    case mdf_type_register_page: {
+      // This is the main register level - We can add a register here
+      bool ok;
+      CMDF_Register* pregnew = new CMDF_Register();
+
+addregdlg1:
+      CDlgMdfRegister dlg(this);
+      dlg.initDialogData(&m_mdf, pregnew);
+      if (QDialog::Accepted == dlg.exec()) {
+        // Check if register is already defined
+        CMDF_Register* preg = m_mdf.getRegister(pregnew->getOffset(), pregnew->getPage());
+        if (nullptr != preg) {
+          QMessageBox::warning(this, tr("MDF add new register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
+          goto addregdlg1;
+        }
+        m_mdf.getRegisterObjList()->push_back(pregnew);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderRegisters(pItem);
+      }
+    } break;
+
+    case mdf_type_register: {
+      // This is the main register level - We can add a register here
+      bool ok;
+      CMDF_Register* pregnew = new CMDF_Register();
+
+    addregdlg:
+      CDlgMdfRegister dlg(this);
+      dlg.initDialogData(&m_mdf, pregnew);
+      if (QDialog::Accepted == dlg.exec()) {
+        // Check if register is already defined
+        CMDF_Register* preg = m_mdf.getRegister(pregnew->getOffset(), pregnew->getPage());
+        if (nullptr != preg) {
+          QMessageBox::warning(this, tr("MDF add new register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
+          goto addregdlg;
+        }
+        m_mdf.getRegisterObjList()->push_back(pregnew);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderRegisters(pItem);
+      }
+    } break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // editRegister
 //
 
@@ -5593,7 +5692,30 @@ CFrmMdf::editRegister(void)
     } break;
 
     case mdf_type_register: {
-      // Should not come here. But if we do don't do an anything. :))))
+      // This is the main register level - We can add a register here
+      bool ok;
+      CMDF_Register* pregnew = new CMDF_Register();
+
+    addregdlg:
+      CDlgMdfRegister dlg(this);
+      dlg.initDialogData(&m_mdf, pregnew);
+      if (QDialog::Accepted == dlg.exec()) {
+        // Check if register is already defined
+        CMDF_Register* preg = m_mdf.getRegister(pregnew->getOffset(), pregnew->getPage());
+        if (nullptr != preg) {
+          QMessageBox::warning(this, tr("MDF add new register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
+          goto addregdlg;
+        }
+        m_mdf.getRegisterObjList()->push_back(pregnew);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderRegisters(pItem);
+      }
     } break;
 
     case mdf_type_register_item: {
@@ -5615,7 +5737,7 @@ CFrmMdf::editRegister(void)
         }
         childrenList.clear();
         pItem->setText(0, QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
-        renderRegisterInfo(pItem, preg);
+        renderRegisterItem(pItem, preg);
       }
     } break;
 
@@ -5638,8 +5760,8 @@ CFrmMdf::editRegister(void)
           delete item;
         }
         childrenList.clear();
-        pItemHead->setText(0, QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
-        renderRegisterInfo(pItemHead, preg);
+        pItemHead->setText(0, QString("Register %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
+        renderRegisterItem(pItemHead, preg);
       }
     } break;
   }
@@ -5889,7 +6011,7 @@ CFrmMdf::editBitDefinition(void)
         }
         str += "}";
         pItem->setText(0, str);
-        renderBitInfo(pItem, pbit);
+        renderBitItem(pItem, pbit);
       }
     } break;
 
@@ -5918,7 +6040,7 @@ CFrmMdf::editBitDefinition(void)
         }
         str += "}";
         pItemHead->setText(0, str);
-        renderBitInfo(pItemHead, pbit);
+        renderBitItem(pItemHead, pbit);
       }
     } break;
 
@@ -6094,7 +6216,7 @@ CFrmMdf::editValueDefinition(void)
       else if ((nullptr != pItemHeadHead) && (mdf_type_remotevar == pItemHeadHead->getObjectType())) {
         CMDF_RemoteVariable* prval = (CMDF_RemoteVariable*)pItem->getObject();
         CDlgMdfValueList dlg(this);
-        //dlg.initDialogData(prval);
+        // dlg.initDialogData(prval);
         if (QDialog::Accepted == dlg.exec()) {
           // Redraw all register items - We do not know changes
           QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
@@ -6134,7 +6256,7 @@ CFrmMdf::editValueDefinition(void)
         childrenList.clear();
         QString str = QString("Value: %1").arg(pvalue->getName().c_str());
         pItem->setText(0, str);
-        renderValueInfo(pItem, pvalue);
+        renderValueItem(pItem, pvalue);
       }
     } break;
 
@@ -6159,7 +6281,7 @@ CFrmMdf::editValueDefinition(void)
         childrenList.clear();
         QString str = QString("Value: %1").arg(pvalue->getName().c_str());
         pItemHead->setText(0, str);
-        renderValueInfo(pItemHead, pvalue);
+        renderValueItem(pItemHead, pvalue);
       }
     } break;
 
@@ -6340,9 +6462,10 @@ CFrmMdf::editRemoteVariable(void)
           delete item;
         }
         childrenList.clear();
-        QString str = QString("Remote variable: %1").arg(pvar->getName().c_str());
+        QString str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(0).arg(pvar->getName().c_str());
+        //str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(i).arg(pvar->getName().c_str());
         pItem->setText(0, str);
-        renderRemoteVariableInfo(pItem, pvar);
+        renderRemoteVariableItem(pItem, pvar);
       }
     } break;
 
@@ -6366,7 +6489,7 @@ CFrmMdf::editRemoteVariable(void)
         }
         childrenList.clear();
         pItemHead->setText(0, QString("%1  %2").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(prvar->getName().c_str()));
-        renderRemoteVariableInfo(pItemHead, prvar);
+        renderRemoteVariableItem(pItemHead, prvar);
       }
     } break;
   }
