@@ -278,6 +278,9 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgmdfdm.ui
     src/cdlgmdfdmaction.ui
     str/cdlgmdfdmactionparam.ui
+
+    src/cdlgmdfevents.ui
+    src/cdlgmdfeventdata.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -632,6 +635,16 @@ add_executable(${PROJECT_NAME}
     src/cdlgmdfdmactionparam.ui
     src/cdlgmdfdmactionparam.cpp
     src/cdlgmdfdmactionparam.h
+
+    build/ui_cdlgmdfevent.h
+    src/cdlgmdfevent.ui
+    src/cdlgmdfevent.cpp
+    src/cdlgmdfevent.h
+
+    build/ui_cdlgmdfeventdata.h
+    src/cdlgmdfeventdata.ui
+    src/cdlgmdfeventdata.cpp
+    src/cdlgmdfeventdata.h
 
     ${VSCP_PATH}/src/vscp/common/version.h
     ${VSCP_PATH}/src/vscp/common/vscp.h

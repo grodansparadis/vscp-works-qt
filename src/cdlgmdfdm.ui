@@ -57,6 +57,12 @@
         <height>0</height>
        </size>
       </property>
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <item>
        <property name="text">
         <string>Level I</string>
@@ -78,6 +84,12 @@
     </item>
     <item row="1" column="1">
      <widget class="QSpinBox" name="spinStartPage">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="maximum">
        <number>65535</number>
       </property>
@@ -91,7 +103,14 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QLineEdit" name="editStartOffset"/>
+     <widget class="QLineEdit" name="editStartOffset">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_7">
@@ -102,6 +121,12 @@
     </item>
     <item row="3" column="1">
      <widget class="QSpinBox" name="spinRowCnt">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="maximum">
        <number>255</number>
       </property>
@@ -116,6 +141,12 @@
     </item>
     <item row="4" column="1">
      <widget class="QSpinBox" name="spinRowSize">
+      <property name="maximumSize">
+       <size>
+        <width>100</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="maximum">
        <number>255</number>
       </property>
@@ -140,23 +171,6 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QToolButton" name="btnEditAction">
-          <property name="toolTip">
-           <string>Edit action item</string>
-          </property>
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="icon">
-           <iconset resource="vscpworks.qrc">
-            <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
-          </property>
-          <property name="shortcut">
-           <string>Ctrl+E</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QToolButton" name="btnAddAction">
           <property name="toolTip">
            <string>Add action item</string>
@@ -170,6 +184,23 @@
           </property>
           <property name="shortcut">
            <string>Ctrl+A</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="btnEditAction">
+          <property name="toolTip">
+           <string>Edit action item</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
+          </property>
+          <property name="shortcut">
+           <string>Ctrl+E</string>
           </property>
          </widget>
         </item>

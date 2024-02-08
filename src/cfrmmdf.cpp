@@ -57,6 +57,8 @@
 #include "cdlgmdfdm.h"
 #include "cdlgmdfdmaction.h"
 #include "cdlgmdfdmactionparam.h"
+#include "cdlgmdfevent.h"
+#include "cdlgmdfeventdata.h"
 #include "cdlgmdffile.h"
 #include "cdlgmdffiledriver.h"
 #include "cdlgmdffilefirmware.h"
@@ -434,33 +436,37 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_event_data:
-        menu->addAction(QString(tr("Event Data")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Add Event Data")), this, SLOT(addEvent()));
         break;
 
       case mdf_type_event_data_item:
-        menu->addAction(QString(tr("Event Data item")), this, SLOT(loadSelectedMdf()));
+      case mdf_type_event_data_sub_item:
+        menu->addAction(QString(tr("Edit Event Data")), this, SLOT(editEvent()));
+        menu->addAction(QString(tr("Delete Event Data")), this, SLOT(deleteEvent()));
         break;
 
       case mdf_type_event:
-        menu->addAction(QString(tr("Event")), this, SLOT(loadSelectedMdf()));
+        menu->addAction(QString(tr("Add Event")), this, SLOT(addEvent()));
         break;
 
       case mdf_type_event_item:
-        menu->addAction(QString(tr("Event item")), this, SLOT(loadSelectedMdf()));
+      case mdf_type_event_sub_item:
+        menu->addAction(QString(tr("Edit Event")), this, SLOT(editEvent()));
+        menu->addAction(QString(tr("Delete Event")), this, SLOT(deleteEvent()));
         break;
 
       case mdf_type_bootloader:
         // menu->addAction(QString(tr("Bootloader")), this, SLOT(editBootlLoader()));
-        menu->addAction(QString(tr("Edit bootloader")), this, SLOT(editBootLoader()));
+        menu->addAction(QString(tr("Edit Bootloader")), this, SLOT(editBootLoader()));
         break;
 
       case mdf_type_bootloader_item:
         // menu->addAction(QString(tr("Bootloader")), this, SLOT(editBootlLoader()));
-        menu->addAction(QString(tr("Edit bootloader item")), this, SLOT(editBootLoader()));
+        menu->addAction(QString(tr("Edit Bootloader Item")), this, SLOT(editBootLoader()));
         break;
 
       case mdf_type_alarm:
-        menu->addAction(QString(tr("Edit alarm bits")), this, SLOT(editAlarm()));
+        menu->addAction(QString(tr("Edit Alarm Bits")), this, SLOT(editAlarm()));
         break;
 
       case mdf_type_address:
@@ -527,87 +533,117 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_picture:
-        menu->addAction(QString(tr("Edit pictures")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit picture file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Edit picture file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_picture_item:
-        menu->addAction(QString(tr("Edit picture item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete picture item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit picture file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete picture file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_picture_sub_item:
-        menu->addAction(QString(tr("Edit picture item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete picture item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit picture file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete picture file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_video:
-        menu->addAction(QString(tr("Edit video items")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit video file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Edit video file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_video_item:
-        menu->addAction(QString(tr("Edit video item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete video item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit video file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete video file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_video_sub_item:
-        menu->addAction(QString(tr("Edit video item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete video item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit video file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete video file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_firmware:
-        menu->addAction(QString(tr("Edit firmware items")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit firmware file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Edit firmware file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_firmware_item:
-        menu->addAction(QString(tr("Edit firmware item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Edit firmware file link item")), this, SLOT(editFile()));
         menu->addAction(QString(tr("Delete firmware item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_firmware_sub_item:
-        menu->addAction(QString(tr("Edit firmware item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete firmware item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit firmware file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete firmware file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_driver:
-        menu->addAction(QString(tr("Edit driver items")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit driver file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Edit driver file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_driver_item:
-        menu->addAction(QString(tr("Edit driver item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete driver item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit driver file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete driver file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_driver_sub_item:
-        menu->addAction(QString(tr("Edit driver item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete driver item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit driver file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete driver file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_setup:
-        menu->addAction(QString(tr("Edit setup script items")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit setup script file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Add setup script file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_setup_item:
-        menu->addAction(QString(tr("Edit setup-script item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete setup-script item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit setup-script file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete setup-script file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_setup_sub_item:
-        menu->addAction(QString(tr("Edit setup-script item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete setup-script item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit setup-script file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete setup-script file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_manual:
-        menu->addAction(QString(tr("Edit manual items")), this, SLOT(editFileList()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit manual file links")), this, SLOT(editFileList()));
+        }
+        else {
+          menu->addAction(QString(tr("Add manual file links")), this, SLOT(editFileList()));
+        }
         break;
 
       case mdf_type_manual_item:
-        menu->addAction(QString(tr("Edit manual item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete manual item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit manual file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete manual file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_manual_sub_item:
-        menu->addAction(QString(tr("Edit manual item")), this, SLOT(editFile()));
-        menu->addAction(QString(tr("Delete manual item")), this, SLOT(deleteFile()));
+        menu->addAction(QString(tr("Edit manual file link item")), this, SLOT(editFile()));
+        menu->addAction(QString(tr("Delete manual file link item")), this, SLOT(deleteFile()));
         break;
 
       case mdf_type_generic_string:
@@ -631,7 +667,12 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_generic_description:
-        menu->addAction(QString(tr("Edit Descriptions")), this, SLOT(editDescription(void)));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit Descriptions")), this, SLOT(editDescription(void)));
+        }
+        else {
+          menu->addAction(QString(tr("Add Descriptions")), this, SLOT(editDescription(void)));
+        }
         break;
 
       case mdf_type_generic_description_item:
@@ -640,7 +681,12 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_generic_help_url:
-        menu->addAction(QString(tr("Edit Info URL's")), this, SLOT(editInfoUrl(void)));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit Info URL's")), this, SLOT(editInfoUrl(void)));
+        }
+        else {
+          menu->addAction(QString(tr("Add Info URL's")), this, SLOT(editInfoUrl(void)));
+        }
         break;
 
       case mdf_type_generic_help_url_item:
@@ -2116,7 +2162,7 @@ CFrmMdf::renderActionParam(QMdfTreeWidgetItem* pActionParamHeadItem,
   renderDescriptionItems(pActionParamHeadItem, pactionparam, pactionparam->getMapDescription());
 
   // Info URL's
-  renderInfoUrlItems(pActionParamHeadItem, pactionparam, pactionparam->getMapDescription());
+  renderInfoUrlItems(pActionParamHeadItem, pactionparam, pactionparam->getMapInfoUrl());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2211,7 +2257,7 @@ CFrmMdf::renderAction(QMdfTreeWidgetItem* pItemAction,
     renderDescriptionItems(pSubItemAction, paction, paction->getMapDescription());
 
     // Info URL's
-    renderInfoUrlItems(pSubItemAction, paction, paction->getMapDescription());
+    renderInfoUrlItems(pSubItemAction, paction, paction->getMapInfoUrl());
   }
 }
 
@@ -2303,42 +2349,42 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
     for (int i = 0; i < pEventList->size(); i++) {
 
       CMDF_Event* pevent = (*pEventList)[i];
-      pSubItem           = new QMdfTreeWidgetItem(pItemEvent, mdf_type_event_item);
+      pSubItem           = new QMdfTreeWidgetItem(pItemEvent, pevent, mdf_type_event_item);
       if (nullptr != pSubItem) {
 
         str = QString("Event: %1 -- %2").arg(i).arg(pevent->getName().c_str());
         pSubItem->setText(0, str);
         pItemEvent->addChild(pSubItem);
 
-        pItem = new QMdfTreeWidgetItem(pSubItem, mdf_type_generic_string);
+        pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
           str = QString("Name: %1").arg(pevent->getName().c_str());
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }
 
-        pItem = new QMdfTreeWidgetItem(pSubItem, mdf_type_generic_number);
+        pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
           str = QString("VSCP Class: %1").arg(pevent->getClass());
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }
 
-        pItem = new QMdfTreeWidgetItem(pSubItem, mdf_type_generic_number);
+        pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
           str = QString("VSCP Type: %1").arg(pevent->getType());
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }
 
-        pItem = new QMdfTreeWidgetItem(pSubItem, mdf_type_generic_number);
+        pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
           str = QString("VSCP Priority: %1").arg(pevent->getPriority());
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }
 
-        pItem = new QMdfTreeWidgetItem(pSubItem, mdf_type_generic_string);
+        pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
           str = QString("Direction: %1 (%2)").arg((MDF_EVENT_DIR_IN == pevent->getDirection()) ? "In" : "Out").arg(pevent->getDirection());
           pItem->setText(0, str);
@@ -2346,7 +2392,7 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
         }
 
         // Event Data
-        QMdfTreeWidgetItem* pItemEventData = new QMdfTreeWidgetItem(pSubItem, mdf_type_event_data);
+        QMdfTreeWidgetItem* pItemEventData = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_data);
         // pItemEvent->setFont(0, fontTopItem);
         // pItemEvent->setForeground(0, greenBrush);
         pItemEventData->setText(0, tr("Event data"));
@@ -2363,22 +2409,22 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
 
             CMDF_EventData* pEventData = (*pEventDataList)[j];
 
-            pEventSubItem = new QMdfTreeWidgetItem(pItemEventData, mdf_type_event_data_item);
+            pEventSubItem = new QMdfTreeWidgetItem(pItemEventData, pEventData, mdf_type_event_data_item);
             if (nullptr != pEventSubItem) {
 
               // Event data
-              str = QString("Event data: %1 -- %2").arg(j).arg(pEventData->getName().c_str());
+              str = QString("Event data: %1 -- %2").arg(pEventData->getOffset()).arg(pEventData->getName().c_str());
               pEventSubItem->setText(0, str);
               pItemEventData->addChild(pEventSubItem);
 
-              pItem = new QMdfTreeWidgetItem(pEventSubItem, mdf_type_generic_string);
+              pItem = new QMdfTreeWidgetItem(pEventSubItem, pEventData, mdf_type_event_data_sub_item);
               if (nullptr != pItem) {
                 str = QString("Name: %1").arg(pEventData->getName().c_str());
                 pItem->setText(0, str);
                 pEventSubItem->addChild(pItem);
               }
 
-              pItem = new QMdfTreeWidgetItem(pEventSubItem, mdf_type_generic_number);
+              pItem = new QMdfTreeWidgetItem(pEventSubItem, pEventData, mdf_type_event_data_sub_item);
               if (nullptr != pItem) {
                 str = QString("Offset: %1").arg(pEventData->getOffset());
                 pItem->setText(0, str);
@@ -2395,7 +2441,7 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
               renderDescriptionItems(pEventSubItem, pEventData, pEventData->getMapDescription());
 
               // Info URL's
-              renderInfoUrlItems(pEventSubItem, pEventData, pEventData->getMapDescription());
+              renderInfoUrlItems(pEventSubItem, pEventData, pEventData->getMapInfoUrl());
             }
           } // EventDataList
         }   // list exist
@@ -2404,7 +2450,7 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
         renderDescriptionItems(pSubItem, pevent, pevent->getMapDescription());
 
         // Info URL's
-        renderInfoUrlItems(pSubItem, pevent, pevent->getMapDescription());
+        renderInfoUrlItems(pSubItem, pevent, pevent->getMapInfoUrl());
       }
     }
   } // EventList
@@ -3150,7 +3196,7 @@ CFrmMdf::deleteMdfWidgetChildItems(QMdfTreeWidgetItem* pItem, mdf_record_type ty
   pItem->setExpanded(true);
 
   QMdfTreeWidgetItem* piter = (QMdfTreeWidgetItem*)ui->treeMDF->itemBelow(pItem);
-  while (type == piter->getObjectType()) {
+  while ((nullptr != piter) && (type == piter->getObjectType())) {
     pItem->removeChild(piter);
     delete piter;
     cnt++;
@@ -3513,10 +3559,16 @@ CFrmMdf::deleteItem()
     case mdf_type_event_data_item:
       break;
 
+    case mdf_type_event_data_sub_item:
+      break;
+
     case mdf_type_event:
       break;
 
     case mdf_type_event_item:
+      break;
+
+    case mdf_type_event_sub_item:
       break;
 
     case mdf_type_value_item:
@@ -3974,6 +4026,15 @@ CFrmMdf::editDescription(void)
     case mdf_type_action_param_sub_item: {
       pmap = pItem->getObject()->getMapDescription();
     } break;
+
+    case mdf_type_event:
+    case mdf_type_event_item:
+    case mdf_type_event_sub_item:
+    case mdf_type_event_data:
+    case mdf_type_event_data_item:
+    case mdf_type_event_data_sub_item: {
+      pmap = pItem->getObject()->getMapDescription();
+    } break;
   }
 
   if (mdf_type_generic_description == pItem->getObjectType()) {
@@ -4093,6 +4154,15 @@ CFrmMdf::deleteDescription(void)
     case mdf_type_action_param:
     case mdf_type_action_param_item:
     case mdf_type_action_param_sub_item: {
+      pmap = pItem->getObject()->getMapDescription();
+    } break;
+
+    case mdf_type_event:
+    case mdf_type_event_item:
+    case mdf_type_event_sub_item:
+    case mdf_type_event_data:
+    case mdf_type_event_data_item:
+    case mdf_type_event_data_sub_item: {
       pmap = pItem->getObject()->getMapDescription();
     } break;
   }
@@ -4219,7 +4289,16 @@ CFrmMdf::editInfoUrl(void)
     case mdf_type_action_param:
     case mdf_type_action_param_item:
     case mdf_type_action_param_sub_item: {
-      pmap = pItem->getObject()->getMapDescription();
+      pmap = pItem->getObject()->getMapInfoUrl();
+    } break;
+
+    case mdf_type_event:
+    case mdf_type_event_item:
+    case mdf_type_event_sub_item:
+    case mdf_type_event_data:
+    case mdf_type_event_data_item:
+    case mdf_type_event_data_sub_item: {
+      pmap = pItem->getObject()->getMapInfoUrl();
     } break;
   }
 
@@ -4341,7 +4420,16 @@ CFrmMdf::deleteInfoUrl(void)
     case mdf_type_action_param:
     case mdf_type_action_param_item:
     case mdf_type_action_param_sub_item: {
-      pmap = pItem->getObject()->getMapDescription();
+      pmap = pItem->getObject()->getMapInfoUrl();
+    } break;
+
+    case mdf_type_event:
+    case mdf_type_event_item:
+    case mdf_type_event_sub_item:
+    case mdf_type_event_data:
+    case mdf_type_event_data_item:
+    case mdf_type_event_data_sub_item: {
+      pmap = pItem->getObject()->getMapInfoUrl();
     } break;
   }
 
@@ -5598,7 +5686,7 @@ CFrmMdf::addRegister(void)
       bool ok;
       CMDF_Register* pregnew = new CMDF_Register();
 
-addregdlg1:
+    addregdlg1:
       CDlgMdfRegister dlg(this);
       dlg.initDialogData(&m_mdf, pregnew);
       if (QDialog::Accepted == dlg.exec()) {
@@ -6463,7 +6551,7 @@ CFrmMdf::editRemoteVariable(void)
         }
         childrenList.clear();
         QString str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(0).arg(pvar->getName().c_str());
-        //str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(i).arg(pvar->getName().c_str());
+        // str = QString("%1 %2 - %3").arg(CDlgMdfRemoteVar::pre_str_remote_variable).arg(i).arg(pvar->getName().c_str());
         pItem->setText(0, str);
         renderRemoteVariableItem(pItem, pvar);
       }
@@ -6797,6 +6885,431 @@ CFrmMdf::editAction(void)
         childrenList.clear();
         renderActionParam(pItemHead, (CMDF_ActionParameter*)pItemHead->getObject());
       }
+    } break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editEvent
+//
+
+void
+CFrmMdf::editEvent(void)
+{
+  QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Action edit"), tr("No MDF event item selected"));
+    return;
+  }
+  QMdfTreeWidgetItem* pItemHead = (nullptr != pItem) ? (QMdfTreeWidgetItem*)pItem->parent() : nullptr;
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Action edit"), tr("No MDF event item selected (parent)"));
+    return;
+  }
+
+  QMdfTreeWidgetItem* pItemHeadHead     = (nullptr != pItemHead) ? (QMdfTreeWidgetItem*)pItemHead->parent() : nullptr;
+  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+
+  uint16_t selectedIndex = pItem->getElementIndex();
+
+  switch (pItem->getObjectType()) {
+    case mdf_type_event_item: {
+      // We show DM dialog
+      CDlgMdfEvent dlg(this);
+      dlg.initDialogData(&m_mdf, (CMDF_Event*)pItem->getObject(), false, 0);
+      if (QDialog::Accepted == dlg.exec()) {
+        QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItemHead);
+      }
+    } break;
+
+    case mdf_type_event_sub_item: {
+
+      if (nullptr == pItemHeadHead) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_sub_item)"));
+        return;
+      }
+
+      // We show DM dialog
+      CDlgMdfEvent dlg(this);
+      dlg.initDialogData(&m_mdf, (CMDF_Event*)pItemHead->getObject(), false, 0);
+      if (QDialog::Accepted == dlg.exec()) {
+        QList<QTreeWidgetItem*> childrenList = pItemHeadHead->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItemHeadHead);
+      }
+    } break;
+
+    case mdf_type_event_data_item: {
+
+      if (nullptr == pItemHeadHead) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_data_item)"));
+        return;
+      }
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHeadHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Invalid object (event)"));
+        return;
+      }
+
+      CMDF_EventData* pEventData = (CMDF_EventData*)pItem->getObject();
+      if (nullptr == pEventData) {
+        return;
+      }
+
+      // save origonal offset
+      uint16_t offset = pEventData->getOffset();
+
+      CDlgMdfEventData dlg(this);
+    adddlg:
+      dlg.initDialogData(&m_mdf, pEventData);
+      // If DM is level I only offset 0 is allowd
+      if (VSCP_LEVEL1 == m_mdf.getLevel()) {
+        dlg.setLevel1();
+      }
+
+      if (QDialog::Accepted == dlg.exec()) {
+
+        // If offset has been changed we must make sure its
+        // unique
+        if (offset != pEventData->getOffset()) {
+          // Event data offset must be unique
+          if (!pEvent->isEventDataOffsetUnique(pEventData)) {
+            QMessageBox::warning(this, tr(APPNAME), tr("Offset is already used. Must be unique"));
+            goto adddlg;
+          }
+        }
+
+        // Remove children
+        QList<QTreeWidgetItem*> childrenList = pItemHeadHead->takeChildren();
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItemHeadHead);
+      }
+    } break;
+
+    case mdf_type_event_data_sub_item: {
+
+      if (nullptr == pItemHeadHeadHead) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_data_sub_item)"));
+        return;
+      }
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHeadHeadHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Invalid object (event)"));
+        return;
+      }
+
+      CMDF_EventData* pEventData = (CMDF_EventData*)pItem->getObject();
+      if (nullptr == pEventData) {
+        return;
+      }
+
+      // save origonal offset
+      uint16_t offset = pEventData->getOffset();
+
+      CDlgMdfEventData dlg(this);
+    adddlg2:
+      dlg.initDialogData(&m_mdf, pEventData);
+      // If DM is level I only offset 0 is allowd
+      if (VSCP_LEVEL1 == m_mdf.getLevel()) {
+        dlg.setLevel1();
+      }
+
+      if (QDialog::Accepted == dlg.exec()) {
+
+        // If offset has been changed we must make sure its
+        // unique
+        if (offset != pEventData->getOffset()) {
+          // Event data offset must be unique
+          if (!pEvent->isEventDataOffsetUnique(pEventData)) {
+            QMessageBox::warning(this, tr(APPNAME), tr("Offset is already used. Must be unique"));
+            goto adddlg2;
+          }
+        }
+
+        // Remove children
+        QList<QTreeWidgetItem*> childrenList = pItemHeadHeadHead->takeChildren();
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItemHeadHeadHead);
+      }
+    } break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addEvent
+//
+
+void
+CFrmMdf::addEvent(void)
+{
+  QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Action edit"), tr("No MDF event item selected"));
+    return;
+  }
+  QMdfTreeWidgetItem* pItemHead = (nullptr != pItem) ? (QMdfTreeWidgetItem*)pItem->parent() : nullptr;
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Action edit"), tr("No MDF event item selected (parent)"));
+    return;
+  }
+
+  QMdfTreeWidgetItem* pItemHeadHead     = (nullptr != pItemHead) ? (QMdfTreeWidgetItem*)pItemHead->parent() : nullptr;
+  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+
+  uint16_t selectedIndex = pItem->getElementIndex();
+
+  switch (pItem->getObjectType()) {
+    case mdf_type_event: {
+      CMDF_Event* pEvent = new CMDF_Event();
+      if (nullptr == pEvent) {
+        return;
+      }
+      // We show DM dialog
+      CDlgMdfEvent dlg(this);
+      dlg.initDialogData(&m_mdf, pEvent, true, 0);
+      if (QDialog::Accepted == dlg.exec()) {
+        // Remove children
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItem);
+      }
+      else {
+        delete pEvent;
+      }
+    } break;
+
+    case mdf_type_event_data: {
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Invalid object (event)"));
+        return;
+      }
+
+      CMDF_EventData* pEventDataNew = new (CMDF_EventData);
+      if (nullptr == pEventDataNew) {
+        return;
+      }
+
+      CDlgMdfEventData dlg(this);
+    adddlg:
+      dlg.initDialogData(&m_mdf, pEventDataNew);
+      // If DM is level I only offset 0 is allowd
+      if (VSCP_LEVEL1 == m_mdf.getLevel()) {
+        dlg.setLevel1();
+      }
+      if (QDialog::Accepted == dlg.exec()) {
+
+        // Event data offset must be unique
+        if (!pEvent->isEventDataOffsetUnique(pEventDataNew->getOffset())) {
+          QMessageBox::warning(this, tr(APPNAME), tr("Offset is already used. Must be unique"));
+          goto adddlg;
+        }
+
+        if (!pEvent->addEventData(pEventDataNew)) {
+          QMessageBox::critical(this, tr(APPNAME), tr("Unable to add event data."));
+        }
+
+        // Remove children
+        QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        renderEvents(pItemHead);
+      }
+      else {
+        delete pEventDataNew;
+      }
+    } break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// deleteEvent
+//
+
+void
+CFrmMdf::deleteEvent(void)
+{
+  QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Action edit"), tr("No MDF event item selected"));
+    return;
+  }
+  QMdfTreeWidgetItem* pItemHead = (nullptr != pItem) ? (QMdfTreeWidgetItem*)pItem->parent() : nullptr;
+  if (nullptr == pItem) {
+    int ret = QMessageBox::critical(this, tr("MDF Event delete"), tr("No MDF event item selected (parent)"));
+    return;
+  }
+
+  QMdfTreeWidgetItem* pItemHeadHead     = (nullptr != pItemHead) ? (QMdfTreeWidgetItem*)pItemHead->parent() : nullptr;
+  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+
+  uint16_t selectedIndex = pItem->getElementIndex();
+
+  switch (pItem->getObjectType()) {
+
+    case mdf_type_event_item: {
+      CMDF_Event* pEvent = (CMDF_Event*)pItem->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::critical(this, tr("MDF Event delete"), tr("No MDF event item selected (parent)"));
+        return;
+      }
+
+      if (QMessageBox::No == QMessageBox::question(this,
+                                                   tr("MDF delete Event"),
+                                                   tr("Delete selected Event?"))) {
+        return;
+      }
+      m_mdf.deleteEvent(pEvent);
+
+      QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
+      // Remove children
+      for (qsizetype i = 0; i < childrenList.size(); ++i) {
+        QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+        delete item;
+      }
+      childrenList.clear();
+      renderEvents(pItemHead);
+    } break;
+
+    case mdf_type_event_sub_item: {
+
+      if (nullptr == pItemHeadHead) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_sub_item)"));
+        return;
+      }
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::critical(this, tr("MDF Event delete"), tr("No MDF event item selected (parent)"));
+        return;
+      }
+
+      if (QMessageBox::No == QMessageBox::question(this,
+                                                   tr("MDF delete Event"),
+                                                   tr("Delete selected Event?"))) {
+        return;
+      }
+      m_mdf.deleteEvent(pEvent);
+
+      QList<QTreeWidgetItem*> childrenList = pItemHeadHead->takeChildren();
+      // Remove children
+      for (qsizetype i = 0; i < childrenList.size(); ++i) {
+        QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+        delete item;
+      }
+      childrenList.clear();
+      renderEvents(pItemHeadHead);
+    } break;
+
+    case mdf_type_event_data_item: {
+
+      if (nullptr == pItemHeadHead) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_data_item)"));
+        return;
+      }
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHeadHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Invalid object (event)"));
+        return;
+      }
+
+      CMDF_EventData* pEventData = (CMDF_EventData*)pItem->getObject();
+      if (nullptr == pEventData) {
+        return;
+      }
+
+      if (QMessageBox::No == QMessageBox::question(this,
+                                                   tr("MDF delete event data item"),
+                                                   tr("Delete event data with offset %1.").arg(pEventData->getOffset()))) {
+        return;
+      }
+
+      if (!pEvent->deleteEventData(pEventData)) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Failed to remove event data with offset %1.").arg(pEventData->getOffset()));
+      }
+
+      QList<QTreeWidgetItem*> childrenList = pItemHeadHeadHead->takeChildren();
+      // Remove children
+      for (qsizetype i = 0; i < childrenList.size(); ++i) {
+        QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+        delete item;
+      }
+
+      childrenList.clear();
+      renderEvents(pItemHeadHeadHead);
+
+    } break;
+
+    case mdf_type_event_data_sub_item: {
+
+      QMdfTreeWidgetItem* pItemHeadHeadHeadHead =
+        (nullptr != pItemHeadHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHeadHead->parent() : nullptr;
+
+      if ((nullptr == pItemHeadHeadHeadHead) || (nullptr == pItemHeadHeadHeadHead)) {
+        QMessageBox::critical(this, tr(APPNAME), tr("Tree structure is corrupted (mdf_type_event_data_sub_item)"));
+        return;
+      }
+
+      CMDF_Event* pEvent = (CMDF_Event*)pItemHeadHeadHead->getObject();
+      if (nullptr == pEvent) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Invalid object (event)"));
+        return;
+      }
+
+      CMDF_EventData* pEventData = (CMDF_EventData*)pItem->getObject();
+      if (nullptr == pEventData) {
+        return;
+      }
+
+      if (QMessageBox::No == QMessageBox::question(this,
+                                                   tr("MDF delete event data item"),
+                                                   tr("Delete event data with offset %1.").arg(pEventData->getOffset()))) {
+        return;
+      }
+
+      if (!pEvent->deleteEventData(pEventData)) {
+        QMessageBox::warning(this, tr(APPNAME), tr("Failed to remove event data with offset %1.").arg(pEventData->getOffset()));
+      }
+
+      QList<QTreeWidgetItem*> childrenList = pItemHeadHeadHeadHead->takeChildren();
+      // Remove children
+      for (qsizetype i = 0; i < childrenList.size(); ++i) {
+        QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+        delete item;
+      }
+      childrenList.clear();
+      renderEvents(pItemHeadHeadHeadHead);
     } break;
   }
 }

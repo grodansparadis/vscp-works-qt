@@ -64,7 +64,7 @@ CDlgTxEdit::CDlgTxEdit(QWidget *parent) :
                 this, &CDlgTxEdit::currentVscpClassIndexChanged );
 
     fillVscpClass(0);
-    setInitialFocus();  
+    setInitialFocus();    
 }
 
 ///////////////////////////////////////////////////////////////////////////////

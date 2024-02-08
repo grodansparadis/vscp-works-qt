@@ -262,8 +262,11 @@ CDlgMdfDmAction::editActionParam(void)
     int idx = ui->listActionParams->currentRow();
 
     QListWidgetItem* pitem = ui->listActionParams->currentItem();
-    printf("data=%d\n", pitem->data(QListWidgetItem::UserType).toUInt());
-    CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+    CMDF_ActionParameter* pactionparam =
+      m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
+    if (nullptr == pactionparam) {
+      return;
+    }
 
     CDlgMdfDmActionParam dlg(this);
     dlg.initDialogData(m_pmdf, pactionparam);
@@ -296,7 +299,7 @@ CDlgMdfDmAction::addActionParam(void)
   }
 
   CDlgMdfDmActionParam dlg(this);
-adddlg:  
+adddlg:
   dlg.initDialogData(m_pmdf, pactionparam);
   // If DM is level I only offset 0 is allowd
   if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
@@ -328,7 +331,7 @@ CDlgMdfDmAction::dupActionParam(void)
   // Save the selected row
   int idx = ui->listActionParams->currentRow();
 
-  QListWidgetItem* pitem = ui->listActionParams->currentItem();
+  QListWidgetItem* pitem             = ui->listActionParams->currentItem();
   CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == pactionparam) {
     return;
@@ -377,20 +380,20 @@ CDlgMdfDmAction::deleteActionParam(void)
   // Save the selected row
   int idx = ui->listActionParams->currentRow();
 
-  QListWidgetItem* pitem = ui->listActionParams->currentItem();
+  QListWidgetItem* pitem             = ui->listActionParams->currentItem();
   CMDF_ActionParameter* pactionparam = m_paction->getActionParam(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == pactionparam) {
     return;
   }
 
-  if (QMessageBox::No == QMessageBox::question(this, 
-                          tr("MDF delete action parameter"), 
-                          tr("Delete action parameter with offset %1.").arg(pactionparam->getOffset()))) {
+  if (QMessageBox::No == QMessageBox::question(this,
+                                               tr("MDF delete action parameter"),
+                                               tr("Delete action parameter with offset %1.").arg(pactionparam->getOffset()))) {
     return;
   }
 
   if (!m_paction->deleteActionParam(pactionparam)) {
-    QMessageBox::warning(this, tr("MDF add new action parameter"), tr("Failed to remove action parameter with offset %1.").arg(pactionparam->getOffset()));      
+    QMessageBox::warning(this, tr("MDF add new action parameter"), tr("Failed to remove action parameter with offset %1.").arg(pactionparam->getOffset()));
   }
 
   renderActionParams();

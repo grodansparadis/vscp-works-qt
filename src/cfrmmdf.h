@@ -276,6 +276,15 @@ public slots:
   /// Edit DM action
   void editAction(void);
 
+  /// Edit DM event
+  void editEvent(void);
+
+  /// Add DM event
+  void addEvent(void);
+
+  /// Delete DM event
+  void deleteEvent(void);
+
   /*!
     Fill in data from info map as children to parent item
 
