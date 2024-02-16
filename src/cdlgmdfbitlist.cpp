@@ -104,7 +104,7 @@ CDlgMdfBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
 
   // Disable items that are not used
   if (mdf_type_register == type) {
-    setWindowTitle("Register bit definitionsöööö");
+    setWindowTitle("Register bit definitions");
   }
   else if (mdf_type_remotevar == type) {
     setWindowTitle("Remote variable bit definitions");
@@ -114,6 +114,9 @@ CDlgMdfBitList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
   }
   else if (mdf_type_action_param == type) {
     setWindowTitle("Action parameter bit definitions");
+  }
+  else if (mdf_type_event_data_item == type) {
+    setWindowTitle("Event data bit definitions");
   }
 
   // m_pmdf->getRegisterMap(m_page, pages);
@@ -167,6 +170,10 @@ CDlgMdfBitList::renderBitItems(void)
   else if (mdf_type_action_param == m_type) {
     pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
   }
+  else if (mdf_type_event_data_item == m_type) {
+    pbits = ((CMDF_EventData*)m_pobj)->getListBits();
+  }
+
   else {
     return;
   }
@@ -233,6 +240,9 @@ addbitdlg:
     }
     else if (mdf_type_action_param == m_type) {
       pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
+    }
+    else if (mdf_type_event_data_item == m_type) {
+      pbits = ((CMDF_EventData*)m_pobj)->getListBits();
     }
     else {
       return;
