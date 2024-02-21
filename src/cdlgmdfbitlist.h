@@ -71,46 +71,25 @@ public:
   void renderBitItems(void);
 
   /*!
+    Get a pointer to the bitlist for the type
+    @return Pointer to bitlist or nullptr if invalid
+  */
+  std::deque<CMDF_Bit*>* getBitList(void);
+
+  /*!
+    Get pointer to bit object
+    @param pos The bits start position
+    @return Pointer to bit object or null pointer if pos is invalid
+  */
+  CMDF_Bit* getBitObj(uint8_t pos);
+
+  /*!
     Check if bits overlap
     @param pbit2test pointer to bit to test
     @param bEdit Edit mode. The bit is already in the list.
     @return Overlapping bits or zero iof no bits overlap
   */
-  uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false)
-  {
-    uint8_t result = 0;
-    std::deque<CMDF_Bit*>* pbits;
-
-    // pbits = m_preg->getListBits();
-    if (mdf_type_register == m_type) {
-      pbits = ((CMDF_Register*)m_pobj)->getListBits();
-    }
-    else if (mdf_type_remotevar == m_type) {
-      pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
-    }
-    else if (mdf_type_alarm == m_type) {
-      pbits = ((CMDF*)m_pobj)->getAlarmListBits();
-    }
-    else if (mdf_type_action_param == m_type) {
-      pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
-    }
-    else {
-      return 0;
-    }
-
-    for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
-      CMDF_Bit* pbit = *it;
-      // Don't test the edited bit of in edit mode
-      if (bEdit && (pbit2test == pbit)) {
-        continue;
-      }
-      if (nullptr != pbit) {
-        result |= pbit->getMask();
-      }
-    }
-
-    return (result & pbit2test->getMask());
-  };
+  uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -139,6 +118,10 @@ private:
 
   // Object type
   mdf_record_type m_type;
+
+  // Render data
+  std::set<uint8_t> m_bitset;
+  std::map<uint8_t, CMDF_Bit*> m_bitmap;
 };
 
 #endif // CDLGMDFREGISTERBITLIST_H

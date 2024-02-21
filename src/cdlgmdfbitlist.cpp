@@ -158,6 +158,48 @@ CDlgMdfBitList::renderBitItems(void)
   }
 
   ui->listBits->clear();
+
+  // Get bitlist (for type)
+  if (nullptr == (pbits = getBitList())) {
+    return;
+  }
+
+  // If no enteries there is nothing to do
+  if (!pbits->size()) {
+    return;
+  }
+
+  // Create set with sorted bit offsets and a map
+  // to help find corresponding bit pointer
+  // Add registers for page
+  m_bitset.clear();
+  m_bitmap.clear();
+  for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+    m_bitset.insert((*it)->getPos());
+    m_bitmap[(*it)->getPos()] = *it;
+  }
+
+  for (auto it = m_bitset.cbegin(); it != m_bitset.cend(); ++it) {
+    CMDF_Bit* pbit = m_bitmap[*it]; //*it;
+    if (nullptr != pbit) {
+      QString str = QString("Bit %1(%2)-- %3").arg(pbit->getPos()).arg(pbit->getWidth()).arg(pbit->getName().c_str());
+      ui->listBits->addItem(str);
+      // Set data to register index
+      ui->listBits->item(ui->listBits->count() - 1)->setData(Qt::UserRole, pbit->getPos());
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBitList
+//
+
+std::deque<CMDF_Bit*>*
+CDlgMdfBitList::getBitList(void)
+{
+  std::deque<CMDF_Bit*>* pbits = nullptr;
+
+  // pbits = m_preg->getListBits();
   if (mdf_type_register == m_type) {
     pbits = ((CMDF_Register*)m_pobj)->getListBits();
   }
@@ -174,27 +216,59 @@ CDlgMdfBitList::renderBitItems(void)
     pbits = ((CMDF_EventData*)m_pobj)->getListBits();
   }
 
-  else {
-    return;
+  return pbits;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBitObj
+//
+
+CMDF_Bit*
+CDlgMdfBitList::getBitObj(uint8_t pos)
+{
+  std::deque<CMDF_Bit*>* pbits = getBitList();
+  if (nullptr == pbits) {
+    return nullptr;
   }
 
-  // If no enteries there is nothing to do
-  if (!pbits->size()) {
-    return;
-  }
-
-  int idx = 0;
   for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
     CMDF_Bit* pbit = *it;
-    if (nullptr != pbit) {
-      QString str = QString("Bit %1(%2)-- %3").arg(pbit->getPos()).arg(pbit->getWidth()).arg(pbit->getName().c_str());
-      ui->listBits->addItem(str);
-      // Set data to register index
-      ui->listBits->item(ui->listBits->count() - 1)->setData(Qt::UserRole, idx);
+    if (pbit->getPos() == pos) {
+      return pbit;
     }
-    idx++;
   }
+
+  return nullptr;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// checkIfBitsOverlap
+//
+
+uint8_t
+CDlgMdfBitList::checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit)
+{
+  uint8_t result = 0;
+  std::deque<CMDF_Bit*>* pbits;
+
+  // Get bitlist (for type)
+  if (nullptr == (pbits = getBitList())) {
+    return 0;
+  }
+
+  for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+    CMDF_Bit* pbit = *it;
+    // Don't test the edited bit of in edit mode
+    if (bEdit && (pbit2test == pbit)) {
+      continue;
+    }
+    if (nullptr != pbit) {
+      result |= pbit->getMask();
+    }
+  }
+
+  return (result & pbit2test->getMask());
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // addRegisterBit
@@ -204,7 +278,7 @@ void
 CDlgMdfBitList::addRegisterBit(void)
 {
   bool ok;
-  std::deque<CMDF_Bit*>* pbits;
+  std::deque<CMDF_Bit*>* pbits = nullptr;
 
   CMDF_Bit* pbitnew = new CMDF_Bit();
   if (nullptr == pbitnew) {
@@ -229,22 +303,9 @@ addbitdlg:
       QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
       goto addbitdlg;
     }
-    if (mdf_type_register == m_type) {
-      pbits = ((CMDF_Register*)m_pobj)->getListBits();
-    }
-    else if (mdf_type_remotevar == m_type) {
-      pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
-    }
-    else if (mdf_type_alarm == m_type) {
-      pbits = ((CMDF*)m_pobj)->getAlarmListBits();
-    }
-    else if (mdf_type_action_param == m_type) {
-      pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
-    }
-    else if (mdf_type_event_data_item == m_type) {
-      pbits = ((CMDF_EventData*)m_pobj)->getListBits();
-    }
-    else {
+
+    // Get bitlist (for type)
+    if (nullptr == (pbits = getBitList())) {
       return;
     }
 
@@ -269,24 +330,17 @@ CDlgMdfBitList::editRegisterBit(void)
   if (-1 != ui->listBits->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listBits->currentRow();
-
+    int idx                = ui->listBits->currentRow();
     QListWidgetItem* pitem = ui->listBits->currentItem();
-    // CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
 
-    if (mdf_type_register == m_type) {
-      pbit = ((CMDF_Register*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
+    // Get bitlist (for type)
+    if (nullptr == getBitList()) {
+      return;
     }
-    else if (mdf_type_remotevar == m_type) {
-      pbit = ((CMDF_RemoteVariable*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
-    }
-    else if (mdf_type_alarm == m_type) {
-      pbit = ((CMDF*)m_pobj)->getAlarmListBits()->at(pitem->data(Qt::UserRole).toUInt());
-    }
-    else if (mdf_type_action_param == m_type) {
-      pbit = ((CMDF_ActionParameter*)m_pobj)->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
-    }
-    else {
+
+    // Get the bit
+    pbit = getBitObj(pitem->data(Qt::UserRole).toUInt());
+    if (nullptr == pbit) {
       return;
     }
 
@@ -318,50 +372,53 @@ CDlgMdfBitList::editRegisterBit(void)
 void
 CDlgMdfBitList::dupRegisterBit(void)
 {
+  CMDF_Bit* pbit               = nullptr;
+  std::deque<CMDF_Bit*>* pbits = nullptr;
+
   if (-1 != ui->listBits->currentRow()) {
 
     // Save the selected row
     int idx = ui->listBits->currentRow();
 
-    //   QListWidgetItem* pitem = ui->listBits->currentItem();
-    //   CMDF_Bit* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    QListWidgetItem* pitem = ui->listBits->currentItem();
 
-    //   CMDF_Bit* pregnew = new CMDF_Bit();
-    //   pregnew->setPage(m_page);
+    CMDF_Bit* pbitnew = new CMDF_Bit();
+    if (nullptr == pbitnew) {
+      QMessageBox::critical(this, tr("MDF bit information"), tr("Memory problem"));
+      spdlog::error("MDF information - Memory problem");
+      return;
+    }
 
-    //   // Make copy
-    //   *pregnew = *preg;
+    // Get the bit
+    pbit = getBitObj(pitem->data(Qt::UserRole).toUInt());
+    if (nullptr == pbit) {
+      return;
+    }
 
-    //   CDlgMdfBit dlg(this);
-    //   dlg.initDialogData(m_pmdf, pregnew);
-    // dupregdlg:
-    //   if (QDialog::Accepted == dlg.exec()) {
-    //     // Check if register is already defined
-    //     CMDF_Bit* pregold = m_pmdf->getRegister(pregnew->getOffset(), pregnew->getPage());
-    //     if (nullptr != pregold) {
-    //       QMessageBox::warning(this, tr("MDF duplicate register"), tr("Register page=%1 offset=%2 is already define. Must be unique.").arg(pregnew->getPage()).arg(pregnew->getOffset()));
-    //       goto dupregdlg;
-    //     }
-    //     qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
-    //     m_pmdf->getRegisterObjList()->push_back(pregnew);
-    //     if (m_page == pregnew->getPage()) {
-    //       m_registersSet.insert(pregnew->getOffset());
-    //     }
-    //     ui->listBits->clear();
-    //     renderRegisterItems();
-    //     if (-1 != idx) {
-    //       ui->listBits->setCurrentRow(idx);
-    //     }
-    //     // Warn if page is not the same as for dialog
-    //     if (pregnew->getPage() != m_page) {
-    //       QMessageBox::information(this,
-    //                                tr("MDF duplicate register"),
-    //                                tr("Register page=%1 offset=%2 is not on same page [%3] as registers and will be added but not shown.").arg(pregnew->getPage()).arg(pregnew->getOffset()).arg(m_page));
-    //     }
-    //   }
-    //   else {
-    //     delete pregnew;
-    //   }
+    // Make copy
+    *pbitnew = *pbit;
+
+    CDlgMdfBit dlg(this);
+    dlg.initDialogData(pbit, 0, m_type);
+  dupbitdlg:
+    if (QDialog::Accepted == dlg.exec()) {
+      uint8_t mask;
+      if ((mask = checkIfBitsOverlap(pbitnew))) {
+        QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+        goto dupbitdlg;
+      }
+
+      // Get bitlist (for type)
+      if (nullptr == (pbits = getBitList())) {
+        return;
+      }
+
+      pbits->push_back(pbitnew);
+      renderBitItems();
+    }
+    else {
+      delete pbitnew;
+    }
   }
   else {
     QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
@@ -375,23 +432,12 @@ CDlgMdfBitList::dupRegisterBit(void)
 void
 CDlgMdfBitList::deleteRegisterBit(void)
 {
-  CMDF_Bit* pbit;
+  CMDF_Bit* pbit = nullptr;
   std::deque<CMDF_Bit*>::iterator it;
-  std::deque<CMDF_Bit*>* pbits;
+  std::deque<CMDF_Bit*>* pbits = nullptr;
 
-  if (mdf_type_register == m_type) {
-    pbits = ((CMDF_Register*)m_pobj)->getListBits();
-  }
-  else if (mdf_type_remotevar == m_type) {
-    pbits = ((CMDF_RemoteVariable*)m_pobj)->getListBits();
-  }
-  else if (mdf_type_alarm == m_type) {
-    pbits = ((CMDF*)m_pobj)->getAlarmListBits();
-  }
-  else if (mdf_type_action_param == m_type) {
-    pbits = ((CMDF_ActionParameter*)m_pobj)->getListBits();
-  }
-  else {
+  // Get bitlist (for type)
+  if (nullptr == (pbits = getBitList())) {
     return;
   }
 
@@ -401,15 +447,13 @@ CDlgMdfBitList::deleteRegisterBit(void)
     int idx = ui->listBits->currentRow();
 
     QListWidgetItem* pitem = ui->listBits->currentItem();
-    // CMDF_Bit* pbit         = m_preg->getListBits()->at(pitem->data(Qt::UserRole).toUInt());
-    pbit = pbits->at(pitem->data(Qt::UserRole).toUInt());
 
-    // std::deque<CMDF_Bit*>::iterator it = m_preg->getListBits()->begin() + pitem->data(Qt::UserRole).toUInt();
-
-    it = pbits->begin() + pitem->data(Qt::UserRole).toUInt();
-    pbits->erase(it);
-
-    // m_preg->getListBits()->erase(it);
+    for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+      CMDF_Bit* pbit = *it;
+      if (pbit->getPos() == pitem->data(Qt::UserRole).toUInt()) {
+        pbits->erase(it);
+      }
+    }
 
     ui->listBits->clear();
     renderBitItems();
