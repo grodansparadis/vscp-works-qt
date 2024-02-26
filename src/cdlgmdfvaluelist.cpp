@@ -57,20 +57,21 @@ CDlgMdfValueList::CDlgMdfValueList(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgMdfValueList)
 {
-  m_preg = nullptr;
+  m_pobj = nullptr;
 
   ui->setupUi(this);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  connect(ui->btnAddRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::addRegisterValue);
-  connect(ui->btnEditRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::editRegisterValue);
-  connect(ui->btnDupRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::dupRegisterValue);
-  connect(ui->btnDelRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::deleteRegisterValue);
+  connect(ui->btnAddRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::addValue);
+  connect(ui->btnEditRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::editValue);
+  connect(ui->btnDupRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::dupValue);
+  connect(ui->btnDelRegisterValue, &QToolButton::clicked, this, &CDlgMdfValueList::deleteValue);
 
-  connect(ui->listRegisterValues, &QListWidget::doubleClicked, this, &CDlgMdfValueList::editRegisterValue);
+  connect(ui->listValues, &QListWidget::doubleClicked, this, &CDlgMdfValueList::editValue);
 
   this->setFixedSize(this->size());
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,18 +88,19 @@ CDlgMdfValueList::~CDlgMdfValueList()
 //
 
 void
-CDlgMdfValueList::initDialogData(CMDF_Register* preg)
+CDlgMdfValueList::initDialogData(CMDF_Object* pobj, mdf_record_type type)
 {
   QString str;
 
-  if (nullptr == preg) {
-    QMessageBox::critical(this, tr("MDF register value information"), tr("Invalid MDF register object"));
-    spdlog::error("MDF register value information - Invalid MDF register object");
+  if (nullptr == pobj) {
+    QMessageBox::critical(this, tr("MDF value information"), tr("Invalid MDF object"));
+    spdlog::error("MDF value information - Invalid MDF object");
     return;
   }
 
-  // Save register pointer and page
-  m_preg = preg;
+  // Save register pointer and type
+  m_pobj = pobj;
+  m_type = type;
 
   // m_pmdf->getRegisterMap(m_page, pages);
   renderValueItems();
@@ -111,12 +113,18 @@ CDlgMdfValueList::initDialogData(CMDF_Register* preg)
 void
 CDlgMdfValueList::renderValueItems(void)
 {
-  if (nullptr == m_preg) {
+  if (nullptr == m_pobj) {
     return;
   }
 
-  ui->listRegisterValues->clear();
-  std::deque<CMDF_Value*>* pvalues = m_preg->getListValues();
+  ui->listValues->clear();
+  std::deque<CMDF_Value*>* pvalues = getValueList();
+
+  if (nullptr == pvalues) {
+    QMessageBox::critical(this, tr("APPNAME"), tr("Invalid firmware object"));
+    spdlog::error("MDF values: Can't get valuelist");
+    return;
+  }
 
   // If no enteries there is nothing to do
   if (!pvalues->size()) {
@@ -128,46 +136,82 @@ CDlgMdfValueList::renderValueItems(void)
     CMDF_Value* pvalue = *it;
     if (nullptr != pvalue) {
       QString str = QString("Value: %1").arg(pvalue->getName().c_str());
-      ui->listRegisterValues->addItem(str);
+      ui->listValues->addItem(str);
       // Set data to register index
-      ui->listRegisterValues->item(ui->listRegisterValues->count() - 1)->setData(Qt::UserRole, idx);
+      ui->listValues->item(ui->listValues->count() - 1)->setData(Qt::UserRole, idx);
     }
     idx++;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// addRegisterValue
+// getValueList
+//
+
+std::deque<CMDF_Value*>*
+CDlgMdfValueList::getValueList(void)
+{
+  std::deque<CMDF_Value*>* pvalues = nullptr;
+
+  // pbits = m_pobj->getListBits();
+  if (mdf_type_register == m_type) {
+    pvalues = ((CMDF_Register*)m_pobj)->getListValues();
+  }
+  else if (mdf_type_remotevar == m_type) {
+    pvalues = ((CMDF_RemoteVariable*)m_pobj)->getListValues();
+  }
+  else if (mdf_type_action_param == m_type) {
+    pvalues = ((CMDF_ActionParameter*)m_pobj)->getListValues();
+  }
+  else if (mdf_type_event_data_item == m_type) {
+    pvalues = ((CMDF_EventData*)m_pobj)->getListValues();
+  }
+  // Bit definitions values
+  else if ((mdf_type_bit_item == m_type) || (mdf_type_bit_sub_item == m_type)) {
+    pvalues = ((CMDF_Bit*)m_pobj)->getListValues();
+  }
+
+  return pvalues;
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+// addValue
 //
 
 void
-CDlgMdfValueList::addRegisterValue(void)
+CDlgMdfValueList::addValue(void)
 {
   bool ok;
   CMDF_Value* pvaluenew = new CMDF_Value();
   if (nullptr == pvaluenew) {
-    QMessageBox::critical(this, tr("MDF register bit information"), tr("Memory problem"));
-    spdlog::error("MDF register information - Memory problem");
+    QMessageBox::critical(this, tr("MDF value information"), tr("Memory problem"));
+    spdlog::error("MDF information - Memory problem");
     return;
   }
 
   // Save the selected row
-  int idx = ui->listRegisterValues->currentRow();
+  int idx = ui->listValues->currentRow();
 
   CDlgMdfValue dlg(this);
   dlg.initDialogData(pvaluenew);
-  dlg.setWindowTitle(tr("Add register value"));
+  dlg.setWindowTitle(tr("Add value"));
 
-addbitdlg:
+addvaluedlg:
 
   if (QDialog::Accepted == dlg.exec()) {
-
     uint8_t mask;
     // if ((mask = checkIfBitsOverlap(pvaluenew))) {
     //   QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
     //   goto addbitdlg;
     // }
-    std::deque<CMDF_Value*>* pvalues = m_preg->getListValues();
+    std::deque<CMDF_Value*>* pvalues = getValueList();
+    if (nullptr == pvalues) {
+      QMessageBox::warning(this, tr(APPNAME), tr("Unable to add value as there is no valuelist [%s] ").arg(static_cast<int>(m_type)));
+      delete pvaluenew;
+      return;
+    }
     pvalues->push_back(pvaluenew);
     renderValueItems();
   }
@@ -177,21 +221,23 @@ addbitdlg:
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// editRegisterValue
+// editValue
 //
 
 void
-CDlgMdfValueList::editRegisterValue(void)
+CDlgMdfValueList::editValue(void)
 {
   bool ok;
 
-  if (-1 != ui->listRegisterValues->currentRow()) {
+  qDebug() << "Type = " << m_type;
+
+  if (-1 != ui->listValues->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegisterValues->currentRow();
+    int idx = ui->listValues->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegisterValues->currentItem();
-    CMDF_Value* pvalue         = m_preg->getListValues()->at(pitem->data(Qt::UserRole).toUInt());
+    QListWidgetItem* pitem = ui->listValues->currentItem();
+    CMDF_Value* pvalue         = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
 
     CDlgMdfValue dlg(this);
     dlg.initDialogData(pvalue);
@@ -204,9 +250,9 @@ CDlgMdfValueList::editRegisterValue(void)
       //   QMessageBox::warning(this, tr("Edit register value"), tr("Can not add register value. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
       //   goto editvaluedlg;
       // }
-      ui->listRegisterValues->clear();
+      ui->listValues->clear();
       renderValueItems();
-      ui->listRegisterValues->setCurrentRow(idx);
+      ui->listValues->setCurrentRow(idx);
     }
   }
   else {
@@ -215,16 +261,16 @@ CDlgMdfValueList::editRegisterValue(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// dupRegisterValue
+// dupValue
 //
 
 void
-CDlgMdfValueList::dupRegisterValue(void)
+CDlgMdfValueList::dupValue(void)
 {
-  if (-1 != ui->listRegisterValues->currentRow()) {
+  if (-1 != ui->listValues->currentRow()) {
 
     // Save the selected row
-    int idx = ui->listRegisterValues->currentRow();
+    int idx = ui->listValues->currentRow();
 
     //   QListWidgetItem* pitem = ui->listRegisterBit->currentItem();
     //   CMDF_Bit* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
@@ -272,36 +318,36 @@ CDlgMdfValueList::dupRegisterValue(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// deleteRegisterValue
+// deleteValue
 //
 
 void
-CDlgMdfValueList::deleteRegisterValue(void)
+CDlgMdfValueList::deleteValue(void)
 {
-  if (-1 != ui->listRegisterValues->currentRow()) {
+  if (-1 != ui->listValues->currentRow()) {
 
     // Save the row
-    int idx = ui->listRegisterValues->currentRow();
+    int idx = ui->listValues->currentRow();
 
-    QListWidgetItem* pitem = ui->listRegisterValues->currentItem();
-    CMDF_Value* pvalue         = m_preg->getListValues()->at(pitem->data(Qt::UserRole).toUInt());
+    QListWidgetItem* pitem = ui->listValues->currentItem();
+    CMDF_Value* pvalue         = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
 
-    std::deque<CMDF_Value*>::iterator it = m_preg->getListValues()->begin() + pitem->data(Qt::UserRole).toUInt();
-    m_preg->getListValues()->erase(it);
+    std::deque<CMDF_Value*>::iterator it = getValueList()->begin() + pitem->data(Qt::UserRole).toUInt();
+    getValueList()->erase(it);
 
-    ui->listRegisterValues->clear();
+    ui->listValues->clear();
     renderValueItems();
     int sel = idx;
     if (0 == idx) {
       sel = 0;
     }
-    else if (m_preg->getListValues()->size() == idx) {
-      sel = m_preg->getListValues()->size() - 1;
+    else if (getValueList()->size() == idx) {
+      sel = getValueList()->size() - 1;
     }
     else {
       sel = idx + 1;
     }
-    ui->listRegisterValues->setCurrentRow(sel);
+    ui->listValues->setCurrentRow(sel);
   }
 }
 
@@ -313,7 +359,7 @@ void
 CDlgMdfValueList::accept()
 {
   std::string str;
-  if (nullptr != m_preg) {
+  if (nullptr != m_pobj) {
 
     // str = ui->editName->text().toStdString();
     //  m_pmdf->setName(str);

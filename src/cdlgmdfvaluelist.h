@@ -55,9 +55,10 @@ public:
 
   /*!
     Init dialog data
-    @param pmdf Pointer to MDF object
+    @param pobj Pointer to MDF object
+    @param type Object type
   */
-  void initDialogData(CMDF_Register* preg);
+  void initDialogData(CMDF_Object* pobj, mdf_record_type type = mdf_type_register);
 
   /*!
     Fill in register bit items
@@ -65,28 +66,41 @@ public:
   void renderValueItems(void);
 
   /*!
+    Get pointer to value list
+    @return Pointer to value list or null pointer if not found
+  */
+  std::deque<CMDF_Value*> *getValueList(void);
+
+  /*!
+    Get pointer to value object
+    @param pos The bits start position
+    @return Pointer to value object or null pointer if pos is invalid
+  */
+  CMDF_Value* getValueObj(uint8_t pos);
+
+  /*!
     Check if bits overlap
     @param pbit2test pointer to bit to test
     @param bEdit Edit mode. The bit is already in the list.
     @return Overlapping bits or zero iof no bits overlap
   */
-  uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false)
-  {
-    uint8_t result               = 0;
-    std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
-    for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
-      CMDF_Bit* pbit = *it;
-      // Don't test the edited bit of in edit mode
-      if (bEdit && (pbit2test == pbit)) {
-        continue;
-      }
-      if (nullptr != pbit) {
-        result |= pbit->getMask();
-      }
-    }
+  // uint8_t checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit = false)
+  // {
+  //   uint8_t result               = 0;
+  //   std::deque<CMDF_Bit*>* pbits = m_preg->getListBits();
+  //   for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
+  //     CMDF_Bit* pbit = *it;
+  //     // Don't test the edited bit of in edit mode
+  //     if (bEdit && (pbit2test == pbit)) {
+  //       continue;
+  //     }
+  //     if (nullptr != pbit) {
+  //       result |= pbit->getMask();
+  //     }
+  //   }
 
-    return (result & pbit2test->getMask());
-  };
+  //   return (result & pbit2test->getMask());
+  // };
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -102,16 +116,19 @@ public slots:
   void accept(void);
 
   // Description buttons
-  void addRegisterValue(void);
-  void editRegisterValue(void);
-  void dupRegisterValue(void);
-  void deleteRegisterValue(void);
+  void addValue(void);
+  void editValue(void);
+  void dupValue(void);
+  void deleteValue(void);
 
 private:
   Ui::CDlgMdfValueList* ui;
 
   // MDF
-  CMDF_Register* m_preg;
+  CMDF_Object* m_pobj;
+
+  // Object type
+  mdf_record_type m_type;
 };
 
 #endif // CDLGMDFREGISTERVALUELIST_H

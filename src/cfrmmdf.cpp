@@ -365,31 +365,41 @@ CFrmMdf::showMdfContextMenu(const QPoint& pos)
         break;
 
       case mdf_type_value:
-        menu->addAction(QString(tr("Edit register values")), this, SLOT(editValueDefinition()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit value(s)")), this, SLOT(editValueDefinition()));
+        }
+        else {
+          menu->addAction(QString(tr("Add value(s)")), this, SLOT(editValueDefinition()));
+        }
         break;
 
       case mdf_type_value_item:
-        menu->addAction(QString(tr("Edit register value")), this, SLOT(editValueDefinition()));
-        menu->addAction(QString(tr("Delete register value")), this, SLOT(deleteValueDefinition()));
+        menu->addAction(QString(tr("Edit value")), this, SLOT(editValueDefinition()));
+        menu->addAction(QString(tr("Delete value")), this, SLOT(deleteValueDefinition()));
         break;
 
       case mdf_type_value_sub_item:
-        menu->addAction(QString(tr("Edit register value")), this, SLOT(editValueDefinition()));
-        menu->addAction(QString(tr("Delete register value")), this, SLOT(deleteValueDefinition()));
+        menu->addAction(QString(tr("Edit value")), this, SLOT(editValueDefinition()));
+        // menu->addAction(QString(tr("Delete register value")), this, SLOT(deleteValueDefinition()));
         break;
 
       case mdf_type_bit:
-        menu->addAction(QString(tr("Edit register bits")), this, SLOT(editBitDefinition()));
+        if (nullptr != pItem->child(0)) {
+          menu->addAction(QString(tr("Edit bit definitions")), this, SLOT(editBitDefinition()));
+        }
+        else {
+          menu->addAction(QString(tr("Add bit definition(s)")), this, SLOT(editBitDefinition()));
+        }
         break;
 
       case mdf_type_bit_item:
-        menu->addAction(QString(tr("Edit register bit definition")), this, SLOT(editBitDefinition()));
-        menu->addAction(QString(tr("Delete register bit definition")), this, SLOT(deleteBitDefinition()));
+        menu->addAction(QString(tr("Edit bit definition")), this, SLOT(editBitDefinition()));
+        menu->addAction(QString(tr("Delete bit definition")), this, SLOT(deleteBitDefinition()));
         break;
 
       case mdf_type_bit_sub_item:
-        menu->addAction(QString(tr("Edit register bit definition")), this, SLOT(editBitDefinition()));
-        menu->addAction(QString(tr("Delete register bit definition")), this, SLOT(deleteBitDefinition()));
+        menu->addAction(QString(tr("Edit bit definition")), this, SLOT(editBitDefinition()));
+        // menu->addAction(QString(tr("Delete register bit definition")), this, SLOT(deleteBitDefinition()));
         break;
 
       case mdf_type_remotevar:
@@ -908,8 +918,8 @@ CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, 
   std::set<uint8_t> bitset;
   std::map<uint8_t, CMDF_Bit*> bitmap;
   for (auto it = dequebits.cbegin(); it != dequebits.cend(); ++it) {
-      bitset.insert((*it)->getPos());
-      bitmap[(*it)->getPos()] = *it;
+    bitset.insert((*it)->getPos());
+    bitmap[(*it)->getPos()] = *it;
   }
 
   for (auto it2 = bitset.cbegin(); it2 != bitset.cend(); ++it2) {
@@ -6521,8 +6531,9 @@ CFrmMdf::editValueDefinition(void)
   if (nullptr == pItemHeadHead) {
     return;
   }
-  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
-  uint16_t selectedIndex                = pItem->getElementIndex();
+  QMdfTreeWidgetItem* pItemHeadHeadHead     = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+  QMdfTreeWidgetItem* pItemHeadHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHeadHead->parent() : nullptr;
+  uint16_t selectedIndex                    = pItem->getElementIndex();
 
   // Item must be selected
   if (nullptr == pItem) {
@@ -6557,9 +6568,13 @@ CFrmMdf::editValueDefinition(void)
         }
       }
       else if ((nullptr != pItemHeadHead) && (mdf_type_remotevar == pItemHeadHead->getObjectType())) {
-        CMDF_RemoteVariable* prval = (CMDF_RemoteVariable*)pItem->getObject();
+        CMDF_RemoteVariable* prvar = (CMDF_RemoteVariable*)pItemHead->getObject();
+        if (nullptr == prvar) {
+          QMessageBox::critical(this, tr(APPNAME), tr("No remote variable object available"));
+          return;
+        }
         CDlgMdfValueList dlg(this);
-        // dlg.initDialogData(prval);
+        dlg.initDialogData(prvar, mdf_type_remotevar);
         if (QDialog::Accepted == dlg.exec()) {
           // Redraw all register items - We do not know changes
           QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
@@ -6569,12 +6584,56 @@ CFrmMdf::editValueDefinition(void)
             delete item;
           }
           childrenList.clear();
-          renderValues(pItem, *prval->getListValues(), true);
+          renderValues(pItem, *prvar->getListValues(), true);
         }
       }
-      else if ((nullptr != pItemHead) && (mdf_type_alarm == pItemHead->getObjectType())) {
+      else if ((nullptr != pItemHead) && (mdf_type_bit_item == pItemHead->getObjectType())) {
+        CDlgMdfValueList dlg(this);
+        dlg.initDialogData(pItem->getObject(), mdf_type_bit_sub_item);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderValues(pItem, *((CMDF_Bit*)pItemHead->getObject())->getListValues(), true);
+          pItem->setExpanded(true);
+        }
       }
       else if ((nullptr != pItemHead) && (mdf_type_action_param_item == pItemHead->getObjectType())) {
+        CDlgMdfValueList dlg(this);
+        dlg.initDialogData(pItemHead->getObject(), mdf_type_action_param);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderValues(pItem, *((CMDF_ActionParameter*)pItemHead->getObject())->getListValues(), true);
+          pItem->setExpanded(true);
+        }
+      }
+      else if ((nullptr != pItemHead) && (mdf_type_event_data_item == pItemHead->getObjectType())) {
+        CDlgMdfValueList dlg(this);
+        dlg.initDialogData(pItemHead->getObject(), mdf_type_action_param);
+        if (QDialog::Accepted == dlg.exec()) {
+          // Redraw all bit items - We do not know changes
+          QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+          // Remove children
+          for (qsizetype i = 0; i < childrenList.size(); ++i) {
+            QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+            delete item;
+          }
+          childrenList.clear();
+          renderValues(pItem, *((CMDF_ActionParameter*)pItemHead->getObject())->getListValues(), true);
+          pItem->setExpanded(true);
+        }
       }
     } break;
 
@@ -6652,8 +6711,9 @@ CFrmMdf::deleteValueDefinition(void)
   if (nullptr == pItemHeadHead) {
     return;
   }
-  QMdfTreeWidgetItem* pItemHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
-  uint16_t selectedIndex                = pItem->getElementIndex();
+  QMdfTreeWidgetItem* pItemHeadHeadHead     = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHead->parent() : nullptr;
+  QMdfTreeWidgetItem* pItemHeadHeadHeadHead = (nullptr != pItemHeadHead) ? (QMdfTreeWidgetItem*)pItemHeadHeadHead->parent() : nullptr;
+  uint16_t selectedIndex                    = pItem->getElementIndex();
 
   // Item must be selected
   if (nullptr == pItem) {
@@ -6679,9 +6739,10 @@ CFrmMdf::deleteValueDefinition(void)
       break;
 
     case mdf_type_value_item: {
-      if ((nullptr != pItemHeadHeadHead) && (mdf_type_register == pItemHeadHeadHead->getObjectType())) {
+
+      if ((nullptr != pItemHeadHead) && (mdf_type_register_item == pItemHeadHead->getObjectType())) {
         // Get register
-        CMDF_Register* preg = (CMDF_Register*)pItemHead->getObject();
+        CMDF_Register* preg = (CMDF_Register*)pItemHeadHead->getObject();
 
         QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
         // Remove children
@@ -6704,44 +6765,154 @@ CFrmMdf::deleteValueDefinition(void)
 
         pItemHead->removeChild(pItem);
       }
-      else if ((nullptr != pItemHeadHead) && (mdf_type_remotevar == pItemHeadHead->getObjectType())) {
+      else if ((nullptr != pItemHeadHead) && (mdf_type_remotevar_item == pItemHeadHead->getObjectType())) {
+
+        // Get remote variable
+        CMDF_RemoteVariable* prvar = (CMDF_RemoteVariable*)pItemHead->getObject();
+
+        // Find element and delete it
+        for (std::deque<CMDF_Value*>::iterator it = prvar->getListValues()->begin(); it != prvar->getListValues()->end();) {
+          if (*it == pItem->getObject()) {
+            CMDF_Value* pvalue = *it;
+            prvar->getListValues()->erase(it);
+            delete pvalue;
+            break;
+          }
+          ++it;
+        }
+
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        std::deque<CMDF_Value*>* pvalues = prvar->getListValues();
+
+        pItemHead->removeChild(pItem);
       }
       else if ((nullptr != pItemHead) && (mdf_type_alarm == pItemHead->getObjectType())) {
       }
-      else if ((nullptr != pItemHead) && (mdf_type_action_param_item == pItemHead->getObjectType())) {
-      }
-    } break;
+      else if ((nullptr != pItemHeadHead) && (mdf_type_action_param_item == pItemHeadHead->getObjectType())) {
+        
+        // Get action parameter
+        CMDF_ActionParameter* pactpar = (CMDF_ActionParameter*)pItemHeadHead->getObject();
 
-    case mdf_type_value_sub_item: {
-      QMdfTreeWidgetItem* pItemHeadHead = (QMdfTreeWidgetItem*)pItemHead->parent();
-      if ((nullptr == pItemHeadHead) || (nullptr == (CMDF_Register*)pItemHeadHead->getObject())) {
-        return;
-      }
-      CMDF_Register* preg                  = (CMDF_Register*)pItemHeadHead->getObject();
-      QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
-      // Remove children
-      for (qsizetype i = 0; i < childrenList.size(); ++i) {
-        QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
-        delete item;
-      }
-      childrenList.clear();
-
-      std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
-      // Find element and delete it
-      std::deque<CMDF_Value*>* pvalues = preg->getListValues();
-      // Find element and delete it
-      for (std::deque<CMDF_Value*>::iterator it = preg->getListValues()->begin(); it != preg->getListValues()->end();) {
-        if (*it == pItem->getObject()) {
-          CMDF_Value* pvalue = *it;
-          preg->getListValues()->erase(it);
-          delete pvalue;
-          break;
+        // Find element and delete it
+        for (std::deque<CMDF_Value*>::iterator it = pactpar->getListValues()->begin(); it != pactpar->getListValues()->end();) {
+          if (*it == pItem->getObject()) {
+            CMDF_Value* pvalue = *it;
+            pactpar->getListValues()->erase(it);
+            delete pvalue;
+            break;
+          }
+          ++it;
         }
-        ++it;
-      }
 
-      pItemHeadHead->removeChild(pItemHead);
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        std::deque<CMDF_Value*>* pvalues = pactpar->getListValues();
+
+        pItemHead->removeChild(pItem);
+      }
+      else if ((mdf_type_bit_item == pItemHeadHead->getObjectType()) && (mdf_type_value == pItemHead->getObjectType())) {
+
+        // Get bit definition
+        CMDF_Bit* pbit = (CMDF_Bit*)pItemHeadHead->getObject();
+
+        // Find element and delete it
+        for (std::deque<CMDF_Value*>::iterator it = pbit->getListValues()->begin(); it != pbit->getListValues()->end();) {
+          if (*it == pItem->getObject()) {
+            CMDF_Value* pvalue = *it;
+            pbit->getListValues()->erase(it);
+            delete pvalue;
+            break;
+          }
+          ++it;
+        }
+
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        // std::deque<CMDF_Value*>* pbits = pbit->getListValues();
+
+        pItemHead->removeChild(pItem);
+      }
+      else if ((mdf_type_event_data_item == pItemHeadHead->getObjectType()) && (mdf_type_value == pItemHead->getObjectType())) {
+        
+        // Get event data parameter
+        CMDF_EventData* pevdata = (CMDF_EventData*)pItemHeadHead->getObject();
+
+        // Find element and delete it
+        for (std::deque<CMDF_Value*>::iterator it = pevdata->getListValues()->begin(); it != pevdata->getListValues()->end();) {
+          if (*it == pItem->getObject()) {
+            CMDF_Value* pvalue = *it;
+            pevdata->getListValues()->erase(it);
+            delete pvalue;
+            break;
+          }
+          ++it;
+        }
+
+        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        // Remove children
+        for (qsizetype i = 0; i < childrenList.size(); ++i) {
+          QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+          delete item;
+        }
+        childrenList.clear();
+        std::deque<CMDF_Value*>* pvalues = pevdata->getListValues();
+
+        pItemHead->removeChild(pItem);
+      }
     } break;
+
+      // case mdf_type_value_sub_item: {
+
+      //   QMdfTreeWidgetItem* pItemHeadHead = (QMdfTreeWidgetItem*)pItemHead->parent();
+      //   if ((nullptr == pItemHeadHead) || (nullptr == (CMDF_Register*)pItemHeadHead->getObject())) {
+      //     return;
+      //   }
+
+      //   if ((nullptr != pItemHeadHeadHead) && (mdf_type_register == pItemHeadHeadHead->getObjectType())) {
+
+      //     CMDF_Register* preg                  = (CMDF_Register*)pItemHeadHead->getObject();
+      //     QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
+      //     // Remove children
+      //     for (qsizetype i = 0; i < childrenList.size(); ++i) {
+      //       QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
+      //       delete item;
+      //     }
+      //     childrenList.clear();
+
+      //     std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
+      //     // Find element and delete it
+      //     std::deque<CMDF_Value*>* pvalues = preg->getListValues();
+      //     // Find element and delete it
+      //     for (std::deque<CMDF_Value*>::iterator it = preg->getListValues()->begin(); it != preg->getListValues()->end();) {
+      //       if (*it == pItem->getObject()) {
+      //         CMDF_Value* pvalue = *it;
+      //         preg->getListValues()->erase(it);
+      //         delete pvalue;
+      //         break;
+      //       }
+      //       ++it;
+      //     }
+
+      //     pItemHeadHead->removeChild(pItemHead);
+      //   }
+
+      // } break;
   }
 }
 

@@ -57,7 +57,7 @@ public:
     Init dialog data
     @param pmdf Pointer to MDF object
   */
-  void initDialogData(CMDF_Object* preg, mdf_record_type type = mdf_type_register);
+  void initDialogData(CMDF_Object* pobj, mdf_record_type type = mdf_type_register);
 
   /*!
     Get bit list for set type

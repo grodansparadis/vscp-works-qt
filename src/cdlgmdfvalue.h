@@ -93,6 +93,9 @@ private:
 
   /// Pointer to bit information
   CMDF_Value* m_pvalue;
+
+  // Render data
+  //std::map<uint8_t, CMDF_Bit*> m_bitmapValues;
 };
 
 #endif // CDlgMdfValue_H

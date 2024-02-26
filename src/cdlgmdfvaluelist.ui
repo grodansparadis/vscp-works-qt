@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Register values</string>
+   <string>Values</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>410</y>
-     <width>651</width>
+     <width>641</width>
      <height>32</height>
     </rect>
    </property>
@@ -47,7 +47,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QListWidget" name="listRegisterValues"/>
+         <widget class="QListWidget" name="listValues"/>
         </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
