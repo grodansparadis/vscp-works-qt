@@ -254,6 +254,9 @@
     <addaction name="actionNew"/>
     <addaction name="actionDownload_MDF"/>
     <addaction name="actionOpen"/>
+    <addaction name="actionReload_MDF"/>
+    <addaction name="actionSave_XML"/>
+    <addaction name="actionSave_JSON"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
    </widget>
@@ -297,7 +300,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open MDF...</string>
+    <string>Load MDF...</string>
    </property>
    <property name="toolTip">
     <string>Open existing MDF</string>
@@ -352,6 +355,21 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionSave_XML">
+   <property name="text">
+    <string>Save MDF on XML format...</string>
+   </property>
+  </action>
+  <action name="actionReload_MDF">
+   <property name="text">
+    <string>Reload MDF</string>
+   </property>
+  </action>
+  <action name="actionSave_JSON">
+   <property name="text">
+    <string>Save MDF on JSON format...</string>
    </property>
   </action>
  </widget>

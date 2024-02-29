@@ -601,6 +601,12 @@ public slots:
   /// Load MDF for selected node
   void loadMdf(void);
 
+  /// Save MDF to external storage on XML format
+  void saveMdf_XML(void);
+
+  /// Save MDF to external storage on JSON format
+  void saveMdf_JSON(void);
+
   /*!
     Find next MDF type item in tree
     @param Pointer to MDF widget item

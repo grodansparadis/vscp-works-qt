@@ -190,6 +190,12 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   // Open has been selected in the menu - Open new MDF file
   connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(openMdf()));
 
+  // Save has been selected in the menu - Save MDF file on XML format
+  connect(ui->actionSave_XML, SIGNAL(triggered()), this, SLOT(saveMdf_XML()));
+
+  // Save has been selected in the menu - Save MDF file on JSON format
+  connect(ui->actionSave_JSON, SIGNAL(triggered()), this, SLOT(saveMdf_JSON()));
+
   // Open has been selected in the menu - Edit Module info
   connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editItem()));
 
@@ -278,6 +284,52 @@ CFrmMdf::openMdf(void)
 
     // Load the tree with parsed objects6
     loadMdf();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveMdf_XML
+//
+
+void
+CFrmMdf::saveMdf_XML()
+{
+  QString fileName = QFileDialog::getSaveFileName(this,
+                                                  tr("Open Module Description File (MDF)"),
+                                                  "/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.xml",
+                                                  tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+
+  if (fileName.length()) {
+    qInfo() << "Selected MDF filename: " << fileName;
+    int rv = m_mdf.save(fileName.toStdString(), MDF_FORMAT_XML);
+    if (VSCP_ERROR_SUCCESS != rv) {
+      spdlog::error("Failed to save MDF file {0}", fileName.toStdString());
+      QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
+      return;
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveMdf_JSON
+//
+
+void
+CFrmMdf::saveMdf_JSON()
+{
+  QString fileName = QFileDialog::getSaveFileName(this,
+                                                  tr("Save Module Description File (MDF)"),
+                                                  "/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.json",
+                                                  tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+
+  if (fileName.length()) {
+    qInfo() << "Selected MDF filename: " << fileName;
+    int rv = m_mdf.save(fileName.toStdString(), MDF_FORMAT_JSON);
+    if (VSCP_ERROR_SUCCESS != rv) {
+      spdlog::error("Failed to save MDF file {0}", fileName.toStdString());
+      QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
+      return;
+    }
   }
 }
 
@@ -6413,8 +6465,6 @@ CFrmMdf::deleteBitDefinition(void)
         }
         childrenList.clear();
 
-        // std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
-
         // Find element and delete it
         for (std::deque<CMDF_Bit*>::iterator it = prvar->getListBits()->begin(); it != prvar->getListBits()->end();) {
           if (*it == pItem->getObject()) {
@@ -6792,10 +6842,8 @@ CFrmMdf::deleteValueDefinition(void)
 
         pItemHead->removeChild(pItem);
       }
-      else if ((nullptr != pItemHead) && (mdf_type_alarm == pItemHead->getObjectType())) {
-      }
       else if ((nullptr != pItemHeadHead) && (mdf_type_action_param_item == pItemHeadHead->getObjectType())) {
-        
+
         // Get action parameter
         CMDF_ActionParameter* pactpar = (CMDF_ActionParameter*)pItemHeadHead->getObject();
 
@@ -6849,7 +6897,7 @@ CFrmMdf::deleteValueDefinition(void)
         pItemHead->removeChild(pItem);
       }
       else if ((mdf_type_event_data_item == pItemHeadHead->getObjectType()) && (mdf_type_value == pItemHead->getObjectType())) {
-        
+
         // Get event data parameter
         CMDF_EventData* pevdata = (CMDF_EventData*)pItemHeadHead->getObject();
 
@@ -6876,43 +6924,6 @@ CFrmMdf::deleteValueDefinition(void)
         pItemHead->removeChild(pItem);
       }
     } break;
-
-      // case mdf_type_value_sub_item: {
-
-      //   QMdfTreeWidgetItem* pItemHeadHead = (QMdfTreeWidgetItem*)pItemHead->parent();
-      //   if ((nullptr == pItemHeadHead) || (nullptr == (CMDF_Register*)pItemHeadHead->getObject())) {
-      //     return;
-      //   }
-
-      //   if ((nullptr != pItemHeadHeadHead) && (mdf_type_register == pItemHeadHeadHead->getObjectType())) {
-
-      //     CMDF_Register* preg                  = (CMDF_Register*)pItemHeadHead->getObject();
-      //     QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
-      //     // Remove children
-      //     for (qsizetype i = 0; i < childrenList.size(); ++i) {
-      //       QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
-      //       delete item;
-      //     }
-      //     childrenList.clear();
-
-      //     std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
-      //     // Find element and delete it
-      //     std::deque<CMDF_Value*>* pvalues = preg->getListValues();
-      //     // Find element and delete it
-      //     for (std::deque<CMDF_Value*>::iterator it = preg->getListValues()->begin(); it != preg->getListValues()->end();) {
-      //       if (*it == pItem->getObject()) {
-      //         CMDF_Value* pvalue = *it;
-      //         preg->getListValues()->erase(it);
-      //         delete pvalue;
-      //         break;
-      //       }
-      //       ++it;
-      //     }
-
-      //     pItemHeadHead->removeChild(pItemHead);
-      //   }
-
-      // } break;
   }
 }
 
