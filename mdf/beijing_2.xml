@@ -2698,7 +2698,7 @@
 			</bit>
 			<bit pos="5" default="false" >
 				<name lang="en">Hard coded</name>
-      	   <description lang="en">If set to one the originating address should be hard coded to trigger DM entry		   action.</description> 
+      	   <description lang="en">If set to one the originating address should be hard coded to trigger DM entry action.</description> 
 			</bit>	
 			<bit pos="6" default="false" >
 				<name lang="en">Check Originating address</name>
