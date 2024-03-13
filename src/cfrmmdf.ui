@@ -141,6 +141,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QToolButton" name="btnAdd">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Add action parameter  item</string>
          </property>
@@ -158,6 +161,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="btnEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Edit action parameter item</string>
          </property>
@@ -175,6 +181,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="btnDup">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Duplicate action parameter item</string>
          </property>
@@ -192,6 +201,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="btnDelete">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="toolTip">
           <string>Delete action parameter item</string>
          </property>
