@@ -64,7 +64,7 @@ jobs:
       run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
     
     - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v2.01
+      uses: jwlawson/actions-setup-cmake@v2
 
     - name: Create Build Environment
       run: |
