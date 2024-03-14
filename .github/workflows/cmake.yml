@@ -16,12 +16,12 @@ jobs:
     steps:
 
     # https://github.com/actions/checkout  
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
     - name: Checkout vscp repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: grodansparadis/vscp
         path: vscp
@@ -29,7 +29,7 @@ jobs:
         submodules: recursive
 
     - name: Checkout eclipse paho repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: eclipse/paho.mqtt.c
         path: paho
@@ -59,7 +59,7 @@ jobs:
       run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
 
     - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v1.14 
+      uses: jwlawson/actions-setup-cmake@v2.01 
     
     - name: Create Build Environment
       run: |

@@ -15,7 +15,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
@@ -23,14 +23,14 @@ jobs:
         vs-version: '[16.4,16.5)'
 
     - name: Checkout vscp repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: grodansparadis/vscp
         path: vscp
         ref: development
 
     - name: Checkout eclipse paho repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: eclipse/paho.mqtt.c
         path: paho

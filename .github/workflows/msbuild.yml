@@ -52,12 +52,12 @@ jobs:
         extra: '--external 7z'
          
     - name: Clone
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: 'recursive'
 
     - name: Checkout vscp repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: grodansparadis/vscp
         path: ${{ github.workspace }}
@@ -106,7 +106,7 @@ jobs:
     #     key: ${{ runner.os }}-vcpkg
 
     # - name: Checkout vcpkg repo
-    #   uses: actions/checkout@v3
+    #   uses: actions/checkout@v4
     #   with:
     #     repository: microsoft/vcpkg
     #     path: C:/vcpkg
