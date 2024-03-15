@@ -214,7 +214,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cdlgcanfilter.ui
     src/cdlgtls.ui
     src/cdlglog.ui
-    str/cdlgsensorindex.ui
+    src/cdlgsensorindex.ui
     src/cdlgeditsensorindex.ui
     src/cdlgtxedit.ui
     src/cdlgsessionfilter.ui
@@ -236,7 +236,7 @@ qt5_wrap_ui(UI src/mainwindow.ui
     src/cfrmnodeconfig.ui
     src/cfrmnodescan.ui
     src/cdlgactionparam.ui
-    srd/cdlgdatepicker.ui
+    src/cdlgdatepicker.ui
     src/cfrmmdf.ui
     src/cdlgmdfmodule.ui          	       
     src/cdlgmdffilepicture.ui  
