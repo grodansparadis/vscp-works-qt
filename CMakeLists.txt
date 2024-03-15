@@ -133,17 +133,15 @@ if (MSVC)
 
   # dlfcn
   find_package(dlfcn-win32 CONFIG REQUIRED)
-
 else()
-
-    # expat
-    include(FindEXPAT)
-    find_package(EXPAT REQUIRED)
-    include_directories(${EXPAT_INCLUDE_DIRS})
-    # paho
-    #include(Findpaho-mqtt)
-    # Mosquitto lib
-    include(FindMosquitto)
+  # expat
+  include(FindEXPAT)
+  find_package(EXPAT REQUIRED)
+  include_directories(${EXPAT_INCLUDE_DIRS})
+  # paho
+  #include(Findpaho-mqtt)
+  # Mosquitto lib
+  include(FindMosquitto)
 
 endif()
 
@@ -686,8 +684,6 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/common/vscpmd5.h
   ${VSCP_PATH}/src/common/vscpmd5.c    
   ./third_party/mustache/mustache.hpp
-  #./third_party/civetweb/include/civetweb.h
-  #./third_party/civetweb/src/civetweb.c
   ./third_party/spdlog/include/
   ./third_party/fastpbkdf2/fastpbkdf2.h
   ./third_party/fastpbkdf2/fastpbkdf2.c   
@@ -697,121 +693,121 @@ add_executable(${PROJECT_NAME}
 
 if (MSVC)
 
-    find_path(PTHREAD_INCLUDE_DIR pthread.h)
-    find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
-    message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
+find_path(PTHREAD_INCLUDE_DIR pthread.h)
+find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
+message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
 
-    include_directories( PUBLIC ./src 
-        ./build
-        ./ui
-        ${VSCP_PATH}/src/vscp/common/  
-        ${VSCP_PATH}/src/common
-        ./third_party
-        ./third_party/nlohmann/include/
-        ./third_party/spdlog/include/
-        ./third_party/mustache/
-        ./third_party/maddy/include/
-        ./third_party/fastpbkdf2/
-        ${PThreads4W_INCLUDE_DIR}
-        ${Qt5Widgets_INCLUDE_DIRS}
-        ${Qt5Core_INCLUDE_DIRS}
-        ${Qt5SerialBus_INCLUDE_DIRS}
-        ${Qt5SerialPort_INCLUDE_DIRS}
-        ${Qt5Network_INCLUDE_DIRS}
-        ${CMAKE_BINARY_DIR}
-        ${OPENSSL_INCLUDE_DIR}
-        ${MOSQUITTO_INCLUDE_DIRS}
-        ${LIBWEBSOCKETS_INCLUDE_DIR}
-        ${EXPAT_INCLUDE_DIRS}
-        ${DLFCN_INCLUDES}
-        ${LOCAL_WIN_INCLUDE}
-        ${LOCAL_SYSLOG_INCLUDE} 
-        ${CURL_INCLUDE_DIR}
-      )        
+include_directories( PUBLIC ./src 
+  ./build
+  ./ui
+  ${VSCP_PATH}/src/vscp/common/  
+  ${VSCP_PATH}/src/common
+  ./third_party
+  ./third_party/nlohmann/include/
+  ./third_party/spdlog/include/
+  ./third_party/mustache/
+  ./third_party/maddy/include/
+  ./third_party/fastpbkdf2/
+  ${PThreads4W_INCLUDE_DIR}
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5SerialBus_INCLUDE_DIRS}
+  ${Qt5SerialPort_INCLUDE_DIRS}
+  ${Qt5Network_INCLUDE_DIRS}
+  ${CMAKE_BINARY_DIR}
+  ${OPENSSL_INCLUDE_DIR}
+  ${MOSQUITTO_INCLUDE_DIRS}
+  ${LIBWEBSOCKETS_INCLUDE_DIR}
+  ${EXPAT_INCLUDE_DIRS}
+  ${DLFCN_INCLUDES}
+  ${LOCAL_WIN_INCLUDE}
+  ${LOCAL_SYSLOG_INCLUDE} 
+  ${CURL_INCLUDE_DIR}
+)
 else()
-    include_directories( PUBLIC ./src 
-        ./build
-        ./ui
-        third_party/mqtt
-        third_party/mqtt/clib
-        ${VSCP_PATH}/src/vscp/common/
-        ${VSCP_PATH}/src/common
-        ./third_party
-        ./third_party/nlohmann/include/
-        #./third_party/civetweb/include/
-        ./third_party/spdlog/include/
-        ./third_party/mustache/
-        ./third_party/maddy/include/
-        ./third_party/fastpbkdf2/
-        ${Qt5Core_INCLUDE_DIRS}
-        ${Qt5SerialBus_INCLUDE_DIRS}
-        ${Qt5SerialPort_INCLUDE_DIRS}
-        ${Qt5Network_INCLUDE_DIRS}
-        ${CMAKE_BINARY_DIR}
-        ${OPENSSL_INCLUDE_DIR}
-        ${MOSQUITTO_INCLUDE_DIRS}
-        ${LIBWEBSOCKETS_INCLUDE_DIR}
-        ${EXPAT_INCLUDE_DIRS}
-        ${DLFCN_INCLUDES}
-        ${LOCAL_WIN_INCLUDE}
-        ${LOCAL_SYSLOG_INCLUDE} 
-        ${CURL_INCLUDE_DIR}
-      )
+include_directories( PUBLIC ./src 
+  ./build
+  ./ui
+  third_party/mqtt
+  third_party/mqtt/clib
+  ${VSCP_PATH}/src/vscp/common/
+  ${VSCP_PATH}/src/common
+  ./third_party
+  ./third_party/nlohmann/include/
+  ./third_party/spdlog/include/
+  ./third_party/mustache/
+  ./third_party/maddy/include/
+  ./third_party/fastpbkdf2/
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5SerialBus_INCLUDE_DIRS}
+  ${Qt5SerialPort_INCLUDE_DIRS}
+  ${Qt5Network_INCLUDE_DIRS}
+  ${CMAKE_BINARY_DIR}
+  ${OPENSSL_INCLUDE_DIR}
+  ${MOSQUITTO_INCLUDE_DIRS}
+  ${LIBWEBSOCKETS_INCLUDE_DIR}
+  ${EXPAT_INCLUDE_DIRS}
+  ${DLFCN_INCLUDES}
+  ${LOCAL_WIN_INCLUDE}
+  ${LOCAL_SYSLOG_INCLUDE} 
+  ${CURL_INCLUDE_DIR}
+)
  endif()   
 
-if (MSVC)
-    
-    find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
-    link_directories(${MOSQUITTO_LIB_DIR})
+if (MSVC) 
+  find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+  message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
+  link_directories(${MOSQUITTO_LIB_DIR})
 
-    #find_path(LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    #find_path(LIBWEBSOCKETS_LIBRARY_DIR libwebsockets.lib websockets.lib websockets_shared.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-    message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
-    link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
+  #find_path(LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+  #find_path(LIBWEBSOCKETS_LIBRARY_DIR libwebsockets.lib websockets.lib websockets_shared.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
+  message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
+  link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE     
-        Qt5::Widgets
-        Qt5::Core
-        Qt5::Network
-        Qt5::Quick
-        Qt5::Sql
-        Qt5::Charts
-        PThreads4W::PThreads4W
-        OpenSSL::SSL
-        OpenSSL::Crypto
-        OpenSSL::SSL OpenSSL::Crypto        
-     #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
-        ${MOSQUITTO_LIBRARIES}
-        ${LIBWEBSOCKETS_LIBRARIES}
-        #"${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
-        expat::expat
-        CURL::libcurl
-        dlfcn-win32::dl)
-  else()
-    target_link_libraries(${PROJECT_NAME} PRIVATE     
-        ${Qt5Widgets_LIBRARIES}
-        ${Qt5Core_LIBRARIES}
-        Qt5::Network
-        Qt5::Quick 
-        Qt5::Sql
-        Qt5::Charts
-        m
-        dl
-        Threads::Threads
-        OpenSSL::SSL 
-        OpenSSL::Crypto
-        ${OPENSSL_LIBRARIES}
+target_link_libraries(${PROJECT_NAME} PRIVATE     
+  Qt5::Widgets
+  Qt5::Core
+  Qt5::Network
+  Qt5::Quick
+  Qt5::Sql
+  Qt5::Charts
+  PThreads4W::PThreads4W
+  OpenSSL::SSL
+  OpenSSL::Crypto
+  OpenSSL::SSL OpenSSL::Crypto        
+  #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
+  ${MOSQUITTO_LIBRARIES}
+  ${LIBWEBSOCKETS_LIBRARIES}
+  #"${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
+  expat::expat
+  CURL::libcurl
+  dlfcn-win32::dl
+)
+else()
+target_link_libraries(${PROJECT_NAME} PRIVATE     
+  ${Qt5Widgets_LIBRARIES}
+  ${Qt5Core_LIBRARIES}
+  Qt5::Network
+  Qt5::Quick 
+  Qt5::Sql
+  Qt5::Charts
+  m
+  dl
+  Threads::Threads
+  OpenSSL::SSL 
+  OpenSSL::Crypto
+  ${OPENSSL_LIBRARIES}
 #        ${PAHO_LIBRARIES}
-        ${MOSQUITTO_LIBRARIES}
+  ${MOSQUITTO_LIBRARIES}
 #        ${LIBWEBSOCKETS_LIBRARIES}
-        ${EXPAT_LIBRARIES}
-        ${CURL_LIBRARIES}
-        ${DLFCN_LIBS})
+  ${EXPAT_LIBRARIES}
+  ${CURL_LIBRARIES}
+  ${DLFCN_LIBS}
+)
 endif()
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
-# qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
 
 
@@ -821,20 +817,17 @@ if(MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
-    set(LIBS_SYSTEM c stdc++)
+  set(LIBS_SYSTEM c stdc++)
 endif()
 
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
-        DESTINATION ${INSTALL_PATH}/share/applications/) 
+  DESTINATION ${INSTALL_PATH}/share/applications/) 
 
 # icons
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/share/icons/) 
 
 # Event database etc
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/${PROJECT_NAME}/)
-
-# Import qml plugins for static builds.
-#qt5_import_qml_plugins(${PROJECT_NAME})
