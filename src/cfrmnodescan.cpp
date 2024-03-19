@@ -119,7 +119,7 @@ eventReceived(vscpEvent* pev, void* pobj)
     return;
   } 
 
-  printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
+  //printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
 
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
@@ -338,6 +338,9 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       break;
   }
 
+  ui->actionConnect->setDisabled(true);
+  ui->actionConnect->setVisible(false);  
+
   // Connect has been clicked
   connect(ui->actionConnect,
           SIGNAL(triggered(bool)),
@@ -348,7 +351,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionScan, SIGNAL(triggered()), this, SLOT(doScan()));
 
   // Scan button has been clicked
-  connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
+  //connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
 
   // Load MDF has been selected in the menu
   connect(ui->actionLoadMdf, SIGNAL(triggered()), this, SLOT(loadSelectedMdf()));
@@ -764,7 +767,8 @@ CFrmNodeScan::doScan(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  ui->btnScan->setEnabled(false);
+  //ui->btnScan->setEnabled(false);
+  ui->actionScan->setEnabled(false);
 
   // This is a sorted list with the nodeid's to search for.
   std::set<uint16_t> nodelist;
@@ -774,7 +778,8 @@ CFrmNodeScan::doScan(void)
                              tr("vscpworks+"),
                              tr("Failed to parse nodes"),
                              QMessageBox::Ok);
-    ui->btnScan->setEnabled(true);                             
+
+    ui->actionScan->setEnabled(true);                             
     return;                             
   }
 
@@ -800,6 +805,8 @@ CFrmNodeScan::doScan(void)
   ui->progressBarScan->setValue(30);
 
   std::set<uint16_t> found;
+
+  // SLOW SCAN
   if (ui->chkSlowScan->isChecked()) {
     
     // Slow scan
@@ -820,27 +827,38 @@ CFrmNodeScan::doScan(void)
                               tr("vscpworks+"),
                               tr("Failed to scan nodes"),
                               QMessageBox::Ok); 
-      ui->btnScan->setEnabled(true);                          
+
+      ui->actionScan->setEnabled(true);                       
       return;               
     }            
   }
+  // NORMAL SCAN
   else {
     // Normal scan
+
+    ui->infoArea->setText("Scan in progress...");
+    ui->infoArea->repaint();
+
     if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
                                                       guidInterface,
                                                       found,
-                                                      pworks->m_config_timeout) ) {
+                                                      pworks->m_config_timeout) ) {      
       ui->progressBarScan->setValue(0);                                                  
       spdlog::error(std::string(tr("Node Fast Scan: Failed to scan for devices").toStdString()));
       QApplication::restoreOverrideCursor();
       QMessageBox::information(this,
-                              tr("vscpworks+"),
+                              APPNAME,
                               tr("Failed to scan nodes"),
                               QMessageBox::Ok);
-      ui->btnScan->setEnabled(true);
+      ui->actionScan->setEnabled(true);
       return;
     }
   }
+  
+  QString str = QString("Found %1 nodes").arg(found.size());
+  ui->infoArea->setText(str);
+    ui->infoArea->repaint();
+  //printf("found node count = %zu\n", found.size());
 
   size_t additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
   if (!ui->chkFetchInfo->isChecked()) {
@@ -855,6 +873,7 @@ CFrmNodeScan::doScan(void)
     // Load mdf and standard registers if requested to do so
     if (ui->chkFetchInfo->isChecked()) {
       doLoadMdf(item);
+      QApplication::setOverrideCursor(Qt::WaitCursor); 
       ui->progressBarScan->setValue(ui->progressBarScan->value() + (int)additem);
     }
   }
@@ -865,6 +884,7 @@ CFrmNodeScan::doScan(void)
     str += "\n";
     str += ui->infoArea->toPlainText().toStdString();
     ui->infoArea->setText(QString::fromStdString(str));
+    ui->infoArea->repaint();
   }
 
   ui->progressBarScan->setValue(100);
@@ -872,7 +892,7 @@ CFrmNodeScan::doScan(void)
   QApplication::restoreOverrideCursor();  
   QApplication::processEvents();
 
-  ui->btnScan->setEnabled(true);
+  ui->actionScan->setEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -921,7 +941,7 @@ CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
 void
 CFrmNodeScan::loadSelectedMdf(void)
 {
-  ui->btnScan->setEnabled(false);
+  ui->actionScan->setEnabled(false);
   QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
   
   // Must be selected items
@@ -930,7 +950,7 @@ CFrmNodeScan::loadSelectedMdf(void)
                              tr(APPNAME),
                              tr("Must select a node to use operation."),
                              QMessageBox::Ok);
-    ui->btnScan->setEnabled(true);
+    ui->actionScan->setEnabled(true);
     return;
   }
 
@@ -940,7 +960,7 @@ CFrmNodeScan::loadSelectedMdf(void)
                              tr(APPNAME),
                              tr("Failed to get node."),
                              QMessageBox::Ok);
-    ui->btnScan->setEnabled(true);
+    ui->actionScan->setEnabled(true);
     return;
   }
 
@@ -952,7 +972,7 @@ CFrmNodeScan::loadSelectedMdf(void)
   QApplication::restoreOverrideCursor();
   QApplication::processEvents();
 
-  ui->btnScan->setEnabled(true);
+  ui->actionScan->setEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -962,7 +982,8 @@ CFrmNodeScan::loadSelectedMdf(void)
 void
 CFrmNodeScan::loadAllMdf(void)
 {
-  ui->btnScan->setEnabled(false);
+  //ui->btnScan->setEnabled(false);
+  ui->actionScan->setEnabled(false);
   CFoundNodeWidgetItem *pItem;
   QTreeWidgetItemIterator it(ui->treeFound);
   while (*it) {
@@ -970,7 +991,8 @@ CFrmNodeScan::loadAllMdf(void)
     doLoadMdf(pItem->m_nodeid);
     ++it;
   }
-  ui->btnScan->setEnabled(true);
+
+  ui->actionScan->setEnabled(true);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -980,6 +1002,7 @@ CFrmNodeScan::loadAllMdf(void)
 void
 CFrmNodeScan::doLoadMdf(uint16_t nodeid)
 {
+  
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   CFoundNodeWidgetItem *pItem;
@@ -1011,6 +1034,7 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   // Get MDF
   std::string str = "Fetching MDF for node " + QString::number(pItem->m_nodeid).toStdString();
   ui->infoArea->setText(QString::fromStdString(str));
+  ui->infoArea->repaint();
   QApplication::processEvents();
 
   ui->statusBar->showMessage(tr("Reading standard registers from device..."));
@@ -1088,6 +1112,7 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   // Set the HTML
   std::string html = vscp_getDeviceInfoHtml(pItem->m_mdf, pItem->m_stdregs);
   ui->infoArea->setHtml(html.c_str());
+  ui->infoArea->repaint();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

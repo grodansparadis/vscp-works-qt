@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
+    <width>607</width>
     <height>673</height>
    </rect>
   </property>
@@ -37,7 +37,7 @@
        </sizepolicy>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="9" column="0" colspan="3">
+       <item row="9" column="0" colspan="2">
         <widget class="QTextBrowser" name="infoArea">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -53,7 +53,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="5" column="1">
         <widget class="QLineEdit" name="editDelay">
          <property name="enabled">
           <bool>false</bool>
@@ -73,7 +73,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="1">
         <widget class="QTreeWidget" name="treeFound">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -82,7 +82,7 @@
           </sizepolicy>
          </property>
          <property name="statusTip">
-          <string>Nodes found from search</string>
+          <string>Nodes found from search. Right click to load MDF.</string>
          </property>
          <property name="alternatingRowColors">
           <bool>true</bool>
@@ -94,7 +94,7 @@
          </column>
         </widget>
        </item>
-       <item row="4" column="2">
+       <item row="4" column="1">
         <widget class="QLineEdit" name="editSearchNodes">
          <property name="enabled">
           <bool>false</bool>
@@ -114,7 +114,7 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="2">
+       <item row="6" column="1">
         <widget class="QLineEdit" name="editTimeout">
          <property name="enabled">
           <bool>false</bool>
@@ -127,31 +127,10 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="0" colspan="3">
+       <item row="12" column="0" colspan="2">
         <widget class="QProgressBar" name="progressBarScan">
          <property name="value">
           <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QPushButton" name="btnScan">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>Start node scan</string>
-         </property>
-         <property name="text">
-          <string>Scan</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normalon>:/images/svg/search.svg</normalon>
-          </iconset>
          </property>
         </widget>
        </item>
@@ -162,7 +141,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="3" column="1">
         <widget class="QCheckBox" name="chkSlowScan">
          <property name="text">
           <string>Slow scan</string>
@@ -176,7 +155,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="2" column="1">
         <widget class="QCheckBox" name="chkFetchInfo">
          <property name="text">
           <string>Fetch node info</string>
@@ -206,7 +185,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>603</width>
+     <width>607</width>
      <height>22</height>
     </rect>
    </property>
@@ -276,6 +255,9 @@
    </property>
   </action>
   <action name="actionConnect">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="vscpworks.qrc">
      <normaloff>:/images/svg/plug-disconnected-black.svg</normaloff>
