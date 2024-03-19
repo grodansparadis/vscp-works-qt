@@ -66,6 +66,13 @@ using namespace kainjow::mustache;
 Q_DECLARE_METATYPE(vscpEvent)
 Q_DECLARE_METATYPE(vscpEventEx)
 
+/*!
+  Set to true to remove development functionality
+  for an official release build.
+*/
+#define VSCP_WORKS_RELEASE    false
+
+/// Application name used in titles and headers
 #define APPNAME "VSCP Works+"
 
 // home folder is used for storage of program configuration

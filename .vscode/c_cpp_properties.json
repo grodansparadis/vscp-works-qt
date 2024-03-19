@@ -59,7 +59,7 @@
                   "${workspaceFolder}/common/third_party/duktape-2.6.0/",
                   "${workspaceFolder}/common/third_party/fastpbkdf2-1.0.0/",
                   "${workspaceFolder}/../vscp/src/common",
-                  "${workspaceFolder}/../vscp/src/vscp/common"                                    
+                  "${workspaceFolder}/../vscp/src/vscp/common"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

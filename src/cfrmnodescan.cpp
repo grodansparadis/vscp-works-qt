@@ -79,6 +79,7 @@
 #include <QXmlStreamReader>
 #include <QtSql>
 #include <QtWidgets>
+#include <QDebug>
 
 // ----------------------------------------------------------------------------
 
@@ -113,11 +114,18 @@ CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
 static void
 eventReceived(vscpEvent* pev, void* pobj)
 {
+  // Check pointers
+  if ((nullptr == pev) || (nullptr == pobj) ) {
+    return;
+  } 
+
+  printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
+
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, pev);
-
+  
   CFrmSession* pSession = (CFrmSession*)pobj;
   pSession->threadReceive(pevnew);
 }
@@ -243,8 +251,8 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
                                 "log for more details."));
         return;
       }
-      m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
+      //m_vscpClient->setCallback(eventReceived, this);
+      //m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 #endif
