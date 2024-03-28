@@ -68,10 +68,10 @@
 #include "cdlgmainsettings.h"
 #include "cdlgnewconnection.h"
 #include "cdlgsessionfilter.h"
+#include "cfrmmdf.h"
 #include "cfrmnodeconfig.h"
 #include "cfrmnodescan.h"
 #include "cfrmsession.h"
-#include "cfrmmdf.h"
 #include "filedownloader.h"
 #include "version.h"
 #include "vscp_client_base.h"
@@ -382,7 +382,7 @@ MainWindow::MainWindow()
     statusBar()->showMessage(tr("Failed to load remote event data. Will "
                                 "try to load from external source."));
     // QMessageBox::information(this,
-    //                             tr("vscpworks+"),
+    //                             tr(APPNAME),
     //                             tr("Failed to load remote event data.
     //                             Will try to load from external source."),
     //                             QMessageBox::Ok );
@@ -469,7 +469,7 @@ MainWindow::checkRemoteEventDbVersion()
   qDebug() << "Data: " << ver;
   if (-1 != ver.indexOf("<title>404 Not Found</title>")) {
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Unable to get version for remote VSCP "
                                 "event data. Will not be downloaded."),
                              QMessageBox::Ok);
@@ -551,7 +551,7 @@ MainWindow::downloadedEventDb()
     tr("A new VSCP event database has automatically been downloaded."));
   QMessageBox::information(
     this,
-    tr("vscpworks+"),
+    tr(APPNAME),
     tr("A new VSCP event database has automatically been downloaded."),
     QMessageBox::Ok);
 }
@@ -783,7 +783,7 @@ MainWindow::editConnectionItem(void)
 
   foreach (QTreeWidgetItem* item, itemList) {
 
-    // Not intereste din top level items
+    // Not interested in top level items
     if (NULL != item->parent()) {
 
       // Get item
@@ -978,7 +978,7 @@ MainWindow::removeConnectionItem(void)
 
       if (QMessageBox::Yes ==
           QMessageBox::question(this,
-                                tr("vscpworks+"),
+                                tr(APPNAME),
                                 str,
                                 QMessageBox::Yes | QMessageBox::No)) {
         // qDebug() << (*pconn)["uuid"].toString();
@@ -1819,7 +1819,8 @@ void
 MainWindow::newSession()
 {
   QList<QTreeWidgetItem*> itemList;
-  itemList = m_connTreeTable->selectedItems();
+  itemList          = m_connTreeTable->selectedItems();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   foreach (QTreeWidgetItem* item, itemList) {
 
@@ -1833,6 +1834,10 @@ MainWindow::newSession()
 
       QJsonObject* pconn = itemConn->getJson();
       CFrmSession* w     = new CFrmSession(this, pconn);
+      if (!w->isConnected() && (pworks->m_session_bAutoConnect)) {
+        delete w;
+        return;
+      }
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
@@ -1888,7 +1893,7 @@ MainWindow::sessionFilter(void)
   CDlgSessionFilter dlg;
   if (QDialog::Accepted == dlg.exec()) {
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("filter set"),
                              QMessageBox::Ok);
   }
@@ -1912,7 +1917,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -1926,7 +1931,7 @@ restart:
     // pworks->m_mapConn[uuid] = conn;
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -1966,7 +1971,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2008,7 +2013,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2017,7 +2022,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2058,7 +2063,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2099,7 +2104,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2108,7 +2113,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2151,7 +2156,7 @@ restart:
 
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2192,7 +2197,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2201,7 +2206,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2244,7 +2249,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2286,7 +2291,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2295,7 +2300,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2337,7 +2342,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2378,7 +2383,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2387,7 +2392,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2429,7 +2434,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2470,7 +2475,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2479,7 +2484,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2521,7 +2526,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2563,7 +2568,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2572,7 +2577,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2614,7 +2619,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2655,7 +2660,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2664,7 +2669,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2705,7 +2710,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2746,7 +2751,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2755,7 +2760,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2796,7 +2801,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2838,7 +2843,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2847,7 +2852,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2890,7 +2895,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2932,7 +2937,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -2941,7 +2946,7 @@ restart:
     QJsonObject conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
-                               tr("vscpworks+"),
+                               tr(APPNAME),
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
@@ -2982,7 +2987,7 @@ restart:
     QString strName = dlg.getName();
     if (!strName.length()) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("A connection needs a description"),
                            QMessageBox::Ok);
       goto restart;
@@ -3099,7 +3104,6 @@ MainWindow::newNodeScan()
     }
   }
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // newNodeBootload

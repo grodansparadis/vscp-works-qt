@@ -319,14 +319,14 @@ CDlgConnSettingsUdp::onTestConnection(void)
     //                                             getUser().toStdString().c_str(),
     //                                             getPassword().toStdString().c_str() ) ) {
     //     QApplication::restoreOverrideCursor();                                                        
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to initialize tcp/ip client"));        
+    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));        
     //     return;                                                
     // }
 
     // // Connect to remote host
     // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
     //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to connect to remote tcp/ip host"));
+    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
     //     m_client.disconnect();        
     //     return;
     // }
@@ -355,7 +355,7 @@ CDlgConnSettingsUdp::onTestConnection(void)
     // // Disconnect from remote host
     // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
     //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr("vscpworks+"), tr("Failed to disconnect from remote tcp/ip host"));        
+    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));        
     //     return;
     // }    
 
@@ -364,5 +364,5 @@ CDlgConnSettingsUdp::onTestConnection(void)
     QString msg = tr("Connection test was successful");
     msg += "\n";
     msg += "NOT IMPLEMENTED YET!";
-    QMessageBox::information(this, tr("vscpworks+"), msg );
+    QMessageBox::information(this, tr(APPNAME), msg );
 }

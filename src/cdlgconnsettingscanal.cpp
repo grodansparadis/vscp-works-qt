@@ -248,7 +248,7 @@ CDlgConnSettingsCanal::testDriver()
   std::string path = ui->editPath->text().toStdString();
 
   if (!((QFileInfo::exists(path.c_str()) && QFileInfo(path.c_str()).isFile()) || QFileInfo(path.c_str()).isSymLink())) {
-    int ret = QMessageBox::warning(this, tr("vscpworks+"), tr("The driver does not exist."), QMessageBox::Ok);
+    int ret = QMessageBox::warning(this, tr(APPNAME), tr("The driver does not exist."), QMessageBox::Ok);
   }
 
   // Save set path
@@ -261,7 +261,7 @@ CDlgConnSettingsCanal::testDriver()
   if (CANAL_ERROR_SUCCESS != (rv = m_vscpClient.m_canalif.init())) {
     std::string str = vscp_str_format("The driver did not load properly. rv=%d", rv);
     QMessageBox::warning(this,
-                         tr("vscpworks+"),
+                         tr(APPNAME),
                          str.c_str(),
                          QMessageBox::Ok);
   }
@@ -278,7 +278,7 @@ CDlgConnSettingsCanal::testDriver()
                                       strGenerationOne.c_str());
 
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              str.c_str(),
                              QMessageBox::Ok);
   }
@@ -344,7 +344,7 @@ CDlgConnSettingsCanal::wizard()
   if (CANAL_ERROR_SUCCESS != (rv = m_vscpClient.m_canalif.init())) {
     std::string str = vscp_str_format("The driver did not load properly. rv=%d", rv);
     QMessageBox::warning(this,
-                         tr("vscpworks+"),
+                         tr(APPNAME),
                          str.c_str(),
                          QMessageBox::Ok);
     // Release the driver
@@ -358,7 +358,7 @@ CDlgConnSettingsCanal::wizard()
 
   if (m_vscpClient.m_canalif.isGenerationOne()) {
     QMessageBox::warning(this,
-                         tr("vscpworks+"),
+                         tr(APPNAME),
                          tr("Driver is a generation one driver that does not have any configuration data embedded"),
                          QMessageBox::Ok);
     // Release the driver
@@ -382,14 +382,14 @@ CDlgConnSettingsCanal::wizard()
 
     if (!xmlcfg.parseXML(xml)) {
       QMessageBox::warning(this,
-                           tr("vscpworks+"),
+                           tr(APPNAME),
                            tr("Failed to parse XML file"),
                            QMessageBox::Ok);
     }
   }
   else {
     QMessageBox::warning(this,
-                         tr("vscpworks+"),
+                         tr(APPNAME),
                          tr("Sorry, no configuration information available"),
                          QMessageBox::Ok);
   }

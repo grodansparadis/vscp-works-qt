@@ -1,4 +1,4 @@
-# The VSCP Works Toolbox (vscp-works-qt)
+# VSCP Works +
 
 ![VSCP logo](./images/logo_100.png)
 

@@ -280,6 +280,10 @@ qt5_wrap_ui(UI src/mainwindow.ui
 
   src/cdlgmdfevents.ui
   src/cdlgmdfeventdata.ui
+
+  src/cdlgtxtsearch.ui
+
+  src/cdlgselectmqtttopics.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -384,8 +388,10 @@ add_executable(${PROJECT_NAME}
 
   src/cfrmsession.h
   src/cfrmsession.cpp
+
   src/vscpworks.h
   src/vscpworks.cpp
+  
   src/canalconfigwizard.h
   src/canalconfigwizard.cpp
 
@@ -616,6 +622,14 @@ add_executable(${PROJECT_NAME}
   src/cdlgmdfeventdata.ui
   src/cdlgmdfeventdata.cpp
   src/cdlgmdfeventdata.h
+
+  src/cdlgtxtsearch.ui
+  src/cdlgtxtsearch.cpp
+  src/cdlgtxtsearch.h
+
+  src/cdlgselectmqtttopics.ui
+  src/cdlgselectmqtttopics.cpp
+  src/cdlgselectmqtttopics.h
 
   ${VSCP_PATH}/src/vscp/common/version.h
   ${VSCP_PATH}/src/vscp/common/vscp.h

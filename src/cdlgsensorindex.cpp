@@ -186,7 +186,7 @@ void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
                         + query.lastError().text().toStdString()));
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         pworks->m_mutexSensorIndexMap.unlock();                
@@ -438,7 +438,7 @@ again:
             spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
                         + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->m_mutexSensorIndexMap.unlock();                
@@ -488,7 +488,7 @@ void CDlgSensorIndex::btnEdit(void)
     int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
@@ -506,7 +506,7 @@ void CDlgSensorIndex::btnEdit(void)
         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
                         + query.lastError().text().toStdString()));
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         pworks->m_mutexSensorIndexMap.unlock();                
@@ -541,7 +541,7 @@ again:
             spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString() 
                         + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->m_mutexSensorIndexMap.unlock();                
@@ -578,7 +578,7 @@ void CDlgSensorIndex::btnClone(void)
     int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
@@ -596,7 +596,7 @@ void CDlgSensorIndex::btnClone(void)
         spdlog::error(std::string(tr("Unable to find record in database Err =").toStdString() 
                         + query.lastError().text().toStdString()));
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         pworks->m_mutexSensorIndexMap.unlock();                
@@ -629,7 +629,7 @@ again:
             spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
                         + query.lastError().text().toStdString()));
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             pworks->m_mutexSensorIndexMap.unlock();                
@@ -676,7 +676,7 @@ void CDlgSensorIndex::btnDelete(void)
     int row = ui->listSensors->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No sensor is selected"),
                               QMessageBox::Ok );
         return;
@@ -693,7 +693,7 @@ void CDlgSensorIndex::btnDelete(void)
         spdlog::error(std::string(tr("Unable to delete sensor. Err =").toStdString() 
                         + query.lastError().text().toStdString()));
         QMessageBox::information(this, 
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );        
     }

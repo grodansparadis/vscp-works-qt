@@ -136,7 +136,7 @@ void CDlgSelectData::onAddValue(void)
         QListWidgetItem * item = ui->listValues->item(i);
         if ((item->data(Qt::UserRole).toUInt() & 0xff) == ui->spinPos->value()) {
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("Data for this data item is already set. Delete item first to set a new value."),
                         QMessageBox::Ok );
             return;

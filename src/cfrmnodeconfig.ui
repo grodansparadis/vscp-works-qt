@@ -104,7 +104,7 @@ selection-background-color: rgb(154, 153, 150);
              <enum>QTabWidget::Rounded</enum>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="elideMode">
              <enum>Qt::ElideNone</enum>
@@ -783,6 +783,14 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionGoto_decsion_matrix"/>
     <addaction name="actionGoto_related_register"/>
     <addaction name="separator"/>
+    <addaction name="actionSearch_register"/>
+    <addaction name="actionNext_register"/>
+    <addaction name="actionSelect_all_search_result_registers"/>
+    <addaction name="separator"/>
+    <addaction name="actionSearch_remote_variable"/>
+    <addaction name="actionNext_remote_variable"/>
+    <addaction name="actionSelect_all_search_result_remote_variables"/>
+    <addaction name="separator"/>
     <addaction name="actionGoto_page_0"/>
     <addaction name="actionGoto_page_1"/>
     <addaction name="actionGoto_page_2"/>
@@ -965,6 +973,12 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Goto decsion matrix</string>
    </property>
+   <property name="iconText">
+    <string>Goto decision matrix</string>
+   </property>
+   <property name="toolTip">
+    <string>Goto decision matrix</string>
+   </property>
    <property name="shortcut">
     <string>Alt+D</string>
    </property>
@@ -1130,6 +1144,63 @@ p, li { white-space: pre-wrap; }
   <action name="actionLoadDefaultsSelected">
    <property name="text">
     <string>Load defaults to selected register(s)</string>
+   </property>
+  </action>
+  <action name="actionSearch_register">
+   <property name="text">
+    <string>Search register...</string>
+   </property>
+   <property name="toolTip">
+    <string>Search register by wildcard</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionSearch_remote_variable">
+   <property name="text">
+    <string>Search remote variable...</string>
+   </property>
+   <property name="toolTip">
+    <string>Search remote variable by wildcard</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
+  </action>
+  <action name="actionNext_register">
+   <property name="text">
+    <string>Go to next search register</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to next search register</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionNext_remote_variable">
+   <property name="text">
+    <string>Go to next search remote variable</string>
+   </property>
+   <property name="iconText">
+    <string>Go to next search remote variable</string>
+   </property>
+   <property name="toolTip">
+    <string>Go to next search remote variable</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
+   </property>
+  </action>
+  <action name="actionSelect_all_search_result_registers">
+   <property name="text">
+    <string>Mark all search result registers</string>
+   </property>
+  </action>
+  <action name="actionSelect_all_search_result_remote_variables">
+   <property name="text">
+    <string>Mark all search result remote variables</string>
    </property>
   </action>
  </widget>

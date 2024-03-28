@@ -163,7 +163,7 @@ CDlgMdfDescription::accept()
     str = ui->editLanguage->text().trimmed().left(2).toStdString();
 
     if (str.length() < 2) {
-      QMessageBox::warning(this, tr("vscpworks+"), tr("Invalid description object. Language must be set to IOS639 value."), QMessageBox::Ok);
+      QMessageBox::warning(this, tr(APPNAME), tr("Invalid description object. Language must be set to IOS639 value."), QMessageBox::Ok);
       return;
     }
 
@@ -178,7 +178,7 @@ CDlgMdfDescription::accept()
   }
   else {
     spdlog::error("MDF module information - Invalid MDF description object (accept)");
-    QMessageBox::warning(this, tr("vscpworks+"), tr("Invalid description object. Unable to save data."), QMessageBox::Ok);
+    QMessageBox::warning(this, tr(APPNAME), tr("Invalid description object. Unable to save data."), QMessageBox::Ok);
   }
 
   QDialog::accept();

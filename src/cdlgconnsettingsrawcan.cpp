@@ -307,7 +307,7 @@ restart:
 
         std::string strName = dlg.getDescription();
         if (!strName.length()) {
-            QMessageBox::warning(this, tr("vscpworks+"),
+            QMessageBox::warning(this, tr(APPNAME),
                                 tr("The filter need a description"),
                                 QMessageBox::Ok);
             goto restart;
@@ -343,14 +343,14 @@ restart:
 void CDlgConnSettingsRawCan::onDeleteFilter(void)
 {
     if ( QMessageBox::Yes == QMessageBox::question(this, 
-                                    tr("vscpworks+"), 
+                                    tr(APPNAME), 
                                     tr("Do you really want to delete filter?"),
                                     QMessageBox::Yes|QMessageBox::No) ) {
 
         CFilterListItem *item = (CFilterListItem *)ui->listFilters->takeItem(ui->listFilters->currentRow());
 
         if (nullptr == item) {
-            QMessageBox::warning(this, tr("vscpworks+"),
+            QMessageBox::warning(this, tr(APPNAME),
                                     tr("A filter must be selected from the list before you can delete it"),
                                     QMessageBox::Ok);
             return;                                    
@@ -370,7 +370,7 @@ void CDlgConnSettingsRawCan::onEditFilter(void)
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
     
     if (nullptr == item) {
-        QMessageBox::warning(this, tr("vscpworks+"),
+        QMessageBox::warning(this, tr(APPNAME),
                                 tr("A filter must be selected from the list before you can edit it"),
                                 QMessageBox::Ok);
         return;
@@ -404,7 +404,7 @@ void CDlgConnSettingsRawCan::onEditFilter(void)
 
         std::string strName = dlg.getDescription();
         if (!strName.length()) {
-            QMessageBox::warning(this, tr("vscpworks+"),
+            QMessageBox::warning(this, tr(APPNAME),
                                 tr("The filter need a description"),
                                 QMessageBox::Ok);
             goto restart;
@@ -447,7 +447,7 @@ void CDlgConnSettingsRawCan::onSetFlags(void)
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
 
     if (nullptr == item) {
-        QMessageBox::warning(this, tr("vscpworks+"),
+        QMessageBox::warning(this, tr(APPNAME),
                                 tr("A filter must be selected from the list before you can set it"),
                                 QMessageBox::Ok);
         return;                                
@@ -476,7 +476,7 @@ void CDlgConnSettingsRawCan::onCloneFilter(void)
     CFilterListItem *item = (CFilterListItem *)ui->listFilters->currentItem();
 
     if (nullptr == item) {
-        QMessageBox::warning(this, tr("vscpworks+"),
+        QMessageBox::warning(this, tr(APPNAME),
                                 tr("A filter must be selected from the list before you can clone it"),
                                 QMessageBox::Ok);
         return;                                
@@ -500,20 +500,20 @@ void CDlgConnSettingsRawCan::onTestConnection(void)
     if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.connect())) {
         QString errorstr = tr("Failed to connect to interface. [%1] rv=%2").arg(getDevice().arg(rv));
         QMessageBox::question(this, 
-                                tr("vscpworks+"), 
+                                tr(APPNAME), 
                                 errorstr.arg(rv),
                                 QMessageBox::Ok);
     }
     else {
         QMessageBox::question(this, 
-                                tr("vscpworks+"), 
+                                tr(APPNAME), 
                                 tr("Successful connect"),
                                 QMessageBox::Ok);
     }
 
     if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.disconnect())) {
         QMessageBox::question(this, 
-                                tr("vscpworks+"), 
+                                tr(APPNAME), 
                                 tr("Failed to disconnect from interface."),
                                 QMessageBox::Ok);
     }

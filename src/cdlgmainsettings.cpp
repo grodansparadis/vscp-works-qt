@@ -382,14 +382,14 @@ void CDlgMainSettings::onReLoadEventDb(void)
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
     if (!pworks->loadEventDb()) {
         QMessageBox::information(this, 
-                                tr("vscpworks+"),
+                                tr(APPNAME),
                                 tr("Unable to load events from VSCP event database."),
                                 QMessageBox::Ok );
         return;                                
     }
     else {
         QMessageBox::information(this, 
-                                tr("vscpworks+"),
+                                tr(APPNAME),
                                 tr("Events reloaded from event database."),
                                 QMessageBox::Ok );
     }

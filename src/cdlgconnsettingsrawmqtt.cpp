@@ -630,7 +630,7 @@ CDlgConnSettingsRawMqtt::onTestConnection(void)
     //                   getPassword().toStdString().c_str())) {
     //     QApplication::restoreOverrideCursor();
     //     QMessageBox::information(this,
-    //                              tr("vscpworks+"),
+    //                              tr(APPNAME),
     //                              tr("Failed to initialize MQTT client"));
     //     return;
     // }
@@ -639,7 +639,7 @@ CDlgConnSettingsRawMqtt::onTestConnection(void)
     if (VSCP_ERROR_SUCCESS != m_client.connect()) {
         QApplication::restoreOverrideCursor();
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to connect to remote MQTT broker"));
         m_client.disconnect();
         return;
@@ -671,7 +671,7 @@ CDlgConnSettingsRawMqtt::onTestConnection(void)
         QApplication::restoreOverrideCursor();
         QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Failed to disconnect from remote MQTT broker"));
         return;
     }
@@ -681,7 +681,7 @@ CDlgConnSettingsRawMqtt::onTestConnection(void)
     QString msg = tr("Connection test was successful");
     msg += "\n";
     // msg += strVersion;
-    QMessageBox::information(this, tr("vscpworks+"), msg);
+    QMessageBox::information(this, tr(APPNAME), msg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -721,7 +721,7 @@ CDlgConnSettingsRawMqtt::onAddSubscription(void)
 {
     bool ok;
     QString topic = QInputDialog::getText(this,
-                                          tr("vscpworks+"),
+                                          tr(APPNAME),
                                           tr("Subscription topic:"),
                                           QLineEdit::Normal,
                                           "",
@@ -751,7 +751,7 @@ CDlgConnSettingsRawMqtt::onEditSubscription(void)
         return;
 
     QString topic = QInputDialog::getText(this,
-                                          tr("vscpworks+"),
+                                          tr(APPNAME),
                                           tr("Subscription topic:"),
                                           QLineEdit::Normal,
                                           pitem->getTopic(),
@@ -802,7 +802,7 @@ CDlgConnSettingsRawMqtt::onDeleteSubscription(void)
     if (QMessageBox::Yes ==
         QMessageBox::question(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Are you sure the subscription topic should be deleted?"),
           QMessageBox::Yes | QMessageBox::No)) {
 
@@ -905,7 +905,7 @@ CDlgConnSettingsRawMqtt::onDeletePublish(void)
     if (QMessageBox::Yes ==
         QMessageBox::question(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Are you sure the publish topic should be deleted?"),
           QMessageBox::Yes | QMessageBox::No)) {
 

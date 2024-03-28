@@ -33,6 +33,7 @@
 #include <vscp.h>
 #include <vscphelper.h>
 
+#include "vscpworks.h"
 #include "cdlgeditsessionfilter.h"
 
 #include "cdlgsessionfilter.h"
@@ -155,7 +156,7 @@ CDlgSessionFilter::editFilter()
 {
     QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("editFilter"),
           QMessageBox::Ok);
 }
@@ -170,7 +171,7 @@ CDlgSessionFilter::cloneFilter()
 {
     QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("cloneFilter"),
           QMessageBox::Ok);
 }
@@ -184,7 +185,7 @@ CDlgSessionFilter::deleteFilter()
 {
     QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("deleteFilter"),
           QMessageBox::Ok);
 }
@@ -198,7 +199,7 @@ CDlgSessionFilter::loadFilter()
 {
     QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("loadFilter"),
           QMessageBox::Ok);
 }
@@ -212,7 +213,7 @@ CDlgSessionFilter::saveFilter()
 {
     QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("saveFilter"),
           QMessageBox::Ok);
 }

@@ -63,6 +63,8 @@ SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt)
 {
     m_topic  = topic;
     m_format = fmt;
+
+    m_bActive = true; // Active by default
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,6 +93,8 @@ PublishItem::PublishItem(const QString& topic,
     m_format  = fmt;
     m_qos     = qos;
     m_bRetain = bretain;
+
+    m_bActive = true; // Active by default
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -732,7 +736,7 @@ CDlgConnSettingsMqtt::onTestConnection(void)
     if (VSCP_ERROR_SUCCESS != m_client.connect()) {
         QApplication::restoreOverrideCursor();
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to connect to remote MQTT broker"));
         m_client.disconnect();
         return;
@@ -764,7 +768,7 @@ CDlgConnSettingsMqtt::onTestConnection(void)
         QApplication::restoreOverrideCursor();
         QMessageBox::information(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Failed to disconnect from remote MQTT broker"));
         return;
     }
@@ -774,7 +778,7 @@ CDlgConnSettingsMqtt::onTestConnection(void)
     QString msg = tr("Connection test was successful");
     msg += "\n";
     // msg += strVersion;
-    QMessageBox::information(this, tr("vscpworks+"), msg);
+    QMessageBox::information(this, tr(APPNAME), msg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -814,7 +818,7 @@ CDlgConnSettingsMqtt::onAddSubscription(void)
 {
     // bool ok;
     // QString topic = QInputDialog::getText(this,
-    //                                       tr("vscpworks+"),
+    //                                       tr(APPNAME),
     //                                       tr("Subscription topic:"),
     //                                       QLineEdit::Normal,
     //                                       "",
@@ -852,7 +856,7 @@ CDlgConnSettingsMqtt::onEditSubscription(void)
     if (nullptr == pitem) return;
 
     // QString topic = QInputDialog::getText(this,
-    //                                       tr("vscpworks+"),
+    //                                       tr(APPNAME),
     //                                       tr("Subscription topic:"),
     //                                       QLineEdit::Normal,
     //                                       pitem->getTopic(),
@@ -912,7 +916,7 @@ CDlgConnSettingsMqtt::onDeleteSubscription(void)
     if (QMessageBox::Yes ==
         QMessageBox::question(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Are you sure the subscription topic should be deleted?"),
           QMessageBox::Yes | QMessageBox::No)) {
 
@@ -1017,7 +1021,7 @@ CDlgConnSettingsMqtt::onDeletePublish(void)
     if (QMessageBox::Yes ==
         QMessageBox::question(
           this,
-          tr("vscpworks+"),
+          tr(APPNAME),
           tr("Are you sure the publish topic should be deleted?"),
           QMessageBox::Yes | QMessageBox::No)) {
 

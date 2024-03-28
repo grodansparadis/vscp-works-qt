@@ -1081,7 +1081,7 @@ CDlgLevel1FilterWizard::calculatePriorityValues(void)
 
     if (!ui->listPriority->count()) {
         // QMessageBox::information(this,
-        //                          tr("vscpworks+"),
+        //                          tr(APPNAME),
         //                          tr("From Visual"),
         //                          QMessageBox::Ok);
     }
@@ -1140,7 +1140,7 @@ CDlgLevel1FilterWizard::calculateVscpClassValues(void)
 
     if (!ui->listClass->count()) {
         // QMessageBox::information(this,
-        //                          tr("vscpworks+"),
+        //                          tr(APPNAME),
         //                          tr("From Visual"),
         //                          QMessageBox::Ok);
     }
@@ -1206,7 +1206,7 @@ CDlgLevel1FilterWizard::calculateNodeIdValues(void)
 
     if (!ui->listNodeId->count()) {
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
+                                  tr(APPNAME),
                                   tr("Nothing selected. Filter and mask will be set to zero."),
                                   QMessageBox::Ok);
     }
@@ -1264,7 +1264,7 @@ CDlgLevel1FilterWizard::onVscpTypeItemClicked(QListWidgetItem *item)
     qDebug() << itemClass->text();
     if (!itemClass->isSelected()) {
         if (QMessageBox::Yes == QMessageBox::information(this,
-                                  tr("vscpworks+"),
+                                  tr(APPNAME),
                                  tr("The VSCP class for this type is not currently selected. Should it be selected?"),
                                   QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel)) {                                      
             itemClass->setSelected(true); // QMessageBox::Question

@@ -65,11 +65,11 @@
 
 #include "cfrmnodescan.h"
 #include "ui_cfrmnodescan.h"
-//#include "cdlgmainsettings.h"
-//#include "cdlgtxedit.h"
-
+// #include "cdlgmainsettings.h"
+// #include "cdlgtxedit.h"
 
 #include <QClipboard>
+#include <QDebug>
 #include <QFile>
 #include <QJSEngine>
 #include <QSqlTableModel>
@@ -79,16 +79,15 @@
 #include <QXmlStreamReader>
 #include <QtSql>
 #include <QtWidgets>
-#include <QDebug>
 
 // ----------------------------------------------------------------------------
 
-CFoundNodeWidgetItem::CFoundNodeWidgetItem(QTreeWidget *parent)
+CFoundNodeWidgetItem::CFoundNodeWidgetItem(QTreeWidget* parent)
   : QTreeWidgetItem(parent, TREE_LIST_FOUND_NODE_TYPE)
 {
-  m_nodeid = 0;
+  m_nodeid   = 0;
   m_bStdRegs = false;
-  m_bMdf = false;
+  m_bMdf     = false;
 }
 
 CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
@@ -115,17 +114,17 @@ static void
 eventReceived(vscpEvent* pev, void* pobj)
 {
   // Check pointers
-  if ((nullptr == pev) || (nullptr == pobj) ) {
+  if ((nullptr == pev) || (nullptr == pobj)) {
     return;
-  } 
+  }
 
-  //printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
+  // printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
 
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, pev);
-  
+
   CFrmSession* pSession = (CFrmSession*)pobj;
   pSession->threadReceive(pevnew);
 }
@@ -155,7 +154,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   if (nullptr == pconn) {
     spdlog::error(std::string(tr("pconn is null").toStdString()));
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Can't open node configuration window - "
                                 "application configuration data is missing"),
                              QMessageBox::Ok);
@@ -167,9 +166,9 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
   // Must have a type
   if (m_connObject["type"].isNull()) {
-    spdlog::error( std::string(tr("Type is not defined in JSON data").toStdString()));
+    spdlog::error(std::string(tr("Type is not defined in JSON data").toStdString()));
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Can't open node configuration  window - The "
                                 "connection type is unknown"),
                              QMessageBox::Ok);
@@ -194,17 +193,17 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   int nWidth  = ui->centralwidget->width();
   int nHeight = ui->centralwidget->height();
 
-/*
-  if (parent != NULL) {
-    setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
-                parent->y() + parent->height() / 2 - nHeight / 2,
-                nWidth,
-                nHeight);
-  }
-  else {
-    resize(nWidth, nHeight);
-  }
-*/  
+  /*
+    if (parent != NULL) {
+      setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
+                  parent->y() + parent->height() / 2 - nHeight / 2,
+                  nWidth,
+                  nHeight);
+    }
+    else {
+      resize(nWidth, nHeight);
+    }
+  */
 
   QJsonDocument doc(m_connObject);
   QString strJson(doc.toJson(QJsonDocument::Compact));
@@ -235,8 +234,10 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
           tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
-      m_vscpClient->setCallback(eventReceived, this);
+      // We donät use a callback
+      //m_vscpClient->setCallback(eventReceived, this);
       // m_connectActToolBar->setChecked(true);
+      // m_connObject["selected-interface"] = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
       connectToRemoteHost(true);
       break;
 
@@ -251,8 +252,8 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
                                 "log for more details."));
         return;
       }
-      //m_vscpClient->setCallback(eventReceived, this);
-      //m_connectActToolBar->setChecked(true);
+      // m_vscpClient->setCallback(eventReceived, this);
+      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 #endif
@@ -339,7 +340,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   }
 
   ui->actionConnect->setDisabled(true);
-  ui->actionConnect->setVisible(false);  
+  ui->actionConnect->setVisible(false);
 
   // Connect has been clicked
   connect(ui->actionConnect,
@@ -351,7 +352,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionScan, SIGNAL(triggered()), this, SLOT(doScan()));
 
   // Scan button has been clicked
-  //connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
+  // connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
 
   // Load MDF has been selected in the menu
   connect(ui->actionLoadMdf, SIGNAL(triggered()), this, SLOT(loadSelectedMdf()));
@@ -376,11 +377,10 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
   // Register row has been clicked.
   connect(ui->treeFound,
-            &QTreeWidget::itemClicked,
-            this,
-            &CFrmNodeScan::onFindNodesTreeWidgetItemClicked);        
+          &QTreeWidget::itemClicked,
+          this,
+          &CFrmNodeScan::onFindNodesTreeWidgetItemClicked);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // DTor
@@ -398,22 +398,21 @@ CFrmNodeScan::~CFrmNodeScan()
     vscp_deleteEvent(pev);
     pev = nullptr;
   }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
 //
 
-void CFrmNodeScan::done(int rv)
+void
+CFrmNodeScan::done(int rv)
 {
-    if (QDialog::Accepted == rv) { // ok was pressed        
-        vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-        // Session window
-        //pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
-        
-    }
-    //QMainWindow::done(rv);
+  if (QDialog::Accepted == rv) { // ok was pressed
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    // Session window
+    // pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
+  }
+  // QMainWindow::done(rv);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -426,7 +425,6 @@ CFrmNodeScan::menu_open_main_settings(void)
   // CDlgMainSettings* dlg = new CDlgMainSettings(this);
   // dlg->exec();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // connectToHost
@@ -469,7 +467,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         spdlog::error(std::string(tr("Node Scan: Unable to connect to remote host.").toStdString()));
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the remote "
                                     "host (see log for more info)."),
                                  QMessageBox::Ok);
@@ -487,7 +485,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the CANAL "
                                     "driver (see log for more info)."),
                                  QMessageBox::Ok);
@@ -506,7 +504,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to SOCKETCAN "
                                     "(see log for more info)."),
                                  QMessageBox::Ok);
@@ -527,7 +525,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         spdlog::error(std::string(tr("Node Scan: Unable to connect to remote host").toStdString()));
         QMessageBox::information(this,
-                                 tr("vscpworks+"),
+                                 tr(APPNAME),
                                  tr("Failed to open a connection to the remote "
                                     "host (see log for more info)."),
                                  QMessageBox::Ok);
@@ -582,9 +580,9 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
         spdlog::error(std::string(tr("Node Scan: Unable to disconnect tcp/ip remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
-                                  tr("Failed to disconnect the connection to the txp/ip remote host"),
-          QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the txp/ip remote host"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::info(std::string(tr("Node Scan: Successful disconnect from tcp/ip remote host").toStdString()));
@@ -592,8 +590,6 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::CANAL:
-
-      // Remove callback
 
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
@@ -603,9 +599,9 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
-                                  tr("Failed to disconnect the connection to the CANAL driver"),
-                                  QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the CANAL driver"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::info(std::string(tr("Node Scan: Successful disconnect from CANAL driver").toStdString()));
@@ -624,9 +620,9 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
-                                  tr("Failed to disconnect the connection to the SOCKETCAN driver"),
-                                  QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the SOCKETCAN driver"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::info(std::string(tr("Node Scan: Successful disconnect from SOCKETCAN driver").toStdString()));
@@ -644,9 +640,9 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
         spdlog::error(std::string(tr("Node Scan: Unable to disconnect from MQTT remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr("vscpworks+"),
-                                  tr("Failed to disconnect the connection to the MQTT remote host"),
-                                  QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the MQTT remote host"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::info(std::string(tr("Node Scan: Successful disconnect from the MQTT remote host").toStdString()));
@@ -691,7 +687,6 @@ CFrmNodeScan::threadReceive(vscpEvent* pev)
 {
   emit dataReceived(pev);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // parseNodes
@@ -757,30 +752,30 @@ CFrmNodeScan::parseNodes(std::set<uint16_t>& nodelist)
   return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // doScan
 //
 
-void 
+void
 CFrmNodeScan::doScan(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  //ui->btnScan->setEnabled(false);
+  // ui->btnScan->setEnabled(false);
   ui->actionScan->setEnabled(false);
 
   // This is a sorted list with the nodeid's to search for.
   std::set<uint16_t> nodelist;
 
+  // Get nodes to scan
   if (!parseNodes(nodelist)) {
     QMessageBox::information(this,
-                             tr("vscpworks+"),
+                             tr(APPNAME),
                              tr("Failed to parse nodes"),
                              QMessageBox::Ok);
 
-    ui->actionScan->setEnabled(true);                             
-    return;                             
+    ui->actionScan->setEnabled(true);
+    return;
   }
 
   ui->progressBarScan->setValue(0);
@@ -796,7 +791,7 @@ CFrmNodeScan::doScan(void)
     ui->infoArea->setText(QString::fromStdString(str));
   }
 
-  QApplication::setOverrideCursor(Qt::WaitCursor);  
+  QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
   std::string interface = m_connObject["selected-interface"].toString().toStdString();
@@ -808,29 +803,32 @@ CFrmNodeScan::doScan(void)
 
   // SLOW SCAN
   if (ui->chkSlowScan->isChecked()) {
-    
+
     // Slow scan
 
-    uint32_t delay = vscp_readStringValue(ui->editDelay->text().toStdString());
+    uint32_t delay   = vscp_readStringValue(ui->editDelay->text().toStdString());
     uint32_t timeout = vscp_readStringValue(ui->editTimeout->text().toStdString());
 
-    if ( VSCP_ERROR_SUCCESS != vscp_scanSlowForDevices(*m_vscpClient,
-                                                        guidInterface,
-                                                        nodelist,
-                                                        found,                              
-                                                        delay,
-                                                        timeout)) {
-      ui->progressBarScan->setValue(0);                                                  
+    if (VSCP_ERROR_SUCCESS != vscp_scanSlowForDevices(*m_vscpClient,
+                                                      guidInterface,
+                                                      nodelist,
+                                                      found,
+                                                      delay,
+                                                      timeout)) {
+      ui->progressBarScan->setValue(0);
       spdlog::error(std::string(tr("Node Slow Scan: Failed to scan for devices").toStdString()));
       QApplication::restoreOverrideCursor();
-      QMessageBox::information(this,
-                              tr("vscpworks+"),
-                              tr("Failed to scan nodes"),
-                              QMessageBox::Ok); 
+      ui->infoArea->setText("Scan failed...");
+      ui->infoArea->repaint();
+      
+      // QMessageBox::information(this,
+      //                         tr(APPNAME),
+      //                         tr("Failed to scan nodes"),
+      //                         QMessageBox::Ok);
 
-      ui->actionScan->setEnabled(true);                       
-      return;               
-    }            
+      ui->actionScan->setEnabled(true);
+      return;
+    }
   }
   // NORMAL SCAN
   else {
@@ -839,41 +837,41 @@ CFrmNodeScan::doScan(void)
     ui->infoArea->setText("Scan in progress...");
     ui->infoArea->repaint();
 
-    if ( VSCP_ERROR_SUCCESS != vscp_scanForDevices( *m_vscpClient,
-                                                      guidInterface,
-                                                      found,
-                                                      pworks->m_config_timeout) ) {      
-      ui->progressBarScan->setValue(0);                                                  
+    if (VSCP_ERROR_SUCCESS != vscp_scanForDevices(*m_vscpClient,
+                                                  guidInterface,
+                                                  found,
+                                                  pworks->m_config_timeout)) {
+      ui->progressBarScan->setValue(0);
       spdlog::error(std::string(tr("Node Fast Scan: Failed to scan for devices").toStdString()));
       QApplication::restoreOverrideCursor();
       QMessageBox::information(this,
-                              APPNAME,
-                              tr("Failed to scan nodes"),
-                              QMessageBox::Ok);
+                               APPNAME,
+                               tr("Failed to scan nodes"),
+                               QMessageBox::Ok);
       ui->actionScan->setEnabled(true);
       return;
     }
   }
-  
+
   QString str = QString("Found %1 nodes").arg(found.size());
   ui->infoArea->setText(str);
-    ui->infoArea->repaint();
-  //printf("found node count = %zu\n", found.size());
+  ui->infoArea->repaint();
+  // printf("found node count = %zu\n", found.size());
 
-  size_t additem = 70/(found.size()+1);  // Add for the progress bar for each mdf file
+  size_t additem = 70 / (found.size() + 1); // Add for the progress bar for each mdf file
   if (!ui->chkFetchInfo->isChecked()) {
     ui->progressBarScan->setValue(90);
   }
 
   for (auto const& item : found) {
-    QString str = "node " + QString::number(item);
-    CFoundNodeWidgetItem *top = new CFoundNodeWidgetItem(ui->treeFound);
+    QString str               = "node " + QString::number(item);
+    CFoundNodeWidgetItem* top = new CFoundNodeWidgetItem(ui->treeFound);
     top->setText(0, tr("Node with id = ") + QString::number(item));
-    top->m_nodeid = item;  // Save nodeid
+    top->m_nodeid = item; // Save nodeid
     // Load mdf and standard registers if requested to do so
     if (ui->chkFetchInfo->isChecked()) {
       doLoadMdf(item);
-      QApplication::setOverrideCursor(Qt::WaitCursor); 
+      QApplication::setOverrideCursor(Qt::WaitCursor);
       ui->progressBarScan->setValue(ui->progressBarScan->value() + (int)additem);
     }
   }
@@ -889,7 +887,7 @@ CFrmNodeScan::doScan(void)
 
   ui->progressBarScan->setValue(100);
 
-  QApplication::restoreOverrideCursor();  
+  QApplication::restoreOverrideCursor();
   QApplication::processEvents();
 
   ui->actionScan->setEnabled(true);
@@ -899,10 +897,10 @@ CFrmNodeScan::doScan(void)
 // slowScanStateChange
 //
 
-void 
+void
 CFrmNodeScan::slowScanStateChange(int state)
 {
-  if ( state == Qt::Checked ) {
+  if (state == Qt::Checked) {
     ui->editSearchNodes->setEnabled(true);
     ui->editDelay->setEnabled(true);
     ui->editTimeout->setEnabled(true);
@@ -914,10 +912,9 @@ CFrmNodeScan::slowScanStateChange(int state)
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // showFindNodesContextMenu
-// 
+//
 
 void
 CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
@@ -942,8 +939,8 @@ void
 CFrmNodeScan::loadSelectedMdf(void)
 {
   ui->actionScan->setEnabled(false);
-  QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
-  
+  QList<QTreeWidgetItem*> selected = ui->treeFound->selectedItems();
+
   // Must be selected items
   if (!selected.size()) {
     QMessageBox::information(this,
@@ -954,7 +951,7 @@ CFrmNodeScan::loadSelectedMdf(void)
     return;
   }
 
-  CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
+  CFoundNodeWidgetItem* pitem = (CFoundNodeWidgetItem*)selected.at(0);
   if (nullptr == pitem) {
     QMessageBox::information(this,
                              tr(APPNAME),
@@ -982,12 +979,12 @@ CFrmNodeScan::loadSelectedMdf(void)
 void
 CFrmNodeScan::loadAllMdf(void)
 {
-  //ui->btnScan->setEnabled(false);
+  // ui->btnScan->setEnabled(false);
   ui->actionScan->setEnabled(false);
-  CFoundNodeWidgetItem *pItem;
+  CFoundNodeWidgetItem* pItem;
   QTreeWidgetItemIterator it(ui->treeFound);
   while (*it) {
-    pItem = (CFoundNodeWidgetItem *)(*it);
+    pItem = (CFoundNodeWidgetItem*)(*it);
     doLoadMdf(pItem->m_nodeid);
     ++it;
   }
@@ -1002,13 +999,13 @@ CFrmNodeScan::loadAllMdf(void)
 void
 CFrmNodeScan::doLoadMdf(uint16_t nodeid)
 {
-  
+
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  CFoundNodeWidgetItem *pItem;
+  CFoundNodeWidgetItem* pItem;
   QTreeWidgetItemIterator it(ui->treeFound);
   while (*it) {
-    pItem = (CFoundNodeWidgetItem *)(*it);
+    pItem = (CFoundNodeWidgetItem*)(*it);
     if (pItem->m_nodeid == nodeid) {
       break;
     }
@@ -1022,11 +1019,11 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   }
 
   pItem->m_bStdRegs = false;
-  pItem->m_bMdf = false;
+  pItem->m_bMdf     = false;
 
   std::string interface = m_connObject["selected-interface"].toString().toStdString();
   cguid guidInterface(interface);
-  
+
   cguid guidNode;
   guidNode = guidInterface;
   guidNode.setLSB(pItem->m_nodeid); // Set node id
@@ -1122,7 +1119,7 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
 void
 CFrmNodeScan::onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column)
 {
-  CFoundNodeWidgetItem *pItem = (CFoundNodeWidgetItem *)item;
+  CFoundNodeWidgetItem* pItem = (CFoundNodeWidgetItem*)item;
   if (nullptr == pItem) {
     return;
   }
@@ -1146,9 +1143,9 @@ void
 CFrmNodeScan::goSession(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    
+
   CFrmSession* w = new CFrmSession(parentWidget(), &m_connObject);
-  w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
+  w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
   w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
   w->setWindowFlags(Qt::Window);
   w->show();
@@ -1166,7 +1163,7 @@ CFrmNodeScan::goConfig(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QList<QTreeWidgetItem *> selected = ui->treeFound->selectedItems();
+  QList<QTreeWidgetItem*> selected = ui->treeFound->selectedItems();
   // Must be selected items
   if (!selected.size()) {
     QMessageBox::information(this,
@@ -1176,7 +1173,7 @@ CFrmNodeScan::goConfig(void)
     return;
   }
 
-  CFoundNodeWidgetItem *pitem = (CFoundNodeWidgetItem *)selected.at(0);
+  CFoundNodeWidgetItem* pitem = (CFoundNodeWidgetItem*)selected.at(0);
   if (nullptr == pitem) {
     QMessageBox::information(this,
                              tr(APPNAME),
@@ -1184,9 +1181,9 @@ CFrmNodeScan::goConfig(void)
                              QMessageBox::Ok);
     return;
   }
-    
+
   CFrmNodeConfig* w = new CFrmNodeConfig(parentWidget(), &m_connObject);
-  w->setAttribute(Qt::WA_DeleteOnClose, true);    // Make window close on exit
+  w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
   w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
   w->setWindowFlags(Qt::Window);
   w->show();

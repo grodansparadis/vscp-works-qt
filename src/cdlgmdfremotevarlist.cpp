@@ -354,7 +354,7 @@ CDlgMdfRemoteVarList::dupRemoteVar(void)
   //   }
   // }
   // else {
-  //   QMessageBox::warning(this, tr("vscpworks+"), tr("An item must be selected"), QMessageBox::Ok);
+  //   QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
   // }
 }
 

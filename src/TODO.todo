@@ -49,6 +49,24 @@ Define your own data rendering (Javascript/mustasch)
 Custom data rendering for any event from db.
 Config device from session window.
 Change line and status info when GUID symbolic or sensor symbolic has been updated
+MQTT: activate/deactivate subscription on the fly. (publish topics also maybe)
+
+Configuration window
+====================
+search register / next 
+search remote variable /next
+Remove ctrl+0/1/2... from menu keep functionality.
+
+Scan window
+===========
+
+Bootloader window
+=================
+
+MDF editor window
+=================
+Encoding/decoding of strings to match JSON/XML.
+
 
 GUID Known nodes Dialog
 =======================
@@ -58,6 +76,9 @@ Dialog log viewer
 =================
 TODO Dialog with log viewing/filtering   CDlgLog
 
+Misc.
+=====
+Generate code for web page interfaces
 
 FUTURE
 ======

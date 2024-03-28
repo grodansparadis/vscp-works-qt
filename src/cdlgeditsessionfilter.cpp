@@ -33,6 +33,7 @@
 #include <vscp.h>
 #include <vscphelper.h>
 
+#include "vscpworks.h"
 #include "sessionfilter.h"
 
 #include "cdlgselectconstraint.h"
@@ -145,7 +146,7 @@ void CDlgEditSessionFilter::addConstraintReceive()
     else {
         // This constraint is already set
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set"),
                         QMessageBox::Ok );
     }
@@ -179,7 +180,7 @@ void CDlgEditSessionFilter::addConstraintTransmit()
     else {
         // This constraint is already set
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set"),
                         QMessageBox::Ok );
     }
@@ -212,7 +213,7 @@ void CDlgEditSessionFilter::addConstraintLevel1()
     else {
         // This constraint is already set
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set"),
                         QMessageBox::Ok );
     }
@@ -245,7 +246,7 @@ void CDlgEditSessionFilter::addConstraintLevel2()
     else {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set"),
                         QMessageBox::Ok );
     }
@@ -269,7 +270,7 @@ void CDlgEditSessionFilter::addConstraintClass(void)
     if (isConstraintDefined(CSessionFilter::type_class)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -282,7 +283,7 @@ void CDlgEditSessionFilter::addConstraintClass(void)
         std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
         if (!selected_classes.size()) {
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("No class defined. Att least one class need to be selected"),
                         QMessageBox::Ok );
             return;          
@@ -323,7 +324,7 @@ void CDlgEditSessionFilter::editConstraintClass(void)
         std::deque<uint16_t> selected_classes = dlg.getSelectedClasses();
         if (!selected_classes.size()) {
             QMessageBox::information(this, 
-                    tr("vscpworks+"),
+                    tr(APPNAME),
                     tr("No class defined. Att least one class need to be selected"),
                     QMessageBox::Ok );
             return;          
@@ -358,7 +359,7 @@ CDlgEditSessionFilter::addConstraintGuid(void)
     if (isConstraintDefined(CSessionFilter::type_guid)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -421,7 +422,7 @@ CDlgEditSessionFilter::addConstraintObid(void)
     if (isConstraintDefined(CSessionFilter::type_obid)) {
         // This constraint is already set
         QMessageBox::information(this,
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;
@@ -472,7 +473,7 @@ void CDlgEditSessionFilter::addConstraintDate(void)
     if (isConstraintDefined(CSessionFilter::type_date)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -714,7 +715,7 @@ void CDlgEditSessionFilter::addConstraintTimeStamp(void)
     if (isConstraintDefined(CSessionFilter::type_timestamp)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -761,7 +762,7 @@ void CDlgEditSessionFilter::addConstraintData(void)
     if (isConstraintDefined(CSessionFilter::type_data)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -812,7 +813,7 @@ void CDlgEditSessionFilter::addConstraintDataSize(void)
     if (isConstraintDefined(CSessionFilter::type_data_size)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -863,7 +864,7 @@ void CDlgEditSessionFilter::addConstraintPriority(void)
     if (isConstraintDefined(CSessionFilter::type_priority)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -911,7 +912,7 @@ void CDlgEditSessionFilter::addConstraintMeasurement(void)
     if (isConstraintDefined(CSessionFilter::type_must_be_measurement)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -929,7 +930,7 @@ void CDlgEditSessionFilter::addConstraintMeasurement(void)
     else {
         // This constraint is already set
             QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set"),
                         QMessageBox::Ok );
     }
@@ -953,7 +954,7 @@ void CDlgEditSessionFilter::addConstraintSensorIndex(void)
     if (isConstraintDefined(CSessionFilter::type_sensor_index)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -992,7 +993,7 @@ void CDlgEditSessionFilter::addConstraintValue(void)
     if (isConstraintDefined(CSessionFilter::type_value)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -1033,7 +1034,7 @@ void CDlgEditSessionFilter::addConstraintUnit(void)
     if (isConstraintDefined(CSessionFilter::type_unit)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -1074,7 +1075,7 @@ void CDlgEditSessionFilter::addConstraintDataCoding(void)
     if (isConstraintDefined(CSessionFilter::type_data_coding)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -1115,7 +1116,7 @@ void CDlgEditSessionFilter::addConstraintScript(void)
     if (isConstraintDefined(CSessionFilter::type_script)) {
         // This constraint is already set
         QMessageBox::information(this, 
-                        tr("vscpworks+"),
+                        tr(APPNAME),
                         tr("This constraint is already set. Use edit instead of add."),
                         QMessageBox::Ok );
         return;                               
@@ -1254,7 +1255,7 @@ CDlgEditSessionFilter::editConstraint(void)
 {
     if (-1 == ui->listConstraints->currentRow()){
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("A constraint must be selected"),
                               QMessageBox::Ok );
         return;                              
@@ -1266,7 +1267,7 @@ CDlgEditSessionFilter::editConstraint(void)
         // * * * Edit receive
         case CSessionFilter::type_must_be_receive:
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("There is nothing to edit for this constraint"),
                               QMessageBox::Ok );
             return;
@@ -1274,7 +1275,7 @@ CDlgEditSessionFilter::editConstraint(void)
         // * * * Edit transmit
         case CSessionFilter::type_must_be_transmit:
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("There is nothing to edit for this constraint"),
                               QMessageBox::Ok );
             return;
@@ -1282,7 +1283,7 @@ CDlgEditSessionFilter::editConstraint(void)
         // * * * Edit leve1
         case CSessionFilter::type_must_be_level1:
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("There is nothing to edit for this constraint"),
                               QMessageBox::Ok );
             return;
@@ -1290,7 +1291,7 @@ CDlgEditSessionFilter::editConstraint(void)
         // * * * Edit  level2
         case CSessionFilter::type_must_be_level2:
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("There is nothing to edit for this constraint"),
                               QMessageBox::Ok );
             return;
@@ -1298,7 +1299,7 @@ CDlgEditSessionFilter::editConstraint(void)
         // * * * Edit measurement
         case CSessionFilter::type_must_be_measurement:
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("There is nothing to edit for this constraint"),
                               QMessageBox::Ok );
             return;
@@ -1384,7 +1385,7 @@ CDlgEditSessionFilter::deleteConstraint(void)
 {
     if (-1 == ui->listConstraints->currentRow()){
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("A constraint must be selected"),
                               QMessageBox::Ok );
         return;                              

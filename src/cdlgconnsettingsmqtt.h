@@ -62,6 +62,9 @@ class SubscribeItem : public QListWidgetItem {
     };
 
   private:
+    /// True if item is active
+    bool m_bActive;
+
     /// Subscribe topic
     QString m_topic;
 
@@ -102,6 +105,9 @@ class PublishItem : public QListWidgetItem {
     };
 
   private:
+    /// True if item is active
+    bool m_bActive;
+    
     /// Quality of service
     int m_qos;
 

@@ -81,10 +81,10 @@ class CFrmNodeConfig;
 #define NUMBER_OF_TABS 4
 
 enum tabbarindex {
-  TABBAR_INDEX_REGISTERS = 0,
-  TABBAR_INDEX_REMOTEVARS,
-  TABBAR_INDEX_DM,
-  TABBAR_INDEX_FILES
+  TAB_BAR_INDEX_REGISTERS = 0,
+  TAB_BAR_INDEX_REMOTEVARS,
+  TAB_BAR_INDEX_DM,
+  TAB_BAR_INDEX_FILES
 };
 
 enum registerColumns {
@@ -771,6 +771,36 @@ class CFrmNodeConfig : public QMainWindow
     */
     void onMainTabBarChanged(int index);
 
+    /*!
+      Search register with text content
+    */
+    void onSearchRegister(void);
+
+    /*!
+      Search next register
+    */
+    void onSearchNextRegister(void);
+
+    /*!
+      Select registers from search result
+    */
+    void onSelectSearchRegisters(void);
+
+    /*!
+      Search remote variable with text content
+    */
+    void onSearchRemoteVariable(void);
+
+    /*!
+      Search remote variable with text content
+    */
+    void onSearchNextRemoteVariable(void);
+
+    /*!
+      Select regsters from search result
+    */
+    void onSelectSearchRemoteVars(void);
+
  signals:
 
     /// Data received from callback
@@ -795,7 +825,7 @@ class CFrmNodeConfig : public QMainWindow
 
     // Holds widget items for register page headers
     // page -> register item header
-    std::map<uint16_t, QTreeWidgetItem *> m_mapRegTopPages;
+    std::map<uint16_t, QTreeWidgetItem *> m_mapPageToPageHeader;
 
     /// The VSCP client type
     CVscpClient::connType m_vscpConnType;
@@ -834,6 +864,26 @@ class CFrmNodeConfig : public QMainWindow
       Maps registers to DM
     */
     //std::map<uint32_t, CDMWidgetItem *> m_mapReg2DM;
+
+    /*!
+      List that get populated after a register search
+    */
+    QList<QTreeWidgetItem *> m_searchListRegs;
+
+    /*!
+      Current pos shown among register search results
+    */
+    uint32_t m_registerSearchPos;
+
+    /*!
+      List that get populated after a remote variable search
+    */
+    QList<QTreeWidgetItem *> m_searchListRemoteVars;
+
+    /*!
+      Current pos shown among remote variable search results
+    */
+    uint32_t m_remoteVarSearchPos;
 
     /// A pointer to a VSCP Client 
     CVscpClient *m_vscpClient;

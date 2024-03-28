@@ -192,7 +192,7 @@ void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
     if (QSqlError::NoError != query.lastError().type()) {
         pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()),
@@ -410,7 +410,7 @@ again:
         // Validate length
         if (47 < strguid.length()) {
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Invalid GUID. Length is wrong."),
                               QMessageBox::Ok ); 
           goto again;                               
@@ -425,7 +425,7 @@ again:
         // Validate # of colons
         if (15 != cntColon) {
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
                               QMessageBox::Ok ); 
             goto again;                               
@@ -442,7 +442,7 @@ again:
         if (QSqlError::NoError != query.lastError().type()) {
             pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this,
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text() );
             spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
                              query.lastError().text().toStdString());                         
@@ -492,7 +492,7 @@ void  CDlgKnownGuid::btnEdit(void)
     int row = ui->listGuid->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No GUID is selected"),
                               QMessageBox::Ok );
         return;
@@ -508,7 +508,7 @@ void  CDlgKnownGuid::btnEdit(void)
     if (QSqlError::NoError != query.lastError().type()) {
         pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
@@ -540,7 +540,7 @@ again:
         if (QSqlError::NoError != query.lastError().type()) {
             pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
 
@@ -578,7 +578,7 @@ void  CDlgKnownGuid::btnClone(void)
     int row = ui->listGuid->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No GUID is selected"),
                               QMessageBox::Ok );
         return;
@@ -594,7 +594,7 @@ void  CDlgKnownGuid::btnClone(void)
     if (QSqlError::NoError != query.lastError().type()) {
         pworks->m_mutexGuidMap.unlock();
         QMessageBox::information(this,
-                            tr("vscpworks+"),
+                            tr(APPNAME),
                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
                             QMessageBox::Ok );
         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
@@ -619,7 +619,7 @@ again:
         // Validate length
         if (47 != strguid.length()) {
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Invalid GUID. Length is wrong."),
                               QMessageBox::Ok ); 
             goto again;                               
@@ -634,7 +634,7 @@ again:
         // Validate # of colons
         if (15 != cntColon) {
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
                               QMessageBox::Ok ); 
             goto again;                               
@@ -651,7 +651,7 @@ again:
         if (QSqlError::NoError != query.lastError().type()) {
             pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
                               QMessageBox::Ok );    
             spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
@@ -679,14 +679,14 @@ void  CDlgKnownGuid::btnDelete(void)
     int row = ui->listGuid->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No GUID is selected"),
                               QMessageBox::Ok );
         return;
     }
 
     int rv = QMessageBox::warning(this,
-                                    tr("vscpworks+"),
+                                    tr(APPNAME),
                                     tr("Are you sure?"),
                                     QMessageBox::Ok | QMessageBox::Cancel );
 
@@ -702,7 +702,7 @@ void  CDlgKnownGuid::btnDelete(void)
         if (QSqlError::NoError != query.lastError().type()) {
             pworks->m_mutexGuidMap.unlock();
             QMessageBox::information(this,
-                                tr("vscpworks+"),
+                                tr(APPNAME),
                                 tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
                                 QMessageBox::Ok );
             spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
@@ -739,7 +739,7 @@ void  CDlgKnownGuid::btnSensorIndex(void)
     int row = ui->listGuid->currentRow();
     if (-1 == row) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No GUID is selected"),
                               QMessageBox::Ok );
         return;

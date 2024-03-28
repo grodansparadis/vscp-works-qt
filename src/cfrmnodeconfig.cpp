@@ -42,7 +42,7 @@
 
 #include <mustache.hpp>
 
-//#include <curl/curl.h>
+// #include <curl/curl.h>
 
 #include <vscp_client_canal.h>
 #include <vscp_client_mqtt.h>
@@ -62,21 +62,23 @@
 
 #include "cdlgeditdm.h"
 #include "cdlgknownguid.h"
+#include "cdlgtxtsearch.h"
 
 #include "cfrmnodeconfig.h"
 #include "ui_cfrmnodeconfig.h"
-//#include "cdlgmainsettings.h"
-//#include "cdlgtxedit.h"
+// #include "cdlgmainsettings.h"
+// #include "cdlgtxedit.h"
 
 #include <mdf.h>
 
-#include <string>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include <QByteArray>
 #include <QClipboard>
 #include <QFile>
+#include <QInputDialog>
 #include <QJSEngine>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -90,12 +92,11 @@
 #include <QXmlStreamReader>
 #include <QtSql>
 #include <QtWidgets>
-#include <QInputDialog>
 
 #include <expat.h>
-#include <nlohmann/json.hpp>         // Needs C++11  -std=c++11
+#include <maddy/parser.h> // Markdown -> HTML
 #include <mustache.hpp>
-#include <maddy/parser.h>   // Markdown -> HTML
+#include <nlohmann/json.hpp> // Needs C++11  -std=c++11
 
 #define XML_BUFF_SIZE 0xffff
 
@@ -146,12 +147,12 @@ CMdfFileWidgetItem::CMdfFileWidgetItem(const QString& text, int type)
 {
   m_mdfFileType = mdf_file_type_none;
 
-  m_picture_obj = nullptr;
-  m_video_obj = nullptr;             
+  m_picture_obj  = nullptr;
+  m_video_obj    = nullptr;
   m_firmware_obj = nullptr;
-  m_driver_obj = nullptr;              
-  m_manual_obj = nullptr;             
-  m_setup_obj = nullptr; 
+  m_driver_obj   = nullptr;
+  m_manual_obj   = nullptr;
+  m_setup_obj    = nullptr;
 }
 
 CMdfFileWidgetItem::~CMdfFileWidgetItem()
@@ -201,9 +202,11 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_nUpdates           = 0;         // No update operations yet
   m_StandardRegTopPage = nullptr;   // No standard registers
   ui->treeWidgetRegisters->clear(); // Clear the tree
-  m_mapRegTopPages.clear();         // Clear the page map
-  m_bInternalChange = false;        // Cell update works as normal
-  m_bMainInfo = false;              // No main MDF info written yet to the info area
+  m_mapPageToPageHeader.clear();    // Clear the page map
+  m_bInternalChange    = false;     // Cell update works as normal
+  m_bMainInfo          = false;     // No main MDF info written yet to the info area
+  m_registerSearchPos  = 0;         // No search performed
+  m_remoteVarSearchPos = 0;         // No search performed
 
   int cnt         = ui->session_tabWidget->count();
   QTabBar* tabBar = ui->session_tabWidget->tabBar();
@@ -338,7 +341,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     Interfaced at the time of configuration.
   */
   QJsonArray json_if_array = m_connObject["interfaces"].toArray();
-  
+
   /*!
    *  If bFullLevel2 is true only GUID textbox is shown.
    *  If false the interface combo plus nickname spinnbox is shown.
@@ -354,7 +357,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       break;
 
-    case CVscpClient::connType::TCPIP: 
+    case CVscpClient::connType::TCPIP:
 
       if (bFullLevel2) {
         // GUID
@@ -380,13 +383,14 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
         }
 
         m_comboInterface->setCurrentText(interface.c_str());
-        //std::cout << "interface = " << interface << std::endl;
+        // std::cout << "interface = " << interface << std::endl;
 
         // Nickname
         m_nodeidConfig = new QSpinBox();
         m_nodeidConfig->setRange(1, 0xfd);
         ui->mainToolBar->addWidget(new QLabel(" node id:"));
         ui->mainToolBar->addWidget(m_nodeidConfig);
+        m_nodeidConfig->setValue(1);
       }
 
       m_vscpClient = new vscpClientTcp();
@@ -402,17 +406,18 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
         QMessageBox::warning(this,
-                              tr(APPNAME),
-                              tr("Failed to initialize CANAL driver. See log for more details."));
+                             tr(APPNAME),
+                             tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
 
       m_nodeidConfig = new QSpinBox();
       m_nodeidConfig->setRange(0, 0xff);
+      m_nodeidConfig->setValue(1);
       ui->mainToolBar->addWidget(new QLabel(" node id:"));
       ui->mainToolBar->addWidget(m_nodeidConfig);
 
-      m_vscpClient->setCallback(eventReceived, this);
+      // m_vscpClient->setCallback(eventReceived, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -423,19 +428,20 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientSocketCan();
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
-        QMessageBox::warning(this, 
-                              tr(APPNAME),
-                              tr("Failed to initialize SOCKETCAN driver. See "
+        QMessageBox::warning(this,
+                             tr(APPNAME),
+                             tr("Failed to initialize SOCKETCAN driver. See "
                                 "log for more details."));
         return;
       }
 
       m_nodeidConfig = new QSpinBox();
       m_nodeidConfig->setRange(0, 0xff);
+      m_nodeidConfig->setValue(1);
       ui->mainToolBar->addWidget(new QLabel("node id:"));
       ui->mainToolBar->addWidget(m_nodeidConfig);
 
-      m_vscpClient->setCallback(eventReceived, this);
+      // m_vscpClient->setCallback(eventReceived, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -571,13 +577,44 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionGoto_page_register,
           SIGNAL(triggered()),
           this,
-          SLOT(gotoRegisterOnPage()));  
+          SLOT(gotoRegisterOnPage()));
 
   // Navigation: Goto selected DM or remote variable register
   connect(ui->actionGoto_related_register,
           SIGNAL(triggered()),
           this,
           SLOT(gotoRegisterForSelected()));
+
+  // Navigation: Search
+  connect(ui->actionSearch_register,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSearchRegister()));
+
+  connect(ui->actionNext_register,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSearchNextRegister()));
+
+  connect(ui->actionSelect_all_search_result_registers,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSelectSearchRegisters()));
+
+  connect(ui->actionSearch_remote_variable,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSearchRemoteVariable()));
+
+  connect(ui->actionNext_remote_variable,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSearchNextRemoteVariable()));
+
+  connect(ui->actionSelect_all_search_result_remote_variables,
+          SIGNAL(triggered()),
+          this,
+          SLOT(onSelectSearchRemoteVars()));
 
   // Navigation: Goto register page 0
   connect(ui->actionGoto_page_0,
@@ -595,13 +632,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->actionGoto_page_2,
           SIGNAL(triggered()),
           this,
-          SLOT(gotoRegisterPage2()));                    
+          SLOT(gotoRegisterPage2()));
 
   // Navigation: Goto register page 3
   connect(ui->actionGoto_page_3,
           SIGNAL(triggered()),
           this,
-          SLOT(gotoRegisterPage3()));        
+          SLOT(gotoRegisterPage3()));
 
   // Navigation: Goto register page 4
   connect(ui->actionGoto_page_4,
@@ -640,46 +677,46 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
           SLOT(gotoRegisterPage9()));
 
   // Edit selected DM row
-  QAction *actEditDM = new QAction(tr("Edit DM row"), this);  
-  actEditDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));                                                                         
+  QAction* actEditDM = new QAction(tr("Edit DM row"), this);
+  actEditDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
   connect(actEditDM, &QAction::triggered, this, &CFrmNodeConfig::editDMRow);
-  ui->treeWidgetDecisionMatrix->addAction(actEditDM); 
+  ui->treeWidgetDecisionMatrix->addAction(actEditDM);
 
   // Toggle active state for selected DM row
-  QAction *actToggleDM = new QAction(tr("Toggle active state for DM row"), this);  
-  actToggleDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));                                                                         
+  QAction* actToggleDM = new QAction(tr("Toggle active state for DM row"), this);
+  actToggleDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
   connect(actToggleDM, &QAction::triggered, this, &CFrmNodeConfig::toggleDMRow);
-  ui->treeWidgetDecisionMatrix->addAction(actToggleDM); 
+  ui->treeWidgetDecisionMatrix->addAction(actToggleDM);
 
   // Navigation: Goto standard registers register page
   connect(ui->actionGoto_standard_registers,
           SIGNAL(triggered()),
           this,
-          SLOT(gotoRegisterPageStdReg()));       
+          SLOT(gotoRegisterPageStdReg()));
 
   // Navigation: Goto DM register page
   connect(ui->actionGoto_decsion_matrix,
           SIGNAL(triggered()),
           this,
-          SLOT(gotoRegisterPageDM()));      
+          SLOT(gotoRegisterPageDM()));
 
   // Navigation: Collapse all register top levels
   connect(ui->actionCollapse_registers,
           SIGNAL(triggered()),
           this,
-          SLOT(collapseAllRegisterTopItems()));  
+          SLOT(collapseAllRegisterTopItems()));
 
   // Navigation: Collapse all file top levels
   connect(ui->actionCollapse_files,
           SIGNAL(triggered()),
           this,
-          SLOT(collapseAllFileTopItems()));                         
+          SLOT(collapseAllFileTopItems()));
 
   // Go to page
   connect(ui->actionUpdateLocal,
           SIGNAL(triggered()),
           this,
-          SLOT(updateLocal()));          
+          SLOT(updateLocal()));
 
   connect(ui->actionDisableColors,
           SIGNAL(triggered(bool)),
@@ -706,21 +743,21 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   // Tab bar clicked
   connect(ui->session_tabWidget,
-            SIGNAL(tabBarClicked(int)),
-            this,
-            SLOT(onMainTabBarClicked(int)));        
+          SIGNAL(tabBarClicked(int)),
+          this,
+          SLOT(onMainTabBarClicked(int)));
 
   // Tab bar changed
   connect(ui->session_tabWidget,
-            SIGNAL(currentChanged(int)),
-            this,
-            SLOT(onMainTabBarChanged(int)));
+          SIGNAL(currentChanged(int)),
+          this,
+          SLOT(onMainTabBarChanged(int)));
 
   // Register row has been clicked.
   connect(ui->treeWidgetRegisters,
-            &QTreeWidget::itemClicked,
-            this,
-            &CFrmNodeConfig::onRegisterTreeWidgetItemClicked);
+          &QTreeWidget::itemClicked,
+          this,
+          &CFrmNodeConfig::onRegisterTreeWidgetItemClicked);
 
   // Register row has been double clicked.
   connect(ui->treeWidgetRegisters,
@@ -756,7 +793,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->treeWidgetDecisionMatrix,
           &QTreeWidget::itemChanged,
           this,
-          &CFrmNodeConfig::onDMTreeWidgetCellChanged);          
+          &CFrmNodeConfig::onDMTreeWidgetCellChanged);
 
   // Open pop up menu on right click on DM list
   connect(ui->treeWidgetDecisionMatrix,
@@ -804,13 +841,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   connect(ui->treeWidgetMdfFiles,
           &QTreeWidget::itemClicked,
           this,
-          &CFrmNodeConfig::onMdfFileTreeWidgetItemClicked);  
+          &CFrmNodeConfig::onMdfFileTreeWidgetItemClicked);
 
   // MDF file item has been double clicked.
   connect(ui->treeWidgetMdfFiles,
           &QTreeWidget::itemDoubleClicked,
           this,
-          &CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked);                
+          &CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked);
 
   // m_shortcut_info = new QShortcut(QKeySequence(tr("Ctrl+I")), this);
   // connect(m_shortcut_info,
@@ -824,7 +861,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
           this,
           &CFrmNodeConfig::fillDeviceHtmlInfo);
 
-  // MDF file item has been double clicked          
+  // MDF file item has been double clicked
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -837,10 +874,9 @@ CFrmNodeConfig::~CFrmNodeConfig()
 
   // Make sure we are disconnected
   doDisconnectFromRemoteHost();
- 
+
   pworks->clearChildWindow(this);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
@@ -868,7 +904,6 @@ CFrmNodeConfig::menu_open_main_settings(void)
   // CDlgMainSettings* dlg = new CDlgMainSettings(this);
   // dlg->exec();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // connectToHost
@@ -933,7 +968,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QApplication::beep();
         QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
-        str += rv;        
+        str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -1038,9 +1073,9 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to disconnect tcp/ip remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr(APPNAME),
-                                  tr("Failed to disconnect the connection to the txp/ip remote host"),
-          QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the txp/ip remote host"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::trace(std::string(tr("Session: Successful disconnect from tcp/ip remote host").toStdString()));
@@ -1060,9 +1095,9 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         str += rv;
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
-                                  tr(APPNAME),
-                                  tr("Failed to disconnect the connection to the CANAL driver"),
-                                  QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the CANAL driver"),
+                                 QMessageBox::Ok);
       }
       else {
         spdlog::trace(std::string(tr("Session: Successful disconnect from CANAL driver").toStdString()));
@@ -1103,11 +1138,11 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
         QApplication::beep();
         spdlog::error(std::string(tr("Session: Unable to disconnect from MQTT remote client").toStdString()));
         QMessageBox::information(this,
-                                  tr(APPNAME),
-                                  tr("Failed to disconnect the connection to the MQTT remote "
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the MQTT remote "
                                     "host"),
-                                  QMessageBox::Ok);
-                              }
+                                 QMessageBox::Ok);
+      }
       else {
         spdlog::trace(std::string(tr("Session: Successful disconnect from the MQTT remote host").toStdString()));
       }
@@ -1239,7 +1274,6 @@ CFrmNodeConfig::onBaseChange(int index)
       base   = 2;
       break;
   }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1253,7 +1287,7 @@ CFrmNodeConfig::onInterfaceChange(int index)
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetMdfFiles->clear();
-  for (int i=0; i<NUMBER_OF_TABS; i++) {
+  for (int i = 0; i < NUMBER_OF_TABS; i++) {
     m_saveInfoArea[i].clear();
   }
   m_nUpdates = 0;
@@ -1270,7 +1304,7 @@ CFrmNodeConfig::onNodeIdChange(int nodeid)
   ui->treeWidgetRemoteVariables->clear();
   ui->treeWidgetDecisionMatrix->clear();
   ui->treeWidgetMdfFiles->clear();
-  for (int i=0; i<NUMBER_OF_TABS; i++) {
+  for (int i = 0; i < NUMBER_OF_TABS; i++) {
     m_saveInfoArea[i].clear();
   }
   m_nUpdates = 0;
@@ -1287,7 +1321,7 @@ CFrmNodeConfig::update(void)
     ;
   }
   else {
-    
+
     if (!m_nUpdates) {
 
       // First read: Read in and render all registers
@@ -1296,9 +1330,10 @@ CFrmNodeConfig::update(void)
         spdlog::error("Update: Failed to read and render registers from the "
                       "remote device.");
         QMessageBox::information(this,
-                                  tr(APPNAME),
-                                  tr("Failed to read and render registers from the remote device."),
-                                  QMessageBox::Ok);
+                                 tr(APPNAME),
+                                 tr("Failed to read and render registers from the remote device."),
+                                 QMessageBox::Ok);
+        return;
       }
 
       renderRemoteVariables();
@@ -1330,7 +1365,7 @@ void
 CFrmNodeConfig::updateFull(void)
 {
   m_nUpdates = 0;
-  for (int i=0; i<NUMBER_OF_TABS; i++) {
+  for (int i = 0; i < NUMBER_OF_TABS; i++) {
     m_saveInfoArea[i].clear();
   }
   update();
@@ -1344,7 +1379,7 @@ void
 CFrmNodeConfig::updateLocal(void)
 {
   m_nUpdates = 0;
-  for (int i=0; i<NUMBER_OF_TABS; i++) {
+  for (int i = 0; i < NUMBER_OF_TABS; i++) {
     m_saveInfoArea[i].clear();
   }
   update();
@@ -1370,7 +1405,13 @@ CFrmNodeConfig::writeChanges(void)
   QApplication::processEvents();
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -1398,9 +1439,9 @@ CFrmNodeConfig::writeChanges(void)
                                                                itemReg->m_regOffset,
                                                                value,
                                                                pworks->m_config_timeout))) {
-        
+
         m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
-        
+
         (*item)->setText(REG_COL_VALUE,
                          pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
                            .toStdString()
@@ -1463,7 +1504,14 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   }
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  // The interface combo is not available for level I interfaces like socketcan
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -1623,8 +1671,9 @@ CFrmNodeConfig::onMainTabBarClicked(int index)
 {
   // Get current index
   int current_index = ui->session_tabWidget->currentIndex();
-  if (-1 == current_index) return;
-  
+  if (-1 == current_index)
+    return;
+
   // Save content of info area
   m_saveInfoArea[current_index] = ui->infoArea->toHtml().toStdString();
 }
@@ -1660,7 +1709,12 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   html += "<br>";
 
   html += "</font><b>Interface</b>:<font color=\"#009900\"> ";
-  html += m_comboInterface->currentText().toStdString();
+  if (nullptr == m_comboInterface) {
+    html += "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    html += m_comboInterface->currentText().toStdString();
+  }
   html += "<br>";
 
   html += "</font><b>Nickname</b>:<font color=\"#009900\"> ";
@@ -1675,7 +1729,12 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   html += " (real GUID)<br>";
 
   // Proxy GUID
-  str = m_comboInterface->currentText().toStdString();
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidNode;
   guidNode.getFromString(str);
   // node id
@@ -1967,13 +2026,9 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   ui->infoArea->setHtml(html.c_str());
 }
 
-
-
 // ****************************************************************************
 //                   * * *  Register handling * * *
 // ****************************************************************************
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // readSelectedRegisterValues
@@ -1987,9 +2042,9 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
 
   if (!m_vscpClient->isConnected()) {
     int ret = QMessageBox::warning(this,
-                                    tr(APPNAME),
-                                    tr("Need to be connected to perform this operation."),
-                                    QMessageBox::Ok);
+                                   tr(APPNAME),
+                                   tr("Need to be connected to perform this operation."),
+                                   QMessageBox::Ok);
     spdlog::error("Aborted read register(s) due to no connection.");
     return;
   }
@@ -1998,7 +2053,13 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
   QApplication::processEvents();
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -2010,17 +2071,15 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
   for (auto item : listSelected) {
     if (item->type() == TREE_LIST_REGISTER_TYPE) {
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
-      uint8_t value = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
+      uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
       if (VSCP_ERROR_SUCCESS == (rv = vscp_readLevel1Register(*m_vscpClient,
-                                                                guidNode,
-                                                                guidInterface,
-                                                                itemReg->m_regPage,
-                                                                itemReg->m_regOffset,
-                                                                value,
-                                                                pworks->m_config_timeout))) {
-        item->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex())
-                                      .toStdString()
-                                      .c_str());
+                                                              guidNode,
+                                                              guidInterface,
+                                                              itemReg->m_regPage,
+                                                              itemReg->m_regOffset,
+                                                              value,
+                                                              pworks->m_config_timeout))) {
+        item->setText(REG_COL_VALUE, pworks->decimalToStringInBase(value, m_baseComboBox->currentIndex()).toStdString().c_str());
         item->setForeground(REG_COL_VALUE, QBrush(QColor("black")));
       }
       else {
@@ -2028,7 +2087,7 @@ CFrmNodeConfig::readSelectedRegisterValues(void)
         spdlog::error("Failed to read register(s) rv = {}", rv);
         QString str = tr("Failed to read register(s) rv = ") + QString::number(rv);
         ui->statusBar->showMessage(str);
-        QApplication::restoreOverrideCursor();        
+        QApplication::restoreOverrideCursor();
         return;
       }
     }
@@ -2051,9 +2110,9 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
   if (!m_vscpClient->isConnected()) {
     QApplication::beep();
     int ret = QMessageBox::warning(this,
-                                    tr(APPNAME),
-                                    tr("Need to be connected to perform this operation."),
-                                    QMessageBox::Ok);
+                                   tr(APPNAME),
+                                   tr("Need to be connected to perform this operation."),
+                                   QMessageBox::Ok);
     spdlog::error("Aborted read register(s) due to no connection.");
     return;
   }
@@ -2062,7 +2121,13 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
   QApplication::processEvents();
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -2076,12 +2141,12 @@ CFrmNodeConfig::writeSelectedRegisterValues(void)
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
       uint8_t value                = vscp_readStringValue(item->text(REG_COL_VALUE).toStdString());
       if (VSCP_ERROR_SUCCESS == (rv = vscp_writeLevel1Register(*m_vscpClient,
-                                                                  guidNode,
-                                                                  guidInterface,
-                                                                  itemReg->m_regPage,
-                                                                  itemReg->m_regOffset,
-                                                                  value,
-                                                                  pworks->m_config_timeout))) {
+                                                               guidNode,
+                                                               guidInterface,
+                                                               itemReg->m_regPage,
+                                                               itemReg->m_regOffset,
+                                                               value,
+                                                               pworks->m_config_timeout))) {
         // Certain that read value is the same as the one we just wrote here
         m_userregs.setChangedState(itemReg->m_regOffset, itemReg->m_regPage, false);
         m_userregs.putReg(itemReg->m_regOffset,
@@ -2182,7 +2247,7 @@ CFrmNodeConfig::gotoRegisterPage(int page)
   ui->treeWidgetRegisters->selectionModel()->clearSelection();
 
   if (!m_stdregs.getMDF().size()) {
-    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
+    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);
     return;
   }
 
@@ -2192,29 +2257,28 @@ CFrmNodeConfig::gotoRegisterPage(int page)
     bool ok;
 
     QStringList items;
-    items << tr("Standard register page"); 
-    std::set<long> *ppages = m_userregs.getPages();
+    items << tr("Standard register page");
+    std::set<long>* ppages = m_userregs.getPages();
     for (auto it = ppages->begin(); it != ppages->end(); ++it) {
       items << tr("Register page ") + QString::number(*it);
     }
-    
-    QString strpage = QInputDialog::getItem(this, tr("Select register page"), tr("Register page:"), 
-                                              items, 0, false, &ok);
+
+    QString strpage = QInputDialog::getItem(this, tr("Select register page"), tr("Register page:"), items, 0, false, &ok);
     if (ok && !items.isEmpty()) {
 
       // Go to register tab
-      ui->session_tabWidget->setCurrentIndex(0);
+      ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REGISTERS);
 
       if (strpage == tr("Standard register page")) {
         m_StandardRegTopPage->setSelected(true);
-        m_StandardRegTopPage->setExpanded(true);  
+        m_StandardRegTopPage->setExpanded(true);
       }
       else {
-        std::string str = strpage.right(strpage.size()-13)  .toStdString();
-        page = vscp_readStringValue(str);
-        m_mapRegTopPages[page]->setSelected(true);
-        m_mapRegTopPages[page]->setExpanded(true);
-        ui->treeWidgetRegisters->scrollToItem(m_mapRegTopPages[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
+        std::string str = strpage.right(strpage.size() - 13).toStdString();
+        page            = vscp_readStringValue(str);
+        m_mapPageToPageHeader[page]->setSelected(true);
+        m_mapPageToPageHeader[page]->setExpanded(true);
+        ui->treeWidgetRegisters->scrollToItem(m_mapPageToPageHeader[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
       }
     }
     else {
@@ -2223,18 +2287,18 @@ CFrmNodeConfig::gotoRegisterPage(int page)
   }
   else {
     // Must be a valid page
-    std::set<long> *ppages = m_userregs.getPages();
-    auto search = ppages->find(page);
+    std::set<long>* ppages = m_userregs.getPages();
+    auto search            = ppages->find(page);
     if (search == ppages->end()) {
-      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok); 
+      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok);
       return;
     }
 
     // Go to register tab
     ui->session_tabWidget->setCurrentIndex(0);
-    m_mapRegTopPages[page]->setSelected(true);
-    m_mapRegTopPages[page]->setExpanded(true);
-    ui->treeWidgetRegisters->scrollToItem(m_mapRegTopPages[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
+    m_mapPageToPageHeader[page]->setSelected(true);
+    m_mapPageToPageHeader[page]->setExpanded(true);
+    ui->treeWidgetRegisters->scrollToItem(m_mapPageToPageHeader[page], QAbstractItemView::PositionAtTop); // QAbstractItemView::EnsureVisible
   }
 }
 
@@ -2342,16 +2406,16 @@ CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
   ui->treeWidgetRegisters->selectionModel()->clearSelection();
 
   if (!m_stdregs.getMDF().size()) {
-    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);  
+    QMessageBox::information(this, tr(APPNAME), tr("No register pages"), QMessageBox::Ok);
     return;
   }
 
   // Must be a valid page
   if (-1 != page) {
-    std::set<long> *ppages = m_userregs.getPages();
-    auto search = ppages->find(page);
+    std::set<long>* ppages = m_userregs.getPages();
+    auto search            = ppages->find(page);
     if (search == ppages->end()) {
-      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok); 
+      QMessageBox::information(this, tr(APPNAME), tr("Register page is not valid"), QMessageBox::Ok);
       return;
     }
   }
@@ -2360,21 +2424,19 @@ CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
 
   if (-1 == reg) {
     bool ok;
-    reg = QInputDialog::getInt(this, tr("Select register"),
-                                          tr("Register:"),
-                                          0,0,2147483647,1, &ok);
-    if (!ok) {                                          
+    reg = QInputDialog::getInt(this, tr("Select register"), tr("Register:"), 0, 0, 2147483647, 1, &ok);
+    if (!ok) {
       return;
     }
   }
 
-  QList<QTreeWidgetItem *> selected =	ui->treeWidgetRegisters->selectedItems();
-  if (!selected.size() ) {
-    QMessageBox::information(this, tr(APPNAME), tr("No register page item selected (it should be!)"), QMessageBox::Ok); 
+  QList<QTreeWidgetItem*> selected = ui->treeWidgetRegisters->selectedItems();
+  if (!selected.size()) {
+    QMessageBox::information(this, tr(APPNAME), tr("No register page item selected (it should be!)"), QMessageBox::Ok);
     return;
   }
 
-  for (int i=0; i<selected[0]->childCount(); i++) {
+  for (int i = 0; i < selected[0]->childCount(); i++) {
     QTreeWidgetItem* item = selected[0]->child(i);
     if (item->type() == TREE_LIST_REGISTER_TYPE) {
       CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item;
@@ -2385,7 +2447,7 @@ CFrmNodeConfig::gotoRegisterOnPage(int page, int reg)
         onRegisterTreeWidgetItemClicked(itemReg, 0);
         break;
       }
-    }    
+    }
   }
 }
 
@@ -2397,15 +2459,14 @@ void
 CFrmNodeConfig::gotoRegisterForSelected(void)
 {
   switch (ui->session_tabWidget->currentIndex()) {
-    
-    case TABBAR_INDEX_REMOTEVARS:
+
+    case TAB_BAR_INDEX_REMOTEVARS:
       gotoRemoteVarRegisterPos();
       break;
 
-    case TABBAR_INDEX_DM:
+    case TAB_BAR_INDEX_DM:
       gotoDMRegisterPos();
-      break; 
-       
+      break;
   }
 }
 
@@ -2451,10 +2512,10 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
 
   QTreeWidgetItemIterator it(ui->treeWidgetDecisionMatrix);
   while (*it) {
-    CDMWidgetItem *pdmItem = (CDMWidgetItem *)*it;
+    CDMWidgetItem* pdmItem = (CDMWidgetItem*)*it;
     if ((nullptr != pdmItem) && (nullptr != pdmItem->m_pDM) && (pdmItem->m_row == row)) {
-       gotoRegisterOnPage(pdmItem->m_pDM->getStartPage(), pdmItem->m_pDM->getStartOffset());
-       break;
+      gotoRegisterOnPage(pdmItem->m_pDM->getStartPage(), pdmItem->m_pDM->getStartOffset());
+      break;
     }
     **it;
   }
@@ -2467,7 +2528,7 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
 void
 CFrmNodeConfig::saveSelectedRegisterValues(void)
 {
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   saveRegisterValues(pworks->m_bSaveAlwaysJSON, false);
 }
 
@@ -2478,7 +2539,7 @@ CFrmNodeConfig::saveSelectedRegisterValues(void)
 void
 CFrmNodeConfig::saveAllRegisterValues(void)
 {
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   saveRegisterValues(pworks->m_bSaveAlwaysJSON, true);
 }
 
@@ -2487,14 +2548,14 @@ CFrmNodeConfig::saveAllRegisterValues(void)
 //
 
 void
-CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* itemReg, bool bJSON)
+CFrmNodeConfig::writeRegisterRecord(QFile& file, const CRegisterWidgetItem* itemReg, bool bJSON)
 {
   if (nullptr == itemReg) {
     return;
   }
 
-  uint8_t value                = vscp_readStringValue(itemReg->text(REG_COL_VALUE).toStdString());
-  QString strName              = itemReg->text(REG_COL_NAME);
+  uint8_t value   = vscp_readStringValue(itemReg->text(REG_COL_VALUE).toStdString());
+  QString strName = itemReg->text(REG_COL_NAME);
 
   if (bJSON) {
     file.write(QString("\t\t{\n").toUtf8());
@@ -2509,7 +2570,7 @@ CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* item
     file.write(QString("\"\n\t\t}").toUtf8());
   }
   else {
-    
+
     file.write(QString("<reg page=\"").toUtf8());
     file.write(QString::number(itemReg->m_regPage).toUtf8());
     file.write(QString("\" offset=\"").toUtf8());
@@ -2518,7 +2579,7 @@ CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* item
     file.write(QString::number(value).toUtf8());
     file.write(QString("\" name=\"").toUtf8());
     file.write(strName.toUtf8());
-    file.write(QString("\" />\n").toUtf8());    
+    file.write(QString("\" />\n").toUtf8());
   }
 }
 
@@ -2529,23 +2590,22 @@ CFrmNodeConfig::writeRegisterRecord(QFile &file, const CRegisterWidgetItem* item
 void
 CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 {
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Check if we should save on JSON format
   if (!bJSON) {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr(APPNAME), "Save in JSON format?",
-                                    QMessageBox::Yes | QMessageBox::No);
+    reply = QMessageBox::question(this, tr(APPNAME), "Save in JSON format?", QMessageBox::Yes | QMessageBox::No);
     if (reply == QMessageBox::Yes) {
       bJSON = true;
-    }   
+    }
   }
 
   QString fileName = QFileDialog::getSaveFileName(this,
-                                    tr("Save registers to file"),
-                                    /*"~/.vscpworks/device-registers.reg"*/"/tmp/device-registers.reg",
-                                    tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
-  //std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
+                                                  tr("Save registers to file"),
+                                                  /*"~/.vscpworks/device-registers.reg"*/ "/tmp/device-registers.reg",
+                                                  tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
+  // std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
   if (fileName.isEmpty()) {
     return;
   }
@@ -2553,10 +2613,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
   // Open the file
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly)) {
-    QMessageBox::information(this, tr(APPNAME),
-                             tr("Cannot write file %1:\n%2.")
-                             .arg(fileName)
-                             .arg(file.errorString()));
+    QMessageBox::information(this, tr(APPNAME), tr("Cannot write file %1:\n%2.").arg(fileName).arg(file.errorString()));
     return;
   }
 
@@ -2564,7 +2621,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
   if (bJSON) {
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();    
+    QApplication::processEvents();
 
     file.write(QString("{\n").toUtf8());
 
@@ -2600,7 +2657,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
           if (bFirst) {
             bFirst = false;
           }
-          else {  
+          else {
             file.write(QString(",\n").toUtf8());
           }
           writeRegisterRecord(file, itemReg, true);
@@ -2621,14 +2678,14 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
           if (bFirst) {
             bFirst = false;
           }
-          else {  
+          else {
             file.write(QString(",\n").toUtf8());
           }
           writeRegisterRecord(file, itemReg, true);
         }
         else {
           // Save all children on page
-          for (int i=0; i<item->childCount(); i++) {
+          for (int i = 0; i < item->childCount(); i++) {
             CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
             writeRegisterRecord(file, itemReg, true);
           }
@@ -2637,10 +2694,10 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     }
 
     file.write(QString("\n\t]\n").toUtf8());
-    file.write(QString("}\n").toUtf8()); 
+    file.write(QString("}\n").toUtf8());
 
-    QApplication::restoreOverrideCursor();  
-    QApplication::processEvents(); 
+    QApplication::restoreOverrideCursor();
+    QApplication::processEvents();
 
     ui->statusBar->showMessage(tr("Saved registers."));
   }
@@ -2649,10 +2706,9 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     // XML format
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents(); 
+    QApplication::processEvents();
 
     file.write(QString("<?xml version = \"1.0\" encoding =  \"UTF-8\" ?>\n").toUtf8());
-
 
     file.write(QString("<registerset ").toUtf8());
 
@@ -2672,7 +2728,6 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
     file.write(QString("module-date=\"").toUtf8());
     file.write(QString(m_mdf.getModuleChangeDate().c_str()).toUtf8());
     file.write(QString("\" ").toUtf8());
-
 
     file.write(QString(">\n").toUtf8());
 
@@ -2699,7 +2754,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
         }
         else {
           // Save all children on page
-          for (int i=0; i<item->childCount(); i++) {
+          for (int i = 0; i < item->childCount(); i++) {
             CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
             writeRegisterRecord(file, itemReg, false);
           }
@@ -2709,7 +2764,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 
     file.write(QString("</registerset>\n").toUtf8());
 
-    QApplication::restoreOverrideCursor();  
+    QApplication::restoreOverrideCursor();
     QApplication::processEvents();
 
     ui->statusBar->showMessage(tr("Saved registers."));
@@ -2717,7 +2772,7 @@ CFrmNodeConfig::saveRegisterValues(bool bJSON, bool bAll)
 }
 
 // ----------------------------------------------------------------------------
-//                             XML register parser 
+//                             XML register parser
 // ----------------------------------------------------------------------------
 
 struct __xml_register_struct__ {
@@ -2727,7 +2782,7 @@ struct __xml_register_struct__ {
 };
 
 struct __xml_parser_struct__ {
-  
+
   // Parser variables
   int depth_xml_parser;
   std::deque<std::string> tokenList;
@@ -2737,7 +2792,7 @@ struct __xml_parser_struct__ {
   std::string errorStr;
 
   // Holds found register writes for later handling
-  std::deque<__xml_register_struct__ *> registerList;
+  std::deque<__xml_register_struct__*> registerList;
 
   // Temporary values
   uint8_t page;
@@ -2752,9 +2807,9 @@ struct __xml_parser_struct__ {
 };
 
 static void
-__startSetupRegisterParser(void *data, const char *name, const char **attr)
+__startSetupRegisterParser(void* data, const char* name, const char** attr)
 {
-  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  __xml_parser_struct__* parsestruct = (__xml_parser_struct__*)data;
   if (nullptr == parsestruct) {
     spdlog::trace("Parse-XML: ---> startSetupMDFParser: Data object is invalid");
     return;
@@ -2769,7 +2824,7 @@ __startSetupRegisterParser(void *data, const char *name, const char **attr)
   parsestruct->tokenList.push_front(currentToken);
 
   switch (parsestruct->depth_xml_parser) {
-    
+
     case 0:
       if (currentToken == "registerset") {
         for (int i = 0; attr[i]; i += 2) {
@@ -2799,8 +2854,8 @@ __startSetupRegisterParser(void *data, const char *name, const char **attr)
       break;
 
     case 1:
-      if (((currentToken == "reg") || (currentToken == "register")) && 
-            (parsestruct->tokenList.back() == "registerset")) {
+      if (((currentToken == "reg") || (currentToken == "register")) &&
+          (parsestruct->tokenList.back() == "registerset")) {
 
         for (int i = 0; attr[i]; i += 2) {
           std::string attribute = attr[i + 1];
@@ -2825,26 +2880,24 @@ __startSetupRegisterParser(void *data, const char *name, const char **attr)
       }
       break;
 
-    // Old form  
+    // Old form
     // <registerset>
     // <reg page="0" offset="2" >
     //   <value>0</value>
     //   <description>sub zone i/o 0</name>
     // </registerset>
     case 2: // value or description
-      break; 
-
+      break;
   }
 
   parsestruct->depth_xml_parser++;
 }
 
-
 static void
-__handleRegisterParserData(void *data, const XML_Char *content, int length)
+__handleRegisterParserData(void* data, const XML_Char* content, int length)
 {
   // Get the pointer to the CMDF object
-  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  __xml_parser_struct__* parsestruct = (__xml_parser_struct__*)data;
   if (nullptr == parsestruct) {
     spdlog::error("Parse-XML: ---> handleMDFParserData: Data object is invalid");
     return;
@@ -2879,14 +2932,13 @@ __handleRegisterParserData(void *data, const XML_Char *content, int length)
       parsestruct->value = vscp_readStringValue(strContent);
     }
   }
-
 }
- 
- static void
-__endSetupRegisterParser(void *data, const char *name)
+
+static void
+__endSetupRegisterParser(void* data, const char* name)
 {
   // Get the pointer to the CMDF object
-  __xml_parser_struct__ *parsestruct = (__xml_parser_struct__ *) data;
+  __xml_parser_struct__* parsestruct = (__xml_parser_struct__*)data;
   if (nullptr == parsestruct) {
     spdlog::trace("Parse-RegisterXML: ---> endSetupMDFParser: Data object is invalid");
     return;
@@ -2900,19 +2952,19 @@ __endSetupRegisterParser(void *data, const char *name)
 
   switch (parsestruct->depth_xml_parser) {
 
-    case 2:  // reg/register
+    case 2: // reg/register
       if ((currentToken == "reg") || (currentToken == "register")) {
         // Save for later handling
-        __xml_register_struct__ *preg = new __xml_register_struct__;
+        __xml_register_struct__* preg = new __xml_register_struct__;
         if (nullptr == preg) {
           spdlog::error("Parse-RegisterXML: ---> endSetupMDFParser: Failed to allocate memory");
           parsestruct->errors++;
           parsestruct->errorStr += "Failed to allocate memory for register structure\n";
           return;
         }
-        preg->page = parsestruct->page;
+        preg->page   = parsestruct->page;
         preg->offset = parsestruct->offset;
-        preg->value = parsestruct->value;
+        preg->value  = parsestruct->value;
         parsestruct->registerList.push_back(preg);
       }
       break;
@@ -2921,18 +2973,17 @@ __endSetupRegisterParser(void *data, const char *name)
   parsestruct->depth_xml_parser--;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // loadXMLRegs
 //
 
-int 
-CFrmNodeConfig::loadXMLRegs(const std::string &path)
+int
+CFrmNodeConfig::loadXMLRegs(const std::string& path)
 {
   int rv = VSCP_ERROR_SUCCESS;
   std::ifstream ifs;
   __xml_parser_struct__ parsestruct;
-  parsestruct.errors = 0;
+  parsestruct.errors           = 0;
   parsestruct.depth_xml_parser = 0;
 
   try {
@@ -2950,17 +3001,17 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
   XML_SetCharacterDataHandler(xmlParser, __handleRegisterParserData);
 
   int bytes_read;
-  void *buf = XML_GetBuffer(xmlParser, XML_BUFF_SIZE);
+  void* buf = XML_GetBuffer(xmlParser, XML_BUFF_SIZE);
 
   while (ifs.good()) {
-    ifs.read((char *) buf, XML_BUFF_SIZE);
+    ifs.read((char*)buf, XML_BUFF_SIZE);
     bytes_read = ifs.gcount();
     if (bytes_read > 0) {
       if (!XML_ParseBuffer(xmlParser, bytes_read, bytes_read == 0)) {
         spdlog::error("Parse-RegisterXML: Failed parse register XML file at line {0} [{1}].",
                       XML_GetCurrentLineNumber(xmlParser),
                       XML_ErrorString(XML_GetErrorCode(xmlParser)));
-        ui->statusBar->showMessage(tr("Loaded registers failed due to parser error."));              
+        ui->statusBar->showMessage(tr("Loaded registers failed due to parser error."));
         rv = VSCP_ERROR_PARSING;
         break;
       }
@@ -2977,27 +3028,33 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
   }
 
   if (parsestruct.moduleName.size() && (parsestruct.moduleName != m_mdf.getModuleName())) {
-    int rv = QMessageBox::warning(this, 
-                tr(APPNAME), tr("Module name does not match. Continue anyway?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    int rv = QMessageBox::warning(this,
+                                  tr(APPNAME),
+                                  tr("Module name does not match. Continue anyway?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
     if (rv == QMessageBox::No) {
       return false;
     }
   }
 
   if (parsestruct.moduleModel.size() && (parsestruct.moduleModel != m_mdf.getModuleModel())) {
-    int rv = QMessageBox::warning(this, 
-                tr(APPNAME), tr("Module model does not match. Continue anyway?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    int rv = QMessageBox::warning(this,
+                                  tr(APPNAME),
+                                  tr("Module model does not match. Continue anyway?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
     if (rv == QMessageBox::No) {
       return false;
     }
   }
 
   if (parsestruct.moduleVersion.size() && (parsestruct.moduleVersion != m_mdf.getModuleVersion())) {
-    int rv = QMessageBox::warning(this, 
-                tr(APPNAME), tr("Module version does not match. Continue anyway?"),
-                QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+    int rv = QMessageBox::warning(this,
+                                  tr(APPNAME),
+                                  tr("Module version does not match. Continue anyway?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
     if (rv == QMessageBox::No) {
       return false;
     }
@@ -3005,18 +3062,20 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
 
   // If model information is missing warn about it
   if (!parsestruct.moduleName.size() && !parsestruct.moduleModel.size() && !parsestruct.moduleVersion.size()) {
-    int rv = QMessageBox::warning(this, 
-                  tr(APPNAME), tr("There is no module information in the register file. Continue anyway?"),
-                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-      if (rv == QMessageBox::No) {
-        return false;
-      }
+    int rv = QMessageBox::warning(this,
+                                  tr(APPNAME),
+                                  tr("There is no module information in the register file. Continue anyway?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
+    if (rv == QMessageBox::No) {
+      return false;
+    }
   }
 
   // Write to registers
-  size_t regcnt = parsestruct.registerList.size();
-  uint16_t regskipped = 0;  // Regs skipped
-  for (auto &reg : parsestruct.registerList) {
+  size_t regcnt       = parsestruct.registerList.size();
+  uint16_t regskipped = 0; // Regs skipped
+  for (auto& reg : parsestruct.registerList) {
 
     // Invalid level I register offsets (standard registers)
     if (reg->offset >= 0x80) {
@@ -3055,13 +3114,13 @@ CFrmNodeConfig::loadXMLRegs(const std::string &path)
 // loadJSONRegs
 //
 
-int 
-CFrmNodeConfig::loadJSONRegs(const std::string &path)
+int
+CFrmNodeConfig::loadJSONRegs(const std::string& path)
 {
   int rv = VSCP_ERROR_SUCCESS;
   json j;
-  uint16_t regcnt = 0;      // Regs written
-  uint16_t regskipped = 0;  // Regs skipped
+  uint16_t regcnt     = 0; // Regs written
+  uint16_t regskipped = 0; // Regs skipped
   // Module information
   std::string moduleName;
   std::string moduleModel;
@@ -3075,18 +3134,21 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
   }
   catch (...) {
     spdlog::error("Parse-JSON: Failed to load and  parse JSON register file.");
-    QMessageBox::warning(this, 
-                  tr(APPNAME), tr("Failed to load and parse JSON register file %1.").arg(path.c_str()),
-                  QMessageBox::Yes);
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to load and parse JSON register file %1.").arg(path.c_str()),
+                         QMessageBox::Yes);
     return false;
   }
 
   if (j.contains("module-name") && j["module-name"].is_string()) {
     moduleName = j["module-name"];
     if (moduleName.size() && (moduleName != m_mdf.getModuleName())) {
-      int rv = QMessageBox::warning(this, 
-                  tr(APPNAME), tr("Module name does not match. Continue anyway?"),
-                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      int rv = QMessageBox::warning(this,
+                                    tr(APPNAME),
+                                    tr("Module name does not match. Continue anyway?"),
+                                    QMessageBox::Yes | QMessageBox::No,
+                                    QMessageBox::No);
       if (rv == QMessageBox::No) {
         return false;
       }
@@ -3096,9 +3158,11 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
   if (j.contains("module-model") && j["module-model"].is_string()) {
     moduleModel = j["module-model"];
     if (moduleModel.size() && (moduleModel != m_mdf.getModuleModel())) {
-      int rv = QMessageBox::warning(this, 
-                  tr(APPNAME), tr("Module model does not match. Continue anyway?"),
-                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      int rv = QMessageBox::warning(this,
+                                    tr(APPNAME),
+                                    tr("Module model does not match. Continue anyway?"),
+                                    QMessageBox::Yes | QMessageBox::No,
+                                    QMessageBox::No);
       if (rv == QMessageBox::No) {
         return false;
       }
@@ -3108,9 +3172,11 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
   if (j.contains("module-version") && j["module-version"].is_string()) {
     moduleVersion = j["module-version"];
     if (moduleVersion.size() && (moduleVersion != m_mdf.getModuleVersion())) {
-      int rv = QMessageBox::warning(this, 
-                  tr(APPNAME), tr("Module version does not match. Continue anyway?"),
-                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+      int rv = QMessageBox::warning(this,
+                                    tr(APPNAME),
+                                    tr("Module version does not match. Continue anyway?"),
+                                    QMessageBox::Yes | QMessageBox::No,
+                                    QMessageBox::No);
       if (rv == QMessageBox::No) {
         return false;
       }
@@ -3123,12 +3189,14 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
 
   // If model information is missing warn about it
   if (!moduleName.size() && !moduleModel.size() && !moduleVersion.size()) {
-    int rv = QMessageBox::warning(this, 
-                  tr(APPNAME), tr("There is no module information in the register file. Continue anyway?"),
-                  QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-      if (rv == QMessageBox::No) {
-        return false;
-      }
+    int rv = QMessageBox::warning(this,
+                                  tr(APPNAME),
+                                  tr("There is no module information in the register file. Continue anyway?"),
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No);
+    if (rv == QMessageBox::No) {
+      return false;
+    }
   }
 
   if (!(j.contains("registers") && j["registers"].is_array())) {
@@ -3137,7 +3205,7 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
     return VSCP_ERROR_PARSING;
   }
   else {
-    for (const auto &item : j["registers"].items()) {
+    for (const auto& item : j["registers"].items()) {
 
       if (item.value().is_object()) {
 
@@ -3151,9 +3219,9 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
         }
         else {
 
-          int page = jreg["page"];
+          int page   = jreg["page"];
           int offset = jreg["offset"];
-          int value = jreg["value"];
+          int value  = jreg["value"];
 
           if (offset >= 128) {
             regskipped++;
@@ -3161,7 +3229,7 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
             continue;
           }
 
-          regcnt++;          
+          regcnt++;
 
           if (page < 0 || page > 0xffff) {
             spdlog::error("Parse-JSON registers: page is out of range. <<{}>>", jreg.dump());
@@ -3178,8 +3246,8 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
             ui->statusBar->showMessage(tr("JSON register load aborted: 'value' parameter is out of range."));
             return VSCP_ERROR_PARSING;
           }
-          
-          if (m_mdf.isRegisterWriteable(offset,page)) {
+
+          if (m_mdf.isRegisterWriteable(offset, page)) {
             regskipped++;
             spdlog::error("Parse-JSON registers: Register is not writeable. {0}:{1}", page, offset);
             continue;
@@ -3193,7 +3261,6 @@ CFrmNodeConfig::loadJSONRegs(const std::string &path)
 
           ui->statusBar->showMessage(tr("Loaded %1 registers. %2 skipped").arg(regcnt).arg(regskipped));
           updateVisualRegisters();
-
         }
       }
       else {
@@ -3216,13 +3283,13 @@ CFrmNodeConfig::loadRegisterValues(void)
 {
   int rv = VSCP_ERROR_SUCCESS;
   std::ifstream ifs;
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   QString path = QFileDialog::getOpenFileName(this,
-                                    tr("Load registers from file"),
-                                    /*"~/.vscpworks/device-registers.reg"*/"/tmp/device-registers.reg",
-                                    tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
-  //std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
+                                              tr("Load registers from file"),
+                                              /*"~/.vscpworks/device-registers.reg"*/ "/tmp/device-registers.reg",
+                                              tr("Register Files (*.reg);;XML Files (*.xml);;JSON Files (*.json);;All Files (*.*)"));
+  // std::cout << "Filename: |" << fileName.toStdString() << "|" << std::endl;
   if (path.isEmpty()) {
     return;
   }
@@ -3254,10 +3321,7 @@ CFrmNodeConfig::loadRegisterValues(void)
       rv = loadJSONRegs(path.toStdString());
       if (VSCP_ERROR_SUCCESS != rv) {
         spdlog::error("Load registers: Failed to load registers from file {}", path.toStdString());
-        QMessageBox::information(this, tr(APPNAME),
-                             tr("Failed to parse JSON file %1:\n%2.")
-                             .arg(path)
-                             .arg(rv));
+        QMessageBox::information(this, tr(APPNAME), tr("Failed to parse JSON file %1:\n%2.").arg(path).arg(rv));
       }
       break;
     }
@@ -3267,10 +3331,7 @@ CFrmNodeConfig::loadRegisterValues(void)
       rv = loadXMLRegs(path.toStdString());
       if (VSCP_ERROR_SUCCESS != rv) {
         spdlog::error("Load registers: Failed to load registers from file {}", path.toStdString());
-        QMessageBox::information(this, tr(APPNAME),
-                             tr("Failed to parse XML file %1:\n%2.")
-                             .arg(path)
-                             .arg(rv));
+        QMessageBox::information(this, tr(APPNAME), tr("Failed to parse XML file %1:\n%2.").arg(path).arg(rv));
       }
       break;
     }
@@ -3278,10 +3339,7 @@ CFrmNodeConfig::loadRegisterValues(void)
       ifs.close();
       rv = VSCP_ERROR_INVALID_SYNTAX;
       spdlog::error("Load registers: Failed to load registers from file {} - Invalid syntax", path.toStdString());
-      QMessageBox::information(this, tr(APPNAME),
-                             tr("Syntax error in register file %1:\n%2.")
-                             .arg(path)
-                             .arg(rv));
+      QMessageBox::information(this, tr(APPNAME), tr("Syntax error in register file %1:\n%2.").arg(path).arg(rv));
       break;
     }
   }
@@ -3294,8 +3352,8 @@ CFrmNodeConfig::loadRegisterValues(void)
 void
 CFrmNodeConfig::loadDefaults(void)
 {
-  int rv = VSCP_ERROR_SUCCESS;
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  int rv            = VSCP_ERROR_SUCCESS;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Write all registers
   QTreeWidgetItemIterator item(ui->treeWidgetRegisters);
@@ -3306,12 +3364,13 @@ CFrmNodeConfig::loadDefaults(void)
         int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
         if (-1 == val) {
           spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
-          continue;;
+          continue;
+          ;
         }
-	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+        if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
           spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
         }
-      } 
+      }
     }
     ++item;
   }
@@ -3324,8 +3383,8 @@ CFrmNodeConfig::loadDefaults(void)
 void
 CFrmNodeConfig::loadDefaultsSelected(void)
 {
-  int rv = VSCP_ERROR_SUCCESS;
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  int rv            = VSCP_ERROR_SUCCESS;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Write selected registers
   QList<QTreeWidgetItem*> listSelected = ui->treeWidgetRegisters->selectedItems();
@@ -3338,16 +3397,17 @@ CFrmNodeConfig::loadDefaultsSelected(void)
         int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
         if (-1 == val) {
           spdlog::error("Load defaults: Failed to get default register value. {%1}:{%2}", itemReg->m_regPage, itemReg->m_regOffset);
-          continue;;
+          continue;
+          ;
         }
-	      if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
+        if (!m_userregs.putReg(itemReg->m_regOffset, itemReg->m_regPage, val)) {
           spdlog::error("Load defaults: Failed to write register {%1}:{%2}.", itemReg->m_regPage, itemReg->m_regOffset);
         }
       }
     }
     else {
       // Save all children on page
-      for (int i=0; i<item->childCount(); i++) {
+      for (int i = 0; i < item->childCount(); i++) {
         CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)item->child(i);
         if (m_mdf.isRegisterWriteable(itemReg->m_regOffset, itemReg->m_regPage)) {
           int val = m_mdf.getDefaultRegisterValue(itemReg->m_regOffset, itemReg->m_regPage);
@@ -3411,9 +3471,9 @@ CFrmNodeConfig::showRegisterContextMenu(const QPoint& pos)
   menu->addAction(QString(tr("Write default value(s) for selected row(s)")), this, SLOT(defaultSelectedRegisterValues()));
   menu->addAction(QString(tr("Set default values for ALL rows")), this, SLOT(defaultRegisterAll()));
   // TODO
-  //menu->addSeparator();
-  //menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
-  //menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  // menu->addSeparator();
+  // menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  // menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
   menu->addSeparator();
   menu->addAction(QString(tr("Save selected registers")), this, SLOT(saveSelectedRegisterValues()));
   menu->addAction(QString(tr("Save ALL registers")), this, SLOT(saveAllRegisterValues()));
@@ -3462,7 +3522,7 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
 bool
 CFrmNodeConfig::renderStandardRegisters(void)
 {
-  //int rv;
+  // int rv;
   std::string str;
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3564,9 +3624,12 @@ CFrmNodeConfig::renderRegisters(void)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetRegisters->clear(); // Clear the tree
-  m_mapRegTopPages.clear();         // Clear the page map
+  m_mapPageToPageHeader.clear();    // Clear the page map
 
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  if (nullptr != m_comboInterface) {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -3617,7 +3680,7 @@ CFrmNodeConfig::renderRegisters(void)
     itemTopReg1->setForeground(0, QBrush(QColor("royalblue")));
     ui->treeWidgetRegisters->addTopLevelItem(itemTopReg1);
     // Save a pointer to the register top item
-    m_mapRegTopPages[page] = itemTopReg1;
+    m_mapPageToPageHeader[page] = itemTopReg1;
 
     // Add registers
     // std::deque<CMDF_Register *> *pregs = m_mdf.getRegisterList();
@@ -3727,9 +3790,9 @@ CFrmNodeConfig::updateVisualRegisters(void)
   // Mark all changed registers
   QTreeWidgetItemIterator it(ui->treeWidgetRegisters);
   while (*it) {
-    
+
     CRegisterWidgetItem* itemReg = (CRegisterWidgetItem*)(*it);
-    //std::cout << "Item: " << itemReg->m_regPage << " " << itemReg->m_regOffset << std::endl;
+    // std::cout << "Item: " << itemReg->m_regPage << " " << itemReg->m_regOffset << std::endl;
 
     if (itemReg->type() != TREE_LIST_REGISTER_TYPE) {
       ++it;
@@ -3790,7 +3853,7 @@ CFrmNodeConfig::updateVisualRegisters(void)
 void
 CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  //int idx;
+  // int idx;
   std::string html;
   std::string str;
   CRegisterWidgetItem* pitem = (CRegisterWidgetItem*)item;
@@ -3845,7 +3908,6 @@ CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
 //                   * * *  Remote variable handling * * *
 // ****************************************************************************
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // onRemoteVariableTreeWidgetItemDoubleClicked
 //
@@ -3868,7 +3930,7 @@ CFrmNodeConfig::onRemoteVariableTreeWidgetItemClicked(QTreeWidgetItem* item, int
 //
 
 void
-CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked( QTreeWidgetItem* item, int column)
+CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int column)
 {
   if (0 == column) {
     ui->treeWidgetRemoteVariables->editItem(item, column);
@@ -3882,12 +3944,12 @@ CFrmNodeConfig::onRemoteVariableTreeWidgetItemDoubleClicked( QTreeWidgetItem* it
 void
 CFrmNodeConfig::gotoRemoteVarRegisterPos(void)
 {
-  CRemoteVariableWidgetItem *item = (CRemoteVariableWidgetItem*)ui->treeWidgetRemoteVariables->currentItem();
+  CRemoteVariableWidgetItem* item = (CRemoteVariableWidgetItem*)ui->treeWidgetRemoteVariables->currentItem();
   if (nullptr == item) {
     return;
   }
 
-  CMDF_RemoteVariable *prv = item->m_pRemoteVariable;
+  CMDF_RemoteVariable* prv = item->m_pRemoteVariable;
   if (nullptr == item) {
     spdlog::error("gotoRemoteVarRegisterPos: No remote variable stored in item");
     return;
@@ -3935,9 +3997,9 @@ CFrmNodeConfig::onRemoteVarTreeWidgetCellChanged(QTreeWidgetItem* item, int colu
   }
 
   int rv;
-  vscpworks* pworks                  = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks                 = (vscpworks*)QCoreApplication::instance();
   CRemoteVariableWidgetItem* rvItem = (CRemoteVariableWidgetItem*)item;
-  std::string strValue                   = item->text(column).toStdString();
+  std::string strValue              = item->text(column).toStdString();
   if (VSCP_ERROR_SUCCESS != (rv = m_userregs.remoteVarFromStringToReg(*rvItem->m_pRemoteVariable, strValue))) {
     QApplication::beep();
     std::string strError = tr("Failed to write remote variable to registers. rv=").toStdString();
@@ -3970,7 +4032,7 @@ CFrmNodeConfig::updateVisualRemoteVariables(void)
   QTreeWidgetItemIterator it(ui->treeWidgetRemoteVariables);
   while (*it) {
     CRemoteVariableWidgetItem* itemRV = (CRemoteVariableWidgetItem*)(*it);
-    if ((nullptr == itemRV) || (nullptr == itemRV->m_pRemoteVariable) ) {
+    if ((nullptr == itemRV) || (nullptr == itemRV->m_pRemoteVariable)) {
       ++it;
       continue;
     }
@@ -4008,7 +4070,7 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
     }
 
     // Get remote variable definition
-    CMDF_RemoteVariable *pRemoteVariable = itemRV->m_pRemoteVariable;
+    CMDF_RemoteVariable* pRemoteVariable = itemRV->m_pRemoteVariable;
     if (nullptr == pRemoteVariable) {
       ++it;
       continue;
@@ -4021,8 +4083,8 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
     }
 
     // Register part of this remote variable
-    if ((offset >= pRemoteVariable->getOffset()) && 
-        (offset < (pRemoteVariable->getOffset()+ pRemoteVariable->getTypeByteCount()))) {
+    if ((offset >= pRemoteVariable->getOffset()) &&
+        (offset < (pRemoteVariable->getOffset() + pRemoteVariable->getTypeByteCount()))) {
 
       std::string str;
       uint8_t format = FORMAT_REMOTEVAR_DECIMAL;
@@ -4033,9 +4095,9 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
         str = "ERROR";
         itemRV->setForeground(REMOTEVAR_COL_VALUE, QBrush(QColor("red")));
       }
-      
+
       m_bInternalChange = true;
-      itemRV->setText(REMOTEVAR_COL_VALUE, str.c_str());                        
+      itemRV->setText(REMOTEVAR_COL_VALUE, str.c_str());
       m_bInternalChange = false;
 
       // Set forecolor
@@ -4062,7 +4124,7 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
 bool
 CFrmNodeConfig::renderRemoteVariables(void)
 {
-  //int rv;
+  // int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetRemoteVariables->clear(); // Clear the tree
@@ -4138,7 +4200,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
     itemWidget->setText(REMOTEVAR_COL_VALUE, str.c_str());
 
     bool bChanged = false;
-    for (uint16_t pos=prvmdf->getOffset(); pos < prvmdf->getOffset()+prvmdf->getTypeByteCount(); pos++) {
+    for (uint16_t pos = prvmdf->getOffset(); pos < prvmdf->getOffset() + prvmdf->getTypeByteCount(); pos++) {
       if (m_userregs.isChanged(pos)) {
         bChanged = true;
         break;
@@ -4166,7 +4228,7 @@ CFrmNodeConfig::renderRemoteVariables(void)
 void
 CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  //int idx;
+  // int idx;
   std::string html;
   std::string str;
   CRemoteVariableWidgetItem* pitem = (CRemoteVariableWidgetItem*)item;
@@ -4207,14 +4269,9 @@ CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
   ui->infoArea->setHtml(html.c_str());
 }
 
-
-
-
 // ****************************************************************************
 //                       * * *  DM handling * * *
 // ****************************************************************************
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // onDMTreeWidgetItemClicked
@@ -4268,11 +4325,11 @@ CFrmNodeConfig::showDMContextMenu(const QPoint& pos)
   menu->addAction(QString(tr("Enable/Disable selected row(s)")), this, SLOT(toggleDMRow()));
   menu->addAction(QString(tr("Read selected DM row(s)")), this, SLOT(readSelectedDMRow()));
   menu->addAction(QString(tr("Write selected DM row(s)")), this, SLOT(writeSelectedDMRow()));
-  //menu->addSeparator();   TODO
-  //menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
-  //menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
-  // TODO Defaults
-  // TODO go to register
+  // menu->addSeparator();   TODO
+  // menu->addAction(QString(tr("Undo value(s) for selected row(s)")), this, SLOT(undoSelectedRegisterValues()));
+  // menu->addAction(QString(tr("Redo value(s) for selected row(s)")), this, SLOT(redoSelectedRegisterValues()));
+  //  TODO Defaults
+  //  TODO go to register
   menu->addSeparator();
   menu->addAction(QString(tr("Save DM values for selected row(s) to disk")), this, SLOT(saveSelectedRegisterValues()));
   menu->addAction(QString(tr("Save DM registers to disk")), this, SLOT(saveAllRegisterValues()));
@@ -4293,13 +4350,13 @@ CFrmNodeConfig::onDMTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
     return;
   }
 
-  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks     = (vscpworks*)QCoreApplication::instance();
   CDMWidgetItem* itemDM = (CDMWidgetItem*)item;
-  QString strValue    = itemDM->text(column);
-  uint8_t value       = vscp_readStringValue(strValue.toStdString());
+  QString strValue      = itemDM->text(column);
+  uint8_t value         = vscp_readStringValue(strValue.toStdString());
   m_userregs.putReg((itemDM->m_row * itemDM->m_pDM->getRowSize()) + column,
-                        itemDM->m_pDM->getStartPage(),
-                        value);
+                    itemDM->m_pDM->getStartPage(),
+                    value);
   updateVisualRegisters();
 }
 
@@ -4311,15 +4368,15 @@ void
 CFrmNodeConfig::editDMRow()
 {
   int reg;
-  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("editDMRow: Item for DM register row is null");
     return;
   }
 
-  uint16_t page                    = item->m_pDM->getStartPage();
-  //std::map<uint32_t, uint8_t>* map = m_userregs.getRegisterMap(item->m_pDM->getStartPage());
+  uint16_t page = item->m_pDM->getStartPage();
+  // std::map<uint32_t, uint8_t>* map = m_userregs.getRegisterMap(item->m_pDM->getStartPage());
 
   CDlgEditDm* pDlg = new CDlgEditDm(this);
   pDlg->setWindowTitle(tr("Edit Decision Matrix Row"));
@@ -4327,9 +4384,9 @@ CFrmNodeConfig::editDMRow()
 
   // Address origin
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) + 
-                              CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_ORIGIN,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
@@ -4337,9 +4394,9 @@ CFrmNodeConfig::editDMRow()
 
   // Flags
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
@@ -4347,9 +4404,9 @@ CFrmNodeConfig::editDMRow()
 
   // Class mask
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_MASK,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_MASK,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
@@ -4357,9 +4414,9 @@ CFrmNodeConfig::editDMRow()
 
   // Class filter
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_FILTER,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_CLASS_FILTER,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
@@ -4367,9 +4424,9 @@ CFrmNodeConfig::editDMRow()
 
   // Type mask
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_MASK,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_MASK,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
@@ -4377,26 +4434,26 @@ CFrmNodeConfig::editDMRow()
 
   // Type filter
   reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_FILTER,
-                            item->m_pDM->getStartPage());
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_TYPE_FILTER,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
   pDlg->setDmTypeFilter(pworks->decimalToStringInBase(reg, m_baseComboBox->currentIndex()).toStdString());
 
   // Action
-  reg = m_userregs.getReg(item->m_pDM->getStartOffset() + 
-                              (item->m_row * item->m_pDM->getRowSize()) +
-                              CMDF_DecisionMatrix::IDX_ADDRESS_ACTION,
-                            item->m_pDM->getStartPage());
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
+                            (item->m_row * item->m_pDM->getRowSize()) +
+                            CMDF_DecisionMatrix::IDX_ADDRESS_ACTION,
+                          item->m_pDM->getStartPage());
   if (reg < 0) {
     return;
   }
   pDlg->setDmActionFromCode(reg);
 
   // Action Parameter
-  reg = m_userregs.getReg(item->m_pDM->getStartOffset() + 
+  reg = m_userregs.getReg(item->m_pDM->getStartOffset() +
                             (item->m_row * item->m_pDM->getRowSize()) +
                             CMDF_DecisionMatrix::IDX_ADDRESS_ACTION_PARAMETER,
                           item->m_pDM->getStartPage());
@@ -4461,7 +4518,7 @@ CFrmNodeConfig::editDMRow()
                       pDlg->getDmActionParameter());
 
     updateVisualRegisters();
-    fillDMHtmlInfo(item, 0);  
+    fillDMHtmlInfo(item, 0);
   }
 }
 
@@ -4472,9 +4529,9 @@ CFrmNodeConfig::editDMRow()
 void
 CFrmNodeConfig::toggleDMRow(void)
 {
-  //int reg;
-  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  // int reg;
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("editDMRow: Item for DM register row is null");
     return;
@@ -4486,22 +4543,22 @@ CFrmNodeConfig::toggleDMRow(void)
   }
 
   uint8_t value = m_userregs.getReg(item->m_pDM->getStartOffset() +
-                        (item->m_row * item->m_pDM->getRowSize()) +
-                        CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
-                      item->m_pDM->getStartPage());
+                                      (item->m_row * item->m_pDM->getRowSize()) +
+                                      CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                                    item->m_pDM->getStartPage());
 
   if (value & 0x80) {
     value &= 0x7f;
   }
   else {
     value |= 0x80;
-  }                      
+  }
 
   m_userregs.putReg(item->m_pDM->getStartOffset() +
-                        (item->m_row * item->m_pDM->getRowSize()) +
-                        CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
-                      item->m_pDM->getStartPage(),
-                      value );
+                      (item->m_row * item->m_pDM->getRowSize()) +
+                      CMDF_DecisionMatrix::IDX_ADDRESS_FLAGS,
+                    item->m_pDM->getStartPage(),
+                    value);
 
   updateVisualRegisters();
   fillDMHtmlInfo(item, 0);
@@ -4515,9 +4572,9 @@ void
 CFrmNodeConfig::readSelectedDMRow(void)
 {
   int rv;
-  //int reg;
-  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  // int reg;
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("readSelectedDMRow: Item for DM register row is null");
     return;
@@ -4532,7 +4589,13 @@ CFrmNodeConfig::readSelectedDMRow(void)
   QApplication::processEvents();
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
@@ -4541,34 +4604,35 @@ CFrmNodeConfig::readSelectedDMRow(void)
   // node id
   guidNode.setLSB(m_nodeidConfig->value());
 
-  std::map<uint8_t,uint8_t> values;
+  std::map<uint8_t, uint8_t> values;
   if (VSCP_ERROR_SUCCESS != (rv = vscp_readLevel1RegisterBlock(*m_vscpClient,
-                                      guidNode,
-                                      guidInterface,
-                                      item->m_pDM->getStartPage(), 
-                                      item->m_pDM->getStartOffset() + (item->m_row * item->m_pDM->getRowSize()),
-                                      item->m_pDM->getRowSize(),
-                                      values,
-                                      pworks->m_config_timeout))) {
-    
-    QApplication::restoreOverrideCursor();  
+                                                               guidNode,
+                                                               guidInterface,
+                                                               item->m_pDM->getStartPage(),
+                                                               item->m_pDM->getStartOffset() + (item->m_row * item->m_pDM->getRowSize()),
+                                                               item->m_pDM->getRowSize(),
+                                                               values,
+                                                               pworks->m_config_timeout))) {
+
+    QApplication::restoreOverrideCursor();
     QApplication::processEvents();
 
     QMessageBox::information(this,
                              tr(APPNAME),
                              tr("Failed to read DM row from node.\n"
-                                "Error code: %1").arg(rv),
-                             QMessageBox::Ok);   
-    return;                                                              
+                                "Error code: %1")
+                               .arg(rv),
+                             QMessageBox::Ok);
+    return;
   }
 
-  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+  for (int i = 0; i < item->m_pDM->getRowSize(); i++) {
     uint8_t pos = item->m_pDM->getStartOffset() +
-                    (item->m_row * item->m_pDM->getRowSize()) +
-                    i;
-    m_userregs.putReg( pos,
-                        item->m_pDM->getStartPage(),
-                        values[pos] );
+                  (item->m_row * item->m_pDM->getRowSize()) +
+                  i;
+    m_userregs.putReg(pos,
+                      item->m_pDM->getStartPage(),
+                      values[pos]);
   }
 
   updateVisualRegisters();
@@ -4586,9 +4650,9 @@ void
 CFrmNodeConfig::writeSelectedDMRow(void)
 {
   int rv;
-  //int reg;
-  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  // int reg;
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("writeSelectedDMRow: Item for DM register row is null");
     return;
@@ -4603,50 +4667,57 @@ CFrmNodeConfig::writeSelectedDMRow(void)
   QApplication::processEvents();
 
   // CAN4VSCP interface
-  std::string str = m_comboInterface->currentText().toStdString();
+  std::string str;
+  if (nullptr == m_comboInterface) {
+    str = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  }
+  else {
+    str = m_comboInterface->currentText().toStdString();
+  }
   cguid guidInterface;
   cguid guidNode;
   guidInterface.getFromString(str);
   guidNode = guidInterface;
-  
+
   // node id
   guidNode.setLSB(m_nodeidConfig->value());
 
-  std::map<uint8_t,uint8_t> values;
-  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+  std::map<uint8_t, uint8_t> values;
+  for (int i = 0; i < item->m_pDM->getRowSize(); i++) {
     uint8_t pos = item->m_pDM->getStartOffset() +
-                    (item->m_row * item->m_pDM->getRowSize()) +
-                    i;
+                  (item->m_row * item->m_pDM->getRowSize()) +
+                  i;
     values[pos] = m_userregs.getReg(pos, item->m_pDM->getStartPage());
   }
 
   if (VSCP_ERROR_SUCCESS != (rv = vscp_writeLevel1RegisterBlock(*m_vscpClient,
-                                    guidNode,
-                                    guidInterface,
-                                    item->m_pDM->getStartPage(),                                    
-                                    values,
-                                    pworks->m_config_timeout))) {
-    
+                                                                guidNode,
+                                                                guidInterface,
+                                                                item->m_pDM->getStartPage(),
+                                                                values,
+                                                                pworks->m_config_timeout))) {
+
     QApplication::restoreOverrideCursor();
     QApplication::processEvents();
 
     QMessageBox::information(this,
                              tr(APPNAME),
                              tr("Failed to write DM row from node.\n"
-                                "Error code: %1").arg(rv),
-                             QMessageBox::Ok);  
-    return;                                                              
+                                "Error code: %1")
+                               .arg(rv),
+                             QMessageBox::Ok);
+    return;
   }
 
-  for (int i=0; i<item->m_pDM->getRowSize(); i++) {
+  for (int i = 0; i < item->m_pDM->getRowSize(); i++) {
     uint8_t pos = item->m_pDM->getStartOffset() +
-                    (item->m_row * item->m_pDM->getRowSize()) +
-                    i;
-    // Mark register as written                
+                  (item->m_row * item->m_pDM->getRowSize()) +
+                  i;
+    // Mark register as written
     m_userregs.setChangedState(pos, item->m_pDM->getStartPage(), false);
     updateChangeDM(pos, item->m_pDM->getStartPage());
   }
-                  
+
   updateVisualRegisters();
   updateVisualDM();
   fillDMHtmlInfo(item, 0);
@@ -4660,16 +4731,15 @@ CFrmNodeConfig::writeSelectedDMRow(void)
 void
 CFrmNodeConfig::gotoDMRegisterPos(void)
 {
-  vscpworks* pworks                = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item              = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
+  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("gotoDMRegisterPos: Item for DM register row is null");
     return;
   }
 
-  uint16_t page                    = item->m_pDM->getStartPage();
-  gotoRegisterOnPage(item->m_pDM->getStartPage(), item->m_pDM->getStartOffset() +
-                                                    (item->m_row * item->m_pDM->getRowSize()));
+  uint16_t page = item->m_pDM->getStartPage();
+  gotoRegisterOnPage(item->m_pDM->getStartPage(), item->m_pDM->getStartOffset() + (item->m_row * item->m_pDM->getRowSize()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4690,7 +4760,7 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
   // Find the change positions in the DM
   int row = (offset - m_mdf.getDM()->getStartOffset()) / m_mdf.getDM()->getRowSize();
   int pos = ((offset - m_mdf.getDM()->getStartOffset()) + row * m_mdf.getDM()->getRowSize()) % m_mdf.getDM()->getRowSize();
-  //std::cout << "Change DM: " << offset << " " << page << " " << row << " " << pos << std::endl;
+  // std::cout << "Change DM: " << offset << " " << page << " " << row << " " << pos << std::endl;
 
   // offset is in the range of the DM
   if ((offset < m_mdf.getDM()->getStartOffset()) ||
@@ -4724,7 +4794,6 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // renderDecisionMatrix
 //
@@ -4732,7 +4801,7 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
 bool
 CFrmNodeConfig::renderDecisionMatrix(void)
 {
-  //int rv;
+  // int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   ui->treeWidgetDecisionMatrix->clear(); // Clear the tree
@@ -4841,7 +4910,7 @@ CFrmNodeConfig::updateVisualDM(void)
 void
 CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
 {
-  //int idx;
+  // int idx;
   std::string html;
   std::string str;
   CDMWidgetItem* pitem     = (CDMWidgetItem*)item;
@@ -4911,8 +4980,8 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   html +=
     QString::number((flags & 0x02) * 512 +
                       vscp_readStringValue(
-                      pitem->text(DM_LEVEL1_COL_CLASS_MASK).toStdString()),
-                      16)
+                        pitem->text(DM_LEVEL1_COL_CLASS_MASK).toStdString()),
+                    16)
       .toStdString();
   html += "</font><br>";
 
@@ -4924,8 +4993,8 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   html +=
     QString::number((flags & 0x01) * 512 +
                       vscp_readStringValue(
-                      pitem->text(DM_LEVEL1_COL_TYPE_MASK).toStdString()),
-                      16)
+                        pitem->text(DM_LEVEL1_COL_TYPE_MASK).toStdString()),
+                    16)
       .toStdString();
   html += "</font><br>";
 
@@ -4974,13 +5043,9 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   ui->infoArea->setHtml(html.c_str());
 }
 
-
-
 // ****************************************************************************
 //                       * * *  MDF files handling * * *
 // ****************************************************************************
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // onMdfFileTreeWidgetItemClicked
@@ -5000,112 +5065,112 @@ CFrmNodeConfig::onMdfFileTreeWidgetItemClicked(QTreeWidgetItem* item, int column
 void
 CFrmNodeConfig::onMdfFileTreeWidgetItemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks         = (vscpworks*)QCoreApplication::instance();
   CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)item;
   if (nullptr != item) {
     spdlog::critical("Doubleclick: MDF file item is NULL {0}", pitem->text(0).toStdString());
     ui->infoArea->setHtml(tr("Doubleclick: MDF file item is NULL"));
-    return;    
+    return;
   }
-  //QDesktopServices::openUrl(QUrl("file:///C:/Documents and Settings/All Users/Desktop", QUrl::TolerantMode));
-  //QDesktopServices::openUrl(QUrl("https://www.vscp.org/presentations/vscpbtdetect.mp4", QUrl::TolerantMode));
+  // QDesktopServices::openUrl(QUrl("file:///C:/Documents and Settings/All Users/Desktop", QUrl::TolerantMode));
+  // QDesktopServices::openUrl(QUrl("https://www.vscp.org/presentations/vscpbtdetect.mp4", QUrl::TolerantMode));
 
-  switch (/*pitem->m_mdfFileType*/pitem->type()) {
+  switch (/*pitem->m_mdfFileType*/ pitem->type()) {
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_picture)):
       break;
 
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_picture)):
-      if (nullptr != pitem->m_picture_obj) {      
+      if (nullptr != pitem->m_picture_obj) {
         QDesktopServices::openUrl(QUrl(pitem->m_picture_obj->getUrl().c_str()));
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open picture!"),
-                             QMessageBox::Ok);  
-      }      
-      break;  
-    
+                             QMessageBox::Ok);
+      }
+      break;
+
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_video)):
       break;
-    
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_video)):
-      if (nullptr != pitem->m_video_obj) {      
+      if (nullptr != pitem->m_video_obj) {
         QDesktopServices::openUrl(QUrl(pitem->m_video_obj->getUrl().c_str()));
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open video!"),
-                             QMessageBox::Ok);  
-      }      
+                             QMessageBox::Ok);
+      }
       break;
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_firmware)):
       break;
 
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_firmware)):
-      if (nullptr != pitem->m_firmware_obj) {      
+      if (nullptr != pitem->m_firmware_obj) {
         // TODO
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open firmware file!"),
-                             QMessageBox::Ok);  
-      }      
-      break;  
-    
+                             QMessageBox::Ok);
+      }
+      break;
+
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_manual)):
       break;
 
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_manual)):
-      if (nullptr != pitem->m_manual_obj) {      
+      if (nullptr != pitem->m_manual_obj) {
         QDesktopServices::openUrl(QUrl(pitem->m_manual_obj->getUrl().c_str()));
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open manual!"),
-                             QMessageBox::Ok);  
-      }      
+                             QMessageBox::Ok);
+      }
       break;
 
-    case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_driver)):      
+    case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_driver)):
       break;
-    
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_driver)):
-      if (nullptr != pitem->m_manual_obj) {    
-        // TODO  
+      if (nullptr != pitem->m_manual_obj) {
+        // TODO
         QDesktopServices::openUrl(QUrl(pitem->m_manual_obj->getUrl().c_str()));
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open manual!"),
-                             QMessageBox::Ok);  
-      }      
+                             QMessageBox::Ok);
+      }
       break;
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_setup)):
       break;
-    
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_setup)):
-      if (nullptr != pitem->m_setup_obj) {      
+      if (nullptr != pitem->m_setup_obj) {
         // TODO
       }
       else {
         QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("Failed to open setup!"),
-                             QMessageBox::Ok);  
-      }      
+                             QMessageBox::Ok);
+      }
       break;
 
     default:
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_none)):
-      break;          
+      break;
   }
 }
 
@@ -5130,7 +5195,7 @@ CFrmNodeConfig::showMdfFilesContextMenu(const QPoint& pos)
 bool
 CFrmNodeConfig::renderMdfFiles(void)
 {
-  //int rv;
+  // int rv;
   CMdfFileWidgetItem* topItemWidget;
   CMdfFileWidgetItem* itemWidget;
 
@@ -5156,8 +5221,8 @@ CFrmNodeConfig::renderMdfFiles(void)
 
     for (int i = 0; i < m_mdf.getPictureCount(); i++) {
 
-      itemWidget = new CMdfFileWidgetItem("Pictures", 
-                        QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_picture));
+      itemWidget = new CMdfFileWidgetItem("Pictures",
+                                          QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_picture));
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for pictures");
         return false;
@@ -5170,7 +5235,7 @@ CFrmNodeConfig::renderMdfFiles(void)
 
       QString name(m_mdf.getPictureObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getPictureObj(i)->getDescription().c_str();
       }
@@ -5199,9 +5264,9 @@ CFrmNodeConfig::renderMdfFiles(void)
     ui->treeWidgetMdfFiles->addTopLevelItem(topItemWidget);
 
     for (int i = 0; i < m_mdf.getVideoCount(); i++) {
-      
-      itemWidget = new CMdfFileWidgetItem("Video", 
-                        QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_video));
+
+      itemWidget = new CMdfFileWidgetItem("Video",
+                                          QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_video));
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for videos");
         return false;
@@ -5210,11 +5275,11 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget->setToolTip(0, tr("Double click to view video"));
       itemWidget->setForeground(0, QBrush(QColor(Qt::darkGreen)));
       itemWidget->m_mdfFileType = mdf_file_type_video;
-      itemWidget->m_video_obj = m_mdf.getVideoObj(i);
+      itemWidget->m_video_obj   = m_mdf.getVideoObj(i);
 
       QString name(m_mdf.getVideoObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getVideoObj(i)->getDescription().c_str();
       }
@@ -5245,8 +5310,8 @@ CFrmNodeConfig::renderMdfFiles(void)
 
     for (int i = 0; i < m_mdf.getFirmwareCount(); i++) {
 
-      itemWidget = new CMdfFileWidgetItem("Firmware", 
-                        QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_firmware));
+      itemWidget = new CMdfFileWidgetItem("Firmware",
+                                          QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_firmware));
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for firmware");
         return false;
@@ -5254,12 +5319,12 @@ CFrmNodeConfig::renderMdfFiles(void)
 
       itemWidget->setToolTip(0, tr("Double click to load selected firmware to remote device"));
       itemWidget->setForeground(0, QBrush(QColor(Qt::darkGreen)));
-      itemWidget->m_mdfFileType = mdf_file_type_firmware;
+      itemWidget->m_mdfFileType  = mdf_file_type_firmware;
       itemWidget->m_firmware_obj = m_mdf.getFirmwareObj(i);
 
       QString name(m_mdf.getFirmwareObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getFirmwareObj(i)->getDescription().c_str();
       }
@@ -5289,8 +5354,8 @@ CFrmNodeConfig::renderMdfFiles(void)
 
     for (int i = 0; i < m_mdf.getDriverCount(); i++) {
 
-      itemWidget = new CMdfFileWidgetItem("Driver", 
-                        QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_driver));
+      itemWidget = new CMdfFileWidgetItem("Driver",
+                                          QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_driver));
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for driver");
         return false;
@@ -5299,11 +5364,11 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget->setToolTip(0, tr("Double click to download and install driver"));
       itemWidget->setForeground(0, QBrush(QColor(Qt::darkGreen)));
       itemWidget->m_mdfFileType = mdf_file_type_driver;
-      itemWidget->m_driver_obj = m_mdf.getDriverObj(i);
+      itemWidget->m_driver_obj  = m_mdf.getDriverObj(i);
 
       QString name(m_mdf.getDriverObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getDriverObj(i)->getDescription().c_str();
       }
@@ -5333,8 +5398,8 @@ CFrmNodeConfig::renderMdfFiles(void)
 
     for (int i = 0; i < m_mdf.getManualCount(); i++) {
 
-      itemWidget = new CMdfFileWidgetItem("Manual", 
-                        QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_manual));
+      itemWidget = new CMdfFileWidgetItem("Manual",
+                                          QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_manual));
       if (nullptr == itemWidget) {
         spdlog::critical("Failed to create MDF file widget item for Manual");
         return false;
@@ -5343,11 +5408,11 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget->setToolTip(0, tr("Double click to open manual"));
       itemWidget->setForeground(0, QBrush(QColor(Qt::darkGreen)));
       itemWidget->m_mdfFileType = mdf_file_type_manual;
-      itemWidget->m_manual_obj = m_mdf.getManualObj(i);
+      itemWidget->m_manual_obj  = m_mdf.getManualObj(i);
 
       QString name(m_mdf.getManualObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getManualObj(i)->getDescription().c_str();
       }
@@ -5386,11 +5451,11 @@ CFrmNodeConfig::renderMdfFiles(void)
       itemWidget->setToolTip(0, tr("Double click to start setup wizard"));
       itemWidget->setForeground(0, QBrush(QColor(Qt::darkGreen)));
       itemWidget->m_mdfFileType = mdf_file_type_setup;
-      itemWidget->m_setup_obj = m_mdf.getSetupObj(i);
+      itemWidget->m_setup_obj   = m_mdf.getSetupObj(i);
 
       QString name(m_mdf.getSetupObj(i)->getName().c_str());
       if (!name.length()) {
-        //name = QString::number(i);
+        // name = QString::number(i);
         name = "";
         name += m_mdf.getSetupObj(i)->getDescription().c_str();
       }
@@ -5408,24 +5473,24 @@ CFrmNodeConfig::renderMdfFiles(void)
 // fillMdfFileHtmlInfo
 //
 
-void 
-CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
+void
+CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem* widgetItem, int column)
 {
   std::string html;
-  
+
   CMdfFileWidgetItem* pitem = (CMdfFileWidgetItem*)widgetItem;
   if (nullptr != pitem) {
     spdlog::critical("MDF file item is NULL {0}", pitem->text(0).toStdString());
     ui->infoArea->setHtml(tr("MDF file item is NULL"));
-    return;    
+    return;
   }
 
   // if (/*pitem->m_mdfFileType == mdf_file_type_none*/) {
   //   spdlog::critical("MDF file has no type {0}", pitem->text(0).toStdString());
   //   ui->infoArea->setHtml(tr("MDF file has no type"));
-  //   return; 
+  //   return;
   // }
-  
+
   html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
          "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
   html += "<html><head>";
@@ -5434,7 +5499,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
   html += "</head>";
   html += "<body>";
 
-  switch (/*pitem->m_mdfFileType*/pitem->type()) {
+  switch (/*pitem->m_mdfFileType*/ pitem->type()) {
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_picture)):
       html += "<h4>";
@@ -5450,7 +5515,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_picture_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_picture_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_picture_obj->getUrl().c_str();
@@ -5466,9 +5531,9 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       else {
         html += tr("Invalid picture item").toStdString();
         html += "</h4>";
-      }      
-      break;  
-    
+      }
+      break;
+
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_video)):
       html += "<h4>";
       html += tr("Videos related to the device").toStdString();
@@ -5483,7 +5548,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_video_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_video_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_video_obj->getUrl().c_str();
@@ -5499,16 +5564,16 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       else {
         html += tr("Invalid video item").toStdString();
         html += "</h4>";
-      }      
-      break;    
-    
+      }
+      break;
+
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_firmware)):
       html += "<h4>";
       html += tr("Firmware for device").toStdString();
       html += "</h4>";
       html += tr("Select item below to get information about ir.").toStdString();
       break;
-    
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_firmware)):
       html += "<h4>";
       if (nullptr != pitem->m_firmware_obj) {
@@ -5516,7 +5581,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_firmware_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_firmware_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_firmware_obj->getUrl().c_str();
@@ -5544,7 +5609,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       else {
         html += tr("Invalid firmware item").toStdString();
         html += "</h4>";
-      }      
+      }
       break;
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_manual)):
@@ -5561,7 +5626,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_manual_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_manual_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_manual_obj->getUrl().c_str();
@@ -5577,16 +5642,16 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       else {
         html += tr("Invalid manual item").toStdString();
         html += "</h4>";
-      }      
-      break;   
-    
+      }
+      break;
+
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_driver)):
       html += "<h4>";
       html += tr("Drivers for device").toStdString();
       html += "</h4>";
       html += tr("Select item below to get information about ir.").toStdString();
       break;
-      
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_driver)):
       html += "<h4>";
       if (nullptr != pitem->m_driver_obj) {
@@ -5594,7 +5659,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_driver_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_driver_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_driver_obj->getUrl().c_str();
@@ -5614,15 +5679,15 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += pitem->m_driver_obj->getOS();
         html += "</a><br><b>OS Version:</b> ";
         html += pitem->m_driver_obj->getOSVer();
-        
+
         html += "</p>";
         html += "<hr>";
       }
       else {
         html += tr("Invalid manual item").toStdString();
         html += "</h4>";
-      }      
-      break; 
+      }
+      break;
 
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_setup)):
       html += "<h4>";
@@ -5630,7 +5695,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       html += "</h4>";
       html += tr("Select item below to get information about ir.").toStdString();
       break;
-    
+
     case (QTreeWidgetItem::UserType + CMdfFileWidgetItem::ITEM_OFFSET + static_cast<int>(mdf_file_type_setup)):
       html += "<h4>";
       if (nullptr != pitem->m_setup_obj) {
@@ -5638,7 +5703,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
         html += "</h4>";
         html += "<p>";
         html += pitem->m_setup_obj->getDescription().c_str();
-        html += "</p><p><b>url:</b> <a href=\"";        
+        html += "</p><p><b>url:</b> <a href=\"";
         html += pitem->m_setup_obj->getUrl().c_str();
         html += "\">";
         html += pitem->m_setup_obj->getUrl().c_str();
@@ -5654,8 +5719,8 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       else {
         html += tr("Invalid manual item").toStdString();
         html += "</h4>";
-      }      
-      break; 
+      }
+      break;
 
     default:
     case (QTreeWidgetItem::UserType + static_cast<int>(mdf_file_type_none)):
@@ -5663,7 +5728,7 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
       html += tr("Invalid entry").toStdString();
       html += "</h4>";
       html += tr("Select item below to get information about ir.").toStdString();
-      break;          
+      break;
   }
 
   // html += "<h4>";
@@ -5681,10 +5746,255 @@ CFrmNodeConfig::fillMdfFileHtmlInfo(QTreeWidgetItem *widgetItem, int column)
   html += "</body></html>";
 
   // Set the HTML
-  ui->infoArea->setHtml(html.c_str());  
+  ui->infoArea->setHtml(html.c_str());
 }
 
+// ----------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------- 
+///////////////////////////////////////////////////////////////////////////////
+// onSearchRegister  Qt::MatchFlags(dlg.getSearchType())
+//
 
+void
+CFrmNodeConfig::onSearchRegister(void)
+{
+  Qt::MatchFlags flags = Qt::MatchRecursive;
 
+  CDlgTxtSearch dlg;
+  dlg.setWindowTitle(tr("Search register from name"));
+  if (QDialog::Accepted == dlg.exec()) {
+
+    // Unselect selected items
+    foreach (QTreeWidgetItem* item, m_searchListRegs) {
+      item->setSelected(false);
+    }
+
+    switch (dlg.getSearchType()) {
+
+      case SEARCH_TYPE_EXACT:
+        flags |= Qt::MatchExactly;
+        break;
+
+      case SEARCH_TYPE_CONTAINS:
+        flags |= Qt::MatchContains;
+        break;
+
+      case SEARCH_TYPE_START:
+        flags |= Qt::MatchStartsWith;
+        break;
+
+      case SEARCH_TYPE_END:
+        flags |= Qt::MatchEndsWith;
+        break;
+
+      case SEARCH_TYPE_REGULAR_EXPRESSION:
+        flags |= Qt::MatchRegularExpression;
+        break;
+    }
+
+    // Search case sensitive if told to do so
+    if (dlg.isCaseSensitive()) {
+      flags |= Qt::MatchCaseSensitive;
+    }
+
+    m_registerSearchPos = 0;
+    m_searchListRegs    = ui->treeWidgetRegisters->findItems(dlg.getSearchText().c_str(),
+                                                          flags,
+                                                          static_cast<int>(REG_COL_NAME));
+    std::cout << m_searchListRegs.size() << std::endl;
+
+    foreach (QTreeWidgetItem* item, m_searchListRegs) {
+      qDebug() << item->text(static_cast<int>(REG_COL_NAME));
+    }
+
+    ui->statusBar->showMessage(tr("Search found %1 registers").arg(m_searchListRegs.size()));
+
+    // Only if items are found
+    if (m_searchListRegs.size()) {
+
+      // Deselect selected
+      QList<QTreeWidgetItem*> selected = ui->treeWidgetRegisters->selectedItems();
+      foreach (QTreeWidgetItem* item, m_searchListRegs) {
+        item->setSelected(false);
+      }
+
+      // Make sure we are on registers tab
+      ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REGISTERS);
+
+      m_searchListRegs[m_registerSearchPos]->setSelected(true);
+      onRegisterTreeWidgetItemClicked(m_searchListRegs[m_registerSearchPos], 0);
+      ui->treeWidgetRegisters->scrollToItem(m_searchListRegs[m_registerSearchPos]);
+
+      if (dlg.isMarkSearchResults()) {
+        onSelectSearchRegisters();
+      }
+
+    } // Items found
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSearchNextRegister
+//
+
+void
+CFrmNodeConfig::onSearchNextRegister(void)
+{
+  if (m_searchListRegs.size()) {
+
+    // Make sure we are on registers tab
+    ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REGISTERS);
+
+    m_searchListRegs[m_registerSearchPos]->setSelected(false);
+    m_registerSearchPos++;
+    if (m_registerSearchPos >= m_searchListRegs.size()) {
+      m_registerSearchPos = 0;
+    }
+    m_searchListRegs[m_registerSearchPos]->setSelected(true);
+    ui->treeWidgetRegisters->scrollToItem(m_searchListRegs[m_registerSearchPos]);
+    // m_searchListRegs[m_registerSearchPos]->setSelected(true);
+    onRegisterTreeWidgetItemClicked(m_searchListRegs[m_registerSearchPos], 0);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSelectSearchRegisters
+//
+
+void
+CFrmNodeConfig::onSelectSearchRegisters(void)
+{
+  if (m_searchListRegs.size()) {
+
+    // Make sure we are on registers tab
+    ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REGISTERS);
+
+    foreach (QTreeWidgetItem* item, m_searchListRegs) {
+      item->setSelected(true);
+      m_mapPageToPageHeader[((CRegisterWidgetItem*)item)->m_regPage]->setExpanded(true);
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSearchRemoteVariable
+//
+
+void
+CFrmNodeConfig::onSearchRemoteVariable(void)
+{
+  Qt::MatchFlags flags = Qt::MatchRecursive;
+
+  CDlgTxtSearch dlg;
+  dlg.setWindowTitle(tr("Search remote variable from name"));
+  if (QDialog::Accepted == dlg.exec()) {
+
+    // Unselect selected items
+    foreach (QTreeWidgetItem* item, m_searchListRemoteVars) {
+      item->setSelected(false);
+    }
+
+    switch (dlg.getSearchType()) {
+
+      case SEARCH_TYPE_EXACT:
+        flags |= Qt::MatchExactly;
+        break;
+
+      case SEARCH_TYPE_CONTAINS:
+        flags |= Qt::MatchContains;
+        break;
+
+      case SEARCH_TYPE_START:
+        flags |= Qt::MatchStartsWith;
+        break;
+
+      case SEARCH_TYPE_END:
+        flags |= Qt::MatchEndsWith;
+        break;
+
+      case SEARCH_TYPE_REGULAR_EXPRESSION:
+        flags |= Qt::MatchRegularExpression;
+        break;
+    }
+
+    // Search case sensitive if told to do so
+    if (dlg.isCaseSensitive()) {
+      flags |= Qt::MatchCaseSensitive;
+    }
+
+    m_registerSearchPos = 0;
+    m_searchListRemoteVars    = ui->treeWidgetRemoteVariables->findItems(dlg.getSearchText().c_str(),
+                                                                flags,
+                                                                static_cast<int>(REMOTEVAR_COL_NAME));
+    std::cout << m_searchListRemoteVars.size() << std::endl;
+
+    foreach (QTreeWidgetItem* item, m_searchListRemoteVars) {
+      qDebug() << item->text(static_cast<int>(REG_COL_NAME));
+    }
+
+    ui->statusBar->showMessage(tr("Search found %1 remote variables").arg(m_searchListRemoteVars.size()));
+
+    // Only if items are found
+    if (m_searchListRemoteVars.size()) {
+
+      // Deselect selected
+      QList<QTreeWidgetItem*> selected = ui->treeWidgetRemoteVariables->selectedItems();
+      foreach (QTreeWidgetItem* item, m_searchListRemoteVars) {
+        item->setSelected(false);
+      }
+
+      // Make sure we are on registers tab
+      ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REMOTEVARS);
+
+      m_searchListRemoteVars[m_registerSearchPos]->setSelected(true);
+      onRegisterTreeWidgetItemClicked(m_searchListRemoteVars[m_remoteVarSearchPos], 0);
+      ui->treeWidgetRemoteVariables->scrollToItem(m_searchListRemoteVars[m_remoteVarSearchPos]);
+
+      if (dlg.isMarkSearchResults()) {
+        onSelectSearchRemoteVars();
+      }
+
+    } // Items found
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSearchNextRemoteVariable
+//
+
+void
+CFrmNodeConfig::onSearchNextRemoteVariable(void)
+{
+  if (m_searchListRemoteVars.size()) {
+
+    // Make sure we are on registers tab
+    ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REMOTEVARS);
+
+    m_searchListRemoteVars[m_remoteVarSearchPos]->setSelected(false);
+    m_remoteVarSearchPos++;
+    if (m_remoteVarSearchPos >= m_searchListRemoteVars.size()) {
+      m_remoteVarSearchPos = 0;
+    }
+    m_searchListRemoteVars[m_registerSearchPos]->setSelected(true);
+    ui->treeWidgetRemoteVariables->scrollToItem(m_searchListRemoteVars[m_remoteVarSearchPos]);
+    onRegisterTreeWidgetItemClicked(m_searchListRemoteVars[m_remoteVarSearchPos], 0);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSelectSearchRemoteVars
+//
+
+void
+CFrmNodeConfig::onSelectSearchRemoteVars(void)
+{
+  if (m_searchListRemoteVars.size()) {
+
+    // Make sure we are on registers tab
+    ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REMOTEVARS);
+
+    foreach (QTreeWidgetItem* item, m_searchListRemoteVars) {
+      item->setSelected(true);
+    }
+  }
+}

@@ -62,6 +62,7 @@ using json = nlohmann::json;
 
 using namespace kainjow::mustache;
 
+
 // Register to be used for signals
 Q_DECLARE_METATYPE(vscpEvent)
 Q_DECLARE_METATYPE(vscpEventEx)

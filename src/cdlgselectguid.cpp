@@ -362,7 +362,7 @@ void CDlgSelectGuid::fillGuid(void)
     uint8_t guid[16];
     if (!vscp_getGuidFromStringToArray(guid, ui->lineEditGuid->text().toStdString())) {
         QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("Faild to convert GUID string"),
                               QMessageBox::Ok );
         return;                              
@@ -510,7 +510,7 @@ void CDlgSelectGuid::fetchKnownGuid(void)
     if (QDialog::Accepted == dlg.exec()) {        
         if (!dlg.getSelectedGuid(guid)) {
             QMessageBox::information(this, 
-                              tr("vscpworks+"),
+                              tr(APPNAME),
                               tr("No GUID selected"),
                               QMessageBox::Ok );
             return;                              
