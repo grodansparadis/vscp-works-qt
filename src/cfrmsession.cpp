@@ -1253,7 +1253,7 @@ CFrmSession::addTxRow(bool bEnable,
 bool
 CFrmSession::isConnected(void)
 {
-  return m_connect->isChecked();
+  return m_vscpClient->isConnected();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
