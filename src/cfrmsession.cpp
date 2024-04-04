@@ -58,8 +58,8 @@
 #include <vscp_client_rs232.h>
 #include <vscp_client_rs485.h>
 
-#include "cdlgselectmqtttopics.h"
 #include "cdlgknownguid.h"
+#include "cdlgselectmqtttopics.h"
 #include "cdlgsessionfilter.h"
 #include "cfrmsession.h"
 
@@ -562,8 +562,8 @@ CFrmSession::createMenu()
 
   // * * * Connection menu * * *
 
-  //m_connMenu = new QMenu(tr("&Connection"), this);
- 
+  // m_connMenu = new QMenu(tr("&Connection"), this);
+
   // m_connectAct    = m_connMenu->addAction(tr("Connect to interface..."),
   //                                      this,
   //                                      &CFrmSession::menu_connect);
@@ -574,7 +574,7 @@ CFrmSession::createMenu()
   // m_pauseAct = m_connMenu->addAction(tr("Pause host"));
   // m_addHostAct = m_connMenu->addAction(tr("Add host..."));
 
-  //m_menuBar->addMenu(m_connMenu);
+  // m_menuBar->addMenu(m_connMenu);
 
   // * * * VSCP menu * * *
   m_vscpMenu      = new QMenu(tr("&VSCP"), this);
@@ -605,6 +605,9 @@ CFrmSession::createMenu()
     m_mqttPublishTopics = m_mqttMenu->addAction(tr("MQTT publish topics..."),
                                                 this,
                                                 &CFrmSession::openMqttPublishTopics);
+    m_mqttPublishTopics = m_mqttMenu->addAction(tr("Clear MQTT retain topics..."),
+                                                this,
+                                                &CFrmSession::openClearMqttRetainPublishTopics);                                           
     m_menuBar->addMenu(m_mqttMenu);
   }
 
@@ -1011,6 +1014,8 @@ CFrmSession::menu_clear_rxlist(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
+  m_infoArea->clear();
+
   m_rxTable->setCurrentCell(-1, -1); // unselect all
 
   m_mutexRxList.lock();
@@ -1401,8 +1406,11 @@ CFrmSession::sendTxEvent(void)
 
     CTxWidgetItem* itemEvent = (CTxWidgetItem*)m_txTable->item(it->row(), txrow_event);
     vscpEvent* pev           = itemEvent->m_tx.getEvent();
+    pev->timestamp           = vscp_makeTimeStamp(); // Set timestamp
+    vscp_setEventToNow(pev);                         // Set time information to "now"
 
     for (int i = 0; i < itemEvent->m_tx.getCount(); i++) {
+      // Send Event
       if (VSCP_ERROR_SUCCESS != m_vscpClient->send(*pev)) {
         spdlog::error(std::string(tr("Session: Unable to send event").toStdString()));
         QMessageBox::information(
@@ -3624,7 +3632,7 @@ void
 CFrmSession::openMqttSubscribeTopics(void)
 {
   CDlgSelectMqttTopics dlg;
-  dlg.init(true, m_vscpClient);
+  dlg.init(CDlgSelectMqttTopics::SUBSCRIBE, m_vscpClient);
   if (QDialog::Accepted == dlg.exec()) {
     // Disconnect
     connectToRemoteHost(false);
@@ -3641,12 +3649,26 @@ void
 CFrmSession::openMqttPublishTopics(void)
 {
   CDlgSelectMqttTopics dlg;
-  dlg.init(false, m_vscpClient);
+  dlg.init(CDlgSelectMqttTopics::PUBLISH, m_vscpClient);
   if (QDialog::Accepted == dlg.exec()) {
     // Disconnect
     connectToRemoteHost(false);
     // Reconnect
     connectToRemoteHost(true);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// openClearMqttRetainPublishTopics
+//
+
+void
+CFrmSession::openClearMqttRetainPublishTopics(void)
+{
+  CDlgSelectMqttTopics dlg;
+  dlg.init(CDlgSelectMqttTopics::CLRRETAIN, m_vscpClient);
+  if (QDialog::Accepted == dlg.exec()) {
+    // Noting to do
   }
 }
 

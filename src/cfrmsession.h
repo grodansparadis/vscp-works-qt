@@ -458,6 +458,9 @@ public slots:
   /// Open dialog to let user select active publish topics
   void openMqttPublishTopics(void);
 
+  /// Open dialog to let user select retain publish topics to clear
+  void openClearMqttRetainPublishTopics(void);
+
 signals:
 
   /// Data received from callback

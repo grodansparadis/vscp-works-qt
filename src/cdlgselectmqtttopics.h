@@ -44,6 +44,15 @@ public:
   ~CDlgSelectMqttTopics();
 
 public:
+  // const int SUBSCRIBE = 0;
+  // const int PUBLISH = 1;
+  // const int CLRRETAIN = 2;
+  typedef enum {
+    SUBSCRIBE,
+    PUBLISH,
+    CLRRETAIN
+  } dlgtype;
+
   /*!
     Fill table with subscription topics
   */
@@ -60,8 +69,9 @@ public:
       false to handel publiosh topics
     @param pvscpClient Pointer to client object. Is expected
       to be initialized and opened.
+    @return VSCP_ERROR_SUCCESS if OK otherwise errorcode
   */
-  void init(bool bSubscription, const CVscpClient* pvscpClient);
+  int init(dlgtype type, const CVscpClient* pvscpClient);
 
   /*!
     Get state for a row in the table widget list
@@ -72,21 +82,21 @@ public slots:
 
   /*!
     Called when the accepted button is pressed
-    Will update the subscribe/publish list with 
+    Will update the subscribe/publish list with
     the active/inactive content from the list
   */
   void accepted(void);
-  
+
   /*!
     Double click is used to select or deselect topics
   */
-  //void onRowDoubleClicked(void);
+  // void onRowDoubleClicked(void);
 
 private:
   Ui::CDlgSelectMqttTopics* ui;
 
-  /// Subscription topics
-  bool m_bSubscriptionTopics;
+  /// Topics types
+  bool m_type;
 
   /// Pointer to client object
   vscpClientMqtt* m_pvscpClient;

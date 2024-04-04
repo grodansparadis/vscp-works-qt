@@ -67,8 +67,8 @@ CDlgSelectMqttTopics::CDlgSelectMqttTopics(QWidget* parent)
   //   this,
   //   &CDlgSelectMqttTopics::onRowDoubleClicked);
 
-  m_bSubscriptionTopics = true;    // Subscription topics is default
-  m_pvscpClient         = nullptr; // No client yet
+  m_type        = CDlgSelectMqttTopics::SUBSCRIBE; // Subscription topics is default
+  m_pvscpClient = nullptr;                         // No client yet
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -150,21 +150,34 @@ CDlgSelectMqttTopics::fillPublishTopics(void)
 // init
 //
 
-void
-CDlgSelectMqttTopics::init(bool bSubscription, const CVscpClient* pvscpClient)
+int
+CDlgSelectMqttTopics::init(CDlgSelectMqttTopics::dlgtype type, const CVscpClient* pvscpClient)
 {
-  m_bSubscriptionTopics = bSubscription;
-  m_pvscpClient         = (vscpClientMqtt*)pvscpClient;
+  m_type        = type;
+
+  // Check pointer
+  if (nullptr == pvscpClient)  {
+    return VSCP_ERROR_INVALID_POINTER;
+  }
+
+  m_pvscpClient = (vscpClientMqtt*)pvscpClient;
 
   // Fill the table with data
-  if (bSubscription) {
+  if (CDlgSelectMqttTopics::SUBSCRIBE == type) {
+    setWindowTitle("MQTT Subscription topics");
     fillSubscriptionTopics();
   }
-  else {
+  else if (CDlgSelectMqttTopics::PUBLISH == type) {
+    setWindowTitle("MQTT Publish topics");
+    fillPublishTopics();
+  }
+  else if (CDlgSelectMqttTopics::CLRRETAIN == type) {
+    setWindowTitle("MQTT clear retain publish topics");
     fillPublishTopics();
   }
 
   QIcon icon(":/check-mark-red.png");
+  return VSCP_ERROR_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,7 +207,7 @@ void
 CDlgSelectMqttTopics::accepted(void)
 {
   int pos = 0;
-  if (m_bSubscriptionTopics) {
+  if (CDlgSelectMqttTopics::SUBSCRIBE == m_type) {
     std::list<subscribeTopic*>* plist = m_pvscpClient->getSubscribeList();
     for (std::list<subscribeTopic*>::iterator it = plist->begin(); it != plist->end(); ++it) {
       subscribeTopic* psub = *it;
@@ -202,14 +215,14 @@ CDlgSelectMqttTopics::accepted(void)
       pos++;
     }
   }
-  else {
-    pos = 0;
+  else if (CDlgSelectMqttTopics::PUBLISH == m_type) {
+    pos                             = 0;
     std::list<publishTopic*>* plist = m_pvscpClient->getPublishList();
     for (std::list<publishTopic*>::iterator it = plist->begin(); it != plist->end(); ++it) {
       publishTopic* ppub = *it;
-      ppub->setActive(isActive(pos));
+      std::string str = ppub->getTopic();
+      m_pvscpClient->clearRetain4Topic(str);
       pos++;
     }
   }
 }
-
