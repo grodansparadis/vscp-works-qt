@@ -2,6 +2,7 @@
 
 
 ## MQTT
+  - Handle v5 properties
   - Handel string, binary, json and xml content
   - First character is not 0x00, "<" or "{" ==> STRING
   - First character 0x00 and content len > 0  ==>  BINARY   (UDP format)

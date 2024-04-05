@@ -41,7 +41,7 @@
 class SubscribeItem : public QListWidgetItem {
 
   public:
-    SubscribeItem(const QString& topic, enumMqttMsgFormat fmt = autofmt);
+    SubscribeItem(const QString& topic, enumMqttMsgFormat fmt = autofmt, int qos = 0);
     ~SubscribeItem();
 
     /// Getters/setters for topic
@@ -61,6 +61,10 @@ class SubscribeItem : public QListWidgetItem {
         m_format = static_cast<enumMqttMsgFormat>(fmt);
     };
 
+    /// Getters/setters for qos
+    int getQos(void) { return m_qos; };
+    void setQos(int qos) { m_qos = qos; };
+
   private:
     /// True if item is active
     bool m_bActive;
@@ -70,6 +74,9 @@ class SubscribeItem : public QListWidgetItem {
 
     /// Subscribe format
     enumMqttMsgFormat m_format;
+
+    /// Quality of service
+    int m_qos;
 };
 
 // ----------------------------------------------------------------------------

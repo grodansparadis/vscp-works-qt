@@ -466,7 +466,8 @@ MainWindow::checkRemoteEventDbVersion()
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   QString ver(pworks->m_pVersionCtrl->downloadedData());
-  qDebug() << "Data: " << ver;
+  spdlog::debug("Remote event db version is {}", ver.toStdString());
+  //qDebug() << "__Data: " << ver;
   if (-1 != ver.indexOf("<title>404 Not Found</title>")) {
     QMessageBox::information(this,
                              tr(APPNAME),

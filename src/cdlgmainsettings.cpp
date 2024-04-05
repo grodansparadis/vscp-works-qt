@@ -343,6 +343,8 @@ void CDlgMainSettings::done(int rv)
             break;  
       }
 
+      // Set new values
+
       pworks->m_consoleLogPattern = ui->editConsoleLogPattern->text().toStdString();
     
       // Data

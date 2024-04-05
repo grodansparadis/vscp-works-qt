@@ -83,17 +83,6 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_bEnableDarkTheme  = false;
   m_bSaveAlwaysJSON   = false;
 
-  // Logging defaults
-  m_fileLogLevel    = spdlog::level::info;
-  m_fileLogPattern  = "[vscpd] [%^%l%$] %v";
-  m_fileLogPath     = "/var/log/vscp/vscp.log";
-  m_maxFileLogSize  = 5242880;
-  m_maxFileLogFiles = 7;
-
-  m_bEnableConsoleLog = false;
-  m_consoleLogLevel   = spdlog::level::info;
-  m_consoleLogPattern = "[vscpd] [%^%l%$] %v";
-
   m_session_timeout   = 1000;
   m_session_maxEvents = -1;
 
@@ -108,13 +97,17 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_config_timeout = 1000;
 
   // Logging defaults
-  m_fileLogLevel    = spdlog::level::info;
-  m_fileLogPattern  = "[vscpworks+] [%^%l%$] %v";
-  m_fileLogPath     = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+  m_fileLogLevel   = spdlog::level::info;
+  m_fileLogPattern = "[%^%l%$] %v";
+#ifdef WIN32
+  m_fileLogPath = "vscpworks.log";
+#else
+  m_fileLogPath    = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+#endif
   m_maxFileLogSize  = 5242880;
   m_maxFileLogFiles = 7;
 
-  m_bEnableConsoleLog = false;
+  m_bEnableConsoleLog = true;
   m_consoleLogLevel   = spdlog::level::info;
   m_consoleLogPattern = "[vscpworks+] [%^%l%$] %v";
 
@@ -122,10 +115,6 @@ vscpworks::vscpworks(int& argc, char** argv)
   // dynamically at run-time
   int idEvent   = qRegisterMetaType<vscpEvent>();
   int idEventEx = qRegisterMetaType<vscpEventEx>();
-
-  
-
-  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -333,6 +322,7 @@ vscpworks::loadSettings(void)
   m_bSaveAlwaysJSON  = settings.value("bSaveAlwaysJson", true).toBool();
 
   // * * * Logging * * *
+  m_bEnableFileLog = true;
   int level = settings.value("fileLogLevel", 4).toInt(); // Default: 4 == "information";
   switch (level) {
     case 0:
@@ -356,13 +346,16 @@ vscpworks::loadSettings(void)
       break;
     case 6:
       m_fileLogLevel = spdlog::level::off;
+      m_bEnableFileLog = false;
       break;
   };
-  m_fileLogPattern  = settings.value("fileLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
+  m_fileLogPattern  = settings.value("fileLogPattern", "%c - [%^%l%$] %v").toString().toStdString();
   m_fileLogPath     = settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
-  m_maxFileLogSize  = settings.value("fileLogMaxSize", 5242880).toInt();
+  m_maxFileLogSize  = settings.value("fileLogMaxSize", 5*1024*1024).toInt();
   m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
 
+  // console log level
+  m_bEnableConsoleLog = true;
   level = settings.value("consoleLogLevel", 4).toInt(); // Default: 4 == "information";
   switch (level) {
     case 0:
@@ -386,10 +379,13 @@ vscpworks::loadSettings(void)
       break;
     case 6:
       m_consoleLogLevel = spdlog::level::off;
+      m_bEnableConsoleLog = false;
       break;
   };
 
-  m_consoleLogPattern = settings.value("consoleLogPattern", "[vscpworks+] [%^%l%$] %v").toString().toStdString();
+  
+
+  m_consoleLogPattern = settings.value("consoleLogPattern", "%c [%^%l%$] %v").toString().toStdString();
 
   // * * * Session * * *
 
@@ -685,7 +681,7 @@ void
 vscpworks::log(int level, const QString& message)
 {
   // Log only messages
-  // if (level <= m_logLevel) {
+  //if (level <= m_logLevel) {
 
   //     QDateTime now = QDateTime::currentDateTime();
 
@@ -701,7 +697,7 @@ vscpworks::log(int level, const QString& message)
   //     if (!query.exec(strQuery)) {
   //         qDebug() << "Failed to insert log message";
   //     }
-  // }
+  //}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

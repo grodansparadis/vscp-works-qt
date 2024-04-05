@@ -3620,7 +3620,7 @@ CFrmSession::updateAllRows(void)
 void
 CFrmSession::openConnectionSettings(void)
 {
-  printf("openConnectionSettings\n");
+  //printf("openConnectionSettings\n");
   // parent()->editConnectionItem();
 }
 

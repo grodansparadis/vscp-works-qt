@@ -98,6 +98,26 @@ enumMqttMsgFormat CDlgMqttSubscribe::getFormat(void)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// setQos
+//
+
+void CDlgMqttSubscribe::setQos(int qos)
+{
+    qos &= 0x03;
+    return ui->comboQos->setCurrentIndex(qos);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getQos
+//
+
+int CDlgMqttSubscribe::getQos(void)
+{
+    return ui->comboQos->currentIndex();
+}
+
+
 
 
 

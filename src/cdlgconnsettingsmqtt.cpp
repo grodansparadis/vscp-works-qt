@@ -58,13 +58,14 @@
 // CTor
 //
 
-SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt)
+SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt, int qos)
   : QListWidgetItem(topic)
 {
-    m_topic  = topic;
-    m_format = fmt;
+  m_topic  = topic;
+  m_format = fmt;
+  m_qos = qos & 3;
 
-    m_bActive = true; // Active by default
+  m_bActive = true; // Active by default
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,12 +90,12 @@ PublishItem::PublishItem(const QString& topic,
                                     bretain ? "true" : "false")
                       .c_str())
 {
-    m_topic   = topic;
-    m_format  = fmt;
-    m_qos     = qos;
-    m_bRetain = bretain;
+  m_topic   = topic;
+  m_format  = fmt;
+  m_qos     = qos;
+  m_bRetain = bretain;
 
-    m_bActive = true; // Active by default
+  m_bActive = true; // Active by default
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,12 +111,12 @@ PublishItem::~PublishItem() {}
 void
 PublishItem::setTopic(const QString& topic)
 {
-    m_topic = topic;
-    setText(vscp_str_format("%s - qos=%d retain=%s",
-                            topic.toStdString().c_str(),
-                            getQos(),
-                            getRetain() ? "true" : "false")
-              .c_str());
+  m_topic = topic;
+  setText(vscp_str_format("%s - qos=%d retain=%s",
+                          topic.toStdString().c_str(),
+                          getQos(),
+                          getRetain() ? "true" : "false")
+            .c_str());
 };
 
 // ----------------------------------------------------------------------------
@@ -128,69 +129,71 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgConnSettingsMqtt)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    // Generate unique client id
-    QString clientid;
-    int rVal = rand() % 100000;
-    clientid.setNum(rVal, 16);
-    clientid = "vscpworks-" + clientid;
+  // Generate unique client id
+  QString clientid;
+  int rVal = rand() % 100000;
+  clientid.setNum(rVal, 16);
+  clientid = "vscpworks-" + clientid;
 
-    // Set defaults
-    m_bTLS = false;
-    // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
-    // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
-    setBroker("tcp://localhost:1883");
-    setClientId(clientid);
-    setUser("admin");
-    setPassword("secret");
+  // Set defaults
+  m_bTLS = false;
+  // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
+  // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
+  setBroker("tcp://localhost:1883");
+  setClientId(clientid);
+  setUser("admin");
+  setPassword("secret");
 
-    connect(ui->btnTLS,
-            &QPushButton::clicked,
-            this,
-            &CDlgConnSettingsMqtt::onTLSSettings);
-    connect(ui->btnAddSubscription,
-            &QPushButton::clicked,
-            this,
-            &CDlgConnSettingsMqtt::onAddSubscription);
-    connect(ui->btnAddPublish,
-            &QPushButton::clicked,
-            this,
-            &CDlgConnSettingsMqtt::onAddPublish);
-    connect(ui->btnTestConnection,
-            &QPushButton::clicked,
-            this,
-            &CDlgConnSettingsMqtt::onTestConnection);
+  connect(ui->btnTLS,
+          &QPushButton::clicked,
+          this,
+          &CDlgConnSettingsMqtt::onTLSSettings);
+  connect(ui->btnAddSubscription,
+          &QPushButton::clicked,
+          this,
+          &CDlgConnSettingsMqtt::onAddSubscription);
+  connect(ui->btnAddPublish,
+          &QPushButton::clicked,
+          this,
+          &CDlgConnSettingsMqtt::onAddPublish);
+  connect(ui->btnTestConnection,
+          &QPushButton::clicked,
+          this,
+          &CDlgConnSettingsMqtt::onTestConnection);
 
-    // Help button
-    connect(ui->buttonBox,
-            &QDialogButtonBox::helpRequested,
-            this,
-            &CDlgConnSettingsMqtt::onGetHelp);
+  // Help button
+  connect(ui->buttonBox,
+          &QDialogButtonBox::helpRequested,
+          this,
+          &CDlgConnSettingsMqtt::onGetHelp);
 
-    // Open pop up menu on right click on VSCP type listbox
-    connect(ui->listSubscribe,
-            &QListWidget::customContextMenuRequested,
-            this,
-            &CDlgConnSettingsMqtt::onSubscribeContextMenu);
+  // Open pop up menu on right click on VSCP type listbox
+  connect(ui->listSubscribe,
+          &QListWidget::customContextMenuRequested,
+          this,
+          &CDlgConnSettingsMqtt::onSubscribeContextMenu);
 
-    // Open edit dialog on item double click
-    connect(ui->listSubscribe,
-            &QListWidget::doubleClicked,
-            this,
-            &CDlgConnSettingsMqtt::onEditSubscription);
+  // Open edit dialog on item double click
+  connect(ui->listSubscribe,
+          &QListWidget::doubleClicked,
+          this,
+          &CDlgConnSettingsMqtt::onEditSubscription);
 
-    // Open pop up menu on right click on VSCP type listbox
-    connect(ui->listPublish,
-            &QListWidget::customContextMenuRequested,
-            this,
-            &CDlgConnSettingsMqtt::onPublishContextMenu);
+  // Open pop up menu on right click on VSCP type listbox
+  connect(ui->listPublish,
+          &QListWidget::customContextMenuRequested,
+          this,
+          &CDlgConnSettingsMqtt::onPublishContextMenu);
 
-    // Open edit dialog on item double click
-    connect(ui->listPublish,
-            &QListWidget::doubleClicked,
-            this,
-            &CDlgConnSettingsMqtt::onEditPublish);
+  // Open edit dialog on item double click
+  connect(ui->listPublish,
+          &QListWidget::doubleClicked,
+          this,
+          &CDlgConnSettingsMqtt::onEditPublish);
+
+  setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,7 +202,7 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
 
 CDlgConnSettingsMqtt::~CDlgConnSettingsMqtt()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -209,7 +212,7 @@ CDlgConnSettingsMqtt::~CDlgConnSettingsMqtt()
 void
 CDlgConnSettingsMqtt::setInitialFocus(void)
 {
-    ui->editDescription->setFocus();
+  ui->editDescription->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,8 +222,8 @@ CDlgConnSettingsMqtt::setInitialFocus(void)
 void
 CDlgConnSettingsMqtt::onGetHelp()
 {
-    QUrl helpUrl("https://docs.vscp.org/");
-    QDesktopServices::openUrl(helpUrl);
+  QUrl helpUrl("https://docs.vscp.org/");
+  QDesktopServices::openUrl(helpUrl);
 }
 
 //-----------------------------------------------------------------------------
@@ -234,7 +237,7 @@ CDlgConnSettingsMqtt::onGetHelp()
 QString
 CDlgConnSettingsMqtt::getName(void)
 {
-    return (ui->editDescription->text());
+  return (ui->editDescription->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,7 +247,7 @@ CDlgConnSettingsMqtt::getName(void)
 void
 CDlgConnSettingsMqtt::setName(const QString& str)
 {
-    ui->editDescription->setText(str);
+  ui->editDescription->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,7 +257,7 @@ CDlgConnSettingsMqtt::setName(const QString& str)
 QString
 CDlgConnSettingsMqtt::getBroker(void)
 {
-    return (ui->editHost->text());
+  return (ui->editHost->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -264,7 +267,7 @@ CDlgConnSettingsMqtt::getBroker(void)
 void
 CDlgConnSettingsMqtt::setBroker(const QString& str)
 {
-    ui->editHost->setText(str);
+  ui->editHost->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -274,7 +277,7 @@ CDlgConnSettingsMqtt::setBroker(const QString& str)
 QString
 CDlgConnSettingsMqtt::getClientId(void)
 {
-    return ui->editClientId->text();
+  return ui->editClientId->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -284,7 +287,7 @@ CDlgConnSettingsMqtt::getClientId(void)
 void
 CDlgConnSettingsMqtt::setClientId(const QString& clientid)
 {
-    ui->editClientId->setText(clientid);
+  ui->editClientId->setText(clientid);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -294,7 +297,7 @@ CDlgConnSettingsMqtt::setClientId(const QString& clientid)
 QString
 CDlgConnSettingsMqtt::getUser(void)
 {
-    return (ui->editUser->text());
+  return (ui->editUser->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -304,7 +307,7 @@ CDlgConnSettingsMqtt::getUser(void)
 void
 CDlgConnSettingsMqtt::setUser(const QString& str)
 {
-    ui->editUser->setText(str);
+  ui->editUser->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -314,7 +317,7 @@ CDlgConnSettingsMqtt::setUser(const QString& str)
 QString
 CDlgConnSettingsMqtt::getPassword(void)
 {
-    return (ui->editPassword->text());
+  return (ui->editPassword->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -324,7 +327,7 @@ CDlgConnSettingsMqtt::getPassword(void)
 void
 CDlgConnSettingsMqtt::setPassword(const QString& str)
 {
-    ui->editPassword->setText(str);
+  ui->editPassword->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -334,7 +337,7 @@ CDlgConnSettingsMqtt::setPassword(const QString& str)
 uint32_t
 CDlgConnSettingsMqtt::getConnectionTimeout(void)
 {
-    return m_client.getConnectionTimeout();
+  return m_client.getConnectionTimeout();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -344,7 +347,7 @@ CDlgConnSettingsMqtt::getConnectionTimeout(void)
 void
 CDlgConnSettingsMqtt::setConnectionTimeout(uint32_t timeout)
 {
-    m_client.setConnectionTimeout(timeout);
+  m_client.setConnectionTimeout(timeout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -354,7 +357,7 @@ CDlgConnSettingsMqtt::setConnectionTimeout(uint32_t timeout)
 uint32_t
 CDlgConnSettingsMqtt::getResponseTimeout(void)
 {
-    return m_client.getResponseTimeout();
+  return m_client.getResponseTimeout();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -364,9 +367,9 @@ CDlgConnSettingsMqtt::getResponseTimeout(void)
 void
 CDlgConnSettingsMqtt::setResponseTimeout(uint32_t timeout)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    QString str       = pworks->decimalToStringInBase(timeout);
-    ui->editKeepAlive->setText(str);
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString str       = pworks->decimalToStringInBase(timeout);
+  ui->editKeepAlive->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -376,7 +379,7 @@ CDlgConnSettingsMqtt::setResponseTimeout(uint32_t timeout)
 uint32_t
 CDlgConnSettingsMqtt::getKeepAlive(void)
 {
-    return vscp_readStringValue(ui->editKeepAlive->text().toStdString());
+  return vscp_readStringValue(ui->editKeepAlive->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -386,9 +389,9 @@ CDlgConnSettingsMqtt::getKeepAlive(void)
 void
 CDlgConnSettingsMqtt::setKeepAlive(uint32_t timeout)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    QString str       = pworks->decimalToStringInBase(timeout, 10);
-    ui->editKeepAlive->setText(str);
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString str       = pworks->decimalToStringInBase(timeout, 10);
+  ui->editKeepAlive->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -398,7 +401,7 @@ CDlgConnSettingsMqtt::setKeepAlive(uint32_t timeout)
 bool
 CDlgConnSettingsMqtt::isCleanSessionEnabled(void)
 {
-    return ui->chkCleanSession->isChecked();
+  return ui->chkCleanSession->isChecked();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -408,7 +411,7 @@ CDlgConnSettingsMqtt::isCleanSessionEnabled(void)
 void
 CDlgConnSettingsMqtt::enableCleanSession(bool clean)
 {
-    ui->chkCleanSession->setChecked(clean);
+  ui->chkCleanSession->setChecked(clean);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -418,7 +421,7 @@ CDlgConnSettingsMqtt::enableCleanSession(bool clean)
 bool
 CDlgConnSettingsMqtt::isExtendedSecurityEnabled(void)
 {
-    return ui->chkCleanSession->isChecked();
+  return ui->chkExtendedSecurity->isChecked();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -428,7 +431,7 @@ CDlgConnSettingsMqtt::isExtendedSecurityEnabled(void)
 void
 CDlgConnSettingsMqtt::enableExtendedSecurity(bool extended)
 {
-    ui->chkExtendedSecurity->setChecked(extended);
+  ui->chkExtendedSecurity->setChecked(extended);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -438,7 +441,7 @@ CDlgConnSettingsMqtt::enableExtendedSecurity(bool extended)
 bool
 CDlgConnSettingsMqtt::isTLSEnabled(void)
 {
-    return m_bTLS;
+  return m_bTLS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -448,7 +451,7 @@ CDlgConnSettingsMqtt::isTLSEnabled(void)
 void
 CDlgConnSettingsMqtt::enableTLS(bool btls)
 {
-    m_bTLS = btls;
+  m_bTLS = btls;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -458,7 +461,7 @@ CDlgConnSettingsMqtt::enableTLS(bool btls)
 bool
 CDlgConnSettingsMqtt::isVerifyPeerEnabled(void)
 {
-    return m_bTLS;
+  return m_bTLS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -468,7 +471,7 @@ CDlgConnSettingsMqtt::isVerifyPeerEnabled(void)
 void
 CDlgConnSettingsMqtt::enableVerifyPeer(bool bverifypeer)
 {
-    m_bVerifyPeer = bverifypeer;
+  m_bVerifyPeer = bverifypeer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -478,7 +481,7 @@ CDlgConnSettingsMqtt::enableVerifyPeer(bool bverifypeer)
 QString
 CDlgConnSettingsMqtt::getCaFile(void)
 {
-    return m_cafile;
+  return m_cafile;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -488,7 +491,7 @@ CDlgConnSettingsMqtt::getCaFile(void)
 void
 CDlgConnSettingsMqtt::setCaFile(const QString& str)
 {
-    m_cafile = str;
+  m_cafile = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -498,7 +501,7 @@ CDlgConnSettingsMqtt::setCaFile(const QString& str)
 QString
 CDlgConnSettingsMqtt::getCaPath(void)
 {
-    return m_capath;
+  return m_capath;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -508,7 +511,7 @@ CDlgConnSettingsMqtt::getCaPath(void)
 void
 CDlgConnSettingsMqtt::setCaPath(const QString& str)
 {
-    m_capath = str;
+  m_capath = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -518,7 +521,7 @@ CDlgConnSettingsMqtt::setCaPath(const QString& str)
 QString
 CDlgConnSettingsMqtt::getCertFile(void)
 {
-    return m_certfile;
+  return m_certfile;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -528,7 +531,7 @@ CDlgConnSettingsMqtt::getCertFile(void)
 void
 CDlgConnSettingsMqtt::setCertFile(const QString& str)
 {
-    m_certfile = str;
+  m_certfile = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -538,7 +541,7 @@ CDlgConnSettingsMqtt::setCertFile(const QString& str)
 QString
 CDlgConnSettingsMqtt::getKeyFile(void)
 {
-    return m_keyfile;
+  return m_keyfile;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -548,7 +551,7 @@ CDlgConnSettingsMqtt::getKeyFile(void)
 void
 CDlgConnSettingsMqtt::setKeyFile(const QString& str)
 {
-    m_keyfile = str;
+  m_keyfile = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -558,7 +561,7 @@ CDlgConnSettingsMqtt::setKeyFile(const QString& str)
 QString
 CDlgConnSettingsMqtt::getPwKeyFile(void)
 {
-    return m_pwkeyfile;
+  return m_pwkeyfile;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -568,7 +571,7 @@ CDlgConnSettingsMqtt::getPwKeyFile(void)
 void
 CDlgConnSettingsMqtt::setPwKeyFile(const QString& str)
 {
-    m_pwkeyfile = str;
+  m_pwkeyfile = str;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -578,51 +581,51 @@ CDlgConnSettingsMqtt::setPwKeyFile(const QString& str)
 QJsonObject
 CDlgConnSettingsMqtt::getJson(void)
 {
-    m_jsonConfig["type"]     = static_cast<int>(CVscpClient::connType::MQTT);
-    m_jsonConfig["name"]     = getName();
-    m_jsonConfig["host"]     = getBroker();
-    m_jsonConfig["clientid"] = getClientId();
-    m_jsonConfig["user"]     = getUser();
-    m_jsonConfig["password"] = getPassword();
-    m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
-    m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
-    m_jsonConfig["keepalive"]          = (int)getKeepAlive();
-    m_jsonConfig["cleansession"]       = isCleanSessionEnabled();
-    m_jsonConfig["extended-security"]  = isExtendedSecurityEnabled();
+  m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::MQTT);
+  m_jsonConfig["name"]               = getName();
+  m_jsonConfig["host"]               = getBroker();
+  m_jsonConfig["clientid"]           = getClientId();
+  m_jsonConfig["user"]               = getUser();
+  m_jsonConfig["password"]           = getPassword();
+  m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
+  m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
+  m_jsonConfig["keepalive"]          = (int)getKeepAlive();
+  m_jsonConfig["cleansession"]       = isCleanSessionEnabled();
+  m_jsonConfig["extended-security"]  = isExtendedSecurityEnabled();
 
-    m_jsonConfig["btls"]        = isTLSEnabled();
-    m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
-    m_jsonConfig["cafile"]      = getCaFile();
-    m_jsonConfig["capath"]      = getCaPath();
-    m_jsonConfig["certfile"]    = getCertFile();
-    m_jsonConfig["keyfile"]     = getKeyFile();
-    m_jsonConfig["pwkeyfile"]   = getPwKeyFile();
+  m_jsonConfig["btls"]        = isTLSEnabled();
+  m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+  m_jsonConfig["cafile"]      = getCaFile();
+  m_jsonConfig["capath"]      = getCaPath();
+  m_jsonConfig["certfile"]    = getCertFile();
+  m_jsonConfig["keyfile"]     = getKeyFile();
+  m_jsonConfig["pwkeyfile"]   = getPwKeyFile();
 
-    // Save all subscriptions
-    QJsonArray subscriptionArray;
-    for (int i = 0; i < ui->listSubscribe->count(); i++) {
-        QJsonObject obj;
-        SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(i);
-        obj["topic"]         = pitem->getTopic();
-        obj["format"]        = pitem->getFormatInt();
-        subscriptionArray.append(obj);
-    }
-    m_jsonConfig["subscribe"] = subscriptionArray;
+  // Save all subscriptions
+  QJsonArray subscriptionArray;
+  for (int i = 0; i < ui->listSubscribe->count(); i++) {
+    QJsonObject obj;
+    SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(i);
+    obj["topic"]         = pitem->getTopic();
+    obj["format"]        = pitem->getFormatInt();
+    subscriptionArray.append(obj);
+  }
+  m_jsonConfig["subscribe"] = subscriptionArray;
 
-    // Save all publishing
-    QJsonArray publishingArray;
-    for (int i = 0; i < ui->listPublish->count(); i++) {
-        QJsonObject obj;
-        PublishItem* pitem = (PublishItem*)ui->listPublish->item(i);
-        obj["topic"]       = pitem->getTopic();
-        obj["format"]      = pitem->getFormatInt();
-        obj["qos"]         = pitem->getQos();
-        obj["bretain"]     = pitem->getRetain();
-        publishingArray.append(obj);
-    }
-    m_jsonConfig["publish"] = publishingArray;
+  // Save all publishing
+  QJsonArray publishingArray;
+  for (int i = 0; i < ui->listPublish->count(); i++) {
+    QJsonObject obj;
+    PublishItem* pitem = (PublishItem*)ui->listPublish->item(i);
+    obj["topic"]       = pitem->getTopic();
+    obj["format"]      = pitem->getFormatInt();
+    obj["qos"]         = pitem->getQos();
+    obj["bretain"]     = pitem->getRetain();
+    publishingArray.append(obj);
+  }
+  m_jsonConfig["publish"] = publishingArray;
 
-    return m_jsonConfig;
+  return m_jsonConfig;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -632,82 +635,81 @@ CDlgConnSettingsMqtt::getJson(void)
 void
 CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
 {
-    m_jsonConfig = *pobj;
+  m_jsonConfig = *pobj;
 
-    if (!m_jsonConfig["name"].isNull())
-        setName(m_jsonConfig["name"].toString());
-    if (!m_jsonConfig["host"].isNull())
-        setBroker(m_jsonConfig["host"].toString());
-    if (!m_jsonConfig["clientid"].isNull())
-        setClientId(m_jsonConfig["clientid"].toString());
-    if (!m_jsonConfig["user"].isNull())
-        setUser(m_jsonConfig["user"].toString());
-    if (!m_jsonConfig["password"].isNull())
-        setPassword(m_jsonConfig["password"].toString());
-    if (!m_jsonConfig["connection-timeout"].isNull())
-        setConnectionTimeout(
-          (uint32_t)m_jsonConfig["connection-timeout"].toInt());
-    if (!m_jsonConfig["response-timeout"].isNull())
-        setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
-    if (!m_jsonConfig["keepalive"].isNull())
-        setKeepAlive((uint32_t)m_jsonConfig["keepalive"].toInt());
-    if (!m_jsonConfig["cleansession"].isNull())
-        enableCleanSession(m_jsonConfig["cleansession"].toBool());
-    if (!m_jsonConfig["extended-security"].isNull())
-        enableExtendedSecurity(m_jsonConfig["extended-security"].toBool());
+  if (!m_jsonConfig["name"].isNull())
+    setName(m_jsonConfig["name"].toString());
+  if (!m_jsonConfig["host"].isNull())
+    setBroker(m_jsonConfig["host"].toString());
+  if (!m_jsonConfig["clientid"].isNull())
+    setClientId(m_jsonConfig["clientid"].toString());
+  if (!m_jsonConfig["user"].isNull())
+    setUser(m_jsonConfig["user"].toString());
+  if (!m_jsonConfig["password"].isNull())
+    setPassword(m_jsonConfig["password"].toString());
+  if (!m_jsonConfig["connection-timeout"].isNull())
+    setConnectionTimeout(
+      (uint32_t)m_jsonConfig["connection-timeout"].toInt());
+  if (!m_jsonConfig["response-timeout"].isNull())
+    setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
+  if (!m_jsonConfig["keepalive"].isNull())
+    setKeepAlive((uint32_t)m_jsonConfig["keepalive"].toInt());
+  if (!m_jsonConfig["cleansession"].isNull())
+    enableCleanSession(m_jsonConfig["cleansession"].toBool());
+  if (!m_jsonConfig["extended-security"].isNull())
+    enableExtendedSecurity(m_jsonConfig["extended-security"].toBool());
 
-    if (!m_jsonConfig["btls"].isNull())
-        enableTLS((short)m_jsonConfig["btls"].toBool());
-    if (!m_jsonConfig["bverifypeer"].isNull())
-        enableVerifyPeer(m_jsonConfig["bverifypeer"].toBool());
-    if (!m_jsonConfig["cafile"].isNull())
-        setCaFile(m_jsonConfig["cafile"].toString());
-    if (!m_jsonConfig["capath"].isNull())
-        setCaPath(m_jsonConfig["capath"].toString());
-    if (!m_jsonConfig["certfile"].isNull())
-        setCertFile(m_jsonConfig["certfile"].toString());
-    if (!m_jsonConfig["keyfile"].isNull())
-        setKeyFile(m_jsonConfig["keyfile"].toString());
-    if (!m_jsonConfig["pwkeyfile"].isNull())
-        setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
+  if (!m_jsonConfig["btls"].isNull())
+    enableTLS((short)m_jsonConfig["btls"].toBool());
+  if (!m_jsonConfig["bverifypeer"].isNull())
+    enableVerifyPeer(m_jsonConfig["bverifypeer"].toBool());
+  if (!m_jsonConfig["cafile"].isNull())
+    setCaFile(m_jsonConfig["cafile"].toString());
+  if (!m_jsonConfig["capath"].isNull())
+    setCaPath(m_jsonConfig["capath"].toString());
+  if (!m_jsonConfig["certfile"].isNull())
+    setCertFile(m_jsonConfig["certfile"].toString());
+  if (!m_jsonConfig["keyfile"].isNull())
+    setKeyFile(m_jsonConfig["keyfile"].toString());
+  if (!m_jsonConfig["pwkeyfile"].isNull())
+    setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
 
-    // Subscriptions
-    if (m_jsonConfig["subscribe"].isArray()) {
-        QJsonArray interfacesArray = m_jsonConfig["subscribe"].toArray();
+  // Subscriptions
+  if (m_jsonConfig["subscribe"].isArray()) {
+    QJsonArray interfacesArray = m_jsonConfig["subscribe"].toArray();
 
-        for (auto v : interfacesArray) {
-
-            QJsonObject item = v.toObject();
-            if (!item["topic"].isNull() && !item["format"].isNull()) {
-                SubscribeItem* pitem =
-                  new SubscribeItem(item["topic"].toString(), static_cast<enumMqttMsgFormat>(item["format"].toInt()) );
-                ui->listSubscribe->addItem(pitem);
-            }
-        }
-
-        ui->listSubscribe->sortItems();
+    for (auto v : interfacesArray) {
+      QJsonObject item = v.toObject();
+      if (!item["topic"].isNull() && !item["format"].isNull()) {
+        SubscribeItem* pitem =
+          new SubscribeItem(item["topic"].toString(), static_cast<enumMqttMsgFormat>(item["format"].toInt()),item["qos"].toInt());
+        ui->listSubscribe->addItem(pitem);
+      }
     }
 
-    // Publish
-    if (m_jsonConfig["publish"].isArray()) {
-        QJsonArray interfacesArray = m_jsonConfig["publish"].toArray();
+    ui->listSubscribe->sortItems();
+  }
 
-        for (auto v : interfacesArray) {
+  // Publish
+  if (m_jsonConfig["publish"].isArray()) {
+    QJsonArray interfacesArray = m_jsonConfig["publish"].toArray();
 
-            QJsonObject item = v.toObject();
-            if (!item["topic"].isNull() && !item["format"].isNull() &&
-                !item["qos"].isNull() && !item["bretain"].isNull()) {
-                PublishItem* pitem = new PublishItem(
-                  item["topic"].toString(),
-                  static_cast<enumMqttMsgFormat>(item["format"].toInt()),
-                  item["qos"].toInt(),
-                  item["bretain"].toBool());
-                ui->listPublish->addItem(pitem);
-            }
-        }
+    for (auto v : interfacesArray) {
 
-        ui->listPublish->sortItems();
+      QJsonObject item = v.toObject();
+      if (!item["topic"].isNull() && !item["format"].isNull() &&
+          !item["qos"].isNull() && !item["bretain"].isNull()) {
+        PublishItem* pitem = new PublishItem(
+          item["topic"].toString(),
+          static_cast<enumMqttMsgFormat>(item["format"].toInt()),
+          item["qos"].toInt(),
+          item["bretain"].toBool());
+        ui->listPublish->addItem(pitem);
+      }
     }
+
+    ui->listPublish->sortItems();
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -719,66 +721,67 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
 void
 CDlgConnSettingsMqtt::onTestConnection(void)
 {
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 
-    std::string str = getBroker().toStdString();
-    m_client.setHost(str);
-    str = getUser().toStdString();
-    m_client.setUser(str);
-    str = getPassword().toStdString();
-    m_client.setPassword(str);
-    str = getClientId().toStdString();
-    m_client.setClientId(str);
-    //m_client->setConnectionTimeout(ui->spinConnectionTimeout->value());  // TODO
+  std::string str = getBroker().toStdString();
+  m_client.setHost(str);
+  str = getUser().toStdString();
+  m_client.setUser(str);
+  str = getPassword().toStdString();
+  m_client.setPassword(str);
+  str = getClientId().toStdString();
+  m_client.setClientId(str);
+  // m_client->setConnectionTimeout(ui->spinConnectionTimeout->value());  // TODO
 
-    // Connect to remote host
-    if (VSCP_ERROR_SUCCESS != m_client.connect()) {
-        QApplication::restoreOverrideCursor();
-        QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Failed to connect to remote MQTT broker"));
-        m_client.disconnect();
-        return;
-    }
-
-    // Get server version
-    uint8_t major_ver;
-    uint8_t minor_ver;
-    uint8_t release_ver;
-    uint8_t build_ver;
-    QString strVersion;
-    if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
-                                                    &minor_ver,
-                                                    &release_ver,
-                                                    &build_ver ) ) {
-
-        strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
-                                        (int)major_ver,
-                                        (int)minor_ver,
-                                        (int)release_ver,
-                                        (int)build_ver ).c_str();
-    }
-    else {
-        strVersion = tr("Failed to get version from server");
-    }
-
-    // Disconnect from remote host
-    if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
-        QApplication::restoreOverrideCursor();
-        QMessageBox::information(
-          this,
-          tr(APPNAME),
-          tr("Failed to disconnect from remote MQTT broker"));
-        return;
-    }
-
+  // Connect to remote host
+  if (VSCP_ERROR_SUCCESS != m_client.connect()) {
     QApplication::restoreOverrideCursor();
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to connect to remote MQTT broker"));
+    m_client.disconnect();
+    return;
+  }
 
-    QString msg = tr("Connection test was successful");
-    msg += "\n";
-    // msg += strVersion;
-    QMessageBox::information(this, tr(APPNAME), msg);
+  // Get server version
+  uint8_t major_ver;
+  uint8_t minor_ver;
+  uint8_t release_ver;
+  uint8_t build_ver;
+  QString strVersion;
+  if (VSCP_ERROR_SUCCESS == m_client.getversion(&major_ver,
+                                                &minor_ver,
+                                                &release_ver,
+                                                &build_ver)) {
+
+    strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
+                                 (int)major_ver,
+                                 (int)minor_ver,
+                                 (int)release_ver,
+                                 (int)build_ver)
+                   .c_str();
+  }
+  else {
+    strVersion = tr("Failed to get version from server");
+  }
+
+  // Disconnect from remote host
+  if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::information(
+      this,
+      tr(APPNAME),
+      tr("Failed to disconnect from remote MQTT broker"));
+    return;
+  }
+
+  QApplication::restoreOverrideCursor();
+
+  QString msg = tr("Connection test was successful");
+  msg += "\n";
+  // msg += strVersion;
+  QMessageBox::information(this, tr(APPNAME), msg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -788,25 +791,25 @@ CDlgConnSettingsMqtt::onTestConnection(void)
 void
 CDlgConnSettingsMqtt::onTLSSettings(void)
 {
-    CDlgTLS dlg;
+  CDlgTLS dlg;
 
-    dlg.enableTLS(m_bTLS);
-    dlg.enableVerifyPeer(m_bVerifyPeer);
-    dlg.setCaFile(m_cafile);
-    dlg.setCaPath(m_capath);
-    dlg.setCertFile(m_certfile);
-    dlg.setKeyFile(m_keyfile);
-    dlg.setPwKeyFile(m_pwkeyfile);
+  dlg.enableTLS(m_bTLS);
+  dlg.enableVerifyPeer(m_bVerifyPeer);
+  dlg.setCaFile(m_cafile);
+  dlg.setCaPath(m_capath);
+  dlg.setCertFile(m_certfile);
+  dlg.setKeyFile(m_keyfile);
+  dlg.setPwKeyFile(m_pwkeyfile);
 
-    if (QDialog::Accepted == dlg.exec()) {
-        m_bTLS        = dlg.isTLSEnabled();
-        m_bVerifyPeer = dlg.isVerifyPeerEnabled();
-        m_cafile      = dlg.getCaFile();
-        m_capath      = dlg.getCaPath();
-        m_certfile    = dlg.getCertFile();
-        m_keyfile     = dlg.getKeyFile();
-        m_pwkeyfile   = dlg.getPwKeyFile();
-    }
+  if (QDialog::Accepted == dlg.exec()) {
+    m_bTLS        = dlg.isTLSEnabled();
+    m_bVerifyPeer = dlg.isVerifyPeerEnabled();
+    m_cafile      = dlg.getCaFile();
+    m_capath      = dlg.getCaPath();
+    m_certfile    = dlg.getCertFile();
+    m_keyfile     = dlg.getKeyFile();
+    m_pwkeyfile   = dlg.getPwKeyFile();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -816,26 +819,26 @@ CDlgConnSettingsMqtt::onTLSSettings(void)
 void
 CDlgConnSettingsMqtt::onAddSubscription(void)
 {
-    // bool ok;
-    // QString topic = QInputDialog::getText(this,
-    //                                       tr(APPNAME),
-    //                                       tr("Subscription topic:"),
-    //                                       QLineEdit::Normal,
-    //                                       "",
-    //                                       &ok);
-    // if (ok && !topic.isEmpty()) {
-    //     ui->listSubscribe->addItem(new SubscribeItem(topic));
-    //     ui->listSubscribe->sortItems();
-    // }
+  // bool ok;
+  // QString topic = QInputDialog::getText(this,
+  //                                       tr(APPNAME),
+  //                                       tr("Subscription topic:"),
+  //                                       QLineEdit::Normal,
+  //                                       "",
+  //                                       &ok);
+  // if (ok && !topic.isEmpty()) {
+  //     ui->listSubscribe->addItem(new SubscribeItem(topic));
+  //     ui->listSubscribe->sortItems();
+  // }
 
-    CDlgMqttSubscribe dlg(this);
+  CDlgMqttSubscribe dlg(this);
 
-    if (QDialog::Accepted == dlg.exec()) {
+  if (QDialog::Accepted == dlg.exec()) {
 
-        ui->listSubscribe->addItem(new SubscribeItem(dlg.getTopic(),
-                                                        dlg.getFormat() ));
-        ui->listSubscribe->sortItems();
-    }
+    ui->listSubscribe->addItem(new SubscribeItem(dlg.getTopic(),
+                                                 dlg.getFormat()));
+    ui->listSubscribe->sortItems();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -845,35 +848,37 @@ CDlgConnSettingsMqtt::onAddSubscription(void)
 void
 CDlgConnSettingsMqtt::onEditSubscription(void)
 {
-    //bool ok;
-    CDlgMqttSubscribe dlg(this);
+  // bool ok;
+  CDlgMqttSubscribe dlg(this);
 
-    // Get selected row
-    int row = ui->listSubscribe->currentRow();
-    if (-1 == row) return;
+  // Get selected row
+  int row = ui->listSubscribe->currentRow();
+  if (-1 == row)
+    return;
 
-    SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
-    if (nullptr == pitem) return;
+  SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
+  if (nullptr == pitem)
+    return;
 
-    // QString topic = QInputDialog::getText(this,
-    //                                       tr(APPNAME),
-    //                                       tr("Subscription topic:"),
-    //                                       QLineEdit::Normal,
-    //                                       pitem->getTopic(),
-    //                                       &ok);
-    // if (ok && !topic.isEmpty()) {
-    //     pitem->setTopic(topic);
-    //     ui->listSubscribe->sortItems();
-    // }
+  // QString topic = QInputDialog::getText(this,
+  //                                       tr(APPNAME),
+  //                                       tr("Subscription topic:"),
+  //                                       QLineEdit::Normal,
+  //                                       pitem->getTopic(),
+  //                                       &ok);
+  // if (ok && !topic.isEmpty()) {
+  //     pitem->setTopic(topic);
+  //     ui->listSubscribe->sortItems();
+  // }
 
-    dlg.setTopic(pitem->getTopic());
-    dlg.setFormat(pitem->getFormat());
+  dlg.setTopic(pitem->getTopic());
+  dlg.setFormat(pitem->getFormat());
 
-    if (QDialog::Accepted == dlg.exec()) {
-        pitem->setFormat(dlg.getFormat());
-        pitem->setTopic(dlg.getTopic());
-        ui->listSubscribe->sortItems();
-    }
+  if (QDialog::Accepted == dlg.exec()) {
+    pitem->setFormat(dlg.getFormat());
+    pitem->setTopic(dlg.getTopic());
+    ui->listSubscribe->sortItems();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -883,18 +888,18 @@ CDlgConnSettingsMqtt::onEditSubscription(void)
 void
 CDlgConnSettingsMqtt::onCloneSubscription(void)
 {
-    // Get selected row
-    int row = ui->listSubscribe->currentRow();
-    if (-1 == row)
-        return;
+  // Get selected row
+  int row = ui->listSubscribe->currentRow();
+  if (-1 == row)
+    return;
 
-    SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
-    if (nullptr == pitem)
-        return;
+  SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
+  if (nullptr == pitem)
+    return;
 
-    ui->listSubscribe->addItem(new SubscribeItem(pitem->getTopic()));
+  ui->listSubscribe->addItem(new SubscribeItem(pitem->getTopic()));
 
-    ui->listSubscribe->sortItems();
+  ui->listSubscribe->sortItems();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -904,26 +909,26 @@ CDlgConnSettingsMqtt::onCloneSubscription(void)
 void
 CDlgConnSettingsMqtt::onDeleteSubscription(void)
 {
-    // Get selected row
-    int row = ui->listSubscribe->currentRow();
-    if (-1 == row)
-        return;
+  // Get selected row
+  int row = ui->listSubscribe->currentRow();
+  if (-1 == row)
+    return;
 
-    SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
-    if (nullptr == pitem)
-        return;
+  SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(row);
+  if (nullptr == pitem)
+    return;
 
-    if (QMessageBox::Yes ==
-        QMessageBox::question(
-          this,
-          tr(APPNAME),
-          tr("Are you sure the subscription topic should be deleted?"),
-          QMessageBox::Yes | QMessageBox::No)) {
+  if (QMessageBox::Yes ==
+      QMessageBox::question(
+        this,
+        tr(APPNAME),
+        tr("Are you sure the subscription topic should be deleted?"),
+        QMessageBox::Yes | QMessageBox::No)) {
 
-        ui->listSubscribe->takeItem(row);
-        // ui->listSubscribe->removeItemWidget();
-        delete pitem;
-    }
+    ui->listSubscribe->takeItem(row);
+    // ui->listSubscribe->removeItemWidget();
+    delete pitem;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -933,17 +938,17 @@ CDlgConnSettingsMqtt::onDeleteSubscription(void)
 void
 CDlgConnSettingsMqtt::onAddPublish(void)
 {
-    CDlgMqttPublish dlg(this);
+  CDlgMqttPublish dlg(this);
 
-    if (QDialog::Accepted == dlg.exec()) {
-        qDebug() << dlg.getQos();
-        qDebug() << dlg.getRetain();
-        ui->listPublish->addItem(new PublishItem(dlg.getTopic(),
-                                                 dlg.getFormat(),
-                                                 dlg.getQos(),
-                                                 dlg.getRetain()));
-        ui->listPublish->sortItems();
-    }
+  if (QDialog::Accepted == dlg.exec()) {
+    qDebug() << dlg.getQos();
+    qDebug() << dlg.getRetain();
+    ui->listPublish->addItem(new PublishItem(dlg.getTopic(),
+                                             dlg.getFormat(),
+                                             dlg.getQos(),
+                                             dlg.getRetain()));
+    ui->listPublish->sortItems();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -953,27 +958,29 @@ CDlgConnSettingsMqtt::onAddPublish(void)
 void
 CDlgConnSettingsMqtt::onEditPublish(void)
 {
-    CDlgMqttPublish dlg(this);
+  CDlgMqttPublish dlg(this);
 
-    // Get selected row
-    int row = ui->listPublish->currentRow();
-    if (-1 == row) return;
+  // Get selected row
+  int row = ui->listPublish->currentRow();
+  if (-1 == row)
+    return;
 
-    PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
-    if (nullptr == pitem) return;
+  PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
+  if (nullptr == pitem)
+    return;
 
-    dlg.setTopic(pitem->getTopic());
-    dlg.setFormat(pitem->getFormat());
-    dlg.setQos(pitem->getQos());
-    dlg.setRetain(pitem->getRetain());
+  dlg.setTopic(pitem->getTopic());
+  dlg.setFormat(pitem->getFormat());
+  dlg.setQos(pitem->getQos());
+  dlg.setRetain(pitem->getRetain());
 
-    if (QDialog::Accepted == dlg.exec()) {
-        pitem->setQos(dlg.getQos());
-        pitem->setRetain(dlg.getRetain());
-        pitem->setFormat(dlg.getFormat());
-        pitem->setTopic(dlg.getTopic());
-        ui->listPublish->sortItems();
-    }
+  if (QDialog::Accepted == dlg.exec()) {
+    pitem->setQos(dlg.getQos());
+    pitem->setRetain(dlg.getRetain());
+    pitem->setFormat(dlg.getFormat());
+    pitem->setTopic(dlg.getTopic());
+    ui->listPublish->sortItems();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -983,23 +990,23 @@ CDlgConnSettingsMqtt::onEditPublish(void)
 void
 CDlgConnSettingsMqtt::onClonePublish(void)
 {
-    // Get selected row
-    int row = ui->listPublish->currentRow();
-    if (-1 == row) {
-        return;
-    }
+  // Get selected row
+  int row = ui->listPublish->currentRow();
+  if (-1 == row) {
+    return;
+  }
 
-    PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
-    if (nullptr == pitem) {
-        return;
-    }
+  PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
+  if (nullptr == pitem) {
+    return;
+  }
 
-    ui->listPublish->addItem(new PublishItem(pitem->getTopic(),
-                                             pitem->getFormat(),
-                                             pitem->getQos(),
-                                             pitem->getRetain()));
+  ui->listPublish->addItem(new PublishItem(pitem->getTopic(),
+                                           pitem->getFormat(),
+                                           pitem->getQos(),
+                                           pitem->getRetain()));
 
-    ui->listPublish->sortItems();
+  ui->listPublish->sortItems();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1009,25 +1016,25 @@ CDlgConnSettingsMqtt::onClonePublish(void)
 void
 CDlgConnSettingsMqtt::onDeletePublish(void)
 {
-    // Get selected row
-    int row = ui->listPublish->currentRow();
-    if (-1 == row)
-        return;
+  // Get selected row
+  int row = ui->listPublish->currentRow();
+  if (-1 == row)
+    return;
 
-    PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
-    if (nullptr == pitem)
-        return;
+  PublishItem* pitem = (PublishItem*)ui->listPublish->item(row);
+  if (nullptr == pitem)
+    return;
 
-    if (QMessageBox::Yes ==
-        QMessageBox::question(
-          this,
-          tr(APPNAME),
-          tr("Are you sure the publish topic should be deleted?"),
-          QMessageBox::Yes | QMessageBox::No)) {
+  if (QMessageBox::Yes ==
+      QMessageBox::question(
+        this,
+        tr(APPNAME),
+        tr("Are you sure the publish topic should be deleted?"),
+        QMessageBox::Yes | QMessageBox::No)) {
 
-        ui->listPublish->takeItem(row);
-        delete pitem;
-    }
+    ui->listPublish->takeItem(row);
+    delete pitem;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1037,22 +1044,22 @@ CDlgConnSettingsMqtt::onDeletePublish(void)
 void
 CDlgConnSettingsMqtt::onSubscribeContextMenu(const QPoint& pos)
 {
-    QMenu* menu = new QMenu(this);
+  QMenu* menu = new QMenu(this);
 
-    menu->addAction(QString("New subscription"),
-                    this,
-                    SLOT(onAddSubscription()));
-    menu->addAction(QString("Edit subscription"),
-                    this,
-                    SLOT(onEditSubscription()));
-    menu->addAction(QString("Clone subscription"),
-                    this,
-                    SLOT(onCloneSubscription()));
-    menu->addAction(QString("delete subscription"),
-                    this,
-                    SLOT(onDeleteSubscription()));
+  menu->addAction(QString("New subscription"),
+                  this,
+                  SLOT(onAddSubscription()));
+  menu->addAction(QString("Edit subscription"),
+                  this,
+                  SLOT(onEditSubscription()));
+  menu->addAction(QString("Clone subscription"),
+                  this,
+                  SLOT(onCloneSubscription()));
+  menu->addAction(QString("delete subscription"),
+                  this,
+                  SLOT(onDeleteSubscription()));
 
-    menu->popup(ui->listSubscribe->viewport()->mapToGlobal(pos));
+  menu->popup(ui->listSubscribe->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1062,14 +1069,14 @@ CDlgConnSettingsMqtt::onSubscribeContextMenu(const QPoint& pos)
 void
 CDlgConnSettingsMqtt::onPublishContextMenu(const QPoint& pos)
 {
-    QMenu* menu = new QMenu(this);
+  QMenu* menu = new QMenu(this);
 
-    menu->addAction(QString("New publishing"), this, SLOT(onAddPublish()));
-    menu->addAction(QString("Edit publishing"), this, SLOT(onEditPublish()));
-    menu->addAction(QString("Clone publishing"), this, SLOT(onClonePublish()));
-    menu->addAction(QString("delete publishing"),
-                    this,
-                    SLOT(onDeletePublish()));
+  menu->addAction(QString("New publishing"), this, SLOT(onAddPublish()));
+  menu->addAction(QString("Edit publishing"), this, SLOT(onEditPublish()));
+  menu->addAction(QString("Clone publishing"), this, SLOT(onClonePublish()));
+  menu->addAction(QString("delete publishing"),
+                  this,
+                  SLOT(onDeletePublish()));
 
-    menu->popup(ui->listPublish->viewport()->mapToGlobal(pos));
+  menu->popup(ui->listPublish->viewport()->mapToGlobal(pos));
 }

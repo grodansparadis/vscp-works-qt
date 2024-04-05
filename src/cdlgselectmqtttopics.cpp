@@ -54,6 +54,7 @@ CDlgSelectMqttTopics::CDlgSelectMqttTopics(QWidget* parent)
   , ui(new Ui::CDlgSelectMqttTopics)
 {
   ui->setupUi(this);
+  this->setFixedSize(this->size().width(), this->size().height());
 
   connect(
     this,
@@ -69,6 +70,8 @@ CDlgSelectMqttTopics::CDlgSelectMqttTopics(QWidget* parent)
 
   m_type        = CDlgSelectMqttTopics::SUBSCRIBE; // Subscription topics is default
   m_pvscpClient = nullptr;                         // No client yet
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

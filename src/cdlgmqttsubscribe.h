@@ -57,6 +57,10 @@ public:
     void setFormat(enumMqttMsgFormat format);
     enumMqttMsgFormat getFormat(void);
 
+    /// Setters/getters for qos
+    void setQos(int qos);
+    int getQos(void);
+
 private:
 
     Ui::CDlgMqttSubscribe *ui;
