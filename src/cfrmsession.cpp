@@ -1154,7 +1154,7 @@ CFrmSession::showTxContextMenu(const QPoint& pos)
 bool
 CFrmSession::addTxRow(bool bEnable,
                       const QString& name,
-                      uint8_t count,
+                      uint16_t count,
                       uint32_t period,
                       const QString& event)
 {
@@ -1401,6 +1401,9 @@ CFrmSession::sendTxEvent(void)
     return;
   }
 
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+
   QList<QModelIndex>::iterator it;
   for (it = selection.begin(); it != selection.end(); it++) {
 
@@ -1409,6 +1412,7 @@ CFrmSession::sendTxEvent(void)
     pev->timestamp           = vscp_makeTimeStamp(); // Set timestamp
     vscp_setEventToNow(pev);                         // Set time information to "now"
 
+    setUpdatesEnabled(false);
     for (int i = 0; i < itemEvent->m_tx.getCount(); i++) {
       // Send Event
       if (VSCP_ERROR_SUCCESS != m_vscpClient->send(*pev)) {
@@ -1422,7 +1426,11 @@ CFrmSession::sendTxEvent(void)
       }
       receiveTxRow(pev);
     }
+    setUpdatesEnabled(true);
   }
+
+  QApplication::restoreOverrideCursor();
+  QApplication::processEvents();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1673,7 +1681,7 @@ CFrmSession::cloneTxEvent(void)
     bool bEnable = itemSourceEvent->m_tx.getEnable();
     QString name = itemSourceEvent->m_tx.getName();
     name += tr("_copy");
-    uint8_t count   = itemSourceEvent->m_tx.getCount();
+    uint16_t count   = itemSourceEvent->m_tx.getCount();
     uint32_t period = itemSourceEvent->m_tx.getPeriod();
 
     // Add new row
@@ -1805,9 +1813,11 @@ CFrmSession::loadTxEvents(const QString& path)
                                             tr("TX files (*.xml *.*)"));
   }
 
+  spdlog::debug("Loading tx events from {}", fileName.toStdString());
+
   QFile file(fileName);
   if (!file.open(QFile::ReadOnly | QFile::Text)) {
-    qDebug() << "Cannot read file" << file.errorString();
+    spdlog::error("Cannot read file - {}", file.errorString().toStdString());
     return;
   }
 
@@ -1820,7 +1830,7 @@ CFrmSession::loadTxEvents(const QString& path)
 
         bool bEnable    = false;
         QString name    = tr("no name");
-        uint8_t count   = 1;
+        uint16_t count   = 1;
         uint32_t period = 0;
         QString event;
 
@@ -1859,11 +1869,11 @@ CFrmSession::loadTxEvents(const QString& path)
           }
         }
 
-        qDebug() << bEnable;
-        qDebug() << name;
-        qDebug() << count;
-        qDebug() << period;
-        qDebug() << event;
+        // qDebug() << bEnable;
+        // qDebug() << name;
+        // qDebug() << count;
+        // qDebug() << period;
+        // qDebug() << event;
         addTxRow(bEnable, name, count, period, event);
 
         reader.skipCurrentElement();
@@ -1917,6 +1927,8 @@ CFrmSession::saveTxEvents(const QString& path)
                                             initialPath,
                                             tr("TX files (*.xml *.*)"));
   }
+
+  spdlog::debug("Saving tx events to {}", fileName.toStdString());
 
   QFile file(fileName);
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {

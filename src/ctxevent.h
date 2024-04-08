@@ -58,8 +58,8 @@ class CTxEvent : public QObject
     QString getName(void) { QString str = m_name; return str; };
 
     // Count setters/getters
-    void setCount(uint8_t count) { m_count = count; }
-    uint8_t getCount(void) { return m_count; };
+    void setCount(uint16_t count) { m_count = count; }
+    uint16_t getCount(void) { return m_count; };
 
     // Period setters/getters
     void setPeriod(uint32_t period) { m_period = period; }
@@ -78,8 +78,8 @@ class CTxEvent : public QObject
     /// Event name
     QString m_name;
 
-    /// Count to send on each activation 1-255
-    uint8_t m_count;
+    /// Count to send when tx is triggered
+    uint16_t m_count;
 
     /// Period
     uint32_t m_period;

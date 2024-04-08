@@ -97,8 +97,8 @@ public:
     /*!
         Setters/getters for count
     */
-    uint8_t getCount(void);
-    void setCount(uint8_t count);
+    uint16_t getCount(void);
+    void setCount(uint16_t count);
 
     /*!
         Setters/getters for VSCP class/type

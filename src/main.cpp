@@ -69,87 +69,16 @@ main(int argc, char* argv[])
 
   try {
 
-    // Init pool
-    // spdlog::init_thread_pool(8192, 1);
-
-    // Flush log every five seconds
-    // spdlog::flush_every(std::chrono::seconds(1));
-
-    // Console log
-    // auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    // if (app.m_bEnableConsoleLog) {
-    //   console_sink->set_level(app.m_consoleLogLevel);
-    //   console_sink->set_pattern(app.m_consoleLogPattern);
-    // }
-    // else {
-    //   // If disabled set to off
-    //   console_sink->set_level(spdlog::level::off);
-    // }
-
-    // File log
-    // auto rotating_file_sink =
-    //   std::make_shared<spdlog::sinks::rotating_file_sink_mt>(app.m_fileLogPath,
-    //                                                          app.m_maxFileLogSize,
-    //                                                          app.m_maxFileLogFiles);
-
-    // if (app.m_bEnableFileLog) {
-    //   rotating_file_sink->set_level(app.m_fileLogLevel);
-    //   rotating_file_sink->set_pattern(app.m_fileLogPattern);
-    // }
-    // else {
-    //   // If disabled set to off
-    //   rotating_file_sink->set_level(spdlog::level::off);
-    // }
-
-    /*
-    spdlog::init_thread_pool(1024 * 8, 1);
-    std::vector<spdlog::sink_ptr> sinks;
-    sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-    sinks.push_back(std::make_shared<spdlog::sinks::rotating_file_sink_mt>(app.m_fileLogPath,
-                                                                           app.m_maxFileLogSize,
-                                                                           app.m_maxFileLogFiles));
-    auto logger = std::make_shared<spdlog::async_logger>("log",
-                                                         sinks.begin(),
-                                                         sinks.end(),
-                                                         spdlog::thread_pool(),
-                                                         spdlog::async_overflow_policy::overrun_oldest);
-    // The separate sub loggers will handle trace levels
-    spdlog::register_logger(logger);
-    spdlog::set_default_logger(logger);
-    //spdlog::initialize_logger(logger);
-    */
-
-    // logger->set_level(app.m_fileLogLevel);
-    // logger->set_pattern(app.m_fileLogPattern);
-
-    // console_sink->set_level(app.m_consoleLogLevel);
-    // console_sink->set_pattern("%v" /*app.m_consoleLogPattern*/);
-
-    // logger->sinks()[0]->set_level(app.m_consoleLogLevel);
-    // logger->sinks()[0]->set_pattern(app.m_consoleLogPattern);
-
-    // logger->sinks()[1]->set_level(app.m_fileLogLevel);
-    // logger->sinks()[1]->set_pattern(app.m_fileLogPattern);
-
-    // logger->sinks()[0]->set_level(spdlog::level::trace);
-    // logger->sinks()[0]->set_pattern("test1 %v");
-
-    // logger->sinks()[1]->set_level(spdlog::level::trace);
-    // logger->sinks()[1]->set_pattern("test2 %v");
-
-    //int size      =  app    10 * 1024 * 1024; // Max size of log file
-    //int backcount = 10;                // Max # log files
-
     // create console_sink
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(spdlog::level::debug);
 
     // create rotating file sink
-    auto file_sink = 
-      std::make_shared<spdlog::sinks::rotating_file_sink_mt>("~/.local/share/VSCP/vscpworks+/logs/log.txt", 
-                                                                  app.m_maxFileLogSize, 
-                                                                  app.m_maxFileLogFiles, 
-                                                                  true);
+    auto file_sink =
+      std::make_shared<spdlog::sinks::rotating_file_sink_mt>(app.m_fileLogPath,
+                                                             app.m_maxFileLogSize,
+                                                             app.m_maxFileLogFiles,
+                                                             true);
     file_sink->set_level(spdlog::level::debug);
 
     // sink's bucket
@@ -157,7 +86,7 @@ main(int argc, char* argv[])
 
     // create async logger, and use global threadpool
     spdlog::init_thread_pool(1024 * 8, 1);
-    auto logger = std::make_shared<spdlog::async_logger>("aslogger", sinks, spdlog::thread_pool());
+    auto logger = std::make_shared<spdlog::async_logger>("xlogger", sinks, spdlog::thread_pool());
 
     // set default logger
     spdlog::set_default_logger(logger);

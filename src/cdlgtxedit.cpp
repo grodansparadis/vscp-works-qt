@@ -244,10 +244,10 @@ CDlgTxEdit::setName(const QString& str)
 // getCount
 //
 
-uint8_t
+uint16_t
 CDlgTxEdit::getCount(void)
 {
-    return (uint8_t)ui->spinCount->value(); 
+    return (uint16_t)ui->spinCount->value(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,7 +255,7 @@ CDlgTxEdit::getCount(void)
 //
 
 void 
-CDlgTxEdit::setCount(uint8_t cnt)
+CDlgTxEdit::setCount(uint16_t cnt)
 {
     ui->spinCount->setValue(cnt);
 }

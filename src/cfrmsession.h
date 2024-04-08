@@ -258,7 +258,7 @@ public:
   */
   bool addTxRow(bool bEnable,
                 const QString& name,
-                uint8_t count,
+                uint16_t count,
                 uint32_t period,
                 const QString& event);
 

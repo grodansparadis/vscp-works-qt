@@ -57,6 +57,7 @@ class QSpinBox;
 class QMenu;
 class QMenuBar;
 class QPushButton;
+class QCheckBox;
 class QTextEdit;
 class QTextBrowser;
 class QToolBar;
@@ -337,6 +338,12 @@ class CFrmNodeConfig : public QMainWindow
       Let user select a GUID to use 
     */
     void selectGuid(void);  // std::string strguid = "-"
+
+    /*!
+      ui checkbox for full Level II has been clicked. Assign
+      value to 
+    */
+    void checkFullLevel2(void);
 
     /*!
       Disable/enable MDF colors
@@ -808,6 +815,9 @@ class CFrmNodeConfig : public QMainWindow
 
  private:
 
+    /// True if full Level II handling 
+    bool m_bFullLevel2;
+
     /// MDF definitions
     CMDF m_mdf;
 
@@ -899,6 +909,9 @@ class CFrmNodeConfig : public QMainWindow
 
     /// Button to open GUID selections dialog
     QPushButton *m_btnSetGUID;
+
+    // Button to mark handling to be full Level II
+    QCheckBox *m_btnFullLevel2;
 
     /// Spin box for configuration nodeid
     QSpinBox *m_nodeidConfig;

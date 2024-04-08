@@ -220,7 +220,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -234,9 +233,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
           tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
-      // We donät use a callback
-      //m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       // m_connObject["selected-interface"] = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
       connectToRemoteHost(true);
       break;
@@ -252,8 +248,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
                                 "log for more details."));
         return;
       }
-      // m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 #endif
@@ -262,7 +256,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -270,15 +263,12 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::MQTT:
       m_vscpClient = new vscpClientMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -286,7 +276,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -294,7 +283,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -302,7 +290,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRest();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -310,7 +297,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRs232();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -318,7 +304,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRs485();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -326,7 +311,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
 
@@ -334,7 +318,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      // m_connectActToolBar->setChecked(true);
       connectToRemoteHost(true);
       break;
   }
@@ -350,9 +333,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
   // Scan has been selected in the menu
   connect(ui->actionScan, SIGNAL(triggered()), this, SLOT(doScan()));
-
-  // Scan button has been clicked
-  // connect(ui->btnScan, SIGNAL(pressed()), this, SLOT(doScan()));
 
   // Load MDF has been selected in the menu
   connect(ui->actionLoadMdf, SIGNAL(triggered()), this, SLOT(loadSelectedMdf()));

@@ -199,6 +199,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   pworks->newChildWindow(this);
 
+  m_bFullLevel2        = false;     // Deafult is level I
   m_nUpdates           = 0;         // No update operations yet
   m_StandardRegTopPage = nullptr;   // No standard registers
   ui->treeWidgetRegisters->clear(); // Clear the tree
@@ -346,7 +347,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
    *  If bFullLevel2 is true only GUID textbox is shown.
    *  If false the interface combo plus nickname spinnbox is shown.
    */
-  bool bFullLevel2 = m_connObject["bfull-l2"].toBool();
+  m_bFullLevel2 = m_connObject["bfull-l2"].toBool();
 
   switch (m_vscpConnType) {
 
@@ -359,7 +360,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
     case CVscpClient::connType::TCPIP:
 
-      if (bFullLevel2) {
+      if (m_bFullLevel2) {
         // GUID
         m_guidConfig = new QLineEdit();
         ui->mainToolBar->addWidget(new QLabel(" GUID: "));
@@ -466,10 +467,66 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       break;
 
     case CVscpClient::connType::MQTT:
+      // if (true /*bFullLevel2*/) {
+
+      m_btnFullLevel2 = new QCheckBox(tr(" Level II"));
+      ui->mainToolBar->addWidget(m_btnFullLevel2);
+      connect(m_btnFullLevel2, SIGNAL(clicked()), this, SLOT(checkFullLevel2()));
+      ui->mainToolBar->addSeparator();
+
+      m_nodeidConfig = new QSpinBox();
+      m_nodeidConfig->setRange(0, 0xff);
+      m_nodeidConfig->setValue(1);
+      ui->mainToolBar->addWidget(new QLabel(" node id:"));
+      ui->mainToolBar->addWidget(m_nodeidConfig);
+      ui->mainToolBar->addSeparator();
+
+      // GUID
+      m_guidConfig = new QLineEdit();
+      ui->mainToolBar->addWidget(new QLabel(" GUID: "));
+      ui->mainToolBar->addWidget(m_guidConfig);
+      m_guidConfig->setText("00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:01");
+
+      m_btnSetGUID = new QPushButton(tr(" Set GUID"));
+      ui->mainToolBar->addWidget(m_btnSetGUID);
+      connect(m_btnSetGUID, SIGNAL(clicked()), this, SLOT(selectGuid()));
+
+      if (m_bFullLevel2) {
+        m_nodeidConfig->setEnabled(false);
+      }
+      else {
+        m_guidConfig->setEnabled(false);
+        m_btnSetGUID->setEnabled(false);
+      }
+
+      // }
+      // else {
+      //   // Interface
+      //   m_comboInterface = new QComboBox();
+      //   ui->mainToolBar->addWidget(new QLabel(" If: "));
+      //   ui->mainToolBar->addWidget(m_comboInterface);
+      //   m_comboInterface->addItem(tr("---"));
+
+      //   std::string _str;
+      //   size_t sz = json_if_array.size();
+      //   foreach (const QJsonValue& value, json_if_array) {
+      //     m_comboInterface->addItem(value.toObject().value("if-item").toString());
+      //   }
+
+      //   m_comboInterface->setCurrentText(interface.c_str());
+      //   // std::cout << "interface = " << interface << std::endl;
+
+      //   // Nickname
+      //   m_nodeidConfig = new QSpinBox();
+      //   m_nodeidConfig->setRange(1, 0xfd);
+      //   ui->mainToolBar->addWidget(new QLabel(" node id:"));
+      //   ui->mainToolBar->addWidget(m_nodeidConfig);
+      //   m_nodeidConfig->setValue(1);
+      // }
       // GUID
       m_vscpClient = new vscpClientMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      //m_vscpClient->setCallback(eventReceived, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -1204,6 +1261,27 @@ CFrmNodeConfig::selectGuid(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// checkFullLevel2
+//
+
+void
+CFrmNodeConfig::checkFullLevel2(void)
+{
+  m_bFullLevel2 = m_btnFullLevel2->isChecked();
+
+  if (m_bFullLevel2) {
+    m_nodeidConfig->setEnabled(false);
+    m_guidConfig->setEnabled(true);
+    m_btnSetGUID->setEnabled(true);
+  }
+  else {
+    m_nodeidConfig->setEnabled(true);
+    m_guidConfig->setEnabled(false);
+    m_btnSetGUID->setEnabled(false);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // disableColors
 //
 
@@ -1317,8 +1395,11 @@ CFrmNodeConfig::onNodeIdChange(int nodeid)
 void
 CFrmNodeConfig::update(void)
 {
-  if (m_connObject["bfull-l2"].toBool()) {
-    ;
+  if (m_bFullLevel2) {
+    QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Fyll level II configuration is not implemented yet."),
+                                 QMessageBox::Ok);
   }
   else {
 
@@ -5922,10 +6003,10 @@ CFrmNodeConfig::onSearchRemoteVariable(void)
       flags |= Qt::MatchCaseSensitive;
     }
 
-    m_registerSearchPos = 0;
-    m_searchListRemoteVars    = ui->treeWidgetRemoteVariables->findItems(dlg.getSearchText().c_str(),
-                                                                flags,
-                                                                static_cast<int>(REMOTEVAR_COL_NAME));
+    m_registerSearchPos    = 0;
+    m_searchListRemoteVars = ui->treeWidgetRemoteVariables->findItems(dlg.getSearchText().c_str(),
+                                                                      flags,
+                                                                      static_cast<int>(REMOTEVAR_COL_NAME));
     std::cout << m_searchListRemoteVars.size() << std::endl;
 
     foreach (QTreeWidgetItem* item, m_searchListRemoteVars) {
