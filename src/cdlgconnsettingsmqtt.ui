@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>633</width>
-    <height>542</height>
+    <width>632</width>
+    <height>564</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -27,7 +27,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>510</y>
+     <y>530</y>
      <width>611</width>
      <height>21</height>
     </rect>
@@ -48,7 +48,7 @@
      <x>20</x>
      <y>10</y>
      <width>501</width>
-     <height>454</height>
+     <height>491</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -222,7 +222,7 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="9" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Subscribe :</string>
@@ -235,7 +235,7 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
+    <item row="9" column="1">
      <widget class="QListWidget" name="listSubscribe">
       <property name="contextMenuPolicy">
        <enum>Qt::CustomContextMenu</enum>
@@ -248,7 +248,7 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="0">
+    <item row="10" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Publish :</string>
@@ -261,7 +261,7 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
+    <item row="10" column="1">
      <widget class="QListWidget" name="listPublish">
       <property name="contextMenuPolicy">
        <enum>Qt::CustomContextMenu</enum>
@@ -271,6 +271,16 @@
       </property>
       <property name="statusTip">
        <string>Right click to add/delete  publishing topics</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="chkFullLevel2">
+      <property name="toolTip">
+       <string>Handle as full Level II interface</string>
+      </property>
+      <property name="text">
+       <string>Full Level II</string>
       </property>
      </widget>
     </item>
@@ -312,7 +322,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>360</y>
+     <y>400</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -328,7 +338,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>260</y>
+     <y>290</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -344,7 +354,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>480</y>
+     <y>510</y>
      <width>611</width>
      <height>20</height>
     </rect>

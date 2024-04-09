@@ -77,9 +77,12 @@
     <file alias="comment.png">../images/comment-square-128.png</file>
     <file>../images/banner.png</file>
     <file>../images/background.png</file>
-    <file>../images/watermark.png</file>
+    <file alias="bootloader_watermark">../images/bootloader_watermark.png</file>
     <file>../images/watermark-canal.png</file>
+    <file alias="canal_watermark">../images/canal_watermark.png</file>
     <file alias="vscpworks.png">../images/vscpworks_128x128.png</file>
+    <file alias="electronics_grunge">../images/electronics/electronic_card_grunge_small.png</file>
+    <file alias="vscp-logo-48x48">../images/logo-48x48.png</file>
     <file>../images/png/128x128/page.png</file>
     <file>../images/png/128x128/page_accept.png</file>
     <file>../images/png/128x128/page_add.png</file>

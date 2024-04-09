@@ -52,6 +52,7 @@
 #include "filedownloader.h"
 #include "vscpworks.h"
 
+#include "bootloaderwizard.h"
 #include "cdlgconnsettingscanal.h"
 #include "cdlgconnsettingslocal.h"
 #include "cdlgconnsettingsmqtt.h"
@@ -467,7 +468,7 @@ MainWindow::checkRemoteEventDbVersion()
 
   QString ver(pworks->m_pVersionCtrl->downloadedData());
   spdlog::debug("Remote event db version is {}", ver.toStdString());
-  //qDebug() << "__Data: " << ver;
+  // qDebug() << "__Data: " << ver;
   if (-1 != ver.indexOf("<title>404 Not Found</title>")) {
     QMessageBox::information(this,
                              tr(APPNAME),
@@ -3113,6 +3114,42 @@ MainWindow::newNodeScan()
 void
 MainWindow::newNodeBootload()
 {
+  int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QList<QTreeWidgetItem*> itemList;
+  itemList = m_connTreeTable->selectedItems();
+
+  // If no item is selected then complain
+  if (!itemList.size()) {
+    int ret = QMessageBox::warning(this,
+                                   tr("VSVP Works+"),
+                                   tr("No connection selected.\n"
+                                      "Please select a connection first."),
+                                   QMessageBox::Ok,
+                                   QMessageBox::Information);
+    return;
+  }
+
+  foreach (QTreeWidgetItem* item, itemList) {
+
+    // Not interested in top level items
+    if (NULL != item->parent()) {
+
+      // Get item
+      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
+
+      // Get the connection object
+      QJsonObject* pconn = itemConn->getJson();
+
+      CBootLoadWizard wiz(this, pconn);
+      if (VSCP_ERROR_SUCCESS != (rv = wiz.initBootLoaderWizard())) {
+        spdlog::error("Aborting bootloader wizard (initBootLoaderWizard) rv={}", rv);
+        return;
+      }
+      wiz.exec();
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

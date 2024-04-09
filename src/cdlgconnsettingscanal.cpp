@@ -342,6 +342,7 @@ CDlgConnSettingsCanal::wizard()
 
   int rv;
   if (CANAL_ERROR_SUCCESS != (rv = m_vscpClient.m_canalif.init())) {
+    
     std::string str = vscp_str_format("The driver did not load properly. rv=%d", rv);
     QMessageBox::warning(this,
                          tr(APPNAME),

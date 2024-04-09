@@ -526,7 +526,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      //m_vscpClient->setCallback(eventReceived, this);
+      // m_vscpClient->setCallback(eventReceived, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -1397,9 +1397,9 @@ CFrmNodeConfig::update(void)
 {
   if (m_bFullLevel2) {
     QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Fyll level II configuration is not implemented yet."),
-                                 QMessageBox::Ok);
+                             tr(APPNAME),
+                             tr("Fyll level II configuration is not implemented yet."),
+                             QMessageBox::Ok);
   }
   else {
 

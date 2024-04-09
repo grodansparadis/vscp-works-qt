@@ -229,7 +229,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
         // Failed to initialize
         QMessageBox::warning(
           this,
-          tr("VSCP Works +"),
+          tr(APPNAME),
           tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
@@ -243,7 +243,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       if (!m_vscpClient->initFromJson(strJson.toStdString())) {
         // Failed to initialize
         QMessageBox::warning(this,
-                             tr("VSCP Works +"),
+                             tr(APPNAME),
                              tr("Failed to initialize SOCKETCAN driver. See "
                                 "log for more details."));
         return;

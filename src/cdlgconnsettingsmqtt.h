@@ -165,6 +165,12 @@ class CDlgConnSettingsMqtt : public QDialog {
     void setClientId(const QString& clientid);
 
     /*!
+        Setters/getters for Full level II
+    */
+    bool getFullL2(void);
+    void setFullL2(bool l2);
+    
+    /*!
         Setters/getters for user
     */
     QString getUser(void);

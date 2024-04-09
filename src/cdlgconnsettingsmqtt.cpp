@@ -63,7 +63,7 @@ SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt, int qo
 {
   m_topic  = topic;
   m_format = fmt;
-  m_qos = qos & 3;
+  m_qos    = qos & 3;
 
   m_bActive = true; // Active by default
 }
@@ -288,6 +288,26 @@ void
 CDlgConnSettingsMqtt::setClientId(const QString& clientid)
 {
   ui->editClientId->setText(clientid);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getFullL2
+//
+
+bool
+CDlgConnSettingsMqtt::getFullL2(void)
+{
+  return ui->chkFullLevel2->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setFullL2
+//
+
+void
+CDlgConnSettingsMqtt::setFullL2(bool l2)
+{
+  ui->chkFullLevel2->setChecked(l2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -592,6 +612,7 @@ CDlgConnSettingsMqtt::getJson(void)
   m_jsonConfig["keepalive"]          = (int)getKeepAlive();
   m_jsonConfig["cleansession"]       = isCleanSessionEnabled();
   m_jsonConfig["extended-security"]  = isExtendedSecurityEnabled();
+  m_jsonConfig["bfull-l2"]           = getFullL2();
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
@@ -643,6 +664,11 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
     setBroker(m_jsonConfig["host"].toString());
   if (!m_jsonConfig["clientid"].isNull())
     setClientId(m_jsonConfig["clientid"].toString());
+
+  if (!m_jsonConfig["bfull-l2"].isNull()) {
+    setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
+  }
+
   if (!m_jsonConfig["user"].isNull())
     setUser(m_jsonConfig["user"].toString());
   if (!m_jsonConfig["password"].isNull())
@@ -682,7 +708,7 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
       QJsonObject item = v.toObject();
       if (!item["topic"].isNull() && !item["format"].isNull()) {
         SubscribeItem* pitem =
-          new SubscribeItem(item["topic"].toString(), static_cast<enumMqttMsgFormat>(item["format"].toInt()),item["qos"].toInt());
+          new SubscribeItem(item["topic"].toString(), static_cast<enumMqttMsgFormat>(item["format"].toInt()), item["qos"].toInt());
         ui->listSubscribe->addItem(pitem);
       }
     }

@@ -631,6 +631,9 @@ add_executable(${PROJECT_NAME}
   src/cdlgselectmqtttopics.cpp
   src/cdlgselectmqtttopics.h
 
+  src/bootloaderwizard.h
+  src/bootloaderwizard.cpp
+
   ${VSCP_PATH}/src/vscp/common/version.h
   ${VSCP_PATH}/src/vscp/common/vscp.h
   ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h
