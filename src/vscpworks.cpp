@@ -323,7 +323,7 @@ vscpworks::loadSettings(void)
 
   // * * * Logging * * *
   m_bEnableFileLog = true;
-  int level = settings.value("fileLogLevel", 4).toInt(); // Default: 4 == "information";
+  int level        = settings.value("fileLogLevel", 4).toInt(); // Default: 4 == "information";
   switch (level) {
     case 0:
       m_fileLogLevel = spdlog::level::trace;
@@ -345,18 +345,18 @@ vscpworks::loadSettings(void)
       m_fileLogLevel = spdlog::level::critical;
       break;
     case 6:
-      m_fileLogLevel = spdlog::level::off;
+      m_fileLogLevel   = spdlog::level::off;
       m_bEnableFileLog = false;
       break;
   };
   m_fileLogPattern  = settings.value("fileLogPattern", "%c - [%^%l%$] %v").toString().toStdString();
   m_fileLogPath     = settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
-  m_maxFileLogSize  = settings.value("fileLogMaxSize", 5*1024*1024).toInt();
+  m_maxFileLogSize  = settings.value("fileLogMaxSize", 5 * 1024 * 1024).toInt();
   m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
 
   // console log level
   m_bEnableConsoleLog = true;
-  level = settings.value("consoleLogLevel", 4).toInt(); // Default: 4 == "information";
+  level               = settings.value("consoleLogLevel", 4).toInt(); // Default: 4 == "information";
   switch (level) {
     case 0:
       m_consoleLogLevel = spdlog::level::trace;
@@ -378,12 +378,10 @@ vscpworks::loadSettings(void)
       m_consoleLogLevel = spdlog::level::critical;
       break;
     case 6:
-      m_consoleLogLevel = spdlog::level::off;
+      m_consoleLogLevel   = spdlog::level::off;
       m_bEnableConsoleLog = false;
       break;
   };
-
-  
 
   m_consoleLogPattern = settings.value("consoleLogPattern", "%c [%^%l%$] %v").toString().toStdString();
 
@@ -681,7 +679,7 @@ void
 vscpworks::log(int level, const QString& message)
 {
   // Log only messages
-  //if (level <= m_logLevel) {
+  // if (level <= m_logLevel) {
 
   //     QDateTime now = QDateTime::currentDateTime();
 
@@ -1173,3 +1171,88 @@ vscpworks::clearChildWindow(QMainWindow* pwnd)
     }
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// downloadMDF
+//
+
+int
+vscpworks::downloadMDF(CStandardRegisters& stdregs,
+                       CMDF& mdf,
+                       QString& path,
+                       std::function<void(int, const char*)> statusCallback)
+{
+  if (nullptr != statusCallback) {
+    statusCallback(0, "Starting MDF download");
+  }
+  spdlog::trace("Download MDF");
+
+  // Get GUID
+  cguid guid;
+  stdregs.getGUID(guid);
+  spdlog::trace("Standard register getGUID = {}", guid.toString());
+
+  std::string url = stdregs.getMDF();
+  spdlog::trace("URL for MDF = {}", url);
+
+  // create a temporary file name for remote MDF
+  std::string tempMdfFileName;
+  for (int i = 0; i < url.length(); i++) {
+    if ((url[i] == '/') || (url[i] == '\\')) {
+      tempMdfFileName += "_";
+    }
+    else {
+      tempMdfFileName += url[i];
+    }
+  }
+
+  // mkstemp()
+  std::string tempPath =
+    QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+      .toStdString();
+  tempPath += "/";
+  tempPath += tempMdfFileName;
+
+  path = tempPath.c_str();
+
+  spdlog::debug("Temporary path: {}", tempPath);
+
+  if (nullptr != statusCallback) {
+    statusCallback(10, "Downloading MDF file...");
+  }
+
+  CURLcode curl_rv;
+  curl_rv = mdf.downLoadMDF(url, tempPath);
+  if (CURLE_OK != curl_rv) {
+    if (nullptr != statusCallback) {
+      statusCallback(10, "Failed to download MDF file for device.");
+    }
+    spdlog::error("Failed to download MDF {0} curl rv={1}", url, (int)curl_rv);
+    QApplication::restoreOverrideCursor();
+    return VSCP_ERROR_COMMUNICATION;
+  }
+
+  if (nullptr != statusCallback) {
+    statusCallback(60, "MDF downloaded.");
+  }
+  spdlog::debug("MDF Downloaded to {}", tempPath);
+
+  // * * * Parse  MDF * * *
+
+  spdlog::debug("Parsing MDF");
+  int rv = mdf.parseMDF(tempPath);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    if (nullptr != statusCallback) {
+      statusCallback(80, "Faild to parse MDF");
+    }
+    spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
+    return VSCP_ERROR_PARSING;
+  }
+
+  spdlog::debug("Parsing MDF OK");
+  if (nullptr != statusCallback) {
+    statusCallback(100, "MDF downloaded and parsed");
+  }
+  return VSCP_ERROR_SUCCESS;
+}
+

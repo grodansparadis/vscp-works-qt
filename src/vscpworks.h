@@ -34,6 +34,8 @@
 #include <version.h>
 #include <vscp_client_base.h>
 #include <vscpunit.h>
+#include <mdf.h>
+#include <register.h>
 
 #include "cfrmsession.h"
 
@@ -340,6 +342,20 @@ public:
     it destroys itself.
   */
   void clearChildWindow(QMainWindow* pwnd);
+
+  /*!
+    Download MDF
+    @return VSCP_ERROR_SUCCESS if all is OK and path to downloaded file is
+      is in pathMDF
+  */
+  int downloadMDF(CStandardRegisters &stdregs, 
+                    CMDF &mdf, 
+                    QString& path,
+                    std::function<void(int, const char *)> statusCallback = nullptr);
+
+
+  // ========================================================================
+  // ========================================================================
 
   // ------------------------------------------------------------------------
   // Global Configuration information below

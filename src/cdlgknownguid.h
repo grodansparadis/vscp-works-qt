@@ -31,125 +31,141 @@
 
 #include <guid.h>
 
-#include <QDialog>  
+#include <QDialog>
 #include <QTableWidgetItem>
 
 namespace Ui {
 class CDlgKnownGuid;
 }
 
-
-class CDlgKnownGuid : public QDialog
-{
-    Q_OBJECT
+class CDlgKnownGuid : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgKnownGuid(QWidget *parent = nullptr);
-    ~CDlgKnownGuid();
+  explicit CDlgKnownGuid(QWidget* parent = nullptr);
+  ~CDlgKnownGuid();
 
-    /*!
-        set Initial focus
-    */
-    void setInitialFocus(void);    
+  /*!
+      set Initial focus
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Insert one GUID element into table
-        @param guid The GUID for the row
-        @param name The symbolic name for the GUID
-    */
-    void insertGuidItem(QString guid, QString name);
+  /*!
+    Fill GUID's from database
+  */
+  void fillGuidFromDb(void);
 
-    /*!
-        An item in the list has been clicked
-        @param item The clicked item
-    */
-    void listItemClicked(QTableWidgetItem *item);
+  /*!
+      Insert one GUID element into table
+      @param guid The GUID for the row
+      @param name The symbolic name for the GUID
+  */
+  void insertGuidItem(QString guid, QString name);
 
-    /*!
-        An item in the list has been double clicked
-        @param item The double clicked item
-    */
-    void listItemDoubleClicked(QTableWidgetItem *item);
+  /*!
+      An item in the list has been clicked
+      @param item The clicked item
+  */
+  void listItemClicked(QTableWidgetItem* item);
 
-    /*!
-        Show context menu
-    */
-    void showContextMenu(const QPoint& pos);
+  /*!
+      An item in the list has been double clicked
+      @param item The double clicked item
+  */
+  void listItemDoubleClicked(QTableWidgetItem* item);
 
-    /*!
-        Select row that holds the supplied GUID
-        @param guid GUID to search for among known GUID's
-        @return true if supplied guid found and row is selected
-                otherwise false.
-    */
-    bool selectByGuid(const QString& guid);
+  /*!
+      Show context menu
+  */
+  void showContextMenu(const QPoint& pos);
 
-    /*!
-        Set GUID that will be used next time add is calles/pressed
-        @param guid GUID to show in new known node window
-    */
-    void setAddGuid(const QString& guid) 
-                { m_addGuid = guid; };
+  /*!
+      Select row that holds the supplied GUID
+      @param guid GUID to search for among known GUID's
+      @return true if supplied guid found and row is selected
+              otherwise false.
+  */
+  bool selectByGuid(const QString& guid);
 
-    /*! 
-        Get the GUID that is selected
-        @return GUID on string form
-    */
-    bool getSelectedGuid(cguid& guid);
+  /*!
+      Set GUID that will be used next time add is calles/pressed
+      @param guid GUID to show in new known node window
+  */
+  void setAddGuid(const QString& guid)
+  {
+    m_addGuid = guid;
+  };
 
-    /*!
-        Enable disable alternative double click
-        behaviour
-    */
-    void enableAccept(bool b) { m_bEnableDblClickAccept = b; };    
+  /*!
+      Get the GUID that is selected
+      @return GUID on string form
+  */
+  bool getSelectedGuid(cguid& guid);
+
+  /*!
+      Enable disable alternative double click
+      behaviour
+    @param b Set to true to let double click select and accept GUID
+  */
+  void enableAccept(bool b=true) { m_bEnableDblClickAccept = b; };
+
+  /*!
+    Show only interfaces if set to true
+    @param b Set to true to show only interfaces, false to show everything.
+  */
+  void setInterfaceShow(bool b=true);
 
 public slots:
-    
-    /// Dialog return
-    void done(int r);   
 
-    /// Handler for search button
-    void btnSearch(void); 
+  /// Dialog return
+  void done(int r);
 
-    /// Handler for add button
-    void btnAdd(void); 
+  /// Handler for search button
+  void btnSearch(void);
 
-    /// Handler for edit button
-    void btnEdit(void); 
+  /// Handler for add button
+  void btnAdd(void);
 
-    /// Handler for clone button
-    void btnClone(void); 
+  /// Handler for edit button
+  void btnEdit(void);
 
-    /// Handler for delete button
-    void btnDelete(void); 
+  /// Handler for clone button
+  void btnClone(void);
 
-    /// Open sensor index dialog
-    void btnSensorIndex(void);
+  /// Handler for delete button
+  void btnDelete(void);
 
-    /// Handler for load button
-    void btnLoad(void); 
+  /// Open sensor index dialog
+  void btnSensorIndex(void);
 
-    /// Handler for save button
-    void btnSave(void); 
-    
+  /// Handler for load button
+  void btnLoad(void);
+
+  /// Handler for save button
+  void btnSave(void);
+
+  /// Toggle show only interfaces
+  void showOnlyInterfaces(void);
 
 private:
 
-    /*!
-        If true a double click of a row item accepts
-        the entry instead of going into edit.
-    */
-    bool m_bEnableDblClickAccept;
+  /*!
+    Set to true of only interfaces GUID's
+    should be shown
+  */
+  bool m_bShowOnlyInterfaces;
 
-    Ui::CDlgKnownGuid *ui;
+  /*!
+      If true a double click of a row item accepts
+      the entry instead of going into edit.
+  */
+  bool m_bEnableDblClickAccept;
 
-    /// GUID to use as default for add
-    QString m_addGuid;
+  Ui::CDlgKnownGuid* ui;
 
+  /// GUID to use as default for add
+  QString m_addGuid;
 };
-
 
 #endif // CDLGKNOWNGUID_H

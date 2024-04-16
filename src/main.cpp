@@ -71,7 +71,8 @@ main(int argc, char* argv[])
 
     // create console_sink
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_level(spdlog::level::debug);
+    console_sink->set_level(app.m_consoleLogLevel);
+    console_sink->set_pattern(app.m_consoleLogPattern);
 
     // create rotating file sink
     auto file_sink =
@@ -79,7 +80,8 @@ main(int argc, char* argv[])
                                                              app.m_maxFileLogSize,
                                                              app.m_maxFileLogFiles,
                                                              true);
-    file_sink->set_level(spdlog::level::debug);
+    file_sink->set_level(app.m_fileLogLevel);
+    file_sink->set_pattern(app.m_fileLogPattern);
 
     // sink's bucket
     spdlog::sinks_init_list sinks{ console_sink, file_sink };
@@ -92,13 +94,15 @@ main(int argc, char* argv[])
     spdlog::set_default_logger(logger);
     // spdlog::initialize_logger(logger);
 
-    logger->sinks()[0]->set_level(app.m_consoleLogLevel);
-    logger->sinks()[0]->set_pattern(app.m_consoleLogPattern);
+    //logger->sinks()[0]->set_level(app.m_consoleLogLevel);
+    //logger->sinks()[0]->set_pattern(app.m_consoleLogPattern);
 
-    logger->sinks()[1]->set_level(app.m_fileLogLevel);
-    logger->sinks()[1]->set_pattern(app.m_fileLogPattern);
+    //logger->sinks()[1]->set_level(app.m_fileLogLevel);
+    //logger->sinks()[1]->set_pattern(app.m_fileLogPattern);
 
-    spdlog::info("VSCP Works + logging");
+    spdlog::set_level(app.m_fileLogLevel);
+
+    spdlog::debug("VSCP Works + logging");
   }
   catch (...) {
     fprintf(stderr, "Unable to init logsystem. Logs Exiting.");
@@ -111,7 +115,7 @@ main(int argc, char* argv[])
   //                                spdlog
   //////////////////////////////////////////////////////////////////////////////
 
-  spdlog::debug("Starting VSCP Works +");
+  spdlog::info("Starting VSCP Works +");
 
   MainWindow mainWin;
   if (!parser.positionalArguments().isEmpty()) {

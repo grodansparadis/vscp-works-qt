@@ -284,6 +284,8 @@ qt5_wrap_ui(UI src/mainwindow.ui
   src/cdlgtxtsearch.ui
 
   src/cdlgselectmqtttopics.ui
+
+  src/cdlgbootfirmware.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -634,6 +636,10 @@ add_executable(${PROJECT_NAME}
   src/bootloaderwizard.h
   src/bootloaderwizard.cpp
 
+  src/cdlgbootfirmware.ui
+  src/cdlgbootfirmware.cpp
+  src/cdlgbootfirmware.h
+
   ${VSCP_PATH}/src/vscp/common/version.h
   ${VSCP_PATH}/src/vscp/common/vscp.h
   ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h
@@ -684,8 +690,10 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/vscp/common/vscp_client_rs232.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_bootloader.h
-  ${VSCP_PATH}/src/vscp/common/vscp_bootloader.cpp
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.h
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.cpp
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.h
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.cpp
   ${VSCP_PATH}/src/vscp/common/vscpunit.h
   ${VSCP_PATH}/src/vscp/common/vscpunit.cpp     
   ${VSCP_PATH}/src/common/sockettcp.h
@@ -699,7 +707,8 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/common/crc8.h
   ${VSCP_PATH}/src/common/crc8.c
   ${VSCP_PATH}/src/common/vscpmd5.h
-  ${VSCP_PATH}/src/common/vscpmd5.c    
+  ${VSCP_PATH}/src/common/vscpmd5.c
+
   ./third_party/mustache/mustache.hpp
   ./third_party/spdlog/include/
   ./third_party/fastpbkdf2/fastpbkdf2.h

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
-    <height>638</height>
+    <width>922</width>
+    <height>715</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,8 +29,8 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>600</y>
-     <width>721</width>
+     <y>680</y>
+     <width>901</width>
      <height>32</height>
     </rect>
    </property>
@@ -41,210 +41,221 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTableWidget" name="listGuid">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>50</y>
-     <width>721</width>
-     <height>271</height>
-    </rect>
-   </property>
-   <property name="alternatingRowColors">
-    <bool>true</bool>
-   </property>
-   <property name="sortingEnabled">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnAdd">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>60</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Add...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnEdit">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>90</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Edit...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnClone">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>120</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Clone</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnDelete">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>150</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Delete...</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="editSearch">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>10</y>
-     <width>301</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnSearch">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>10</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Search</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnLoad">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>180</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Load...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnSave">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>210</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save...</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="textDescription">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>350</y>
-     <width>721</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>330</y>
-     <width>91</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Description</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="comboSearchType">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>211</width>
-     <height>25</height>
+     <width>901</width>
+     <height>661</height>
     </rect>
    </property>
-   <item>
-    <property name="text">
-     <string>GUID equal to</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>GUID starts with</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>GUID contains</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name equal to</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name start swith</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Name contains</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QPushButton" name="btnSensorIndex">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>250</y>
-     <width>89</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Sensors...</string>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QCheckBox" name="checkShowInterfaces">
+      <property name="text">
+       <string>Show only interfaces</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QComboBox" name="comboSearchType">
+        <item>
+         <property name="text">
+          <string>GUID equal to</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>GUID starts with</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>GUID contains</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Name equal to</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Name start swith</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Name contains</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="editSearch"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnSearch">
+        <property name="text">
+         <string>Search</string>
+        </property>
+        <property name="icon">
+         <iconset resource="vscpworks.qrc">
+          <normaloff>:/images/svg/search.svg</normaloff>:/images/svg/search.svg</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QTableWidget" name="listGuid">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="btnAdd">
+          <property name="text">
+           <string>Add...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/add.png</normaloff>:/add.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnEdit">
+          <property name="text">
+           <string>Edit...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/pencil.svg</normaloff>:/pencil.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnClone">
+          <property name="text">
+           <string>Clone</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/clone.svg</normaloff>:/clone.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnDelete">
+          <property name="text">
+           <string>Delete...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/remove.png</normaloff>:/remove.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnLoad">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Load...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/folder_add.png</normaloff>:/folder_add.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnSave">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Save...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/folder_next.png</normaloff>:/folder_next.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnSensorIndex">
+          <property name="text">
+           <string>Sensors...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="vscpworks.qrc">
+            <normaloff>:/process.png</normaloff>:/process.png</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Description</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="textDescription">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="vscpworks.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>

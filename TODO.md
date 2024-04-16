@@ -1,5 +1,9 @@
 # VSCP Works + -- Things to do
 
+c++ pass class member as callback
+https://stackoverflow.com/questions/400257/how-can-i-pass-a-class-member-function-as-a-callback
+
+  - All dialogs should use layout for all items
 
 ## MQTT
   - Handle v5 properties
@@ -45,6 +49,8 @@
   - Change line and status info when GUID symbolic or sensor symbolic has been updated
   - MQTT: activate/deactivate subscription on the fly. (publish topics also maybe)
   - Better and more flexible sizing
+  - Message receive should be reprogrammed using std::bind and std::function 
+     https://stackoverflow.com/questions/400257/how-can-i-pass-a-class-member-function-as-a-callback
 
 ## Configuration window
  - search register / next 
@@ -52,13 +58,16 @@
   - Remove ctrl+0/1/2... from menu keep functionality.
 
 ## Scan window
-
+  - Go to firmware update directly from window
+  - Full Level II device scan.
 
 ## Bootloader window
 
 
 ## MDF editor window
-Encoding/decoding of strings to match JSON/XML.
+- No way to add file items
+- Initial path is wrong
+- Encoding/decoding of strings to match JSON/XML.
 
 
 ## GUID Known nodes Dialog

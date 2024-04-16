@@ -30,99 +30,77 @@
 #include <pch.h>
 #endif
 
+#include <guid.h>
 #include <vscp.h>
-#include <guid.h>
 #include <vscphelper.h>
-#include <guid.h>
 
 #include "vscpworks.h"
 
-#include "mainwindow.h"
 #include "cdlgknownguid.h"
-#include "ui_cdlgknownguid.h"
 #include "cdlgsensorindex.h"
+#include "mainwindow.h"
+#include "ui_cdlgknownguid.h"
 
 #include "cdlgeditguid.h"
 
-#include <QMessageBox>
 #include <QMenu>
-
+#include <QMessageBox>
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
 //
 
-CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
-        QDialog(parent),
-        ui(new Ui::CDlgKnownGuid)
+CDlgKnownGuid::CDlgKnownGuid(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgKnownGuid)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // display the dialog on the right of the current screen.
-    // QRect rect = geometry();           // get current geometry of dialog window
-    // QRect parentRect = parent->geometry();    // get current geometry of parent window
-    // rect.moveTo(mapToGlobal(QPoint(parentRect.x() + parentRect.width() - rect.width(), parentRect.y())));
-    // setGeometry(rect);
+  m_bShowOnlyInterfaces = false; // All GUID's are shown by default
 
+  // edit on row double click
+  m_bEnableDblClickAccept = false;
 
-    //QRect scr = /*QApplication::desktop()*/screenGeometry();
-    //move( scr.center() - rect().center() );
-    //QWidget::mapToGlobal()
+  ui->btnSave->setVisible(false);
+  ui->btnLoad->setVisible(false);
 
-    // edit on row double click
-    m_bEnableDblClickAccept = false;
+  connect(ui->listGuid, &QTableWidget::itemClicked, this, &CDlgKnownGuid::listItemClicked);
+  connect(ui->listGuid, &QTableWidget::itemDoubleClicked, this, &CDlgKnownGuid::listItemDoubleClicked);
 
-    ui->btnSave->setVisible(false);
-    ui->btnLoad->setVisible(false); 
+  // Open pop up menu on right click on VSCP type listbox
+  connect(ui->listGuid,
+          &QTableWidget::customContextMenuRequested,
+          this,
+          &CDlgKnownGuid::showContextMenu);
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  connect(ui->btnSearch, &QPushButton::clicked, this, &CDlgKnownGuid::btnSearch);
+  connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgKnownGuid::btnAdd);
+  connect(ui->btnEdit, &QPushButton::clicked, this, &CDlgKnownGuid::btnEdit);
+  connect(ui->btnClone, &QPushButton::clicked, this, &CDlgKnownGuid::btnClone);
+  connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgKnownGuid::btnDelete);
+  connect(ui->btnSensorIndex, &QPushButton::clicked, this, &CDlgKnownGuid::btnSensorIndex);
+  connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
+  connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
 
-    connect(ui->listGuid, &QTableWidget::itemClicked, this, &CDlgKnownGuid::listItemClicked);
-    connect(ui->listGuid, &QTableWidget::itemDoubleClicked, this, &CDlgKnownGuid::listItemDoubleClicked);
+  connect(ui->checkShowInterfaces, &QCheckBox::clicked, this, &CDlgKnownGuid::showOnlyInterfaces);
 
-    // Open pop up menu on right click on VSCP type listbox
-    connect(ui->listGuid,
-            &QTableWidget::customContextMenuRequested,
-            this,
-            &CDlgKnownGuid::showContextMenu);
+  ui->textDescription->acceptRichText();
 
-    connect(ui->btnSearch, &QPushButton::clicked, this, &CDlgKnownGuid::btnSearch);
-    connect(ui->btnAdd, &QPushButton::clicked, this, &CDlgKnownGuid::btnAdd); 
-    connect(ui->btnEdit, &QPushButton::clicked, this, &CDlgKnownGuid::btnEdit); 
-    connect(ui->btnClone, &QPushButton::clicked, this, &CDlgKnownGuid::btnClone); 
-    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgKnownGuid::btnDelete);
-    connect(ui->btnSensorIndex, &QPushButton::clicked, this, &CDlgKnownGuid::btnSensorIndex);  
-    connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgKnownGuid::btnLoad);
-    connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
+  QStringList headers(
+    QString(tr("GUID, Name")).split(','));
+  ui->listGuid->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
+  ui->listGuid->setSelectionBehavior(QAbstractItemView::SelectRows);
+  ui->listGuid->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    ui->textDescription->acceptRichText();
+  ui->listGuid->setColumnCount(2);
+  ui->listGuid->setColumnWidth(0, 450); // GUID
+  ui->listGuid->setColumnWidth(1, 200); // Name
+  ui->listGuid->horizontalHeader()->setStretchLastSection(true);
+  ui->listGuid->setHorizontalHeaderLabels(headers);
 
-    QStringList headers(
-      QString(tr("GUID, Name")).split(','));
-    ui->listGuid->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
-    ui->listGuid->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->listGuid->setSelectionMode(QAbstractItemView::SingleSelection);
-
-    ui->listGuid->setColumnCount(2);
-    ui->listGuid->setColumnWidth(0, 350);  // GUID
-    ui->listGuid->setColumnWidth(1, 200);  // Name
-    ui->listGuid->horizontalHeader()->setStretchLastSection(true);
-    ui->listGuid->setHorizontalHeaderLabels(headers);
-
-    // Fill in GUID's
-     
-    pworks->m_mutexGuidMap.lock();
-
-    QSqlQuery query("SELECT * FROM guid order by name", pworks->m_worksdb);
-
-    while (query.next()) {
-        QString guid = query.value(1).toString();
-        QString name = query.value(2).toString();
-
-        insertGuidItem(guid, name);
-    }
-
-    pworks->m_mutexGuidMap.unlock();
+  // Fill in GUID's
+  fillGuidFromDb();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,667 +109,734 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget *parent) :
 
 CDlgKnownGuid::~CDlgKnownGuid()
 {
-    delete ui;
+  delete ui;
 }
 
+void
+CDlgKnownGuid::setInterfaceShow(bool b)
+{
+  ui->checkShowInterfaces->setChecked(b);
+  showOnlyInterfaces();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fillGuidFromDb
+//
+
+void
+CDlgKnownGuid::fillGuidFromDb(void)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  pworks->m_mutexGuidMap.lock();
+
+  QSqlQuery query("SELECT * FROM guid order by name", pworks->m_worksdb);
+
+  while (query.next()) {
+    QString guid = query.value(1).toString();
+    QString name = query.value(2).toString();
+
+    insertGuidItem(guid, name);
+  }
+
+  pworks->m_mutexGuidMap.unlock();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // insertGuidItem
 //
 
-void CDlgKnownGuid::insertGuidItem(QString guid, QString name) 
+void
+CDlgKnownGuid::insertGuidItem(QString strguid, QString name)
 {
-    int row = ui->listGuid->rowCount();
-    ui->listGuid->insertRow(row);
+  int row = ui->listGuid->rowCount();
 
-    // * * * GUID
-    QTableWidgetItem* itemGuid = new QTableWidgetItem(guid);
-
-    // Not editable
-    itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
-
-    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
-
-    // * * * Name
-    QTableWidgetItem* itemName = new QTableWidgetItem(name);
-
-    // Not editable
-    itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
-
-    ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
-
-    // Make all rows equal height
-    ui->listGuid->setUpdatesEnabled(false);
-    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
-        ui->listGuid->setRowHeight(i, 10);
+  // Show only interfaces (two LSB's are zero)
+  if (m_bShowOnlyInterfaces) {
+    cguid ifguid(strguid.toStdString());
+    if (ifguid[14] || ifguid[15]) {
+      return;
     }
-    ui->listGuid->setUpdatesEnabled(true);
+  }
+
+  // Insert new row
+  ui->listGuid->insertRow(row);
+
+  // * * * GUID
+  QTableWidgetItem* itemGuid = new QTableWidgetItem(strguid);
+
+  // Set fixed font to make GUID's easier to read
+  QFont font = QFont();
+  font.setFamily("Courier");
+  itemGuid->setFont(font);
+
+  // Not editable
+  itemGuid->setFlags(itemGuid->flags() & ~Qt::ItemIsEditable);
+
+  ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 0, itemGuid);
+
+  // * * * Name
+  QTableWidgetItem* itemName = new QTableWidgetItem(name);
+
+  // Not editable
+  itemName->setFlags(itemName->flags() & ~Qt::ItemIsEditable);
+
+  ui->listGuid->setItem(ui->listGuid->rowCount() - 1, 1, itemName);
+
+  // Make all rows equal height
+  ui->listGuid->setUpdatesEnabled(false);
+  for (int i = 0; i < ui->listGuid->rowCount(); i++) {
+    ui->listGuid->setRowHeight(i, 10);
+  }
+  ui->listGuid->setUpdatesEnabled(true);
+
+  ui->listGuid->resizeRowsToContents();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // listItemClicked
 //
 
-void CDlgKnownGuid::listItemClicked(QTableWidgetItem *item)
+void
+CDlgKnownGuid::listItemClicked(QTableWidgetItem* item)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
-    if (-1 == currentRow) {
-        currentRow = 0; // First row
-    }
+  int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
+  if (-1 == currentRow) {
+    currentRow = 0; // First row
+  }
 
-    QTableWidgetItem *itemGuid = ui->listGuid->item(currentRow, 0);
-    QString strguid = itemGuid->text(); 
-    
-    // Search db record for description
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
-    pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+  QTableWidgetItem* itemGuid = ui->listGuid->item(currentRow, 0);
+  QString strguid            = itemGuid->text();
 
-    if (QSqlError::NoError != query.lastError().type()) {
-        pworks->m_mutexGuidMap.unlock();
-        QMessageBox::information(this,
-                            tr(APPNAME),
-                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );
-        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()),
-                         query.lastError().text().toStdString());                
-        return;                            
-    }
+  // Search db record for description
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  pworks->m_mutexGuidMap.lock();
+  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    if (query.next()) {
-#if QT_VERSION >= 0x050E00    
-        ui->textDescription->setMarkdown(query.value(3).toString());
+  if (QSqlError::NoError != query.lastError().type()) {
+    pworks->m_mutexGuidMap.unlock();
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             QMessageBox::Ok);
+    spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()),
+                  query.lastError().text().toStdString());
+    return;
+  }
+
+  if (query.next()) {
+#if QT_VERSION >= 0x050E00
+    ui->textDescription->setMarkdown(query.value(3).toString());
 #else
-        ui->textDescription->setText(query.value(3).toString());
-#endif 
-    }
+    ui->textDescription->setText(query.value(3).toString());
+#endif
+  }
 
-    pworks->m_mutexGuidMap.unlock(); 
+  pworks->m_mutexGuidMap.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // listItemDoubleClicked
 //
 
-void CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem *item)
+void
+CDlgKnownGuid::listItemDoubleClicked(QTableWidgetItem* item)
 {
-    if (!m_bEnableDblClickAccept) {
-        btnEdit();
-    }
-    else {
-        accept();
-    }
+  if (!m_bEnableDblClickAccept) {
+    btnEdit();
+  }
+  else {
+    accept();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // showContextMenu
 //
 
-void CDlgKnownGuid::showContextMenu(const QPoint& pos)
+void
+CDlgKnownGuid::showContextMenu(const QPoint& pos)
 {
-    QMenu *menu = new QMenu(this);
+  QMenu* menu = new QMenu(this);
 
-    menu->addAction(QString(tr("Add...")), this, SLOT(btnAdd()));
-    menu->addAction(QString(tr("Edit...")), this, SLOT(btnEdit()));
-    menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone()));
-    menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete()));
-    menu->addSeparator();
-    menu->addAction(QString(tr("Sensor...")), this, SLOT(btnSensorIndex()));
+  menu->addAction(QString(tr("Add...")), this, SLOT(btnAdd()));
+  menu->addAction(QString(tr("Edit...")), this, SLOT(btnEdit()));
+  menu->addAction(QString(tr("Clone...")), this, SLOT(btnClone()));
+  menu->addAction(QString(tr("Delete")), this, SLOT(btnDelete()));
+  menu->addSeparator();
+  menu->addAction(QString(tr("Sensor...")), this, SLOT(btnSensorIndex()));
 
-    // menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
-    // menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
+  // menu->addAction(QString(tr("Load from file file...")), this, SLOT(btnLoad()));
+  // menu->addAction(QString(tr("Save to file...")), this, SLOT(btnSave()));
 
-    menu->popup(ui->listGuid->viewport()->mapToGlobal(pos));
+  menu->popup(ui->listGuid->viewport()->mapToGlobal(pos));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // selectByGuid
 //
 
-bool CDlgKnownGuid::selectByGuid(const QString& guid)
+bool
+CDlgKnownGuid::selectByGuid(const QString& guid)
 {
-    for (int i=0; i < ui->listGuid->rowCount(); i++) {
-        
-        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
-        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
-        
-        if (itemGuid->text() == guid) {
-            ui->listGuid->selectRow(i);
-            return true;
-        }
-        else {
-            ui->listGuid->clearSelection();
-        }   
+  for (int i = 0; i < ui->listGuid->rowCount(); i++) {
+
+    QTableWidgetItem* itemGuid = ui->listGuid->item(i, 0);
+    QTableWidgetItem* itemName = ui->listGuid->item(i, 1);
+
+    if (itemGuid->text() == guid) {
+      ui->listGuid->selectRow(i);
+      return true;
     }
+    else {
+      ui->listGuid->clearSelection();
+    }
+  }
 
-    return false;
+  return false;
 }
-
-    
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
 //
 
-void CDlgKnownGuid::done(int rv)
+void
+CDlgKnownGuid::done(int rv)
 {
-    if (QDialog::Accepted == rv) { // ok was pressed
-        
-        vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  if (QDialog::Accepted == rv) { // ok was pressed
 
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-        // Session window
-        //pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
-        
-    }
-    QDialog::done(rv);
+    // Session window
+    // pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
+  }
+  QDialog::done(rv);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnSearch
 //
 
-void  CDlgKnownGuid::btnSearch(void)
+void
+CDlgKnownGuid::btnSearch(void)
 {
-    /*!
-        Search for GUID if ":" is in search term other wise search for name
-        which must start with a letter.
-    */    
-    int searchType = ui->comboSearchType->currentIndex();  // 0-exact, 1=start, 2=contains
+  /*!
+      Search for GUID if ":" is in search term other wise search for name
+      which must start with a letter.
+  */
+  int searchType = ui->comboSearchType->currentIndex(); // 0-exact, 1=start, 2=contains
 
-    
-    int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
-    if (-1 == currentRow) {
-        currentRow = 0; // First row
+  int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
+  if (-1 == currentRow) {
+    currentRow = 0; // First row
+  }
+  else {
+    currentRow++; // Row after the selected one
+  }
+
+  QString strsearch = ui->editSearch->text();
+
+  for (int i = currentRow; i < ui->listGuid->rowCount(); i++) {
+
+    QTableWidgetItem* itemGuid = ui->listGuid->item(i, 0);
+    QTableWidgetItem* itemName = ui->listGuid->item(i, 1);
+
+    // GUID exact match
+    if (0 == searchType) {
+      if (itemGuid->text() == ui->editSearch->text()) {
+        // itemGuid->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
     }
-    else {
-        currentRow++;   // Row after the selected one
+    // GUID starts with
+    else if (1 == searchType) {
+      if (itemGuid->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+        // itemGuid->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
     }
-
-    QString strsearch = ui->editSearch->text();
-
-    for (int i=currentRow; i < ui->listGuid->rowCount(); i++) {
-        
-        QTableWidgetItem * itemGuid = ui->listGuid->item(i,0);
-        QTableWidgetItem * itemName = ui->listGuid->item(i,1);
-        
-        // GUID exact match
-        if (0 == searchType) {
-            if (itemGuid->text() == ui->editSearch->text()) {
-                //itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }   
-        }
-        // GUID starts with
-        else if (1 == searchType) {
-            if (itemGuid->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // GUID contains
-        else if (2 == searchType) {
-            if (itemGuid->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                itemGuid->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // Name Exact match
-        else if (3 == searchType) {
-            if (itemName->text() == ui->editSearch->text()) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            } 
-        }
-        // Name starts with
-        else if (4 == searchType) {
-            if (itemName->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-        // Name contains
-        else if (5 == searchType) {
-            if (itemName->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
-                //itemName->setSelected(true); 
-                ui->listGuid->selectRow(i);
-                break;
-            }
-            else {
-                ui->listGuid->clearSelection();
-            }
-        }
-    } 
+    // GUID contains
+    else if (2 == searchType) {
+      if (itemGuid->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+        itemGuid->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
+    }
+    // Name Exact match
+    else if (3 == searchType) {
+      if (itemName->text() == ui->editSearch->text()) {
+        // itemName->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
+    }
+    // Name starts with
+    else if (4 == searchType) {
+      if (itemName->text().startsWith(ui->editSearch->text(), Qt::CaseInsensitive)) {
+        // itemName->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
+    }
+    // Name contains
+    else if (5 == searchType) {
+      if (itemName->text().contains(ui->editSearch->text(), Qt::CaseInsensitive)) {
+        // itemName->setSelected(true);
+        ui->listGuid->selectRow(i);
+        break;
+      }
+      else {
+        ui->listGuid->clearSelection();
+      }
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnAdd
 //
 
-void  CDlgKnownGuid::btnAdd(void)
+void
+CDlgKnownGuid::btnAdd(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Add new known GUID")); 
+  CDlgEditGuid dlg;
+  dlg.setWindowTitle(tr("Add new known GUID"));
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    dlg.setGuid(m_addGuid);
-    m_addGuid = "";
+  dlg.setGuid(m_addGuid);
+  m_addGuid = "";
 
-again:    
-    if (QDialog::Accepted == dlg.exec()) {
+again:
+  if (QDialog::Accepted == dlg.exec()) {
 
-        QString strguid = dlg.getGuid();
-        strguid = strguid.trimmed();
+    QString strguid = dlg.getGuid();
+    strguid         = strguid.trimmed();
 
-        // Validate length
-        if (47 < strguid.length()) {
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Invalid GUID. Length is wrong."),
-                              QMessageBox::Ok ); 
-          goto again;                               
-        }
-
-        // Validate format
-        int cntColon = 0;
-        for (int i=0; i<strguid.length(); i++) {
-            if (':' == strguid[i]) cntColon++;
-        }
-
-        // Validate # of colons
-        if (15 != cntColon) {
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
-        pworks->m_mutexGuidMap.lock();
-        QSqlQuery query(strQuery
-                        .arg(strguid)
-                        .arg(dlg.getName())
-                        .arg(dlg.getDescription()), 
-                        pworks->m_worksdb);
-        if (QSqlError::NoError != query.lastError().type()) {
-            pworks->m_mutexGuidMap.unlock();
-            QMessageBox::information(this,
-                              tr(APPNAME),
-                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text() );
-            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
-                             query.lastError().text().toStdString());                         
-            goto again;                            
-        }
-
-        // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
-
-        // Add to dialog List
-        insertGuidItem(strguid, dlg.getName());
-        
-#if QT_VERSION >= 0x050E00    
-        ui->textDescription->setMarkdown(dlg.getDescription());
-#else
-        ui->textDescription->setText(dlg.getDescription());
-#endif 
-        ui->listGuid->sortItems(0, Qt::AscendingOrder);
-
-        // Select added item
-        for (int i=0; i < ui->listGuid->rowCount(); i++) {
-        
-            QTableWidgetItem * itemGuid = ui->listGuid->item(i, 0);
-        
-            if (itemGuid->text() == strguid) {
-                ui->listGuid->selectRow(i);
-                break;;
-            }
-
-        }
+    // Validate length
+    if (47 < strguid.length()) {
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Invalid GUID. Length is wrong."),
+                               QMessageBox::Ok);
+      goto again;
     }
+
+    // Validate format
+    int cntColon = 0;
+    for (int i = 0; i < strguid.length(); i++) {
+      if (':' == strguid[i])
+        cntColon++;
+    }
+
+    // Validate # of colons
+    if (15 != cntColon) {
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
+                               QMessageBox::Ok);
+      goto again;
+    }
+
+    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
+
+    pworks->m_mutexGuidMap.lock();
+    QSqlQuery query(strQuery
+                      .arg(strguid)
+                      .arg(dlg.getName())
+                      .arg(dlg.getDescription()),
+                    pworks->m_worksdb);
+    if (QSqlError::NoError != query.lastError().type()) {
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text());
+      spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      goto again;
+    }
+
+    // Add to the internal table
+    pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
+    pworks->m_mutexGuidMap.unlock();
+
+    // Add to dialog List
+    insertGuidItem(strguid, dlg.getName());
+
+#if QT_VERSION >= 0x050E00
+    ui->textDescription->setMarkdown(dlg.getDescription());
+#else
+    ui->textDescription->setText(dlg.getDescription());
+#endif
+    ui->listGuid->sortItems(0, Qt::AscendingOrder);
+
+    // Select added item
+    for (int i = 0; i < ui->listGuid->rowCount(); i++) {
+
+      QTableWidgetItem* itemGuid = ui->listGuid->item(i, 0);
+
+      if (itemGuid->text() == strguid) {
+        ui->listGuid->selectRow(i);
+        break;
+        ;
+      }
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnEdit
 //
 
-void  CDlgKnownGuid::btnEdit(void)
+void
+CDlgKnownGuid::btnEdit(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Edit known GUID"));
-    dlg.setEditMode();
+  CDlgEditGuid dlg;
+  dlg.setWindowTitle(tr("Edit known GUID"));
+  dlg.setEditMode();
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
-    if (-1 == row) {
-        QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("No GUID is selected"),
-                              QMessageBox::Ok );
-        return;
-    }
-    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
-    QString strguid = itemGuid->text();
-    strguid = strguid.trimmed();
+  int row = ui->listGuid->currentRow();
+  if (-1 == row) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("No GUID is selected"),
+                             QMessageBox::Ok);
+    return;
+  }
+  QTableWidgetItem* itemGuid = ui->listGuid->item(row, 0);
+  QString strguid            = itemGuid->text();
+  strguid                    = strguid.trimmed();
 
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  pworks->m_mutexGuidMap.lock();
+  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+  if (QSqlError::NoError != query.lastError().type()) {
+    pworks->m_mutexGuidMap.unlock();
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             QMessageBox::Ok);
+    spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
+                  query.lastError().text().toStdString());
+    return;
+  }
+
+  if (query.next()) {
+    dlg.setGuid(query.value(1).toString());
+    dlg.setName(query.value(2).toString());
+    dlg.setDescription(query.value(3).toString());
+  }
+
+  pworks->m_mutexGuidMap.unlock();
+
+again:
+  if (QDialog::Accepted == dlg.exec()) {
+
+    QString strname        = dlg.getName();
+    QString strdescription = dlg.getDescription();
+
+    QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
-
+    QSqlQuery query(strQuery
+                      .arg(strname)
+                      .arg(strdescription)
+                      .arg(strguid),
+                    pworks->m_worksdb);
     if (QSqlError::NoError != query.lastError().type()) {
-        pworks->m_mutexGuidMap.unlock();
-        QMessageBox::information(this,
-                            tr(APPNAME),
-                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );
-        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
-                         query.lastError().text().toStdString());                  
-        return;                            
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
+
+      spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      goto again;
     }
 
-    if (query.next()) {
-        dlg.setGuid(query.value(1).toString());
-        dlg.setName(query.value(2).toString());
-        dlg.setDescription(query.value(3).toString());
-    }
-
+    // Add to the internal table
+    pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
     pworks->m_mutexGuidMap.unlock();
 
-again:    
-    if (QDialog::Accepted == dlg.exec()) {
-
-        QString strname = dlg.getName();
-        QString strdescription = dlg.getDescription();
-
-        QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
-        pworks->m_mutexGuidMap.lock();
-        QSqlQuery query(strQuery
-                            .arg(strname)
-                            .arg(strdescription)
-                            .arg(strguid), 
-                            pworks->m_worksdb);
-        if (QSqlError::NoError != query.lastError().type()) {
-            pworks->m_mutexGuidMap.unlock();
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
-                              QMessageBox::Ok );    
-
-            spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) + 
-                             query.lastError().text().toStdString());                            
-            goto again;                            
-        }
-
-        // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
-
-        // Add to dialog List
-        QTableWidgetItem * itemName = ui->listGuid->item(row, 1);
-        itemName->setText(dlg.getName());        
-#if QT_VERSION >= 0x050E00    
-        ui->textDescription->setMarkdown(dlg.getDescription());
+    // Add to dialog List
+    QTableWidgetItem* itemName = ui->listGuid->item(row, 1);
+    itemName->setText(dlg.getName());
+#if QT_VERSION >= 0x050E00
+    ui->textDescription->setMarkdown(dlg.getDescription());
 #else
-        ui->textDescription->setText(dlg.getDescription());
+    ui->textDescription->setText(dlg.getDescription());
 #endif
-    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnClone
 //
 
-void  CDlgKnownGuid::btnClone(void)
+void
+CDlgKnownGuid::btnClone(void)
 {
-    CDlgEditGuid dlg;
-    dlg.setWindowTitle(tr("Clone GUID")); 
+  CDlgEditGuid dlg;
+  dlg.setWindowTitle(tr("Clone GUID"));
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
-    if (-1 == row) {
-        QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("No GUID is selected"),
-                              QMessageBox::Ok );
-        return;
+  int row = ui->listGuid->currentRow();
+  if (-1 == row) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("No GUID is selected"),
+                             QMessageBox::Ok);
+    return;
+  }
+  QTableWidgetItem* itemGuid = ui->listGuid->item(row, 0);
+  QString strguid            = itemGuid->text();
+  strguid                    = strguid.trimmed();
+
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  pworks->m_mutexGuidMap.lock();
+  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+
+  if (QSqlError::NoError != query.lastError().type()) {
+    pworks->m_mutexGuidMap.unlock();
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             QMessageBox::Ok);
+    spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
+                  query.lastError().text().toStdString());
+    return;
+  }
+
+  if (query.next()) {
+    dlg.setGuid(query.value(1).toString());
+    dlg.setName(query.value(2).toString());
+    dlg.setDescription(query.value(3).toString());
+  }
+
+  pworks->m_mutexGuidMap.unlock();
+
+again:
+  if (QDialog::Accepted == dlg.exec()) {
+
+    QString strguid = dlg.getGuid();
+    strguid         = strguid.trimmed();
+
+    // Validate length
+    if (47 != strguid.length()) {
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Invalid GUID. Length is wrong."),
+                               QMessageBox::Ok);
+      goto again;
     }
-    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
-    QString strguid = itemGuid->text();
-    strguid = strguid.trimmed();
 
-    QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+    // Validate format
+    int cntColon = 0;
+    for (int i = 0; i < strguid.length(); i++) {
+      if (':' == strguid[i])
+        cntColon++;
+    }
+
+    // Validate # of colons
+    if (15 != cntColon) {
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
+                               QMessageBox::Ok);
+      goto again;
+    }
+
+    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
+
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
-
+    QSqlQuery query(strQuery
+                      .arg(strguid)
+                      .arg(dlg.getName())
+                      .arg(dlg.getDescription()),
+                    pworks->m_worksdb);
     if (QSqlError::NoError != query.lastError().type()) {
-        pworks->m_mutexGuidMap.unlock();
-        QMessageBox::information(this,
-                            tr(APPNAME),
-                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-                            QMessageBox::Ok );
-        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) + 
-                         query.lastError().text().toStdString());
-        return;                            
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
+      spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      goto again;
     }
 
-    if (query.next()) {
-        dlg.setGuid(query.value(1).toString());
-        dlg.setName(query.value(2).toString());
-        dlg.setDescription(query.value(3).toString());
-    }
-
+    // Add to the internal table
+    pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
     pworks->m_mutexGuidMap.unlock();
 
-again:    
-    if (QDialog::Accepted == dlg.exec()) {
-
-        QString strguid = dlg.getGuid();
-        strguid = strguid.trimmed();
-
-        // Validate length
-        if (47 != strguid.length()) {
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Invalid GUID. Length is wrong."),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        // Validate format
-        int cntColon = 0;
-        for (int i=0; i<strguid.length(); i++) {
-            if (':' == strguid[i]) cntColon++;
-        }
-
-        // Validate # of colons
-        if (15 != cntColon) {
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Invalid GUID. Format is wrong. Should be like 'FF:FF:FF:FF:FF:FF:FF:FE:B8:27:EB:0A:00:02:00:05'"),
-                              QMessageBox::Ok ); 
-            goto again;                               
-        }
-
-        QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
-        pworks->m_mutexGuidMap.lock();
-        QSqlQuery query(strQuery
-                        .arg(strguid)
-                        .arg(dlg.getName())
-                        .arg(dlg.getDescription()), 
-                        pworks->m_worksdb);
-        if (QSqlError::NoError != query.lastError().type()) {
-            pworks->m_mutexGuidMap.unlock();
-            QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
-                              QMessageBox::Ok );    
-            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) + 
-                             query.lastError().text().toStdString());
-            goto again;                            
-        }
-
-        // Add to the internal table
-        pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-        pworks->m_mutexGuidMap.unlock();
-
-        // Add to dialog List
-        insertGuidItem(strguid, dlg.getName());
-    }
+    // Add to dialog List
+    insertGuidItem(strguid, dlg.getName());
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnDelete
 //
 
-void  CDlgKnownGuid::btnDelete(void)
+void
+CDlgKnownGuid::btnDelete(void)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    int row = ui->listGuid->currentRow();
-    if (-1 == row) {
-        QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("No GUID is selected"),
-                              QMessageBox::Ok );
-        return;
-    }
+  int row = ui->listGuid->currentRow();
+  if (-1 == row) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("No GUID is selected"),
+                             QMessageBox::Ok);
+    return;
+  }
 
-    int rv = QMessageBox::warning(this,
-                                    tr(APPNAME),
-                                    tr("Are you sure?"),
-                                    QMessageBox::Ok | QMessageBox::Cancel );
-
-    if ( QMessageBox::Ok == rv ) {
-        QTableWidgetItem * item = ui->listGuid->item(row, 0);
-        QString strguid = item->text();
-        strguid = strguid.trimmed();
-
-        QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
-        pworks->m_mutexGuidMap.lock();
-        QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
-
-        if (QSqlError::NoError != query.lastError().type()) {
-            pworks->m_mutexGuidMap.unlock();
-            QMessageBox::information(this,
+  int rv = QMessageBox::warning(this,
                                 tr(APPNAME),
-                                tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
-                                QMessageBox::Ok );
-            spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
-                             query.lastError().text().toStdString());
-            return;
-        }
-        else {
+                                tr("Are you sure?"),
+                                QMessageBox::Ok | QMessageBox::Cancel);
 
-            // Delete row
-            ui->listGuid->removeRow(row);
+  if (QMessageBox::Ok == rv) {
+    QTableWidgetItem* item = ui->listGuid->item(row, 0);
+    QString strguid        = item->text();
+    strguid                = strguid.trimmed();
 
-            // Delete from internal table
-            pworks->m_mapGuidToSymbolicName.erase(strguid);
-            // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
-            // if (std::map::end != it) {
+    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMap.lock();
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-            // }
-        }
-
-        pworks->m_mutexGuidMap.unlock();
+    if (QSqlError::NoError != query.lastError().type()) {
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
+      spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      return;
     }
-}
+    else {
 
+      // Delete row
+      ui->listGuid->removeRow(row);
+
+      // Delete from internal table
+      pworks->m_mapGuidToSymbolicName.erase(strguid);
+      // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
+      // if (std::map::end != it) {
+
+      // }
+    }
+
+    pworks->m_mutexGuidMap.unlock();
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnSensorIndex
 //
 
-void  CDlgKnownGuid::btnSensorIndex(void)
+void
+CDlgKnownGuid::btnSensorIndex(void)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // Must be a selected GUID
-    int row = ui->listGuid->currentRow();
-    if (-1 == row) {
-        QMessageBox::information(this, 
-                              tr(APPNAME),
-                              tr("No GUID is selected"),
-                              QMessageBox::Ok );
-        return;
-    }
+  // Must be a selected GUID
+  int row = ui->listGuid->currentRow();
+  if (-1 == row) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("No GUID is selected"),
+                             QMessageBox::Ok);
+    return;
+  }
 
-    QTableWidgetItem * item = ui->listGuid->item(row, 0);
-    QString strguid = item->text();
-    strguid = strguid.trimmed();    
+  QTableWidgetItem* item = ui->listGuid->item(row, 0);
+  QString strguid        = item->text();
+  strguid                = strguid.trimmed();
 
-    item = ui->listGuid->item(row, 1);
-    QString strname = item->text();    
+  item            = ui->listGuid->item(row, 1);
+  QString strname = item->text();
 
-    CDlgSensorIndex dlg(nullptr, pworks->getIdxForGuidRecord(strguid));
-    
-    dlg.setGuid(strguid);
-    dlg.setGuidName(strname);
-    
-    if (QDialog::Accepted == dlg.exec()) {
-        
-    }
+  CDlgSensorIndex dlg(nullptr, pworks->getIdxForGuidRecord(strguid));
+
+  dlg.setGuid(strguid);
+  dlg.setGuidName(strname);
+
+  if (QDialog::Accepted == dlg.exec()) {
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getSelectedGuid
 //
 
-bool CDlgKnownGuid::getSelectedGuid(cguid& guid)
+bool
+CDlgKnownGuid::getSelectedGuid(cguid& guid)
 {
-    int row = ui->CDlgKnownGuid::listGuid->currentRow();
-    if (-1 == row) return false;
-    QTableWidgetItem * itemGuid = ui->listGuid->item(row, 0);
-    QString strguid = itemGuid->text();
-    strguid = strguid.trimmed();
-    guid.getFromString(strguid.toStdString());
-    return true;
+  int row = ui->CDlgKnownGuid::listGuid->currentRow();
+  if (-1 == row)
+    return false;
+  QTableWidgetItem* itemGuid = ui->listGuid->item(row, 0);
+  QString strguid            = itemGuid->text();
+  strguid                    = strguid.trimmed();
+  guid.getFromString(strguid.toStdString());
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnLoad
 //
 
-void  CDlgKnownGuid::btnLoad(void)
+void
+CDlgKnownGuid::btnLoad(void)
 {
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // btnSave
 //
 
-void  CDlgKnownGuid::btnSave(void)
+void
+CDlgKnownGuid::btnSave(void)
 {
-
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showOnlyInterfaces
+//
+
+void
+CDlgKnownGuid::showOnlyInterfaces(void)
+{
+  m_bShowOnlyInterfaces = ui->checkShowInterfaces->isChecked();
+  // ui->listGuid->removeRows
+  ui->listGuid->clearContents();
+  ui->listGuid->model()->removeRows(0, ui->listGuid->rowCount());
+  fillGuidFromDb();
+}

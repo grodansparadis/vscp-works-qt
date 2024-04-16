@@ -30,84 +30,345 @@
 #ifndef CBOOTLOADWIZARD_H
 #define CBOOTLOADWIZARD_H
 
-#include "vscphelper.h"
+#include <vscphelper.h>
+#include <mdf.h>
 #include <vscp_client_base.h>
+#include <vscp_bootdevice.h>
 
-#include <QLabel>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QSpinBox>
-#include <QProgressBar>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QCheckBox>
 #include <QFormLayout>
-#include <QWizard>
-#include <QMessageBox>
+#include <QHBoxLayout>
 #include <QJsonObject>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMessageBox>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QTextEdit>
+#include <QVBoxLayout>
+#include <QFileDialog>
+#include <QWizard>
 
+class CWizardPageNickname : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageNickname(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageNickname();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+private:
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+};
+
+// ----------------------------------------------------------------------------
+
+class CWizardPageInterface : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageInterface(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageInterface();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+public slots:
+
+  /*!
+    open known GUID dialog
+  */
+  void openKnownGuidDlg(void);
+
+  /*!
+    Set interface to all zeros
+  */
+  void setAllZeros(void);
+
+private:
+  /// The interface id
+  QLineEdit* m_pInterface;
+
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+};
+
+// ----------------------------------------------------------------------------
+
+class CWizardPageGuid : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageGuid(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageGuid();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+public slots:
+
+  /*!
+    open known GUID dialog
+  */
+  void openKnownGuidDlg(void);
+
+private:
+  // The selected GUID
+  QLineEdit* m_pGuid;
+
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+};
+
+// ----------------------------------------------------------------------------
+
+class CWizardPageLoadMdf : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageLoadMdf(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageLoadMdf();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+  /*!
+    Call back used to display callback.
+    @param progress Numerical representation of progress, normally 0-100
+    @param str Description of progress step
+  */
+  void statusCallback(int progress, const char* str);
+
+public slots:
+
+private:
+
+  /*!
+    Checkbox that select if MDF should be
+    loaded locally or from url fetched from device
+  */
+  QCheckBox* m_pchkLocalMdf;
+
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+};
+
+// ----------------------------------------------------------------------------
+
+class CWizardPageFirmware : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageFirmware(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageFirmware();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+public slots:
+
+  /*!
+    Get firmware file
+  */
+  void setFirmwareFile(void);
+
+private:
+
+  CMDF m_mdf;
+
+  QLineEdit* m_labelFirmwareFile;
+
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+};
+
+// ----------------------------------------------------------------------------
+
+class CWizardPageFlash : public QWizardPage {
+  Q_OBJECT
+
+public:
+  explicit CWizardPageFlash(QWidget* parent, CVscpClient* vscpClient);
+  ~CWizardPageFlash();
+
+  /*!
+    Setup the page
+  */
+  void initializePage(void);
+
+  /*!
+    Clean up the page
+  */
+  void cleanupPage(void);
+
+  /*!
+    Called by the framework to check if to determine whether the Next or
+    Finish button should be enabled or disabled.
+    @return true if buttons should be displayed.
+  */
+  bool isComplete(void);
+
+  /*!
+    Called when next or finnish is pressed to perform
+    last minute validation
+    @return true if it ios  OK to move on
+  */
+  bool validatePage(void);
+
+private:
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
+
+  /// Pointer to the boot device
+  CBootDevice* m_bootDev;
+};
+
+// ----------------------------------------------------------------------------
 
 class CBootLoadWizard : public QWizard {
   Q_OBJECT
 
 public:
-  explicit CBootLoadWizard(QWidget *parent, QJsonObject* pconn);
+  explicit CBootLoadWizard(QWidget* parent, QJsonObject* pconn);
   ~CBootLoadWizard();
 
   enum { Page_Intro,
          Page_Nickname,
          Page_Interface,
          Page_Guid,
-         Page_PreDevice,
-         Page_Device,
+         Page_LoadMdf,
          Page_Firmware,
+         Page_Flash,
          Page_Done };
 
-
   /*!
     Create the introduction page
   */
-  QWizardPage *createIntroPage(void); 
-
-  /*!
-    Create the nickname page
-  */
-  QWizardPage *createNicknamePage(void); 
-
-  /*!
-    Create the interface page
-  */
-  QWizardPage *createInterfacePage(void);
-
-  /*!
-    Create the introduction page
-  */
-  QWizardPage *createGuidPage(void); 
-
-  /*!
-    Create the page to show before data collection
-  */
-  QWizardPage *createPreDevicePage(void); 
-
-  /*!
-    Create the introduction page
-  */
-  QWizardPage *createDevicePage(void); 
+  QWizardPage* createIntroPage(void);
 
   /*!
     Start the bootloader wizard
   */
   int initBootLoaderWizard(void);
 
- private:
+private:
+  /// The VSCP client type
+  CVscpClient::connType m_vscpConnType;
 
-    /// The VSCP client type
-    CVscpClient::connType m_vscpConnType;
+  /// Configuration data for the session
+  QJsonObject m_connObject;
 
-    /// Configuration data for the session
-    QJsonObject m_connObject;
-
-    /// A pointer to a VSCP Client 
-    CVscpClient *m_vscpClient;
+  /// A pointer to a VSCP Client
+  CVscpClient* m_vscpClient;
 };
 
 #endif // CBOOTLOADWIZARD_H
