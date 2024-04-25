@@ -1,4 +1,4 @@
-// cdlgconnsettingslocal.h
+// cdlgselectbootalgorithm.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,69 +26,42 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGCONNSETTINGSLOCAL_H
-#define CDLGCONNSETTINGSLOCAL_H
-
-#include "vscp_client_local.h"
+#ifndef CDLGSELECTBOOTALGORITHM_H
+#define CDLGSELECTBOOTALGORITHM_H
 
 #include <QDialog>
-#include <QListWidgetItem>
-#include <QJsonObject>
+#include <QComboBox>
 
 namespace Ui {
-class CDlgConnSettingsLocal;
+class CDlgSelectBootAlgorithm;
 }
 
 
-class CDlgConnSettingsLocal : public QDialog
+class CDlgSelectBootAlgorithm : public QDialog
 {
     Q_OBJECT
 
 public:
-    
+    explicit CDlgSelectBootAlgorithm(QWidget *parent = nullptr);
+    ~CDlgSelectBootAlgorithm();
 
 public:
-    explicit CDlgConnSettingsLocal(QWidget *parent = nullptr);
-    ~CDlgConnSettingsLocal();
+    
+    /// Get set data size value
+    uint8_t getBootAlgorithm();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+    /// Set data size value
+    void setBootAlgorithm(uint8_t algorithm);
 
-    /*!
-        Setters/getters for name/description
-    */
-    QString getName(void);
-    void setName(const QString& str);
 
-    /*!
-        Setters/getters for path
-    */
-    QString getPath(void);
-    void setPath(const QString& str);
-
-    /*!
-        Setters/getters for JSON config object
-    */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+private slots:
+    
 
 private:
 
-    Ui::CDlgConnSettingsLocal *ui;
+    Ui::CDlgSelectBootAlgorithm *ui;
 
-    // void createMenu();
-    // void createHorizontalGroupBox();
-    // void createGridGroupBox();
-    // void createFormGroupBox();
-
-    // Dummy client
-    vscpClientLocal m_vscpClient;
-
-    // JSON configuration object
-    QJsonObject m_jsonConfig;
 };
 
 
-#endif // CDLGCONNSETTINGSLOCAL_H
+#endif // CDLGSELECTDATASIZE_H

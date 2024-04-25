@@ -143,7 +143,7 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setBroker("tcp://localhost:1883");
   setClientId(clientid);
-  setUser("admin");
+  setUser("vscp");
   setPassword("secret");
 
   connect(ui->btnTLS,

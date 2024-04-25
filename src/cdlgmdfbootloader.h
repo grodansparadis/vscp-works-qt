@@ -57,7 +57,6 @@ class CDlgMdfBootLoader : public QDialog {
   Q_OBJECT
 
 public:
-public:
   explicit CDlgMdfBootLoader(QWidget* parent = nullptr);
   ~CDlgMdfBootLoader();
 

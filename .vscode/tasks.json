@@ -3,7 +3,7 @@
         {
           "taskName": "build",
           "type": "shell",
-          "command": "cd build; make -j4",
+          "command": "cd build; make -j4 -Wall",
           "args": [],
           "group": {
               "kind": "build",
@@ -14,7 +14,7 @@
         {
           "taskName": "clean & build all",
           "type": "shell",
-          "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+          "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
           "args": [],
           "group": {
               "kind": "build",
@@ -36,7 +36,7 @@
         {
           "taskName": "Clean & build all 5.15.2",
           "type": "shell",
-          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
           "args": [],
           "group": {
               "kind": "build",
@@ -56,9 +56,9 @@
           }
         },
         {
-          "taskName": "Clean & build all 6.5.1",
+          "taskName": "Clean & build all 6.6.2",
           "type": "shell",
-          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.5.1/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
           "args": [],
           "group": {
               "kind": "build",

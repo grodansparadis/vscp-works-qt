@@ -150,7 +150,6 @@ private slots:
     void removeConnectionItem(void);
 
     // New connections
-    void newLocalConnection(void);
     void newTcpipConnection(void);
     void newCanalConnection(void);
     void newSocketCanConnection(void);
@@ -159,12 +158,10 @@ private slots:
     void newMqttConnection(void);
     void newUdpConnection(void);
     void newMulticastConnection(void);
-    void newRestConnection(void);
     void newRawCanConnection(void);
     void newRawMqttConnection(void);
 
     // Edit connections
-    void editLocalConnection(treeWidgetItemConn *itemConn);
     void editTcpipConnection(treeWidgetItemConn *itemConn);
     void editCanalConnection(treeWidgetItemConn *itemConn);
     void editSocketCanConnection(treeWidgetItemConn *itemConn);
@@ -173,7 +170,6 @@ private slots:
     void editMqttConnection(treeWidgetItemConn *itemConn);
     void editUdpConnection(treeWidgetItemConn *itemConn);
     void editMulticastConnection(treeWidgetItemConn *itemConn);
-    void editRestConnection(treeWidgetItemConn *itemConn);
     void editRawCanConnection(treeWidgetItemConn *itemConn);
     void editRawMqttConnection(treeWidgetItemConn *itemConn);
 

@@ -50,9 +50,6 @@
 #include <vscp_client_multicast.h>
 #include <vscp_client_rawcan.h>
 #include <vscp_client_rawmqtt.h>
-#include <vscp_client_rest.h>
-#include <vscp_client_rs232.h>
-#include <vscp_client_rs485.h>
 #ifndef WIN32
 #include <vscp_client_socketcan.h>
 #endif
@@ -213,9 +210,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      break;
-
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
@@ -281,27 +275,6 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::REST:
-      m_vscpClient = new vscpClientRest();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::RS232:
-      m_vscpClient = new vscpClientRs232();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::RS485:
-      m_vscpClient = new vscpClientRs485();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
       connectToRemoteHost(true);
@@ -440,9 +413,6 @@ CFrmNodeScan::doConnectToRemoteHost(void)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      break;
-
     case CVscpClient::connType::TCPIP:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         spdlog::error(std::string(tr("Node Scan: Unable to connect to remote host.").toStdString()));
@@ -521,15 +491,6 @@ CFrmNodeScan::doConnectToRemoteHost(void)
     case CVscpClient::connType::MULTICAST:
       break;
 
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
-      break;
-
     case CVscpClient::connType::RAWCAN:
       break;
 
@@ -551,9 +512,6 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
-      break;
-
-    case CVscpClient::connType::LOCAL:
       break;
 
     case CVscpClient::connType::TCPIP:
@@ -633,15 +591,6 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::MULTICAST:
-      break;
-
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
       break;
 
     case CVscpClient::connType::RAWCAN:
@@ -793,6 +742,7 @@ CFrmNodeScan::doScan(void)
                                                       guidInterface,
                                                       nodelist,
                                                       found,
+                                                      nullptr,
                                                       delay,
                                                       timeout)) {
       ui->progressBarScan->setValue(0);
@@ -800,7 +750,7 @@ CFrmNodeScan::doScan(void)
       QApplication::restoreOverrideCursor();
       ui->infoArea->setText("Scan failed...");
       ui->infoArea->repaint();
-      
+
       // QMessageBox::information(this,
       //                         tr(APPNAME),
       //                         tr("Failed to scan nodes"),
@@ -820,6 +770,7 @@ CFrmNodeScan::doScan(void)
     if (VSCP_ERROR_SUCCESS != vscp_scanForDevices(*m_vscpClient,
                                                   guidInterface,
                                                   found,
+                                                  nullptr,
                                                   pworks->m_config_timeout)) {
       ui->progressBarScan->setValue(0);
       spdlog::error(std::string(tr("Node Fast Scan: Failed to scan for devices").toStdString()));
@@ -1017,7 +968,7 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   ui->statusBar->showMessage(tr("Reading standard registers from device..."));
 
   // Get standard registers
-  int rv = pItem->m_stdregs.init(*m_vscpClient, guidNode, guidInterface, pworks->m_config_timeout);
+  int rv = pItem->m_stdregs.init(*m_vscpClient, guidNode, guidInterface, nullptr, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
     ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") + QString::number(rv));
     spdlog::error("Failed to init standard registers {0}", rv);

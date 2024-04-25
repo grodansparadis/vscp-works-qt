@@ -54,12 +54,10 @@
 
 #include "bootloaderwizard.h"
 #include "cdlgconnsettingscanal.h"
-#include "cdlgconnsettingslocal.h"
 #include "cdlgconnsettingsmqtt.h"
 #include "cdlgconnsettingsmulticast.h"
 #include "cdlgconnsettingsrawcan.h"
 #include "cdlgconnsettingsrawmqtt.h"
-#include "cdlgconnsettingsrest.h"
 #include "cdlgconnsettingssocketcan.h"
 #include "cdlgconnsettingstcpip.h"
 #include "cdlgconnsettingsudp.h"
@@ -196,21 +194,6 @@ MainWindow::MainWindow()
   QFont font("", 10, QFont::Bold);
   QBrush b(Qt::darkYellow);
 
-  // Local
-  QStringList strlist_local(QString(tr("Local")).split(','));
-  m_topitem_local =
-    new QTreeWidgetItem(strlist_local,
-                        static_cast<int>(CVscpClient::connType::LOCAL));
-  m_topitem_local->setIcon(0, iconTest);
-  m_topitem_local->setToolTip(
-    0,
-    tr("Holds local files/streams. Typically logfile and debug content "
-       "containing VSCP events."));
-  // Set font
-  m_topitem_local->setForeground(0, b);
-  m_topitem_local->setFont(0, font);
-  m_connTreeTable->addTopLevelItem(m_topitem_local);
-
   // CANAL
   QStringList strlist_canal(QString(tr("CANAL Connections")).split(','));
   m_topitem_canal =
@@ -309,17 +292,7 @@ MainWindow::MainWindow()
   m_topitem_multicast->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_multicast);
 
-  // REST
-  QStringList strlist_rest(QString(tr("REST Connections")).split(','));
-  m_topitem_rest =
-    new QTreeWidgetItem(strlist_rest,
-                        static_cast<int>(CVscpClient::connType::REST));
-  m_topitem_rest->setIcon(0, iconTest);
-  m_topitem_rest->setToolTip(0, "Holds VSCP REST connections.");
-  // Set font
-  m_topitem_rest->setForeground(0, b);
-  m_topitem_rest->setFont(0, font);
-  m_connTreeTable->addTopLevelItem(m_topitem_rest);
+  
 
   // RAWCAN
   QStringList strlist_rawcan(QString(tr("Raw CAN Connections")).split(','));
@@ -593,12 +566,6 @@ MainWindow::addLoadedConnections(void)
       switch (
         static_cast<CVscpClient::connType>((it.value())["type"].toInt())) {
 
-        case CVscpClient::connType::LOCAL: {
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_local, it.value());
-          m_topitem_local->sortChildren(0, Qt::AscendingOrder);
-        } break;
-
         case CVscpClient::connType::TCPIP: {
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_tcpip, it.value());
@@ -647,11 +614,7 @@ MainWindow::addLoadedConnections(void)
           m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
         } break;
 
-        case CVscpClient::connType::REST: {
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_rest, it.value());
-          m_topitem_rest->sortChildren(0, Qt::AscendingOrder);
-        } break;
+
 
         case CVscpClient::connType::RAWCAN: {
           // Add connection to connection tree
@@ -699,10 +662,6 @@ MainWindow::openConnectionSettingsDialog(CVscpClient::connType type)
 {
   switch (type) {
 
-    case CVscpClient::connType::LOCAL:
-      newLocalConnection();
-      break;
-
     case CVscpClient::connType::TCPIP:
       newTcpipConnection();
       break;
@@ -735,9 +694,7 @@ MainWindow::openConnectionSettingsDialog(CVscpClient::connType type)
       newMulticastConnection();
       break;
 
-    case CVscpClient::connType::REST:
-      newRestConnection();
-      break;
+
 
     case CVscpClient::connType::RAWCAN:
       newRawCanConnection();
@@ -796,10 +753,6 @@ MainWindow::editConnectionItem(void)
 
       switch ((*pconn)["type"].toInt()) {
 
-        case static_cast<int>(CVscpClient::connType::LOCAL):
-          editLocalConnection(itemConn);
-          break;
-
         case static_cast<int>(CVscpClient::connType::TCPIP):
           editTcpipConnection(itemConn);
           break;
@@ -830,10 +783,6 @@ MainWindow::editConnectionItem(void)
 
         case static_cast<int>(CVscpClient::connType::MULTICAST):
           editMulticastConnection(itemConn);
-          break;
-
-        case static_cast<int>(CVscpClient::connType::REST):
-          editRestConnection(itemConn);
           break;
 
         case static_cast<int>(CVscpClient::connType::RAWCAN):
@@ -887,11 +836,6 @@ MainWindow::cloneConnectionItem(void)
 
       switch (type) {
 
-        case static_cast<int>(CVscpClient::connType::LOCAL):
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_local, conn_copy);
-          break;
-
         case static_cast<int>(CVscpClient::connType::TCPIP):
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_tcpip, conn_copy);
@@ -930,11 +874,6 @@ MainWindow::cloneConnectionItem(void)
         case static_cast<int>(CVscpClient::connType::MULTICAST):
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_multicast, conn_copy);
-          break;
-
-        case static_cast<int>(CVscpClient::connType::REST):
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_rest, conn_copy);
           break;
 
         case static_cast<int>(CVscpClient::connType::RAWCAN):
@@ -1014,10 +953,6 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 
     switch ((*pconn)["type"].toInt()) {
 
-      case static_cast<int>(CVscpClient::connType::LOCAL):
-        newSession();
-        break;
-
       case static_cast<int>(CVscpClient::connType::TCPIP):
         newSession();
         break;
@@ -1050,10 +985,6 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         newSession();
         break;
 
-      case static_cast<int>(CVscpClient::connType::REST):
-        newSession();
-        break;
-
       case static_cast<int>(CVscpClient::connType::RAWCAN):
         newSession();
         break;
@@ -1071,10 +1002,6 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
   else {
 
     switch (item->type()) {
-
-      case static_cast<int>(CVscpClient::connType::LOCAL):
-        newLocalConnection();
-        break;
 
       case static_cast<int>(CVscpClient::connType::TCPIP):
         newTcpipConnection();
@@ -1106,10 +1033,6 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 
       case static_cast<int>(CVscpClient::connType::MULTICAST):
         newMulticastConnection();
-        break;
-
-      case static_cast<int>(CVscpClient::connType::REST):
-        newRestConnection();
         break;
 
       case static_cast<int>(CVscpClient::connType::RAWCAN):
@@ -1150,12 +1073,6 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
   // If this is a top level item allow just new connection
   if (QModelIndex() == parent) {
     switch (item->type()) {
-
-      case static_cast<int>(CVscpClient::connType::LOCAL):
-        menu->addAction(QString(tr("Add new local connection...")),
-                        this,
-                        SLOT(newLocalConnection()));
-        break;
 
       case static_cast<int>(CVscpClient::connType::TCPIP):
         menu->addAction(QString(tr("Add new tcp/ip connection...")),
@@ -1205,12 +1122,6 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         SLOT(newMulticastConnection()));
         break;
 
-      case static_cast<int>(CVscpClient::connType::REST):
-        menu->addAction(QString(tr("Add new REST connection...")),
-                        this,
-                        SLOT(newRestConnection()));
-        break;
-
       case static_cast<int>(CVscpClient::connType::RAWCAN):
         menu->addAction(QString(tr("Add new raw CAN connection...")),
                         this,
@@ -1232,12 +1143,6 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
   }
   else {
     switch (item->parent()->type()) {
-
-      case static_cast<int>(CVscpClient::connType::LOCAL):
-        menu->addAction(QString(tr("Add new local connection")),
-                        this,
-                        SLOT(newLocalConnection()));
-        break;
 
       case static_cast<int>(CVscpClient::connType::TCPIP):
         menu->addAction(QString(tr("Add new tcp/ip connection")),
@@ -1285,12 +1190,6 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         menu->addAction(QString(tr("Add new multicast connection")),
                         this,
                         SLOT(newMulticastConnection()));
-        break;
-
-      case static_cast<int>(CVscpClient::connType::REST):
-        menu->addAction(QString(tr("Add new REST connection")),
-                        this,
-                        SLOT(newRestConnection()));
         break;
 
       case static_cast<int>(CVscpClient::connType::RAWCAN):
@@ -1353,7 +1252,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
 
     const QIcon bootloadIcon = QIcon(":/page_up.png");
     menu->addAction(bootloadIcon,
-                    QString(tr("Bootload")),
+                    QString(tr("Bootloader wizard")),
                     this,
                     SLOT(newNodeBootload()));
   }
@@ -1460,7 +1359,7 @@ MainWindow::createActions()
   const QIcon newSessionIcon = QIcon(":/page.png");
   QAction* newSessionAct =
     new QAction(newSessionIcon, tr("&Session window..."), this);
-  newSessionAct->setShortcut(Qt::Key_S | Qt::CTRL);
+  newSessionAct->setShortcut(Qt::Key_S | Qt::ALT);
   newSessionAct->setStatusTip(tr("Open a new VSCP Session window"));
   connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
   fileMenu->addAction(newSessionAct);
@@ -1470,7 +1369,7 @@ MainWindow::createActions()
   const QIcon newDevConfigIcon = QIcon(":/page_process.png");
   QAction* newDevConfigAct =
     new QAction(newDevConfigIcon, tr("&Configuration..."), this);
-  newDevConfigAct->setShortcut(Qt::Key_C | Qt::CTRL);
+  newDevConfigAct->setShortcut(Qt::Key_C | Qt::ALT);
   newDevConfigAct->setStatusTip(tr("Open a new VSCP configuration window"));
   connect(newDevConfigAct,
           &QAction::triggered,
@@ -1484,7 +1383,7 @@ MainWindow::createActions()
   const QIcon scanForNodeIcon = QIcon(":/page_search.png");
   QAction* scanForNodeAct =
     new QAction(scanForNodeIcon, tr("Scan for &nodes..."), this);
-  scanForNodeAct->setShortcut(Qt::Key_F | Qt::CTRL);
+  scanForNodeAct->setShortcut(Qt::Key_F | Qt::ALT);
   scanForNodeAct->setStatusTip(tr("Open a new node scan window."));
   connect(scanForNodeAct, &QAction::triggered, this, &MainWindow::newNodeScan);
   fileMenu->addAction(scanForNodeAct);
@@ -1495,9 +1394,9 @@ MainWindow::createActions()
   const QIcon bootloaderIcon = QIcon(":/page_up.png");
   QAction* bootloaderAct =
     new QAction(bootloaderIcon, tr("&Bootloader wizard..."), this);
-  bootloaderAct->setShortcut(Qt::Key_B | Qt::CTRL);
+  bootloaderAct->setShortcut(Qt::Key_B| Qt::ALT);
   bootloaderAct->setStatusTip(tr("Open a new VSCP bootloader wizard."));
-  connect(bootloaderAct, &QAction::triggered, this, &MainWindow::save);
+  connect(bootloaderAct, &QAction::triggered, this, &MainWindow::newNodeBootload);
   fileMenu->addAction(bootloaderAct);
   fileToolBar->addAction(bootloaderAct);
 
@@ -1898,101 +1797,6 @@ MainWindow::sessionFilter(void)
                              tr(APPNAME),
                              tr("filter set"),
                              QMessageBox::Ok);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// newLocalConnection
-//
-
-void
-MainWindow::newLocalConnection()
-{
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsLocal dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    // Add the new connection
-    // pworks->m_mapConn.push_back(dlg.getJson());
-    QJsonObject conn = dlg.getJson();
-    // QString uuid = QUuid::createUuid().toString();
-    // conn["uuid"] = uuid;
-    // pworks->m_mapConn[uuid] = conn;
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientLocal *pClient = new vscpClientLocal();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->setPath(dlg.getPath().toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_local, conn);
-    m_topitem_local->sortChildren(0, Qt::AscendingOrder);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// editLocalConnection
-//
-
-void
-MainWindow::editLocalConnection(treeWidgetItemConn* itemConn)
-{
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
-
-  CDlgConnSettingsLocal dlg(this);
-  dlg.setJson(pconn);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    // Set the new connection
-    QJsonObject conn = dlg.getJson();
-
-    // Update listTree data
-    itemConn->setJson(conn);
-
-    // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
-
-    // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
-
-    m_topitem_local->sortChildren(0, Qt::AscendingOrder);
   }
 }
 
@@ -2732,97 +2536,6 @@ restart:
     itemConn->setText(0, conn["name"].toString());
 
     m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// newRestConnection
-//
-
-void
-MainWindow::newRestConnection()
-{
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsRest dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    QJsonObject conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientRest *pClient = new vscpClientRest();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_rest, conn);
-    m_topitem_rest->sortChildren(0, Qt::AscendingOrder);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// editRestConnection
-//
-
-void
-MainWindow::editRestConnection(treeWidgetItemConn* itemConn)
-{
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
-
-  CDlgConnSettingsRest dlg(this);
-  dlg.setJson(pconn);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    // Set the new connection
-    QJsonObject conn = dlg.getJson();
-
-    // Update listTree data
-    itemConn->setJson(conn);
-
-    // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
-
-    // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
-
-    m_topitem_rest->sortChildren(0, Qt::AscendingOrder);
   }
 }
 

@@ -67,6 +67,7 @@ CDlgBootFirmware::CDlgBootFirmware(QWidget* parent)
 
   connect(ui->chkLocal, &QCheckBox::toggled, this, &CDlgBootFirmware::chkLocalFile);
   connect(ui->listFirmware, &QListWidget::itemClicked, this, &CDlgBootFirmware::selectFirmwareFile);
+  connect(ui->listFirmware, &QListWidget::itemDoubleClicked, this, &CDlgBootFirmware::accept);
   connect(ui->BtnSelectFile, &QPushButton::clicked, this, &CDlgBootFirmware::selectLocalFile);
 }
 

@@ -2,7 +2,7 @@
 #
 # Build instructions for VSCP Works.
 #
-# Copyright (c) 2000-2023 Åke Hedman, Grodans Paradis AB
+# Copyright (c) 2000-2024 Åke Hedman, Grodans Paradis AB
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -192,7 +192,6 @@ endif()
 # set(UI )
 qt5_wrap_ui(UI src/mainwindow.ui    
   src/cdlgmainsettings.ui
-  src/cdlgconnsettingslocal.ui
   src/cdlgconnsettingscanal.ui
   src/cdlgconnsettingstcpip.ui
   src/cdlgconnsettingssocketcan.ui
@@ -201,7 +200,6 @@ qt5_wrap_ui(UI src/mainwindow.ui
   src/cdlgconnsettingsws2.ui
   src/cdlgconnsettingsudp.ui
   src/cdlgconnsettingsmulticast.ui
-  src/cdlgconnsettingsrest.ui
   src/cdlgconnsettingsrawcan.ui
   src/cdlgconnsettingsrawmqtt.ui
   src/cdlgnewconnection.ui
@@ -286,6 +284,8 @@ qt5_wrap_ui(UI src/mainwindow.ui
   src/cdlgselectmqtttopics.ui
 
   src/cdlgbootfirmware.ui
+  
+  src/cdlgselectbootalgorithm.ui
 )
 
 add_executable(${PROJECT_NAME}
@@ -303,10 +303,6 @@ add_executable(${PROJECT_NAME}
   src/cdlgmainsettings.ui
   src/cdlgmainsettings.h
   src/cdlgmainsettings.cpp
-
-  src/cdlgconnsettingslocal.ui
-  src/cdlgconnsettingslocal.h
-  src/cdlgconnsettingslocal.cpp
 
   src/cdlgconnsettingscanal.ui
   src/cdlgconnsettingscanal.h
@@ -359,10 +355,6 @@ add_executable(${PROJECT_NAME}
   src/cdlgconnsettingsrawmqtt.ui
   src/cdlgconnsettingsrawmqtt.h
   src/cdlgconnsettingsrawmqtt.cpp
-
-  src/cdlgconnsettingsrest.ui
-  src/cdlgconnsettingsrest.h
-  src/cdlgconnsettingsrest.cpp
 
   src/cdlgknownguid.ui
   src/cdlgknownguid.h
@@ -637,8 +629,12 @@ add_executable(${PROJECT_NAME}
   src/bootloaderwizard.cpp
 
   src/cdlgbootfirmware.ui
-  src/cdlgbootfirmware.cpp
   src/cdlgbootfirmware.h
+  src/cdlgbootfirmware.cpp
+
+  src/cdlgselectbootalgorithm.ui
+  src/cdlgselectbootalgorithm.h
+  src/cdlgselectbootalgorithm.cpp
 
   ${VSCP_PATH}/src/vscp/common/version.h
   ${VSCP_PATH}/src/vscp/common/vscp.h
@@ -662,8 +658,6 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/vscp/common/register.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_client_base.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_base.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_local.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_local.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_client_canal.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_canal.cpp    
   ${VSCP_PATH}/src/vscp/common/vscp_client_mqtt.h
@@ -680,16 +674,10 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/vscp/common/vscp_client_udp.cpp 
   ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.cpp 
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rest.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rest.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.h
   ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rs232.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rs232.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rs485.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.h
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.h

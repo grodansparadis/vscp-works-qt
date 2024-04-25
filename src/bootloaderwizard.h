@@ -72,7 +72,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -80,6 +80,11 @@ public:
     @return true if it ios  OK to move on
   */
   bool validatePage(void);
+
+  /*!
+    Next page
+  */
+  int nextId(void) const;
 
 private:
   /// A pointer to a VSCP Client
@@ -110,7 +115,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -163,7 +168,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -211,7 +216,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -265,7 +270,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -281,11 +286,23 @@ public slots:
   */
   void setFirmwareFile(void);
 
+  /*!
+    Local file checkbock clicked
+  */
+  void toggleLocalFile(bool checked);
+
 private:
 
   CMDF m_mdf;
 
-  QLineEdit* m_labelFirmwareFile;
+  /// Selected firmware file
+  QLineEdit* m_editFirmwareFile;
+
+  /// Button that open dialog to select firmware file
+  QPushButton* m_btnSelectFirmware;
+
+  // Checkbox that selects local file
+  QCheckBox* m_chkLocalFile;
 
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
@@ -315,7 +332,7 @@ public:
     Finish button should be enabled or disabled.
     @return true if buttons should be displayed.
   */
-  bool isComplete(void);
+  bool isComplete(void) const;
 
   /*!
     Called when next or finnish is pressed to perform
@@ -324,12 +341,38 @@ public:
   */
   bool validatePage(void);
 
+  /*!
+    Add a status message
+    @param str Statusmessage to add. Not added if zero length
+  */
+  void addStatusMessage(const QString& str);
+
+  /*!
+    Callback for the flashing operation
+    @param int progress for operation 0-100. If set to -1 progress is
+      not updated.
+    @param str Description of operation
+  */
+  void statusCallback(int progress, const char* str);
+
+public slots:
+
+  /// Flash the device
+  void flashDevice(void);  
+
 private:
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
 
   /// Pointer to the boot device
   CBootDevice* m_bootDev;
+
+  /// Boot progress
+  QProgressBar *m_progress;
+
+  /// Last info message from boot process
+  QTextEdit *m_infomsg;
+  
 };
 
 // ----------------------------------------------------------------------------

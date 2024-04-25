@@ -54,9 +54,6 @@
 #include <vscp_client_multicast.h>
 #include <vscp_client_rawcan.h>
 #include <vscp_client_rawmqtt.h>
-#include <vscp_client_rest.h>
-#include <vscp_client_rs232.h>
-#include <vscp_client_rs485.h>
 
 #include "cdlgknownguid.h"
 #include "cdlgselectmqtttopics.h"
@@ -229,14 +226,11 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      break;
-
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -251,7 +245,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         return;
       }
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -267,7 +261,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         return;
       }
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -279,7 +273,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -290,7 +284,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -312,7 +306,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -323,40 +317,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
-      // Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::REST:
-      m_vscpClient = new vscpClientRest();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
-      // Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::RS232:
-      m_vscpClient = new vscpClientRs232();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
-      // Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::RS485:
-      m_vscpClient = new vscpClientRs485();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -367,7 +328,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -379,7 +340,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
       m_vscpClient->setCallback(eventReceived, this);
-      m_connectActBar->setChecked(true);
+      //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
         connectToRemoteHost(true);
@@ -607,7 +568,7 @@ CFrmSession::createMenu()
                                                 &CFrmSession::openMqttPublishTopics);
     m_mqttPublishTopics = m_mqttMenu->addAction(tr("Clear MQTT retain topics..."),
                                                 this,
-                                                &CFrmSession::openClearMqttRetainPublishTopics);                                           
+                                                &CFrmSession::openClearMqttRetainPublishTopics);
     m_menuBar->addMenu(m_mqttMenu);
   }
 
@@ -1681,7 +1642,7 @@ CFrmSession::cloneTxEvent(void)
     bool bEnable = itemSourceEvent->m_tx.getEnable();
     QString name = itemSourceEvent->m_tx.getName();
     name += tr("_copy");
-    uint16_t count   = itemSourceEvent->m_tx.getCount();
+    uint16_t count  = itemSourceEvent->m_tx.getCount();
     uint32_t period = itemSourceEvent->m_tx.getPeriod();
 
     // Add new row
@@ -1830,7 +1791,7 @@ CFrmSession::loadTxEvents(const QString& path)
 
         bool bEnable    = false;
         QString name    = tr("no name");
-        uint16_t count   = 1;
+        uint16_t count  = 1;
         uint32_t period = 0;
         QString event;
 
@@ -2076,9 +2037,6 @@ CFrmSession::doConnectToRemoteHost(void)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      break;
-
     case CVscpClient::connType::TCPIP:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         QIcon disconnectIcon(":/disconnect.png");
@@ -2181,15 +2139,6 @@ CFrmSession::doConnectToRemoteHost(void)
     case CVscpClient::connType::MULTICAST:
       break;
 
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
-      break;
-
     case CVscpClient::connType::RAWCAN:
       break;
 
@@ -2211,9 +2160,6 @@ CFrmSession::doDisconnectFromRemoteHost(void)
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
-      break;
-
-    case CVscpClient::connType::LOCAL:
       break;
 
     case CVscpClient::connType::TCPIP:
@@ -2332,15 +2278,6 @@ CFrmSession::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::MULTICAST:
-      break;
-
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
       break;
 
     case CVscpClient::connType::RAWCAN:
@@ -3632,8 +3569,8 @@ CFrmSession::updateAllRows(void)
 void
 CFrmSession::openConnectionSettings(void)
 {
-  //printf("openConnectionSettings\n");
-  // parent()->editConnectionItem();
+  // printf("openConnectionSettings\n");
+  //  parent()->editConnectionItem();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

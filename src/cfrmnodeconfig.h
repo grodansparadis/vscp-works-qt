@@ -176,12 +176,12 @@ class CRemoteVariableWidgetItem : public QTreeWidgetItem
 /*!
     Class that represent a row in the DM list
 */
-class CDMWidgetItem : public QTreeWidgetItem
+class CDmWidgetItem : public QTreeWidgetItem
 {
 
  public:
-    CDMWidgetItem(const QString& text);
-    virtual ~CDMWidgetItem();
+    CDmWidgetItem(const QString& text);
+    virtual ~CDmWidgetItem();
 
     /*!
       Holds index for the DM row

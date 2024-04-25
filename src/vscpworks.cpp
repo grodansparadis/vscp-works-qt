@@ -197,10 +197,6 @@ vscpworks::getConnectionName(CVscpClient::connType type)
       str = tr("No connection");
       break;
 
-    case CVscpClient::connType::LOCAL:
-      str = tr("VSCP local connection");
-      break;
-
     case CVscpClient::connType::TCPIP:
       str = tr("VSCP tcp/ip connection");
       break;
@@ -231,18 +227,6 @@ vscpworks::getConnectionName(CVscpClient::connType type)
 
     case CVscpClient::connType::MULTICAST:
       str = tr("VSCP multicast connection");
-      break;
-
-    case CVscpClient::connType::REST:
-      str = tr("VSCP REST connection");
-      break;
-
-    case CVscpClient::connType::RS232:
-      str = tr("VSCP RS-232 connection");
-      break;
-
-    case CVscpClient::connType::RS485:
-      str = tr("VSCP RS-485 connection");
       break;
 
     case CVscpClient::connType::RAWCAN:
@@ -1255,4 +1239,3 @@ vscpworks::downloadMDF(CStandardRegisters& stdregs,
   }
   return VSCP_ERROR_SUCCESS;
 }
-

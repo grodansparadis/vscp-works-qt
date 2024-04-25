@@ -68,17 +68,7 @@
         </property>
         <item>
          <property name="text">
-          <string>IHEX8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>IHEX16</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>IHEX32</string>
+          <string>IHEX</string>
          </property>
         </item>
        </widget>

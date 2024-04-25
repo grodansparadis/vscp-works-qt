@@ -56,10 +56,13 @@ https://stackoverflow.com/questions/400257/how-can-i-pass-a-class-member-functio
  - search register / next 
   - search remote variable /next
   - Remove ctrl+0/1/2... from menu keep functionality.
+  - Change node id after scan does not work
+  - From firmware file -> boot of that file.
 
 ## Scan window
   - Go to firmware update directly from window
   - Full Level II device scan.
+  - Go to bootload
 
 ## Bootloader window
 

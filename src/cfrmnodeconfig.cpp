@@ -49,9 +49,6 @@
 #include <vscp_client_multicast.h>
 #include <vscp_client_rawcan.h>
 #include <vscp_client_rawmqtt.h>
-#include <vscp_client_rest.h>
-#include <vscp_client_rs232.h>
-#include <vscp_client_rs485.h>
 #ifndef WIN32
 #include <vscp_client_socketcan.h>
 #endif
@@ -129,13 +126,13 @@ CRemoteVariableWidgetItem::~CRemoteVariableWidgetItem()
 
 // ----------------------------------------------------------------------------
 
-CDMWidgetItem::CDMWidgetItem(const QString& text)
+CDmWidgetItem::CDmWidgetItem(const QString& text)
   : QTreeWidgetItem(TREE_LIST_DM_TYPE)
 {
   m_pDM = nullptr;
 }
 
-CDMWidgetItem::~CDMWidgetItem()
+CDmWidgetItem::~CDmWidgetItem()
 {
   ;
 }
@@ -354,9 +351,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      // GUID
-      break;
 
     case CVscpClient::connType::TCPIP:
 
@@ -549,33 +543,6 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       connectToRemoteHost(true);
       break;
 
-    case CVscpClient::connType::REST:
-      // GUID
-      m_vscpClient = new vscpClientRest();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      ui->actionConnect->setChecked(true);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::RS232:
-      // nodeid
-      m_vscpClient = new vscpClientRs232();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      ui->actionConnect->setChecked(true);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::RS485:
-      // nodeid
-      m_vscpClient = new vscpClientRs485();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
-      ui->actionConnect->setChecked(true);
-      ui->actionConnect->setChecked(true);
-      connectToRemoteHost(true);
-      break;
 
     case CVscpClient::connType::RAWCAN:
       m_vscpClient = new vscpClientRawCan();
@@ -996,9 +963,6 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
     case CVscpClient::connType::NONE:
       break;
 
-    case CVscpClient::connType::LOCAL:
-      break;
-
     case CVscpClient::connType::TCPIP:
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
@@ -1090,15 +1054,6 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
     case CVscpClient::connType::MULTICAST:
       break;
 
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
-      break;
-
     case CVscpClient::connType::RAWCAN:
       break;
 
@@ -1120,9 +1075,6 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
-      break;
-
-    case CVscpClient::connType::LOCAL:
       break;
 
     case CVscpClient::connType::TCPIP:
@@ -1209,15 +1161,6 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::MULTICAST:
-      break;
-
-    case CVscpClient::connType::REST:
-      break;
-
-    case CVscpClient::connType::RS232:
-      break;
-
-    case CVscpClient::connType::RS485:
       break;
 
     case CVscpClient::connType::RAWCAN:
@@ -1534,8 +1477,9 @@ CFrmNodeConfig::writeChanges(void)
       }
       else {
         QApplication::beep();
-        spdlog::error("Failed to write register(s) rv = {}", rv);
+        spdlog::error("Failed to write register(s) rv = {0}  {1}:{2}", rv,itemReg->m_regPage,itemReg->m_regOffset);
         QString str = tr("Failed to write register(s) rv = ") + QString::number(rv);
+        str += QString("reg={}:{}").arg(itemReg->m_regPage).arg(itemReg->m_regOffset); 
         ui->statusBar->showMessage(str);
         QApplication::restoreOverrideCursor();
         return VSCP_ERROR_COMMUNICATION;
@@ -1607,7 +1551,7 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
 
   ui->statusBar->showMessage(tr("Reading standard registers from device..."));
 
-  int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface, pworks->m_config_timeout);
+  int rv = m_stdregs.init(*m_vscpClient, guidNode, guidInterface, nullptr, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to read standard registers from device. rv=") +
@@ -2593,7 +2537,7 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
 
   QTreeWidgetItemIterator it(ui->treeWidgetDecisionMatrix);
   while (*it) {
-    CDMWidgetItem* pdmItem = (CDMWidgetItem*)*it;
+    CDmWidgetItem* pdmItem = (CDmWidgetItem*)*it;
     if ((nullptr != pdmItem) && (nullptr != pdmItem->m_pDM) && (pdmItem->m_row == row)) {
       gotoRegisterOnPage(pdmItem->m_pDM->getStartPage(), pdmItem->m_pDM->getStartOffset());
       break;
@@ -3739,7 +3683,7 @@ CFrmNodeConfig::renderRegisters(void)
   spdlog::trace("MDF page count = {}", nPages);
 
   // Get user registers for all pages
-  rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages, pworks->m_config_timeout);
+  rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages, nullptr, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
     std::cout << "Failed to read user regs: " << rv << std::endl;
     QApplication::beep();
@@ -4432,7 +4376,7 @@ CFrmNodeConfig::onDMTreeWidgetCellChanged(QTreeWidgetItem* item, int column)
   }
 
   vscpworks* pworks     = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* itemDM = (CDMWidgetItem*)item;
+  CDmWidgetItem* itemDM = (CDmWidgetItem*)item;
   QString strValue      = itemDM->text(column);
   uint8_t value         = vscp_readStringValue(strValue.toStdString());
   m_userregs.putReg((itemDM->m_row * itemDM->m_pDM->getRowSize()) + column,
@@ -4450,7 +4394,7 @@ CFrmNodeConfig::editDMRow()
 {
   int reg;
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  CDmWidgetItem* item = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("editDMRow: Item for DM register row is null");
     return;
@@ -4612,7 +4556,7 @@ CFrmNodeConfig::toggleDMRow(void)
 {
   // int reg;
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  CDmWidgetItem* item = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("editDMRow: Item for DM register row is null");
     return;
@@ -4655,7 +4599,7 @@ CFrmNodeConfig::readSelectedDMRow(void)
   int rv;
   // int reg;
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  CDmWidgetItem* item = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("readSelectedDMRow: Item for DM register row is null");
     return;
@@ -4693,6 +4637,7 @@ CFrmNodeConfig::readSelectedDMRow(void)
                                                                item->m_pDM->getStartOffset() + (item->m_row * item->m_pDM->getRowSize()),
                                                                item->m_pDM->getRowSize(),
                                                                values,
+                                                               nullptr,
                                                                pworks->m_config_timeout))) {
 
     QApplication::restoreOverrideCursor();
@@ -4733,7 +4678,7 @@ CFrmNodeConfig::writeSelectedDMRow(void)
   int rv;
   // int reg;
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  CDmWidgetItem* item = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("writeSelectedDMRow: Item for DM register row is null");
     return;
@@ -4776,6 +4721,7 @@ CFrmNodeConfig::writeSelectedDMRow(void)
                                                                 guidInterface,
                                                                 item->m_pDM->getStartPage(),
                                                                 values,
+                                                                nullptr,
                                                                 pworks->m_config_timeout))) {
 
     QApplication::restoreOverrideCursor();
@@ -4813,7 +4759,7 @@ void
 CFrmNodeConfig::gotoDMRegisterPos(void)
 {
   vscpworks* pworks   = (vscpworks*)QCoreApplication::instance();
-  CDMWidgetItem* item = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
+  CDmWidgetItem* item = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->currentItem();
   if (nullptr == item) {
     spdlog::error("gotoDMRegisterPos: Item for DM register row is null");
     return;
@@ -4849,7 +4795,7 @@ CFrmNodeConfig::updateChangeDM(uint32_t offset, uint16_t page, bool bFromRegUpda
     return;
   }
 
-  CDMWidgetItem* itemDM = (CDMWidgetItem*)ui->treeWidgetDecisionMatrix->topLevelItem(row);
+  CDmWidgetItem* itemDM = (CDmWidgetItem*)ui->treeWidgetDecisionMatrix->topLevelItem(row);
   if (NULL == itemDM) {
     return;
   }
@@ -4892,7 +4838,7 @@ CFrmNodeConfig::renderDecisionMatrix(void)
   uint32_t startOffset     = pdm->getStartOffset();
 
   for (int row = 0; row < pdm->getRowCount(); row++) {
-    CDMWidgetItem* itemWidget = new CDMWidgetItem("DM");
+    CDmWidgetItem* itemWidget = new CDmWidgetItem("DM");
     if (nullptr == itemWidget) {
       spdlog::critical("Failed to create DM widget item");
       continue;
@@ -4970,7 +4916,7 @@ CFrmNodeConfig::updateVisualDM(void)
 
   QTreeWidgetItemIterator it(ui->treeWidgetDecisionMatrix);
   while (*it) {
-    CDMWidgetItem* itemDM = (CDMWidgetItem*)(*it);
+    CDmWidgetItem* itemDM = (CDmWidgetItem*)(*it);
     int pos               = itemDM->m_pDM->getStartOffset() + itemDM->m_row * itemDM->m_pDM->getRowSize();
     for (int i = pos; i < (pos + 8); i++) {
       if (m_userregs.isChanged(i, itemDM->m_pDM->getStartPage())) {
@@ -4994,7 +4940,7 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   // int idx;
   std::string html;
   std::string str;
-  CDMWidgetItem* pitem     = (CDMWidgetItem*)item;
+  CDmWidgetItem* pitem     = (CDmWidgetItem*)item;
   CMDF_DecisionMatrix* pDM = pitem->m_pDM;
 
   html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
