@@ -35,8 +35,8 @@
 
 #include "vscpworks.h"
 
-#include "mainwindow.h"
 #include "cdlgmainsettings.h"
+#include "mainwindow.h"
 #include "ui_cdlgmainsettings.h"
 
 #include "cfrmsession.h"
@@ -52,177 +52,177 @@
 // CTor
 //
 
-CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgMainSettings)
+CDlgMainSettings::CDlgMainSettings(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgMainSettings)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(onBaseChange(int))); 
+  connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(int)), this, SLOT(onBaseChange(int)));
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();    
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // * * * General * * *
+  // * * * General * * *
 
-    // Numeric base
-    //m_baseIndex = pworks->m_base;
-    ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
-    //onBaseChange(static_cast<int>(m_baseIndex));
+  // Numeric base
+  // m_baseIndex = pworks->m_base;
+  ui->comboNumberBase->setCurrentIndex(static_cast<int>(pworks->m_base));
+  // onBaseChange(static_cast<int>(m_baseIndex));
 
-    // Preferred language
-    ui->editPreferredLanguage->setText(pworks->m_preferredLanguage.c_str());
+  // Preferred language
+  ui->editPreferredLanguage->setText(pworks->m_preferredLanguage.c_str());
 
-    // Darkthereme
-    ui->chkDarkTheme->setChecked(pworks->m_bEnableDarkTheme);
+  // Darkthereme
+  ui->chkDarkTheme->setChecked(pworks->m_bEnableDarkTheme);
 
-    // Ask befor delete/clear
-    ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);
+  // Ask befor delete/clear
+  ui->chkAskOnDelete->setChecked(pworks->m_bAskBeforeDelete);
 
-    // Save format
-    ui->chkAlwaysJSON->setChecked(pworks->m_bSaveAlwaysJSON);
+  // Save format
+  ui->chkAlwaysJSON->setChecked(pworks->m_bSaveAlwaysJSON);
 
-    // * * * Session Window tab * * *
+  // * * * Session Window tab * * *
 
-    // Session response timeout
-    ui->spinSessionTimeout->setValue(pworks->m_session_timeout);
+  // Session response timeout
+  ui->spinSessionTimeout->setValue(pworks->m_session_timeout);
 
-    // Max number of session events
-    ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
+  // Max number of session events
+  ui->editMaxSessionEvents->setText(QString::number(pworks->m_session_maxEvents));
 
-    // Class display format
-    ui->comboClassDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_ClassDisplayFormat));
+  // Class display format
+  ui->comboClassDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_ClassDisplayFormat));
 
-    // Type display format
-    ui->comboTypeDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_TypeDisplayFormat));
+  // Type display format
+  ui->comboTypeDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_TypeDisplayFormat));
 
-    // GUID display format
-    ui->comboGuidDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_GuidDisplayFormat));
+  // GUID display format
+  ui->comboGuidDisplayFormat->setCurrentIndex(static_cast<int>(pworks->m_session_GuidDisplayFormat));
 
-    // Automatic connect  
-    ui->chkAutomaticConnect->setChecked(pworks->m_session_bAutoConnect);
+  // Automatic connect
+  ui->chkAutomaticConnect->setChecked(pworks->m_session_bAutoConnect);
 
-    // VSCP type token format  
-    ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
+  // VSCP type token format
+  ui->chkShowFullToken->setChecked(pworks->m_session_bShowFullTypeToken);
 
-    // * * * config tab * * *
+  // * * * config tab * * *
 
-    // Config response timeout
-    ui->spinConfigTimeout->setValue(pworks->m_config_timeout);
+  // Config response timeout
+  ui->spinConfigTimeout->setValue(pworks->m_config_timeout);
 
-    // Base for config values
-    ui->comboNumberBaseConfig->setCurrentIndex(static_cast<int>(pworks->m_config_base));
+  // Base for config values
+  ui->comboNumberBaseConfig->setCurrentIndex(static_cast<int>(pworks->m_config_base));
 
-    // Disable colors from MDF
-    ui->chkConfigDisableColors->setChecked(pworks->m_config_bDisableColors);
-    
-    // * * *  logging tab * * *
+  // Disable colors from MDF
+  ui->chkConfigDisableColors->setChecked(pworks->m_config_bDisableColors);
 
-    // File log level
-    switch (pworks->m_fileLogLevel) {
-    
-      case spdlog::level::off:
-        ui->comboFileLogLevel->setCurrentIndex(0);
-        break;
+  // * * * Firmware * * *
+  ui->chkDeviceCode->setChecked(pworks->m_firmware_devicecode_required);
 
-      case spdlog::level::critical:
-        ui->comboFileLogLevel->setCurrentIndex(1);
-        break;
+  // * * *  logging tab * * *
 
-      case spdlog::level::err:
-        ui->comboFileLogLevel->setCurrentIndex(2);
-        break;  
+  // File log level
+  switch (pworks->m_fileLogLevel) {
 
-      case spdlog::level::warn:
-        ui->comboFileLogLevel->setCurrentIndex(3);
-        break;
+    case spdlog::level::off:
+      ui->comboFileLogLevel->setCurrentIndex(0);
+      break;
 
-      default:
-      case spdlog::level::info:
-        ui->comboFileLogLevel->setCurrentIndex(4);
-        break;  
+    case spdlog::level::critical:
+      ui->comboFileLogLevel->setCurrentIndex(1);
+      break;
 
-      case spdlog::level::debug:
-        ui->comboFileLogLevel->setCurrentIndex(5);
-        break;  
+    case spdlog::level::err:
+      ui->comboFileLogLevel->setCurrentIndex(2);
+      break;
 
-      case spdlog::level::trace:
-        ui->comboFileLogLevel->setCurrentIndex(6);
-        break;  
-    }
+    case spdlog::level::warn:
+      ui->comboFileLogLevel->setCurrentIndex(3);
+      break;
 
-    ui->editFileLogPattern->setText(pworks->m_fileLogPattern.c_str());
-    ui->editFileLogPath->setText(pworks->m_fileLogPath.c_str());
-    ui->editFileLogMaxSize->setText(QString::number(pworks->m_maxFileLogSize));
-    ui->editFileLogMaxFiles->setText(QString::number(pworks->m_maxFileLogFiles));
+    default:
+    case spdlog::level::info:
+      ui->comboFileLogLevel->setCurrentIndex(4);
+      break;
 
-    // File log level
-    switch(pworks->m_consoleLogLevel) {
-    
-      case spdlog::level::off:
-        ui->comboConsoleLogLevel->setCurrentIndex(0);
-        break;
+    case spdlog::level::debug:
+      ui->comboFileLogLevel->setCurrentIndex(5);
+      break;
 
-      case spdlog::level::critical:
-        ui->comboConsoleLogLevel->setCurrentIndex(1);
-        break;
+    case spdlog::level::trace:
+      ui->comboFileLogLevel->setCurrentIndex(6);
+      break;
+  }
 
-      case spdlog::level::err:
-        ui->comboConsoleLogLevel->setCurrentIndex(2);
-        break;  
+  ui->editFileLogPattern->setText(pworks->m_fileLogPattern.c_str());
+  ui->editFileLogPath->setText(pworks->m_fileLogPath.c_str());
+  ui->editFileLogMaxSize->setText(QString::number(pworks->m_maxFileLogSize));
+  ui->editFileLogMaxFiles->setText(QString::number(pworks->m_maxFileLogFiles));
 
-      case spdlog::level::warn:
-        ui->comboConsoleLogLevel->setCurrentIndex(3);
-        break;
+  // File log level
+  switch (pworks->m_consoleLogLevel) {
 
-      default:
-      case spdlog::level::info:
-        ui->comboConsoleLogLevel->setCurrentIndex(4);
-        break;  
+    case spdlog::level::off:
+      ui->comboConsoleLogLevel->setCurrentIndex(0);
+      break;
 
-      case spdlog::level::debug:
-        ui->comboConsoleLogLevel->setCurrentIndex(5);
-        break;  
+    case spdlog::level::critical:
+      ui->comboConsoleLogLevel->setCurrentIndex(1);
+      break;
 
-      case spdlog::level::trace:
-        ui->comboConsoleLogLevel->setCurrentIndex(6);
-        break;  
-    }
+    case spdlog::level::err:
+      ui->comboConsoleLogLevel->setCurrentIndex(2);
+      break;
 
-    ui->editConsoleLogPattern->setText(pworks->m_consoleLogPattern.c_str());
+    case spdlog::level::warn:
+      ui->comboConsoleLogLevel->setCurrentIndex(3);
+      break;
 
-    // ------------------------------------------------------------------------
+    default:
+    case spdlog::level::info:
+      ui->comboConsoleLogLevel->setCurrentIndex(4);
+      break;
 
-    // Local storage folder
-    ui->pathLocalStorage->setText(pworks->m_shareFolder);
+    case spdlog::level::debug:
+      ui->comboConsoleLogLevel->setCurrentIndex(5);
+      break;
 
-    // VSCP home folder
-    ui->pathVscpHome->setText(pworks->m_vscpHomeFolder);
+    case spdlog::level::trace:
+      ui->comboConsoleLogLevel->setCurrentIndex(6);
+      break;
+  }
 
-    // Path to config folder
-    ui->pathConfigFile->setText(pworks->m_configFolder);
+  ui->editConsoleLogPattern->setText(pworks->m_consoleLogPattern.c_str());
 
-    // Path to event db
-    {
-        QString path = pworks->m_shareFolder;
-        path += "vscp_events.sqlite3";
-        ui->pathVscpEventDb->setText(path);
-    }
-    
-    // Event DB last download
-    QString str = pworks->m_lastEventDbLoadDateTime.toString(Qt::ISODate);
-    str += " @ server [";
-    str += pworks->m_lastEventDbServerDateTime.toString(Qt::ISODate);
-    str += "]";
-    ui->lastDownload->setText(str);
+  // ------------------------------------------------------------------------
 
-    connect(ui->btnDownLoadNewEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onDownloadEventDb);
-    connect(ui->btnReLoadEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onReLoadEventDb ); 
-    
+  // Local storage folder
+  ui->pathLocalStorage->setText(pworks->m_shareFolder);
 
-    // Hook to row double clicked
-    //connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );           
-    
+  // VSCP home folder
+  ui->pathVscpHome->setText(pworks->m_vscpHomeFolder);
+
+  // Path to config folder
+  ui->pathConfigFile->setText(pworks->m_configFolder);
+
+  // Path to event db
+  {
+    QString path = pworks->m_shareFolder;
+    path += "vscp_events.sqlite3";
+    ui->pathVscpEventDb->setText(path);
+  }
+
+  // Event DB last download
+  QString str = pworks->m_lastEventDbLoadDateTime.toString(Qt::ISODate);
+  str += " @ server [";
+  str += pworks->m_lastEventDbServerDateTime.toString(Qt::ISODate);
+  str += "]";
+  ui->lastDownload->setText(str);
+
+  connect(ui->btnDownLoadNewEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onDownloadEventDb);
+  connect(ui->btnReLoadEventDb, &QPushButton::clicked, this, &CDlgMainSettings::onReLoadEventDb);
+
+  // Hook to row double clicked
+  // connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgLevel1Filter::onDoubleClicked );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -231,125 +231,129 @@ CDlgMainSettings::CDlgMainSettings(QWidget *parent) :
 
 CDlgMainSettings::~CDlgMainSettings()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // accepted
 //
 
-void CDlgMainSettings::done(int rv)
+void
+CDlgMainSettings::done(int rv)
 {
-    if (QDialog::Accepted == rv) { // ok was pressed
-        
-      vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  if (QDialog::Accepted == rv) { // ok was pressed
 
-      // General
-      pworks->m_base = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
-      pworks->m_bEnableDarkTheme = ui->chkDarkTheme->isChecked();
-      pworks->m_bAskBeforeDelete = ui->chkAskOnDelete->isChecked();   
-      pworks->m_bSaveAlwaysJSON = ui->chkAlwaysJSON->isChecked();   
-      pworks->m_preferredLanguage = ui->editPreferredLanguage->text().toStdString();   
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-      // Session window
-      pworks->m_session_timeout = ui->spinSessionTimeout->value();
-      pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
-      pworks->m_session_ClassDisplayFormat = 
-          static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
-      pworks->m_session_TypeDisplayFormat = 
-          static_cast<CFrmSession::typeDisplayFormat>(ui->comboTypeDisplayFormat->currentIndex());
-      pworks->m_session_GuidDisplayFormat = 
-          static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
-      pworks->m_session_bAutoConnect = ui->chkAutomaticConnect->isChecked();
-      pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
+    // General
+    pworks->m_base              = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
+    pworks->m_bEnableDarkTheme  = ui->chkDarkTheme->isChecked();
+    pworks->m_bAskBeforeDelete  = ui->chkAskOnDelete->isChecked();
+    pworks->m_bSaveAlwaysJSON   = ui->chkAlwaysJSON->isChecked();
+    pworks->m_preferredLanguage = ui->editPreferredLanguage->text().toStdString();
 
-      // Config window
-      pworks->m_config_timeout = ui->spinConfigTimeout->value();
-      pworks->m_config_base = static_cast<numerical_base>(ui->comboNumberBaseConfig->currentIndex());
-      pworks->m_config_bDisableColors = ui->chkConfigDisableColors->isChecked();
-      
-      // Logging
+    // Session window
+    pworks->m_session_timeout   = ui->spinSessionTimeout->value();
+    pworks->m_session_maxEvents = ui->editMaxSessionEvents->text().toInt();
+    pworks->m_session_ClassDisplayFormat =
+      static_cast<CFrmSession::classDisplayFormat>(ui->comboClassDisplayFormat->currentIndex());
+    pworks->m_session_TypeDisplayFormat =
+      static_cast<CFrmSession::typeDisplayFormat>(ui->comboTypeDisplayFormat->currentIndex());
+    pworks->m_session_GuidDisplayFormat =
+      static_cast<CFrmSession::guidDisplayFormat>(ui->comboGuidDisplayFormat->currentIndex());
+    pworks->m_session_bAutoConnect       = ui->chkAutomaticConnect->isChecked();
+    pworks->m_session_bShowFullTypeToken = ui->chkShowFullToken->isChecked();
 
-      // File log level
-      int level = ui->comboFileLogLevel->currentIndex();
-      switch (level) {
-          
-          case 0:
-            pworks->m_fileLogLevel = spdlog::level::off;
-            break;
+    // Config window
+    pworks->m_config_timeout        = ui->spinConfigTimeout->value();
+    pworks->m_config_base           = static_cast<numerical_base>(ui->comboNumberBaseConfig->currentIndex());
+    pworks->m_config_bDisableColors = ui->chkConfigDisableColors->isChecked();
 
-          case 1:
-            pworks->m_fileLogLevel = spdlog::level::critical;
-            break;
+    // Firmware loading window
+    pworks->m_firmware_devicecode_required = ui->chkDeviceCode->isChecked();
 
-          case 2:
-            pworks->m_fileLogLevel = spdlog::level::err;
-            break;
+    // Logging
 
-          case 3:
-            pworks->m_fileLogLevel = spdlog::level::warn;
-            break;
+    // File log level
+    int level = ui->comboFileLogLevel->currentIndex();
+    switch (level) {
 
-          default:
-          case 4:
-            pworks->m_fileLogLevel = spdlog::level::info;
-            break;   
+      case 0:
+        pworks->m_fileLogLevel = spdlog::level::off;
+        break;
 
-          case 5:
-            pworks->m_fileLogLevel = spdlog::level::debug;
-            break;       
+      case 1:
+        pworks->m_fileLogLevel = spdlog::level::critical;
+        break;
 
-          case 6:
-            pworks->m_fileLogLevel = spdlog::level::trace;
-            break;  
-      }
+      case 2:
+        pworks->m_fileLogLevel = spdlog::level::err;
+        break;
 
-      pworks->m_fileLogPattern = ui->editFileLogPattern->text().toStdString();
-      pworks->m_fileLogPath = ui->editFileLogPath->text().toStdString();
-      pworks->m_maxFileLogSize = vscp_readStringValue(ui->editFileLogMaxSize->text().toStdString());
-      pworks->m_maxFileLogFiles = vscp_readStringValue(ui->editFileLogMaxFiles->text().toStdString());
+      case 3:
+        pworks->m_fileLogLevel = spdlog::level::warn;
+        break;
 
-      // Console log level
-      level = ui->comboConsoleLogLevel->currentIndex();
-      switch (level) {
-          
-          case 0:
-            pworks->m_consoleLogLevel = spdlog::level::off;
-            break;
+      default:
+      case 4:
+        pworks->m_fileLogLevel = spdlog::level::info;
+        break;
 
-          case 1:
-            pworks->m_consoleLogLevel = spdlog::level::critical;
-            break;
+      case 5:
+        pworks->m_fileLogLevel = spdlog::level::debug;
+        break;
 
-          case 2:
-            pworks->m_consoleLogLevel = spdlog::level::err;
-            break;
-
-          case 3:
-            pworks->m_consoleLogLevel = spdlog::level::warn;
-            break;
-
-          default:
-          case 4:
-            pworks->m_consoleLogLevel = spdlog::level::info;
-            break;   
-
-          case 5:
-            pworks->m_consoleLogLevel = spdlog::level::debug;
-            break;       
-
-          case 6:
-            pworks->m_consoleLogLevel = spdlog::level::trace;
-            break;  
-      }
-
-      // Set new values
-
-      pworks->m_consoleLogPattern = ui->editConsoleLogPattern->text().toStdString();
-    
-      // Data
-      pworks->writeSettings();
+      case 6:
+        pworks->m_fileLogLevel = spdlog::level::trace;
+        break;
     }
+
+    pworks->m_fileLogPattern  = ui->editFileLogPattern->text().toStdString();
+    pworks->m_fileLogPath     = ui->editFileLogPath->text().toStdString();
+    pworks->m_maxFileLogSize  = vscp_readStringValue(ui->editFileLogMaxSize->text().toStdString());
+    pworks->m_maxFileLogFiles = vscp_readStringValue(ui->editFileLogMaxFiles->text().toStdString());
+
+    // Console log level
+    level = ui->comboConsoleLogLevel->currentIndex();
+    switch (level) {
+
+      case 0:
+        pworks->m_consoleLogLevel = spdlog::level::off;
+        break;
+
+      case 1:
+        pworks->m_consoleLogLevel = spdlog::level::critical;
+        break;
+
+      case 2:
+        pworks->m_consoleLogLevel = spdlog::level::err;
+        break;
+
+      case 3:
+        pworks->m_consoleLogLevel = spdlog::level::warn;
+        break;
+
+      default:
+      case 4:
+        pworks->m_consoleLogLevel = spdlog::level::info;
+        break;
+
+      case 5:
+        pworks->m_consoleLogLevel = spdlog::level::debug;
+        break;
+
+      case 6:
+        pworks->m_consoleLogLevel = spdlog::level::trace;
+        break;
+    }
+
+    // Set new values
+
+    pworks->m_consoleLogPattern = ui->editConsoleLogPattern->text().toStdString();
+
+    // Data
+    pworks->writeSettings();
+  }
   QDialog::done(rv);
 }
 
@@ -357,42 +361,44 @@ void CDlgMainSettings::done(int rv)
 // onBaseChange
 //
 
-void CDlgMainSettings::onBaseChange(int index)
+void
+CDlgMainSettings::onBaseChange(int index)
 {
-    
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // onDownloadEventDb
 //
 
-void CDlgMainSettings::onDownloadEventDb(void)
+void
+CDlgMainSettings::onDownloadEventDb(void)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    //pworks->writeSettings();
-    //QWidget* widget = this-> parentWidget();
-    MainWindow *main = (MainWindow *)this-> parentWidget();
-    main->initForcedRemoteEventDbFetch();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  // pworks->writeSettings();
+  // QWidget* widget = this-> parentWidget();
+  MainWindow* main = (MainWindow*)this->parentWidget();
+  main->initForcedRemoteEventDbFetch();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // onReLoadEventDb
 //
 
-void CDlgMainSettings::onReLoadEventDb(void)
+void
+CDlgMainSettings::onReLoadEventDb(void)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
-    if (!pworks->loadEventDb()) {
-        QMessageBox::information(this, 
-                                tr(APPNAME),
-                                tr("Unable to load events from VSCP event database."),
-                                QMessageBox::Ok );
-        return;                                
-    }
-    else {
-        QMessageBox::information(this, 
-                                tr(APPNAME),
-                                tr("Events reloaded from event database."),
-                                QMessageBox::Ok );
-    }
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  if (!pworks->loadEventDb()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Unable to load events from VSCP event database."),
+                             QMessageBox::Ok);
+    return;
+  }
+  else {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Events reloaded from event database."),
+                             QMessageBox::Ok);
+  }
 }

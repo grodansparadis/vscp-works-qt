@@ -94,7 +94,11 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_session_bShowFullTypeToken = false;
   m_session_bAutoSaveTxRows    = true;
 
+  // Config
   m_config_timeout = 1000;
+
+  // Firmware
+  m_firmware_devicecode_required = true;
 
   // Logging defaults
   m_fileLogLevel   = spdlog::level::info;
@@ -391,6 +395,9 @@ vscpworks::loadSettings(void)
   m_config_bDisableColors = settings.value("configDisableColors", false).toBool();
   m_config_timeout        = settings.value("configTimeout", "1000").toUInt();
 
+  // * * * Firmware * * *
+  m_firmware_devicecode_required = settings.value("firmwareDeviceCodeRequired", true).toBool();
+
   // VSCP event database last load date/time
   // ---------------------------------------
   m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
@@ -520,6 +527,9 @@ vscpworks::writeSettings()
   settings.setValue("configNumericBase", static_cast<int>(m_config_base));
   settings.setValue("configDisableColors", m_config_bDisableColors);
   settings.setValue("configTimeout", m_config_timeout);
+
+  // * * * Firmware * * *
+  settings.setValue("firmwareDeviceCodeRequired", m_firmware_devicecode_required);
 
   writeConnections();
 }

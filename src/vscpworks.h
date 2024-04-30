@@ -474,6 +474,15 @@ public:
 
   // ------------------------------------------------------------------------
 
+  /*!
+    if true device code on device must be the same as for firmware device code
+    from MDF
+  */
+  
+  bool m_firmware_devicecode_required;
+
+  // ------------------------------------------------------------------------
+
   /// URL for event database
   QUrl m_eventDbUrl;
 

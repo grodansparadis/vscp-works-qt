@@ -1083,6 +1083,7 @@ void
 CWizardPageFlash::flashDevice(void)
 {
   int rv;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Lets rock'n roll
   spdlog::info("Starting flash device process.");
@@ -1150,7 +1151,8 @@ CWizardPageFlash::flashDevice(void)
       spdlog::info("Init remote device");
       addStatusMessage("Init remote device.");
       QApplication::setOverrideCursor(Qt::WaitCursor);
-      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceInit())) {
+      cguid our_guid;
+      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceInit(our_guid, 0, pworks->m_firmware_devicecode_required))) {
         QApplication::restoreOverrideCursor();
         spdlog::error("Failed to set device into boot mode rv={}", rv);
         addStatusMessage(QString("Failed to init remote device: rv = {%0}.").arg(rv));

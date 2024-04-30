@@ -682,6 +682,8 @@ add_executable(${PROJECT_NAME}
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.cpp
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.h
   ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.cpp
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_vscp.h
+  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_vscp.cpp
   ${VSCP_PATH}/src/vscp/common/vscpunit.h
   ${VSCP_PATH}/src/vscp/common/vscpunit.cpp     
   ${VSCP_PATH}/src/common/sockettcp.h
