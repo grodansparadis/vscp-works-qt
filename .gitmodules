@@ -20,3 +20,6 @@
 [submodule "third_party/libwebsockets"]
 	path = third_party/libwebsockets
 	url = https://github.com/warmcat/libwebsockets.git
+[submodule "third_party/crypto-algorithms"]
+	path = third_party/crypto-algorithms
+	url = https://github.com/B-Con/crypto-algorithms.git

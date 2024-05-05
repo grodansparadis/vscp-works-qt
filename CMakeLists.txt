@@ -701,8 +701,10 @@ add_executable(${PROJECT_NAME}
 
   ./third_party/mustache/mustache.hpp
   ./third_party/spdlog/include/
-  ./third_party/fastpbkdf2/fastpbkdf2.h
-  ./third_party/fastpbkdf2/fastpbkdf2.c   
+#  ./third_party/fastpbkdf2/fastpbkdf2.h
+#  ./third_party/fastpbkdf2/fastpbkdf2.c
+  ./third_party/crypto-algorithms/sha256.h
+  ./third_party/crypto-algorithms/sha256.c    
   install/${PROJECT_NAME}.desktop
   ${TS_FILES}   
   ) 
@@ -721,9 +723,10 @@ include_directories( PUBLIC ./src
   ./third_party
   ./third_party/nlohmann/include/
   ./third_party/spdlog/include/
-  ./third_party/mustache/
+  ./third_party/Mustache/
   ./third_party/maddy/include/
-  ./third_party/fastpbkdf2/
+  #./third_party/fastpbkdf2/
+  ./third_party/crypto-algorithms/
   ${PThreads4W_INCLUDE_DIR}
   ${Qt5Widgets_INCLUDE_DIRS}
   ${Qt5Core_INCLUDE_DIRS}
@@ -753,7 +756,8 @@ include_directories( PUBLIC ./src
   ./third_party/spdlog/include/
   ./third_party/mustache/
   ./third_party/maddy/include/
-  ./third_party/fastpbkdf2/
+#  ./third_party/fastpbkdf2/
+  ./third_party/crypto-algorithms/s
   ${Qt5Core_INCLUDE_DIRS}
   ${Qt5SerialBus_INCLUDE_DIRS}
   ${Qt5SerialPort_INCLUDE_DIRS}
@@ -813,9 +817,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   OpenSSL::SSL 
   OpenSSL::Crypto
   ${OPENSSL_LIBRARIES}
-#        ${PAHO_LIBRARIES}
   ${MOSQUITTO_LIBRARIES}
-#        ${LIBWEBSOCKETS_LIBRARIES}
+  ${LIBWEBSOCKETS_LIBRARIES}
   ${EXPAT_LIBRARIES}
   ${CURL_LIBRARIES}
   ${DLFCN_LIBS}
