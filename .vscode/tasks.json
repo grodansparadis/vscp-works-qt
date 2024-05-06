@@ -1,96 +1,104 @@
 {
     "tasks": [
-        {
-          "taskName": "build",
-          "type": "shell",
-          "command": "cd build; make -j4 -Wall",
-          "args": [],
-          "group": {
-              "kind": "build",
-              "isDefault": true
-          },
-          "problemMatcher": "$gcc"
+      {
+        "taskName": "build",
+        "type": "shell",
+        "command": "cd build; make -j4 -Wall",
+        "args": [],
+        "group": "build",
+        "problemMatcher": "$gcc",
+        "label": "build"
+      },
+      {
+        "taskName": "clean & build all",
+        "type": "shell",
+        "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
+        "args": [],
+        "group": {
+          "kind": "build",
+          "isDefault": true
         },
-        {
-          "taskName": "clean & build all",
-          "type": "shell",
-          "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
-          "args": [],
-          "group": {
-              "kind": "build",
-              "isDefault": false
-          },
-          "problemMatcher": {
-              "owner": "cpp",
-              "fileLocation": ["relative", "${workspaceFolder}"],
-              "pattern": {
-                "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                "file": 1,
-                "line": 2,
-                "column": 3,
-                "severity": 4,
-                "message": 5
-              }
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
           }
         },
-        {
-          "taskName": "Clean & build all 5.15.2",
-          "type": "shell",
-          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
-          "args": [],
-          "group": {
-              "kind": "build",
-              "isDefault": false
-          },
-          "problemMatcher": {
-              "owner": "cpp",
-              "fileLocation": ["relative", "${workspaceFolder}"],
-              "pattern": {
-                "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                "file": 1,
-                "line": 2,
-                "column": 3,
-                "severity": 4,
-                "message": 5
-              }
-          }
+        "label": "clean & build all"
+      },
+      {
+        "taskName": "Clean & build all 5.15.2",
+        "type": "shell",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
+        "args": [],
+        "group": {
+          "kind": "build",
+          "isDefault": false
         },
-        {
-          "taskName": "Clean & build all 6.6.2",
-          "type": "shell",
-          "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
-          "args": [],
-          "group": {
-              "kind": "build",
-              "isDefault": false
-          },
-          "problemMatcher": {
-              "owner": "cpp",
-              "fileLocation": ["relative", "${workspaceFolder}"],
-              "pattern": {
-                "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                "file": 1,
-                "line": 2,
-                "column": 3,
-                "severity": 4,
-                "message": 5
-              }
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
           }
-        },
-        {
-            "type": "shell",
-            "label": "g++ build active file",
-            "command": "/usr/bin/g++",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "options": {
-                "cwd": "/usr/bin"
-            }
         }
+      },
+      {
+        "taskName": "Clean & build all 6.6.2",
+        "type": "shell",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+        "args": [],
+        "group": {
+          "kind": "build",
+          "isDefault": false
+        },
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        }
+      },
+      {
+        "type": "shell",
+        "label": "g++ build active file",
+        "command": "/usr/bin/g++",
+        "args": [
+          "-g",
+          "${file}",
+          "-o",
+          "${fileDirname}/${fileBasenameNoExtension}"
+        ],
+        "options": {
+          "cwd": "/usr/bin"
+        }
+      }
     ],
     "version": "2.0.0"
 }

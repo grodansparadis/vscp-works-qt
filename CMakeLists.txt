@@ -56,8 +56,8 @@ if (NOT DEFINED VSCP_PATH)
   set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
 endif()
 
-file(TO_CMAKE_PATH "${VSCP_PATH}" VSCP_PATH)
-message(STATUS "VSCP path = ${VSCP_PATH}")
+file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
+message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -106,7 +106,6 @@ include(FindLibWebSockets)
 
 # Windows Libs
 if (MSVC)
-
   #include(g:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake)
   
   # pthread
@@ -158,7 +157,7 @@ set(OPENSSL_VER "OPENSSL_API_${OPENSSL_VERSION_MAJOR}_${OPENSSL_VERSION_MINOR}")
 message(STATUS "OPENSSL Version: ${OPENSSL_VER} - ${OPENSSL_VERSION}")
 #add_definitions(-D${OPENSSL_VER}) 
 
-# 1.1.0 / 1.1.1 / 3.0.0 / 3.1.0 / 3.2.0
+# 1.1.0 / 1.1.1 / 3.0 / 3.1 / 3.2 / 3.3df -h
 string(FIND "${OPENSSL_VERSION}" "1.0" SSL_VER_POS)
 if(NOT ${SSL_VER_POS} EQUAL -1)
   add_definitions(-DOPENSSL_API_1_0)
@@ -187,6 +186,12 @@ string(FIND "${OPENSSL_VERSION}" "3.2" SSL_VER_POS)
 if(NOT SSL_VER_POS EQUAL -1)
   add_definitions(-DOPENSSL_API_3_2)
   message(STATUS "Open ssl version is 3.2")
+endif()
+
+string(FIND "${OPENSSL_VERSION}" "3.3" SSL_VER_POS)
+if(NOT SSL_VER_POS EQUAL -1)
+  add_definitions(-DOPENSSL_API_3_3)
+  message(STATUS "Open ssl version is 3.3")
 endif()
 
 # set(UI )
@@ -238,15 +243,15 @@ qt5_wrap_ui(UI src/mainwindow.ui
   src/cdlgactionparam.ui
   src/cdlgdatepicker.ui
   src/cfrmmdf.ui
-  src/cdlgmdfmodule.ui          	       
-  src/cdlgmdffilepicture.ui  
   src/cdlgmdfmodule.ui
-  src/cdlgmdfevent.ui	       
-  src/cdlgmdffilesetup.ui    
+  src/cdlgmdffilepicture.ui
+  src/cdlgmdfmodule.ui
+  src/cdlgmdfevent.ui
+  src/cdlgmdffilesetup.ui
   src/cdlgmdfregister.ui
-  src/cdlgmdfbootloader.ui   
-  src/cdlgmdffiledriver.ui    
-  src/cdlgmdffile.ui	      
+  src/cdlgmdfbootloader.ui
+  src/cdlgmdffiledriver.ui
+  src/cdlgmdffile.ui
   src/cdlgmdfremotevar.ui
   src/cdlgmdfdescription.ui
   src/cdlgmdfinfourl.ui
@@ -636,142 +641,137 @@ add_executable(${PROJECT_NAME}
   src/cdlgselectbootalgorithm.h
   src/cdlgselectbootalgorithm.cpp
 
-  ${VSCP_PATH}/src/vscp/common/version.h
-  ${VSCP_PATH}/src/vscp/common/vscp.h
-  ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.h
-  ${VSCP_PATH}/src/vscp/common/vscpremotetcpif.cpp
-  ${VSCP_PATH}/src/vscp/common/vscpdatetime.h
-  ${VSCP_PATH}/src/vscp/common/vscpdatetime.cpp
-  ${VSCP_PATH}/src/vscp/common/guid.h
-  ${VSCP_PATH}/src/vscp/common/guid.cpp
-  ${VSCP_PATH}/src/vscp/common/mdf.h
-  ${VSCP_PATH}/src/vscp/common/mdf.cpp
-  ${VSCP_PATH}/src/vscp/common/vscphelper.h
-  ${VSCP_PATH}/src/vscp/common/vscphelper.cpp
-  ${VSCP_PATH}/src/vscp/common/canal.h
-  ${VSCP_PATH}/src/vscp/common/canaldlldef.h
-  ${VSCP_PATH}/src/vscp/common/vscpcanaldeviceif.h
-  ${VSCP_PATH}/src/vscp/common/vscpcanaldeviceif.cpp
-  ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.h
-  ${VSCP_PATH}/src/vscp/common/canal_xmlconfig.cpp
-  ${VSCP_PATH}/src/vscp/common/register.h
-  ${VSCP_PATH}/src/vscp/common/register.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_base.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_base.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_canal.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_canal.cpp    
-  ${VSCP_PATH}/src/vscp/common/vscp_client_mqtt.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_mqtt.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_tcp.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_tcp.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_socketcan.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_socketcan.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_ws1.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_ws1.cpp 
-  ${VSCP_PATH}/src/vscp/common/vscp_client_ws2.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_ws2.cpp 
-  ${VSCP_PATH}/src/vscp/common/vscp_client_udp.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_udp.cpp 
-  ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_multicast.cpp 
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rawcan.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.h
-  ${VSCP_PATH}/src/vscp/common/vscp_client_rawmqtt.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.h
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.h
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_pic1.cpp
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_vscp.h
-  ${VSCP_PATH}/src/vscp/common/vscp_bootdevice_vscp.cpp
-  ${VSCP_PATH}/src/vscp/common/vscpunit.h
-  ${VSCP_PATH}/src/vscp/common/vscpunit.cpp     
-  ${VSCP_PATH}/src/common/sockettcp.h
-  ${VSCP_PATH}/src/common/sockettcp.c
-  ${VSCP_PATH}/src/common/vscpbase64.h
-  ${VSCP_PATH}/src/common/vscpbase64.c
-  ${VSCP_PATH}/src/common/vscp_aes.h
-  ${VSCP_PATH}/src/common/vscp_aes.c
-  ${VSCP_PATH}/src/common/crc.h
-  ${VSCP_PATH}/src/common/crc.c
-  ${VSCP_PATH}/src/common/crc8.h
-  ${VSCP_PATH}/src/common/crc8.c
-  ${VSCP_PATH}/src/common/vscpmd5.h
-  ${VSCP_PATH}/src/common/vscpmd5.c
+  $ENV{VSCP_ROOT}/src/vscp/common/version.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpremotetcpif.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpremotetcpif.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpdatetime.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpdatetime.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/guid.h
+  $ENV{VSCP_ROOT}/src/vscp/common/guid.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/mdf.h
+  $ENV{VSCP_ROOT}/src/vscp/common/mdf.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscphelper.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscphelper.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/canal.h
+  $ENV{VSCP_ROOT}/src/vscp/common/canaldlldef.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpcanaldeviceif.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpcanaldeviceif.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/canal_xmlconfig.h
+  $ENV{VSCP_ROOT}/src/vscp/common/canal_xmlconfig.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/register.h
+  $ENV{VSCP_ROOT}/src/vscp/common/register.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_base.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_base.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_canal.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_canal.cpp    
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_mqtt.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_mqtt.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_tcp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_tcp.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_socketcan.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_socketcan.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws1.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws1.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws2.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws2.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_udp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_udp.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_multicast.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_multicast.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawcan.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawcan.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawmqtt.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawmqtt.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_pic1.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_pic1.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_vscp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_vscp.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpunit.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscpunit.cpp     
+  $ENV{VSCP_ROOT}/src/common/sockettcp.h
+  $ENV{VSCP_ROOT}/src/common/sockettcp.c
+  $ENV{VSCP_ROOT}/src/common/vscpbase64.h
+  $ENV{VSCP_ROOT}/src/common/vscpbase64.c
+  $ENV{VSCP_ROOT}/src/common/vscp_aes.h
+  $ENV{VSCP_ROOT}/src/common/vscp_aes.c
+  $ENV{VSCP_ROOT}/src/common/crc.h
+  $ENV{VSCP_ROOT}/src/common/crc.c
+  $ENV{VSCP_ROOT}/src/common/crc8.h
+  $ENV{VSCP_ROOT}/src/common/crc8.c
+  $ENV{VSCP_ROOT}/src/common/vscpmd5.h
+  $ENV{VSCP_ROOT}/src/common/vscpmd5.c
 
   ./third_party/mustache/mustache.hpp
   ./third_party/spdlog/include/
-#  ./third_party/fastpbkdf2/fastpbkdf2.h
-#  ./third_party/fastpbkdf2/fastpbkdf2.c
   ./third_party/crypto-algorithms/sha256.h
   ./third_party/crypto-algorithms/sha256.c    
   install/${PROJECT_NAME}.desktop
   ${TS_FILES}   
-  ) 
+) 
 
 if (MSVC)
+  find_path(PTHREAD_INCLUDE_DIR pthread.h)
+  find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
+  message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
 
-find_path(PTHREAD_INCLUDE_DIR pthread.h)
-find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
-message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
-
-include_directories( PUBLIC ./src 
-  ./build
-  ./ui
-  ${VSCP_PATH}/src/vscp/common/  
-  ${VSCP_PATH}/src/common
-  ./third_party
-  ./third_party/nlohmann/include/
-  ./third_party/spdlog/include/
-  ./third_party/Mustache/
-  ./third_party/maddy/include/
-  #./third_party/fastpbkdf2/
-  ./third_party/crypto-algorithms/
-  ${PThreads4W_INCLUDE_DIR}
-  ${Qt5Widgets_INCLUDE_DIRS}
-  ${Qt5Core_INCLUDE_DIRS}
-  ${Qt5SerialBus_INCLUDE_DIRS}
-  ${Qt5SerialPort_INCLUDE_DIRS}
-  ${Qt5Network_INCLUDE_DIRS}
-  ${CMAKE_BINARY_DIR}
-  ${OPENSSL_INCLUDE_DIR}
-  ${MOSQUITTO_INCLUDE_DIRS}
-  ${LIBWEBSOCKETS_INCLUDE_DIR}
-  ${EXPAT_INCLUDE_DIRS}
-  ${DLFCN_INCLUDES}
-  ${LOCAL_WIN_INCLUDE}
-  ${LOCAL_SYSLOG_INCLUDE} 
-  ${CURL_INCLUDE_DIR}
-)
+  include_directories( PUBLIC ./src 
+    ./build
+    ./ui
+    $ENV{VSCP_ROOT}/src/vscp/common/  
+    $ENV{VSCP_ROOT}/src/common
+    ./third_party
+    ./third_party/nlohmann/include/
+    ./third_party/spdlog/include/
+    ./third_party/Mustache/
+    ./third_party/maddy/include/
+    ./third_party/crypto-algorithms/
+    ${PThreads4W_INCLUDE_DIR}
+    ${Qt5Widgets_INCLUDE_DIRS}
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5SerialBus_INCLUDE_DIRS}
+    ${Qt5SerialPort_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
+    ${CMAKE_BINARY_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ${MOSQUITTO_INCLUDE_DIRS}
+    ${LIBWEBSOCKETS_INCLUDE_DIR}
+    ${EXPAT_INCLUDE_DIRS}
+    ${DLFCN_INCLUDES}
+    ${LOCAL_WIN_INCLUDE}
+    ${LOCAL_SYSLOG_INCLUDE} 
+    ${CURL_INCLUDE_DIR}
+  )
 else()
-include_directories( PUBLIC ./src 
-  ./build
-  ./ui
-  third_party/mqtt
-  third_party/mqtt/clib
-  ${VSCP_PATH}/src/vscp/common/
-  ${VSCP_PATH}/src/common
-  ./third_party
-  ./third_party/nlohmann/include/
-  ./third_party/spdlog/include/
-  ./third_party/mustache/
-  ./third_party/maddy/include/
-#  ./third_party/fastpbkdf2/
-  ./third_party/crypto-algorithms/s
-  ${Qt5Core_INCLUDE_DIRS}
-  ${Qt5SerialBus_INCLUDE_DIRS}
-  ${Qt5SerialPort_INCLUDE_DIRS}
-  ${Qt5Network_INCLUDE_DIRS}
-  ${CMAKE_BINARY_DIR}
-  ${OPENSSL_INCLUDE_DIR}
-  ${MOSQUITTO_INCLUDE_DIRS}
-  ${LIBWEBSOCKETS_INCLUDE_DIR}
-  ${EXPAT_INCLUDE_DIRS}
-  ${DLFCN_INCLUDES}
-  ${LOCAL_WIN_INCLUDE}
-  ${LOCAL_SYSLOG_INCLUDE} 
-  ${CURL_INCLUDE_DIR}
-)
+  include_directories( PUBLIC ./src 
+    ./build
+    ./ui
+    third_party/mqtt
+    third_party/mqtt/clib
+    $ENV{VSCP_ROOT}/src/vscp/common/
+    $ENV{VSCP_ROOT}/src/common
+    ./third_party
+    ./third_party/nlohmann/include/
+    ./third_party/spdlog/include/
+    ./third_party/mustache/
+    ./third_party/maddy/include/
+    ./third_party/crypto-algorithms/s
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5SerialBus_INCLUDE_DIRS}
+    ${Qt5SerialPort_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
+    ${CMAKE_BINARY_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ${MOSQUITTO_INCLUDE_DIRS}
+    ${LIBWEBSOCKETS_INCLUDE_DIR}
+    ${EXPAT_INCLUDE_DIRS}
+    ${DLFCN_INCLUDES}
+    ${LOCAL_WIN_INCLUDE}
+    ${LOCAL_SYSLOG_INCLUDE} 
+    ${CURL_INCLUDE_DIR}
+  )
  endif()   
 
 if (MSVC) 
