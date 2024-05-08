@@ -169,17 +169,17 @@ CMdfFileWidgetItem::~CMdfFileWidgetItem()
 //     //emit CFrmSession::receiveRow(pev, true);
 // }
 
-static void
-eventReceived(vscpEvent &ev, void* pobj)
-{
-  vscpEvent* pevnew = new vscpEvent;
-  pevnew->sizeData  = 0;
-  pevnew->pdata     = nullptr;
-  vscp_copyEvent(pevnew, &ev);
+// static void
+// eventReceived(vscpEvent &ev, void* pobj)
+// {
+//   vscpEvent* pevnew = new vscpEvent;
+//   pevnew->sizeData  = 0;
+//   pevnew->pdata     = nullptr;
+//   vscp_copyEvent(pevnew, &ev);
 
-  CFrmSession* pSession = (CFrmSession*)pobj;
-  pSession->threadReceive(pevnew);
-}
+//   CFrmNodeConfig* pNodeConfig = (CFrmNodeConfig*)pobj;
+//   pNodeConfig->threadReceive(pevnew);
+// }
 
 // ----------------------------------------------------------------------------
 
@@ -346,6 +346,11 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
    */
   m_bFullLevel2 = m_connObject["bfull-l2"].toBool();
 
+  using namespace std::placeholders;
+  auto cb = std::bind(&CFrmNodeConfig::receiveCallback, this, _1, _2);
+  // lambda version for reference
+  //auto cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
+
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
@@ -390,7 +395,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -446,7 +451,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -455,7 +460,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -529,7 +534,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -538,7 +543,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -547,7 +552,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::RAWCAN:
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -555,7 +560,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::RAWMQTT:
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -1181,10 +1186,29 @@ CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
 // threadReceive
 //
 
+// void
+// CFrmNodeConfig::threadReceive(vscpEvent* pev)
+// {
+//   emit dataReceived(pev);
+// }
+
+///////////////////////////////////////////////////////////////////////////////
+// receiveCallback
+//
+
 void
-CFrmNodeConfig::threadReceive(vscpEvent* pev)
+CFrmNodeConfig::receiveCallback(vscpEvent& ev, void *pobj) 
 {
-  emit dataReceived(pev);
+  vscpEvent* pevnew = new vscpEvent;
+  pevnew->sizeData  = 0;
+  pevnew->pdata     = nullptr;
+  vscp_copyEvent(pevnew, &ev);
+
+  emit dataReceived(pevnew);
+
+  // Alternative method for reference
+  //CFrmSession* pSession = (CFrmSession*)pobj;
+  //pSession->threadReceive(pevnew);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

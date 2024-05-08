@@ -5,7 +5,10 @@
         "type": "shell",
         "command": "cd build; make -j4 -Wall",
         "args": [],
-        "group": "build",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
         "problemMatcher": "$gcc",
         "label": "build"
       },
@@ -15,8 +18,7 @@
         "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
         "args": [],
         "group": {
-          "kind": "build",
-          "isDefault": true
+          "kind": "build"
         },
         "problemMatcher": {
           "owner": "cpp",

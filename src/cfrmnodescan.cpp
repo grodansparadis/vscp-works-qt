@@ -108,7 +108,7 @@ CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
 // }
 
 static void
-eventReceived(vscpEvent &ev, void* pobj)
+eventReceived(vscpEvent& ev, void* pobj)
 {
   // printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
 
@@ -117,8 +117,8 @@ eventReceived(vscpEvent &ev, void* pobj)
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);
 
-  CFrmSession* pSession = (CFrmSession*)pobj;
-  pSession->threadReceive(pevnew);
+  CFrmNodeScan* pNodeScan = (CFrmNodeScan*)pobj;
+  pNodeScan->threadReceive(pevnew);
 }
 
 // ----------------------------------------------------------------------------
@@ -200,6 +200,11 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   QJsonDocument doc(m_connObject);
   QString strJson(doc.toJson(QJsonDocument::Compact));
 
+  using namespace std::placeholders;
+  auto cb = std::bind(&CFrmNodeScan::receiveCallback, this, _1, _2);
+  //  lambda version for reference
+  // auto cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
+
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
@@ -208,7 +213,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
 
@@ -244,14 +249,14 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
 
@@ -271,21 +276,21 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::RAWCAN:
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::RAWMQTT:
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       connectToRemoteHost(true);
       break;
   }
@@ -610,6 +615,25 @@ void
 CFrmNodeScan::threadReceive(vscpEvent* pev)
 {
   emit dataReceived(pev);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// receiveCallback
+//
+
+void
+CFrmNodeScan::receiveCallback(vscpEvent& ev, void *pobj) 
+{
+  vscpEvent* pevnew = new vscpEvent;
+  pevnew->sizeData  = 0;
+  pevnew->pdata     = nullptr;
+  vscp_copyEvent(pevnew, &ev);
+
+  emit dataReceived(pevnew);
+
+  // Alternative method for reference
+  //CFrmSession* pSession = (CFrmSession*)pobj;
+  //pSession->threadReceive(pevnew);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

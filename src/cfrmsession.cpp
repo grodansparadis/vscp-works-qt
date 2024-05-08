@@ -101,17 +101,17 @@ CTxWidgetItem::~CTxWidgetItem()
 //     //emit CFrmSession::receiveRow(pev, true);
 // }
 
-static void
-eventReceived(vscpEvent &ev, void* pobj)
-{
-  vscpEvent* pevnew = new vscpEvent;
-  pevnew->sizeData  = 0;
-  pevnew->pdata     = nullptr;
-  vscp_copyEvent(pevnew, &ev);
+// static void
+// eventReceived(vscpEvent &ev, void* pobj)
+// {
+//   vscpEvent* pevnew = new vscpEvent;
+//   pevnew->sizeData  = 0;
+//   pevnew->pdata     = nullptr;
+//   vscp_copyEvent(pevnew, &ev);
 
-  CFrmSession* pSession = (CFrmSession*)pobj;
-  pSession->threadReceive(pevnew);
-}
+//   CFrmSession* pSession = (CFrmSession*)pobj;
+//   pSession->threadReceive(pevnew);
+// }
 
 // ----------------------------------------------------------------------------
 
@@ -212,14 +212,23 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
 
   setLayout(mainLayout);
 
-  qDebug() << connect(this,
-                      &CFrmSession::dataReceived,
-                      this,
-                      &CFrmSession::receiveRxRow,
-                      Qt::ConnectionType::QueuedConnection);
+  /*!
+    This is an old construct to call a method from a 
+    worker thread
+  */
+  // qDebug() << connect(this,
+  //                     &CFrmSession::dataReceived,
+  //                     this,
+  //                     &CFrmSession::receiveRxRow,
+  //                     Qt::ConnectionType::QueuedConnection);
 
   QJsonDocument doc(m_connObject);
   QString strJson(doc.toJson(QJsonDocument::Compact));
+
+  using namespace std::placeholders;
+  auto cb = std::bind(&CFrmSession::receiveCallback, this, _1, _2);
+  // lambda version for reference
+  //auto cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
 
   switch (m_vscpConnType) {
 
@@ -229,7 +238,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -244,7 +253,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         QMessageBox::warning(this, tr("VSCP Works +"), tr("Failed to initialize CANAL driver. See log for more details."));
         return;
       }
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -260,7 +269,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
         QMessageBox::warning(this, tr("VSCP Works +"), tr("Failed to initialize SOCKETCAN driver. See log for more details."));
         return;
       }
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -272,7 +281,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -283,7 +292,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -294,7 +303,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::MQTT:
       m_vscpClient = new vscpClientMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       // m_connectActBar->setChecked(true);
       //  Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -305,7 +314,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::UDP:
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -316,7 +325,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -327,7 +336,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::RAWCAN:
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -339,7 +348,7 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::RAWMQTT:
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(eventReceived, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
       //m_connectActBar->setChecked(true);
       // Connect if autoconnect is enabled
       if (pworks->m_session_bAutoConnect) {
@@ -3892,9 +3901,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
   item->setFlags(item->flags() & ~Qt::ItemIsEditable);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// receiveRxRow
-//
+
 
 void
 CFrmSession::receiveRxRow(vscpEvent* pev)
@@ -4197,8 +4204,27 @@ CFrmSession::fillReceiveEventDiff()
 // threadReceive
 //
 
+// void
+// CFrmSession::threadReceive(vscpEvent* pev)
+// {
+//   emit dataReceived(pev);
+// }
+
+///////////////////////////////////////////////////////////////////////////////
+// receiveCallback
+//
+
 void
-CFrmSession::threadReceive(vscpEvent* pev)
+CFrmSession::receiveCallback(vscpEvent& ev, void *pobj) 
 {
-  emit dataReceived(pev);
+  vscpEvent* pevnew = new vscpEvent;
+  pevnew->sizeData  = 0;
+  pevnew->pdata     = nullptr;
+  vscp_copyEvent(pevnew, &ev);
+
+  emit dataReceived(pevnew);
+
+  // Alternative method for reference
+  //CFrmSession* pSession = (CFrmSession*)pobj;
+  //pSession->threadReceive(pevnew);
 }
