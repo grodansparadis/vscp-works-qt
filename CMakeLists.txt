@@ -703,7 +703,6 @@ add_executable(${PROJECT_NAME}
   $ENV{VSCP_ROOT}/src/common/crc8.c
   $ENV{VSCP_ROOT}/src/common/vscpmd5.h
   $ENV{VSCP_ROOT}/src/common/vscpmd5.c
-
   ./third_party/mustache/mustache.hpp
   ./third_party/spdlog/include/
   ./third_party/crypto-algorithms/sha256.h

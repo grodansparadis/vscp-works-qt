@@ -108,19 +108,14 @@ CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
 // }
 
 static void
-eventReceived(vscpEvent* pev, void* pobj)
+eventReceived(vscpEvent &ev, void* pobj)
 {
-  // Check pointers
-  if ((nullptr == pev) || (nullptr == pobj)) {
-    return;
-  }
-
   // printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
 
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
-  vscp_copyEvent(pevnew, pev);
+  vscp_copyEvent(pevnew, &ev);
 
   CFrmSession* pSession = (CFrmSession*)pobj;
   pSession->threadReceive(pevnew);
@@ -213,7 +208,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
@@ -249,14 +244,14 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
@@ -269,28 +264,28 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::UDP:
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::RAWCAN:
       m_vscpClient = new vscpClientRawCan();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::RAWMQTT:
       m_vscpClient = new vscpClientRawMqtt();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallback(eventReceived, this);
+      m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
   }
