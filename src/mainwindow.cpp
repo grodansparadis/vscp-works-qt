@@ -73,7 +73,7 @@
 #include "cfrmsession.h"
 #include "filedownloader.h"
 #include "version.h"
-#include "vscp_client_base.h"
+#include "vscp-client-base.h"
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>

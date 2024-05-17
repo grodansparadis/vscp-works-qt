@@ -32,8 +32,8 @@
 
 #include <vscphelper.h>
 #include <mdf.h>
-#include <vscp_client_base.h>
-#include <vscp_bootdevice.h>
+#include <vscp-client-base.h>
+#include <vscp-bootdevice.h>
 
 #include <QCheckBox>
 #include <QFormLayout>

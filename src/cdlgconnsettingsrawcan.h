@@ -31,7 +31,7 @@
 
 #ifndef WIN32
 
-#include "vscp_client_socketcan.h"
+#include "vscp-client-socketcan.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

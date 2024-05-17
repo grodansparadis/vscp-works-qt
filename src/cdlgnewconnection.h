@@ -29,7 +29,7 @@
 #ifndef CDLGNEWCONNECTION_H
 #define CDLGNEWCONNECTION_H
 
-#include "vscp_client_base.h"
+#include "vscp-client-base.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

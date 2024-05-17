@@ -42,7 +42,7 @@
 #include <mdf.h>
 #include <register.h>
 #include <vscp.h>
-#include <vscp_client_base.h>
+#include <vscp-client-base.h>
 
 #include "cdlgselectbootalgorithm.h"
 #include "filedownloader.h"
@@ -61,7 +61,7 @@
 #include "cdlgconnsettingsws2.h"
 #include "cdlgknownguid.h"
 #include "version.h"
-#include "vscp_bootdevice_pic1.h"
+#include "vscp-bootdevice-pic1.h"
 
 #include <curl/curl.h>
 

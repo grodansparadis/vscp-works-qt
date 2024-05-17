@@ -30,7 +30,7 @@
 #define CDLGCONNSETTINGSRAWMQTT_H
 
 #include "vscphelper.h"
-#include "vscp_client_mqtt.h"
+#include "vscp-client-mqtt.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

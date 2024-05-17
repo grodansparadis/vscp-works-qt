@@ -54,19 +54,19 @@ SOURCES +=  src/main.cpp \
     vscp/src/vscp/common/vscphelper.cpp \
     vscp/src/vscp/common/vscpcanaldeviceif.cpp \
     vscp/src/vscp/common/canal_xmlconfig.cpp \
-    vscp/src/vscp/common/vscp_client_base.cpp \
-    vscp/src/vscp/common/vscp_client_local.cpp \
-    vscp/src/vscp/common/vscp_client_canal.cpp \  
-    vscp/src/vscp/common/vscp_client_mqtt.cpp \
-    vscp/src/vscp/common/vscp_client_tcp.cpp \
-    vscp/src/vscp/common/vscp_client_socketcan.cpp \
-    vscp/src/vscp/common/vscp_client_ws1.cpp \
-    vscp/src/vscp/common/vscp_client_ws2.cpp \
-    vscp/src/vscp/common/vscp_client_udp.cpp \
-    vscp/src/vscp/common/vscp_client_multicast.cpp \
-    vscp/src/vscp/common/vscp_client_rest.cpp \
-    vscp/src/vscp/common/vscp_client_rawcan.cpp \
-    vscp/src/vscp/common/vscp_client_rawmqtt.cpp \
+    vscp/src/vscp/common/vscp-client-base.cpp \
+    vscp/src/vscp/common/vscp-client-local.cpp \
+    vscp/src/vscp/common/vscp-client-canal.cpp \  
+    vscp/src/vscp/common/vscp-client-mqtt.cpp \
+    vscp/src/vscp/common/vscp-client-tcp.cpp \
+    vscp/src/vscp/common/vscp-client-socketcan.cpp \
+    vscp/src/vscp/common/vscp-client-ws1.cpp \
+    vscp/src/vscp/common/vscp-client-ws2.cpp \
+    vscp/src/vscp/common/vscp-client-udp.cpp \
+    vscp/src/vscp/common/vscp-client-multicast.cpp \
+    vscp/src/vscp/common/vscp-client-rest.cpp \
+    vscp/src/vscp/common/vscp-client-rawcan.cpp \
+    vscp/src/vscp/common/vscp-client-rawmqtt.cpp \
     vscp/src/vscp/common/vscp_bootloader.cpp \
     vscp/src/common/third_party/civetweb-1.13/src/civetweb.c \ 
     vscp/src/common/sockettcp.c \
@@ -114,19 +114,19 @@ HEADERS  += src/vscpworks.h \
     vscp/src/vscp/common/canaldlldef.h \
     vscp/src/vscp/common/vscpcanaldeviceif.h \
     vscp/src/vscp/common/canal_xmlconfig.h \
-    vscp/src/vscp/common/vscp_client_base.h \
-    vscp/src/vscp/common/vscp_client_local.h \
-    vscp/src/vscp/common/vscp_client_canal.h \
-    vscp/src/vscp/common/vscp_client_mqtt.h \
-    vscp/src/vscp/common/vscp_client_tcp.h \
-    vscp/src/vscp/common/vscp_client_socketcan.h \
-    vscp/src/vscp/common/vscp_client_ws1.h \
-    vscp/src/vscp/common/vscp_client_ws2.h \
-    vscp/src/vscp/common/vscp_client_udp.h \
-    vscp/src/vscp/common/vscp_client_multicast.h \
-    vscp/src/vscp/common/vscp_client_rest.h \
-    vscp/src/vscp/common/vscp_client_rawcan.h \
-    vscp/src/vscp/common/vscp_client_rawmqtt.h \
+    vscp/src/vscp/common/vscp-client-base.h \
+    vscp/src/vscp/common/vscp-client-local.h \
+    vscp/src/vscp/common/vscp-client-canal.h \
+    vscp/src/vscp/common/vscp-client-mqtt.h \
+    vscp/src/vscp/common/vscp-client-tcp.h \
+    vscp/src/vscp/common/vscp-client-socketcan.h \
+    vscp/src/vscp/common/vscp-client-ws1.h \
+    vscp/src/vscp/common/vscp-client-ws2.h \
+    vscp/src/vscp/common/vscp-client-udp.h \
+    vscp/src/vscp/common/vscp-client-multicast.h \
+    vscp/src/vscp/common/vscp-client-rest.h \
+    vscp/src/vscp/common/vscp-client-rawcan.h \
+    vscp/src/vscp/common/vscp-client-rawmqtt.h \
     vscp/src/vscp/common/vscp_bootloader.h \
     vscp/src/common/third_party/mustache.hpp \
     vscp/src/common/third_party/civetweb-1.13/include/civetweb.h \

@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSMULTICAST_H
 #define CDLGCONNSETTINGSMULTICAST_H
 
-#include "vscp_client_multicast.h"
+#include "vscp-client-multicast.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

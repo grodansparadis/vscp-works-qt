@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSMQTT_H
 #define CDLGCONNSETTINGSMQTT_H
 
-#include "vscp_client_mqtt.h"
+#include "vscp-client-mqtt.h"
 #include "vscphelper.h"
 
 #include <QDialog>

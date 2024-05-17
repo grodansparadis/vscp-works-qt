@@ -31,7 +31,7 @@
 #define CDLGCONNSETTINGSCANAL_H
 
 #include "canalconfigwizard.h"
-#include "vscp_client_canal.h"
+#include "vscp-client-canal.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

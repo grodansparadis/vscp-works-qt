@@ -31,7 +31,7 @@
 #endif
 
 #include <vscp.h>
-#include <vscp_client_mqtt.h>
+#include <vscp-client-mqtt.h>
 
 #include "cdlgselectmqtttopics.h"
 #include "ui_cdlgselectmqtttopics.h"

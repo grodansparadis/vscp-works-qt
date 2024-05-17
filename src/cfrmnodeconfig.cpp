@@ -44,18 +44,18 @@
 
 // #include <curl/curl.h>
 
-#include <vscp_client_canal.h>
-#include <vscp_client_mqtt.h>
-#include <vscp_client_multicast.h>
-#include <vscp_client_rawcan.h>
-#include <vscp_client_rawmqtt.h>
+#include <vscp-client-canal.h>
+#include <vscp-client-mqtt.h>
+#include <vscp-client-multicast.h>
+#include <vscp-client-rawcan.h>
+#include <vscp-client-rawmqtt.h>
 #ifndef WIN32
-#include <vscp_client_socketcan.h>
+#include <vscp-client-socketcan.h>
 #endif
-#include <vscp_client_tcp.h>
-#include <vscp_client_udp.h>
-#include <vscp_client_ws1.h>
-#include <vscp_client_ws2.h>
+#include <vscp-client-tcp.h>
+#include <vscp-client-udp.h>
+#include <vscp-client-ws1.h>
+#include <vscp-client-ws2.h>
 
 #include "cdlgeditdm.h"
 #include "cdlgknownguid.h"
@@ -93,7 +93,7 @@
 #include <expat.h>
 #include <maddy/parser.h> // Markdown -> HTML
 #include <mustache.hpp>
-#include <nlohmann/json.hpp> // Needs C++11  -std=c++11
+#include <nlohmann/json.hpp> 
 
 #define XML_BUFF_SIZE 0xffff
 
@@ -160,7 +160,7 @@ CMdfFileWidgetItem::~CMdfFileWidgetItem()
 // ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-// vscp_client_ack
+// vscp-client-ack
 //
 
 // void CVscpClientCallback::eventReceived(vscpEvent *pev)

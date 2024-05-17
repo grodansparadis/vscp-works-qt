@@ -32,7 +32,7 @@
 #include <vscp.h>
 
 #include <version.h>
-#include <vscp_client_base.h>
+#include <vscp-client-base.h>
 #include <vscpunit.h>
 #include <mdf.h>
 #include <register.h>
@@ -54,7 +54,7 @@
 #include <list>
 
 #include <mustache.hpp>
-#include <nlohmann/json.hpp> // Needs C++11  -std=c++11
+#include <nlohmann/json.hpp> 
 
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"

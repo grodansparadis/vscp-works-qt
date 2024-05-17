@@ -32,8 +32,8 @@
 #ifndef CANALCONFIGWIZARD_H
 #define CANALCONFIGWIZARD_H
 
-#include <canal_xmlconfig.h>
-#include "vscp_client_canal.h"
+#include <canal-xmlconfig.h>
+#include "vscp-client-canal.h"
 
 #include <QWizard>
 

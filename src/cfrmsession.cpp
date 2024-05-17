@@ -42,18 +42,18 @@
 
 #include <mustache.hpp>
 
-#include <vscp_client_canal.h>
-#include <vscp_client_tcp.h>
-#include <vscp_client_udp.h>
-#include <vscp_client_ws1.h>
-#include <vscp_client_ws2.h>
+#include <vscp-client-canal.h>
+#include <vscp-client-tcp.h>
+#include <vscp-client-udp.h>
+#include <vscp-client-ws1.h>
+#include <vscp-client-ws2.h>
 #ifndef WIN32
-#include <vscp_client_socketcan.h>
+#include <vscp-client-socketcan.h>
 #endif
-#include <vscp_client_mqtt.h>
-#include <vscp_client_multicast.h>
-#include <vscp_client_rawcan.h>
-#include <vscp_client_rawmqtt.h>
+#include <vscp-client-mqtt.h>
+#include <vscp-client-multicast.h>
+#include <vscp-client-rawcan.h>
+#include <vscp-client-rawmqtt.h>
 
 #include "cdlgknownguid.h"
 #include "cdlgselectmqtttopics.h"
@@ -92,7 +92,7 @@ CTxWidgetItem::~CTxWidgetItem()
 // ----------------------------------------------------------------------------
 
 ///////////////////////////////////////////////////////////////////////////////
-// vscp_client_ack
+// vscp-client-ack
 //
 
 // void CVscpClientCallback::eventReceived(vscpEvent *pev)
@@ -216,11 +216,11 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
     This is an old construct to call a method from a 
     worker thread
   */
-  // qDebug() << connect(this,
-  //                     &CFrmSession::dataReceived,
-  //                     this,
-  //                     &CFrmSession::receiveRxRow,
-  //                     Qt::ConnectionType::QueuedConnection);
+  qDebug() << connect(this,
+                      &CFrmSession::dataReceived,
+                      this,
+                      &CFrmSession::receiveRxRow,
+                      Qt::ConnectionType::QueuedConnection);
 
   QJsonDocument doc(m_connObject);
   QString strJson(doc.toJson(QJsonDocument::Compact));
@@ -3901,7 +3901,9 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
   item->setFlags(item->flags() & ~Qt::ItemIsEditable);
 }
 
-
+///////////////////////////////////////////////////////////////////////////////
+// receiveRxRow
+//
 
 void
 CFrmSession::receiveRxRow(vscpEvent* pev)

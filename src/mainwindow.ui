@@ -138,7 +138,7 @@
     <property name="title">
      <string>VSCP</string>
     </property>
-    <addaction name="actionVSCP_Client_Windows"/>
+    <addaction name="actionvscp-client-Windows"/>
     <addaction name="actionVSCP_Device_Configuration_Window"/>
     <addaction name="actionVSCP_MDF_Editor"/>
     <addaction name="actionScan_for_devices"/>
@@ -185,7 +185,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <action name="actionVSCP_Client_Windows">
+  <action name="actionvscp-client-Windows">
    <property name="text">
     <string>Client Windows...</string>
    </property>

@@ -31,7 +31,7 @@
 
 #include <vscp.h>
 
-#include <vscp_client_base.h>
+#include <vscp-client-base.h>
 
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>

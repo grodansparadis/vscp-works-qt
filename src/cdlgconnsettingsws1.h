@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSWS1_H
 #define CDLGCONNSETTINGSWS1_H
 
-#include "vscp_client_ws1.h"
+#include "vscp-client-ws1.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

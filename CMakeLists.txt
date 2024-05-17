@@ -657,46 +657,46 @@ add_executable(${PROJECT_NAME}
   $ENV{VSCP_ROOT}/src/vscp/common/canaldlldef.h
   $ENV{VSCP_ROOT}/src/vscp/common/vscpcanaldeviceif.h
   $ENV{VSCP_ROOT}/src/vscp/common/vscpcanaldeviceif.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/canal_xmlconfig.h
-  $ENV{VSCP_ROOT}/src/vscp/common/canal_xmlconfig.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/canal-xmlconfig.h
+  $ENV{VSCP_ROOT}/src/vscp/common/canal-xmlconfig.cpp
   $ENV{VSCP_ROOT}/src/vscp/common/register.h
   $ENV{VSCP_ROOT}/src/vscp/common/register.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_base.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_base.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_canal.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_canal.cpp    
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_mqtt.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_mqtt.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_tcp.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_tcp.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_socketcan.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_socketcan.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws1.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws1.cpp 
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws2.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_ws2.cpp 
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_udp.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_udp.cpp 
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_multicast.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_multicast.cpp 
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawcan.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawcan.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawmqtt.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_client_rawmqtt.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_pic1.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_pic1.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_vscp.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp_bootdevice_vscp.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-base.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-base.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-canal.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-canal.cpp    
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-mqtt.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-mqtt.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-tcp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-tcp.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-socketcan.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-socketcan.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-ws1.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-ws1.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-ws2.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-ws2.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-udp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-udp.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-multicast.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-multicast.cpp 
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawcan.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawcan.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawmqtt.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawmqtt.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice-pic1.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice-pic1.cpp
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice-vscp.h
+  $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice-vscp.cpp
   $ENV{VSCP_ROOT}/src/vscp/common/vscpunit.h
   $ENV{VSCP_ROOT}/src/vscp/common/vscpunit.cpp     
   $ENV{VSCP_ROOT}/src/common/sockettcp.h
   $ENV{VSCP_ROOT}/src/common/sockettcp.c
   $ENV{VSCP_ROOT}/src/common/vscpbase64.h
   $ENV{VSCP_ROOT}/src/common/vscpbase64.c
-  $ENV{VSCP_ROOT}/src/common/vscp_aes.h
-  $ENV{VSCP_ROOT}/src/common/vscp_aes.c
+  $ENV{VSCP_ROOT}/src/common/vscp-aes.h
+  $ENV{VSCP_ROOT}/src/common/vscp-aes.c
   $ENV{VSCP_ROOT}/src/common/crc.h
   $ENV{VSCP_ROOT}/src/common/crc.c
   $ENV{VSCP_ROOT}/src/common/crc8.h

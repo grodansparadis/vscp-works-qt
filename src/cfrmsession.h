@@ -34,7 +34,7 @@
 
 #include <vscp.h>
 
-#include <vscp_client_base.h>
+#include <vscp-client-base.h>
 
 #include "ctxevent.h"
 

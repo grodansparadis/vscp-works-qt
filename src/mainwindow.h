@@ -34,7 +34,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "vscp_client_base.h"
+#include "vscp-client-base.h"
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>

@@ -41,7 +41,7 @@
 
 #include <mustache.hpp>
 
-#include <vscp_client_tcp.h>
+#include <vscp-client-tcp.h>
 
 #include "widgetgraph.h"
 #include "xyseries.h"

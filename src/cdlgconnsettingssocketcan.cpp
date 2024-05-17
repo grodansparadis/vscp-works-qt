@@ -33,7 +33,7 @@
 #ifndef WIN32
 
 #include <vscphelper.h>
-#include <vscp_client_socketcan.h>
+#include <vscp-client-socketcan.h>
 
 #include "cdlglevel1filter.h"
 #include "cdlgsocketcanflags.h"

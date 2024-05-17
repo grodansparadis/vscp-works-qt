@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSUDP_H
 #define CDLGCONNSETTINGSUDP_H
 
-#include "vscp_client_udp.h"
+#include "vscp-client-udp.h"
 
 #include <QDialog>
 #include <QListWidgetItem>

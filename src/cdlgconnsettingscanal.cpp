@@ -35,7 +35,7 @@
 
 #include "cdlglevel1filter.h"
 
-#include "canal_xmlconfig.h"
+#include "canal-xmlconfig.h"
 #include "canalconfigwizard.h"
 #include "vscphelper.h"
 

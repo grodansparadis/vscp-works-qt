@@ -33,7 +33,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "vscp_client_tcp.h"
+#include "vscp-client-tcp.h"
 
 #include <QDialog>
 #include <QListWidgetItem>
