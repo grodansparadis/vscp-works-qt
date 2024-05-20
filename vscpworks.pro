@@ -36,8 +36,6 @@ SOURCES +=  src/main.cpp \
     src/cdlgconnsettingsws2.cpp \
     src/cdlgconnsettingsudp.cpp \
     src/cdlgconnsettingsmulticast.cpp \
-    src/cdlgconnsettingsrawcan.cpp \
-    src/cdlgconnsettingsrawmqtt.cpp \
     src/cdlgconnsettingsrest.cpp \
     src/cdlglevel1filter.cpp \
     src/cdlglevel1filterwizard.cpp \

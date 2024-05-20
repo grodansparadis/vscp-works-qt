@@ -48,8 +48,6 @@
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
-#include <vscp-client-rawcan.h>
-#include <vscp-client-rawmqtt.h>
 #ifndef WIN32
 #include <vscp-client-socketcan.h>
 #endif
@@ -280,19 +278,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
       connectToRemoteHost(true);
       break;
 
-    case CVscpClient::connType::RAWCAN:
-      m_vscpClient = new vscpClientRawCan();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      connectToRemoteHost(true);
-      break;
 
-    case CVscpClient::connType::RAWMQTT:
-      m_vscpClient = new vscpClientRawMqtt();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      connectToRemoteHost(true);
-      break;
   }
 
   ui->actionConnect->setDisabled(true);

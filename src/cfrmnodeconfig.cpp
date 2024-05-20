@@ -47,8 +47,6 @@
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
-#include <vscp-client-rawcan.h>
-#include <vscp-client-rawmqtt.h>
 #ifndef WIN32
 #include <vscp-client-socketcan.h>
 #endif
@@ -93,7 +91,7 @@
 #include <expat.h>
 #include <maddy/parser.h> // Markdown -> HTML
 #include <mustache.hpp>
-#include <nlohmann/json.hpp> 
+#include <nlohmann/json.hpp>
 
 #define XML_BUFF_SIZE 0xffff
 
@@ -349,13 +347,12 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   using namespace std::placeholders;
   auto cb = std::bind(&CFrmNodeConfig::receiveCallback, this, _1, _2);
   // lambda version for reference
-  //auto cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
+  // auto cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
 
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
       break;
-
 
     case CVscpClient::connType::TCPIP:
 
@@ -395,7 +392,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -451,7 +448,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -460,7 +457,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -534,7 +531,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientUdp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -543,24 +540,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // GUID
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      ui->actionConnect->setChecked(true);
-      connectToRemoteHost(true);
-      break;
-
-
-    case CVscpClient::connType::RAWCAN:
-      m_vscpClient = new vscpClientRawCan();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      ui->actionConnect->setChecked(true);
-      connectToRemoteHost(true);
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      m_vscpClient = new vscpClientRawMqtt();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
@@ -1197,7 +1177,7 @@ CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
 //
 
 void
-CFrmNodeConfig::receiveCallback(vscpEvent& ev, void *pobj) 
+CFrmNodeConfig::receiveCallback(vscpEvent& ev, void* pobj)
 {
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
@@ -1207,8 +1187,8 @@ CFrmNodeConfig::receiveCallback(vscpEvent& ev, void *pobj)
   emit dataReceived(pevnew);
 
   // Alternative method for reference
-  //CFrmSession* pSession = (CFrmSession*)pobj;
-  //pSession->threadReceive(pevnew);
+  // CFrmSession* pSession = (CFrmSession*)pobj;
+  // pSession->threadReceive(pevnew);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1501,9 +1481,9 @@ CFrmNodeConfig::writeChanges(void)
       }
       else {
         QApplication::beep();
-        spdlog::error("Failed to write register(s) rv = {0}  {1}:{2}", rv,itemReg->m_regPage,itemReg->m_regOffset);
+        spdlog::error("Failed to write register(s) rv = {0}  {1}:{2}", rv, itemReg->m_regPage, itemReg->m_regOffset);
         QString str = tr("Failed to write register(s) rv = ") + QString::number(rv);
-        str += QString("reg={}:{}").arg(itemReg->m_regPage).arg(itemReg->m_regOffset); 
+        str += QString("reg={}:{}").arg(itemReg->m_regPage).arg(itemReg->m_regOffset);
         ui->statusBar->showMessage(str);
         QApplication::restoreOverrideCursor();
         return VSCP_ERROR_COMMUNICATION;

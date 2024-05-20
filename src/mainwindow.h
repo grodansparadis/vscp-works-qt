@@ -158,8 +158,6 @@ private slots:
     void newMqttConnection(void);
     void newUdpConnection(void);
     void newMulticastConnection(void);
-    void newRawCanConnection(void);
-    void newRawMqttConnection(void);
 
     // Edit connections
     void editTcpipConnection(treeWidgetItemConn *itemConn);
@@ -170,8 +168,6 @@ private slots:
     void editMqttConnection(treeWidgetItemConn *itemConn);
     void editUdpConnection(treeWidgetItemConn *itemConn);
     void editMulticastConnection(treeWidgetItemConn *itemConn);
-    void editRawCanConnection(treeWidgetItemConn *itemConn);
-    void editRawMqttConnection(treeWidgetItemConn *itemConn);
 
     void openConnectionSettingsDialog(CVscpClient::connType type);
 

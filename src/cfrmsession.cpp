@@ -52,8 +52,6 @@
 #endif
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
-#include <vscp-client-rawcan.h>
-#include <vscp-client-rawmqtt.h>
 
 #include "cdlgknownguid.h"
 #include "cdlgselectmqtttopics.h"
@@ -333,28 +331,6 @@ CFrmSession::CFrmSession(QWidget* parent, QJsonObject* pconn)
       }
       break;
 
-    case CVscpClient::connType::RAWCAN:
-      m_vscpClient = new vscpClientRawCan();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      //m_connectActBar->setChecked(true);
-      // Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      this->close();
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      m_vscpClient = new vscpClientRawMqtt();
-      m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
-      //m_connectActBar->setChecked(true);
-      // Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
   }
 
   // TX Table signales

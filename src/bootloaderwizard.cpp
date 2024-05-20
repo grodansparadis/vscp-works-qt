@@ -52,8 +52,6 @@
 #include "cdlgconnsettingscanal.h"
 #include "cdlgconnsettingsmqtt.h"
 #include "cdlgconnsettingsmulticast.h"
-#include "cdlgconnsettingsrawcan.h"
-#include "cdlgconnsettingsrawmqtt.h"
 #include "cdlgconnsettingssocketcan.h"
 #include "cdlgconnsettingstcpip.h"
 #include "cdlgconnsettingsudp.h"

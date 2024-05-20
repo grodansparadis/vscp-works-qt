@@ -205,8 +205,6 @@ qt5_wrap_ui(UI src/mainwindow.ui
   src/cdlgconnsettingsws2.ui
   src/cdlgconnsettingsudp.ui
   src/cdlgconnsettingsmulticast.ui
-  src/cdlgconnsettingsrawcan.ui
-  src/cdlgconnsettingsrawmqtt.ui
   src/cdlgnewconnection.ui
   src/cdlglevel1filter.ui
   src/cdlglevel1filterwizard.ui
@@ -352,14 +350,6 @@ add_executable(${PROJECT_NAME}
   src/cdlgconnsettingsmulticast.ui
   src/cdlgconnsettingsmulticast.h
   src/cdlgconnsettingsmulticast.cpp
-
-  src/cdlgconnsettingsrawcan.ui
-  src/cdlgconnsettingsrawcan.h
-  src/cdlgconnsettingsrawcan.cpp
-
-  src/cdlgconnsettingsrawmqtt.ui
-  src/cdlgconnsettingsrawmqtt.h
-  src/cdlgconnsettingsrawmqtt.cpp
 
   src/cdlgknownguid.ui
   src/cdlgknownguid.h
@@ -679,10 +669,6 @@ add_executable(${PROJECT_NAME}
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-udp.cpp 
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-multicast.h
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-multicast.cpp 
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawcan.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawcan.cpp
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawmqtt.h
-  $ENV{VSCP_ROOT}/src/vscp/common/vscp-client-rawmqtt.cpp
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice.h
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice.cpp
   $ENV{VSCP_ROOT}/src/vscp/common/vscp-bootdevice-pic1.h
