@@ -26,7 +26,7 @@ jobs:
       with:
         repository: grodansparadis/vscp
         path: vscp
-        ref: development  
+        ref: development
         submodules: recursive
 
     - name: Checkout eclipse paho repo

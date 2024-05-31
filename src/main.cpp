@@ -142,7 +142,4 @@ main(int argc, char* argv[])
 
   mainWin.show();
   return app.exec();
-
-  // Save configuration
-  app.writeSettings();
 }

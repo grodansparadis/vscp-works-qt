@@ -45,7 +45,7 @@
 
 // #include <QtSerialPort/QSerialPort>
 // #include <QCanBus>
-//  #include <QCanBusDevice>6
+//  #include <QCanBusDevice>
 //  #include <QCanBusFactory>
 //  #include <QCanBusFrame>
 
