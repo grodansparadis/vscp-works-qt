@@ -115,16 +115,6 @@ CDlgNewConnection::addConnectionItems(void)
   QListWidgetItem* itemMulticast = new QListWidgetItem(iconMulticast, QString::fromUtf8("Multicast"), nullptr, static_cast<int>(CVscpClient::connType::MULTICAST));
   ui->listWidgetConnectionTypes->addItem(itemMulticast);
   itemMulticast->setToolTip("VSCP over Multicast");
-
-  const QIcon iconRawCan      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-  QListWidgetItem* itemRawCan = new QListWidgetItem(iconRawCan, QString::fromUtf8("Raw CAN"), nullptr, static_cast<int>(CVscpClient::connType::RAWCAN));
-  ui->listWidgetConnectionTypes->addItem(itemRawCan);
-  itemRawCan->setToolTip("Raw CAN");
-
-  const QIcon iconRawMqtt      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
-  QListWidgetItem* itemRawMqtt = new QListWidgetItem(iconRawMqtt, QString::fromUtf8("Raw MQTT"), nullptr, static_cast<int>(CVscpClient::connType::RAWMQTT));
-  ui->listWidgetConnectionTypes->addItem(itemRawMqtt);
-  itemRawMqtt->setToolTip("Raw MQTT");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

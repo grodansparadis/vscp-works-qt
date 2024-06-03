@@ -211,7 +211,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
@@ -247,14 +247,14 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
@@ -274,11 +274,12 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
       m_vscpClient->initFromJson(strJson.toStdString());
-      m_vscpClient->setCallbackEv(/*eventReceived*/cb, this);
+      m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
-
+    default:
+      break;
   }
 
   ui->actionConnect->setDisabled(true);
@@ -476,12 +477,6 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::MULTICAST:
       break;
-
-    case CVscpClient::connType::RAWCAN:
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      break;
   }
 }
 
@@ -578,12 +573,6 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 
     case CVscpClient::connType::MULTICAST:
       break;
-
-    case CVscpClient::connType::RAWCAN:
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      break;
   }
 }
 
@@ -608,7 +597,7 @@ CFrmNodeScan::threadReceive(vscpEvent* pev)
 //
 
 void
-CFrmNodeScan::receiveCallback(vscpEvent& ev, void *pobj) 
+CFrmNodeScan::receiveCallback(vscpEvent& ev, void* pobj)
 {
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
@@ -618,8 +607,8 @@ CFrmNodeScan::receiveCallback(vscpEvent& ev, void *pobj)
   emit dataReceived(pevnew);
 
   // Alternative method for reference
-  //CFrmSession* pSession = (CFrmSession*)pobj;
-  //pSession->threadReceive(pevnew);
+  // CFrmSession* pSession = (CFrmSession*)pobj;
+  // pSession->threadReceive(pevnew);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

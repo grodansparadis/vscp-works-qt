@@ -41,8 +41,8 @@
 
 #include <mdf.h>
 #include <register.h>
-#include <vscp.h>
 #include <vscp-client-base.h>
+#include <vscp.h>
 
 #include "cdlgselectbootalgorithm.h"
 #include "filedownloader.h"
@@ -676,6 +676,11 @@ CWizardPageLoadMdf::validatePage(void)
     case CVscpClient::connType::MQTT:
       break;
 
+    case CVscpClient::connType::NONE:
+    case CVscpClient::connType::UDP:
+    case CVscpClient::connType::MULTICAST:
+    case CVscpClient::connType::WS1:
+    case CVscpClient::connType::WS2:
     defult:
       spdlog::error("No bootloader wizard (yet!?) for this type of "
                     "communication interface - {}",
@@ -1501,7 +1506,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       break;
 #endif
 
-    case CVscpClient::connType::MQTT:
+    case CVscpClient::connType::MQTT: {
       m_vscpClient = new vscpClientMqtt();
       if (nullptr == m_vscpClient) {
         spdlog::error("Can't start bootloader wizard as there is no vscpClient specified.");
@@ -1540,8 +1545,13 @@ CBootLoadWizard::initBootLoaderWizard(void)
       setPage(Page_LoadMdf, new CWizardPageLoadMdf(this, m_vscpClient));
       setPage(Page_Firmware, new CWizardPageFirmware(this, m_vscpClient));
       setPage(Page_Flash, new CWizardPageFlash(this, m_vscpClient));
-      break;
+    } break;
 
+    case CVscpClient::connType::NONE:
+    case CVscpClient::connType::UDP:
+    case CVscpClient::connType::MULTICAST:
+    case CVscpClient::connType::WS1:
+    case CVscpClient::connType::WS2:
     defult:
       spdlog::error("No bootloader wizard (yet!?) for this type of "
                     "communication interface - {}",
@@ -1552,7 +1562,8 @@ CBootLoadWizard::initBootLoaderWizard(void)
                                   "communication interface."),
                                QMessageBox::Ok);
       return VSCP_ERROR_PARAMETER;
-  }
+
+  } // switch
 
   return VSCP_ERROR_SUCCESS;
 }

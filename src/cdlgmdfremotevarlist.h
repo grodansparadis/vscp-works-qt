@@ -27,7 +27,7 @@
 //
 
 #ifndef CDLGMDFREMOTEVARLIST_H
-#define CDLGMDFREGMOTEVARLIST_H
+#define CDLGMDFREMOTEVARLIST_H
 
 #include <vscpworks.h>
 #include <mdf.h>

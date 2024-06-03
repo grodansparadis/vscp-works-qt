@@ -5,10 +5,7 @@
         "type": "shell",
         "command": "cd build; make -j4 -Wall",
         "args": [],
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
+        "group": "build",
         "problemMatcher": "$gcc",
         "label": "build"
       },
@@ -17,9 +14,7 @@
         "type": "shell",
         "command": "cd build; make clean; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
         "args": [],
-        "group": {
-          "kind": "build"
-        },
+        "group": "build",
         "problemMatcher": {
           "owner": "cpp",
           "fileLocation": [
@@ -44,7 +39,7 @@
         "args": [],
         "group": {
           "kind": "build",
-          "isDefault": false
+          "isDefault": true
         },
         "problemMatcher": {
           "owner": "cpp",
@@ -60,17 +55,15 @@
             "severity": 4,
             "message": 5
           }
-        }
+        },
+        "label": "Clean & build all 5.15.2"
       },
       {
         "taskName": "Clean & build all 6.6.2",
         "type": "shell",
         "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
         "args": [],
-        "group": {
-          "kind": "build",
-          "isDefault": false
-        },
+        "group": "build",
         "problemMatcher": {
           "owner": "cpp",
           "fileLocation": [
@@ -85,7 +78,8 @@
             "severity": 4,
             "message": 5
           }
-        }
+        },
+        "label": "Clean & build all 6.6.2"
       },
       {
         "type": "shell",
@@ -100,6 +94,17 @@
         "options": {
           "cwd": "/usr/bin"
         }
+      },
+      {
+        "type": "cmake",
+        "label": "CMake: build",
+        "command": "build",
+        "targets": [
+          "all"
+        ],
+        "group": "build",
+        "problemMatcher": [],
+        "detail": "CMake template build task"
       }
     ],
     "version": "2.0.0"

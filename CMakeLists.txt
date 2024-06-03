@@ -106,6 +106,7 @@ include(FindLibWebSockets)
 
 # Windows Libs
 if (MSVC)
+  message("Windows build")
   #include(g:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake)
   
   # pthread

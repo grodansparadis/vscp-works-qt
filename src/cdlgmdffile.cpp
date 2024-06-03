@@ -274,6 +274,9 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
     case mdf_type_manual_item:
       setWindowTitle(tr("Manual files"));
       break;
+
+    default:
+    break;  
   }
 
   // ui->editName->setText(m_pfile->getName().c_str());
@@ -460,6 +463,9 @@ CDlgMdfFile::addFileItem(void)
         delete pobjnew;
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -531,6 +537,9 @@ CDlgMdfFile::editFileItem(void)
           ui->listFile->currentItem()->setText(QString(pre_str_manual) + QString(" ") + pobj->getName().c_str());
         }
       } break;
+
+      default:
+      break;
     }
   }
   else {
@@ -709,7 +718,10 @@ CDlgMdfFile::dupFileItem(void)
           delete pobjnew;
         }
       } break;
-    }
+
+      default:
+      break;
+    } // switch
   }
   else {
     QMessageBox::warning(this, tr(APPNAME), tr("An item must be selected"), QMessageBox::Ok);
@@ -766,6 +778,9 @@ CDlgMdfFile::deleteFileItem(void)
         pManualList->erase(pManualList->begin() + idx);
         ui->listFile->takeItem(idx);
       } break;
+
+      default:
+      break;
     }
   }
   else {

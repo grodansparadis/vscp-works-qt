@@ -2513,7 +2513,7 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
               renderInfoUrlItems(pEventSubItem, pEventData, pEventData->getMapInfoUrl());
             }
           } // EventDataList
-        }   // list exist
+        } // list exist
 
         // Descriptions
         renderDescriptionItems(pSubItem, pevent, pevent->getMapDescription());
@@ -4030,6 +4030,9 @@ CFrmMdf::editDescription(void)
   // Get correct pointer to description map
   switch (pParentToItemDescription->getObjectType()) {
 
+    case mdf_type_unknown:
+      break;
+
     case mdf_type_mdf:
       pmap = m_mdf.getMapDescription();
       break;
@@ -4108,6 +4111,9 @@ CFrmMdf::editDescription(void)
     case mdf_type_event_data_sub_item: {
       pmap = pItem->getObject()->getMapDescription();
     } break;
+
+    default:
+      break;
   }
 
   if (mdf_type_generic_description == pItem->getObjectType()) {
@@ -4176,6 +4182,9 @@ CFrmMdf::deleteDescription(void)
   // Get correct pointer to description map
   switch (pParentToItemDescription->getObjectType()) {
 
+    case mdf_type_unknown:
+      break;
+
     case mdf_type_mdf:
       pmap = m_mdf.getMapDescription();
       break;
@@ -4238,6 +4247,9 @@ CFrmMdf::deleteDescription(void)
     case mdf_type_event_data_sub_item: {
       pmap = pItem->getObject()->getMapDescription();
     } break;
+
+    default:
+      break;
   }
 
   std::string selstr = pItem->text(0).split('_').first().left(2).toStdString();
@@ -4297,6 +4309,9 @@ CFrmMdf::editInfoUrl(void)
 
   // Get correct pointer to description map
   switch (pParentToItemInfoUrl->getObjectType()) {
+
+    case mdf_type_unknown:
+      break;
 
     case mdf_type_mdf:
       pmap = m_mdf.getMapInfoUrl();
@@ -4373,6 +4388,9 @@ CFrmMdf::editInfoUrl(void)
     case mdf_type_event_data_sub_item: {
       pmap = pItem->getObject()->getMapInfoUrl();
     } break;
+
+    default:
+      break;
   }
 
   if (mdf_type_generic_help_url == pItem->getObjectType()) {
@@ -4504,6 +4522,9 @@ CFrmMdf::deleteInfoUrl(void)
     case mdf_type_event_data_sub_item: {
       pmap = pItem->getObject()->getMapInfoUrl();
     } break;
+
+    default:
+      break;
   }
 
   std::string selstr = pItem->text(0).split('_').first().left(2).toStdString();
@@ -5122,6 +5143,9 @@ CFrmMdf::editFileList(void)
 
         renderManualItems(pItem, selectedIndex);
       } break;
+
+      default:
+        break;
     }
   }
 }
@@ -5153,7 +5177,6 @@ CFrmMdf::editFile(void)
   switch (pItem->getObjectType()) {
 
       // Picture
-
     case mdf_type_picture_item: {
       CMDF_Picture* pobj = (CMDF_Picture*)pItem->getObject();
       CDlgMdfFilePicture dlg(this);
@@ -5488,6 +5511,9 @@ CFrmMdf::editFile(void)
       }
     } break;
 
+    default:
+      break;
+
   } // Switch
 }
 
@@ -5725,6 +5751,9 @@ CFrmMdf::deleteFile(void)
       m_headFileSetupScript->removeChild(pItemHead);
     } break;
 
+    default:
+      break;
+
   } // switch
 }
 
@@ -5807,6 +5836,9 @@ CFrmMdf::addRegister(void)
         renderRegisters(pItem);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -5925,6 +5957,9 @@ CFrmMdf::editRegister(void)
         renderRegisterItem(pItemHead, preg);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -6012,6 +6047,9 @@ CFrmMdf::deleteRegister(void)
 
     case mdf_type_register_page:
       // TODO
+      break;
+
+    default:
       break;
   }
 
@@ -6559,6 +6597,9 @@ CFrmMdf::deleteBitDefinition(void)
       }
 
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -6924,6 +6965,9 @@ CFrmMdf::deleteValueDefinition(void)
         pItemHead->removeChild(pItem);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -7017,6 +7061,9 @@ CFrmMdf::editRemoteVariable(void)
         renderRemoteVariableItem(pItemHead, prvar);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -7104,6 +7151,9 @@ CFrmMdf::deleteRemoteVariable(void)
 
     case mdf_type_register_page:
       // TODO
+      break;
+
+    default:
       break;
   }
 
@@ -7195,6 +7245,9 @@ CFrmMdf::editDM(void)
         renderDecisionMatrix(pItemHead, (CMDF_DecisionMatrix*)pItemHead->getObject(), selectedIndex);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -7323,7 +7376,10 @@ CFrmMdf::editAction(void)
         renderActionParam(pItemHead, (CMDF_ActionParameter*)pItemHead->getObject());
       }
     } break;
-  }
+
+    default:
+      break;
+  } // switch
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -7491,6 +7547,9 @@ CFrmMdf::editEvent(void)
         renderEvents(pItemHeadHeadHead);
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -7586,6 +7645,9 @@ CFrmMdf::addEvent(void)
         delete pEventDataNew;
       }
     } break;
+
+    default:
+      break;
   }
 }
 
@@ -7748,5 +7810,8 @@ CFrmMdf::deleteEvent(void)
       childrenList.clear();
       renderEvents(pItemHeadHeadHeadHead);
     } break;
+
+    default:
+      break;
   }
 }

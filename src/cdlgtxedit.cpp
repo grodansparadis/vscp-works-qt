@@ -166,7 +166,7 @@ void CDlgTxEdit::fillVscpType(uint16_t vscpclass, uint16_t vscptype)
         uint16_t typeId   = it->first & 0xfff;
         QString typeToken = it->second;
 
-        if ((classId == vscpclass)) {
+        if (classId == vscpclass) {
             QString listItem =
                 vscp_str_format(
                 "%s ",

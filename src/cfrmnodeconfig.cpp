@@ -544,6 +544,9 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
       break;
+
+    default:
+      break;
   }
 
   // CONNECTIONS
@@ -1038,12 +1041,6 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
 
     case CVscpClient::connType::MULTICAST:
       break;
-
-    case CVscpClient::connType::RAWCAN:
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      break;
   }
 }
 
@@ -1146,12 +1143,6 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       break;
 
     case CVscpClient::connType::MULTICAST:
-      break;
-
-    case CVscpClient::connType::RAWCAN:
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
       break;
   }
 }
@@ -2546,7 +2537,7 @@ CFrmNodeConfig::gotoRegisterPageDM(int row)
       gotoRegisterOnPage(pdmItem->m_pDM->getStartPage(), pdmItem->m_pDM->getStartOffset());
       break;
     }
-    **it;
+    ++it;
   }
 }
 

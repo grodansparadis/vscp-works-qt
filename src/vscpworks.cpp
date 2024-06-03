@@ -106,7 +106,7 @@ vscpworks::vscpworks(int& argc, char** argv)
 #ifdef WIN32
   m_fileLogPath = "vscpworks.log";
 #else
-  m_fileLogPath    = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+  m_fileLogPath = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
 #endif
   m_maxFileLogSize  = 5242880;
   m_maxFileLogFiles = 7;
@@ -231,14 +231,6 @@ vscpworks::getConnectionName(CVscpClient::connType type)
 
     case CVscpClient::connType::MULTICAST:
       str = tr("VSCP multicast connection");
-      break;
-
-    case CVscpClient::connType::RAWCAN:
-      str = tr("Raw CAN connection");
-      break;
-
-    case CVscpClient::connType::RAWMQTT:
-      str = tr("Raw MQTT connection");
       break;
   }
 
@@ -1098,7 +1090,7 @@ vscpworks::getVscpRenderFunctions(std::map<std::string, std::string>& map,
     if (std::string::npos != (posFunc = str.find("function()"))) {
       // We have a function  "id: function() {....}
       // it can have one line or be multiline 6
-      if (posColon = (posColon = str.find(":"))) {
+      if (std::string::npos == (posColon = str.find(":"))) {
         return false;
       }
       name = vscp_str_left(str, posColon);
