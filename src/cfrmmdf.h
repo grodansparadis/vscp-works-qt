@@ -661,6 +661,12 @@ private:
   QMdfTreeWidgetItem* m_headAlarm;
   QMdfTreeWidgetItem* m_headDecisionMatrix;
   QMdfTreeWidgetItem* m_headEvent;
+
+  /// path for last successfully opened MDF
+  QString m_last_path;
+
+  /// True if a loadeed file has been edited
+  bool m_bChanged;
 };
 
 #endif // CFrmMdf_H

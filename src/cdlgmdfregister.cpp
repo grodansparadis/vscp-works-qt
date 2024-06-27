@@ -144,7 +144,7 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
   setBackgroundColor(preg->getBackgroundColor());
 
   // Only one page for Level II
-  if (1 == m_pmdf->getLevel()) {
+  if (VSCP_LEVEL2 == m_pmdf->getLevel()) {
     ui->comboPage->setEnabled(false);
     ui->btnNewPage->setEnabled(false);
     ui->comboPage->addItem(QString("Level II (no pages)"), 0);
@@ -371,7 +371,7 @@ CDlgMdfRegister::getOffset(void)
   uint32_t offset = vscp_readStringValue(ui->editOffset->text().toStdString());
 
   // Level I can only have offset 0-127
-  if (1 == m_pmdf->getLevel()) {
+  if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
     offset &= 0x7f;
   }
 
@@ -382,7 +382,7 @@ void
 CDlgMdfRegister::setOffset(uint32_t offset)
 {
   // Level I can only have offset 0-127
-  if (1 == m_pmdf->getLevel()) {
+  if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
     offset &= 0x7f;
   }
 
@@ -530,7 +530,7 @@ CDlgMdfRegister::accept()
     m_preg->setName(getName().toStdString());
     
     // Level I can only have offset 0-127
-    if (1 == m_pmdf->getLevel()) {
+    if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
       m_preg->setPage(getPage());
     }
     else {

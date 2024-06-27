@@ -373,7 +373,7 @@ CDlgMdfRemoteVarList::deleteRemoteVar(void)
     QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
     CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
     m_pmdf->deleteRemoteVariable(pvar);
-    delete pvar;
+    //delete pvar;
     ui->listRemoteVar->removeItemWidget(pitem);
     renderRemoteVarItems();
     ui->listRemoteVar->setCurrentRow(idx);

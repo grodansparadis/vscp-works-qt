@@ -396,7 +396,7 @@ CDlgMdfRegisterList::deleteRegister(void)
     QListWidgetItem* pitem = ui->listRegister->currentItem();
     CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
     m_pmdf->deleteRegister(preg);
-    delete preg;
+    //delete preg;
     ui->listRegister->removeItemWidget(pitem);
     renderRegisterItems();
     ui->listRegister->setCurrentRow(idx);

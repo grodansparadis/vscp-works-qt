@@ -443,8 +443,9 @@ public slots:
   void loadTxOnStart(void);
 
   /// Save Tx events
-  void saveTxEvents(const QString& path = "");
+  void saveTxEvents(const QString& path = "", bool bSelected = true);
   void saveTxEventsAct(void) { saveTxEvents(); };
+  void saveTxEventsAllAct(void) { saveTxEvents("",false); };
 
   /// Save TX events on save
   void saveTxOnExit(void);
@@ -579,6 +580,7 @@ private:
   QAction* m_saveEventsAct;
   QAction* m_loadTxAct;
   QAction* m_saveTxAct;
+  QAction* m_saveTxAllAct;
   QAction* m_exitAct;
 
   // Host meny

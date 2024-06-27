@@ -427,9 +427,14 @@ CFrmSession::createMenu()
                           &CFrmSession::loadTxEventsAct);
 
   m_saveTxAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
-                                      tr("Write TX rows to file..."),
+                                      tr("Write SELECTED TX rows to file..."),
                                       this,
                                       &CFrmSession::saveTxEventsAct);
+
+  m_saveTxAllAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
+                                      tr("Write ALL TX rows to file..."),
+                                      this,
+                                      &CFrmSession::saveTxEventsAllAct);                                      
 
   m_exitAct = m_fileMenu->addAction(windowCloseIcon,
                                     tr("Close window"),
@@ -854,13 +859,21 @@ CFrmSession::createTxGridGroup()
 
   m_txToolBar->addSeparator();
 
-  // Save tx rows
+  // Save selected tx rows
   const QIcon saveIcon = QIcon::fromTheme("document-save");
-  QAction* saveAct     = new QAction(saveIcon, tr("&Save"), this);
+  QAction* saveAct     = new QAction(saveIcon, tr("&Save selected"), this);
   saveAct->setShortcuts(QKeySequence::New);
   saveAct->setStatusTip(tr("Save selected transmit event(s)"));
   connect(saveAct, &QAction::triggered, this, &CFrmSession::saveTxEventsAct);
   m_txToolBar->addAction(saveAct);
+
+  // Save all tx rows
+  const QIcon saveAllIcon = QIcon::fromTheme("document-save");
+  QAction* saveAllAct     = new QAction(saveAllIcon, tr("Save &all"), this);
+  saveAllAct->setShortcuts(QKeySequence::New);
+  saveAllAct->setStatusTip(tr("Save selected transmit event(s)"));
+  connect(saveAllAct, &QAction::triggered, this, &CFrmSession::saveTxEventsAllAct);
+  m_txToolBar->addAction(saveAllAct);
 
   // Load tx rows
   const QIcon loadIcon = QIcon::fromTheme("document-open");
@@ -1078,9 +1091,13 @@ CFrmSession::showTxContextMenu(const QPoint& pos)
 
   menu->addSeparator();
 
-  menu->addAction(QString(tr("Save transmission rows...")),
+  menu->addAction(QString(tr("Save SELECTED transmission rows...")),
                   this,
-                  SLOT(saveTxEvents()));
+                  /*SLOT(saveTxEvents("",true))*/&CFrmSession::saveTxEventsAllAct);
+
+  menu->addAction(QString(tr("Save ALL transmission rows...")),
+                  this,
+                  /*SLOT(saveTxEvents("",false))*/&CFrmSession::saveTxEventsAllAct);                
 
   menu->addAction(QString(tr("Load transmission rows...")),
                   this,
@@ -1860,10 +1877,9 @@ CFrmSession::loadTxOnStart(void)
 //
 
 void
-CFrmSession::saveTxEvents(const QString& path)
+CFrmSession::saveTxEvents(const QString& path, bool bSelected)
 {
   QString fileName = path;
-  // vscpEvent* pev;
 
   vscpworks* pworks         = (vscpworks*)QCoreApplication::instance();
   QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
@@ -1871,7 +1887,7 @@ CFrmSession::saveTxEvents(const QString& path)
   if (!path.length()) {
     QString initialPath = pworks->m_shareFolder + "/txsets/txset.xml";
     fileName            = QFileDialog::getSaveFileName(this,
-                                            tr("File to save transmition events to"),
+                                            bSelected ? tr("Select file to save selected transmition events to") : tr("Select file to save all transmition events to"),
                                             initialPath,
                                             tr("TX files (*.xml *.*)"));
   }
@@ -1889,7 +1905,7 @@ CFrmSession::saveTxEvents(const QString& path)
 
     stream.writeStartElement("txrows");
 
-    if (selection.size()) {
+    if (selection.size() & bSelected) {
 
       // Save selected items
       QList<QModelIndex>::iterator it;
@@ -1967,7 +1983,7 @@ CFrmSession::saveTxOnExit(void)
   qDebug() << savePath;
 
   if (pworks->m_session_bAutoSaveTxRows) {
-    saveTxEvents(savePath);
+    saveTxEvents(savePath, false);
   }
 }
 

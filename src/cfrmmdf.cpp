@@ -215,6 +215,8 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
           &CFrmMdf::onItemDoubleClicked);
 
   this->setFixedSize(this->size());
+
+  newMdf(); // Render defaults
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,8 +257,8 @@ void
 CFrmMdf::newMdf(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  // getSaveFileName()
+  m_mdf.clearStorage();
+  loadMdf();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -268,22 +270,27 @@ CFrmMdf::openMdf(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QString fileName = QFileDialog::getOpenFileName(this,
-                                                  tr("Open Module Description File (MDF)"),
-                                                  "/usr/local/src/VSCP/vscp-works-qt/mdf/beijing_2.xml",
-                                                  tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+  QString path = QFileDialog::getOpenFileName(this,
+                                              tr("Open MDF (Module Description File)"),
+                                              "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/beijing_2.xml"*/,
+                                              tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
-  if (fileName.length()) {
-    qInfo() << "Selected MDF filename: " << fileName;
-    int rv = m_mdf.parseMDF(fileName.toStdString());
+  if (path.length()) {
+    qInfo() << "Selected MDF filename: " << path;
+    int rv = m_mdf.parseMDF(path.toStdString());
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to parse MDF file {0}", fileName.toStdString());
+      spdlog::error("Failed to parse MDF file {0}", path.toStdString());
       QMessageBox::warning(this, APPNAME, tr("Failed to parse MDF file."));
       return;
     }
 
-    // Load the tree with parsed objects6
+    // Save the path
+    m_last_path = path;
+
+    // Load the tree with parsed objects
     loadMdf();
+
+    m_bChanged = false;
   }
 }
 
@@ -294,19 +301,20 @@ CFrmMdf::openMdf(void)
 void
 CFrmMdf::saveMdf_XML()
 {
-  QString fileName = QFileDialog::getSaveFileName(this,
-                                                  tr("Open Module Description File (MDF)"),
-                                                  "/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.xml",
-                                                  tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+  QString path = QFileDialog::getSaveFileName(this,
+                                              tr("Open Module Description File (MDF)"),
+                                              "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.xml"*/,
+                                              tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
-  if (fileName.length()) {
-    qInfo() << "Selected MDF filename: " << fileName;
-    int rv = m_mdf.save(fileName.toStdString(), MDF_FORMAT_XML);
+  if (path.length()) {
+    qInfo() << "Selected MDF filename: " << path;
+    int rv = m_mdf.save(path.toStdString(), MDF_FORMAT_XML);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", fileName.toStdString());
+      spdlog::error("Failed to save MDF file {0}", path.toStdString());
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
+    m_bChanged = false;
   }
 }
 
@@ -319,7 +327,7 @@ CFrmMdf::saveMdf_JSON()
 {
   QString fileName = QFileDialog::getSaveFileName(this,
                                                   tr("Save Module Description File (MDF)"),
-                                                  "/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.json",
+                                                  "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.json"*/,
                                                   tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
   if (fileName.length()) {
@@ -330,6 +338,7 @@ CFrmMdf::saveMdf_JSON()
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
+    m_bChanged = false;
   }
 }
 
@@ -1226,14 +1235,15 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
   std::deque<CMDF_Register*>* regs = m_mdf.getRegisterObjList();
 
   // If we have pages separate registers in pages
-  if (nPages > 1) {
+  if (nPages >= 1) {
     for (auto itr : pages) {
 
       pItem = new QMdfTreeWidgetItem(pParent, &m_mdf, mdf_type_register_page, itr);
       if (nullptr != pItem) {
 
-        QString str = QString("Register page: %1").arg(itr);
+        QString str = QString(tr("Register page: %1")).arg(itr);
         pItem->setText(0, str);
+        pItem->setData(0, Qt::UserRole, itr); // Save page
         pParent->addChild(pItem);
 
         // Add registers for page
@@ -5787,6 +5797,12 @@ CFrmMdf::addRegister(void)
       // This is the main register level - We can add a register here
       bool ok;
       CMDF_Register* pregnew = new CMDF_Register();
+      if (nullptr == pregnew) {
+        spdlog::error("addRegister: Unable to allocate memory for new egister");
+        return;
+      }
+
+      pregnew->setPage(pItem->data(0, Qt::UserRole).toInt());
 
     addregdlg1:
       CDlgMdfRegister dlg(this);
@@ -5799,14 +5815,14 @@ CFrmMdf::addRegister(void)
           goto addregdlg1;
         }
         m_mdf.getRegisterObjList()->push_back(pregnew);
-        QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
+        QList<QTreeWidgetItem*> childrenList = m_headRegister->takeChildren();
         // Remove children
         for (qsizetype i = 0; i < childrenList.size(); ++i) {
           QMdfTreeWidgetItem* item = (QMdfTreeWidgetItem*)childrenList.at(i);
           delete item;
         }
         childrenList.clear();
-        renderRegisters(pItem);
+        renderRegisters(m_headRegister);
       }
     } break;
 
@@ -7097,11 +7113,11 @@ CFrmMdf::deleteRemoteVariable(void)
 
   switch (pItem->getObjectType()) {
 
-    case mdf_type_register:
+    case mdf_type_remotevar:
       // Nothing to do and should not come here :)
       break;
 
-    case mdf_type_register_item: {
+    case mdf_type_remotevar_item: {
       QList<QTreeWidgetItem*> childrenList = pItem->takeChildren();
       // Remove children
       for (qsizetype i = 0; i < childrenList.size(); ++i) {
@@ -7109,13 +7125,13 @@ CFrmMdf::deleteRemoteVariable(void)
         delete item;
       }
       childrenList.clear();
-      std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
+      std::deque<CMDF_RemoteVariable*>* prvars = m_mdf.getRemoteVariableList();
       // Find element and delete it
-      for (std::deque<CMDF_Register*>::iterator it = m_mdf.getRegisterObjList()->begin(); it != m_mdf.getRegisterObjList()->end();) {
+      for (std::deque<CMDF_RemoteVariable*>::iterator it = m_mdf.getRemoteVariableList()->begin(); it != m_mdf.getRemoteVariableList()->end();) {
         if (*it == pItem->getObject()) {
-          CMDF_Register* pReg = *it;
-          m_mdf.getRegisterObjList()->erase(it);
-          delete pReg;
+          CMDF_RemoteVariable* prvar = *it;
+          m_mdf.getRemoteVariableList()->erase(it);
+          delete prvar;
           break;
         }
         ++it;
@@ -7124,7 +7140,7 @@ CFrmMdf::deleteRemoteVariable(void)
       pItemHead->removeChild(pItem);
     } break;
 
-    case mdf_type_register_sub_item: {
+    case mdf_type_remotevar_sub_item: {
       QMdfTreeWidgetItem* pItemHeadHead    = (QMdfTreeWidgetItem*)pItemHead->parent();
       QList<QTreeWidgetItem*> childrenList = pItemHead->takeChildren();
       // Remove children
@@ -7134,13 +7150,13 @@ CFrmMdf::deleteRemoteVariable(void)
       }
       childrenList.clear();
 
-      std::deque<CMDF_Register*>* pregisters = m_mdf.getRegisterObjList();
+      std::deque<CMDF_RemoteVariable*>* prvars = m_mdf.getRemoteVariableList();
       // Find element and delete it
-      for (std::deque<CMDF_Register*>::iterator it = m_mdf.getRegisterObjList()->begin(); it != m_mdf.getRegisterObjList()->end();) {
+      for (std::deque<CMDF_RemoteVariable*>::iterator it = m_mdf.getRemoteVariableList()->begin(); it != m_mdf.getRemoteVariableList()->end();) {
         if (*it == pItem->getObject()) {
-          CMDF_Register* pReg = *it;
-          m_mdf.getRegisterObjList()->erase(it);
-          delete pReg;
+          CMDF_RemoteVariable* pvar = *it;
+          m_mdf.getRemoteVariableList()->erase(it);
+          delete pvar;
           break;
         }
         ++it;
@@ -7148,10 +7164,6 @@ CFrmMdf::deleteRemoteVariable(void)
 
       pItemHeadHead->removeChild(pItemHead);
     } break;
-
-    case mdf_type_register_page:
-      // TODO
-      break;
 
     default:
       break;

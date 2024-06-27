@@ -312,7 +312,7 @@
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Load MDF...</string>
+    <string>Open MDF...</string>
    </property>
    <property name="toolTip">
     <string>Open existing MDF</string>
