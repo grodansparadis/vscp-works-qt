@@ -445,7 +445,7 @@ public slots:
   /*!
     Fill register data from already loaded registers
   */
-  bool renderRegisters(void);
+  int renderRegisters(void);
 
   /*!
     Fill remote variable data from already loaded MDF data

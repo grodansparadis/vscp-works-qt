@@ -1344,13 +1344,16 @@ CFrmNodeConfig::update(void)
     if (!m_nUpdates) {
 
       // First read: Read in and render all registers
-      if (VSCP_ERROR_SUCCESS != doUpdate("")) {
+      int rv;
+      if (VSCP_ERROR_SUCCESS != (rv = doUpdate(""))) {
         QApplication::beep();
         spdlog::error("Update: Failed to read and render registers from the "
-                      "remote device.");
+                      "remote device. (rv={})",
+                      rv);
+        QString str = QString(tr("Failed to read and render registers from the remote device. %1")).arg(rv);
         QMessageBox::information(this,
                                  tr(APPNAME),
-                                 tr("Failed to read and render registers from the remote device."),
+                                 str,
                                  QMessageBox::Ok);
         return;
       }
@@ -1630,13 +1633,13 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   spdlog::trace("Parsing MDF OK");
 
   // Fill register data
-  if (!renderRegisters()) {
+  if (VSCP_ERROR_SUCCESS != renderRegisters()) {
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to render registers"));
     spdlog::error("Failed to render registers");
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
-    return VSCP_ERROR_PARSING;
+    return VSCP_ERROR_READ;
   }
   fillDeviceHtmlInfo();
   m_bMainInfo = true;
@@ -3542,7 +3545,7 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
 bool
 CFrmNodeConfig::renderStandardRegisters(void)
 {
-  // int rv;
+  //int rv;
   std::string str;
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3637,7 +3640,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
 // renderRegisters
 //
 
-bool
+int
 CFrmNodeConfig::renderRegisters(void)
 {
   int rv;
@@ -3664,7 +3667,7 @@ CFrmNodeConfig::renderRegisters(void)
 
   if (!renderStandardRegisters()) {
     spdlog::critical("Failed to render standard registers");
-    return false;
+    return VSCP_ERROR_READ_ERROR;
   }
 
   // ----------------------------------------------------------
@@ -3680,10 +3683,10 @@ CFrmNodeConfig::renderRegisters(void)
   // Get user registers for all pages
   rv = m_userregs.init(*m_vscpClient, guidNode, guidInterface, pages, nullptr, pworks->m_config_timeout);
   if (VSCP_ERROR_SUCCESS != rv) {
-    std::cout << "Failed to read user regs: " << rv << std::endl;
+    std::cout << "Failed to read/read user regs: " << rv << std::endl;
     QApplication::beep();
-    spdlog::error("Failed to init user registers");
-    return false;
+    spdlog::error("Failed to init/read user registers rv={}", rv);
+    return rv;
   }
 
   for (auto page : pages) {
@@ -3795,7 +3798,7 @@ CFrmNodeConfig::renderRegisters(void)
 
   m_nUpdates++; // Another update
 
-  return true;
+  return VSCP_ERROR_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

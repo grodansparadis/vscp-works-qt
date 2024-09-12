@@ -1,6 +1,18 @@
 {
     "tasks": [
       {
+        "type": "cmake",
+        "label": "CMake: build",
+        "command": "build",
+        "targets": [
+          "all"
+        ],
+        "group": "build",
+        "problemMatcher": [],
+        "detail": "CMake template build task",
+        "isDefault": true
+      },
+      {
         "taskName": "build",
         "type": "shell",
         "command": "cd build; make -j4 -Wall",
@@ -35,11 +47,10 @@
       {
         "taskName": "Clean & build all 5.15.2",
         "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
         "args": [],
         "group": {
           "kind": "build",
-          "isDefault": true
         },
         "problemMatcher": {
           "owner": "cpp",
@@ -61,7 +72,7 @@
       {
         "taskName": "Clean & build all 6.6.2",
         "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=/home/akhe/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
         "args": [],
         "group": "build",
         "problemMatcher": {
@@ -82,6 +93,29 @@
         "label": "Clean & build all 6.6.2"
       },
       {
+        "taskName": "Clean & build all 6.7.2",
+        "type": "shell",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.7.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+        "args": [],
+        "group": "build",
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        },
+        "label": "Clean & build all 6.7.2"
+      },
+      {
         "type": "shell",
         "label": "g++ build active file",
         "command": "/usr/bin/g++",
@@ -94,17 +128,6 @@
         "options": {
           "cwd": "/usr/bin"
         }
-      },
-      {
-        "type": "cmake",
-        "label": "CMake: build",
-        "command": "build",
-        "targets": [
-          "all"
-        ],
-        "group": "build",
-        "problemMatcher": [],
-        "detail": "CMake template build task"
       }
     ],
     "version": "2.0.0"

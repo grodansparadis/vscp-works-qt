@@ -769,6 +769,7 @@ CFrmNodeScan::doScan(void)
       ui->progressBarScan->setValue(0);
       spdlog::error(std::string(tr("Node Fast Scan: Failed to scan for devices").toStdString()));
       QApplication::restoreOverrideCursor();
+      QApplication::processEvents();
       QMessageBox::information(this,
                                APPNAME,
                                tr("Failed to scan nodes"),
@@ -813,7 +814,8 @@ CFrmNodeScan::doScan(void)
   ui->progressBarScan->setValue(100);
 
   QApplication::restoreOverrideCursor();
-  QApplication::processEvents();
+  QApplication::restoreOverrideCursor();
+  //QApplication::processEvents();
 
   ui->actionScan->setEnabled(true);
 }

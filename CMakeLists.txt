@@ -492,7 +492,6 @@ add_executable(${PROJECT_NAME}
   src/xyseries.h
   src/xyseries.cpp
 
-  build/ui_cdlgdatepicker.h
   src/cdlgdatepicker.ui
   src/cdlgdatepicker.cpp 
   src/cdlgdatepicker.h 

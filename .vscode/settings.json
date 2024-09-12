@@ -107,5 +107,9 @@
     "cSpell.language": "sv,en",
     "cSpell.words": [
       "MQTT"
-    ]
+    ],
+    "cmake.clearOutputBeforeBuild": false,
+    "cmake.configureEnvironment": {
+      "CMAKE_PREFIX_PATH": "~/Qt/6.7.2/gcc_64"
+    }
 }
