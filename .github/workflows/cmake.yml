@@ -35,6 +35,9 @@ jobs:
         ref: development  
         submodules: recursive
 
+      name: Create environment variable for VSCP_ROOT
+      run: export VSCP_ROOT=${{github.workspace}}/vscp  
+
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
       with:
@@ -71,7 +74,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ ..
+        cmake  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=${{ github.workspace }}/Qt/6.7.2/gcc_64 ..
 
     - name: Build
       working-directory: ${{github.workspace}}/build
