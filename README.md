@@ -14,20 +14,13 @@ That said a lot of functionality works and it may be a useful tool in some situa
 ## Build on Linux
 If you still want to build this project
 
-### Install qt 5.0.
-```bash
-  sudo apt install qttools5-dev
-  sudo apt install qt5-default
-  sudo apt install libqt5serialbus5-dev
-  sudo apt install qtdeclarative5-dev
-  sudo apt install libqt5serialport5
-  sudo apt install libqt5serialport5-dev
-  sudo apt install libqt5charts-dev
-```
+### Install Qt.
+
+Go to the qt site and download qt using the [Qt Online Installer](https://www.qt.io/download-open-source). Any version above 5.15 should work.
 
 ### Install other needed libs
 
-You need expat, mosquitto, openssl to build this project
+You need expat, paho-mqtt, openssl and libcurl to build this project
 
 ```bash
   sudo apt install libexpat-dev
@@ -36,7 +29,7 @@ You need expat, mosquitto, openssl to build this project
   sudo apt-get install libcurl4-openssl-dev
 ```
 
-Paho version 1.3 or bigger should be used. Build manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
+Paho version 1.3 or bigger should be used. Can also be built manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
 
 ```bash
   cmake .. -DPAHO_WITH_SSL=TRUE
@@ -52,7 +45,7 @@ to enable needed SSL
   git checkout development
 ``` 
 
-This source is by default expected to be in a folder on the same level as the vscp-works-qt project. But you can use another location and set the path to this folder with *-DVSCP_PATH="path to vscp folder"* when issuing cmake for vscp-works-qt.
+This source is by default expected to be in a folder on the same directory level as the cloned vscp-works-qt project. But you can use another location and set the path to this folder with *-DVSCP_PATH="path to vscp folder"* when issuing cmake for vscp-works-qt.
 
 For now the *development branch* is needed for the vscp project. This is temporary.
 
