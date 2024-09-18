@@ -59,7 +59,7 @@ For now the *development branch* is needed for the vscp project. This is tempora
 
 ### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
 ```bash
-  git clone https://github.com/grodansparadis/vscp-works-qt.git
+  git clone  --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
 ```  
 
 ### Go to the build folder and make the project
