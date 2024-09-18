@@ -35,7 +35,7 @@ jobs:
         ref: development  
         submodules: recursive
 
-      name: Create environment variable for VSCP_ROOT
+    - name: Create environment variable for VSCP_ROOT
       run: export VSCP_ROOT=${{github.workspace}}/vscp  
 
     - name: Checkout eclipse paho repo
