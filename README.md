@@ -60,10 +60,12 @@ For now the *development branch* is needed for the vscp project. This is tempora
   cd vscp-works-qt
   mkdir build
   cd build
-  cmake ..
+  cmake cmake -DCMAKE_PREFIX_PATH=~/Qt/6.7.2/gcc_64 ..
 ```
 
-use
+where **CMAKE_PREFIX_PATH** should point to the Qt version you installed previously
+
+You can use
 
 ```bash
   cmake -DCMAKE_BUILD_TYPE=Debug ..
@@ -81,7 +83,7 @@ if you need to set a path to the local copy of the vscp main repository
 
 ## Build on Windows
 
-If you don't have Visual Studio Code installed it is recommended. You can fined it [here](https://code.visualstudio.com/download).
+If you don't have Visual Studio Code installed it is recommended. You can find it [here](https://code.visualstudio.com/download).
 
 Install cmake-tools, c++ extension
 
@@ -93,7 +95,7 @@ ext install cmake-tools
 You need to checkout the VSCP main repository code as well (but not in the vcpkg folder). You do this with
 
 ```bash
-  git clone https://github.com/grodansparadis/vscp.git
+  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
   cd vscp
   git checkout development
 ``` 
@@ -101,7 +103,7 @@ You need to checkout the VSCP main repository code as well (but not in the vcpkg
 and the vscp-works-qt code
 
 ```bash
-git clone https://github.com/grodansparadis/vscp-works-qt.git
+git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
 ```
 
 ### Optionally install Qt for uae of Qt tools

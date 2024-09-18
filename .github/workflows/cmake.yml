@@ -14,8 +14,14 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
+    
+      # https://github.com/marketplace/actions/install-qt
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      version: 6.7.*
+      dir: ${{ github.workspace }}/qt/
 
-    # https://github.com/actions/checkout  
+      # https://github.com/actions/checkout  
     - uses: actions/checkout@v4
       with:
         submodules: recursive
