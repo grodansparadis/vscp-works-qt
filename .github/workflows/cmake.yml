@@ -1,4 +1,6 @@
 name: Linux Build
+env:
+  VSCP_ROOT: 'this is a test'
 
 on: [push]
 
@@ -36,7 +38,7 @@ jobs:
         submodules: recursive
 
     - name: Create environment variable for VSCP_ROOT
-      run: export VSCP_ROOT=${{github.workspace}}/vscp  
+      run: export VSCP_ROOT=${{github.workspace}}/vscp
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
