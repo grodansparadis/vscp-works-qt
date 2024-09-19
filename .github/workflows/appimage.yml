@@ -23,13 +23,13 @@ jobs:
         submodules: recursive
 
     # https://github.com/marketplace/actions/install-qt
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: '6.2.*'
-        target: 'desktop'
-        dir: '${{ github.workspace }}/qt/'
-        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+    # - name: Install Qt
+    #   uses: jurplel/install-qt-action@v4
+    #   with:
+    #     version: '6.2.*'
+    #     target: 'desktop'
+    #     dir: '${{ github.workspace }}/qt/'
+    #     modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
@@ -70,8 +70,8 @@ jobs:
       run: sudo apt install libfuse2  
 
     # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    # - name: Install qt5 components manually
-    #   run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
+    - name: Install qt5 components manually
+       run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
     
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
@@ -79,7 +79,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_PATH=vscp/
+        cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_PATH=vscp/ 
 
     - name: Build
       working-directory: ${{github.workspace}}/build
