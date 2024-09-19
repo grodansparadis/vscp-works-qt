@@ -1433,8 +1433,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str = tr("Bootloader wizard: Unable to connect to the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Bootloader wizard: Unable to connect to the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -1481,8 +1480,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str = tr("Bootloader wizard: Unable to connect to the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Bootloader wizard: Unable to connect to the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),

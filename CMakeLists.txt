@@ -87,9 +87,10 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
-#find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED Core Network Quick Sql Qml SerialPort)
-#find_package(Qt5 5.15 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Charts Quick SerialBus SerialPort QmlImportScanner)
-find_package(Qt5 5.15 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Charts Quick SerialBus SerialPort)
+#xxxfind_package(Qt5 5.15 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Charts Quick SerialBus SerialPort)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Qml Core Network Sql Charts Quick SerialBus SerialPort)
+qt_standard_project_setup()
+
 
 # pthreads
 set (THREADS_PREFER_PTHREAD_FLAG ON)
@@ -196,103 +197,103 @@ if(NOT SSL_VER_POS EQUAL -1)
 endif()
 
 # set(UI )
-qt5_wrap_ui(UI src/mainwindow.ui    
-  src/cdlgmainsettings.ui
-  src/cdlgconnsettingscanal.ui
-  src/cdlgconnsettingstcpip.ui
-  src/cdlgconnsettingssocketcan.ui
-  src/cdlgconnsettingsmqtt.ui
-  src/cdlgconnsettingsws1.ui
-  src/cdlgconnsettingsws2.ui
-  src/cdlgconnsettingsudp.ui
-  src/cdlgconnsettingsmulticast.ui
-  src/cdlgnewconnection.ui
-  src/cdlglevel1filter.ui
-  src/cdlglevel1filterwizard.ui
-  src/cdlglevel2filter.ui
-  src/cdlgsocketcanflags.ui
-  src/cdlgmqttpublish.ui
-  src/cdlgmqttsubscribe.ui
-  src/cdlgknownguid.ui
-  src/cdlgeditguid.ui
-  src/cdlgcanfilter.ui
-  src/cdlgtls.ui
-  src/cdlglog.ui
-  src/cdlgsensorindex.ui
-  src/cdlgeditsensorindex.ui
-  src/cdlgtxedit.ui
-  src/cdlgsessionfilter.ui
-  src/cdlgeditsessionfilter.ui
-  src/cdlgselectclass.ui
-  src/cdlgselectguid.ui
-  src/cdlgselectobid.ui
-  src/cdlgselectdata.ui
-  src/cdlgselectdatasize.ui
-  src/cdlgselectmeasurementvalue.ui
-  src/cdlgselectpriority.ui
-  src/cdlgselectmeasurementvalue.ui
-  src/cdlgselecttimestamp.ui
-  src/cdlgselectunit.ui
-  src/cdlgselectsensorindex.ui
-  src/cdlgselectdatacoding.ui
-  src/cdlgselectdate.ui
-  src/cdlgselectconstraint.ui
-  src/cfrmnodeconfig.ui
-  src/cfrmnodescan.ui
-  src/cdlgactionparam.ui
-  src/cdlgdatepicker.ui
-  src/cfrmmdf.ui
-  src/cdlgmdfmodule.ui
-  src/cdlgmdffilepicture.ui
-  src/cdlgmdfmodule.ui
-  src/cdlgmdfevent.ui
-  src/cdlgmdffilesetup.ui
-  src/cdlgmdfregister.ui
-  src/cdlgmdfbootloader.ui
-  src/cdlgmdffiledriver.ui
-  src/cdlgmdffile.ui
-  src/cdlgmdfremotevar.ui
-  src/cdlgmdfdescription.ui
-  src/cdlgmdfinfourl.ui
-  src/cdlgmdffilefirmware.ui
-  src/cdlgmdffilevideo.ui
-  src/cdlgmdffilemanual.ui
-  src/cdlgmdfvaluelist.ui
-  src/cdlgeditmap.ui
-  src/cdlgmdfmanufacturer.ui
-  src/cdlgmdfcontact.ui
-  src/cdlgmdfcontactlist.ui
+#qt5_wrap_ui(UI src/mainwindow.ui    
+#  src/cdlgmainsettings.ui
+#  src/cdlgconnsettingscanal.ui
+#  src/cdlgconnsettingstcpip.ui
+#  src/cdlgconnsettingssocketcan.ui
+#  src/cdlgconnsettingsmqtt.ui
+#  src/cdlgconnsettingsws1.ui
+#  src/cdlgconnsettingsws2.ui
+#  src/cdlgconnsettingsudp.ui
+#  src/cdlgconnsettingsmulticast.ui
+#  src/cdlgnewconnection.ui
+#  src/cdlglevel1filter.ui
+#  src/cdlglevel1filterwizard.ui
+#  src/cdlglevel2filter.ui
+#  src/cdlgsocketcanflags.ui
+#  src/cdlgmqttpublish.ui
+#  src/cdlgmqttsubscribe.ui
+#  src/cdlgknownguid.ui
+#  src/cdlgeditguid.ui
+#  src/cdlgcanfilter.ui
+#  src/cdlgtls.ui
+#  src/cdlglog.ui
+#  src/cdlgsensorindex.ui
+#  src/cdlgeditsensorindex.ui
+#  src/cdlgtxedit.ui
+#  src/cdlgsessionfilter.ui
+#  src/cdlgeditsessionfilter.ui
+#  src/cdlgselectclass.ui
+#  src/cdlgselectguid.ui
+#  src/cdlgselectobid.ui
+#  src/cdlgselectdata.ui
+#  src/cdlgselectdatasize.ui
+#  src/cdlgselectmeasurementvalue.ui
+#  src/cdlgselectpriority.ui
+#  src/cdlgselectmeasurementvalue.ui
+#  src/cdlgselecttimestamp.ui
+#  src/cdlgselectunit.ui
+#  src/cdlgselectsensorindex.ui
+#  src/cdlgselectdatacoding.ui
+#  src/cdlgselectdate.ui
+#  src/cdlgselectconstraint.ui
+#  src/cfrmnodeconfig.ui
+#  src/cfrmnodescan.ui
+#  src/cdlgactionparam.ui
+#  src/cdlgdatepicker.ui
+#  src/cfrmmdf.ui
+#  src/cdlgmdfmodule.ui
+#  src/cdlgmdffilepicture.ui
+#  src/cdlgmdfmodule.ui
+#  src/cdlgmdfevent.ui
+#  src/cdlgmdffilesetup.ui
+#  src/cdlgmdfregister.ui
+#  src/cdlgmdfbootloader.ui
+#  src/cdlgmdffiledriver.ui
+#  src/cdlgmdffile.ui
+#  src/cdlgmdfremotevar.ui
+#  src/cdlgmdfdescription.ui
+#  src/cdlgmdfinfourl.ui
+#  src/cdlgmdffilefirmware.ui
+#  src/cdlgmdffilevideo.ui
+#  src/cdlgmdffilemanual.ui
+#  src/cdlgmdfvaluelist.ui
+#  src/cdlgeditmap.ui
+#  src/cdlgmdfmanufacturer.ui
+#  src/cdlgmdfcontact.ui
+#  src/cdlgmdfcontactlist.ui
 
-  src/cdlgmdfregister.ui
-  src/cdlgmdfregisterlist.ui
+# src/cdlgmdfregister.ui
+#  src/cdlgmdfregisterlist.ui
 
-  src/cdlgmdfbit.ui
-  src/cdlgmdfbitlist.ui
-  src/cdlgmdfvalue.ui
-  src/cdlgmdfvaluelist.ui
+#  src/cdlgmdfbit.ui
+#  src/cdlgmdfbitlist.ui
+#  src/cdlgmdfvalue.ui
+#  src/cdlgmdfvaluelist.ui
 
-  src/cdlgmdfregistermapping.ui
+#  src/cdlgmdfregistermapping.ui
 
-  src/cdlgmdfremotevar.ui
-  src/cdlgmdfremotevarlist.ui
+#  src/cdlgmdfremotevar.ui
+#  src/cdlgmdfremotevarlist.ui
 
-  src/cdlgmdfdm.ui
-  src/cdlgmdfdmaction.ui
-  str/cdlgmdfdmactionparam.ui
+#  src/cdlgmdfdm.ui
+#  src/cdlgmdfdmaction.ui
+#  str/cdlgmdfdmactionparam.ui
 
-  src/cdlgmdfevents.ui
-  src/cdlgmdfeventdata.ui
+#  src/cdlgmdfevents.ui
+#  src/cdlgmdfeventdata.ui
 
-  src/cdlgtxtsearch.ui
+#  src/cdlgtxtsearch.ui
 
-  src/cdlgselectmqtttopics.ui
+#  src/cdlgselectmqtttopics.ui
 
-  src/cdlgbootfirmware.ui
+#  src/cdlgbootfirmware.ui
   
-  src/cdlgselectbootalgorithm.ui
-)
+#  src/cdlgselectbootalgorithm.ui
+#)
 
-add_executable(${PROJECT_NAME}
+qt_add_executable(${PROJECT_NAME}
   src/vscpworks.qrc
   src/main.cpp
   src/mainwindow.cpp
@@ -790,12 +791,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
-  ${Qt5Widgets_LIBRARIES}
-  ${Qt5Core_LIBRARIES}
-  Qt5::Network
-  Qt5::Quick 
-  Qt5::Sql
-  Qt5::Charts
+  Qt6::Widgets
+  Qt6::Qml
+  Qt6::Sql
+  Qt6::Charts
+#  ${Qt5Widgets_LIBRARIES}
+#  ${Qt5Core_LIBRARIES}
+#  Qt5::Network
+#  Qt5::Quick 
+#  Qt5::Sql
+#  Qt5::Charts
   m
   dl
   Threads::Threads
@@ -811,8 +816,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 endif()
 
 # https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
+#qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+#qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
 
 
 if(MSVC)

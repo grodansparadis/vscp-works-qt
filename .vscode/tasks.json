@@ -15,7 +15,7 @@
       {
         "taskName": "build",
         "type": "shell",
-        "command": "cd build; make -j4 -Wall",
+        "command": "cd build; make -j8 -Wall",
         "args": [],
         "group": "build",
         "problemMatcher": "$gcc",
@@ -47,7 +47,7 @@
       {
         "taskName": "Clean & build all 5.15.2",
         "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j8 -Wall",
         "args": [],
         "group": {
           "kind": "build",
@@ -72,7 +72,7 @@
       {
         "taskName": "Clean & build all 6.6.2",
         "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.6.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j8",
         "args": [],
         "group": "build",
         "problemMatcher": {
@@ -95,7 +95,7 @@
       {
         "taskName": "Clean & build all 6.7.2",
         "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.7.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.7.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j8",
         "args": [],
         "group": "build",
         "problemMatcher": {

@@ -1789,7 +1789,7 @@ CFrmSession::loadTxEvents(const QString& path)
   QXmlStreamReader reader(&file);
 
   if (reader.readNextStartElement()) {
-    if (reader.name() == "txrows") {
+    if (reader.name() == QString("txrows")) {
       qDebug() << reader.name();
       while (reader.readNextStartElement()) {
 
@@ -1799,7 +1799,7 @@ CFrmSession::loadTxEvents(const QString& path)
         uint32_t period = 0;
         QString event;
 
-        if (reader.name() == "row") {
+        if (reader.name() == QString("row")) {
 
           // enable
           if (reader.attributes().hasAttribute("enable")) {
@@ -2067,8 +2067,7 @@ CFrmSession::doConnectToRemoteHost(void)
         QIcon disconnectIcon(":/disconnect.png");
         m_connect->setIcon(disconnectIcon);
         m_connect->setChecked(false);
-        QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to connect to the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(
           this,
@@ -2092,8 +2091,7 @@ CFrmSession::doConnectToRemoteHost(void)
         QIcon disconnectIcon(":/disconnect.png");
         m_connect->setIcon(disconnectIcon);
         m_connect->setChecked(false);
-        QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(
           this,
@@ -2195,8 +2193,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
         m_connect->setIcon(connectIcon);
         m_connect->setChecked(true);
 
-        QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to disconnect from the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -2224,8 +2221,7 @@ CFrmSession::doDisconnectFromRemoteHost(void)
         m_connect->setIcon(connectIcon);
         m_connect->setChecked(true);
 
-        QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -2887,7 +2883,7 @@ CFrmSession::loadRxFromFile(void)
   QXmlStreamReader reader(&file);
 
   if (reader.readNextStartElement()) {
-    if (reader.name() == "rxrows") {
+    if (reader.name() == QString("rxrows")) {
       qDebug() << reader.name();
       while (reader.readNextStartElement()) {
 
@@ -2899,7 +2895,7 @@ CFrmSession::loadRxFromFile(void)
         QString comment = tr("");
         QString event;
 
-        if (reader.name() == "row") {
+        if (reader.name() == QString("row")) {
 
           // flags
           if (reader.attributes().hasAttribute("flags")) {

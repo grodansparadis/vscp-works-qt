@@ -58,7 +58,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-QT_CHARTS_USE_NAMESPACE
+//QT_CHARTS_USE_NAMESPACE
 
 WidgetGraph::WidgetGraph(QWidget *parent) :
     QWidget(parent),

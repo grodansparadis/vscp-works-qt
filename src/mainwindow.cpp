@@ -163,13 +163,14 @@ MainWindow::MainWindow()
   // connect(m_textEdit->document(), &QTextDocument::contentsChanged,
   //        this, &MainWindow::connectionsWasModified);
 
-#ifndef QT_NO_SESSIONMANAGER
-  QGuiApplication::setFallbackSessionManagementEnabled(false);
-  connect(qApp,
-          &QGuiApplication::commitDataRequest,
-          this,
-          &MainWindow::commitData);
-#endif
+// https://forum.qt.io/topic/125035/what-is-was-qguiapplication-setfallbacksessionmanagementenabled/2
+// #ifndef QT_NO_SESSIONMANAGER
+//   QGuiApplication::setFallbackSessionManagementEnabled(false);
+//   connect(qApp,
+//           &QGuiApplication::commitDataRequest,
+//           this,
+//           &MainWindow::commitData);
+// #endif
 
   setCurrentFile(QString());
   setUnifiedTitleAndToolBarOnMac(true);
@@ -435,8 +436,8 @@ MainWindow::checkRemoteEventDbVersion()
 
     // If there is a newer version we should download it
     if (!QFile::exists(path) ||
-        (pworks->m_lastEventDbServerDateTime.toTime_t() >
-         pworks->m_lastEventDbLoadDateTime.toTime_t())) {
+        (pworks->m_lastEventDbServerDateTime.toSecsSinceEpoch() >
+         pworks->m_lastEventDbLoadDateTime.toSecsSinceEpoch())) {
 
       // Get version for remote events
       QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");

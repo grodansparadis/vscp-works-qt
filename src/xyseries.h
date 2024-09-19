@@ -35,11 +35,11 @@
 #include <QtCore/QVector>
 #include <QtCharts/QChartGlobal>
 
-QT_CHARTS_BEGIN_NAMESPACE
+//QT_CHARTS_BEGIN_NAMESPACE
 class QXYSeries;
-QT_CHARTS_END_NAMESPACE
+//QT_CHARTS_END_NAMESPACE
 
-QT_CHARTS_USE_NAMESPACE
+//QT_CHARTS_USE_NAMESPACE
 
 class XYSeriesIODevice : public QIODevice
 {

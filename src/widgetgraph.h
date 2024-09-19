@@ -36,18 +36,18 @@
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartGlobal>
 
-QT_CHARTS_BEGIN_NAMESPACE
+//QT_CHARTS_BEGIN_NAMESPACE
 class QLineSeries;
 class QChart;
-QT_CHARTS_END_NAMESPACE
+//QT_CHARTS_END_NAMESPACE
 
-QT_CHARTS_USE_NAMESPACE
+//QT_CHARTS_USE_NAMESPACE
 
 class XYSeriesIODevice;
 
-QT_BEGIN_NAMESPACE
+//QT_BEGIN_NAMESPACE
 
-QT_END_NAMESPACE
+//QT_END_NAMESPACE
 
 class WidgetGraph : public QWidget
 {

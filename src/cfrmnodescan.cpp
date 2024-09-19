@@ -418,8 +418,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str = tr("Node Scan: Unable to connect to the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Node Scan: Unable to connect to the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -437,8 +436,7 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
-        QString str = tr("Node Scan: Unable to connect to the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Node Scan: Unable to connect to the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -514,8 +512,7 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       QApplication::processEvents();
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
-        QString str = tr("Node Scan: Unable to disconnect from the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Node Scan: Unable to disconnect from the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -535,8 +532,7 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QString str = tr("Node Scan: Unable to disconnect from the "
-                         "SOCKETCAN driver. rv=");
-        str += rv;
+                         "SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),

@@ -976,8 +976,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QApplication::beep();
-        QString str = tr("Session: Unable to connect to the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to connect to the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -998,8 +997,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       QApplication::processEvents();
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
         QApplication::beep();
-        QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to connect to the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -1082,8 +1080,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QApplication::beep();
-        QString str = tr("Session: Unable to disconnect from the CANAL driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to disconnect from the CANAL driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -1102,8 +1099,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QApplication::beep();
-        QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv=");
-        str += rv;
+        QString str = tr("Session: Unable to disconnect from the SOCKETCAN driver. rv={}").arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(
           this,
