@@ -26,9 +26,11 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 7.*.*
-        dir: ${{ github.workspace }}/qt/
-        modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
+        aqtversion: '==6.*.*'
+        version: '7.*.*'
+        target: 'desktop'
+        dir: '${{ github.workspace }}/qt/'
+        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
@@ -69,8 +71,8 @@ jobs:
       run: sudo apt install libfuse2  
 
     # Note that both of libqt5serialport5 libqt5serialport5-dev is needed    
-    - name: Install qt5 components manually
-      run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
+    # - name: Install qt5 components manually
+    #   run: sudo apt install qttools5-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtdeclarative5-dev libqt5charts5-dev libqt5serialbus5-dev libqt5serialport5-dev
     
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
