@@ -28,6 +28,7 @@ jobs:
       with:
         version: 6.2.*
         dir: ${{ github.workspace }}/qt/
+        modules: qtcharts qtconnectivity qtgraphs qtserialbus qtserialport qtwebsockets
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
