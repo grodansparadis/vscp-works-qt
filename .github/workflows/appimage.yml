@@ -26,8 +26,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        aqtversion: '==6.*'
-        version: '7.*.*'
+        version: '6.*.*'
         target: 'desktop'
         dir: '${{ github.workspace }}/qt/'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
