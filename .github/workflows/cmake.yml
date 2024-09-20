@@ -48,12 +48,13 @@ jobs:
     - name: test
       run: |
         export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-        echo "${{env.Qt6_DIR}}"
-        echo "${{env.QT_ROOT_DIR}}"
+        echo ${{env.Qt6_DIR}}
+        echo ${{env.QT_ROOT_DIR}}
         export TTT=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
         echo "${{env.TTT}}"
         echo "Hello"
         echo $TTT
+        echo $Qt6_DIR
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
