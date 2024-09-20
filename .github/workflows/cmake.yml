@@ -90,7 +90,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ ..
+        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp2/ -DVSCP_PATH=${{github.workspace}}/vscp/ ..
         env:
           QT_ROOT_DIR: super
 
