@@ -90,6 +90,7 @@ jobs:
       run: |
         mkdir build && cd build
         cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=$QT_ROOT_DIR -DQt6_DIR=$Qt6_DIR -DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0/gcc_64/lib/cmake/Qt6 ..
+        env: QT_ROOT_DIR: ${{env.QT_ROOT_DIR}}
 
     - name: Build
       working-directory: ${{github.workspace}}/build
