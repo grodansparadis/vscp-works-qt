@@ -26,7 +26,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.8.0
+        version: 6.5.3
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
@@ -70,6 +70,7 @@ jobs:
     - name: Install FUSE manually
       run: sudo apt install libfuse2  
 
+    # https://forum.qt.io/topic/151452/what-qt-specific-files-exactly-do-i-need-to-add-when-deploying/34
     - name: Install mysql client
       run: sudo apt install libmysqlclient-dev  
 
