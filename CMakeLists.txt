@@ -59,6 +59,9 @@ endif()
 file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
 message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
 
+file(TO_CMAKE_PATH "$ENV{QT_ROOT_DIR}" QT_PATH)
+message(STATUS "Qt path = $ENV{QT_PATH}")
+
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DWIN32_LEAN_AND_MEANS)
