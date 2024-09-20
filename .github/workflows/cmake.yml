@@ -41,10 +41,10 @@ jobs:
     - name: Create environment variable for VSCP_ROOT
       run: |
         export VSCP_ROOT=${{github.workspace}}/vscp
-        echo ${{env.Qt6_DIR}}
-        export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-        echo ${{env.QT_ROOT_DIR}}
-        echo ${{env.Qt6_DIR}}
+        echo "${{env.Qt6_DIR}}"
+        export Qt6_DIR="${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/"
+        echo "${{env.QT_ROOT_DIR}}"
+        echo "${{env.Qt6_DIR}}"
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
