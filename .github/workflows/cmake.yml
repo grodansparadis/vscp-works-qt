@@ -47,8 +47,8 @@ jobs:
 
     - name: test
       run: |
-        export ${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-        echo "${{env.Qt6_DIR}}"
+        export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
+        echo "${{env.}}"
         echo "${{env.QT_ROOT_DIR}}"
 
     - name: Checkout eclipse paho repo
