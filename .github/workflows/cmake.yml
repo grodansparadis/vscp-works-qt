@@ -40,6 +40,8 @@ jobs:
 
     - name: Create environment variable for VSCP_ROOT
       run: export VSCP_ROOT=${{github.workspace}}/vscp
+      run: export Qt6_DIR=${{env..QT_ROOT_DIR}}
+      run: echo ${{env..QT_ROOT_DIR}}
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
