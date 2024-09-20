@@ -40,13 +40,16 @@ jobs:
         ref: development  
         submodules: recursive
 
-    - name: Create environment variable for VSCP_ROOT
+    - name: Create environment variable for VSCP_ROOT and Qt6_DIR
       run: |
         export VSCP_ROOT=${{github.workspace}}/vscp
+        echo echo ${{env.VSCP_ROOT}}
+
+    - name: test
+      run: |
+        export ${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
         echo "${{env.Qt6_DIR}}"
-        export Qt6_DIR=$QT_ROOT_DIR/lib/cmake/Qt6/
         echo "${{env.QT_ROOT_DIR}}"
-        echo "${{env.Qt6_DIR}}ppp"
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
