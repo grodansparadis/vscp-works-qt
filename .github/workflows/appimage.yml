@@ -125,7 +125,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
-      run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
+      run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage  --exclude-libs=libqsqlmimer
 
     - uses: actions/upload-artifact@v4
       with:
