@@ -7,6 +7,7 @@ env:
   BUILD_TYPE: Release
   VSCP_ROOT: ${{github.workspace}}/vscp
   QT_ROOT_DIR: /home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0
+  Qt6_DIR: /home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0/gcc_64/lib/cmake/Qt6/
 
 jobs:
   build:
