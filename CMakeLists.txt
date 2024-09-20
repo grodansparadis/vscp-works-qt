@@ -48,6 +48,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # --- System Libraries ---
 include(GNUInstallDirs) 
 
+# Include Qt basic functions
+include(QtCommon)
+
 # Added extensions for curl lib find
 list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 
