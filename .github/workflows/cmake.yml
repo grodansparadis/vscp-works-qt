@@ -24,7 +24,6 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        #dir: ${{ github.workspace }}/qt/
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
       # https://github.com/actions/checkout  
@@ -44,17 +43,6 @@ jobs:
       run: |
         export VSCP_ROOT=${{github.workspace}}/vscp
         echo echo ${{env.VSCP_ROOT}}
-
-    # - name: test
-    #   run: |
-    #     export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-    #     echo $Qt6_DIR
-    #     echo $QT_ROOT_DIR
-    #     export TTT=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-    #     echo "${{env.TTT}}"
-    #     echo "Hello"
-    #     echo $TTT
-    #     echo $Qt6_DIR
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
@@ -86,13 +74,12 @@ jobs:
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2 
     
-    #        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=$QT_ROOT_DIR -DQt6_DIR=$Qt6_DIR -DQT_ADDITIONAL_PACKAGES_PREFIX_PATH=/home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0/gcc_64/lib/cmake/Qt6 ..  
     - name: Create Build Environment
       run: |
         mkdir build && cd build
         cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp2/ -DVSCP_PATH=${{github.workspace}}/vscp/ ..
 
-    - name: Build
+    - name: Build vscp-works-qt
       working-directory: ${{github.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
