@@ -30,7 +30,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+        modules: 'qtsql qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
@@ -125,7 +125,8 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
-      run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage  --exclude-libs=libqsqlmimer
+      # https://forum.qt.io/topic/154845/libmimerapi-so-not-found/4
+      run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage  
 
     - uses: actions/upload-artifact@v4
       with:
