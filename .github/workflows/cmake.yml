@@ -85,7 +85,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}} ..
+        cmake  -D CMAKE_BUILD_TYPE=Release  -D CMAKE_INSTALL_PREFIX=/usr -D VSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -D CMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}} -D Qt6_DIR=/home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0/gcc_64/lib/cmake/Qt6/ ..
 
     - name: Build
       working-directory: ${{github.workspace}}/build
