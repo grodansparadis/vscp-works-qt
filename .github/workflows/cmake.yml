@@ -20,8 +20,10 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.2.*
+        version: 6.8.0
+        host: 'linux'
         target: 'desktop'
+        arch: 'linux_gcc_64'
         dir: ${{ github.workspace }}/qt/
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
@@ -42,7 +44,7 @@ jobs:
       run: |
         export VSCP_ROOT=${{github.workspace}}/vscp
         echo "${{env.Qt6_DIR}}"
-        export Qt6_DIR="${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/"
+        export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
         echo "${{env.QT_ROOT_DIR}}"
         echo "${{env.Qt6_DIR}}"
 
@@ -82,7 +84,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}} ..
+        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp/ -DVSCP_PATH=${{github.workspace}}/vscp/ -DCMAKE_PREFIX_PATH=${{env.QT_ROOT_DIR}} ..
 
     - name: Build
       working-directory: ${{github.workspace}}/build
