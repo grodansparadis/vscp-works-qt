@@ -6,8 +6,6 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   VSCP_ROOT: ${{github.workspace}}/vscp
-  QT_ROOT_DIR: /home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0
-  Qt6_DIR: /home/runner/work/vscp-works-qt/vscp-works-qt/qt/Qt/6.8.0/gcc_64/lib/cmake/Qt6/
 
 jobs:
   build:
@@ -26,7 +24,7 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        dir: ${{ github.workspace }}/qt/
+        #dir: ${{ github.workspace }}/qt/
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
       # https://github.com/actions/checkout  
@@ -47,16 +45,16 @@ jobs:
         export VSCP_ROOT=${{github.workspace}}/vscp
         echo echo ${{env.VSCP_ROOT}}
 
-    - name: test
-      run: |
-        export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-        echo $Qt6_DIR
-        echo $QT_ROOT_DIR
-        export TTT=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
-        echo "${{env.TTT}}"
-        echo "Hello"
-        echo $TTT
-        echo $Qt6_DIR
+    # - name: test
+    #   run: |
+    #     export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
+    #     echo $Qt6_DIR
+    #     echo $QT_ROOT_DIR
+    #     export TTT=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
+    #     echo "${{env.TTT}}"
+    #     echo "Hello"
+    #     echo $TTT
+    #     echo $Qt6_DIR
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
