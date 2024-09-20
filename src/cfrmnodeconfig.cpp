@@ -690,13 +690,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
   // Edit selected DM row
   QAction* actEditDM = new QAction(tr("Edit DM row"), this);
-  actEditDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
+  actEditDM->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_E));
   connect(actEditDM, &QAction::triggered, this, &CFrmNodeConfig::editDMRow);
   ui->treeWidgetDecisionMatrix->addAction(actEditDM);
 
   // Toggle active state for selected DM row
   QAction* actToggleDM = new QAction(tr("Toggle active state for DM row"), this);
-  actToggleDM->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
+  actToggleDM->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_T));
   connect(actToggleDM, &QAction::triggered, this, &CFrmNodeConfig::toggleDMRow);
   ui->treeWidgetDecisionMatrix->addAction(actToggleDM);
 

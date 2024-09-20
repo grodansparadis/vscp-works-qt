@@ -490,25 +490,25 @@ CFrmSession::createMenu()
   m_toggleRxClassMarkAct = m_editMenu->addAction(tr("Toggle RX Class mark"),
                                                  this,
                                                  &CFrmSession::setVscpClassMark);
-  m_toggleRxClassMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_C));
+  m_toggleRxClassMarkAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
   m_toggleRxClassMarkAct->setStatusTip(tr("Mark the receive row with special background color"));
 
   m_toggleRxTypeMarkAct = m_editMenu->addAction(tr("Toggle RX Type mark"),
                                                 this,
                                                 &CFrmSession::setVscpTypeMark);
-  m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+  m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
   m_toggleRxTypeMarkAct->setStatusTip(tr("Mark the receive row with special background color"));
 
   m_addExCommentAct = m_editMenu->addAction(tr("Add/Edit RX comment"),
                                             this,
                                             &CFrmSession::addEventNote);
-  m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+  m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
   m_toggleRxTypeMarkAct->setStatusTip(tr("Add a comment to selected RX row(s)"));
 
   m_deleteRxCommentAct = m_editMenu->addAction(tr("Remove RX comment"),
                                                this,
                                                &CFrmSession::removeEventNote);
-  m_deleteRxCommentAct->setShortcut(QKeySequence(Qt::ALT + Qt::Key_T));
+  m_deleteRxCommentAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
   m_deleteRxCommentAct->setStatusTip(tr("Remove a comment from selected RX row(s)"));
 
   m_menuBar->addMenu(m_editMenu);

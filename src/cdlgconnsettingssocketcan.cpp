@@ -522,21 +522,18 @@ void CDlgConnSettingsSocketCan::onTestConnection(void)
         QString errorstr = tr("Failed to connect to interface. [%1] rv=%2").arg(getDevice().arg(rv));
         QMessageBox::question(this, 
                                 tr(APPNAME), 
-                                errorstr.arg(rv),
-                                QMessageBox::Ok);
+                                errorstr.arg(rv));
     }
     else {
         QMessageBox::question(this, 
                                 tr(APPNAME), 
-                                tr("Successful connect"),
-                                QMessageBox::Ok);
+                                tr("Successful connect"));
     }
 
     if (VSCP_ERROR_SUCCESS != (rv = m_clientSocketcan.disconnect())) {
         QMessageBox::question(this, 
                                 tr(APPNAME), 
-                                tr("Failed to disconnect from interface."),
-                                QMessageBox::Ok);
+                                tr("Failed to disconnect from interface."));
     }
 }
 

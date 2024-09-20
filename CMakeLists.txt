@@ -62,7 +62,6 @@ message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DWIN32_LEAN_AND_MEANS)
-  #add_definitions(-DOPENSSL_API_1_1)
   add_definitions(-D_POSIX_C_SOURCE)    
   add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -72,8 +71,7 @@ elseif(UNIX)
 endif()
 
 if (MSVC)
-#     # use precompiled headers
-#     set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h" "-fpch.h")
+# use precompiled headers
   set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h ")
 endif()
 
@@ -87,7 +85,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
-#xxxfind_package(Qt5 5.15 COMPONENTS Widgets LinguistTools REQUIRED Core Network Sql Charts Quick SerialBus SerialPort)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Qml Core Network Sql Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
@@ -196,102 +193,6 @@ if(NOT SSL_VER_POS EQUAL -1)
   message(STATUS "Open ssl version is 3.3")
 endif()
 
-# set(UI )
-#qt5_wrap_ui(UI src/mainwindow.ui    
-#  src/cdlgmainsettings.ui
-#  src/cdlgconnsettingscanal.ui
-#  src/cdlgconnsettingstcpip.ui
-#  src/cdlgconnsettingssocketcan.ui
-#  src/cdlgconnsettingsmqtt.ui
-#  src/cdlgconnsettingsws1.ui
-#  src/cdlgconnsettingsws2.ui
-#  src/cdlgconnsettingsudp.ui
-#  src/cdlgconnsettingsmulticast.ui
-#  src/cdlgnewconnection.ui
-#  src/cdlglevel1filter.ui
-#  src/cdlglevel1filterwizard.ui
-#  src/cdlglevel2filter.ui
-#  src/cdlgsocketcanflags.ui
-#  src/cdlgmqttpublish.ui
-#  src/cdlgmqttsubscribe.ui
-#  src/cdlgknownguid.ui
-#  src/cdlgeditguid.ui
-#  src/cdlgcanfilter.ui
-#  src/cdlgtls.ui
-#  src/cdlglog.ui
-#  src/cdlgsensorindex.ui
-#  src/cdlgeditsensorindex.ui
-#  src/cdlgtxedit.ui
-#  src/cdlgsessionfilter.ui
-#  src/cdlgeditsessionfilter.ui
-#  src/cdlgselectclass.ui
-#  src/cdlgselectguid.ui
-#  src/cdlgselectobid.ui
-#  src/cdlgselectdata.ui
-#  src/cdlgselectdatasize.ui
-#  src/cdlgselectmeasurementvalue.ui
-#  src/cdlgselectpriority.ui
-#  src/cdlgselectmeasurementvalue.ui
-#  src/cdlgselecttimestamp.ui
-#  src/cdlgselectunit.ui
-#  src/cdlgselectsensorindex.ui
-#  src/cdlgselectdatacoding.ui
-#  src/cdlgselectdate.ui
-#  src/cdlgselectconstraint.ui
-#  src/cfrmnodeconfig.ui
-#  src/cfrmnodescan.ui
-#  src/cdlgactionparam.ui
-#  src/cdlgdatepicker.ui
-#  src/cfrmmdf.ui
-#  src/cdlgmdfmodule.ui
-#  src/cdlgmdffilepicture.ui
-#  src/cdlgmdfmodule.ui
-#  src/cdlgmdfevent.ui
-#  src/cdlgmdffilesetup.ui
-#  src/cdlgmdfregister.ui
-#  src/cdlgmdfbootloader.ui
-#  src/cdlgmdffiledriver.ui
-#  src/cdlgmdffile.ui
-#  src/cdlgmdfremotevar.ui
-#  src/cdlgmdfdescription.ui
-#  src/cdlgmdfinfourl.ui
-#  src/cdlgmdffilefirmware.ui
-#  src/cdlgmdffilevideo.ui
-#  src/cdlgmdffilemanual.ui
-#  src/cdlgmdfvaluelist.ui
-#  src/cdlgeditmap.ui
-#  src/cdlgmdfmanufacturer.ui
-#  src/cdlgmdfcontact.ui
-#  src/cdlgmdfcontactlist.ui
-
-# src/cdlgmdfregister.ui
-#  src/cdlgmdfregisterlist.ui
-
-#  src/cdlgmdfbit.ui
-#  src/cdlgmdfbitlist.ui
-#  src/cdlgmdfvalue.ui
-#  src/cdlgmdfvaluelist.ui
-
-#  src/cdlgmdfregistermapping.ui
-
-#  src/cdlgmdfremotevar.ui
-#  src/cdlgmdfremotevarlist.ui
-
-#  src/cdlgmdfdm.ui
-#  src/cdlgmdfdmaction.ui
-#  str/cdlgmdfdmactionparam.ui
-
-#  src/cdlgmdfevents.ui
-#  src/cdlgmdfeventdata.ui
-
-#  src/cdlgtxtsearch.ui
-
-#  src/cdlgselectmqtttopics.ui
-
-#  src/cdlgbootfirmware.ui
-  
-#  src/cdlgselectbootalgorithm.ui
-#)
 
 qt_add_executable(${PROJECT_NAME}
   src/vscpworks.qrc
@@ -715,11 +616,6 @@ if (MSVC)
     ./third_party/maddy/include/
     ./third_party/crypto-algorithms/
     ${PThreads4W_INCLUDE_DIR}
-    ${Qt5Widgets_INCLUDE_DIRS}
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5SerialBus_INCLUDE_DIRS}
-    ${Qt5SerialPort_INCLUDE_DIRS}
-    ${Qt5Network_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIRS}
@@ -744,10 +640,6 @@ else()
     ./third_party/mustache/
     ./third_party/maddy/include/
     ./third_party/crypto-algorithms/s
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5SerialBus_INCLUDE_DIRS}
-    ${Qt5SerialPort_INCLUDE_DIRS}
-    ${Qt5Network_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIRS}
@@ -765,26 +657,16 @@ if (MSVC)
   message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
   link_directories(${MOSQUITTO_LIB_DIR})
 
-  #find_path(LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
-  #find_path(LIBWEBSOCKETS_LIBRARY_DIR libwebsockets.lib websockets.lib websockets_shared.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
   message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
   link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE     
-  Qt5::Widgets
-  Qt5::Core
-  Qt5::Network
-  Qt5::Quick
-  Qt5::Sql
-  Qt5::Charts
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
   OpenSSL::SSL OpenSSL::Crypto        
-  #   eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs
   ${MOSQUITTO_LIBRARIES}
   ${LIBWEBSOCKETS_LIBRARIES}
-  #"${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib"
   expat::expat
   CURL::libcurl
   dlfcn-win32::dl
@@ -795,12 +677,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Qml
   Qt6::Sql
   Qt6::Charts
-#  ${Qt5Widgets_LIBRARIES}
-#  ${Qt5Core_LIBRARIES}
-#  Qt5::Network
-#  Qt5::Quick 
-#  Qt5::Sql
-#  Qt5::Charts
   m
   dl
   Threads::Threads
@@ -815,16 +691,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 endif()
 
-# https://www3.sra.co.jp/qt/relation/doc/qtdoc/cmake-manual.html
-#qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-#qt5_add_resources(src/vscpworks.qrc qdarkstyle/theme/style.qrc) 
-
 
 if(MSVC)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-    add_definitions(-DWIN32_LEAN_AND_MEANS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    set(LIBS_SYSTEM ws2_32)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  add_definitions(-DWIN32_LEAN_AND_MEANS)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  set(LIBS_SYSTEM ws2_32)
 elseif(UNIX)
   set(LIBS_SYSTEM c stdc++)
 endif()

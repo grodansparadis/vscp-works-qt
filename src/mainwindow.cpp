@@ -2450,9 +2450,7 @@ MainWindow::newNodeConfiguration()
     int ret = QMessageBox::warning(this,
                                    tr("VSVP Works+"),
                                    tr("No connection selected.\n"
-                                      "Please select a connection first."),
-                                   QMessageBox::Ok,
-                                   QMessageBox::Information);
+                                      "Please select a connection first."));
     return;
   }
 
@@ -2496,9 +2494,7 @@ MainWindow::newNodeScan()
     int ret = QMessageBox::warning(this,
                                    tr("VSVP Works+"),
                                    tr("No connection selected.\n"
-                                      "Please select a connection first."),
-                                   QMessageBox::Ok,
-                                   QMessageBox::Information);
+                                      "Please select a connection first."));
     return;
   }
 
@@ -2543,9 +2539,7 @@ MainWindow::newNodeBootload()
     int ret = QMessageBox::warning(this,
                                    tr("VSVP Works+"),
                                    tr("No connection selected.\n"
-                                      "Please select a connection first."),
-                                   QMessageBox::Ok,
-                                   QMessageBox::Information);
+                                      "Please select a connection first."));
     return;
   }
 
