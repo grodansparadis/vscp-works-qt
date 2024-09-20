@@ -45,6 +45,7 @@ jobs:
         export VSCP_ROOT=${{github.workspace}}/vscp
         echo "${{env.Qt6_DIR}}"
         export Qt6_DIR=${{env.QT_ROOT_DIR}}/lib/cmake/Qt6/
+        export t123456=2
         echo "${{env.QT_ROOT_DIR}}"
         echo "${{env.Qt6_DIR}}"
 
