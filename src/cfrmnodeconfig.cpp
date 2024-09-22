@@ -79,13 +79,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProgressBar>
-#include <QSqlTableModel>
+//#include <QSqlTableModel>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QTreeWidgetItemIterator>
 #include <QXmlStreamReader>
-#include <QtSql>
+//#include <QtSql>
 #include <QtWidgets>
 
 #include <expat.h>

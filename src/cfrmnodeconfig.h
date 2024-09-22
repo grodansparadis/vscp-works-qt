@@ -44,7 +44,8 @@
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QTreeWidget>
-#include <QtSql>
+#include <QFile>
+//#include <QtSql>
 
 QT_BEGIN_NAMESPACE
 class QAction;

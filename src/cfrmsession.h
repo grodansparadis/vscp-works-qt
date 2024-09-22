@@ -43,7 +43,10 @@
 #include <QObject>
 #include <QTableView>
 #include <QTableWidgetItem>
-#include <QtSql>
+#include <QJsonObject>
+#include <QComboBox>
+#include <QMutex>
+//#include <QtSql>
 #include <QToolButton>
 
 QT_BEGIN_NAMESPACE

@@ -67,12 +67,12 @@
 #include <QDebug>
 #include <QFile>
 #include <QJSEngine>
-#include <QSqlTableModel>
+//#include <QSqlTableModel>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QXmlStreamReader>
-#include <QtSql>
+//#include <QtSql>
 #include <QtWidgets>
 
 // ----------------------------------------------------------------------------
