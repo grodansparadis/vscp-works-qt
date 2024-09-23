@@ -74,8 +74,9 @@ jobs:
         version: 5.15.*
         host: 'linux'
         target: 'desktop'
-        arch: 'linux_gcc_64'
-        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+        arch: 'gcc_64'
+        modules: qtcharts 
+#        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 #        extra: '--exclude-libs=libqsqlmimer'
 
     - name: Setup cmake
