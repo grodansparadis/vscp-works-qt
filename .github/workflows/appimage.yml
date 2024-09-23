@@ -28,9 +28,9 @@ jobs:
       with:
         version: 6.5.3
         host: 'linux'
-#        target: 'desktop'
+        target: 'desktop'
         arch: 'linux_gcc_64'
-        modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
+#        modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
