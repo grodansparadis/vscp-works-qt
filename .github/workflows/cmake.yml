@@ -68,8 +68,14 @@ jobs:
     - name: Install libwebsockets-dev 
       run: sudo apt install libwebsockets-dev   
 
-    - name: Install paho manually
-      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
+    - name: Install FUSE manually
+      run: sudo apt install libfuse2
+
+    - name: Install sqlite3
+      run: sudo apt install libsqlite3-dev  
+
+#    - name: Install paho manually
+#      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
        
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2 
