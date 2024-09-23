@@ -73,9 +73,9 @@ jobs:
     - name: Install sqlite3
       run: sudo apt install libsqlite3-dev  
 
-    # https://forum.qt.io/topic/151452/what-qt-specific-files-exactly-do-i-need-to-add-when-deploying/34
-    - name: Install mysql client
-      run: sudo apt install libmysqlclient-dev  
+    # # https://forum.qt.io/topic/151452/what-qt-specific-files-exactly-do-i-need-to-add-when-deploying/34
+    # - name: Install mysql client
+    #   run: sudo apt install libmysqlclient-dev  
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
