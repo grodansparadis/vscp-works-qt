@@ -71,12 +71,12 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.8.*
+        version: 5.15.*
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
-        extra: '--exclude-libs=libqsqlmimer'
+#        extra: '--exclude-libs=libqsqlmimer'
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
