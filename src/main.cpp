@@ -10,7 +10,6 @@
 #include "vscp.h"
 #include "vscphelper.h"
 
-#include <QFile>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 

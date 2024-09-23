@@ -47,15 +47,14 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#include <QJsonDocument>
 #include <QJSEngine>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QSettings>
-// #include <QSqlDatabase>
-// #include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QTextDocument>
 #include <QUuid>
@@ -138,7 +137,7 @@ vscpworks::~vscpworks()
       break;
     }
   }
-  //m_worksdb.close();
+  m_worksdb.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -610,7 +609,6 @@ vscpworks::removeConnection(const QString& uuid, bool bSave)
 bool
 vscpworks::loadEventDb(void)
 {
-/*
   m_mutexVscpEventsMaps.lock();
 
   m_evdb         = QSqlDatabase::addDatabase("QSQLITE", "vscpevents");
@@ -656,7 +654,6 @@ vscpworks::loadEventDb(void)
   }
 
   m_mutexVscpEventsMaps.unlock();
-*/  
   return true;
 }
 
@@ -697,53 +694,53 @@ vscpworks::openVscpWorksDatabase(void)
   // Set up database
   QString eventdbname = m_shareFolder + "vscpworks.sqlite3";
 
-  // QString dbName(eventdbname);
-  // m_worksdb = QSqlDatabase::addDatabase("QSQLITE", "vscpworks");
-  // m_worksdb.setDatabaseName(dbName);
-  // m_worksdb.open();
+  QString dbName(eventdbname);
+  m_worksdb = QSqlDatabase::addDatabase("QSQLITE", "vscpworks");
+  m_worksdb.setDatabaseName(dbName);
+  m_worksdb.open();
 
   // Create GUID table if it does not exist
-  // QSqlQuery query = QSqlQuery(m_worksdb);
-  // if (!query.exec("CREATE TABLE IF NOT EXISTS guid ("
-  //                 "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-  //                 "guid	TEXT UNIQUE,"
-  //                 "name	TEXT,"
-  //                 "description   TEXT);")) {
-  //   qDebug() << query.lastError();
-  //   return false;
-  // }
+  QSqlQuery query = QSqlQuery(m_worksdb);
+  if (!query.exec("CREATE TABLE IF NOT EXISTS guid ("
+                  "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                  "guid	TEXT UNIQUE,"
+                  "name	TEXT,"
+                  "description   TEXT);")) {
+    qDebug() << query.lastError();
+    return false;
+  }
 
   // Create GUID name index
-  // if (!query.exec("CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)")) {
-  //   qDebug() << query.lastError();
-  //   return false;
-  // }
+  if (!query.exec("CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)")) {
+    qDebug() << query.lastError();
+    return false;
+  }
 
-  // if (!query.exec("CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
-  //                 "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-  //                 "\"link_to_guid\"	INTEGER, "
-  //                 "\"sensor\"	        INTEGER, "
-  //                 "\"name\"	        TEXT, "
-  //                 "\"description\"	TEXT );")) {
-  //   qDebug() << query.lastError();
-  //   return false;
-  // }
+  if (!query.exec("CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
+                  "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                  "\"link_to_guid\"	INTEGER, "
+                  "\"sensor\"	        INTEGER, "
+                  "\"name\"	        TEXT, "
+                  "\"description\"	TEXT );")) {
+    qDebug() << query.lastError();
+    return false;
+  }
 
-  // // Create sensor link + idx unique  index
-  // if (!query.exec("CREATE UNIQUE INDEX IF NOT EXISTS \"idxSensors\" ON \"sensorindex\" (\"link_to_guid\" ASC, \"sensor\" ASC)")) {
-  //   qDebug() << query.lastError();
-  //   return false;
-  // }
+  // Create sensor link + idx unique  index
+  if (!query.exec("CREATE UNIQUE INDEX IF NOT EXISTS \"idxSensors\" ON \"sensorindex\" (\"link_to_guid\" ASC, \"sensor\" ASC)")) {
+    qDebug() << query.lastError();
+    return false;
+  }
 
-  // // Create log table if it does not exist
-  // if (!query.exec("CREATE TABLE IF NOT EXISTS log ("
-  //                 "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-  //                 "level INTEGER,"
-  //                 "datetime TEXT,"
-  //                 "message TEXT);")) {
-  //   qDebug() << query.lastError();
-  //   return false;
-  // }
+  // Create log table if it does not exist
+  if (!query.exec("CREATE TABLE IF NOT EXISTS log ("
+                  "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                  "level INTEGER,"
+                  "datetime TEXT,"
+                  "message TEXT);")) {
+    qDebug() << query.lastError();
+    return false;
+  }
 
   // Load known GUID's to memory
   loadGuidTable();
@@ -763,17 +760,17 @@ vscpworks::loadGuidTable(void)
 {
   m_mutexGuidMap.lock();
 
-  // QSqlQuery query("SELECT * FROM guid order by name", m_worksdb);
-  // if (QSqlError::NoError != query.lastError().type()) {
-  //   m_mutexGuidMap.unlock();
-  //   return false;
-  // }
+  QSqlQuery query("SELECT * FROM guid order by name", m_worksdb);
+  if (QSqlError::NoError != query.lastError().type()) {
+    m_mutexGuidMap.unlock();
+    return false;
+  }
 
-  // while (query.next()) {
-  //   QString guid                  = query.value(1).toString();
-  //   QString name                  = query.value(2).toString();
-  //   m_mapGuidToSymbolicName[guid] = name;
-  // }
+  while (query.next()) {
+    QString guid                  = query.value(1).toString();
+    QString name                  = query.value(2).toString();
+    m_mapGuidToSymbolicName[guid] = name;
+  }
 
   m_mutexGuidMap.unlock();
   return true;
@@ -788,18 +785,18 @@ vscpworks::loadSensorTable(void)
 {
   m_mutexSensorIndexMap.lock();
 
-  // QSqlQuery query("SELECT * FROM sensorindex order by sensor", m_worksdb);
-  // if (QSqlError::NoError != query.lastError().type()) {
-  //   m_mutexSensorIndexMap.unlock();
-  //   return false;
-  // }
+  QSqlQuery query("SELECT * FROM sensorindex order by sensor", m_worksdb);
+  if (QSqlError::NoError != query.lastError().type()) {
+    m_mutexSensorIndexMap.unlock();
+    return false;
+  }
 
-  // while (query.next()) {
-  //   int link_to_guid                                             = query.value(1).toInt();
-  //   int sensor                                                   = query.value(2).toInt();
-  //   QString name                                                 = query.value(3).toString();
-  //   m_mapSensorIndexToSymbolicName[(link_to_guid << 8) + sensor] = name;
-  // }
+  while (query.next()) {
+    int link_to_guid                                             = query.value(1).toInt();
+    int sensor                                                   = query.value(2).toInt();
+    QString name                                                 = query.value(3).toString();
+    m_mapSensorIndexToSymbolicName[(link_to_guid << 8) + sensor] = name;
+  }
 
   m_mutexSensorIndexMap.unlock();
   return true;
@@ -821,15 +818,15 @@ vscpworks::addGuid(QString guid, QString name)
     return true;
   }
 
-  // QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
-  // QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_worksdb);
-  // if (queryClass.lastError().isValid()) {
-  //   spdlog::error(std::string(tr("Failed to insert GUID into database %s")
-  //                               .arg(queryClass.lastError().text())
-  //                               .toStdString()));
-  //   qDebug() << queryClass.lastError();
-  //   return false;
-  // }
+  QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
+  QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_worksdb);
+  if (queryClass.lastError().isValid()) {
+    spdlog::error(std::string(tr("Failed to insert GUID into database %s")
+                                .arg(queryClass.lastError().text())
+                                .toStdString()));
+    qDebug() << queryClass.lastError();
+    return false;
+  }
 
   // Add to loaded
   m_mapGuidToSymbolicName[guid] = name;
@@ -851,15 +848,15 @@ vscpworks::getIdxForGuidRecord(const QString& guid)
 
   QString strInsert = "SELECT * FROM guid WHERE guid='%1';";
 
-  // QSqlQuery query(strInsert.arg(guid), m_worksdb);
-  // if (query.lastError().isValid()) {
-  //   m_mutexGuidMap.unlock();
-  //   return -1;
-  // }
+  QSqlQuery query(strInsert.arg(guid), m_worksdb);
+  if (query.lastError().isValid()) {
+    m_mutexGuidMap.unlock();
+    return -1;
+  }
 
-  // if (query.next()) {
-  //   index = query.value(0).toInt();
-  // }
+  if (query.next()) {
+    index = query.value(0).toInt();
+  }
 
   m_mutexGuidMap.unlock();
   return index;
@@ -932,18 +929,18 @@ vscpworks::getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit)
 
   QString strQuery = "SELECT * FROM vscp_unit WHERE nunit='%1' AND link_to_class=%2 AND link_to_type=%3;";
 
-  // QSqlQuery query(m_evdb);
-  // query.exec(strQuery.arg(unit).arg(vscpClass).arg(vscpType));
+  QSqlQuery query(m_evdb);
+  query.exec(strQuery.arg(unit).arg(vscpClass).arg(vscpType));
 
-  // while (query.next()) {
-  //   u.m_unit         = query.value(3).toInt();
-  //   u.m_name         = query.value(4).toString().toStdString();
-  //   u.m_description  = query.value(5).toString().toStdString();
-  //   u.m_conversion0  = query.value(6).toString().toStdString();
-  //   u.m_conversion   = query.value(7).toString().toStdString();
-  //   u.m_symbol_ascii = query.value(8).toString().toStdString();
-  //   u.m_symbol_utf8  = query.value(9).toString().toStdString();
-  // }
+  while (query.next()) {
+    u.m_unit         = query.value(3).toInt();
+    u.m_name         = query.value(4).toString().toStdString();
+    u.m_description  = query.value(5).toString().toStdString();
+    u.m_conversion0  = query.value(6).toString().toStdString();
+    u.m_conversion   = query.value(7).toString().toStdString();
+    u.m_symbol_ascii = query.value(8).toString().toStdString();
+    u.m_symbol_utf8  = query.value(9).toString().toStdString();
+  }
 
   return u;
 }
@@ -1030,44 +1027,44 @@ vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type
   QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;";
   qDebug() << strQuery.arg(type).arg(vscpClass).arg(vscpType);
 
-  // QSqlQuery query(m_evdb);
-  // query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
-  // // Try if there is a general render definition if none
-  // // is defined for the event
-  // qDebug() << query.size();
-  // qDebug() << query.numRowsAffected();
-  // if (query.next()) {
-  //   query.first();
-  // }
-  // else {
-  //   // Definition for all events of class
-  //   query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
-  //   query.first();
-  // }
-  // do {
+  QSqlQuery query(m_evdb);
+  query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
+  // Try if there is a general render definition if none
+  // is defined for the event
+  qDebug() << query.size();
+  qDebug() << query.numRowsAffected();
+  if (query.next()) {
+    query.first();
+  }
+  else {
+    // Definition for all events of class
+    query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
+    query.first();
+  }
+  do {
 
-  //   // * * * VARIABLES * * *
-  //   QString vscpVariables = query.value(4).toString();
-  //   if (vscpVariables.startsWith("BASE64:", Qt::CaseInsensitive)) {
-  //     vscpVariables = vscpVariables.right(vscpVariables.length() - 7);
-  //     vscpVariables = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
-  //   }
+    // * * * VARIABLES * * *
+    QString vscpVariables = query.value(4).toString();
+    if (vscpVariables.startsWith("BASE64:", Qt::CaseInsensitive)) {
+      vscpVariables = vscpVariables.right(vscpVariables.length() - 7);
+      vscpVariables = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
+    }
 
-  //   qDebug() << vscpVariables;
-  //   qDebug() << "---------------------------------------------";
-  //   vscpVariables.replace("\"", "&quote;").replace("&quote;", "'").replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
-  //   qDebug() << vscpVariables;
+    qDebug() << vscpVariables;
+    qDebug() << "---------------------------------------------";
+    vscpVariables.replace("\"", "&quote;").replace("&quote;", "'").replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
+    qDebug() << vscpVariables;
 
-  //   // * * * TEMPLATES * * *
-  //   QString vscpTemplate = query.value(5).toString();
-  //   if (vscpTemplate.startsWith("BASE64:", Qt::CaseInsensitive)) {
-  //     vscpTemplate = vscpTemplate.right(vscpTemplate.length() - 7);
-  //     vscpTemplate = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
-  //   }
-  //   vscpTemplate.replace("\"", "&quote;").replace("&quote;", "'").replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
-  //   qDebug() << vscpTemplate;
-  //   strList << vscpVariables << vscpTemplate;
-  // } while (query.next());
+    // * * * TEMPLATES * * *
+    QString vscpTemplate = query.value(5).toString();
+    if (vscpTemplate.startsWith("BASE64:", Qt::CaseInsensitive)) {
+      vscpTemplate = vscpTemplate.right(vscpTemplate.length() - 7);
+      vscpTemplate = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
+    }
+    vscpTemplate.replace("\"", "&quote;").replace("&quote;", "'").replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
+    qDebug() << vscpTemplate;
+    strList << vscpVariables << vscpTemplate;
+  } while (query.next());
 
   return strList;
 }

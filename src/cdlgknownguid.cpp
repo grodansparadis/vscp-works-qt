@@ -128,7 +128,7 @@ CDlgKnownGuid::fillGuidFromDb(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  /*pworks->m_mutexGuidMap.lock();
+  pworks->m_mutexGuidMap.lock();
 
   QSqlQuery query("SELECT * FROM guid order by name", pworks->m_worksdb);
 
@@ -139,7 +139,7 @@ CDlgKnownGuid::fillGuidFromDb(void)
     insertGuidItem(guid, name);
   }
 
-  pworks->m_mutexGuidMap.unlock();*/
+  pworks->m_mutexGuidMap.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ void
 CDlgKnownGuid::listItemClicked(QTableWidgetItem* item)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-/*
+
   int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
   if (-1 == currentRow) {
     currentRow = 0; // First row
@@ -235,7 +235,6 @@ CDlgKnownGuid::listItemClicked(QTableWidgetItem* item)
   }
 
   pworks->m_mutexGuidMap.unlock();
-*/  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -460,7 +459,7 @@ again:
     }
 
     QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-/*
+
     pworks->m_mutexGuidMap.lock();
     QSqlQuery query(strQuery
                       .arg(strguid)
@@ -476,7 +475,7 @@ again:
                     query.lastError().text().toStdString());
       goto again;
     }
-*/
+
     // Add to the internal table
     pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
     pworks->m_mutexGuidMap.unlock();
@@ -532,7 +531,7 @@ CDlgKnownGuid::btnEdit(void)
 
   QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
   pworks->m_mutexGuidMap.lock();
-  /*QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
   if (QSqlError::NoError != query.lastError().type()) {
     pworks->m_mutexGuidMap.unlock();
@@ -552,7 +551,7 @@ CDlgKnownGuid::btnEdit(void)
   }
 
   pworks->m_mutexGuidMap.unlock();
-*/
+
 again:
   if (QDialog::Accepted == dlg.exec()) {
 
@@ -561,22 +560,22 @@ again:
 
     QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
     pworks->m_mutexGuidMap.lock();
-    // QSqlQuery query(strQuery
-    //                   .arg(strname)
-    //                   .arg(strdescription)
-    //                   .arg(strguid),
-    //                 pworks->m_worksdb);
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //   pworks->m_mutexGuidMap.unlock();
-    //   QMessageBox::information(this,
-    //                            tr(APPNAME),
-    //                            tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
-    //                            QMessageBox::Ok);
+    QSqlQuery query(strQuery
+                      .arg(strname)
+                      .arg(strdescription)
+                      .arg(strguid),
+                    pworks->m_worksdb);
+    if (QSqlError::NoError != query.lastError().type()) {
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
 
-    //   spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) +
-    //                 query.lastError().text().toStdString());
-    //   goto again;
-    // }
+      spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      goto again;
+    }
 
     // Add to the internal table
     pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
@@ -617,26 +616,26 @@ CDlgKnownGuid::btnClone(void)
   QString strguid            = itemGuid->text();
   strguid                    = strguid.trimmed();
 
-  // QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
-  // pworks->m_mutexGuidMap.lock();
-  // QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  pworks->m_mutexGuidMap.lock();
+  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-  // if (QSqlError::NoError != query.lastError().type()) {
-  //   pworks->m_mutexGuidMap.unlock();
-  //   QMessageBox::information(this,
-  //                            tr(APPNAME),
-  //                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-  //                            QMessageBox::Ok);
-  //   spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
-  //                 query.lastError().text().toStdString());
-  //   return;
-  // }
+  if (QSqlError::NoError != query.lastError().type()) {
+    pworks->m_mutexGuidMap.unlock();
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             QMessageBox::Ok);
+    spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
+                  query.lastError().text().toStdString());
+    return;
+  }
 
-  // if (query.next()) {
-  //   dlg.setGuid(query.value(1).toString());
-  //   dlg.setName(query.value(2).toString());
-  //   dlg.setDescription(query.value(3).toString());
-  // }
+  if (query.next()) {
+    dlg.setGuid(query.value(1).toString());
+    dlg.setName(query.value(2).toString());
+    dlg.setDescription(query.value(3).toString());
+  }
 
   pworks->m_mutexGuidMap.unlock();
 
@@ -673,22 +672,22 @@ again:
 
     QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
 
-    // pworks->m_mutexGuidMap.lock();
-    // QSqlQuery query(strQuery
-    //                   .arg(strguid)
-    //                   .arg(dlg.getName())
-    //                   .arg(dlg.getDescription()),
-    //                 pworks->m_worksdb);
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //   pworks->m_mutexGuidMap.unlock();
-    //   QMessageBox::information(this,
-    //                            tr(APPNAME),
-    //                            tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
-    //                            QMessageBox::Ok);
-    //   spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
-    //                 query.lastError().text().toStdString());
-    //   goto again;
-    // }
+    pworks->m_mutexGuidMap.lock();
+    QSqlQuery query(strQuery
+                      .arg(strguid)
+                      .arg(dlg.getName())
+                      .arg(dlg.getDescription()),
+                    pworks->m_worksdb);
+    if (QSqlError::NoError != query.lastError().type()) {
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
+      spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      goto again;
+    }
 
     // Add to the internal table
     pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
@@ -727,32 +726,32 @@ CDlgKnownGuid::btnDelete(void)
     QString strguid        = item->text();
     strguid                = strguid.trimmed();
 
-    // QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
-    // pworks->m_mutexGuidMap.lock();
-    // QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
+    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
+    pworks->m_mutexGuidMap.lock();
+    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //   pworks->m_mutexGuidMap.unlock();
-    //   QMessageBox::information(this,
-    //                            tr(APPNAME),
-    //                            tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
-    //                            QMessageBox::Ok);
-    //   spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
-    //                 query.lastError().text().toStdString());
-    //   return;
-    // }
-    // else {
+    if (QSqlError::NoError != query.lastError().type()) {
+      pworks->m_mutexGuidMap.unlock();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                               QMessageBox::Ok);
+      spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
+                    query.lastError().text().toStdString());
+      return;
+    }
+    else {
 
-    //   // Delete row
-    //   ui->listGuid->removeRow(row);
+      // Delete row
+      ui->listGuid->removeRow(row);
 
-    //   // Delete from internal table
-    //   pworks->m_mapGuidToSymbolicName.erase(strguid);
-    //   // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
-    //   // if (std::map::end != it) {
+      // Delete from internal table
+      pworks->m_mapGuidToSymbolicName.erase(strguid);
+      // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
+      // if (std::map::end != it) {
 
-    //   // }
-    // }
+      // }
+    }
 
     pworks->m_mutexGuidMap.unlock();
   }

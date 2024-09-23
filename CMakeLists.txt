@@ -87,8 +87,8 @@ set(CMAKE_AUTORCC ON)
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-# qt  sql Network
-find_package(Qt6 REQUIRED COMPONENTS Widgets Qml Core Charts Quick SerialBus SerialPort)
+# qt
+find_package(Qt6 REQUIRED COMPONENTS Widgets Qml Core Network Sql Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
 
@@ -678,7 +678,7 @@ else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
   Qt6::Widgets
   Qt6::Qml
-#  Qt6::Sql
+  Qt6::Sql
   Qt6::Charts
   m
   dl

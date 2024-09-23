@@ -49,9 +49,8 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QObject>
-#include <QJsonDocument>
-#include <QStandardPaths>
-//#include <QSqlDatabase>
+#include <QSqlDatabase>
+
 #include <list>
 
 #include <mustache.hpp>
@@ -538,10 +537,10 @@ public:
   std::map<int, QString> m_mapSensorIndexToSymbolicName;
 
   /// VSCP works database
-  //QSqlDatabase m_worksdb;
+  QSqlDatabase m_worksdb;
 
   /// Event database
-  //QSqlDatabase m_evdb;
+  QSqlDatabase m_evdb;
 
   // List with open childwindows
   std::list<QMainWindow*> m_childWindows;

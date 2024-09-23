@@ -104,17 +104,17 @@ CDlgSensorIndex::CDlgSensorIndex(QWidget *parent, int link_to_guid) :
      
     pworks->m_mutexSensorIndexMap.lock(); 
 
-    // QString strQuery = "SELECT * FROM sensorindex  WHERE link_to_guid = %1 ORDER BY sensor;"; 
-    // QSqlQuery query(strQuery.arg(m_link_to_guid), pworks->m_worksdb);
+    QString strQuery = "SELECT * FROM sensorindex  WHERE link_to_guid = %1 ORDER BY sensor;"; 
+    QSqlQuery query(strQuery.arg(m_link_to_guid), pworks->m_worksdb);
 
-    // while (query.next()) {
-    //     QString sensor = query.value(2).toString();
-    //     QString name = query.value(3).toString();
+    while (query.next()) {
+        QString sensor = query.value(2).toString();
+        QString name = query.value(3).toString();
 
-    //     insertSensorIndexItem(sensor, name);
-    // }
+        insertSensorIndexItem(sensor, name);
+    }
 
-    // pworks->m_mutexSensorIndexMap.unlock();
+    pworks->m_mutexSensorIndexMap.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -177,31 +177,31 @@ void CDlgSensorIndex::listItemClicked(QTableWidgetItem *item)
     QString strsensor = itemSensor->text(); 
     
     // Search db record for description
-//     QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
-//     pworks->m_mutexSensorIndexMap.lock();
-//     QSqlQuery query(strQuery.arg(strsensor.toInt()).arg(m_link_to_guid), pworks->m_worksdb);
+    QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
+    pworks->m_mutexSensorIndexMap.lock();
+    QSqlQuery query(strQuery.arg(strsensor.toInt()).arg(m_link_to_guid), pworks->m_worksdb);
 
-//     // Check for database operation error
-//     if (QSqlError::NoError != query.lastError().type()) {
-//         spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
-//                         + query.lastError().text().toStdString()));
-//         QMessageBox::information(this,
-//                             tr(APPNAME),
-//                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-//                             QMessageBox::Ok );
-//         pworks->m_mutexSensorIndexMap.unlock();                
-//         return;                            
-//     }
+    // Check for database operation error
+    if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+        QMessageBox::information(this,
+                            tr(APPNAME),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->m_mutexSensorIndexMap.unlock();                
+        return;                            
+    }
 
-//     if (query.next()) {
-// #if QT_VERSION >= 0x050E00    
-//         ui->textDescription->setMarkdown(query.value(4).toString());
-// #else
-//         ui->textDescription->setText(query.value(3).toString());
-// #endif 
-//     }
+    if (query.next()) {
+#if QT_VERSION >= 0x050E00    
+        ui->textDescription->setMarkdown(query.value(4).toString());
+#else
+        ui->textDescription->setText(query.value(3).toString());
+#endif 
+    }
 
-//     pworks->m_mutexSensorIndexMap.unlock(); 
+    pworks->m_mutexSensorIndexMap.unlock(); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -425,30 +425,30 @@ again:
 
         QString strQuery = tr("INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, '%3', '%4');");
 
-        // pworks->m_mutexSensorIndexMap.lock();
-        // QSqlQuery query(strQuery
-        //                 .arg(m_link_to_guid)
-        //                 .arg(dlg.getSensor())
-        //                 .arg(dlg.getName())
-        //                 .arg(dlg.getDescription()), 
-        //                 pworks->m_worksdb);
+        pworks->m_mutexSensorIndexMap.lock();
+        QSqlQuery query(strQuery
+                        .arg(m_link_to_guid)
+                        .arg(dlg.getSensor())
+                        .arg(dlg.getName())
+                        .arg(dlg.getDescription()), 
+                        pworks->m_worksdb);
         
-        // // Check for database operation error
-        // if (QSqlError::NoError != query.lastError().type()) {
-        //     spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
-        //                 + query.lastError().text().toStdString()));
-        //     QMessageBox::information(this, 
-        //                       tr(APPNAME),
-        //                       tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
-        //                       QMessageBox::Ok );    
-        //     pworks->m_mutexSensorIndexMap.unlock();                
-        //     goto again;                            
-        // }
+        // Check for database operation error
+        if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+            QMessageBox::information(this, 
+                              tr(APPNAME),
+                              tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->m_mutexSensorIndexMap.unlock();                
+            goto again;                            
+        }
 
-        // // Add to the internal table
-        // pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
+        // Add to the internal table
+        pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
 
-        // pworks->m_mutexSensorIndexMap.unlock();
+        pworks->m_mutexSensorIndexMap.unlock();
 
         // Add to dialog List
         insertSensorIndexItem(QString::number(dlg.getSensor()), dlg.getName());
@@ -499,25 +499,25 @@ void CDlgSensorIndex::btnEdit(void)
 
     QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
     pworks->m_mutexSensorIndexMap.lock();
-    // QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
 
-    // // Check for database operation error
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //     spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
-    //                     + query.lastError().text().toStdString()));
-    //     QMessageBox::information(this,
-    //                         tr(APPNAME),
-    //                         tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-    //                         QMessageBox::Ok );
-    //     pworks->m_mutexSensorIndexMap.unlock();                
-    //     return;                            
-    // }
+    // Check for database operation error
+    if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+        QMessageBox::information(this,
+                            tr(APPNAME),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->m_mutexSensorIndexMap.unlock();                
+        return;                            
+    }
 
-    // if (query.next()) {
-    //     dlg.setSensor(query.value(2).toInt());
-    //     dlg.setName(query.value(3).toString());
-    //     dlg.setDescription(query.value(4).toString());
-    // }
+    if (query.next()) {
+        dlg.setSensor(query.value(2).toInt());
+        dlg.setName(query.value(3).toString());
+        dlg.setDescription(query.value(4).toString());
+    }
 
     pworks->m_mutexSensorIndexMap.unlock();
 
@@ -529,24 +529,24 @@ again:
 
         QString strQuery = tr("UPDATE sensorindex SET name='%1', description='%2' WHERE sensor='%3' AND link_to_guid=%4;");
         pworks->m_mutexSensorIndexMap.lock();
-        // QSqlQuery query(strQuery
-        //                     .arg(strname)
-        //                     .arg(strdescription)
-        //                     .arg(strsensor)
-        //                     .arg(m_link_to_guid), 
-        //                     pworks->m_worksdb);
+        QSqlQuery query(strQuery
+                            .arg(strname)
+                            .arg(strdescription)
+                            .arg(strsensor)
+                            .arg(m_link_to_guid), 
+                            pworks->m_worksdb);
 
-        // // Check for database operation error
-        // if (QSqlError::NoError != query.lastError().type()) {
-        //     spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString() 
-        //                 + query.lastError().text().toStdString()));
-        //     QMessageBox::information(this, 
-        //                       tr(APPNAME),
-        //                       tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
-        //                       QMessageBox::Ok );    
-        //     pworks->m_mutexSensorIndexMap.unlock();                
-        //     goto again;                            
-        // }
+        // Check for database operation error
+        if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+            QMessageBox::information(this, 
+                              tr(APPNAME),
+                              tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->m_mutexSensorIndexMap.unlock();                
+            goto again;                            
+        }
 
         // Add to the in memory table
         pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
@@ -589,25 +589,25 @@ void CDlgSensorIndex::btnClone(void)
 
     QString strQuery = tr("SELECT * FROM sensorindex WHERE sensor=%1 AND link_to_guid=%2;");
     pworks->m_mutexSensorIndexMap.lock();
-    // QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
 
-    // // Check for database operation error
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //     spdlog::error(std::string(tr("Unable to find record in database Err =").toStdString() 
-    //                     + query.lastError().text().toStdString()));
-    //     QMessageBox::information(this,
-    //                         tr(APPNAME),
-    //                         tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
-    //                         QMessageBox::Ok );
-    //     pworks->m_mutexSensorIndexMap.unlock();                
-    //     return;                            
-    // }
+    // Check for database operation error
+    if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to find record in database Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+        QMessageBox::information(this,
+                            tr(APPNAME),
+                            tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );
+        pworks->m_mutexSensorIndexMap.unlock();                
+        return;                            
+    }
 
-    // if (query.next()) {
-    //     //dlg.setSensor(query.value(2).toInt());
-    //     dlg.setName(query.value(3).toString());
-    //     dlg.setDescription(query.value(4).toString());
-    // }
+    if (query.next()) {
+        //dlg.setSensor(query.value(2).toInt());
+        dlg.setName(query.value(3).toString());
+        dlg.setDescription(query.value(4).toString());
+    }
 
     pworks->m_mutexSensorIndexMap.unlock();
 
@@ -616,30 +616,30 @@ again:
 
         QString strQuery = tr("INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, '%3', '%4');");
 
-        // pworks->m_mutexSensorIndexMap.lock();
-        // QSqlQuery query(strQuery
-        //                 .arg(m_link_to_guid)
-        //                 .arg(dlg.getSensor())
-        //                 .arg(dlg.getName())
-        //                 .arg(dlg.getDescription()), 
-        //                 pworks->m_worksdb);
+        pworks->m_mutexSensorIndexMap.lock();
+        QSqlQuery query(strQuery
+                        .arg(m_link_to_guid)
+                        .arg(dlg.getSensor())
+                        .arg(dlg.getName())
+                        .arg(dlg.getDescription()), 
+                        pworks->m_worksdb);
                        
-        // // Check for database operation error
-        // if (QSqlError::NoError != query.lastError().type()) {
-        //     spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
-        //                 + query.lastError().text().toStdString()));
-        //     QMessageBox::information(this, 
-        //                       tr(APPNAME),
-        //                       tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
-        //                       QMessageBox::Ok );    
-        //     pworks->m_mutexSensorIndexMap.unlock();                
-        //     goto again;                            
-        // }
+        // Check for database operation error
+        if (QSqlError::NoError != query.lastError().type()) {
+            spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+            QMessageBox::information(this, 
+                              tr(APPNAME),
+                              tr("Unable to save sensor into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                              QMessageBox::Ok );    
+            pworks->m_mutexSensorIndexMap.unlock();                
+            goto again;                            
+        }
 
-        // // Add to the in memory table
-        // pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
+        // Add to the in memory table
+        pworks->m_mapSensorIndexToSymbolicName[(m_link_to_guid << 8) + dlg.getSensor()] = dlg.getName();
 
-        // pworks->m_mutexSensorIndexMap.unlock();
+        pworks->m_mutexSensorIndexMap.unlock();
 
         // Add to dialog List
         insertSensorIndexItem(QString::number(dlg.getSensor()), dlg.getName());
@@ -686,27 +686,27 @@ void CDlgSensorIndex::btnDelete(void)
 
     QString strQuery = tr("DELETE FROM sensorindex WHERE sensor='%1' AND link_to_guid=%2;");
     pworks->m_mutexSensorIndexMap.lock();
-    // QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
+    QSqlQuery query(strQuery.arg(strsensor).arg(m_link_to_guid), pworks->m_worksdb);
 
-    // // Check for database operation error
-    // if (QSqlError::NoError != query.lastError().type()) {
-    //     spdlog::error(std::string(tr("Unable to delete sensor. Err =").toStdString() 
-    //                     + query.lastError().text().toStdString()));
-    //     QMessageBox::information(this, 
-    //                         tr(APPNAME),
-    //                         tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
-    //                         QMessageBox::Ok );        
-    // }
-    // else {
+    // Check for database operation error
+    if (QSqlError::NoError != query.lastError().type()) {
+        spdlog::error(std::string(tr("Unable to delete sensor. Err =").toStdString() 
+                        + query.lastError().text().toStdString()));
+        QMessageBox::information(this, 
+                            tr(APPNAME),
+                            tr("Unable to delete sensor.\n\n Error =") + query.lastError().text(),
+                            QMessageBox::Ok );        
+    }
+    else {
 
-    //     // Delete row
-    //     ui->listSensors->removeRow(row);
+        // Delete row
+        ui->listSensors->removeRow(row);
 
-    //     // Delete from in memory table
-    //     pworks->m_mapSensorIndexToSymbolicName.erase((m_link_to_guid << 8) + strsensor.toInt());
-    // }
+        // Delete from in memory table
+        pworks->m_mapSensorIndexToSymbolicName.erase((m_link_to_guid << 8) + strsensor.toInt());
+    }
 
-    // pworks->m_mutexSensorIndexMap.unlock();                        
+    pworks->m_mutexSensorIndexMap.unlock();                        
 }
 
 ///////////////////////////////////////////////////////////////////////////////
