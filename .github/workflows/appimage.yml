@@ -22,17 +22,6 @@ jobs:
       with:
         submodules: recursive
 
-    # https://github.com/marketplace/actions/install-qt
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: 6.8.*
-        host: 'linux'
-        target: 'desktop'
-        arch: 'linux_gcc_64'
-        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
-        extra: '-exclude-libs=libqsqlmimer'
-
     - name: Checkout vscp repo
       uses: actions/checkout@v4
       with:
@@ -41,11 +30,11 @@ jobs:
         ref: development
         submodules: recursive
 
-    - name: Checkout eclipse paho repo
-      uses: actions/checkout@v4
-      with:
-        repository: eclipse/paho.mqtt.c
-        path: paho
+    # - name: Checkout eclipse paho repo
+    #   uses: actions/checkout@v4
+    #   with:
+    #     repository: eclipse/paho.mqtt.c
+    #     path: paho
 
     - name: Update before installing packages
       run: sudo apt-get update
@@ -59,8 +48,8 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
-    - name: Install paho manually
-      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
+    # - name: Install paho manually
+    #   run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
     
     - name: Install curl manually
       run: sudo apt-get install libcurl4-openssl-dev
@@ -77,6 +66,17 @@ jobs:
     # # https://forum.qt.io/topic/151452/what-qt-specific-files-exactly-do-i-need-to-add-when-deploying/34
     # - name: Install mysql client
     #   run: sudo apt install libmysqlclient-dev  
+
+    # https://github.com/marketplace/actions/install-qt
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: 6.8.*
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+#        extra: '-exclude-libs=libqsqlmimer'
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
