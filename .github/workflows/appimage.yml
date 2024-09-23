@@ -22,6 +22,11 @@ jobs:
       with:
         submodules: recursive
 
+    -name: test
+     run: |
+        aqt list-qt linux desktop --arch 6.5.3
+        aqt list-qt linux desktop --modules 6.5.3 linux_gcc_64
+
     # https://github.com/marketplace/actions/install-qt
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
