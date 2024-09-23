@@ -30,7 +30,8 @@ jobs:
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
-        modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
+        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+        extra: '-exclude-libs=libqsqlmimer'
 
     - name: Checkout vscp repo
       uses: actions/checkout@v4
