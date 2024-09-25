@@ -27,8 +27,7 @@
 #
 # windows
 # -------
-# Set environment variabel to VSCP_ROOT 
-# cmake .. -G "Visual Studio 16 2019" -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_TOOLCHAIN_FILE=G:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=G:\Qt\6.7.2\msvc2019_64\
+# cmake .. -G "Visual Studio 17 2022" -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_TOOLCHAIN_FILE=G:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=G:\Qt\6.7.2\msvc2019_64\
 # cmake --build . --config Debug
 # set PATH=G:\Qt\Qt-6.7.2\msvc2019_64\bin;%PATH%
 #
@@ -39,12 +38,17 @@ project(vscp-works-qt LANGUAGES CXX C)
 option(USE_SSL "Use SSL" TRUE)
 
 ## --- C++14 build flags ---
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # Generate position-independent code (-fPIC on UNIX)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+set_target_properties(${PROJECT_NAM} PROPERTIES
+  WIN32_EXECUTABLE ON
+  MACOSX_BUNDLE ON
+)
 
 # --- System Libraries ---
 include(GNUInstallDirs) 
@@ -61,7 +65,7 @@ file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
 message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
 
 file(TO_CMAKE_PATH "$ENV{QT_ROOT_DIR}" QT_PATH)
-message(STATUS "Qt path = $ENV{QT_PATH}")
+message(STATUS "QT_ROOT_DIR = $ENV{QT_ROOT_DIR}")
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -608,7 +612,8 @@ if (MSVC)
   find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
   message(STATUS "Include: ${MOSQUITTO_INCLUDE_DIR}")
 
-  include_directories( PUBLIC ./src 
+  include_directories( PUBLIC 
+    ./src 
     ./build
     ./ui
     $ENV{VSCP_ROOT}/src/vscp/common/  
@@ -622,7 +627,7 @@ if (MSVC)
     ${PThreads4W_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${MOSQUITTO_INCLUDE_DIRS}
+    ${MOSQUITTO_INCLUDE_DIRS}cd bui
     ${LIBWEBSOCKETS_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
@@ -631,7 +636,8 @@ if (MSVC)
     ${CURL_INCLUDE_DIR}
   )
 else()
-  include_directories( PUBLIC ./src 
+  include_directories( PUBLIC 
+    ./src 
     ./build
     ./ui
     third_party/mqtt
@@ -664,7 +670,11 @@ if (MSVC)
   message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
   link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE     
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+  Qt6::Widgets
+  Qt6::Qml
+  Qt6::Sql
+  Qt6::Charts    
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto

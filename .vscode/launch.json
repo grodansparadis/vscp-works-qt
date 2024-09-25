@@ -52,7 +52,11 @@
         "request": "launch",
         "name": "Debug portfile(s)",
         "cmakeDebugType": "external",
+<<<<<<< HEAD
         "pipeName": "/tmp/vcpkg_ext_portfile_dbg",
+=======
+        "pipeName": "\\\\.\\pipe\\vcpkg_ext_portfile_dbg",
+>>>>>>> 99063577d2c6f0b876be4ba772a602728c9740bf
         "preLaunchTask": "Debug vcpkg commands"
       }
     ]

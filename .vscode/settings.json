@@ -98,12 +98,14 @@
       "**/node_modules/*/**": true,
       "**/.hg/store/**": true
     },
-    "cmake.configureArgs": [        
-        "-DVCPKG_HOST_TRIPLET=x64-windows-static",
-        "-DVCPKG_TARGET_TRIPLET=x64-windows-static",
-        "-DQT_PATH=G:/Qt/",
-        "-DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "-DVCPKG_ROOT=G:/akhe/development/vcpkg"
+    "cmake.configureArgs": [
+      "-DVCPKG_HOST_TRIPLET=x64-windows-static",
+      "-DQT_PATH=G:/Qt/",
+      "-DCMAKE_TOOLCHAIN_FILE=G:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "-DVCPKG_ROOT=G:/vcpkg",
+      "-DVCPKG_TARGET_TRIPLET=",
+      "-DVCPKG_APPLOCAL_DEPS=ON",
+      "-DX_VCPKG_APPLOCAL_DEPS_INSTALL=ON"
     ],
     "cSpell.language": "sv,en",
     "cSpell.words": [
@@ -112,5 +114,15 @@
     "cmake.clearOutputBeforeBuild": false,
     "cmake.configureEnvironment": {
       "CMAKE_PREFIX_PATH": "~/Qt/6.7.2/gcc_64"
-    }
+    },
+    "vcpkg.general.enable": true,
+    "vcpkg.target.hostTriplet": "x64-windows",
+    "vcpkg.target.defaultTriplet": "",
+    "vcpkg.target.useStaticLib": false,
+    "cmake.configureSettings": {
+      "CMAKE_TOOLCHAIN_FILE": "G:\\vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
+    "vcpkg.target.installDependencies": true,
+    "vcpkg.target.preferSystemLibs": false,
+    "vcpkg.target.useManifest": false
 }
