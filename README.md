@@ -206,6 +206,8 @@ msbuild vscp-works-qt.sln
 
 Note that you must have a *developer command prompt*
 
+**Note:** You may experience a lot of warnings from spdlog which is a library that is part if vscp-works-qt. This is nothing to to worry about. More info on the subject is [here](https://github.com/gabime/spdlog/issues/2065).
+
 -------------------------------------------------------------------------------
 
 **Internal project Notes and trouble shooting below**
