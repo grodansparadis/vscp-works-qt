@@ -568,7 +568,7 @@ CWizardPageLoadMdf::isComplete(void) const
 bool
 CWizardPageLoadMdf::validatePage(void)
 {
-  int rv;
+  //int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   switch (m_vscpClient->getType()) {

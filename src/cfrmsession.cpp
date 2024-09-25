@@ -1905,7 +1905,7 @@ CFrmSession::saveTxEvents(const QString& path, bool bSelected)
 
     stream.writeStartElement("txrows");
 
-    if (selection.size() & bSelected) {
+    if ((0 != selection.size()) & bSelected) {
 
       // Save selected items
       QList<QModelIndex>::iterator it;
