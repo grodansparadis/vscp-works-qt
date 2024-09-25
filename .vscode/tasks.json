@@ -50,7 +50,7 @@
         "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug .. ;  make -j4 -Wall",
         "args": [],
         "group": {
-          "kind": "build",
+          "kind": "build"
         },
         "problemMatcher": {
           "owner": "cpp",
