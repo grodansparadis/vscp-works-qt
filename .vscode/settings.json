@@ -79,7 +79,8 @@
       "complex": "cpp",
       "format": "cpp",
       "codecvt": "cpp",
-      "charconv": "cpp"
+      "charconv": "cpp",
+      "semaphore": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

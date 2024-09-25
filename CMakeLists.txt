@@ -27,9 +27,10 @@
 #
 # windows
 # -------
-# cmake .. -G "Visual Studio 17 2022" -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_TOOLCHAIN_FILE=G:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=G:\Qt\5.15.2\msvc2019_64\
+# Set environment variabel to VSCP_ROOT 
+# cmake .. -G "Visual Studio 16 2019" -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_TOOLCHAIN_FILE=G:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=G:\Qt\6.7.2\msvc2019_64\
 # cmake --build . --config Debug
-# set PATH=G:\Qt\Qt-6.6.2\msvc2019_64\bin;%PATH%
+# set PATH=G:\Qt\Qt-6.7.2\msvc2019_64\bin;%PATH%
 #
 
 cmake_minimum_required(VERSION 3.5)
@@ -88,7 +89,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt
-find_package(Qt6 REQUIRED COMPONENTS Widgets Qml Core Network Sql Charts Quick SerialBus SerialPort)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Qml Network Sql Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
 
