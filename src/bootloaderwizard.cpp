@@ -614,6 +614,7 @@ CWizardPageLoadMdf::validatePage(void)
                              QMessageBox::Ok);
         return false;
       }
+      
       QApplication::restoreOverrideCursor();
 
       setField("boot.firmware.guid", stdregs.getGUIDStr().c_str());

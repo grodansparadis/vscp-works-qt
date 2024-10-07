@@ -1,5 +1,6 @@
 build-vscp-works-qt-Desktop_Qt_5_14_2_GCC_64bit-Debug
 build
+.venv
 src/CMakeCache.txt
 src/CMakeFiles/
 src/cmake_install.cmake

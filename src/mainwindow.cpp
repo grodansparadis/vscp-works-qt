@@ -43,11 +43,11 @@
 #include <QMessageBox>
 #include <QtWidgets>
 
-// #include <QtSerialPort/QSerialPort>
-// #include <QCanBus>
-//  #include <QCanBusDevice>
-//  #include <QCanBusFactory>
-//  #include <QCanBusFrame>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialBus/QCanBus>
+#include <QtSerialBus/QCanBusDevice>
+#include <QtSerialBus/QCanBusFactory>
+#include <QtSerialBus/QCanBusFrame>
 
 #include "filedownloader.h"
 #include "vscpworks.h"

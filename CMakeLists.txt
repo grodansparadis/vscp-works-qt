@@ -81,7 +81,7 @@ elseif(UNIX)
 endif()
 
 if (MSVC)
-# use precompiled headers
+  # use precompiled headers
   set (CMAKE_AUTOMOC_MOC_OPTIONS "-bpch.h ")
 endif()
 

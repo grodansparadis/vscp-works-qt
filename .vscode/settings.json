@@ -80,7 +80,9 @@
       "format": "cpp",
       "codecvt": "cpp",
       "charconv": "cpp",
-      "semaphore": "cpp"
+      "semaphore": "cpp",
+      "qserialport": "cpp",
+      "qcanbus": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {
