@@ -126,5 +126,6 @@
     },
     "vcpkg.target.installDependencies": true,
     "vcpkg.target.preferSystemLibs": false,
-    "vcpkg.target.useManifest": false
+    "vcpkg.target.useManifest": false,
+    "debug.focusWindowOnBreak": false
 }

@@ -711,7 +711,7 @@ CFrmNodeScan::doScan(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  QApplication::processEvents();
+  //QApplication::processEvents();
 
   std::string interface = m_connObject["selected-interface"].toString().toStdString();
   cguid guidInterface(interface);
@@ -793,7 +793,7 @@ CFrmNodeScan::doScan(void)
     // Load mdf and standard registers if requested to do so
     if (ui->chkFetchInfo->isChecked()) {
       doLoadMdf(item);
-      QApplication::setOverrideCursor(Qt::WaitCursor);
+      //QApplication::setOverrideCursor(Qt::WaitCursor);
       ui->progressBarScan->setValue(ui->progressBarScan->value() + (int)additem);
     }
   }
@@ -810,8 +810,6 @@ CFrmNodeScan::doScan(void)
   ui->progressBarScan->setValue(100);
 
   QApplication::restoreOverrideCursor();
-  QApplication::restoreOverrideCursor();
-  //QApplication::processEvents();
 
   ui->actionScan->setEnabled(true);
 }

@@ -90,6 +90,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem* topItem,
 {
   assert(nullptr != topItem);
 
+
   setText(0, conn["name"].toString());
   m_conn = conn;
 
@@ -97,7 +98,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem* topItem,
     QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
 
   setIcon(0, icon);
-  // item_test->setToolTip(0, "This is just a test connection from a snowy
+  // item_test->setToolTip(0, "This is just a te1st connection from a snowy
   // country named Sweden.");
   // m_connTreeTable->addTopLevelItem(item_test);
   // topItem->addChild(this);
