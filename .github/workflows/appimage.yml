@@ -5,7 +5,7 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  VSCP_ROOT: ${{github.workspace}}/third_party/vscp
+  VSCP_ROOT: ${{github.workspace}}/third_party/vscp/
 
 jobs:
   build:
@@ -20,14 +20,6 @@ jobs:
     # https://github.com/actions/checkout  
     - uses: actions/checkout@v4
       with:
-        submodules: recursive
-
-    - name: Checkout vscp repo
-      uses: actions/checkout@v4
-      with:
-        repository: grodansparadis/vscp
-        path: vscp
-        ref: development
         submodules: recursive
 
     - name: Update before installing packages
