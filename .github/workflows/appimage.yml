@@ -30,12 +30,6 @@ jobs:
         ref: development
         submodules: recursive
 
-    # - name: Checkout eclipse paho repo
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: eclipse/paho.mqtt.c
-    #     path: paho
-
     - name: Update before installing packages
       run: sudo apt-get update
 
@@ -48,9 +42,6 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
-    # - name: Install paho manually
-    #   run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
-    
     - name: Install curl manually
       run: sudo apt-get install libcurl4-openssl-dev
 
@@ -71,7 +62,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 5.15.*
+        version: 6.8.*
         host: 'linux'
         target: 'desktop'
         arch: 'linux_amd64_gcc'
