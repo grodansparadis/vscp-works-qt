@@ -26,6 +26,6 @@
 [submodule "third_party/qspdlog"]
 	path = third_party/qspdlog
 	url = https://github.com/arsdever/qspdlog.git
-[submodule "vscp"]
-	path = vscp
+[submodule "third_party/vscp"]
+	path = third_party/vscp
 	url = https://github.com/grodansparadis/vscp.git
