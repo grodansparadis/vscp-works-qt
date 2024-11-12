@@ -59,7 +59,7 @@ jobs:
         target: 'desktop'
         arch: 'linux_gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
-#        extra: '--exclude-libs=libqsqlmimer'
+        extra: '--exclude-libs=libmimerapi'
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
@@ -68,7 +68,6 @@ jobs:
       run: |
         mkdir build && cd build
         cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/third_party/vscp/ -DVSCP_PATH=${{github.workspace}}/third_party/vscp/ ..
- 
 
     - name: Build
       working-directory: ${{github.workspace}}/build
