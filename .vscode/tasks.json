@@ -43,32 +43,7 @@
           }
         },
         "label": "clean & build all"
-      },
-      {
-        "taskName": "Clean & build all 5.15.2",
-        "type": "shell",
-        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug -DQt6_DIR=~/Qt/5.15.2/gcc_64 .. ;  make -j4 -Wall",
-        "args": [],
-        "group": {
-          "kind": "build"
-        },
-        "problemMatcher": {
-          "owner": "cpp",
-          "fileLocation": [
-            "relative",
-            "${workspaceFolder}"
-          ],
-          "pattern": {
-            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-            "file": 1,
-            "line": 2,
-            "column": 3,
-            "severity": 4,
-            "message": 5
-          }
-        },
-        "label": "Clean & build all 5.15.2"
-      },
+      },      
       {
         "taskName": "Clean & build all 6.8.0",
         "type": "shell",
@@ -114,6 +89,54 @@
           }
         },
         "label": "Clean & build all 6.7.3"
+      },
+      {
+        "taskName": "Clean & build all 6.5.3",
+        "type": "shell",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/6.5.3/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug -DQt6_DIR=~/Qt/6.5.3/gcc_64 .. ;  make -j4",
+        "args": [],
+        "group": "build",
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        },
+        "label": "Clean & build all 6.5.3"
+      },
+      {
+        "taskName": "Clean & build all 5.15.2",
+        "type": "shell",
+        "command": "cd build; make clean; export CMAKE_PREFIX_PATH=~/Qt/5.15.2/gcc_64:$CMAKE_PREFIX_PATH; cmake -DCMAKE_BUILD_TYPE=Debug -DQt6_DIR=~/Qt/5.15.2/gcc_64 .. ;  make -j4 -Wall",
+        "args": [],
+        "group": {
+          "kind": "build"
+        },
+        "problemMatcher": {
+          "owner": "cpp",
+          "fileLocation": [
+            "relative",
+            "${workspaceFolder}"
+          ],
+          "pattern": {
+            "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        },
+        "label": "Clean & build all 5.15.2"
       },
       {
         "type": "shell",

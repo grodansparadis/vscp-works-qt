@@ -56,9 +56,9 @@ include(GNUInstallDirs)
 # Added extensions for curl lib find
 list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 
-# --- Path to vscp --- 
+# --- Path to VSCP --- 
 if (NOT DEFINED VSCP_PATH)
-  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/../vscp")
+  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/third_party/vscp")
 endif()
 
 file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
