@@ -59,7 +59,7 @@ jobs:
         target: 'desktop'
         arch: 'gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
-        extra: '--exclude-libs=libmimerapi'
+#        extra: '--exclude-libs=libmimerapi'
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
