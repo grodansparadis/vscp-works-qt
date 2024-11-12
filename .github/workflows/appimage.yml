@@ -5,7 +5,7 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  VSCP_ROOT: ${{github.workspace}}/vscp
+  VSCP_ROOT: ${{github.workspace}}/third_party/vscp
 
 jobs:
   build:
@@ -65,7 +65,7 @@ jobs:
         version: 6.8.*
         host: 'linux'
         target: 'desktop'
-        arch: 'linux_amd64_gcc'
+        arch: 'linux_gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 #        extra: '--exclude-libs=libqsqlmimer'
 
@@ -75,7 +75,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp2/ -DVSCP_PATH=${{github.workspace}}/vscp/ ..
+        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/third_party/vscp/ -DVSCP_PATH=${{github.workspace}}/third_party/vscp/ ..
  
 
     - name: Build
