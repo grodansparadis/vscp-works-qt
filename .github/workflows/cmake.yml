@@ -5,7 +5,7 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  VSCP_ROOT: ${{github.workspace}}/vscp
+  VSCP_ROOT: ${{github.workspace}}/third_party/vscp
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.7.3
+        version: 6.8.0
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
@@ -31,18 +31,10 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Checkout vscp repo
-      uses: actions/checkout@v4
-      with:
-        repository: grodansparadis/vscp
-        path: ${{github.workspace}}/vscp
-        ref: development  
-        submodules: recursive
-
     - name: Create environment variable for VSCP_ROOT and Qt6_DIR
       run: |
-        export VSCP_ROOT=${{github.workspace}}/vscp
-        echo echo ${{env.VSCP_ROOT}}
+        export VSCP_ROOT=${{github.workspace}}/third_party/vscp
+        echo ${{env.VSCP_ROOT}}
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
@@ -83,7 +75,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/vscp2/ -DVSCP_PATH=${{github.workspace}}/vscp/ ..
+        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/third_party/vscp/ -DVSCP_PATH=${{github.workspace}}/third_party/vscp/ ..
 
     - name: Build vscp-works-qt
       working-directory: ${{github.workspace}}/build
