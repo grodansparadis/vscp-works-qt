@@ -207,11 +207,14 @@ public slots:
   /// Find nodes item clicked -> Display device info
   void onFindNodesTreeWidgetItemClicked(QTreeWidgetItem* item, int column);
 
-  /// Open session window fron selected found node
+  /// Open session window from selected found node
   void goSession(void);
 
-  /// Open config window fron selected found node
+  /// Open config window from selected found node
   void goConfig(void);
+
+  /// Open firmware update window from selected node found
+  void goFirmwareUpdate(void);
 
 signals:
 
@@ -223,7 +226,7 @@ private:
   CVscpClient::connType m_vscpConnType;
 
   /// Configuration data for the session
-  QJsonObject m_connObject;
+  QJsonObject m_connObject; 
 
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;

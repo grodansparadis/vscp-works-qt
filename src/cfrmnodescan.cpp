@@ -60,6 +60,8 @@
 
 #include "cfrmnodescan.h"
 #include "ui_cfrmnodescan.h"
+
+#include "bootloaderwizard.h"
 // #include "cdlgmainsettings.h"
 // #include "cdlgtxedit.h"
 
@@ -130,7 +132,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   , ui(new Ui::CFrmNodeScan)
 {
   ui->setupUi(this);
-
+ 
   ui->treeFound->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeFound->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -532,7 +534,8 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 
       if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
         QString str = tr("Node Scan: Unable to disconnect from the "
-                         "SOCKETCAN driver. rv={}").arg(rv);
+                         "SOCKETCAN driver. rv={}")
+                        .arg(rv);
         spdlog::error(str.toStdString());
         QMessageBox::information(this,
                                  tr(APPNAME),
@@ -711,7 +714,7 @@ CFrmNodeScan::doScan(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  //QApplication::processEvents();
+  // QApplication::processEvents();
 
   std::string interface = m_connObject["selected-interface"].toString().toStdString();
   cguid guidInterface(interface);
@@ -793,7 +796,7 @@ CFrmNodeScan::doScan(void)
     // Load mdf and standard registers if requested to do so
     if (ui->chkFetchInfo->isChecked()) {
       doLoadMdf(item);
-      //QApplication::setOverrideCursor(Qt::WaitCursor);
+      // QApplication::setOverrideCursor(Qt::WaitCursor);
       ui->progressBarScan->setValue(ui->progressBarScan->value() + (int)additem);
     }
   }
@@ -849,6 +852,7 @@ CFrmNodeScan::showFindNodesContextMenu(const QPoint& pos)
   menu->addSeparator();
   menu->addAction(QString(tr("Configure")), this, SLOT(goConfig()));
   menu->addAction(QString(tr("Session")), this, SLOT(goSession()));
+  menu->addAction(QString(tr("Load/update firmware")), this, SLOT(goFirmwareUpdate()));
   menu->popup(ui->treeFound->viewport()->mapToGlobal(pos));
 }
 
@@ -1113,4 +1117,52 @@ CFrmNodeScan::goConfig(void)
   w->raise();
   // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
   w->activateWindow();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// goFirmwareUpdate
+//
+
+void
+CFrmNodeScan::goFirmwareUpdate(void)
+{
+  int rv;
+
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QList<QTreeWidgetItem*> selected = ui->treeFound->selectedItems();
+  // Must be selected items
+  if (!selected.size()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Must select a node to use operation."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  CFoundNodeWidgetItem* pitem = (CFoundNodeWidgetItem*)selected.at(0);
+  if (nullptr == pitem) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to get node."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  CBootLoadWizard wiz(parentWidget(), &m_connObject);
+
+  if (VSCP_ERROR_SUCCESS != (rv = wiz.initBootLoaderWizard())) {
+    spdlog::error("Aborting bootloader wizard (initBootLoaderWizard) rv={}", rv);
+    return;
+  }
+
+  
+  CWizardPageNickname *pageNickname = (CWizardPageNickname *)wiz.page(CBootLoadWizard::Page_Nickname);
+  pageNickname->setNickname(pitem->m_nodeid);
+
+  // Select 'set nickname' page
+  //wiz.setCurrentId(CBootLoadWizard::Page_Nickname);
+
+  wiz.exec();
+
 }

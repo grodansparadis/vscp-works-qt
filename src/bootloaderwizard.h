@@ -86,9 +86,15 @@ public:
   */
   int nextId(void) const;
 
+  /// Set initial nickname
+  void setNickname(uint16_t nickname) { m_nickname = nickname; }
+
 private:
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
+
+  // Default 
+  uint16_t m_nickname;
 };
 
 // ----------------------------------------------------------------------------
@@ -343,7 +349,7 @@ public:
 
   /*!
     Add a status message
-    @param str Statusmessage to add. Not added if zero length
+    @param str Status message to add. Not added if zero length
   */
   void addStatusMessage(const QString& str);
 

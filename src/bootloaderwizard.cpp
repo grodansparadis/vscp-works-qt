@@ -82,6 +82,8 @@ CWizardPageNickname::CWizardPageNickname(QWidget* parent, CVscpClient* vscpClien
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   m_vscpClient      = vscpClient;
+
+  m_nickname = 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,7 +116,8 @@ CWizardPageNickname::initializePage(void)
                                 "to set node id\n\n"));
   label->setWordWrap(true);
 
-  QLineEdit* pNodeId        = new QLineEdit("0x01");
+  QString str = QString::number(m_nickname);
+  QLineEdit* pNodeId        = new QLineEdit(QString("0x%1").arg(m_nickname, 2, 16, QLatin1Char('0')));
   QCheckBox* pSetInBootMode = new QCheckBox("Remote device is already in bootmode");
   pNodeId->setMaximumWidth(100);
   // pNodeIdSpinBox->setMinimum(1);
@@ -670,6 +673,7 @@ CWizardPageLoadMdf::validatePage(void)
         str += " Model: ";
         str += mdf.getModuleModel().c_str();
         setField("boot.firmware.devicename", str);
+        QApplication::restoreOverrideCursor();
       }
     } break;
 #endif
@@ -726,7 +730,7 @@ void
 CWizardPageFirmware::initializePage(void)
 {
   QString str;
-  setTitle("Select firmare to upload to device");
+  setTitle("Select firmware to upload to device");
 
   QLabel* label = new QLabel("Select the firmware you want to upload to the remote device. "
                              "You can use a local file or you can use one of the files listed "
@@ -747,6 +751,7 @@ CWizardPageFirmware::initializePage(void)
   QLabel* labelBootloadDeviceCode = new QLabel("Current firmware device code: " +
                                                field("boot.firmware.device.code").toString());
   m_chkLocalFile                  = new QCheckBox("Use local firmware file");
+  m_chkLocalFile->setStyleSheet("color: rgb(129, 61, 156);");
   m_btnSelectFirmware             = new QPushButton("Select firmware file");
   m_editFirmwareFile              = new QLineEdit("No firmware file selected");
 
@@ -757,6 +762,7 @@ CWizardPageFirmware::initializePage(void)
   layout->addWidget(labelVer);
   layout->addWidget(labelBootloadAlgorithm);
   layout->addWidget(labelBootloadDeviceCode);
+  layout->addSpacing(30);
   layout->addWidget(m_chkLocalFile);
   layout->addWidget(m_btnSelectFirmware);
   layout->addWidget(m_editFirmwareFile);
@@ -841,6 +847,10 @@ CWizardPageFirmware::isComplete(void) const
   return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// write_data
+//
+
 static size_t
 write_data(void* ptr, size_t size, size_t nmemb, FILE* stream)
 {
@@ -862,8 +872,8 @@ CWizardPageFirmware::validatePage(void)
   }
 
   /*!
-    Open file selction dialog if local file is checked
-    and filname is nill
+    Open file selection dialog if local file is checked
+    and filename is nill
   */
   if (m_chkLocalFile->isChecked() && !m_editFirmwareFile->text().trimmed().size()) {
     QString path = QFileDialog::getOpenFileName(this,
@@ -1109,7 +1119,7 @@ CWizardPageFlash::flashDevice(void)
       guid.setNicknameID(vscp_readStringValue(field("boot.nickname").toString().toStdString()));
       using namespace std::placeholders;
       // auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
-      //  lambda version for reference
+      // lambda version for reference
       auto callback = [this](auto a, auto b) { this->statusCallback(a, b); };
       CBootDevice_PIC1 boot(m_vscpClient, vscp_readStringValue(field("boot.nickname").toString().toStdString()), callback);
       addStatusMessage("Hex file path: " + field("boot.firmware.path").toString());

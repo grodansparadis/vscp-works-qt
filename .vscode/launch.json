@@ -5,6 +5,39 @@
     "version": "0.2.0",
     "configurations": [
       {
+        "name": "Launch lldb",
+        "type": "lldb",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/vscp-works-qt",
+        "args": [],
+        "preLaunchTask": "build",
+      },
+      {
+        "name": "(gdb) Launch X",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/vscp-works-qt",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+            {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            },
+            {
+                "description": "Set Disassembly Flavor to Intel",
+                "text": "-gdb-set disassembly-flavor intel",
+                "ignoreFailures": true
+            }
+        ]
+      },
+
+      {
         "name": "(gdb) Launch",
         "type": "cppdbg",
         "request": "launch",
@@ -15,6 +48,9 @@
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb",
+        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/b3a88788bb1e8a32eb6392485a993de5/tonka3000.qtvsctools/qt.natvis.xml",
+        "logging": { "engineLogging": true, "trace": true, "traceResponse": true },
         "setupCommands": [
           {
             "description": "Enable pretty-printing for gdb",
@@ -22,8 +58,6 @@
             "ignoreFailures": true
           }
         ],
-        "preLaunchTask": "build",
-        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/b3a88788bb1e8a32eb6392485a993de5/tonka3000.qtvsctools/qt.natvis.xml"
       },
       {
         "name": "g++ build and debug active file",
@@ -52,11 +86,7 @@
         "request": "launch",
         "name": "Debug portfile(s)",
         "cmakeDebugType": "external",
-<<<<<<< HEAD
         "pipeName": "/tmp/vcpkg_ext_portfile_dbg",
-=======
-        "pipeName": "\\\\.\\pipe\\vcpkg_ext_portfile_dbg",
->>>>>>> 99063577d2c6f0b876be4ba772a602728c9740bf
         "preLaunchTask": "Debug vcpkg commands"
       }
     ]
