@@ -83,7 +83,7 @@ CWizardPageNickname::CWizardPageNickname(QWidget* parent, CVscpClient* vscpClien
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   m_vscpClient      = vscpClient;
 
-  m_nickname = 1;
+  m_nickname = 1; // Initialize default nickname id
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -739,16 +739,16 @@ CWizardPageFirmware::initializePage(void)
                              "the firmware you intend to upload.\n");
   label->setWordWrap(true);
 
-  QLabel* labelDeviceName         = new QLabel("Device name: " + field("boot.firmware.devicename").toString());
-  QLabel* labelGUID               = new QLabel("Current firmware GUID: " + field("boot.firmware.guid").toString());
-  QLabel* labelVer                = new QLabel("Current firmware version: " +
+  QLabel* labelDeviceName         = new QLabel("<span style=\"color:green;\">Device name</span>: " + field("boot.firmware.devicename").toString());
+  QLabel* labelGUID               = new QLabel("<span style=\"color:green;\">Current firmware GUID</span>: " + field("boot.firmware.guid").toString());
+  QLabel* labelVer                = new QLabel("<span style=\"color:green;\">Current firmware version</span>: " +
                                 field("boot.firmware.version.major").toString() + "." +
                                 field("boot.firmware.version.minor").toString() + "." +
                                 field("boot.firmware.version.sub").toString());
-  QLabel* labelBootloadAlgorithm  = new QLabel("Current firmware bootload algorithm: " +
+  QLabel* labelBootloadAlgorithm  = new QLabel("<span style=\"color:green;\">Current firmware bootload algorithm</span>: " +
                                               field("boot.firmware.bootloader.algorithm").toString() + " - " +
                                               vscp_getBootLoaderDescription(field("boot.firmware.bootloader.algorithm").toInt()));
-  QLabel* labelBootloadDeviceCode = new QLabel("Current firmware device code: " +
+  QLabel* labelBootloadDeviceCode = new QLabel("<span style=\"color:green;\">Current firmware device code</span>: " +
                                                field("boot.firmware.device.code").toString());
   m_chkLocalFile                  = new QCheckBox("Use local firmware file");
   m_chkLocalFile->setStyleSheet("color: rgb(129, 61, 156);");

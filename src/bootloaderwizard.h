@@ -93,7 +93,7 @@ private:
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
 
-  // Default 
+  // Default nickname id
   uint16_t m_nickname;
 };
 

@@ -108,6 +108,8 @@ CDlgBootFirmware::initDialogData(CMDF* pmdf)
     std::cout << itemstr.toStdString() << "\n";
     itemstr += " - Target: ";
     itemstr += pFirmware->getTarget().c_str();
+    itemstr += " - Target Code: ";
+    itemstr += QString::number(pFirmware->getTargetCode()).toStdString().c_str();
     itemstr += " - Version: ";
     itemstr += pFirmware->getVersion().c_str();
     ui->listFirmware->addItem(itemstr);

@@ -1155,13 +1155,9 @@ CFrmNodeScan::goFirmwareUpdate(void)
     spdlog::error("Aborting bootloader wizard (initBootLoaderWizard) rv={}", rv);
     return;
   }
-
   
   CWizardPageNickname *pageNickname = (CWizardPageNickname *)wiz.page(CBootLoadWizard::Page_Nickname);
   pageNickname->setNickname(pitem->m_nodeid);
-
-  // Select 'set nickname' page
-  //wiz.setCurrentId(CBootLoadWizard::Page_Nickname);
 
   wiz.exec();
 
