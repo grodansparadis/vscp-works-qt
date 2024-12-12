@@ -89,6 +89,8 @@ public:
   /// Set initial nickname
   void setNickname(uint16_t nickname) { m_nickname = nickname; }
 
+  
+
 private:
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
@@ -360,6 +362,12 @@ public:
     @param str Description of operation
   */
   void statusCallback(int progress, const char* str);
+
+  /// Flash device using PIC1 algorithm
+  void flashDevicePIC1(void);
+
+  /// Flash device using VSCP algorithm
+  void flashDeviceVSCP(void);
 
 public slots:
 

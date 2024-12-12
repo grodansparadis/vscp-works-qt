@@ -60,6 +60,7 @@
 #include "cdlgknownguid.h"
 #include "version.h"
 #include "vscp-bootdevice-pic1.h"
+#include "vscp-bootdevice-vscp.h"
 
 #include <curl/curl.h>
 
@@ -116,7 +117,7 @@ CWizardPageNickname::initializePage(void)
                                 "to set node id\n\n"));
   label->setWordWrap(true);
 
-  QString str = QString::number(m_nickname);
+  QString str               = QString::number(m_nickname);
   QLineEdit* pNodeId        = new QLineEdit(QString("0x%1").arg(m_nickname, 2, 16, QLatin1Char('0')));
   QCheckBox* pSetInBootMode = new QCheckBox("Remote device is already in bootmode");
   pNodeId->setMaximumWidth(100);
@@ -150,11 +151,11 @@ CWizardPageNickname::initializePage(void)
   registerField("boot.firmware.version.minor", new QSpinBox(0));
   registerField("boot.firmware.version.sub", new QSpinBox(0));
 
-  // Boot loader algorith device expect
+  // Boot loader algorithm device expect
   registerField("boot.firmware.bootloader.algorithm", new QSpinBox(0));
 
   // Firmware device code of current firmware
-  registerField("boot.firmware.device.code", new QSpinBox(0));
+  registerField("boot.firmware.code", new QSpinBox(0));
 
   // Path to local firmware file
   registerField("boot.firmware.path", new QLineEdit(""));
@@ -274,7 +275,7 @@ CWizardPageInterface::initializePage(void)
   QLabel* label = new QLabel(tr("The communication method you have selected may be able to connect to several "
                                 "interfaces. Interfaces are defined by GUID's which "
                                 "have zeros in the two lowest bytes. This is just a method "
-                                "used to talk to level I devicess over a level II connection\n\n"));
+                                "used to talk to level I devices over a level II connection\n\n"));
   label->setWordWrap(true);
 
   m_pInterface = new QLineEdit("");
@@ -403,7 +404,7 @@ CWizardPageGuid::initializePage(void)
 {
   setTitle("Set GUID");
 
-  QLabel* label = new QLabel(tr("The device you want to update is indentified by a full GUID. "
+  QLabel* label = new QLabel(tr("The device you want to update is identified by a full GUID. "
                                 "Please set or select this GUID here. \n\n"
                                 "For 16-bit nickname id's use full GUID with nickname set in the two"
                                 "LSB's\n\n"));
@@ -519,7 +520,7 @@ CWizardPageLoadMdf::initializePage(void)
                                 "will be connected to and boot loader information will be "
                                 "fetched from the device and the MDF will be downloaded and parsed\n\n"
 
-                                "Alternativly if you select the 'use local MDF' you will be asked to"
+                                "Alternatively if you select the 'use local MDF' you will be asked to"
                                 "provide a path to a local MDF file\n\n"));
   label->setWordWrap(true);
 
@@ -577,7 +578,6 @@ CWizardPageLoadMdf::validatePage(void)
   switch (m_vscpClient->getType()) {
 
     case CVscpClient::connType::TCPIP:
-
       break;
 
     case CVscpClient::connType::CANAL: {
@@ -617,7 +617,7 @@ CWizardPageLoadMdf::validatePage(void)
                              QMessageBox::Ok);
         return false;
       }
-      
+
       QApplication::restoreOverrideCursor();
 
       setField("boot.firmware.guid", stdregs.getGUIDStr().c_str());
@@ -627,11 +627,11 @@ CWizardPageLoadMdf::validatePage(void)
       setField("boot.firmware.version.minor", stdregs.getFirmwareMinorVersion());
       setField("boot.firmware.version.sub", stdregs.getFirmwareSubMinorVersion());
 
-      // Boot loader algorith device expect
+      // Boot loader algorithm device expect
       setField("boot.firmware.bootloader.algorithm", stdregs.getBootloaderAlgorithm());
 
       // Firmware device code of current firmware
-      setField("boot.firmware.device.code", stdregs.getFirmwareDeviceCode());
+      setField("boot.firmware.code", stdregs.getFirmwareDeviceCode());
 
       // * * * Download MDF * * *
 
@@ -645,7 +645,7 @@ CWizardPageLoadMdf::validatePage(void)
         int rv       = mdf.parseMDF(path.toStdString());
         if (VSCP_ERROR_SUCCESS != rv) {
           // if (nullptr != statusCallback) {
-          //   statusCallback(80, "Faild to parse MDF");
+          //   statusCallback(80, "Failed to parse MDF");
           // }
           spdlog::error("Failed to parse MDF {0} rv={1}", path.toStdString(), rv);
           return false;
@@ -686,7 +686,7 @@ CWizardPageLoadMdf::validatePage(void)
     case CVscpClient::connType::MULTICAST:
     case CVscpClient::connType::WS1:
     case CVscpClient::connType::WS2:
-    defult:
+    default:
       spdlog::error("No bootloader wizard (yet!?) for this type of "
                     "communication interface - {}",
                     static_cast<int>(m_vscpClient->getType()));
@@ -739,21 +739,21 @@ CWizardPageFirmware::initializePage(void)
                              "the firmware you intend to upload.\n");
   label->setWordWrap(true);
 
-  QLabel* labelDeviceName         = new QLabel("<span style=\"color:green;\">Device name</span>: " + field("boot.firmware.devicename").toString());
-  QLabel* labelGUID               = new QLabel("<span style=\"color:green;\">Current firmware GUID</span>: " + field("boot.firmware.guid").toString());
-  QLabel* labelVer                = new QLabel("<span style=\"color:green;\">Current firmware version</span>: " +
+  QLabel* labelDeviceName         = new QLabel("<span style=\"color:green;font-weight: bold;\">Device name</span>: " + field("boot.firmware.devicename").toString());
+  QLabel* labelGUID               = new QLabel("<span style=\"color:green;font-weight: bold;\">Device GUID</span>: " + field("boot.firmware.guid").toString());
+  QLabel* labelVer                = new QLabel("<span style=\"color:green;font-weight: bold;\">Device firmware version</span>: " +
                                 field("boot.firmware.version.major").toString() + "." +
                                 field("boot.firmware.version.minor").toString() + "." +
                                 field("boot.firmware.version.sub").toString());
-  QLabel* labelBootloadAlgorithm  = new QLabel("<span style=\"color:green;\">Current firmware bootload algorithm</span>: " +
+  QLabel* labelBootloadAlgorithm  = new QLabel("<span style=\"color:green;font-weight: bold;\">Device firmware bootload algorithm</span>: " +
                                               field("boot.firmware.bootloader.algorithm").toString() + " - " +
                                               vscp_getBootLoaderDescription(field("boot.firmware.bootloader.algorithm").toInt()));
-  QLabel* labelBootloadDeviceCode = new QLabel("<span style=\"color:green;\">Current firmware device code</span>: " +
-                                               field("boot.firmware.device.code").toString());
+  QLabel* labelBootloadDeviceCode = new QLabel("<span style=\"color:green;font-weight: bold;\">Device firmware code</span>: " +
+                                               field("boot.firmware.code").toString());
   m_chkLocalFile                  = new QCheckBox("Use local firmware file");
   m_chkLocalFile->setStyleSheet("color: rgb(129, 61, 156);");
-  m_btnSelectFirmware             = new QPushButton("Select firmware file");
-  m_editFirmwareFile              = new QLineEdit("No firmware file selected");
+  m_btnSelectFirmware = new QPushButton("Select firmware file");
+  m_editFirmwareFile  = new QLineEdit("No firmware file selected");
 
   QVBoxLayout* layout = new QVBoxLayout;
   layout->addWidget(label);
@@ -1040,7 +1040,7 @@ CWizardPageFlash::initializePage(void)
 
   m_infomsg = new QTextEdit();
   m_infomsg->setReadOnly(true);
-  m_infomsg->setStyleSheet("background-color:lightgrey;");
+  m_infomsg->setStyleSheet("background-color:rgb(252, 250, 210);");
 
   QPushButton* btnFlash = new QPushButton(tr("Flash device"));
   btnFlash->setMaximumWidth(200);
@@ -1063,15 +1063,20 @@ CWizardPageFlash::initializePage(void)
 
 void
 CWizardPageFlash::statusCallback(int progress, const char* str)
-{
-  spdlog::trace("Flashing {0} {1}\n", progress, str);
+{  
   if (-1 != progress) {
     m_progress->setValue(progress);
+    spdlog::trace("Status {0} {1}\n", progress, str);
+  }
+  else {
+    spdlog::trace("Status {0}\n", str);
   }
 
   if (strlen(str)) {
     addStatusMessage(str);
   }
+
+  QApplication::processEvents();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1087,6 +1092,336 @@ CWizardPageFlash::addStatusMessage(const QString& str)
   strmsg += "\n";
   strmsg += m_infomsg->toPlainText();
   m_infomsg->setText(strmsg);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// flashDeviceVSCP
+//
+
+void
+CWizardPageFlash::flashDeviceVSCP(void)
+{
+  int rv;
+  cguid guid;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  addStatusMessage("VSCP Bootloader.");
+  guid.setNicknameID(vscp_readStringValue(field("boot.nickname").toString().toStdString()));
+  using namespace std::placeholders;
+
+  // auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
+  // lambda version for reference
+  auto callback = [this](auto a, auto b) { this->statusCallback(a, b); };
+  
+  CBootDevice_VSCP boot(m_vscpClient, vscp_readStringValue(field("boot.nickname").toString().toStdString()), callback);
+  
+  addStatusMessage("Downloaded Hex file path: " + field("boot.firmware.path").toString());
+  boot.loadIntelHexFile(field("boot.firmware.path").toString().toStdString());
+
+  uint32_t min, max;
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_CODE_START, CBootDevice_VSCP::MEM_CODE_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("Flash code range: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("Flash code range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No flash memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_RAM_START, CBootDevice_VSCP::MEM_RAM_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("Ram code range: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("Ram code range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No ram memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_USERID_START, CBootDevice_VSCP::MEM_USERID_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("User id: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("User id range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No user id memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_CONFIG_START, CBootDevice_VSCP::MEM_CONFIG_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("Config: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("Config range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No config memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_EEPROM_START, CBootDevice_VSCP::MEM_EEPROM_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("EEPROM: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("EEPROM range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No EEPROM memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_USER0_START, CBootDevice_VSCP::MEM_USER0_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("User 0: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("User 0 range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No user 0 memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_USER1_START, CBootDevice_VSCP::MEM_USER1_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("User 1: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("User 1 range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No user 1 memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_VSCP::MEM_USER2_START, CBootDevice_VSCP::MEM_USER2_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("User 2: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("User 2 range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No user 2 memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  spdlog::info("Init remote device");
+  addStatusMessage("Init remote device.");
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  cguid our_guid;
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceInit(our_guid, 0, pworks->m_firmware_devicecode_required))) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to set device into boot mode rv={}", rv);
+    addStatusMessage(QString("Failed to init remote device: rv = {%0}.").arg(rv));
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Failed to set the device in boot mode"),
+                          QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Remote device initiated and in bootmode.");
+
+  spdlog::info("Load firmware to remote device");
+  addStatusMessage("Load firmware to remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceLoad())) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to load firmware to device rv={}", rv);
+    addStatusMessage(QString("Failed to load firmware to device: rv = {%0}.").arg(rv));
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Failed to load firmware to device"),
+                          QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Firmware loaded to remote device.");
+
+/*
+  spdlog::info("Restart remote device");
+  addStatusMessage("Restart remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceRestart())) {
+    spdlog::warn("Failed to confirm restart of device. (Usually not indicating an error) rv={}", rv);
+    addStatusMessage(QString("Failed to confirm restart of device. (Usually not indicating an error): rv = {%0}.").arg(rv));
+  }
+  addStatusMessage("Remote device restarted.");
+
+  spdlog::info("Reboot remote device");
+  addStatusMessage("Reboot remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceReboot())) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to confirm reboot of device rv={}", rv);
+    addStatusMessage(QString("Failed to confirm reboot of device: rv = {%0}.").arg(rv));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to reboot remote device"),
+                             QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Remote device rebooted.");*/
+
+  m_progress->setValue(100);
+  addStatusMessage(QString("Success."));
+  QApplication::restoreOverrideCursor();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// flashDevicePIC1
+//
+
+void
+CWizardPageFlash::flashDevicePIC1(void)
+{
+  int rv;
+  cguid guid;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  addStatusMessage("Microchip PIC1 Bootloader.");
+  guid.setNicknameID(vscp_readStringValue(field("boot.nickname").toString().toStdString()));
+  using namespace std::placeholders;
+  // auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
+  // lambda version for reference
+  auto callback = [this](auto a, auto b) { this->statusCallback(a, b); };
+  CBootDevice_PIC1 boot(m_vscpClient, vscp_readStringValue(field("boot.nickname").toString().toStdString()), callback);
+  addStatusMessage("Hex file path: " + field("boot.firmware.path").toString());
+  boot.loadIntelHexFile(field("boot.firmware.path").toString().toStdString());
+
+  uint32_t min, max;
+  rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_CODE_START, CBootDevice_PIC1::MEM_CODE_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("Flash code range: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("Flash code range: 0x%0. 0x%1").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No flash memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_USERID_START, CBootDevice_PIC1::MEM_USERID_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("User id: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("User id range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No user id memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_CONFIG_START, CBootDevice_PIC1::MEM_CONFIG_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("Config: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("Config range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No config memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_EEPROM_START, CBootDevice_PIC1::MEM_EEPROM_END, &min, &max);
+  if (VSCP_ERROR_SUCCESS == rv) {
+    spdlog::info("EEPROM: {0:X}. {1:X}", min, max);
+    if (min || max) {
+      addStatusMessage(QString("EEPROM range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
+    }
+    else {
+      addStatusMessage(QString("No EEPROM memory"));
+    }
+  }
+  else {
+    spdlog::error("getMinMaxForRange: failed rv={0}", rv);
+  }
+
+  spdlog::info("Init remote device");
+  addStatusMessage("Init remote device.");
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  cguid our_guid;
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceInit(our_guid, 0, pworks->m_firmware_devicecode_required))) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to set device into boot mode rv={}", rv);
+    addStatusMessage(QString("Failed to init remote device: rv = {%0}.").arg(rv));
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Failed to set the device in boot mode"),
+                          QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Remote device initiated.");
+
+  spdlog::info("Load firmware to remote device");
+  addStatusMessage("Load firmware to remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceLoad())) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Bootloader wizard: Failed to load firmware to device rv={}", rv);
+    addStatusMessage(QString("Bootloader wizard: Failed to load firmware to device: rv = {%0}.").arg(rv));
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Bootloader wizard: Failed to load firmware to device"),
+                          QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Bootloader wizard: Firmware loaded to remote device.");
+
+  spdlog::info("Restart remote device");
+  addStatusMessage("Restart remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceRestart())) {
+    spdlog::warn("Failed to confirm restart of device. (Usually not indicating an error) rv={}", rv);
+    addStatusMessage(QString("Failed to confirm restart of device. (Usually not indicating an error): rv = {%0}.").arg(rv));
+  }
+  addStatusMessage("Remote device restarted.");
+
+  spdlog::info("Reboot remote device");
+  addStatusMessage("Reboot remote device.");
+  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceReboot())) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to confirm reboot of device rv={}", rv);
+    addStatusMessage(QString("Failed to confirm reboot of device: rv = {%0}.").arg(rv));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to reboot remote device"),
+                             QMessageBox::Ok);
+    return;
+  }
+  addStatusMessage("Remote device rebooted.");
+
+  m_progress->setValue(100);
+  addStatusMessage(QString("Success."));
+  QApplication::restoreOverrideCursor();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1109,116 +1444,13 @@ CWizardPageFlash::flashDevice(void)
   spdlog::info("Bootloading algorithm: {}", field("boot.firmware.bootloader.algorithm").toInt());
   switch (field("boot.firmware.bootloader.algorithm").toInt()) {
 
-    case VSCP_BOOTLOADER_VSCP: {
-      addStatusMessage("VSCP Bootloader.");
-    } break;
+    case VSCP_BOOTLOADER_VSCP:
+      flashDeviceVSCP();
+      break;
 
-    case VSCP_BOOTLOADER_PIC1: {
-      cguid guid;
-      addStatusMessage("Microchip PIC1 Bootloader.");
-      guid.setNicknameID(vscp_readStringValue(field("boot.nickname").toString().toStdString()));
-      using namespace std::placeholders;
-      // auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
-      // lambda version for reference
-      auto callback = [this](auto a, auto b) { this->statusCallback(a, b); };
-      CBootDevice_PIC1 boot(m_vscpClient, vscp_readStringValue(field("boot.nickname").toString().toStdString()), callback);
-      addStatusMessage("Hex file path: " + field("boot.firmware.path").toString());
-      boot.loadIntelHexFile(field("boot.firmware.path").toString().toStdString());
-
-      uint32_t min, max;
-      rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_CODE_START, CBootDevice_PIC1::MEM_CODE_END, &min, &max);
-      if (VSCP_ERROR_SUCCESS == rv) {
-        spdlog::info("Flash code range: {0:X}. {1:X}", min, max);
-        addStatusMessage(QString("Flash code range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
-      }
-      else {
-        spdlog::error("getMinMaxForRange: failed rv={0}", rv);
-      }
-
-      rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_USERID_START, CBootDevice_PIC1::MEM_USERID_END, &min, &max);
-      if (VSCP_ERROR_SUCCESS == rv) {
-        spdlog::info("User id: {0:X}. {1:X}", min, max);
-        addStatusMessage(QString("User id range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
-      }
-      else {
-        spdlog::error("getMinMaxForRange: failed rv={0}", rv);
-      }
-
-      rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_CONFIG_START, CBootDevice_PIC1::MEM_CONFIG_END, &min, &max);
-      if (VSCP_ERROR_SUCCESS == rv) {
-        spdlog::info("Config: {0:X}. {1:X}", min, max);
-        addStatusMessage(QString("Config range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
-      }
-      else {
-        spdlog::error("getMinMaxForRange: failed rv={0}", rv);
-      }
-
-      rv = boot.getMinMaxForRange(CBootDevice_PIC1::MEM_EEPROM_START, CBootDevice_PIC1::MEM_EEPROM_END, &min, &max);
-      if (VSCP_ERROR_SUCCESS == rv) {
-        spdlog::info("EEPROM: {0:X}. {1:X}", min, max);
-        addStatusMessage(QString("EEPROM range: 0x{%0}. 0x{%1}").arg(min, 8, 16, QChar('0')).arg(max, 8, 16, QChar('0')));
-      }
-      else {
-        spdlog::error("getMinMaxForRange: failed rv={0}", rv);
-      }
-
-      spdlog::info("Init remote device");
-      addStatusMessage("Init remote device.");
-      QApplication::setOverrideCursor(Qt::WaitCursor);
-      cguid our_guid;
-      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceInit(our_guid, 0, pworks->m_firmware_devicecode_required))) {
-        QApplication::restoreOverrideCursor();
-        spdlog::error("Failed to set device into boot mode rv={}", rv);
-        addStatusMessage(QString("Failed to init remote device: rv = {%0}.").arg(rv));
-        QMessageBox::critical(this,
-                              tr(APPNAME),
-                              tr("Failed to set the device in boot mode"),
-                              QMessageBox::Ok);
-        return;
-      }
-      addStatusMessage("Remote device initiated.");
-
-      spdlog::info("Load firmware to remote device");
-      addStatusMessage("Load firmware to remote device.");
-      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceLoad())) {
-        QApplication::restoreOverrideCursor();
-        spdlog::error("Failed to load firmare to device rv={}", rv);
-        addStatusMessage(QString("Failed to load firmare to device: rv = {%0}.").arg(rv));
-        QMessageBox::critical(this,
-                              tr(APPNAME),
-                              tr("Failed to load firmware to device"),
-                              QMessageBox::Ok);
-        return;
-      }
-      addStatusMessage("Firmware loaded to remote device.");
-
-      spdlog::info("Restart remote device");
-      addStatusMessage("Restart remote device.");
-      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceRestart())) {
-        spdlog::warn("Failed to confirm restart of device. (Usually not indicating an error) rv={}", rv);
-        addStatusMessage(QString("Failed to confirm restart of device. (Usually not indicating an error): rv = {%0}.").arg(rv));
-      }
-      addStatusMessage("Remote device restarted.");
-
-      spdlog::info("Reboot remote device");
-      addStatusMessage("Reboot remote device.");
-      if (VSCP_ERROR_SUCCESS != (rv = boot.deviceReboot())) {
-        QApplication::restoreOverrideCursor();
-        spdlog::error("Failed to confirm reboot of device rv={}", rv);
-        addStatusMessage(QString("Failed to confirm reboot of device: rv = {%0}.").arg(rv));
-        QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Failed to reboot remote device"),
-                                 QMessageBox::Ok);
-        return;
-      }
-      addStatusMessage("Remote device rebooted.");
-
-      m_progress->setValue(100);
-      addStatusMessage(QString("Success."));
-      QApplication::restoreOverrideCursor();
-
-    } break;
+    case VSCP_BOOTLOADER_PIC1:
+      flashDevicePIC1();
+      break;
 
     case VSCP_BOOTLOADER_NONE0:
     case VSCP_BOOTLOADER_NONE1:
@@ -1561,7 +1793,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
     case CVscpClient::connType::MULTICAST:
     case CVscpClient::connType::WS1:
     case CVscpClient::connType::WS2:
-    defult:
+    default:
       spdlog::error("No bootloader wizard (yet!?) for this type of "
                     "communication interface - {}",
                     static_cast<int>(m_vscpConnType));

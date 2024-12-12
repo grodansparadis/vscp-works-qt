@@ -16,7 +16,7 @@ If you still want to build this project
 
 ### Install Qt.
 
-Go to the qt site and download qt using the [Qt Online Installer](https://www.qt.io/download-open-source). Any version above 5.15 should work.
+Go to the qt site and download qt using the [Qt Online Installer](https://www.qt.io/download-open-source). Any version 6.x should work.
 
 ### Install other needed libs
 
@@ -141,13 +141,11 @@ vcpkg integrate install
 Install the required libs
 
 ```bash
-vcpkg install qt5:x64-windows
 vcpkg install pthread:x64-windows
 vcpkg install dlfcn-win32:x64-windows
 vcpkg install expat:x64-windows
 vcpkg install openssl:x64-windows
 vcpkg install paho-mqtt:x64-windows
-vcpkg install qtcharts:x64-windows
 ```
 
 The Qt installation may take some time
@@ -308,10 +306,7 @@ cmake ..
 
 ## Linux
 
-  * Need to install libqt5serialport5-dev
 
-  sudo apt-get install libqt5serialport5
-  sudo apt-get install libqt5serialport5-dev
 
 ## Enable debug
 

@@ -10,7 +10,7 @@
         "request": "launch",
         "program": "${workspaceFolder}/build/vscp-works-qt",
         "args": [],
-        "preLaunchTask": "build",
+        "preLaunchTask": "CMake: build",
       },
       {
         "name": "(gdb) Launch X",
