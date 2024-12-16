@@ -442,6 +442,19 @@
     </property>
    </item>
   </widget>
+  <widget class="QPushButton" name="btnClearFilter">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>400</y>
+     <width>88</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear filter</string>
+   </property>
+  </widget>
  </widget>
  <tabstops>
   <tabstop>editVscpPriorityFilter</tabstop>

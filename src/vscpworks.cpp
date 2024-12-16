@@ -250,8 +250,15 @@ vscpworks::loadSettings(void)
 
   // Configuration folder
   // --------------------
-  // Linux: "/home/akhe/.config"                      Config file is here (VSCP/vscp-works-qt)
-  // Windows:
+  // Linux: "/home/<Username>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
+  // Windows: c:\Users\<Username>\Appdata\roaming\vscpworks+
+  {
+    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    path += "/";
+    path += QCoreApplication::applicationName();
+    path += "/";
+    m_configFolder = settings.value("configFolder", path).toString();
+  }
   {
     QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     path += "/";

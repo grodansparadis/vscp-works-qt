@@ -136,6 +136,10 @@ public slots:
     */
     void calculateVscpTypeValues(void);
 
+    /*!
+      Clear all filter fields
+    */
+    void clearFilter(void);
 
 private slots:
     

@@ -76,7 +76,7 @@ Q_DECLARE_METATYPE(vscpEventEx)
 #define VSCP_WORKS_RELEASE    false
 
 /// Application name used in titles and headers
-#define APPNAME "VSCP Works+"
+#define APPNAME "VSCP Works"
 
 // home folder is used for storage of program configuration
 // system folder holds databases etc
