@@ -26,7 +26,7 @@ jobs:
         arch: 'linux_gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
-      # https://github.com/actions/checkout  
+      # https://github.com/actions/checkout
     - uses: actions/checkout@v4
       with:
         submodules: recursive
@@ -54,23 +54,23 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
-    - name: Install libcurl4-openssl-dev manually 
-      run: sudo apt install libcurl4-openssl-dev  
+    - name: Install libcurl4-openssl-dev manually
+      run: sudo apt install libcurl4-openssl-dev
 
     - name: Install libwebsockets-dev 
-      run: sudo apt install libwebsockets-dev   
+      run: sudo apt install libwebsockets-dev
 
     - name: Install FUSE manually
       run: sudo apt install libfuse2
 
     - name: Install sqlite3
-      run: sudo apt install libsqlite3-dev  
+      run: sudo apt install libsqlite3-dev
 
 #    - name: Install paho manually
 #      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install
        
     - name: Setup cmake
-      uses: jwlawson/actions-setup-cmake@v2 
+      uses: jwlawson/actions-setup-cmake@v2
     
     - name: Create Build Environment
       run: |
