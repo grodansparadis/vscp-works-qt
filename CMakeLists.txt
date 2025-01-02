@@ -2,7 +2,7 @@
 #
 # Build instructions for VSCP Works.
 #
-# Copyright (c) 2000-2024 Åke Hedman, Grodans Paradis AB
+# Copyright (c) 2000-2025 Åke Hedman, Grodans Paradis AB
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal

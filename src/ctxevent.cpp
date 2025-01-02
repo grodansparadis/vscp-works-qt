@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2024 Ake Hedman, Grodans Paradis AB
+// Copyright © 2000-2025 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // "First they ignore you, then they laugh at you, then they fight you, then you win”
