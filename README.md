@@ -169,7 +169,7 @@ Build as usual but use
 cd vscp-vscp-works
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT=G:/akhe/development/vcpkg/ -DCMAKE_TOOLCHAIN_FILE=G:/akhe/development/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
+cmake .. -DCMAKE_BUILD_TYPE=Release -DVCPKG_ROOT=G:/vcpkg/ -DCMAKE_TOOLCHAIN_FILE=G:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH=g:/Qt/6.8.1/msvc2022_64
 ```
 
 The **VCPKG_ROOT** and **CMAKE_TOOLCHAIN_FILE** path is most certainly different in your case
@@ -188,12 +188,12 @@ Building and configuration is simplified with VS Code installed. Configure/build
 }
 ``` 
 
-to your settings.json file.
+to your settings.json file. Or to use 
 
-To build at the command prompt use
+To build at the command prompt use **--config Release** or **--config Release**
 
 ```bash
-cmake --build .
+cmake --build . --config Release
 ```
 
 or 

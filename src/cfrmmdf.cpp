@@ -1223,7 +1223,7 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
   uint32_t nPages;
   std::set<uint16_t> pages;
   QMdfTreeWidgetItem* pSubItem;
-  QMdfTreeWidgetItem* pItem;
+  QMdfTreeWidgetItem* pItem = nullptr;
 
   // Check pointers
   if (nullptr == pParent) {
