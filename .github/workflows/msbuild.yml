@@ -40,7 +40,7 @@ jobs:
         target: 'desktop'
         arch: 'win64_msvc2022_64'
         modules: 'qtcharts qtgraphs qtsensors qtserialbus qtwebsockets'
-        #archives: 'qtbase qtsvg qttools qtwebsockets qtdeclarative'
+        archives: 'qtbase qtsvg qttools qtcharts qtwebsockets qtdeclarative'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'

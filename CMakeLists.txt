@@ -96,8 +96,8 @@ set(CMAKE_AUTORCC ON)
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-# qt - Charts Quick SerialBus SerialPort  
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Sql Network Qml)
+# qt -   
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Sql Network Qml Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
 # pthreads
@@ -399,11 +399,11 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgselectconstraint.h
   src/cdlgselectconstraint.cpp
 
-  #src/widgetgraph.h
-  #src/widgetgraph.cpp 
+  src/widgetgraph.h
+  src/widgetgraph.cpp 
 
-  #src/xyseries.h
-  #src/xyseries.cpp
+  src/xyseries.h
+  src/xyseries.cpp
 
   src/cdlgdatepicker.ui
   src/cdlgdatepicker.cpp 
@@ -677,7 +677,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Widgets
   Qt6::Qml
   Qt6::Sql
-  #Qt6::Charts    
+  Qt6::Charts    
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
@@ -693,7 +693,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Widgets
   Qt6::Qml
   Qt6::Sql
-  #Qt6::Charts
+  Qt6::Charts
   m
   dl
   Threads::Threads
