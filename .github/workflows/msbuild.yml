@@ -31,7 +31,7 @@ jobs:
       with:
         arch: x64
   
-    # https://ddalcino.github.io/aqt-list-server/      qtserialbus qtserialport
+    # https://ddalcino.github.io/aqt-list-server/      
     - name: Prepare Qt Libraries
       uses: jurplel/install-qt-action@v3
       with:
@@ -39,12 +39,12 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
-        modules: 'qtcharts qtgraphs qtsensors qtserialbus qtwebsockets'
+        modules: 'qtcharts qtgraphs qtsensors qtserialbus qtserialport qtwebsockets'
         #archives: 'qtbase qtsvg qttools qtcharts qtwebsockets qtdeclarative'
-        #cache: 'true'
-        #cache-key-prefix: 'install-qt-action'
+        cache: 'true'
+        cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
-        tools: 'tools_qtcreator,qt.tools.qtcreator'
+        #tools: 'tools_qtcreator,qt.tools.qtcreator'
         set-env: 'true'
         tools-only: 'false'
         aqtversion: '==3.1.*'

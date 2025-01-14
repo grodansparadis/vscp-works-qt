@@ -151,7 +151,6 @@ else()
   #include(Findpaho-mqtt)
   # Mosquitto lib
   include(FindMosquitto)
-
 endif()
 
 find_package(CURL REQUIRED) 
@@ -400,7 +399,7 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgselectconstraint.cpp
 
   src/widgetgraph.h
-  src/widgetgraph.cpp 
+  src/widgetgraph.cpp
 
   src/xyseries.h
   src/xyseries.cpp
@@ -718,6 +717,35 @@ elseif(UNIX)
   set(LIBS_SYSTEM c stdc++)
 endif()
 
+#   ===========================  cpack  ===========================
+if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
+
+include(InstallRequiredSystemLibraries)
+set(CPACK_GENERATOR "IFW")
+if(WIN32)
+set(CPACK_IFW_ROOT "G:/Qt/Tools/QtInstallerFramework/4.6")
+else(WIN32)
+set(CPACK_IFW_ROOT "~/Qt/Tools/QtInstallerFramework/4.8")
+endif(WIN32)
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+include(CPack)
+if(WIN32)
+include(CPackIFW)
+endif(WIN32)
+
+#if(WIN32)
+#else
+#if(CPACK_GENERATOR MATCHES "DEB")
+#    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
+#elseif(CPACK_GENERATOR MATCHES "TGZ")
+#    set(CPACK_PACKAGING_INSTALL_PREFIX "")
+#endif()
+#endif()
+
+endif() # "${CMAKE_ROOT}/Modules/CPack.cmake"
+
 install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
@@ -729,3 +757,4 @@ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/s
 
 # Event database etc
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/${PROJECT_NAME}/)
+

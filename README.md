@@ -60,7 +60,7 @@ For now the *development branch* is needed for the vscp project. This is tempora
   cd vscp-works-qt
   mkdir build
   cd build
-  cmake -DCMAKE_PREFIX_PATH=~/Qt/6.7.2/gcc_64 ..
+  cmake -DCMAKE_PREFIX_PATH=~/Qt/6.8.1/gcc_64 ..
 ```
 
 where **CMAKE_PREFIX_PATH** should point to the Qt version you installed previously

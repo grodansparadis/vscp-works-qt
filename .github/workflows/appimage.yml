@@ -50,11 +50,11 @@ jobs:
     # - name: Install mysql client
     #   run: sudo apt install libmysqlclient-dev  
 
-    # https://github.com/marketplace/actions/install-qt
+    # https://github.com/marketplace/actions/install-qt 6.5.3
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.5.3
+        version: 6.8.1
         host: 'linux'
         target: 'desktop'
         arch: 'gcc_64'
