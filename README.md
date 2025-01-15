@@ -26,21 +26,10 @@ You need expat, paho-mqtt, openssl and libcurl to build this project
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
   sudo apt install libmosquitto-dev
+  sudo apt install libwebsockets-dev
   sudo apt-get install libcurl4-openssl-dev
   sudo apt install libglx-dev libgl1-mesa-dev
 ```
-
-### You need the vscp repository for support source files
-
-```bash
-  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
-  cd vscp
-  git checkout development
-``` 
-
-This source is by default expected to be in a folder on the same directory level as the cloned vscp-works-qt project. But you can use another location and set the path to this folder with *-DVSCP_PATH="path to vscp folder"* when issuing cmake for vscp-works-qt.
-
-For now the *development branch* is needed for the vscp project. This is temporary.
 
 
 ### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
