@@ -20,39 +20,19 @@ Go to the qt site and download qt using the [Qt Online Installer](https://www.qt
 
 ### Install other needed libs
 
-You need expat, paho-mqtt, openssl and libcurl to build this project
+You need expat, mosquitto, openssl and libcurl to build this project
 
 ```bash
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
-  sudo apt install libpaho-mqtt-dev
+  sudo apt install libmosquitto-dev
+  sudo apt install libwebsockets-dev
   sudo apt-get install libcurl4-openssl-dev
+  sudo apt install libglx-dev libgl1-mesa-dev
 ```
-
-Paho version 1.3 or bigger should be used. Can also be built manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
-
-```bash
-  cmake .. -DPAHO_WITH_SSL=TRUE
-```
-
-to enable needed SSL
-
-### You need the vscp repository for support source files
-
-```bash
-  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
-  cd vscp
-  git checkout development
-``` 
-
-This source is by default expected to be in a folder on the same directory level as the cloned vscp-works-qt project. But you can use another location and set the path to this folder with *-DVSCP_PATH="path to vscp folder"* when issuing cmake for vscp-works-qt.
-
-For now the *development branch* is needed for the vscp project. This is temporary.
-
-
 ### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
 ```bash
-  git clone  --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
+  git clone  --recurse-submodules -j4 https://github.com/grodansparadis/vscp-works-qt.git
 ```  
 
 ### Go to the build folder and make the project
@@ -72,14 +52,6 @@ You can use
 ```
 
 if you want to build a version suitable for debugging.
-
-use 
-
-```bash
-  cmake -DVSCP_PATH="path to vscp" ..
-```
-
-if you need to set a path to the local copy of the vscp main repository
 
 ## Build on Windows
 

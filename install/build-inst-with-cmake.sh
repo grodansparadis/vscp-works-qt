@@ -34,6 +34,5 @@ cp ../icons/vscpworks.png AppDir
 # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
-# move built AppImage back into original CWD
-mv QtQuickApp*.AppImage "$OLD_CWD"
+
 

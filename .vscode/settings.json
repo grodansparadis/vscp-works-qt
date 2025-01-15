@@ -118,7 +118,7 @@
     ],
     "cmake.clearOutputBeforeBuild": false,
     "cmake.configureEnvironment": {
-      "CMAKE_PREFIX_PATH": "~/Qt/6.8.0/gcc_64"
+      "CMAKE_PREFIX_PATH": "~/Qt/6.8.1/gcc_64"
     },
     "vcpkg.general.enable": true,
     "vcpkg.target.hostTriplet": "x64-windows",
