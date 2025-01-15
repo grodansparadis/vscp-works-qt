@@ -25,17 +25,9 @@ You need expat, paho-mqtt, openssl and libcurl to build this project
 ```bash
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
-  sudo apt install libpaho-mqtt-dev
+  sudo apt install libmosquitto-dev
   sudo apt-get install libcurl4-openssl-dev
 ```
-
-Paho version 1.3 or bigger should be used. Can also be built manually from [Paho code repository](https://github.com/eclipse/paho.mqtt.c) with
-
-```bash
-  cmake .. -DPAHO_WITH_SSL=TRUE
-```
-
-to enable needed SSL
 
 ### You need the vscp repository for support source files
 
