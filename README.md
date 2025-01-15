@@ -27,6 +27,7 @@ You need expat, paho-mqtt, openssl and libcurl to build this project
   sudo apt install libssl-dev
   sudo apt install libmosquitto-dev
   sudo apt-get install libcurl4-openssl-dev
+  sudo apt install libglx-dev libgl1-mesa-dev
 ```
 
 ### You need the vscp repository for support source files
