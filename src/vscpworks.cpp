@@ -106,7 +106,15 @@ vscpworks::vscpworks(int& argc, char** argv)
 #ifdef WIN32
   m_fileLogPath = "vscpworks.log";
 #else
-  m_fileLogPath = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+  //m_fileLogPath = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
+  {
+    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    path += "/";
+    path += QCoreApplication::applicationName();
+    path += "/logs/vscpworks.log";
+    m_fileLogPath = settings.value("configFolder", path).toString();
+    fprintf(stderr, "log file: %s\n", m_fileLogPath.toStdString().c_str());
+  }
 #endif
   m_maxFileLogSize  = 5242880;
   m_maxFileLogFiles = 7;
@@ -336,7 +344,7 @@ vscpworks::loadSettings(void)
       break;
   };
   m_fileLogPattern  = settings.value("fileLogPattern", "%c - [%^%l%$] %v").toString().toStdString();
-  m_fileLogPath     = settings.value("fileLogPath", "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
+  m_fileLogPath     = settings.value("fileLogPath", "vscpworks.log").toString().toStdString();
   m_maxFileLogSize  = settings.value("fileLogMaxSize", 5 * 1024 * 1024).toInt();
   m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
 

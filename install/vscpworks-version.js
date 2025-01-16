@@ -5,5 +5,10 @@
 		minor: 0,
 		release: 1,
 		patch: 0
-	}
+	},
+  "path": {
+    "windows": "xxxx",
+    "linux": "yyyyy",
+    "macos": "zzzzz"
+  }
 }

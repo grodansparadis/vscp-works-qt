@@ -46,15 +46,17 @@ wget -c https://github.com/probonopd/linuxdeployqt/releases/download/continuous/
 chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 ```
 
-5. Run linuxdeployqt
+5. Set the path to the Qt installation
 
 ```bash
+export PATH=~/Qt/6.8.1/gcc_64/bin/:$PATH
+``` 
+
+6. Run linuxdeployqt
+
+```bash./vs 
 # Run linuxdeployqt
-./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/vscp-works-qt.desktop -exclude-libs=libqsqlmimer -appimage
-
-or alternatively
-
-./linuxdeployqt-continuous-x86_64.AppImage AppDir/vscp-works-qt  -exclude-libs=libqsqlmimer
+ARCH=x86_64 ./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/vscp-works-qt.desktop -exclude-libs=libqsqlmimer -appimage
 ```
 
 The libsqlmimer file is commercial and not allowed to be distributed. It is excluded from the installation package. libodbc1 or libodbc2 needs to be installed and libpq-dev for PostgreSQL support. This is needed for the database plugin to work even if the specific databases is not used.
@@ -63,10 +65,15 @@ The libsqlmimer file is commercial and not allowed to be distributed. It is excl
 
 It is now possible to to use the Qt installation framework to create an installer for the installation package. But the AppImage will suffice for most cases.
 
+7. You can also build a tree with files and use appimage to make an AppImage file. See the link below for more information.
 
+```bash
+./appimagetool-i686.AppImage AppDir
+```
 
 # Reference material
 
  * [Deploying Qt Applications (windows, Mac, Linux)](https://www.youtube.com/playlist?list=PLQMs5svASiXNx0UX7tVTncos4j0j9rRa4)
  * [Qt Installer Framework](https://doc.qt.io/qtinstallerframework/ifw-tutorial.html)
  * [linuxdeployqt](https://github.com/probonopd/linuxdeployqt/releases)
+ * [AppImage](https://github.com/AppImage/AppImageKit)
