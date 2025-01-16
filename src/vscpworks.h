@@ -54,7 +54,7 @@
 #include <list>
 
 #include <mustache.hpp>
-#include <nlohmann/json.hpp> 
+#include <nlohmann/json.hpp>
 
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"
@@ -64,7 +64,6 @@ using json = nlohmann::json;
 
 using namespace kainjow::mustache;
 
-
 // Register to be used for signals
 Q_DECLARE_METATYPE(vscpEvent)
 Q_DECLARE_METATYPE(vscpEventEx)
@@ -73,7 +72,7 @@ Q_DECLARE_METATYPE(vscpEventEx)
   Set to true to remove development functionality
   for an official release build.
 */
-#define VSCP_WORKS_RELEASE    false
+#define VSCP_WORKS_RELEASE false
 
 /// Application name used in titles and headers
 #define APPNAME "VSCP Works"
@@ -104,181 +103,176 @@ class vscpworks : public QApplication {
 
 public:
   /*!
-      Constructor
+    Constructor
   */
   vscpworks(int& argc, char** argv);
 
   /*!
-      Destructor
+    Destructor
   */
   ~vscpworks();
 
-  const QString URL_EVENT_VERSION  = tr("https://www.vscp.org/events/version.js");
-  const QString URL_EVENT_DATABASE = tr("https://www.vscp.org/events/vscp_events.sqlite3");
+  // Use non scure to prevent certificat errors
+  const QString URL_EVENT_VERSION     = tr("http://www.vscp.org/events/version.js");
+  const QString URL_EVENT_DATABASE    = tr("http://www.vscp.org/events/vscp_events.sqlite3");
+  const QString URL_VSCPWORKS_VERSION = tr("http://www.vscp.org/version/vscpworks-version.js");
 
   /*!
-      Add connection
-      @param conn JSON connection object
-      @param bSave Save connections if set to true
+    Add connection
+    @param conn JSON connection object
+    @param bSave Save connections if set to true
   */
   bool addConnection(QJsonObject& conn, bool bSave = false);
 
   /*!
-      Remove connection
-      @param uuid Id for connection
-      @param bSave Save connections if set to true
+    Remove connection
+    @param uuid Id for connection
+    @param bSave Save connections if set to true
   */
   bool removeConnection(const QString& uuid, bool bSave = false);
 
   /*!
-      Load configuration settings from disk
+    Load configuration settings from disk
   */
   void loadSettings(void);
 
   /*!
-      Save configuration settings to disk
+    Save configuration settings to disk
   */
   void writeSettings(void);
 
   /*!
-      Save connections to disk
+    Save connections to disk
   */
   void writeConnections(void);
 
   /*!
-      Check the remote event information at
-      https://vscp.org/events for the file
-      version.json which hold the release
-      version for the files. A new version
-      of the db should be downloaded if this
-      date is newer then stored.
+    Check the remote event information at
+    https://vscp.org/events for the file
+    version.json which hold the release
+    version for the files. A new version
+    of the db should be downloaded if this
+    date is newer then stored.
 
-      @return True if current rate is up to date, if not
-          false is returned and a new version of the
-          database should be downloaded.
+    @return True if current rate is up to date, if not
+        false is returned and a new version of the
+        database should be downloaded.
   */
   // bool checkRemoteEventDbVersion(void);
 
   /*!
-      Loading data from the VSCP Event database into memory
-      @return true on success
+    Loading data from the VSCP Event database into memory
+    @return true on success
   */
   bool loadEventDb(void);
 
   /*!
-      Loading data from the vscpworks database GUID table into memory
-      @return true on success
+    Loading data from the vscpworks database GUID table into memory
+    @return true on success
   */
   bool loadGuidTable(void);
 
   /*!
-      Loading data from the vscpworks database sensorindex table into memory
-      @return true on success
+    Loading data from the vscpworks database sensorindex table into memory
+    @return true on success
   */
   bool loadSensorTable(void);
 
   /*!
-      Add GUID with symbolic name
-      @param name GUID symbolic name of GUID to add
-      @param guid GUID to add
-      @return True on success, false on failure
+    Add GUID with symbolic name
+    @param name GUID symbolic name of GUID to add
+    @param guid GUID to add
+    @return True on success, false on failure
   */
   bool addGuid(QString name, QString guid);
 
   /*!
-      Get index for GUID record
-      @param guid GUID on string form
-      @return index or -1 if error.
+    Get index for GUID record
+    @param guid GUID on string form
+    @return index or -1 if error.
   */
   int getIdxForGuidRecord(const QString& guid);
 
   /*!
-      Convert integer number to selected base.
-      The resulting string  representation of the number have
-      - No prefix if decimal
-      - "0x" prefix if hexadecimal
-      - "0o" prefix if octal
-      - "0b" prefix if binary
-      @param value Integer that should be converted to a number
-      in the current base.
-      @param tobase If set to -1 (default) the current base is used for
-          base, otherwise the set base will be used.
-      @return String representing number with prepended base  prefix.
+    Convert integer number to selected base.
+    The resulting string  representation of the number have
+    - No prefix if decimal
+    - "0x" prefix if hexadecimal
+    - "0o" prefix if octal
+    - "0b" prefix if binary
+    @param value Integer that should be converted to a number
+    in the current base.
+    @param tobase If set to -1 (default) the current base is used for
+        base, otherwise the set base will be used.
+    @return String representing number with prepended base  prefix.
   */
   QString decimalToStringInBase(uint32_t value, int tobase = -1);
 
   /*!
-      Convert integer number to selected base
-      The resulting string  representation of the number have
-      - No prefix if decimal
-      - "0x" prefix if hexadecimal
-      - "0o" prefix if octal
-      - "0b" prefix if binary
-      @param strvalue Integer on string form whish should be converted to
-      a number in the current base.
-      @param tobase If set to -1 (default) the current base is used for
-          base, otherwise the set base will be used.
-      @return String representing number with prepended base prefix.
+    Convert integer number to selected base
+    The resulting string  representation of the number have
+    - No prefix if decimal
+    - "0x" prefix if hexadecimal
+    - "0o" prefix if octal
+    - "0b" prefix if binary
+    @param strvalue Integer on string form whish should be converted to
+    a number in the current base.
+    @param tobase If set to -1 (default) the current base is used for
+        base, otherwise the set base will be used.
+    @return String representing number with prepended base prefix.
   */
   QString decimalToStringInBase(const QString& strvalue, int tobase = -1);
 
   /*!
-      Get connection name
-      @param type Connection code
-      @return String with connection descriptive name
+    Get connection name
+    @param type Connection code
+    @return String with connection descriptive name
   */
   QString getConnectionName(CVscpClient::connType type);
 
   /*!
-      Create and open the VSCP Works database with tables and structure
+    Create and open the VSCP Works database with tables and structure
   */
   bool openVscpWorksDatabase(void);
 
   /*!
-      Log one message to the logging database
-      @param level Log level 0 is lowest
-      @param message to log
-  */
-  void log(int level, const QString& message);
-
-  /*!
-      Get short token from class/type. That is a token on the form
-      "TEMPERATURE" instead of "CLASS1_TYPE_MEASUREMENT_TEMPERATURE"
-      @param vscpClass A valid VSCP class token
-      @param vscpType A valid VSCP type token for the class.
-      @return A string contining the token
+    Get short token from class/type. That is a token on the form
+    "TEMPERATURE" instead of "CLASS1_TYPE_MEASUREMENT_TEMPERATURE"
+    @param vscpClass A valid VSCP class token
+    @param vscpType A valid VSCP type token for the class.
+    @return A string containing the token
   */
   QString getShortTypeToken(uint16_t vscpClass, uint16_t vscpType);
 
   /*!
-      Get URL for specification page that have info about this class
-      @param vscpClass VSCP class to get help URL for
-      @return URL to help page
+    Get URL for specification page that have info about this class
+    @param vscpClass VSCP class to get help URL for
+    @return URL to help page
   */
   QString getHelpUrlForClass(uint16_t vscpClass);
 
   /*!
-      Get URL for specification page section that have info about this class/type
-      @param vscpClass VSCP class to get help URL for
-      @param vscpType VSCP type to get help URL for
-      @return URL to help page
+    Get URL for specification page section that have info about this class/type
+    @param vscpClass VSCP class to get help URL for
+    @param vscpType VSCP type to get help URL for
+    @return URL to help page
   */
   QString getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType);
 
   /*!
-      Get unit information info from database for a specific event
-      @param vscpClass VSCP Class to lookup unit for
-      @param vscpClass VSCP TYpe to lookup unit for
-      @param unit The VSCP specific unit code to look up
-      @return Returns a CVscpUnit with unit data filled in. Defaults to zero.
+    Get unit information info from database for a specific event
+    @param vscpClass VSCP Class to lookup unit for
+    @param vscpClass VSCP TYpe to lookup unit for
+    @param unit The VSCP specific unit code to look up
+    @return Returns a CVscpUnit with unit data filled in. Defaults to zero.
   */
   CVscpUnit getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit = 0);
 
   /*!
-      Replace mustache special character variable data with
-      proper values
-      @param str String that should have tags replaces
-      @return Handled string
+    Replace mustache special character variable data with
+    proper values
+    @param str String that should have tags replaces
+    @return Handled string
   */
   std::string replaceVscpRenderVariables(const std::string& str);
 
@@ -292,31 +286,31 @@ public:
                               std::string& strVariables);
 
   /*!
-      Fill the render template with data from a supplied map.
-      The map holds pairs like
+    Fill the render template with data from a supplied map.
+    The map holds pairs like
 
-          lbl-start,    '<b>'
-          lbl-end,      '</b>'
-          val-start,    '<span style="color:rgb(0, 0, 153):">'
-          val-end,      '</span>'
-          newline,      '<br>'
-          crc8,         '12345'
-          ....
+        lbl-start,    '<b>'
+        lbl-end,      '</b>'
+        val-start,    '<span style="color:rgb(0, 0, 153):">'
+        val-end,      '</span>'
+        newline,      '<br>'
+        crc8,         '12345'
+        ....
 
-      @param map A map holding variables and value pairs
-      @param strTemplate This is the template to use
-      @return A string generated from the supplied template and variables
+    @param map A map holding variables and value pairs
+    @param strTemplate This is the template to use
+    @return A string generated from the supplied template and variables
   */
   std::string renderVscpDataTemplate(std::map<std::string, std::string>& map,
                                      std::string& strTemplate);
 
   /*!
-      Get render variables and template for a class/type pair
-      @param vscpClass The VSCP class to get variables/template for
-      @param vscpType The VSCP type to get variables/template for
-      @param type Environment to get variables/template for, Default is "vscpworks"
-      @return A string list with the variables string at pos 0 and
-              the template in pos 1
+    Get render variables and template for a class/type pair
+    @param vscpClass The VSCP class to get variables/template for
+    @param vscpType The VSCP type to get variables/template for
+    @param type Environment to get variables/template for, Default is "vscpworks"
+    @return A string list with the variables string at pos 0 and
+            the template in pos 1
   */
   QStringList getVscpRenderData(uint16_t vscpClass,
                                 uint16_t vscpType,
@@ -348,11 +342,10 @@ public:
     @return VSCP_ERROR_SUCCESS if all is OK and path to downloaded file is
       is in pathMDF
   */
-  int downloadMDF(CStandardRegisters &stdregs, 
-                    CMDF &mdf, 
-                    QString& path,
-                    std::function<void(int, const char *)> statusCallback = nullptr);
-
+  int downloadMDF(CStandardRegisters& stdregs,
+                  CMDF& mdf,
+                  QString& path,
+                  std::function<void(int, const char*)> statusCallback = nullptr);
 
   // ========================================================================
   // ========================================================================
@@ -478,7 +471,7 @@ public:
     if true device code on device must be the same as for firmware device code
     from MDF
   */
-  
+
   bool m_firmware_devicecode_required;
 
   // ------------------------------------------------------------------------
@@ -544,7 +537,6 @@ public:
 
   // List with open childwindows
   std::list<QMainWindow*> m_childWindows;
-
 };
 
 #endif

@@ -116,7 +116,7 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_consoleLogPattern = "[vscpworks+] [%^%l%$] %v";
 
   // After the following it is possible to create and destroy event objects
-  // dynamically at run-time
+  // dynamically at run-time - https://doc.qt.io/qt-6/qmetatype.html
   int idEvent   = qRegisterMetaType<vscpEvent>();
   int idEventEx = qRegisterMetaType<vscpEventEx>();
 }
@@ -245,36 +245,33 @@ void
 vscpworks::loadSettings(void)
 {
   QString str;
-
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+  fprintf(stderr, "Loading application data\n");
 
   // Configuration folder
   // --------------------
-  // Linux: "/home/<Username>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
-  // Windows: c:\Users\<Username>\Appdata\roaming\vscpworks+
+  // Linux: "/home/<USER>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
+  // Windows: c:\Users\<USER>\Appdata\roaming\vscpworks+
   {
     QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     path += "/";
     path += QCoreApplication::applicationName();
     path += "/";
     m_configFolder = settings.value("configFolder", path).toString();
-  }
-  {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    path += "/";
-    path += QCoreApplication::applicationName();
-    path += "/";
-    m_configFolder = settings.value("configFolder", path).toString();
+    fprintf(stderr, "Config folder: %s\n", m_configFolder.toStdString().c_str());
   }
 
   // Share folder
   // ------------
-  // Linux: "/home/akhe/.local/share/vscp-works-qt"   user data is here
-  // Windows:
+  // Linux: "/home/<USER>/.local/share/VSCP/vscpworks+"
+  // Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
   {
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     path += "/";
     m_shareFolder = settings.value("shareFolder", path).toString();
+    fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
+
     // If folder does not exist, create it
     QDir dir(path);
     if (!dir.exists()) {
@@ -286,6 +283,8 @@ vscpworks::loadSettings(void)
     dir.mkpath("./txsets");
     // Make a folder for autosaved/loaded data
     dir.mkpath("./cache");
+    // Make a folder for log data
+    dir.mkpath("./logs");
   }
 
 // VSCP Home folder
@@ -295,14 +294,14 @@ vscpworks::loadSettings(void)
 #else
   m_vscpHomeFolder = settings.value("vscpHomeFolder", "/var/lib/vscp").toString();
 #endif
+  fprintf(stderr, "VSCP home folder: %s\n", m_vscpHomeFolder.toStdString().c_str());
 
   // System numerical base
   // ---------------------
   m_base = static_cast<numerical_base>(settings.value("numericBase", "0").toInt());
 
-  // preferred language
+  // Preferred language
   m_preferredLanguage = settings.value("PreferredLanguage", "en").toString().toStdString();
-  ;
 
   m_bEnableDarkTheme = settings.value("bDarkTheme", true).toBool();
   m_bAskBeforeDelete = settings.value("bAskBeforeDelete", true).toBool();
@@ -664,32 +663,7 @@ vscpworks::loadEventDb(void)
   return true;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// log
-//
 
-void
-vscpworks::log(int level, const QString& message)
-{
-  // Log only messages
-  // if (level <= m_logLevel) {
-
-  //     QDateTime now = QDateTime::currentDateTime();
-
-  //     QString strQuery = "INSERT INTO log (level, datetime, message) values (";
-  //     strQuery +=  QString::number(level);
-  //     strQuery += ",";
-  //     strQuery += "'" + now.toString() + "'";
-  //     strQuery += ",";
-  //     strQuery += "'" +message + "'";
-  //     strQuery += ");";
-
-  //     QSqlQuery query = QSqlQuery( m_worksdb );
-  //     if (!query.exec(strQuery)) {
-  //         qDebug() << "Failed to insert log message";
-  //     }
-  //}
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // openVscpWorksDatabase

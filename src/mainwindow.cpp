@@ -375,7 +375,7 @@ MainWindow::initRemoteEventDbFetch()
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get version for remote event database
-  QUrl versionUrl("http://vscp.org/events/version.json");
+  QUrl versionUrl(pworks->URL_EVENT_VERSION);
   pworks->m_pVersionCtrl = new FileDownloader(versionUrl, this);
 
   bool success = connect(pworks->m_pVersionCtrl,

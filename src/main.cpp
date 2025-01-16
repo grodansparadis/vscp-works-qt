@@ -24,21 +24,6 @@
 int
 main(int argc, char* argv[])
 {
-
-  // // Init pool
-  // spdlog::init_thread_pool(8192, 1);
-
-  // // Flush log every five seconds
-  // spdlog::flush_every(std::chrono::seconds(1));
-
-  // The console log logs during the upstart phase
-  // it is replaced by the main logger when system is
-  // configured
-  // auto console = spdlog::stdout_color_mt("console");
-  // console->set_level(spdlog::level::trace);
-  // console->set_pattern("[%c] [%^%l%$] %v");
-  // spdlog::set_default_logger(console);
-
   vscpworks app(argc, argv);
   QCoreApplication::setOrganizationName("VSCP");
   QCoreApplication::setOrganizationDomain("vscp.org");
@@ -61,7 +46,7 @@ main(int argc, char* argv[])
   fprintf(stderr, "Application data loaded\n");
 
   //////////////////////////////////////////////////////////////////////////////
-  //                                spdlog
+  //                                <spdlog>
   //////////////////////////////////////////////////////////////////////////////
 
   // patterns - https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
@@ -101,18 +86,18 @@ main(int argc, char* argv[])
     //logger->sinks()[1]->set_pattern(app.m_fileLogPattern);
 
     spdlog::set_level(app.m_fileLogLevel);
-
     spdlog::debug("VSCP Works + logging");
   }
-  catch (...) {
-    fprintf(stderr, "Unable to init logsystem. Logs Exiting.");
+  catch (const spdlog::spdlog_ex &ex) {
+    fprintf(stderr, "Unable to init logsystem. Logs Exiting.\n");
+    std::cout << "Log init failed: " << ex.what() << std::endl;
     spdlog::drop_all();
     spdlog::shutdown();
     exit(EXIT_FAILURE);
   }
 
   //////////////////////////////////////////////////////////////////////////////
-  //                                spdlog
+  //                                </spdlog>
   //////////////////////////////////////////////////////////////////////////////
 
   spdlog::info("Starting VSCP Works +");
@@ -131,7 +116,7 @@ main(int argc, char* argv[])
     QFile f(":style.qss");
 
     if (!f.exists()) {
-      printf("Unable to set stylesheet, file not found\n");
+      fprintf(stderr,"Unable to set stylesheet, file not found\n");
     }
     else {
       f.open(QFile::ReadOnly | QFile::Text);

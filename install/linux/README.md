@@ -50,12 +50,14 @@ chmod a+x linuxdeployqt-continuous-x86_64.AppImage
 
 ```bash
 # Run linuxdeployqt
-./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/vscp-works-qt.desktop -exclude-libs=libqsqlmimer,libqsqlodbc.so -appimage
+./linuxdeployqt-continuous-x86_64.AppImage AppDir/usr/share/applications/vscp-works-qt.desktop -exclude-libs=libqsqlmimer -appimage
 
 or alternatively
 
-./linuxdeployqt-continuous-x86_64.AppImage AppDir/vscp-works-qt  -exclude-libs=libqsqlmimer,libqsqlodbc.so
+./linuxdeployqt-continuous-x86_64.AppImage AppDir/vscp-works-qt  -exclude-libs=libqsqlmimer
 ```
+
+The libsqlmimer file is commercial and not allowed to be distributed. It is excluded from the installation package. libodbc1 or libodbc2 needs to be installed and libpq-dev for PostgreSQL support. This is needed for the database plugin to work even if the specific databases is not used.
 
 6. The installation package is now created and can be found in the `build` folder.
 

@@ -28,7 +28,13 @@ You need expat, mosquitto, openssl and libcurl to build this project
   sudo apt install libmosquitto-dev
   sudo apt install libwebsockets-dev
   sudo apt-get install libcurl4-openssl-dev
+  #sudo apt install libspdlog-dev
+  # For Qt OpenGL support
   sudo apt install libglx-dev libgl1-mesa-dev
+  # For Qt database support
+  sudo apt install libodbc1 or libodbc2
+  sudo apt install libpq-dev
+
 ```
 ### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
 ```bash
