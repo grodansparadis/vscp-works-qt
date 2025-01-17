@@ -30,6 +30,9 @@ main(int argc, char* argv[])
   QCoreApplication::setApplicationName("vscpworks+");
   QCoreApplication::setApplicationVersion(VSCPWORKS_DISPLAY_VERSION);
 
+  // Go to users home directory
+  QDir::setCurrent(QDir::homePath());
+
   // vscpworks --config "config folder"
   QCommandLineParser parser;
   parser.setApplicationDescription(QCoreApplication::applicationName());

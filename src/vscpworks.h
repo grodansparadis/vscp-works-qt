@@ -113,9 +113,9 @@ public:
   ~vscpworks();
 
   // Use non scure to prevent certificat errors
-  const QString URL_EVENT_VERSION     = tr("http://www.vscp.org/events/version.js");
-  const QString URL_EVENT_DATABASE    = tr("http://www.vscp.org/events/vscp_events.sqlite3");
-  const QString URL_VSCPWORKS_VERSION = tr("http://www.vscp.org/version/vscpworks-version.js");
+  const QString URL_EVENT_VERSION     = tr("https://www.vscp.org/events/version.json");
+  const QString URL_EVENT_DATABASE    = tr("https://www.vscp.org/events/vscp_events.sqlite3");
+  const QString URL_VSCPWORKS_VERSION = tr("https://www.vscp.org/version/vscpworks-version.js");
 
   /*!
     Add connection
