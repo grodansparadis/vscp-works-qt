@@ -103,9 +103,34 @@ vscpworks::vscpworks(int& argc, char** argv)
   // Logging defaults
   m_fileLogLevel   = spdlog::level::info;
   m_fileLogPattern = "[%^%l%$] %v";
+
+  // Go to users home directory
+  QDir::setCurrent(QDir::homePath());
+
+  // Configuration folder
+  // --------------------
+  // Linux: "/home/<USER>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
+  // Windows: c:\Users\<USER>\Appdata\roaming\vscpworks+
+#ifdef WIN32
+  QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+  path += "VSCP/";
+  path += QCoreApplication::applicationName();
+  path += ".conf";
+  m_configFolder = path;
+#else
+  {
+    // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    QString path = ".config/VSCP/";
+    path += QCoreApplication::applicationName();
+    path += ".conf";
+    m_configFolder = path;
+  }
+  fprintf(stderr, "Config folder: %s\n", m_configFolder.toStdString().c_str());
+#endif
+
 #ifdef WIN32
   {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     path += "/";
     path += QCoreApplication::applicationName();
     path += "/logs/vscpworks.log";
@@ -113,12 +138,11 @@ vscpworks::vscpworks(int& argc, char** argv)
     fprintf(stderr, "log file: %s\n", m_fileLogPath.c_str());
   }
 #else
-  //m_fileLogPath = "~/.local/share/VSCP/vscpworks+/logs/vscpworks.log";
   {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    //path += "/";
-    //path += QCoreApplication::applicationName();
-    path += "/logs/vscpworks.log";
+    // QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString path = "./.local/share/VSCP/logs/";
+    path += QCoreApplication::applicationName();
+    path += "/vscpworks.log";
     m_fileLogPath = path.toStdString();
     fprintf(stderr, "log file: %s\n", m_fileLogPath.c_str());
   }
@@ -261,37 +285,28 @@ void
 vscpworks::loadSettings(void)
 {
   QString str;
+  QString path;
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   fprintf(stderr, "Loading application data\n");
 
-  // Configuration folder
-  // --------------------
-  // Linux: "/home/<USER>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
-  // Windows: c:\Users\<USER>\Appdata\roaming\vscpworks+
+// Share folder
+// ------------
+// Linux: "/home/<USER>/.local/share/VSCP/vscpworks+"
+// Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
+#if WIN32
+  path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+#else
+  path = ".local/share/VSCP/vscpworks+";
+#endif
   {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     path += "/";
-    path += QCoreApplication::applicationName();
-    path += "/";
-    m_configFolder = settings.value("configFolder", path).toString();
-    fprintf(stderr, "Config folder: %s\n", m_configFolder.toStdString().c_str());
-  }
-
-  // Share folder
-  // ------------
-  // Linux: "/home/<USER>/.local/share/VSCP/vscpworks+"
-  // Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
-  {
-    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    path += "/";
-    m_shareFolder = settings.value("shareFolder", path).toString();
     fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
 
     // If folder does not exist, create it
     QDir dir(path);
     if (!dir.exists()) {
-      dir.mkpath(".");
+      dir.mkpath(path);
     }
     // Make a folder for  receive sets
     dir.mkpath("./rxsets");
@@ -352,7 +367,7 @@ vscpworks::loadSettings(void)
       break;
   };
   m_fileLogPattern  = settings.value("fileLogPattern", "%c - [%^%l%$] %v").toString().toStdString();
-  m_fileLogPath     = settings.value("fileLogPath", "./.local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
+  m_fileLogPath     = settings.value("fileLogPath", ".local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
   m_maxFileLogSize  = settings.value("fileLogMaxSize", 5 * 1024 * 1024).toInt();
   m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
 
@@ -452,8 +467,6 @@ vscpworks::writeSettings()
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   // General settings
-  settings.setValue("configFolder", m_configFolder);
-  settings.setValue("shareFolder", m_shareFolder);
   settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
   settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
   settings.setValue("PreferredLanguage", m_preferredLanguage.c_str());
@@ -678,8 +691,6 @@ vscpworks::loadEventDb(void)
   m_mutexVscpEventsMaps.unlock();
   return true;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // openVscpWorksDatabase

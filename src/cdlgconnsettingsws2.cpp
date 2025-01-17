@@ -52,16 +52,19 @@
 // CTor
 //
 
-CDlgConnSettingsWs2::CDlgConnSettingsWs2(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgConnSettingsWs2)
+CDlgConnSettingsWs2::CDlgConnSettingsWs2(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgConnSettingsWs2)
 {
-    ui->setupUi(this);
-    
-    setInitialFocus();
+  ui->setupUi(this);
 
-    connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onSetFilter );
-    connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onTestConnection );
+  // Clear filter
+  memset(&m_filter, 0, sizeof(vscpEventFilter));
+
+  setInitialFocus();
+
+  connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onSetFilter);
+  connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onTestConnection);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,296 +73,310 @@ CDlgConnSettingsWs2::CDlgConnSettingsWs2(QWidget *parent) :
 
 CDlgConnSettingsWs2::~CDlgConnSettingsWs2()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void CDlgConnSettingsWs2::setInitialFocus(void)
+void
+CDlgConnSettingsWs2::setInitialFocus(void)
 {
-    ui->editDescription->setFocus();
+  ui->editDescription->setFocus();
 }
-
-
 
 // ----------------------------------------------------------------------------
 // Getters / Setters
 // ----------------------------------------------------------------------------
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-QString CDlgConnSettingsWs2::getName(void)
+QString
+CDlgConnSettingsWs2::getName(void)
 {
-    return (ui->editDescription->text()); 
+  return (ui->editDescription->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgConnSettingsWs2::setName(const QString& str)
+void
+CDlgConnSettingsWs2::setName(const QString& str)
 {
-    ui->editDescription->setText(str);
+  ui->editDescription->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getUrl
 //
 
-QString CDlgConnSettingsWs2::getUrl(void)
+QString
+CDlgConnSettingsWs2::getUrl(void)
 {
-    return (ui->editUrl->text()); 
+  return (ui->editUrl->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setUrl
 //
 
-void CDlgConnSettingsWs2::setUrl(const QString& str)
+void
+CDlgConnSettingsWs2::setUrl(const QString& str)
 {
-    ui->editUrl->setText(str);
+  ui->editUrl->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getUser
 //
 
-QString CDlgConnSettingsWs2::getUser(void)
+QString
+CDlgConnSettingsWs2::getUser(void)
 {
-    return (ui->editUsername->text()); 
+  return (ui->editUsername->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setUser
 //
 
-void CDlgConnSettingsWs2::setUser(const QString& str)
+void
+CDlgConnSettingsWs2::setUser(const QString& str)
 {
-    ui->editUsername->setText(str);
+  ui->editUsername->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getPassword
 //
 
-QString CDlgConnSettingsWs2::getPassword(void)
+QString
+CDlgConnSettingsWs2::getPassword(void)
 {
-    return (ui->editUsername->text()); 
+  return (ui->editUsername->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setPassword
 //
 
-void CDlgConnSettingsWs2::setPassword(const QString& str)
+void
+CDlgConnSettingsWs2::setPassword(const QString& str)
 {
-    ui->editUsername->setText(str);
+  ui->editUsername->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getConnectionTimeout
 //
 
-uint32_t CDlgConnSettingsWs2::getConnectionTimeout(void)
+uint32_t
+CDlgConnSettingsWs2::getConnectionTimeout(void)
 {
-    return m_client.getConnectionTimeout();
+  return m_client.getConnectionTimeout();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setConnectionTimeout
 //
 
-void CDlgConnSettingsWs2::setConnectionTimeout(uint32_t timeout)
+void
+CDlgConnSettingsWs2::setConnectionTimeout(uint32_t timeout)
 {
-    m_client.setConnectionTimeout(timeout);
+  m_client.setConnectionTimeout(timeout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getResponseTimeout
 //
 
-uint32_t CDlgConnSettingsWs2::getResponseTimeout(void)
+uint32_t
+CDlgConnSettingsWs2::getResponseTimeout(void)
 {
-    return m_client.getResponseTimeout();
+  return m_client.getResponseTimeout();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setResponseTimeout
 //
 
-void CDlgConnSettingsWs2::setResponseTimeout(uint32_t timeout)
+void
+CDlgConnSettingsWs2::setResponseTimeout(uint32_t timeout)
 {
-    m_client.setResponseTimeout(timeout);
+  m_client.setResponseTimeout(timeout);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getJson
 //
 
-QJsonObject CDlgConnSettingsWs2::getJson(void)
+QJsonObject
+CDlgConnSettingsWs2::getJson(void)
 {
-    std::string str;
+  std::string str;
 
-    m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::WS2);
-    m_jsonConfig["name"] = getName();
-    m_jsonConfig["url"] = getUrl();
-    m_jsonConfig["user"] = getUser();
-    m_jsonConfig["password"] = getPassword();
+  m_jsonConfig["type"]     = static_cast<int>(CVscpClient::connType::WS2);
+  m_jsonConfig["name"]     = getName();
+  m_jsonConfig["url"]      = getUrl();
+  m_jsonConfig["user"]     = getUser();
+  m_jsonConfig["password"] = getPassword();
 
-    // Filter
-    m_jsonConfig["priority-filter"] = m_filter.filter_priority;
-    m_jsonConfig["priority-mask"] = m_filter.mask_priority;
-    m_jsonConfig["class-filter"] = m_filter.filter_class;
-    m_jsonConfig["class-mask"] = m_filter.mask_class;
-    m_jsonConfig["type-filter"] = m_filter.filter_type;
-    m_jsonConfig["type-mask"] = m_filter.mask_type;
-    vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
-    m_jsonConfig["guid-filter"] = str.c_str();
-    vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
-    m_jsonConfig["guid-mask"] = str.c_str();
+  // Filter
+  m_jsonConfig["priority-filter"] = m_filter.filter_priority;
+  m_jsonConfig["priority-mask"]   = m_filter.mask_priority;
+  m_jsonConfig["class-filter"]    = m_filter.filter_class;
+  m_jsonConfig["class-mask"]      = m_filter.mask_class;
+  m_jsonConfig["type-filter"]     = m_filter.filter_type;
+  m_jsonConfig["type-mask"]       = m_filter.mask_type;
+  vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
+  m_jsonConfig["guid-filter"] = str.c_str();
+  vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
+  m_jsonConfig["guid-mask"] = str.c_str();
 
-    return m_jsonConfig; 
+  return m_jsonConfig;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // setJson
 //
 
-void CDlgConnSettingsWs2::setJson(const QJsonObject *pobj)
+void
+CDlgConnSettingsWs2::setJson(const QJsonObject* pobj)
 {
-    m_jsonConfig = *pobj; 
+  m_jsonConfig = *pobj;
 
-    if (!m_jsonConfig["name"].isNull()) setName(m_jsonConfig["name"].toString());
-    if (!m_jsonConfig["url"].isNull()) setUrl(m_jsonConfig["url"].toString());
-    if (!m_jsonConfig["user"].isNull()) setUser(m_jsonConfig["user"].toString());
-    if (!m_jsonConfig["password"].isNull()) setPassword(m_jsonConfig["password"].toString()); 
-    if (!m_jsonConfig["connection-timeout"].isNull()) setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt()); 
-    if (!m_jsonConfig["response-timeout"].isNull()) setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());  
+  if (!m_jsonConfig["name"].isNull())
+    setName(m_jsonConfig["name"].toString());
+  if (!m_jsonConfig["url"].isNull())
+    setUrl(m_jsonConfig["url"].toString());
+  if (!m_jsonConfig["user"].isNull())
+    setUser(m_jsonConfig["user"].toString());
+  if (!m_jsonConfig["password"].isNull())
+    setPassword(m_jsonConfig["password"].toString());
+  if (!m_jsonConfig["connection-timeout"].isNull())
+    setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt());
+  if (!m_jsonConfig["response-timeout"].isNull())
+    setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
 
-    // Get main filter
-    memset(&m_filter, 0, sizeof(vscpEventFilter));
-    if (!m_jsonConfig["priority-filter"].isNull()) {
-        m_filter.filter_priority = (uint8_t)m_jsonConfig["priority-filter"].toInt();
-    }
+  // Get main filter
+  memset(&m_filter, 0, sizeof(vscpEventFilter));
+  if (!m_jsonConfig["priority-filter"].isNull()) {
+    m_filter.filter_priority = (uint8_t)m_jsonConfig["priority-filter"].toInt();
+  }
 
-    if (!m_jsonConfig["priority-mask"].isNull()) {
-        m_filter.mask_priority = (uint8_t)m_jsonConfig["priority-mask"].toInt();
-    }
+  if (!m_jsonConfig["priority-mask"].isNull()) {
+    m_filter.mask_priority = (uint8_t)m_jsonConfig["priority-mask"].toInt();
+  }
 
-    if (!m_jsonConfig["class-filter"].isNull()) {
-        m_filter.filter_class = (uint16_t)m_jsonConfig["class-filter"].toInt();
-    }
-    
-    if (!m_jsonConfig["class-mask"].isNull()) {
-        m_filter.mask_class = (uint16_t)m_jsonConfig["class-mask"].toInt();
-    }
+  if (!m_jsonConfig["class-filter"].isNull()) {
+    m_filter.filter_class = (uint16_t)m_jsonConfig["class-filter"].toInt();
+  }
 
-    if (!m_jsonConfig["type-filter"].isNull()) {
-        m_filter.filter_type = (uint16_t)m_jsonConfig["type-filter"].toInt();
-    }
-    
-    if (!m_jsonConfig["type-mask"].isNull()) {
-        m_filter.mask_type = (uint16_t)m_jsonConfig["type-mask"].toInt();
-    }
+  if (!m_jsonConfig["class-mask"].isNull()) {
+    m_filter.mask_class = (uint16_t)m_jsonConfig["class-mask"].toInt();
+  }
 
-    if (!m_jsonConfig["guid-filter"].isNull()) {
-        vscp_getGuidFromStringToArray(m_filter.filter_GUID, 
-                                        m_jsonConfig["guid-filter"].toString().toStdString());
-    }
-    
-    if (!m_jsonConfig["guid-mask"].isNull()) {
-        vscp_getGuidFromStringToArray(m_filter.mask_GUID, 
-                                        m_jsonConfig["guid-mask"].toString().toStdString());
-    }       
+  if (!m_jsonConfig["type-filter"].isNull()) {
+    m_filter.filter_type = (uint16_t)m_jsonConfig["type-filter"].toInt();
+  }
+
+  if (!m_jsonConfig["type-mask"].isNull()) {
+    m_filter.mask_type = (uint16_t)m_jsonConfig["type-mask"].toInt();
+  }
+
+  if (!m_jsonConfig["guid-filter"].isNull()) {
+    vscp_getGuidFromStringToArray(m_filter.filter_GUID,
+                                  m_jsonConfig["guid-filter"].toString().toStdString());
+  }
+
+  if (!m_jsonConfig["guid-mask"].isNull()) {
+    vscp_getGuidFromStringToArray(m_filter.mask_GUID,
+                                  m_jsonConfig["guid-mask"].toString().toStdString());
+  }
 }
 
-
 // ----------------------------------------------------------------------------
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // onSetFilter
 //
 
-void 
+void
 CDlgConnSettingsWs2::onSetFilter(void)
 {
-    CDlgLevel2Filter dlg;
+  CDlgLevel2Filter dlg;
 
-    dlg.setFilter(&m_filter);
+  dlg.setFilter(&m_filter);
 
-    if (QDialog::Accepted == dlg.exec() ) {
-        dlg.getFilter(&m_filter);    
-    }
+  if (QDialog::Accepted == dlg.exec()) {
+    dlg.getFilter(&m_filter);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // onTestConnection
 //
 
-void 
+void
 CDlgConnSettingsWs2::onTestConnection(void)
 {
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QApplication::processEvents();
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
 
-    // // Initialize host connection
-    // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-    //                                             getPort(),
-    //                                             getUser().toStdString().c_str(),
-    //                                             getPassword().toStdString().c_str() ) ) {
-    //     QApplication::restoreOverrideCursor();                                                        
-    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));        
-    //     return;                                                
-    // }
+  // // Initialize host connection
+  // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
+  //                                             getPort(),
+  //                                             getUser().toStdString().c_str(),
+  //                                             getPassword().toStdString().c_str() ) ) {
+  //     QApplication::restoreOverrideCursor();
+  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));
+  //     return;
+  // }
 
-    // // Connect to remote host
-    // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
-    //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
-    //     m_client.disconnect();        
-    //     return;
-    // }
+  // // Connect to remote host
+  // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
+  //     QApplication::restoreOverrideCursor();
+  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
+  //     m_client.disconnect();
+  //     return;
+  // }
 
-    // // Get server version
-    // uint8_t major_ver;
-    // uint8_t minor_ver;
-    // uint8_t release_ver;
-    // uint8_t build_ver;
-    // QString strVersion;
-    // if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
-    //                                                 &minor_ver,
-    //                                                 &release_ver,
-    //                                                 &build_ver ) ) {
-        
-    //     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
-    //                                     (int)major_ver,
-    //                                     (int)minor_ver,
-    //                                     (int)release_ver,
-    //                                     (int)build_ver ).c_str();      
-    // }
-    // else {
-    //     strVersion = tr("Failed to get version from server");
-    // }
+  // // Get server version
+  // uint8_t major_ver;
+  // uint8_t minor_ver;
+  // uint8_t release_ver;
+  // uint8_t build_ver;
+  // QString strVersion;
+  // if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
+  //                                                 &minor_ver,
+  //                                                 &release_ver,
+  //                                                 &build_ver ) ) {
 
-    // // Disconnect from remote host
-    // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
-    //     QApplication::restoreOverrideCursor();
-    //     QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));        
-    //     return;
-    // }    
+  //     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
+  //                                     (int)major_ver,
+  //                                     (int)minor_ver,
+  //                                     (int)release_ver,
+  //                                     (int)build_ver ).c_str();
+  // }
+  // else {
+  //     strVersion = tr("Failed to get version from server");
+  // }
 
-    QApplication::restoreOverrideCursor();
+  // // Disconnect from remote host
+  // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
+  //     QApplication::restoreOverrideCursor();
+  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));
+  //     return;
+  // }
 
-    QString msg = tr("Connection test was successful");
-    msg += "\n";
-    msg += "NOT IMPLEMENTED YET!";
-    QMessageBox::information(this, tr(APPNAME), msg );
+  QApplication::restoreOverrideCursor();
+
+  QString msg = tr("Connection test was successful");
+  msg += "\n";
+  msg += "NOT IMPLEMENTED YET!";
+  QMessageBox::information(this, tr(APPNAME), msg);
 }

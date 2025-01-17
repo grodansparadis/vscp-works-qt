@@ -69,6 +69,9 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
   setHost("tcp://localhost:9598");
   setUser("admin");
   setPassword("secret");
+  
+  // Clear filter
+  memset(&m_filter, 0, sizeof(vscpEventFilter));
 
   connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings);
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter);

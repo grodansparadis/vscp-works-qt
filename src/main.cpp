@@ -30,9 +30,6 @@ main(int argc, char* argv[])
   QCoreApplication::setApplicationName("vscpworks+");
   QCoreApplication::setApplicationVersion(VSCPWORKS_DISPLAY_VERSION);
 
-  // Go to users home directory
-  QDir::setCurrent(QDir::homePath());
-
   // vscpworks --config "config folder"
   QCommandLineParser parser;
   parser.setApplicationDescription(QCoreApplication::applicationName());
@@ -89,7 +86,7 @@ main(int argc, char* argv[])
     //logger->sinks()[1]->set_pattern(app.m_fileLogPattern);
 
     spdlog::set_level(app.m_fileLogLevel);
-    spdlog::debug("VSCP Works + logging");
+    spdlog::debug("VSCP Works+ logging");
   }
   catch (const spdlog::spdlog_ex &ex) {
     fprintf(stderr, "Unable to init logsystem. Logs Exiting.\n");

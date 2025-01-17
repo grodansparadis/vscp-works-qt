@@ -1794,7 +1794,7 @@ MainWindow::newTcpipConnection()
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   CDlgConnSettingsTcpip dlg(this);
-  dlg.setInitialFocus();
+  dlg.setInitialFocus(); 
 
 restart:
 

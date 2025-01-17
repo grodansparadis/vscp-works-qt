@@ -62,6 +62,9 @@ CDlgConnSettingsCanal::CDlgConnSettingsCanal(QWidget* parent)
 {
   ui->setupUi(this);
 
+  // Clear filter
+  //memset(&m_filter, 0, sizeof(vscpEventFilter));
+
   connect(ui->btnTest, SIGNAL(clicked()), this, SLOT(testDriver()));
   connect(ui->btnSetPath, SIGNAL(clicked()), this, SLOT(setDriverPath()));
   connect(ui->btnWizard, SIGNAL(clicked()), this, SLOT(wizard()));
@@ -342,7 +345,7 @@ CDlgConnSettingsCanal::wizard()
 
   int rv;
   if (CANAL_ERROR_SUCCESS != (rv = m_vscpClient.m_canalif.init())) {
-    
+
     std::string str = vscp_str_format("The driver did not load properly. rv=%d", rv);
     QMessageBox::warning(this,
                          tr(APPNAME),
