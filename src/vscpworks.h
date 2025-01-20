@@ -501,6 +501,7 @@ public:
 
   /// List with defined connections uuid,conf-obj
   QMap<QString, QJsonObject> m_mapConn;
+  QMap<QString, json> m_map2Conn;
 
   /// Mutex protecting vscpClass/vscpType maps
   QMutex m_mutexVscpEventsMaps;

@@ -66,6 +66,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include <fstream>
+
 // for convenience
 using json = nlohmann::json;
 using namespace kainjow::mustache;
@@ -464,6 +466,9 @@ vscpworks::loadSettings(void)
 void
 vscpworks::writeSettings()
 {
+  json j, jj;
+  json conn_array = json::array();
+
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   // General settings
@@ -474,6 +479,14 @@ vscpworks::writeSettings()
   settings.setValue("bAskBeforeDelete", m_bAskBeforeDelete);
   settings.setValue("bSaveAlwaysJson", m_bSaveAlwaysJSON);
   settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
+
+  j["vscpHomeFolder"]        = m_vscpHomeFolder.toStdString();
+  j["numericBase"]           = m_base;
+  j["PreferredLanguage"]     = m_preferredLanguage;
+  j["bDarkTheme"]            = m_bEnableDarkTheme;
+  j["bAskBeforeDelete"]      = m_bAskBeforeDelete;
+  j["bSaveAlwaysJson"]       = m_bSaveAlwaysJSON;
+  j["last-eventdb-download"] = m_lastEventDbLoadDateTime.toMSecsSinceEpoch();
 
   // * * * Logging * * *
   int level = 4; // Default: 4 == "information";
@@ -508,6 +521,12 @@ vscpworks::writeSettings()
   settings.setValue("fileLogMaxSize", m_maxFileLogSize);
   settings.setValue("fileLogMaxFiles", m_maxFileLogFiles);
 
+  j["fileLogLevel"]    = level;
+  j["fileLogPath"]     = m_fileLogPath;
+  j["fileLogPattern"]  = m_fileLogPattern;
+  j["fileLogMaxSize"]  = m_maxFileLogSize;
+  j["fileLogMaxFiles"] = m_maxFileLogFiles;
+
   level = 4; // Default: 4 == "information";
   switch (m_consoleLogLevel) {
     case spdlog::level::trace:
@@ -537,6 +556,9 @@ vscpworks::writeSettings()
   settings.setValue("consoleLogLevel", level);
   settings.setValue("consoleLogPattern", QString::fromStdString(m_consoleLogPattern));
 
+  j["consoleLogLevel"]   = level;
+  j["consoleLogPattern"] = m_consoleLogPattern;
+
   // * * * Session * * *
 
   settings.setValue("sessionTimeout", m_session_timeout);
@@ -550,15 +572,49 @@ vscpworks::writeSettings()
   settings.setValue("sessionShowFullTypeToken", m_session_bShowFullTypeToken);
   settings.setValue("sessionAutoSaveTxRows", m_session_bAutoSaveTxRows);
 
+  j["sessionTimeout"]            = m_session_timeout;
+  j["maxSessionEvents"]          = m_session_maxEvents;
+  j["sessionClassDisplayFormat"] = static_cast<int>(m_session_ClassDisplayFormat);
+  j["sessionTypeDisplayFormat"]  = static_cast<int>(m_session_TypeDisplayFormat);
+  j["sessionGuidDisplayFormat"]  = static_cast<int>(m_session_GuidDisplayFormat);
+  j["sessionAutoConnect"]        = m_session_bAutoConnect;
+  j["sessionShowFullTypeToken"]  = m_session_bShowFullTypeToken;
+  j["sessionAutoSaveTxRows"]     = m_session_bAutoSaveTxRows;
+
   // * * * Config * * *
   settings.setValue("configNumericBase", static_cast<int>(m_config_base));
   settings.setValue("configDisableColors", m_config_bDisableColors);
   settings.setValue("configTimeout", m_config_timeout);
 
+  j["configNumericBase"]   = static_cast<int>(m_config_base);
+  j["configDisableColors"] = m_config_bDisableColors;
+  j["configTimeout"]       = m_config_timeout;
+
   // * * * Firmware * * *
   settings.setValue("firmwareDeviceCodeRequired", m_firmware_devicecode_required);
 
+  j["firmwareDeviceCodeRequired"] = m_firmware_devicecode_required;
+
+  QMap<QString, QJsonObject>::const_iterator it = m_mapConn.constBegin();
+  while (it != m_mapConn.constEnd()) {
+    QJsonDocument doc(it.value());
+    QString strJson(doc.toJson(QJsonDocument::Compact));
+    // qDebug() << it.key() << ": " << it.value() << ":" << strJson;
+    it++;
+
+    jj = json::parse(strJson.toStdString());
+    conn_array.push_back(jj);
+    // printf("%s\n",strJson.toStdString().c_str());
+  }
+
+  j["connections"] = conn_array;
+
   writeConnections();
+
+  std::cout << j.dump(4);
+
+  std::ofstream o("/home/akhe/.config/VSCP/vscpworks+_config.json");
+  o << std::setw(4) << j << std::endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -568,6 +624,9 @@ vscpworks::writeSettings()
 void
 vscpworks::writeConnections(void)
 {
+  json j;
+  json conn_array = json::array();
+
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   // Remove old entries
@@ -595,8 +654,14 @@ vscpworks::writeConnections(void)
     // qDebug() << it.key() << ": " << it.value() << ":" << strJson;
     settings.setValue("connection", strJson);
     it++;
+
+    j = json::parse(strJson.toStdString());
+    conn_array.push_back(j);
+    // printf("%s\n",strJson.toStdString().c_str());
   }
   settings.endArray();
+
+  std::cout << conn_array.dump(4);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -606,6 +671,7 @@ vscpworks::writeConnections(void)
 bool
 vscpworks::addConnection(QJsonObject& conn, bool bSave)
 {
+  // If no UUID is set, create one
   if (!conn["uuid"].toString().trimmed().length()) {
     conn["uuid"] = QUuid::createUuid().toString();
   }
