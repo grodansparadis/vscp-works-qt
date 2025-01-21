@@ -206,6 +206,10 @@ vscpworks::~vscpworks()
       break;
     }
   }
+
+  // Clean up SQLite lib allocations
+  sqlite3_shutdown();
+  
   m_worksdb.close();
 }
 

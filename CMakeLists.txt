@@ -602,6 +602,8 @@ qt_add_executable(${PROJECT_NAME}
   ./third_party/vscp/src/common/vscpmd5.h
   ./third_party/vscp/src/common/vscpmd5.c
   ./third_party/mustache/mustache.hpp
+  ./third_party/sqlite3/sqlite3.h
+  ./third_party/sqlite3/sqlite3.c
   ./third_party/spdlog/include/
   ./third_party/crypto-algorithms/sha256.h
   ./third_party/crypto-algorithms/sha256.c    
@@ -624,6 +626,7 @@ if (MSVC)
     ./third_party/nlohmann/include/
     ./third_party/spdlog/include/
     ./third_party/Mustache/
+    ./third_party/sqlite3/
     ./third_party/maddy/include/
     ./third_party/crypto-algorithms/
     ${PThreads4W_INCLUDE_DIR}
@@ -650,6 +653,7 @@ else()
     ./third_party/nlohmann/include/
     ./third_party/spdlog/include/
     ./third_party/mustache/
+    ./third_party/sqlite3/
     ./third_party/maddy/include/
     ./third_party/crypto-algorithms/s
     ${CMAKE_BINARY_DIR}

@@ -50,6 +50,7 @@ main(int argc, char* argv[])
 
   fprintf(stderr, "Application data loaded\n");
 
+
   //////////////////////////////////////////////////////////////////////////////
   //                                <spdlog>
   //////////////////////////////////////////////////////////////////////////////
@@ -104,6 +105,12 @@ main(int argc, char* argv[])
   //////////////////////////////////////////////////////////////////////////////
   //                                </spdlog>
   //////////////////////////////////////////////////////////////////////////////
+
+  // Initialize the SQLite library
+  if (SQLITE_OK != sqlite3_initialize()) {
+    spdlog::critical("Unable to initialize SQLite library.");
+    return EXIT_FAILURE;
+  }
 
   spdlog::info("Starting VSCP Works +");
 

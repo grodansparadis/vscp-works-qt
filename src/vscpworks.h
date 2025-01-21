@@ -54,6 +54,7 @@
 #include <list>
 
 #include <mustache.hpp>
+#include <sqlite3.h>
 
 #include <nlohmann/json.hpp>
 // https://github.com/nlohmann/json
