@@ -1515,7 +1515,7 @@ CWizardPageFlash::validatePage(void)
 // CTor
 //
 
-CBootLoadWizard::CBootLoadWizard(QWidget* parent, QJsonObject* pconn)
+CBootLoadWizard::CBootLoadWizard(QWidget* parent, json* pconn)
   : QWizard(parent)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -1537,7 +1537,7 @@ CBootLoadWizard::CBootLoadWizard(QWidget* parent, QJsonObject* pconn)
   m_connObject = *pconn;
 
   // Must have a type
-  if (m_connObject["type"].isNull()) {
+  if (!m_connObject.contains("type") && m_connObject["type"].is_string()) {
     spdlog::error(std::string(tr("Type is not defined in JSON data").toStdString()));
     QMessageBox::information(this,
                              tr(APPNAME),
@@ -1547,13 +1547,13 @@ CBootLoadWizard::CBootLoadWizard(QWidget* parent, QJsonObject* pconn)
     return;
   }
 
-  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
 
   QString str = tr("VSCP Works Bootloader Wizard - ");
   str += pworks->getConnectionName(m_vscpConnType);
   str += tr(" - ");
-  if (!m_connObject["name"].isNull()) {
-    str += m_connObject["name"].toString();
+  if (m_connObject.contains("name") && m_connObject["name"].is_string()) {
+    str += m_connObject["name"].get<std::string>();
   }
   else {
     str += tr("Unknown");
@@ -1598,8 +1598,8 @@ CBootLoadWizard::initBootLoaderWizard(void)
   // We need a helpbutton
   setOption(QWizard::HaveHelpButton);
 
-  QJsonDocument doc(m_connObject);
-  QString strJson(doc.toJson(QJsonDocument::Compact));
+  // QJsonDocument doc(m_connObject);
+  // QString strJson(doc.toJson(QJsonDocument::Compact));
 
   switch (m_vscpConnType) {
 
@@ -1616,7 +1616,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       }
 
       // Initialize communication parameters
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       // m_vscpClient->setCallback(eventReceived, this);
 
       QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -1663,7 +1663,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       }
 
       // Initialize communication parameters
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(
           this,
@@ -1712,7 +1712,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       }
 
       // Initialize communication parameters
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(this,
                              tr(""),
@@ -1759,7 +1759,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       }
 
       // Initialize communication parameters
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
 
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
         spdlog::error(std::string(tr("Bootloader wizard: Unable to connect to remote host").toStdString()));

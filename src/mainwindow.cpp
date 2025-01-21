@@ -85,13 +85,12 @@
 //
 
 treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem* topItem,
-                                       const QJsonObject& conn)
+                                       const json& conn)
   : QTreeWidgetItem(topItem, static_cast<int>(itemType::CONNECTION))
 {
   assert(nullptr != topItem);
 
-
-  setText(0, conn["name"].toString());
+  setText(0, conn["name"].get<std::string>().c_str());
   m_conn = conn;
 
   const QIcon icon =
@@ -118,6 +117,8 @@ treeWidgetItemConn::~treeWidgetItemConn() {}
 MainWindow::MainWindow()
   : m_connTreeTable(new QTreeWidget)
 {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
   // Enable custom context menu
   m_connTreeTable->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -164,14 +165,14 @@ MainWindow::MainWindow()
   // connect(m_textEdit->document(), &QTextDocument::contentsChanged,
   //        this, &MainWindow::connectionsWasModified);
 
-// https://forum.qt.io/topic/125035/what-is-was-qguiapplication-setfallbacksessionmanagementenabled/2
-// #ifndef QT_NO_SESSIONMANAGER
-//   QGuiApplication::setFallbackSessionManagementEnabled(false);
-//   connect(qApp,
-//           &QGuiApplication::commitDataRequest,
-//           this,
-//           &MainWindow::commitData);
-// #endif
+  // https://forum.qt.io/topic/125035/what-is-was-qguiapplication-setfallbacksessionmanagementenabled/2
+  // #ifndef QT_NO_SESSIONMANAGER
+  //   QGuiApplication::setFallbackSessionManagementEnabled(false);
+  //   connect(qApp,
+  //           &QGuiApplication::commitDataRequest,
+  //           this,
+  //           &MainWindow::commitData);
+  // #endif
 
   setCurrentFile(QString());
   setUnifiedTitleAndToolBarOnMac(true);
@@ -308,8 +309,6 @@ MainWindow::MainWindow()
 
   // Load connections
   addLoadedConnections();
-
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   initRemoteEventDbFetch();
 
@@ -511,7 +510,7 @@ MainWindow::downloadedEventDb()
 
 void
 MainWindow::addChildItemToConnectionTree(QTreeWidgetItem* topitem,
-                                         const QJsonObject& conn)
+                                         const json& conn)
 {
   // Check pointers
   assert(nullptr != topitem);
@@ -531,60 +530,64 @@ MainWindow::addLoadedConnections(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QMap<QString, QJsonObject>::const_iterator it =
+  QMap<std::string, json>::const_iterator it =
     pworks->m_mapConn.constBegin();
   while (it != pworks->m_mapConn.constEnd()) {
 
-    if (!(it.value())["type"].isUndefined() && !(it.value())["type"].isNull()) {
+    json j = it.value();    
+    // std::cout << j.dump(4) << std::endl;
+    spdlog::trace(j.dump(4).c_str());
+
+    if (j.contains("type") && j["type"].is_number()) {
 
       switch (
-        static_cast<CVscpClient::connType>((it.value())["type"].toInt())) {
+        static_cast<CVscpClient::connType>(j["type"].get<int>())) {
 
         case CVscpClient::connType::TCPIP: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_tcpip, it.value());
+          addChildItemToConnectionTree(m_topitem_tcpip, j);
           m_topitem_tcpip->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::CANAL: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_canal, it.value());
+          addChildItemToConnectionTree(m_topitem_canal, j);
           m_topitem_canal->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::SOCKETCAN: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_socketcan, it.value());
+          addChildItemToConnectionTree(m_topitem_socketcan, j);
           m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::WS1: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_ws1, it.value());
+          addChildItemToConnectionTree(m_topitem_ws1, j);
           m_topitem_ws1->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::WS2: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_ws2, it.value());
+          addChildItemToConnectionTree(m_topitem_ws2, j);
           m_topitem_ws2->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::MQTT: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_mqtt, it.value());
+          addChildItemToConnectionTree(m_topitem_mqtt, j);
           m_topitem_mqtt->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::UDP: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_udp, it.value());
+          addChildItemToConnectionTree(m_topitem_udp, j);
           m_topitem_udp->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::MULTICAST: {
           // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_multicast, it.value());
+          addChildItemToConnectionTree(m_topitem_multicast, j);
           m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
         } break;
 
@@ -604,8 +607,10 @@ MainWindow::addLoadedConnections(void)
 void
 MainWindow::closeEvent(QCloseEvent* event)
 {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
   if (maybeSave()) {
-    writeSettings();
+    pworks->writeSettings();
     event->accept();
   }
   else {
@@ -699,9 +704,9 @@ MainWindow::editConnectionItem(void)
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
-      switch ((*pconn)["type"].toInt()) {
+      switch ((*pconn)["type"].get<int>()) {
 
         case static_cast<int>(CVscpClient::connType::TCPIP):
           editTcpipConnection(itemConn);
@@ -763,14 +768,14 @@ MainWindow::cloneConnectionItem(void)
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
       // Make copy of connection config
-      QJsonObject conn_copy = *pconn;
+      json conn_copy = *pconn;
 
       int type = 0;
-      if (!(*pconn)["type"].isNull()) {
-        type = (*pconn)["type"].toInt();
+      if ((*pconn).contains("type") && (*pconn)["type"].is_number()) {
+        type = (*pconn)["type"].get<int>();
       }
 
       // Add to main table
@@ -843,10 +848,10 @@ MainWindow::removeConnectionItem(void)
   foreach (QTreeWidgetItem* item, itemList) {
     treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
     if (itemConn->isSelected()) {
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
       QString str = tr("Are you sure that you want to delete [");
-      str += (*pconn)["name"].toString();
+      str += (*pconn)["name"].get<std::string>();
       str += "]";
 
       if (QMessageBox::Yes ==
@@ -854,8 +859,7 @@ MainWindow::removeConnectionItem(void)
                                 tr(APPNAME),
                                 str,
                                 QMessageBox::Yes | QMessageBox::No)) {
-        // qDebug() << (*pconn)["uuid"].toString();
-        pworks->removeConnection((*pconn)["uuid"].toString(), true);
+        pworks->removeConnection((*pconn)["uuid"].get<std::string>().c_str(), true);
         QTreeWidgetItem* parent = item->parent();
         parent->removeChild(item);
         delete item;
@@ -881,9 +885,9 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
     treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
     // Get the connection object
-    QJsonObject* pconn = itemConn->getJson();
+    json* pconn = itemConn->getJson();
 
-    switch ((*pconn)["type"].toInt()) {
+    switch ((*pconn)["type"].get<int>()) {
 
       case static_cast<int>(CVscpClient::connType::TCPIP):
         newSession();
@@ -1406,30 +1410,42 @@ MainWindow::createStatusBar()
 void
 MainWindow::readSettings()
 {
-  QScreen* screen = QGuiApplication::primaryScreen();
-  // QList <QScreen*> screens = QGuiApplication::screens();  // Multiscreen
-  QSettings settings(QCoreApplication::organizationName(),
-                     QCoreApplication::applicationName());
-  const QByteArray geometry =
-    settings.value("geometry", QByteArray()).toByteArray();
-  if (geometry.isEmpty()) {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // QScreen* screen = QGuiApplication::primaryScreen();
+  // // QList <QScreen*> screens = QGuiApplication::screens();  // Multiscreen
+  // QSettings settings(QCoreApplication::organizationName(),
+  //                    QCoreApplication::applicationName());
+  // const QByteArray geometry =
+  //   settings.value("geometry", QByteArray()).toByteArray();
+  // if (geometry.isEmpty()) {
+  //   const QRect availableGeometry = screen->availableGeometry();
+  //   resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
+  //   move((availableGeometry.width() - width()) / 2,
+  //        (availableGeometry.height() - height()) / 2);
+  // }
+  // else {
+  //   restoreGeometry(geometry);
+  // }
+  if (!pworks->m_mainWindowRect.isValid() && !pworks->m_mainWindowRect.isNull()) {
+    setGeometry(pworks->m_mainWindowRect);
+  }
+  else {
+    QScreen* screen               = QGuiApplication::primaryScreen();
     const QRect availableGeometry = screen->availableGeometry();
     resize(availableGeometry.width() / 3, availableGeometry.height() / 2);
     move((availableGeometry.width() - width()) / 2,
          (availableGeometry.height() - height()) / 2);
   }
-  else {
-    restoreGeometry(geometry);
-  }
 
-  int size = settings.beginReadArray("hosts/connections");
-  for (int i = 0; i < size; ++i) {
-    settings.setArrayIndex(i);
-    std::string conn = settings.value("conn", "").toString().toStdString();
-  }
-  settings.endArray();
+  // int size = settings.beginReadArray("hosts/connections");
+  // for (int i = 0; i < size; ++i) {
+  //   settings.setArrayIndex(i);
+  //   std::string conn = settings.value("conn", "").toString().toStdString();
+  // }
+  // settings.endArray();
 
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  // vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // int margin = settings.value("editor/wrapMargin").toInt();
   // int margin = settings.value("editor/wrapMargin", 80).toInt();
@@ -1444,19 +1460,6 @@ MainWindow::readSettings()
   // Default numerical base
   // default_base_ numerical_base = settings.value("general/numerical-base",
   // 0).toInt();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// writeSettings *
-//
-
-void
-MainWindow::writeSettings()
-{
-  QSettings settings(QCoreApplication::organizationName(),
-                     QCoreApplication::applicationName());
-
-  settings.setValue("geometry", saveGeometry());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1617,7 +1620,7 @@ MainWindow::newSession()
 
   foreach (QTreeWidgetItem* item, itemList) {
 
-    // Not intereste din top level items
+    // Not interested in top level items
     if (NULL != item->parent()) {
 
       // Get item
@@ -1625,8 +1628,8 @@ MainWindow::newSession()
 
       // Get the connection object
 
-      QJsonObject* pconn = itemConn->getJson();
-      CFrmSession* w     = new CFrmSession(this, pconn);
+      json* pconn    = itemConn->getJson();
+      CFrmSession* w = new CFrmSession(this, pconn);
       if (!w->isConnected() && (pworks->m_session_bAutoConnect)) {
         delete w;
         return;
@@ -1717,7 +1720,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -1749,7 +1752,7 @@ MainWindow::editCanalConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsCanal dlg(this);
   dlg.setJson(pconn);
@@ -1768,17 +1771,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_canal->sortChildren(0, Qt::AscendingOrder);
   }
@@ -1794,7 +1797,7 @@ MainWindow::newTcpipConnection()
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   CDlgConnSettingsTcpip dlg(this);
-  dlg.setInitialFocus(); 
+  dlg.setInitialFocus();
 
 restart:
 
@@ -1808,7 +1811,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -1840,7 +1843,7 @@ MainWindow::editTcpipConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsTcpip dlg(this);
   dlg.setJson(pconn);
@@ -1861,17 +1864,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_tcpip->sortChildren(0, Qt::AscendingOrder);
   }
@@ -1901,7 +1904,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -1934,7 +1937,7 @@ MainWindow::editSocketCanConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 #ifndef WIN32
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsSocketCan dlg(this);
 
@@ -1954,17 +1957,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
   }
@@ -1995,7 +1998,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -2027,7 +2030,7 @@ MainWindow::editMqttConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsMqtt dlg(this);
 
@@ -2047,17 +2050,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_mqtt->sortChildren(0, Qt::AscendingOrder);
   }
@@ -2087,7 +2090,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -2119,7 +2122,7 @@ MainWindow::editWs1Connection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsWs1 dlg(this);
 
@@ -2139,17 +2142,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_ws1->sortChildren(0, Qt::AscendingOrder);
   }
@@ -2179,7 +2182,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -2211,7 +2214,7 @@ MainWindow::editWs2Connection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsWs2 dlg(this);
 
@@ -2231,17 +2234,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_ws2->sortChildren(0, Qt::AscendingOrder);
   }
@@ -2272,7 +2275,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -2304,7 +2307,7 @@ MainWindow::editUdpConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsUdp dlg(this);
 
@@ -2324,17 +2327,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_udp->sortChildren(0, Qt::AscendingOrder);
   }
@@ -2364,7 +2367,7 @@ restart:
       goto restart;
     }
 
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
     if (!pworks->addConnection(conn, true)) {
       QMessageBox::information(this,
                                tr(APPNAME),
@@ -2396,7 +2399,7 @@ MainWindow::editMulticastConnection(treeWidgetItemConn* itemConn)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Get the connection object
-  QJsonObject* pconn = itemConn->getJson();
+  json* pconn = itemConn->getJson();
 
   CDlgConnSettingsMulticast dlg(this);
   dlg.setJson(pconn);
@@ -2415,17 +2418,17 @@ restart:
     }
 
     // Set the new connection
-    QJsonObject conn = dlg.getJson();
+    json conn = dlg.getJson();
 
     // Update listTree data
     itemConn->setJson(conn);
 
     // Update main table data
-    pworks->m_mapConn[conn["uuid"].toString()] = conn;
-    pworks->writeConnections();
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
 
     // Replace any possible new name
-    itemConn->setText(0, conn["name"].toString());
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
   }
@@ -2464,7 +2467,7 @@ MainWindow::newNodeConfiguration()
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
       CFrmNodeConfig* w = new CFrmNodeConfig(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
@@ -2508,7 +2511,7 @@ MainWindow::newNodeScan()
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
       CFrmNodeScan* w = new CFrmNodeScan(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
@@ -2553,7 +2556,7 @@ MainWindow::newNodeBootload()
       treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
 
       // Get the connection object
-      QJsonObject* pconn = itemConn->getJson();
+      json* pconn = itemConn->getJson();
 
       CBootLoadWizard wiz(this, pconn);
       if (VSCP_ERROR_SUCCESS != (rv = wiz.initBootLoaderWizard())) {

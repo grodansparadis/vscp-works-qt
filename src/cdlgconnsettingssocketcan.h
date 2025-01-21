@@ -35,7 +35,6 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
-#include <QJsonObject>
 #include <QList>
 
 // ----------------------------------------------------------------------------
@@ -93,8 +92,8 @@ public:
     /*!
         Setters/getters for JSON config object
     */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+    json getJson(void);
+    void setJson(const json *pobj);
 
 
     /*!
@@ -162,7 +161,7 @@ public:
     Ui::CDlgConnSettingsSocketCan *ui;
 
     /// JSON configuration object
-    QJsonObject m_jsonConfig;
+    json m_jsonConfig;
 
     /// SocketCan client
     vscpClientSocketCan m_clientSocketcan;

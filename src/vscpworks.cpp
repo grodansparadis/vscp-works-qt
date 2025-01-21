@@ -48,8 +48,6 @@
 #include <QDir>
 #include <QFile>
 #include <QJSEngine>
-#include <QJsonArray>
-#include <QJsonObject>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QSettings>
@@ -117,17 +115,17 @@ vscpworks::vscpworks(int& argc, char** argv)
   QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
   path += "VSCP/";
   path += QCoreApplication::applicationName();
-  path += ".conf";
+  path += ".json";
   m_configFolder = path;
 #else
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     QString path = ".config/VSCP/";
     path += QCoreApplication::applicationName();
-    path += ".conf";
-    m_configFolder = path;
+    path += ".json";
+    m_configFile = path;
   }
-  fprintf(stderr, "Config folder: %s\n", m_configFolder.toStdString().c_str());
+  fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
 #endif
 
 #ifdef WIN32
@@ -150,6 +148,34 @@ vscpworks::vscpworks(int& argc, char** argv)
   }
 #endif
 
+  // Share folder
+  // ------------
+  // Linux: "/home/<USER>/.local/share/VSCP/vscpworks+"
+  // Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
+  {
+#if WIN32
+    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+#else
+    QString path = ".local/share/VSCP/vscpworks+";
+#endif
+    path += "/";
+    fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
+
+    // If folder does not exist, create it
+    QDir dir(path);
+    if (!dir.exists()) {
+      dir.mkpath(path);
+    }
+    // Make a folder for  receive sets
+    dir.mkpath("./rxsets");
+    // Make a folder for transmission sets
+    dir.mkpath("./txsets");
+    // Make a folder for autosaved/loaded data
+    dir.mkpath("./cache");
+    // Make a folder for log data
+    dir.mkpath("./logs");
+  }
+
   m_maxFileLogSize  = 5242880;
   m_maxFileLogFiles = 7;
 
@@ -169,6 +195,7 @@ vscpworks::vscpworks(int& argc, char** argv)
 
 vscpworks::~vscpworks()
 {
+  // Save settings
   writeSettings();
 
   for (QMainWindow* pwnd : m_childWindows) {
@@ -283,180 +310,240 @@ vscpworks::getConnectionName(CVscpClient::connType type)
 // loadSettings *
 //
 
-void
+bool
 vscpworks::loadSettings(void)
 {
+  json j;
   QString str;
-  QString path;
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   fprintf(stderr, "Loading application data\n");
 
-// Share folder
-// ------------
-// Linux: "/home/<USER>/.local/share/VSCP/vscpworks+"
-// Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
-#if WIN32
-  path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-#else
-  path = ".local/share/VSCP/vscpworks+";
-#endif
-  {
-    path += "/";
-    fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
-
-    // If folder does not exist, create it
-    QDir dir(path);
-    if (!dir.exists()) {
-      dir.mkpath(path);
+  // If the database don't exist, bail out
+  if (!QFile::exists(m_configFile)) {
+    writeSettings();
+    if (!QFile::exists(m_configFile)) {
+      QString err = QString(tr("The VSCP works configuration file does not exist.  [%0]\n")).arg(m_configFile);
+      fprintf(stderr, "%s", err.toStdString().c_str());
+      return false;
     }
-    // Make a folder for  receive sets
-    dir.mkpath("./rxsets");
-    // Make a folder for transmission sets
-    dir.mkpath("./txsets");
-    // Make a folder for autosaved/loaded data
-    dir.mkpath("./cache");
-    // Make a folder for log data
-    dir.mkpath("./logs");
   }
 
-// VSCP Home folder
-// ----------------
-#ifdef WIN32
-  m_vscpHomeFolder = settings.value("vscpHomeFolder", "c:/program files/vscp").toString();
-#else
-  m_vscpHomeFolder = settings.value("vscpHomeFolder", "/var/lib/vscp").toString();
-#endif
-  fprintf(stderr, "VSCP home folder: %s\n", m_vscpHomeFolder.toStdString().c_str());
+  // Read in configuration file
+  try {
+    std::ifstream ifs(m_configFile.toStdString());
+    j = json::parse(ifs);
+  }
+  catch (...) {
+    QString err = QString(tr("The VSCP works configuration file is not valid.  [%0]")).arg(m_configFile);
+    fprintf(stderr, "%s", err.toStdString().c_str());
+    return false;
+  }
 
   // System numerical base
   // ---------------------
-  m_base = static_cast<numerical_base>(settings.value("numericBase", "0").toInt());
+  if (j.contains("numericBase") && j["numericBase"].is_number()) {
+    m_base = static_cast<numerical_base>(j["numericBase"].get<int>());
+  }
 
   // Preferred language
-  m_preferredLanguage = settings.value("PreferredLanguage", "en").toString().toStdString();
+  if (j.contains("PreferredLanguage") && j["PreferredLanguage"].is_string()) {
+    m_preferredLanguage = j["PreferredLanguage"].get<std::string>();
+  }
 
-  m_bEnableDarkTheme = settings.value("bDarkTheme", true).toBool();
-  m_bAskBeforeDelete = settings.value("bAskBeforeDelete", true).toBool();
-  m_bSaveAlwaysJSON  = settings.value("bSaveAlwaysJson", true).toBool();
+  if (j.contains("bDarkTheme") && j["bDarkTheme"].is_boolean()) {
+    m_bEnableDarkTheme = j["bDarkTheme"].get<bool>();
+  }
+
+  if (j.contains("bAskBeforeDelete") && j["bAskBeforeDelete"].is_boolean()) {
+    m_bAskBeforeDelete = j["bAskBeforeDelete"].get<bool>();
+  }
+
+  if (j.contains("bSaveAlwaysJson") && j["bSaveAlwaysJson"].is_boolean()) {
+    m_bSaveAlwaysJSON = j["bSaveAlwaysJson"].get<bool>();
+  }
 
   // * * * Logging * * *
   m_bEnableFileLog = true;
-  int level        = settings.value("fileLogLevel", 4).toInt(); // Default: 4 == "information";
-  switch (level) {
-    case 0:
-      m_fileLogLevel = spdlog::level::trace;
-      break;
-    case 1:
-      m_fileLogLevel = spdlog::level::debug;
-      break;
-    default:
-    case 2:
-      m_fileLogLevel = spdlog::level::info;
-      break;
-    case 3:
-      m_fileLogLevel = spdlog::level::warn;
-      break;
-    case 4:
-      m_fileLogLevel = spdlog::level::err;
-      break;
-    case 5:
-      m_fileLogLevel = spdlog::level::critical;
-      break;
-    case 6:
-      m_fileLogLevel   = spdlog::level::off;
-      m_bEnableFileLog = false;
-      break;
-  };
-  m_fileLogPattern  = settings.value("fileLogPattern", "%c - [%^%l%$] %v").toString().toStdString();
-  m_fileLogPath     = settings.value("fileLogPath", ".local/share/VSCP/vscpworks+/logs/vscpworks.log").toString().toStdString();
-  m_maxFileLogSize  = settings.value("fileLogMaxSize", 5 * 1024 * 1024).toInt();
-  m_maxFileLogFiles = settings.value("fileLogMaxFiles", 10).toInt();
+  if (j.contains("fileLogLevel") && j["fileLogLevel"].is_number()) {
+    int level = j["fileLogLevel"].get<int>();
+    switch (level) {
+      case 0:
+        m_fileLogLevel = spdlog::level::trace;
+        break;
+      case 1:
+        m_fileLogLevel = spdlog::level::debug;
+        break;
+      default:
+      case 2:
+        m_fileLogLevel = spdlog::level::info;
+        break;
+      case 3:
+        m_fileLogLevel = spdlog::level::warn;
+        break;
+      case 4:
+        m_fileLogLevel = spdlog::level::err;
+        break;
+      case 5:
+        m_fileLogLevel = spdlog::level::critical;
+        break;
+      case 6:
+        m_fileLogLevel   = spdlog::level::off;
+        m_bEnableFileLog = false;
+        break;
+    }
+  }
+
+  if (j.contains("fileLogPattern") && j["fileLogPattern"].is_string()) {
+    m_fileLogPattern = j["fileLogPattern"].get<std::string>();
+  }
+
+  if (j.contains("fileLogPath") && j["fileLogPath"].is_string()) {
+    m_fileLogPath = j["fileLogPath"].get<std::string>();
+  }
+
+  if (j.contains("fileLogMaxSize") && j["fileLogMaxSize"].is_number()) {
+    m_maxFileLogSize = j["fileLogMaxSize"].get<uint32_t>();
+  }
+
+  if (j.contains("fileLogMaxFiles") && j["fileLogMaxFiles"].is_number()) {
+    m_maxFileLogFiles = j["fileLogMaxFiles"].get<uint16_t>();
+  }
 
   // console log level
   m_bEnableConsoleLog = true;
-  level               = settings.value("consoleLogLevel", 4).toInt(); // Default: 4 == "information";
-  switch (level) {
-    case 0:
-      m_consoleLogLevel = spdlog::level::trace;
-      break;
-    case 1:
-      m_consoleLogLevel = spdlog::level::debug;
-      break;
-    default:
-    case 2:
-      m_consoleLogLevel = spdlog::level::info;
-      break;
-    case 3:
-      m_consoleLogLevel = spdlog::level::warn;
-      break;
-    case 4:
-      m_consoleLogLevel = spdlog::level::err;
-      break;
-    case 5:
-      m_consoleLogLevel = spdlog::level::critical;
-      break;
-    case 6:
-      m_consoleLogLevel   = spdlog::level::off;
-      m_bEnableConsoleLog = false;
-      break;
-  };
+  if (j.contains("consoleLogLevel") && j["consoleLogLevel"].is_number()) {
+    int level = j["consoleLogLevel"].get<int>();
+    switch (level) {
+      case 0:
+        m_consoleLogLevel = spdlog::level::trace;
+        break;
+      case 1:
+        m_consoleLogLevel = spdlog::level::debug;
+        break;
+      default:
+      case 2:
+        m_consoleLogLevel = spdlog::level::info;
+        break;
+      case 3:
+        m_consoleLogLevel = spdlog::level::warn;
+        break;
+      case 4:
+        m_consoleLogLevel = spdlog::level::err;
+        break;
+      case 5:
+        m_consoleLogLevel = spdlog::level::critical;
+        break;
+      case 6:
+        m_consoleLogLevel   = spdlog::level::off;
+        m_bEnableConsoleLog = false;
+        break;
+    }
+  }
 
-  m_consoleLogPattern = settings.value("consoleLogPattern", "%c [%^%l%$] %v").toString().toStdString();
+  if (j.contains("consoleLogPattern") && j["consoleLogPattern"].is_string()) {
+    m_consoleLogPattern = j["consoleLogPattern"].get<std::string>();
+  }
 
   // * * * Session * * *
 
-  m_session_maxEvents          = settings.value("maxSessionEvents", -1).toInt();
-  m_session_timeout            = settings.value("sessionTimeout", "1000").toUInt();
-  m_session_ClassDisplayFormat = static_cast<CFrmSession::classDisplayFormat>(settings.value("sessionClassDisplayFormat",
-                                                                                             static_cast<int>(CFrmSession::classDisplayFormat::symbolic))
-                                                                                .toInt());
-  m_session_TypeDisplayFormat  = static_cast<CFrmSession::typeDisplayFormat>(settings.value("sessionTypeDisplayFormat",
-                                                                                           static_cast<int>(CFrmSession::typeDisplayFormat::symbolic))
-                                                                              .toInt());
-  m_session_GuidDisplayFormat  = static_cast<CFrmSession::guidDisplayFormat>(settings.value("sessionGuidDisplayFormat",
-                                                                                           static_cast<int>(CFrmSession::guidDisplayFormat::guid))
-                                                                              .toInt());
-  m_session_bAutoConnect       = settings.value("sessionAutoConnect", true).toBool();
-  m_session_bShowFullTypeToken = settings.value("sessionShowFullTypeToken", true).toBool();
-  m_session_bAutoSaveTxRows    = settings.value("sessionAutoSaveTxRows", true).toBool();
+  if (j.contains("maxSessionEvents") && j["maxSessionEvents"].is_number()) {
+    m_session_maxEvents = j["maxSessionEvents"].get<int>();
+  }
+
+  if (j.contains("sessionTimeout") && j["sessionTimeout"].is_number()) {
+    m_session_timeout = j["sessionTimeout"].get<uint32_t>();
+  }
+
+  if (j.contains("sessionClassDisplayFormat") && j["sessionClassDisplayFormat"].is_number()) {
+    m_session_ClassDisplayFormat = static_cast<CFrmSession::classDisplayFormat>(j["sessionClassDisplayFormat"].get<int>());
+  }
+
+  if (j.contains("sessionTypeDisplayFormat") && j["sessionTypeDisplayFormat"].is_number()) {
+    m_session_TypeDisplayFormat = static_cast<CFrmSession::typeDisplayFormat>(j["sessionTypeDisplayFormat"].get<int>());
+  }
+
+  if (j.contains("sessionGuidDisplayFormat") && j["sessionGuidDisplayFormat"].is_number()) {
+    m_session_GuidDisplayFormat = static_cast<CFrmSession::guidDisplayFormat>(j["sessionGuidDisplayFormat"].get<int>());
+  }
+
+  if (j.contains("sessionAutoConnect") && j["sessionAutoConnect"].is_boolean()) {
+    m_session_bAutoConnect = j["sessionAutoConnect"].get<bool>();
+  }
+
+  if (j.contains("sessionShowFullTypeToken") && j["sessionShowFullTypeToken"].is_boolean()) {
+    m_session_bShowFullTypeToken = j["sessionShowFullTypeToken"].get<bool>();
+  }
+
+  if (j.contains("sessionAutoSaveTxRows") && j["sessionAutoSaveTxRows"].is_boolean()) {
+    m_session_bAutoSaveTxRows = j["sessionAutoSaveTxRows"].get<bool>();
+  }
 
   // * * * Config * * *
-  m_config_base           = static_cast<numerical_base>(settings.value("configNumericBase", "1").toInt());
-  m_config_bDisableColors = settings.value("configDisableColors", false).toBool();
-  m_config_timeout        = settings.value("configTimeout", "1000").toUInt();
+  if (j.contains("configNumericBase") && j["configNumericBase"].is_number()) {
+    m_config_base = static_cast<numerical_base>(j["configNumericBase"].get<int>());
+  }
+
+  if (j.contains("configDisableColors") && j["configDisableColors"].is_boolean()) {
+    m_config_bDisableColors = j["configDisableColors"].get<bool>();
+  }
+
+  if (j.contains("configTimeout") && j["configTimeout"].is_number()) {
+    m_config_timeout = j["configTimeout"].get<uint32_t>();
+  }
 
   // * * * Firmware * * *
-  m_firmware_devicecode_required = settings.value("firmwareDeviceCodeRequired", true).toBool();
+  if (j.contains("firmwareDeviceCodeRequired") && j["firmwareDeviceCodeRequired"].is_boolean()) {
+    m_firmware_devicecode_required = j["firmwareDeviceCodeRequired"].get<bool>();
+  }
 
   // VSCP event database last load date/time
   // ---------------------------------------
-  m_lastEventDbLoadDateTime = settings.value("last-eventdb-download", "1970-01-01T00:00:00Z").toDateTime();
+  if (j.contains("last-eventdb-download") && j["last-eventdb-download"].is_number()) {
+    m_lastEventDbLoadDateTime = QDateTime::fromMSecsSinceEpoch(j["last-eventdb-download"].get<uint64_t>());
+  }
 
   // * * *  Read in defined connections  * * *
   // Note!!! Se notes in save
 
-  int size = settings.beginReadArray("hosts");
-  for (int i = 0; i < size; ++i) {
-    settings.setArrayIndex(i);
-    QString strJson = settings.value("connection").toString();
-
-    QJsonObject conn;
-    QJsonDocument doc = QJsonDocument::fromJson(strJson.toUtf8());
-    if (!doc.isNull()) {
-      if (doc.isObject()) {
-        conn = doc.object();
-        addConnection(conn);
-      }
-      else {
-        qDebug() << "Connection document is not an object";
-      }
-    }
-    else {
-      qDebug() << "Invalid JSON for connection object\n";
+  if (j.contains("connections") && j["connections"].is_array()) {
+    json conn_array = j["connections"];
+    for (json::iterator it = conn_array.begin(); it != conn_array.end(); ++it) {
+      addConnection(*it, false);
     }
   }
-  settings.endArray();
+
+  // VSCP Home folder
+  // ----------------
+
+#ifdef WIN32
+  if (j.contains("vscpHomeFolder") && j["vscpHomeFolder"].is_string()) {
+    m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>();
+  }
+  else {
+    m_vscpHomeFolder = settings.value("vscpHomeFolder", "c:/program files/vscp").toString();
+  }
+#else
+  if (j.contains("vscpHomeFolder") && j["vscpHomeFolder"].is_string()) {
+    m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>().c_str();
+  }
+  else {
+    m_vscpHomeFolder = "/var/lib/vscp";
+  }
+#endif
+  fprintf(stderr, "VSCP home folder: %s\n", m_vscpHomeFolder.toStdString().c_str());
+
+  // Main window dimensions
+  if (j.contains("mainwindow-dimensions") && j["mainwindow-dimensions"].is_array()) {
+    json dim = j["mainwindow-dimensions"];
+    if (dim.size() == 4) {
+      m_mainWindowRect = QRect(dim[0].get<int>(),
+                               dim[1].get<int>(),
+                               dim[2].get<int>(),
+                               dim[3].get<int>());
+    }
+  }
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -469,17 +556,7 @@ vscpworks::writeSettings()
   json j, jj;
   json conn_array = json::array();
 
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-
   // General settings
-  settings.setValue("vscpHomeFolder", m_vscpHomeFolder);
-  settings.setValue("numericBase", QString::number(static_cast<int>(m_base)));
-  settings.setValue("PreferredLanguage", m_preferredLanguage.c_str());
-  settings.setValue("bDarkTheme", m_bEnableDarkTheme);
-  settings.setValue("bAskBeforeDelete", m_bAskBeforeDelete);
-  settings.setValue("bSaveAlwaysJson", m_bSaveAlwaysJSON);
-  settings.setValue("last-eventdb-download", m_lastEventDbLoadDateTime);
-
   j["vscpHomeFolder"]        = m_vscpHomeFolder.toStdString();
   j["numericBase"]           = m_base;
   j["PreferredLanguage"]     = m_preferredLanguage;
@@ -515,12 +592,6 @@ vscpworks::writeSettings()
       break;
   };
 
-  settings.setValue("fileLogLevel", level);
-  settings.setValue("fileLogPattern", QString::fromStdString(m_fileLogPattern));
-  settings.setValue("fileLogPath", QString::fromStdString(m_fileLogPath));
-  settings.setValue("fileLogMaxSize", m_maxFileLogSize);
-  settings.setValue("fileLogMaxFiles", m_maxFileLogFiles);
-
   j["fileLogLevel"]    = level;
   j["fileLogPath"]     = m_fileLogPath;
   j["fileLogPattern"]  = m_fileLogPattern;
@@ -553,25 +624,10 @@ vscpworks::writeSettings()
       break;
   };
 
-  settings.setValue("consoleLogLevel", level);
-  settings.setValue("consoleLogPattern", QString::fromStdString(m_consoleLogPattern));
-
   j["consoleLogLevel"]   = level;
   j["consoleLogPattern"] = m_consoleLogPattern;
 
   // * * * Session * * *
-
-  settings.setValue("sessionTimeout", m_session_timeout);
-  settings.setValue("maxSessionEvents", m_session_maxEvents);
-
-  settings.setValue("sessionClassDisplayFormat", static_cast<int>(m_session_ClassDisplayFormat));
-  settings.setValue("sessionTypeDisplayFormat", static_cast<int>(m_session_TypeDisplayFormat));
-  settings.setValue("sessionGuidDisplayFormat", static_cast<int>(m_session_GuidDisplayFormat));
-
-  settings.setValue("sessionAutoConnect", m_session_bAutoConnect);
-  settings.setValue("sessionShowFullTypeToken", m_session_bShowFullTypeToken);
-  settings.setValue("sessionAutoSaveTxRows", m_session_bAutoSaveTxRows);
-
   j["sessionTimeout"]            = m_session_timeout;
   j["maxSessionEvents"]          = m_session_maxEvents;
   j["sessionClassDisplayFormat"] = static_cast<int>(m_session_ClassDisplayFormat);
@@ -582,86 +638,37 @@ vscpworks::writeSettings()
   j["sessionAutoSaveTxRows"]     = m_session_bAutoSaveTxRows;
 
   // * * * Config * * *
-  settings.setValue("configNumericBase", static_cast<int>(m_config_base));
-  settings.setValue("configDisableColors", m_config_bDisableColors);
-  settings.setValue("configTimeout", m_config_timeout);
-
   j["configNumericBase"]   = static_cast<int>(m_config_base);
   j["configDisableColors"] = m_config_bDisableColors;
   j["configTimeout"]       = m_config_timeout;
 
   // * * * Firmware * * *
-  settings.setValue("firmwareDeviceCodeRequired", m_firmware_devicecode_required);
-
   j["firmwareDeviceCodeRequired"] = m_firmware_devicecode_required;
 
-  QMap<QString, QJsonObject>::const_iterator it = m_mapConn.constBegin();
+  QMap<std::string, json>::const_iterator it = m_mapConn.constBegin();
   while (it != m_mapConn.constEnd()) {
-    QJsonDocument doc(it.value());
-    QString strJson(doc.toJson(QJsonDocument::Compact));
-    // qDebug() << it.key() << ": " << it.value() << ":" << strJson;
+    // jj = json::parse((*it).toStdString());
+    conn_array.push_back(it.value());
     it++;
-
-    jj = json::parse(strJson.toStdString());
-    conn_array.push_back(jj);
-    // printf("%s\n",strJson.toStdString().c_str());
   }
 
   j["connections"] = conn_array;
 
-  writeConnections();
-
-  std::cout << j.dump(4);
-
-  std::ofstream o("/home/akhe/.config/VSCP/vscpworks+_config.json");
-  o << std::setw(4) << j << std::endl;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// writeConnections
-//
-
-void
-vscpworks::writeConnections(void)
-{
-  json j;
-  json conn_array = json::array();
-
-  QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
-
-  // Remove old entries
-  int size = settings.beginReadArray("hosts");
-  for (auto i = 0; i < size; i++) {
-    settings.setArrayIndex(i);
-    settings.remove("connection");
+  // Main window dimensions
+  {
+    json dim = json::array();
+    dim.push_back(m_mainWindowRect.x());
+    dim.push_back(m_mainWindowRect.y());
+    dim.push_back(m_mainWindowRect.width());
+    dim.push_back(m_mainWindowRect.height());
+    j["mainwindow-dimensions"] = dim;
   }
-  settings.endArray();
 
-  // Connections
-  settings.beginWriteArray("hosts");
-  int i = 0;
+  //std::cout << j.dump(4);
+  spdlog::trace("{0}",j.dump(4).c_str());
 
-  /*
-      Note!
-      We need to convert QJsonObject into string due to a bug
-      that prevent saving/loading in some cases.
-  */
-  QMap<QString, QJsonObject>::const_iterator it = m_mapConn.constBegin();
-  while (it != m_mapConn.constEnd()) {
-    settings.setArrayIndex(i++);
-    QJsonDocument doc(it.value());
-    QString strJson(doc.toJson(QJsonDocument::Compact));
-    // qDebug() << it.key() << ": " << it.value() << ":" << strJson;
-    settings.setValue("connection", strJson);
-    it++;
-
-    j = json::parse(strJson.toStdString());
-    conn_array.push_back(j);
-    // printf("%s\n",strJson.toStdString().c_str());
-  }
-  settings.endArray();
-
-  std::cout << conn_array.dump(4);
+  std::ofstream of(m_configFile.toStdString());
+  of << std::setw(4) << j << std::endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -669,19 +676,34 @@ vscpworks::writeConnections(void)
 //
 
 bool
-vscpworks::addConnection(QJsonObject& conn, bool bSave)
+vscpworks::addConnection(json& conn, bool bSave)
 {
+  //std::cout << conn.dump(4) << std::endl;
+  spdlog::trace(conn.dump(4).c_str());
+
   // If no UUID is set, create one
-  if (!conn["uuid"].toString().trimmed().length()) {
-    conn["uuid"] = QUuid::createUuid().toString();
+  QString struuid;
+  if (conn.contains("uuid") && conn["uuid"].is_string()) {
+    // Make sure it's not empty
+    struuid = conn["uuid"].get<std::string>().c_str();
+    if (!struuid.trimmed().length()) {
+      // Create a new UUID
+      conn["uuid"] = QUuid::createUuid().toString().toStdString();
+    }
+  }
+  else {
+    // Create a new UUID
+    conn["uuid"] = QUuid::createUuid().toString().toStdString();
   }
 
+  struuid = conn["uuid"].get<std::string>().c_str();
+
   // Add configuration item to map
-  m_mapConn[conn["uuid"].toString().trimmed()] = conn;
+  m_mapConn[struuid.toStdString()] = conn;
 
   // Save settings if requested to do so
   if (bSave)
-    writeConnections();
+    writeSettings();
 
   return true;
 }
@@ -693,12 +715,12 @@ vscpworks::addConnection(QJsonObject& conn, bool bSave)
 bool
 vscpworks::removeConnection(const QString& uuid, bool bSave)
 {
-  QMap<QString, QJsonObject>::iterator it;
-  int n = m_mapConn.remove(uuid);
+  QMap<std::string, json>::iterator it;
+  int n = m_mapConn.remove(uuid.toStdString());
 
   // Save settings if requested to do so
   if (bSave)
-    writeConnections();
+    writeSettings();
 
   return true;
 }

@@ -222,7 +222,7 @@ class CFrmNodeConfig : public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit CFrmNodeConfig(QWidget* parent = nullptr, QJsonObject* pconnObj = nullptr);
+  explicit CFrmNodeConfig(QWidget* parent = nullptr, json* pconnObj = nullptr);
   virtual ~CFrmNodeConfig();
 
   /*!
@@ -834,7 +834,7 @@ private:
   CVscpClient::connType m_vscpConnType;
 
   /// Configuration data for the session
-  QJsonObject m_connObject;
+  json m_connObject;
 
   /*!
     Can be set to true when the system updates a register cell. Prevents

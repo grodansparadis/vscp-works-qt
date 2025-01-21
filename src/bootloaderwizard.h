@@ -38,7 +38,6 @@
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
-#include <QJsonObject>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -395,7 +394,7 @@ class CBootLoadWizard : public QWizard {
   Q_OBJECT
 
 public:
-  explicit CBootLoadWizard(QWidget* parent, QJsonObject* pconn);
+  explicit CBootLoadWizard(QWidget* parent, json* pconn);
   ~CBootLoadWizard();
 
   enum { Page_Intro,
@@ -422,7 +421,7 @@ private:
   CVscpClient::connType m_vscpConnType;
 
   /// Configuration data for the session
-  QJsonObject m_connObject;
+  json m_connObject;
 
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;

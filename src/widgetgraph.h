@@ -66,7 +66,7 @@ private:
     CVscpClient::connType m_vscpConnType;
 
     /// Configuration data for the session
-    QJsonObject m_connObject;
+    json m_connObject;
 
     /// A pointer to a VSCP Client 
     CVscpClient *m_vscpClient;

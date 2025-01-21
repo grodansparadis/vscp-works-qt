@@ -41,7 +41,12 @@ main(int argc, char* argv[])
                                            QCoreApplication::translate("main", "Set <directory> as home."),
                                            QCoreApplication::translate("main", "directory"));
   parser.process(app);
-  app.loadSettings();
+  
+  // Load settings
+  if (!app.loadSettings()) {
+    fprintf(stderr, "Application data could not be loaded. Aborting!\n");
+    return EXIT_FAILURE;
+  }
 
   fprintf(stderr, "Application data loaded\n");
 

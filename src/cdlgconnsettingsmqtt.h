@@ -33,99 +33,105 @@
 #include "vscphelper.h"
 
 #include <QDialog>
-#include <QJsonObject>
 #include <QListWidgetItem>
 
 // ----------------------------------------------------------------------------
 
 class SubscribeItem : public QListWidgetItem {
 
-  public:
-    SubscribeItem(const QString& topic, enumMqttMsgFormat fmt = autofmt, int qos = 0);
-    ~SubscribeItem();
+public:
+  SubscribeItem(const QString& topic, enumMqttMsgFormat fmt = autofmt, int qos = 0, uint32_t v5_options = 0);
+  ~SubscribeItem();
 
-    /// Getters/setters for topic
-    QString getTopic(void) { return m_topic; };
-    void setTopic(const QString& topic)
-    {
-        m_topic = topic;
-        setText(topic);
-    };
+  /// Getters/setters for topic
+  QString getTopic(void) { return m_topic; };
+  void setTopic(const QString& topic)
+  {
+    m_topic = topic;
+    setText(topic);
+  };
 
-    /// Getters/setters for format
-    enumMqttMsgFormat getFormat(void) { return m_format; };
-    int getFormatInt(void) { return static_cast<int>(m_format); };
-    void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
-    void setFormatFromInt(int fmt)
-    {
-        m_format = static_cast<enumMqttMsgFormat>(fmt);
-    };
+  /// Getters/setters for format
+  enumMqttMsgFormat getFormat(void) { return m_format; };
+  int getFormatInt(void) { return static_cast<int>(m_format); };
+  void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
+  void setFormatFromInt(int fmt)
+  {
+    m_format = static_cast<enumMqttMsgFormat>(fmt);
+  };
 
-    /// Getters/setters for qos
-    int getQos(void) { return m_qos; };
-    void setQos(int qos) { m_qos = qos; };
+  /// Getters/setters for qos
+  int getQos(void) { return m_qos; };
+  void setQos(int qos) { m_qos = qos; };
 
-  private:
-    /// True if item is active
-    bool m_bActive;
+  /// Getters/setters for v5 options
+  uint32_t getV5Options(void) { return m_v5_options; };
+  void setV5Options(uint32_t v5_options) { m_v5_options = v5_options; };
 
-    /// Subscribe topic
-    QString m_topic;
+private:
+  /// True if item is active
+  bool m_bActive;
 
-    /// Subscribe format
-    enumMqttMsgFormat m_format;
+  /// Subscribe topic
+  QString m_topic;
 
-    /// Quality of service
-    int m_qos;
+  /// Subscribe format
+  enumMqttMsgFormat m_format;
+
+  /// Quality of service
+  int m_qos;
+
+  /// Version 5 options
+  uint32_t m_v5_options;
 };
 
 // ----------------------------------------------------------------------------
 
 class PublishItem : public QListWidgetItem {
 
-  public:
-    PublishItem(const QString& topic,
-                enumMqttMsgFormat fmt = jsonfmt,
-                int qos               = 0,
-                bool bretain          = false);
-    ~PublishItem();
+public:
+  PublishItem(const QString& topic,
+              enumMqttMsgFormat fmt = jsonfmt,
+              int qos               = 0,
+              bool bretain          = false);
+  ~PublishItem();
 
-    /// Getters/setters for topic
-    QString getTopic(void) { return m_topic; };
-    void setTopic(const QString& topic);
+  /// Getters/setters for topic
+  QString getTopic(void) { return m_topic; };
+  void setTopic(const QString& topic);
 
-    /// Getters/setters for qos
-    int getQos(void) { return m_qos; };
-    void setQos(int qos) { m_qos = qos; };
+  /// Getters/setters for qos
+  int getQos(void) { return m_qos; };
+  void setQos(int qos) { m_qos = qos; };
 
-    /// Getters/setters for retain
-    bool getRetain(void) { return m_bRetain; };
-    void setRetain(bool bretain) { m_bRetain = bretain; };
+  /// Getters/setters for retain
+  bool getRetain(void) { return m_bRetain; };
+  void setRetain(bool bretain) { m_bRetain = bretain; };
 
-    /// Getters/setters for format
-    enumMqttMsgFormat getFormat(void) { return m_format; };
-    int getFormatInt(void) { return static_cast<int>(m_format); };
-    void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
-    void setFormatFromInt(int fmt)
-    {
-        m_format = static_cast<enumMqttMsgFormat>(fmt);
-    };
+  /// Getters/setters for format
+  enumMqttMsgFormat getFormat(void) { return m_format; };
+  int getFormatInt(void) { return static_cast<int>(m_format); };
+  void setFormat(enumMqttMsgFormat fmt) { m_format = fmt; };
+  void setFormatFromInt(int fmt)
+  {
+    m_format = static_cast<enumMqttMsgFormat>(fmt);
+  };
 
-  private:
-    /// True if item is active
-    bool m_bActive;
-    
-    /// Quality of service
-    int m_qos;
+private:
+  /// True if item is active
+  bool m_bActive;
 
-    /// Retain message
-    bool m_bRetain;
+  /// Quality of service
+  int m_qos;
 
-    // Publish topic
-    QString m_topic;
+  /// Retain message
+  bool m_bRetain;
 
-    // Publishing format
-    enumMqttMsgFormat m_format;
+  // Publish topic
+  QString m_topic;
+
+  // Publishing format
+  enumMqttMsgFormat m_format;
 };
 
 // ----------------------------------------------------------------------------
@@ -135,209 +141,209 @@ class CDlgConnSettingsMqtt;
 }
 
 class CDlgConnSettingsMqtt : public QDialog {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    explicit CDlgConnSettingsMqtt(QWidget* parent = nullptr);
-    ~CDlgConnSettingsMqtt();
+public:
+  explicit CDlgConnSettingsMqtt(QWidget* parent = nullptr);
+  ~CDlgConnSettingsMqtt();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Setters/getters for name/description
-    */
-    QString getName(void);
-    void setName(const QString& str);
+  /*!
+      Setters/getters for name/description
+  */
+  QString getName(void);
+  void setName(const QString& str);
 
-    /*!
-        Setters/getters for host/broker
-    */
-    QString getBroker(void);
-    void setBroker(const QString& str);
+  /*!
+      Setters/getters for host/broker
+  */
+  QString getBroker(void);
+  void setBroker(const QString& str);
 
-    /*!
-        Setters/getters for port
-    */
-    QString getClientId(void);
-    void setClientId(const QString& clientid);
+  /*!
+      Setters/getters for port
+  */
+  QString getClientId(void);
+  void setClientId(const QString& clientid);
 
-    /*!
-        Setters/getters for Full level II
-    */
-    bool getFullL2(void);
-    void setFullL2(bool l2);
-    
-    /*!
-        Setters/getters for user
-    */
-    QString getUser(void);
-    void setUser(const QString& str);
+  /*!
+      Setters/getters for Full level II
+  */
+  bool getFullL2(void);
+  void setFullL2(bool l2);
 
-    /*!
-        Setters/getters for password
-    */
-    QString getPassword(void);
-    void setPassword(const QString& str);
-    /*!
-        Setters/getters for connection timeout
-    */
-    uint32_t getConnectionTimeout(void);
-    void setConnectionTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for user
+  */
+  QString getUser(void);
+  void setUser(const QString& str);
 
-    /*!
-        Setters/getters for response timeout
-    */
-    uint32_t getResponseTimeout(void);
-    void setResponseTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for password
+  */
+  QString getPassword(void);
+  void setPassword(const QString& str);
+  /*!
+      Setters/getters for connection timeout
+  */
+  uint32_t getConnectionTimeout(void);
+  void setConnectionTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for keepalive period
-    */
-    uint32_t getKeepAlive(void);
-    void setKeepAlive(uint32_t timeout);
+  /*!
+      Setters/getters for response timeout
+  */
+  uint32_t getResponseTimeout(void);
+  void setResponseTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for clean session
-    */
-    bool isCleanSessionEnabled(void);
-    void enableCleanSession(bool bClearSession);
+  /*!
+      Setters/getters for keepalive period
+  */
+  uint32_t getKeepAlive(void);
+  void setKeepAlive(uint32_t timeout);
 
-    /*!
-        Setters/getters for extended security
-    */
-    bool isExtendedSecurityEnabled(void);
-    void enableExtendedSecurity(bool bExtendedSecurity);
+  /*!
+      Setters/getters for clean session
+  */
+  bool isCleanSessionEnabled(void);
+  void enableCleanSession(bool bClearSession);
 
-    /*!
-        Setters/getters for TLS enable
-    */
-    bool isTLSEnabled(void);
-    void enableTLS(bool bTLS);
+  /*!
+      Setters/getters for extended security
+  */
+  bool isExtendedSecurityEnabled(void);
+  void enableExtendedSecurity(bool bExtendedSecurity);
 
-    /*!
-        Setters/getters for TLS enable
-    */
-    bool isVerifyPeerEnabled(void);
-    void enableVerifyPeer(bool bverifypeer);
+  /*!
+      Setters/getters for TLS enable
+  */
+  bool isTLSEnabled(void);
+  void enableTLS(bool bTLS);
 
-    /*!
-        Setters/getters for TLS CA file
-    */
-    QString getCaFile(void);
-    void setCaFile(const QString& str);
+  /*!
+      Setters/getters for TLS enable
+  */
+  bool isVerifyPeerEnabled(void);
+  void enableVerifyPeer(bool bverifypeer);
 
-    /*!
-        Setters/getters for TLS CA path
-    */
-    QString getCaPath(void);
-    void setCaPath(const QString& str);
+  /*!
+      Setters/getters for TLS CA file
+  */
+  QString getCaFile(void);
+  void setCaFile(const QString& str);
 
-    /*!
-        Setters/getters for TLS Cert file
-    */
-    QString getCertFile(void);
-    void setCertFile(const QString& str);
+  /*!
+      Setters/getters for TLS CA path
+  */
+  QString getCaPath(void);
+  void setCaPath(const QString& str);
 
-    /*!
-        Setters/getters for TLS key file
-    */
-    QString getKeyFile(void);
-    void setKeyFile(const QString& str);
+  /*!
+      Setters/getters for TLS Cert file
+  */
+  QString getCertFile(void);
+  void setCertFile(const QString& str);
 
-    /*!
-        Setters/getters for TLS pw key file
-    */
-    QString getPwKeyFile(void);
-    void setPwKeyFile(const QString& str);
+  /*!
+      Setters/getters for TLS key file
+  */
+  QString getKeyFile(void);
+  void setKeyFile(const QString& str);
 
-    /*!
-        Setters/getters for JSON config object
-    */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject* pobj);
+  /*!
+      Setters/getters for TLS pw key file
+  */
+  QString getPwKeyFile(void);
+  void setPwKeyFile(const QString& str);
 
-  private slots:
+  /*!
+      Setters/getters for JSON config object
+  */
+  json getJson(void);
+  void setJson(const json* pobj);
 
-    /// Add subscription
-    void onAddSubscription(void);
+private slots:
 
-    /// Edit subscription
-    void onEditSubscription(void);
+  /// Add subscription
+  void onAddSubscription(void);
 
-    /// Clone subscription
-    void onCloneSubscription(void);
+  /// Edit subscription
+  void onEditSubscription(void);
 
-    /// Delete subscription
-    void onDeleteSubscription(void);
+  /// Clone subscription
+  void onCloneSubscription(void);
 
-    /// Add publish
-    void onAddPublish(void);
+  /// Delete subscription
+  void onDeleteSubscription(void);
 
-    /// Edit publish
-    void onEditPublish(void);
+  /// Add publish
+  void onAddPublish(void);
 
-    /// Clone publish
-    void onClonePublish(void);
+  /// Edit publish
+  void onEditPublish(void);
 
-    /// Delete publish
-    void onDeletePublish(void);
+  /// Clone publish
+  void onClonePublish(void);
 
-    /// Test connection button clicked
-    void onTestConnection(void);
+  /// Delete publish
+  void onDeletePublish(void);
 
-    /// TLS settings button clicked
-    void onTLSSettings(void);
+  /// Test connection button clicked
+  void onTestConnection(void);
 
-    /// Get help with settings
-    void onGetHelp(void);
+  /// TLS settings button clicked
+  void onTLSSettings(void);
 
-    /// Subscription context menu
-    void onSubscribeContextMenu(const QPoint& pos);
+  /// Get help with settings
+  void onGetHelp(void);
 
-    /// Publish context menu
-    void onPublishContextMenu(const QPoint& pos);
+  /// Subscription context menu
+  void onSubscribeContextMenu(const QPoint& pos);
 
-  private:
-    Ui::CDlgConnSettingsMqtt* ui;
+  /// Publish context menu
+  void onPublishContextMenu(const QPoint& pos);
 
-    /// TLS flag (secure transport if enabled)
-    bool m_bTLS;
+private:
+  Ui::CDlgConnSettingsMqtt* ui;
 
-    /*!
-        the server certificate will be verified and the connection
-        aborted if the verification fails.
-    */
-    bool m_bVerifyPeer;
+  /// TLS flag (secure transport if enabled)
+  bool m_bTLS;
 
-    /// CA file
-    QString m_cafile;
+  /*!
+      the server certificate will be verified and the connection
+      aborted if the verification fails.
+  */
+  bool m_bVerifyPeer;
 
-    /// Path to CA file (can hold filename also)
-    QString m_capath;
+  /// CA file
+  QString m_cafile;
 
-    /// Path to CERT file
-    QString m_certfile;
+  /// Path to CA file (can hold filename also)
+  QString m_capath;
 
-    /// Key file
-    QString m_keyfile;
+  /// Path to CERT file
+  QString m_certfile;
 
-    /// Password keyfile
-    QString m_pwkeyfile;
+  /// Key file
+  QString m_keyfile;
 
-    /*!
-        This variable holds the connection type that
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
+  /// Password keyfile
+  QString m_pwkeyfile;
 
-    // JSON configuration object
-    QJsonObject m_jsonConfig;
+  /*!
+      This variable holds the connection type that
+      the used select
+  */
+  CVscpClient::connType m_selected_type;
 
-    /// VSCP MQTT client
-    vscpClientMqtt m_client;
+  // JSON configuration object
+  json m_jsonConfig;
+
+  /// VSCP MQTT client
+  vscpClientMqtt m_client;
 };
 
 #endif // CDLGCONNSETTINGSMQTT_H

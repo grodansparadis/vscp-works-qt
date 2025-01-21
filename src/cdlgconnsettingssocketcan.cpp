@@ -43,7 +43,6 @@
 #include "ui_cdlgconnsettingssocketcan.h"
 
 #include <QMessageBox>
-#include <QJsonArray>
 #include <QMenu>
 
 #include <spdlog/async.h>
@@ -238,25 +237,25 @@ CDlgConnSettingsSocketCan::setResponseTimout(uint32_t timeout)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsSocketCan::getJson(void)
 {
   m_jsonConfig["type"]             = static_cast<int>(CVscpClient::connType::SOCKETCAN);
-  m_jsonConfig["name"]             = getName();
-  m_jsonConfig["device"]           = getDevice();
+  m_jsonConfig["name"]             = getName().toStdString();
+  m_jsonConfig["device"]           = getDevice().toStdString();
   m_jsonConfig["flags"]            = (int)getFlags();
   m_jsonConfig["response-timeout"] = (int)getResponseTimeout();
 
-  QJsonArray filterArray;
+  json filterArray = json::array();
 
   for (int i = 0; i < ui->listFilters->count(); ++i) {
     CFilterListItem* item = (CFilterListItem*)ui->listFilters->item(i);
-    QJsonObject obj;
-    obj["name"]    = item->m_name;
+    json obj;
+    obj["name"]    = item->m_name.toStdString();
     obj["filter"]  = (int)item->m_filter;
     obj["mask"]    = (int)item->m_mask;
     obj["binvert"] = item->m_bInvert;
-    filterArray.append(obj);
+    filterArray.push_back(obj);
   }
 
   m_jsonConfig["filters"] = filterArray;
@@ -269,21 +268,30 @@ CDlgConnSettingsSocketCan::getJson(void)
 //
 
 void
-CDlgConnSettingsSocketCan::setJson(const QJsonObject* pobj)
+CDlgConnSettingsSocketCan::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
-  if (!m_jsonConfig["name"].isNull())
-    setName(m_jsonConfig["name"].toString());
-  if (!m_jsonConfig["device"].isNull())
-    setDevice(m_jsonConfig["device"].toString());
-  if (!m_jsonConfig["flags"].isNull())
-    setFlags((uint32_t)(m_jsonConfig["flags"].toInt()));
-  if (!m_jsonConfig["response-timeout"].isNull())
-    setResponseTimout((uint32_t)(m_jsonConfig["response-timeout"].toInt()));
+  if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
+    setName(m_jsonConfig["name"].get<std::string>().c_str());
+  }
 
-  if (m_jsonConfig["filters"].isArray()) {
-    QJsonArray filterArray = m_jsonConfig["filters"].toArray();
+  if (m_jsonConfig.contains("device") && m_jsonConfig["device"].is_string()) {
+    setDevice(m_jsonConfig["device"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("flags") && m_jsonConfig["flags"].is_number()) {
+    setFlags((m_jsonConfig["flags"].get<uint32_t>()));
+  }
+
+  if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {
+    setResponseTimout((m_jsonConfig["response-timeout"].get<uint32_t>()));
+  }
+
+  if (m_jsonConfig.contains("filters") && m_jsonConfig["filters"].is_array()) {
+
+    json filterArray = json::array();
+    filterArray      = m_jsonConfig["filters"];
 
     for (auto v : filterArray) {
 
@@ -292,15 +300,22 @@ CDlgConnSettingsSocketCan::setJson(const QJsonObject* pobj)
       uint32_t mask;
       bool bInvert;
 
-      QJsonObject item = v.toObject();
-      if (!item["name"].isNull())
-        strName = item["name"].toString();
-      if (!item["filter"].isNull())
-        filter = (uint32_t)item["filter"].toInt();
-      if (!item["mask"].isNull())
-        mask = (uint32_t)item["mask"].toInt();
-      if (!item["binvert"].isNull())
-        bInvert = item["binvert"].toBool();
+      json item = v;
+      if (item.contains("name") && item["name"].is_string()) {
+        strName = item["name"].get<std::string>().c_str();
+      }
+
+      if (item.contains("filter") && item["filter"].is_number()) {
+        filter = item["filter"].get<uint32_t>();
+      }
+
+      if (item.contains("mask") && item["mask"].is_number()) {
+        mask = item["mask"].get<uint32_t>();
+      }
+
+      if (item.contains("binvert") && item["binvert"].is_boolean()) {
+        bInvert = item["binvert"].get<bool>();
+      }
 
       ui->listFilters->addItem(new CFilterListItem(strName, filter, mask, bInvert));
     }

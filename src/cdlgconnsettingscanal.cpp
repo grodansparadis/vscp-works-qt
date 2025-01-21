@@ -208,13 +208,13 @@ CDlgConnSettingsCanal::setDataRate(uint32_t datarate)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsCanal::getJson(void)
 {
   m_jsonConfig["type"]     = static_cast<int>(CVscpClient::connType::CANAL);
-  m_jsonConfig["name"]     = getName();
-  m_jsonConfig["path"]     = getPath();
-  m_jsonConfig["config"]   = getConfig();
+  m_jsonConfig["name"]     = getName().toStdString();
+  m_jsonConfig["path"]     = getPath().toStdString();
+  m_jsonConfig["config"]   = getConfig().toStdString();
   m_jsonConfig["flags"]    = (int)getFlags();
   m_jsonConfig["datarate"] = (int)getDataRate();
   return m_jsonConfig;
@@ -225,20 +225,29 @@ CDlgConnSettingsCanal::getJson(void)
 //
 
 void
-CDlgConnSettingsCanal::setJson(const QJsonObject* pobj)
+CDlgConnSettingsCanal::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
-  if (!m_jsonConfig["name"].isNull())
-    setName(m_jsonConfig["name"].toString());
-  if (!m_jsonConfig["path"].isNull())
-    setPath(m_jsonConfig["path"].toString());
-  if (!m_jsonConfig["config"].isNull())
-    setConfig(m_jsonConfig["config"].toString());
-  if (!m_jsonConfig["flags"].isNull())
-    setFlags(uint32_t(m_jsonConfig["flags"].toInt()));
-  if (!m_jsonConfig["datarate"].isNull())
-    setDataRate(m_jsonConfig["datarate"].toInt());
+  if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
+    setName(m_jsonConfig["name"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("path") && m_jsonConfig["path"].is_string()) {
+    setPath(m_jsonConfig["path"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("config") && m_jsonConfig["config"].is_string()) {
+    setConfig(m_jsonConfig["config"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("flags") && m_jsonConfig["flags"].is_number()) {
+    setFlags(uint32_t(m_jsonConfig["flags"].get<uint32_t>()));
+  }
+
+  if (m_jsonConfig.contains("datarate") && m_jsonConfig["datarate"].is_number()) {
+    setDataRate(m_jsonConfig["datarate"].get<uint32_t>());
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

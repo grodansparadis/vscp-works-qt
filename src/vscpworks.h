@@ -54,13 +54,13 @@
 #include <list>
 
 #include <mustache.hpp>
+
 #include <nlohmann/json.hpp>
+// https://github.com/nlohmann/json
+using json = nlohmann::json;
 
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"
-
-// https://github.com/nlohmann/json
-using json = nlohmann::json;
 
 using namespace kainjow::mustache;
 
@@ -122,7 +122,7 @@ public:
     @param conn JSON connection object
     @param bSave Save connections if set to true
   */
-  bool addConnection(QJsonObject& conn, bool bSave = false);
+  bool addConnection(json& conn, bool bSave = false);
 
   /*!
     Remove connection
@@ -134,7 +134,7 @@ public:
   /*!
     Load configuration settings from disk
   */
-  void loadSettings(void);
+  bool loadSettings(void);
 
   /*!
     Save configuration settings to disk
@@ -144,7 +144,7 @@ public:
   /*!
     Save connections to disk
   */
-  void writeConnections(void);
+  //void writeSettings(void);
 
   /*!
     Check the remote event information at
@@ -360,8 +360,8 @@ public:
   // ------------------------------------------------------------------------
 
   /// Folder used for configuration
-  /// Linux: ~/.configure/VSCP/(vscpworks+.conf)
-  QString m_configFolder;
+  /// Linux: ~/.configure/VSCP/(vscpworks+.json)
+  QString m_configFile;
 
   /// Folder for writeable data
   /// Linux: ~/.local/share/vscp/vscpworks+
@@ -500,8 +500,7 @@ public:
   FileDownloader* m_pVersionCtrl;
 
   /// List with defined connections uuid,conf-obj
-  QMap<QString, QJsonObject> m_mapConn;
-  QMap<QString, json> m_map2Conn;
+  QMap<std::string, json> m_mapConn;
 
   /// Mutex protecting vscpClass/vscpType maps
   QMutex m_mutexVscpEventsMaps;
@@ -538,6 +537,11 @@ public:
 
   // List with open childwindows
   std::list<QMainWindow*> m_childWindows;
+
+  // ------------------------------------------------------------------------
+  //                    Windows geometry
+  // ------------------------------------------------------------------------
+  QRect m_mainWindowRect;
 };
 
 #endif

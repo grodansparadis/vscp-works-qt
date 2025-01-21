@@ -44,7 +44,6 @@
 #include "ui_cdlgconnsettingsrawcan.h"
 
 #include <QMessageBox>
-#include <QJsonArray>
 #include <QMenu>
 
 #include <spdlog/async.h>
@@ -217,7 +216,7 @@ CDlgConnSettingsRawCan::setResponseTimout(uint32_t timeout)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsRawCan::getJson(void)
 {
   m_jsonConfig["type"]            = static_cast<int>(CVscpClient::connType::RAWCAN);
@@ -226,11 +225,11 @@ CDlgConnSettingsRawCan::getJson(void)
   m_jsonConfig["flags"]           = (int)getFlags();
   m_jsonConfig["resonse-timeout"] = (int)getResponseTimeout();
 
-  QJsonArray filterArray;
+  json filterArray = json::array();
 
   for (int i = 0; i < ui->listFilters->count(); ++i) {
     CFilterListItem* item = (CFilterListItem*)ui->listFilters->item(i);
-    QJsonObject obj;
+    json obj;
     obj["name"]    = item->m_name;
     obj["filter"]  = (int)item->m_filter;
     obj["mask"]    = (int)item->m_mask;
@@ -248,7 +247,7 @@ CDlgConnSettingsRawCan::getJson(void)
 //
 
 void
-CDlgConnSettingsRawCan::setJson(const QJsonObject* pobj)
+CDlgConnSettingsRawCan::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
@@ -262,7 +261,7 @@ CDlgConnSettingsRawCan::setJson(const QJsonObject* pobj)
     setResponseTimout((uint32_t)(m_jsonConfig["response-timeout"].toInt()));
 
   if (m_jsonConfig["filters"].isArray()) {
-    QJsonArray filterArray = m_jsonConfig["filters"].toArray();
+    json filterArray = m_jsonConfig["filters"];
 
     for (auto v : filterArray) {
 
@@ -271,7 +270,7 @@ CDlgConnSettingsRawCan::setJson(const QJsonObject* pobj)
       uint32_t mask;
       bool bInvert;
 
-      QJsonObject item = v.toObject();
+      json item = v.toObject();
       if (!item["name"].isNull())
         strName = item["name"].toString();
       if (!item["filter"].isNull())

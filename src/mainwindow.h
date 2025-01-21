@@ -38,7 +38,6 @@
 
 #include <QMainWindow>
 #include <QTreeWidgetItem>
-#include <QJsonObject>
 
 #include <list>
 
@@ -76,12 +75,12 @@ public:
         @param client Pointer to communication client
     */
     treeWidgetItemConn(QTreeWidgetItem *topItem, 
-                            const QJsonObject& conn);
+                            const json& conn);
     ~treeWidgetItemConn();
 
     /// Getter/Setter for configuration object
-    QJsonObject *getJson() { return &m_conn; };
-    void setJson(QJsonObject& conn) { m_conn = conn; };
+    json *getJson() { return &m_conn; };
+    void setJson(json& conn) { m_conn = conn; };
 
 private:
 
@@ -89,7 +88,7 @@ private:
         JSON configuration for the
         communication client.
     */
-    QJsonObject m_conn;
+    json m_conn;
     
 };
 
@@ -193,7 +192,7 @@ protected:
         @param client Pointer to communication client
     */
     void addChildItemToConnectionTree(QTreeWidgetItem *topitem,  
-                                        const QJsonObject& conn);
+                                        const json& conn);
 
     /*!
         Fill in loaded connections to the tree
@@ -206,16 +205,12 @@ private:
   void createActions();
   void createStatusBar();
   void readSettings();
-  void writeSettings();
   bool maybeSave();
   bool saveFile(const QString &fileName);
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
-  //QPlainTextEdit *m_textEdit;
-  //QTableWidget *m_connTable;
   QTreeWidget *m_connTreeTable;
-
   QString curFile;    
 
   // Top items in tree control

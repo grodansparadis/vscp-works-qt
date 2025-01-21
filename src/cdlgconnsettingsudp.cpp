@@ -217,17 +217,17 @@ CDlgConnSettingsUdp::setResponseTimeout(uint32_t timeout)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsUdp::getJson(void)
 {
   std::string str;
 
   m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::UDP);
-  m_jsonConfig["name"] = getName();
+  m_jsonConfig["name"] = getName().toStdString().c_str();
   qDebug() << getName();
-  m_jsonConfig["ip"]         = getIp();
+  m_jsonConfig["ip"]         = getIp().toStdString();
   m_jsonConfig["encryption"] = getEncryption();
-  m_jsonConfig["key"]        = getKey();
+  m_jsonConfig["key"]        = getKey().toStdString();
 
   // Filter
   m_jsonConfig["priority-filter"] = m_filter.filter_priority;
@@ -249,57 +249,68 @@ CDlgConnSettingsUdp::getJson(void)
 //
 
 void
-CDlgConnSettingsUdp::setJson(const QJsonObject* pobj)
+CDlgConnSettingsUdp::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
-  if (!m_jsonConfig["name"].isNull())
-    setName(m_jsonConfig["name"].toString());
-  if (!m_jsonConfig["ip"].isNull())
-    setIp(m_jsonConfig["ip"].toString());
-  if (!m_jsonConfig["encryption"].isNull())
-    setEncryption((short)m_jsonConfig["encryption"].toInt());
-  if (!m_jsonConfig["key"].isNull())
-    setKey(m_jsonConfig["key"].toString());
-  if (!m_jsonConfig["connection-timeout"].isNull())
-    setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt());
-  if (!m_jsonConfig["response-timeout"].isNull())
-    setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
+  if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
+    setName(m_jsonConfig["name"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("ip") && m_jsonConfig["ip"].is_string()) {
+    setIp(m_jsonConfig["ip"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("encryption") && m_jsonConfig["encryption"].is_number()) {
+    setEncryption(m_jsonConfig["encryption"].get<short>());
+  }
+
+  if (m_jsonConfig.contains("key") && m_jsonConfig["key"].is_string()) {
+    setKey(m_jsonConfig["key"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
+    setConnectionTimeout(m_jsonConfig["connection-timeout"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {
+    setResponseTimeout(m_jsonConfig["response-timeout"].get<uint32_t>());
+  }
 
   // Get main filter
   memset(&m_filter, 0, sizeof(vscpEventFilter));
-  if (!m_jsonConfig["priority-filter"].isNull()) {
-    m_filter.filter_priority = (uint8_t)m_jsonConfig["priority-filter"].toInt();
+  if (m_jsonConfig.contains("priority-filter") && m_jsonConfig["priority-filter"].is_number()) {
+    m_filter.filter_priority = m_jsonConfig["priority-filter"].get<uint8_t>();
   }
 
-  if (!m_jsonConfig["priority-mask"].isNull()) {
-    m_filter.mask_priority = (uint8_t)m_jsonConfig["priority-mask"].toInt();
+  if (m_jsonConfig.contains("priority-mask") && m_jsonConfig["priority-mask"].is_number()) {
+    m_filter.mask_priority = m_jsonConfig["priority-mask"].get<uint8_t>();
   }
 
-  if (!m_jsonConfig["class-filter"].isNull()) {
-    m_filter.filter_class = (uint16_t)m_jsonConfig["class-filter"].toInt();
+  if (m_jsonConfig.contains("class-filter") && m_jsonConfig["class-filter"].is_number()) {
+    m_filter.filter_class = m_jsonConfig["class-filter"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["class-mask"].isNull()) {
-    m_filter.mask_class = (uint16_t)m_jsonConfig["class-mask"].toInt();
+  if (m_jsonConfig.contains("class-mask") && m_jsonConfig["class-mask"].is_number()) {
+    m_filter.mask_class = m_jsonConfig["class-mask"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["type-filter"].isNull()) {
-    m_filter.filter_type = (uint16_t)m_jsonConfig["type-filter"].toInt();
+  if (m_jsonConfig.contains("type-filter") && m_jsonConfig["type-filter"].is_number()) {
+    m_filter.filter_type = m_jsonConfig["type-filter"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["type-mask"].isNull()) {
-    m_filter.mask_type = (uint16_t)m_jsonConfig["type-mask"].toInt();
+  if (m_jsonConfig.contains("type-mask") && m_jsonConfig["type-mask"].is_number()) {
+    m_filter.mask_type = m_jsonConfig["type-mask"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["guid-filter"].isNull()) {
+  if (m_jsonConfig.contains("guid-filter") && m_jsonConfig["guid-filter"].is_string()) {
     vscp_getGuidFromStringToArray(m_filter.filter_GUID,
-                                  m_jsonConfig["guid-filter"].toString().toStdString());
+                                  m_jsonConfig["guid-filter"].get<std::string>().c_str());
   }
 
-  if (!m_jsonConfig["guid-mask"].isNull()) {
+  if (m_jsonConfig.contains("guid-mask") && m_jsonConfig["guid-mask"].is_string()) {
     vscp_getGuidFromStringToArray(m_filter.mask_GUID,
-                                  m_jsonConfig["guid-mask"].toString().toStdString());
+                                  m_jsonConfig["guid-mask"].get<std::string>().c_str());
   }
 }
 

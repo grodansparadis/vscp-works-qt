@@ -33,7 +33,6 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
-#include <QJsonObject>
 #include <QList>
 
 
@@ -97,8 +96,8 @@ public:
     /*!
         Setters/getters for JSON config object
     */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+    json getJson(void);
+    void setJson(const json *pobj);
 
  private slots:
 
@@ -113,7 +112,7 @@ private:
     Ui::CDlgConnSettingsUdp *ui;
 
     // JSON configuration object
-    QJsonObject m_jsonConfig;
+    json m_jsonConfig;
 
     /// VSCP tcp/ip client
     vscpClientUdp m_client;

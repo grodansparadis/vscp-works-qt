@@ -202,7 +202,7 @@ CDlgMainSettings::CDlgMainSettings(QWidget* parent)
   ui->pathVscpHome->setText(pworks->m_vscpHomeFolder);
 
   // Path to config folder
-  ui->pathConfigFile->setText(pworks->m_configFolder);
+  ui->pathConfigFile->setText(pworks->m_configFile);
 
   // Path to event db
   {
@@ -348,7 +348,6 @@ CDlgMainSettings::done(int rv)
     }
 
     // Set new values
-
     pworks->m_consoleLogPattern = ui->editConsoleLogPattern->text().toStdString();
 
     // Data

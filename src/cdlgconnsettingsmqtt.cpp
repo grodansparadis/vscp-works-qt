@@ -43,7 +43,6 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QInputDialog>
-#include <QJsonArray>
 #include <QMenu>
 #include <QMessageBox>
 
@@ -58,12 +57,13 @@
 // CTor
 //
 
-SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt, int qos)
+SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt, int qos, uint32_t v5_options)
   : QListWidgetItem(topic)
 {
   m_topic  = topic;
   m_format = fmt;
   m_qos    = qos & 3;
+  m_v5_options = v5_options;
 
   m_bActive = true; // Active by default
 }
@@ -146,7 +146,7 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   setUser("vscp");
   setPassword("secret");
   // Clear filter
-  //memset(&m_filter, 0, sizeof(vscpEventFilter));
+  // memset(&m_filter, 0, sizeof(vscpEventFilter));
 
   connect(ui->btnTLS,
           &QPushButton::clicked,
@@ -600,15 +600,15 @@ CDlgConnSettingsMqtt::setPwKeyFile(const QString& str)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsMqtt::getJson(void)
 {
   m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::MQTT);
-  m_jsonConfig["name"]               = getName();
-  m_jsonConfig["host"]               = getBroker();
-  m_jsonConfig["clientid"]           = getClientId();
-  m_jsonConfig["user"]               = getUser();
-  m_jsonConfig["password"]           = getPassword();
+  m_jsonConfig["name"]               = getName().toStdString();
+  m_jsonConfig["host"]               = getBroker().toStdString();
+  m_jsonConfig["clientid"]           = getClientId().toStdString();
+  m_jsonConfig["user"]               = getUser().toStdString();
+  m_jsonConfig["password"]           = getPassword().toStdString();
   m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
   m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
   m_jsonConfig["keepalive"]          = (int)getKeepAlive();
@@ -618,33 +618,36 @@ CDlgConnSettingsMqtt::getJson(void)
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
-  m_jsonConfig["cafile"]      = getCaFile();
-  m_jsonConfig["capath"]      = getCaPath();
-  m_jsonConfig["certfile"]    = getCertFile();
-  m_jsonConfig["keyfile"]     = getKeyFile();
-  m_jsonConfig["pwkeyfile"]   = getPwKeyFile();
+  m_jsonConfig["cafile"]      = getCaFile().toStdString();
+  m_jsonConfig["capath"]      = getCaPath().toStdString();
+  m_jsonConfig["certfile"]    = getCertFile().toStdString();
+  m_jsonConfig["keyfile"]     = getKeyFile().toStdString();
+  m_jsonConfig["pwkeyfile"]   = getPwKeyFile().toStdString();
 
   // Save all subscriptions
-  QJsonArray subscriptionArray;
+  json subscriptionArray = json::array();
   for (int i = 0; i < ui->listSubscribe->count(); i++) {
-    QJsonObject obj;
+    json j;
     SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(i);
-    obj["topic"]         = pitem->getTopic();
-    obj["format"]        = pitem->getFormatInt();
-    subscriptionArray.append(obj);
+    j["topic"]           = pitem->getTopic().toStdString();
+    j["format"]          = pitem->getFormatInt();
+    j["qos"]             = pitem->getQos();
+    j["v5_options"]      = pitem->getV5Options();
+    subscriptionArray.push_back(j);
   }
   m_jsonConfig["subscribe"] = subscriptionArray;
 
   // Save all publishing
-  QJsonArray publishingArray;
+  json publishingArray = json::array();
+
   for (int i = 0; i < ui->listPublish->count(); i++) {
-    QJsonObject obj;
+    json j;
     PublishItem* pitem = (PublishItem*)ui->listPublish->item(i);
-    obj["topic"]       = pitem->getTopic();
-    obj["format"]      = pitem->getFormatInt();
-    obj["qos"]         = pitem->getQos();
-    obj["bretain"]     = pitem->getRetain();
-    publishingArray.append(obj);
+    j["topic"]         = pitem->getTopic().toStdString();
+    j["format"]        = pitem->getFormatInt();
+    j["qos"]           = pitem->getQos();
+    j["bretain"]       = pitem->getRetain();
+    publishingArray.push_back(j);
   }
   m_jsonConfig["publish"] = publishingArray;
 
@@ -656,61 +659,105 @@ CDlgConnSettingsMqtt::getJson(void)
 //
 
 void
-CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
+CDlgConnSettingsMqtt::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
-  if (!m_jsonConfig["name"].isNull())
-    setName(m_jsonConfig["name"].toString());
-  if (!m_jsonConfig["host"].isNull())
-    setBroker(m_jsonConfig["host"].toString());
-  if (!m_jsonConfig["clientid"].isNull())
-    setClientId(m_jsonConfig["clientid"].toString());
-
-  if (!m_jsonConfig["bfull-l2"].isNull()) {
-    setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
+  if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
+    setName(m_jsonConfig["name"].get<std::string>().c_str());
   }
 
-  if (!m_jsonConfig["user"].isNull())
-    setUser(m_jsonConfig["user"].toString());
-  if (!m_jsonConfig["password"].isNull())
-    setPassword(m_jsonConfig["password"].toString());
-  if (!m_jsonConfig["connection-timeout"].isNull())
-    setConnectionTimeout(
-      (uint32_t)m_jsonConfig["connection-timeout"].toInt());
-  if (!m_jsonConfig["response-timeout"].isNull())
-    setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
-  if (!m_jsonConfig["keepalive"].isNull())
-    setKeepAlive((uint32_t)m_jsonConfig["keepalive"].toInt());
-  if (!m_jsonConfig["cleansession"].isNull())
-    enableCleanSession(m_jsonConfig["cleansession"].toBool());
-  if (!m_jsonConfig["extended-security"].isNull())
-    enableExtendedSecurity(m_jsonConfig["extended-security"].toBool());
+  if (m_jsonConfig.contains("host") && m_jsonConfig["host"].is_string()) {
+    setBroker(m_jsonConfig["host"].get<std::string>().c_str());
+  }
 
-  if (!m_jsonConfig["btls"].isNull())
-    enableTLS((short)m_jsonConfig["btls"].toBool());
-  if (!m_jsonConfig["bverifypeer"].isNull())
-    enableVerifyPeer(m_jsonConfig["bverifypeer"].toBool());
-  if (!m_jsonConfig["cafile"].isNull())
-    setCaFile(m_jsonConfig["cafile"].toString());
-  if (!m_jsonConfig["capath"].isNull())
-    setCaPath(m_jsonConfig["capath"].toString());
-  if (!m_jsonConfig["certfile"].isNull())
-    setCertFile(m_jsonConfig["certfile"].toString());
-  if (!m_jsonConfig["keyfile"].isNull())
-    setKeyFile(m_jsonConfig["keyfile"].toString());
-  if (!m_jsonConfig["pwkeyfile"].isNull())
-    setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
+  if (m_jsonConfig.contains("clientid") && m_jsonConfig["clientid"].is_string()) {
+    setClientId(m_jsonConfig["clientid"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("bfull-l2") && m_jsonConfig["bfull-l2"].is_boolean()) {
+    setFullL2(m_jsonConfig["bfull-l2"].get<short>());
+  }
+
+  if (m_jsonConfig.contains("user") && m_jsonConfig["user"].is_string()) {
+    setUser(m_jsonConfig["user"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("password") && m_jsonConfig["password"].is_string()) {
+    setPassword(m_jsonConfig["password"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
+    setConnectionTimeout(
+      m_jsonConfig["connection-timeout"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {
+    setResponseTimeout(m_jsonConfig["response-timeout"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("keepalive") && m_jsonConfig["keepalive"].is_number()) {
+    setKeepAlive(m_jsonConfig["keepalive"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("cleansession") && m_jsonConfig["cleansession"].is_boolean()) {
+    enableCleanSession(m_jsonConfig["cleansession"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("extended-security") && m_jsonConfig["extended-security"].is_boolean()) {
+    enableExtendedSecurity(m_jsonConfig["extended-security"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("btls") && m_jsonConfig["btls"].is_boolean()) {
+    enableTLS((short)m_jsonConfig["btls"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+    enableVerifyPeer(m_jsonConfig["bverifypeer"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("cafile") && m_jsonConfig["cafile"].is_string()) {
+    setCaFile(m_jsonConfig["cafile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("capath") && m_jsonConfig["capath"].is_string()) {
+    setCaPath(m_jsonConfig["capath"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("certfile") && m_jsonConfig["certfile"].is_string()) {
+    setCertFile(m_jsonConfig["certfile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("keyfile") && m_jsonConfig["keyfile"].is_string()) {
+    setKeyFile(m_jsonConfig["keyfile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("pwkeyfile") && m_jsonConfig["pwkeyfile"].is_string()) {
+    setPwKeyFile(m_jsonConfig["pwkeyfile"].get<std::string>().c_str());
+  }
 
   // Subscriptions
-  if (m_jsonConfig["subscribe"].isArray()) {
-    QJsonArray interfacesArray = m_jsonConfig["subscribe"].toArray();
+  if (m_jsonConfig.contains("subscribe") && m_jsonConfig["subscribe"].is_array()) {
+    json subscribeArray = json::array();
+    subscribeArray      = m_jsonConfig["subscribe"];
+    std::cout << subscribeArray.dump(4) << std::endl;
 
-    for (auto v : interfacesArray) {
-      QJsonObject item = v.toObject();
-      if (!item["topic"].isNull() && !item["format"].isNull()) {
+    for (auto v : subscribeArray) {
+      int qos = 0;
+      uint32_t v5_options = 0;
+      json item = v;
+      if (item.contains("topic") && item.contains("format")) {
+        if (item.contains("qos")) {
+          qos = item["qos"].get<int>();
+        }
+        if (item.contains("v5_options")) {
+          v5_options = item["v5_options"].get<uint32_t>();
+        }
         SubscribeItem* pitem =
-          new SubscribeItem(item["topic"].toString(), static_cast<enumMqttMsgFormat>(item["format"].toInt()), item["qos"].toInt());
+          new SubscribeItem(item["topic"].get<std::string>().c_str(), 
+                static_cast<enumMqttMsgFormat>(item["format"].get<int>()),
+                qos,
+                v5_options);
         ui->listSubscribe->addItem(pitem);
       }
     }
@@ -719,19 +766,20 @@ CDlgConnSettingsMqtt::setJson(const QJsonObject* pobj)
   }
 
   // Publish
-  if (m_jsonConfig["publish"].isArray()) {
-    QJsonArray interfacesArray = m_jsonConfig["publish"].toArray();
+  if (m_jsonConfig.contains("publish") && m_jsonConfig["publish"].is_array()) {
+    json interfacesArray = json::array();
+    interfacesArray      = m_jsonConfig["publish"];
 
     for (auto v : interfacesArray) {
 
-      QJsonObject item = v.toObject();
-      if (!item["topic"].isNull() && !item["format"].isNull() &&
-          !item["qos"].isNull() && !item["bretain"].isNull()) {
+      json item = v;
+      if (item.contains("topic") && item.contains("format") &&
+          item.contains("qos") && item.contains("bretain")) {
         PublishItem* pitem = new PublishItem(
-          item["topic"].toString(),
-          static_cast<enumMqttMsgFormat>(item["format"].toInt()),
-          item["qos"].toInt(),
-          item["bretain"].toBool());
+          item["topic"].get<std::string>().c_str(),
+          static_cast<enumMqttMsgFormat>(item["format"].get<int>()),
+          item["qos"].get<int>(),
+          item["bretain"].get<bool>());
         ui->listPublish->addItem(pitem);
       }
     }

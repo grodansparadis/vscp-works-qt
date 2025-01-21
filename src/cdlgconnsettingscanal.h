@@ -35,7 +35,6 @@
 
 #include <QDialog>
 #include <QListWidgetItem>
-#include <QJsonObject>
 
 namespace Ui {
 class CDlgConnSettingsCanal;
@@ -107,8 +106,8 @@ public:
     /*!
         Setters/getters for JSON config object
     */
-    QJsonObject getJson(void);
-    void setJson(const QJsonObject *pobj);
+    json getJson(void);
+    void setJson(const json *pobj);
 
 private slots:
     void testDriver();
@@ -130,7 +129,7 @@ private:
     vscpClientCanal m_vscpClient;
 
     // JSON configuration object
-    QJsonObject m_jsonConfig;
+    json m_jsonConfig;
 };
 
 

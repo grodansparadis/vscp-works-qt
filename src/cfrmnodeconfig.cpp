@@ -74,10 +74,6 @@
 #include <QClipboard>
 #include <QFile>
 #include <QInputDialog>
-#include <QJSEngine>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QProgressBar>
 #include <QSqlTableModel>
 #include <QStandardPaths>
@@ -185,7 +181,7 @@ CMdfFileWidgetItem::~CMdfFileWidgetItem()
 // CFrmNodeConfig
 //
 
-CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
+CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
   : QMainWindow(parent)
   , ui(new Ui::CFrmNodeConfig)
 {
@@ -268,7 +264,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
 
-  spdlog::debug(std::string(tr("Node configuration module opended").toStdString()));
+  spdlog::debug(std::string(tr("Node configuration module opened").toStdString()));
 
   if (nullptr == pconn) {
     QApplication::beep();
@@ -285,7 +281,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
   m_connObject = *pconn;
 
   // Must have a type
-  if (m_connObject["type"].isNull()) {
+  if (!(m_connObject.contains("type") && m_connObject["type"].is_number())) {
     QApplication::beep();
     spdlog::error(std::string(tr("Type is not define in JSON data").toStdString()));
     QMessageBox::information(this,
@@ -296,13 +292,13 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     return;
   }
 
-  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
 
   QString str;
   str += pworks->getConnectionName(m_vscpConnType);
   str += tr(" - ");
-  if (!m_connObject["name"].isNull()) {
-    str += m_connObject["name"].toString();
+  if (m_connObject.contains("name") && m_connObject["name"].is_string()) {
+    str += m_connObject["name"].get<std::string>().c_str();
   }
   else {
     str += tr("Unknown");
@@ -324,25 +320,33 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     resize(nWidth, nHeight);
   }
 
-  QJsonDocument doc(m_connObject);
-  QString strJson(doc.toJson(QJsonDocument::Compact));
+  // QJsonDocument doc(m_connObject);
+  // QString strJson(doc.toJson(QJsonDocument::Compact));
 
   /*!
     The selected interface is the interface we should select in the combo box
     when we open the window.
   */
-  std::string interface = m_connObject["selected-interface"].toString().toStdString();
+  std::string interface = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  if (m_connObject.contains("selected-interface") &&
+      m_connObject["selected-interface"].is_string()) {
+    interface = m_connObject["selected-interface"].get<std::string>();
+  }
+  cguid guidInterface(interface);
 
   /*!
     Interfaced at the time of configuration.
   */
-  QJsonArray json_if_array = m_connObject["interfaces"].toArray();
+  json json_if_array = m_connObject["interfaces"];
 
   /*!
    *  If bFullLevel2 is true only GUID textbox is shown.
-   *  If false the interface combo plus nickname spinnbox is shown.
+   *  If false the interface combo plus nickname spinbox is shown.
    */
-  m_bFullLevel2 = m_connObject["bfull-l2"].toBool();
+  m_bFullLevel2 = false;
+  if (m_connObject.contains("bfull-l2") && m_connObject["bfull-l2"].is_boolean()) {
+    m_bFullLevel2 = m_connObject["bfull-l2"].get<bool>();
+  }
 
   using namespace std::placeholders;
   auto cb = std::bind(&CFrmNodeConfig::receiveCallback, this, _1, _2);
@@ -375,8 +379,8 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
 
         std::string _str;
         size_t sz = json_if_array.size();
-        foreach (const QJsonValue& value, json_if_array) {
-          m_comboInterface->addItem(value.toObject().value("if-item").toString());
+        foreach (const json& value, json_if_array) {
+          m_comboInterface->addItem(value["if-item"].get<std::string>().c_str());
         }
 
         m_comboInterface->setCurrentText(interface.c_str());
@@ -391,7 +395,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       }
 
       m_vscpClient = new vscpClientTcp();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -400,7 +404,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::CANAL:
       // nodeid
       m_vscpClient = new vscpClientCanal();
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(this,
                              tr(APPNAME),
@@ -423,7 +427,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::SOCKETCAN:
       // nodeid
       m_vscpClient = new vscpClientSocketCan();
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(this,
                              tr(APPNAME),
@@ -447,7 +451,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS1:
       // GUID
       m_vscpClient = new vscpClientWs1();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -456,7 +460,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::WS2:
       // GUID
       m_vscpClient = new vscpClientWs2();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -521,7 +525,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
       // }
       // GUID
       m_vscpClient = new vscpClientMqtt();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       // m_vscpClient->setCallbackEv(eventReceived, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -530,7 +534,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::UDP:
       // GUID
       m_vscpClient = new vscpClientUdp();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -539,7 +543,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, QJsonObject* pconn)
     case CVscpClient::connType::MULTICAST:
       // GUID
       m_vscpClient = new vscpClientMulticast();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);
@@ -3541,7 +3545,7 @@ CFrmNodeConfig::onRegisterTreeWidgetCellChanged(QTreeWidgetItem* item, int colum
 bool
 CFrmNodeConfig::renderStandardRegisters(void)
 {
-  //int rv;
+  // int rv;
   std::string str;
   uint8_t value;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();

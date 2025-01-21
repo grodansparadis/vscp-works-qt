@@ -44,7 +44,6 @@
 
 #include <QDebug>
 #include <QDesktopServices>
-#include <QJsonArray>
 #include <QMessageBox>
 
 #include <spdlog/async.h>
@@ -69,7 +68,7 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
   setHost("tcp://localhost:9598");
   setUser("admin");
   setPassword("secret");
-  
+
   // Clear filter
   memset(&m_filter, 0, sizeof(vscpEventFilter));
 
@@ -438,29 +437,29 @@ CDlgConnSettingsTcpip::setPwKeyFile(const QString& str)
 // getJsonObj
 //
 
-QJsonObject
+json
 CDlgConnSettingsTcpip::getJson(void)
 {
   std::string str;
 
   m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::TCPIP);
-  m_jsonConfig["name"]               = getName();
-  m_jsonConfig["host"]               = getHost();
-  m_jsonConfig["user"]               = getUser();
-  m_jsonConfig["password"]           = getPassword();
+  m_jsonConfig["name"]               = getName().toStdString();
+  m_jsonConfig["host"]               = getHost().toStdString();
+  m_jsonConfig["user"]               = getUser().toStdString();
+  m_jsonConfig["password"]           = getPassword().toStdString();
   m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
   m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
   m_jsonConfig["bpoll"]              = getPoll();
   m_jsonConfig["bfull-l2"]           = getFullL2();
-  m_jsonConfig["selected-interface"] = getInterface();
+  m_jsonConfig["selected-interface"] = getInterface().toStdString();
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
-  m_jsonConfig["cafile"]      = getCaFile();
-  m_jsonConfig["capath"]      = getCaPath();
-  m_jsonConfig["certfile"]    = getCertFile();
-  m_jsonConfig["keyfile"]     = getKeyFile();
-  m_jsonConfig["pwkeyfile"]   = getPwKeyFile();
+  m_jsonConfig["cafile"]      = getCaFile().toStdString();
+  m_jsonConfig["capath"]      = getCaPath().toStdString();
+  m_jsonConfig["certfile"]    = getCertFile().toStdString();
+  m_jsonConfig["keyfile"]     = getKeyFile().toStdString();
+  m_jsonConfig["pwkeyfile"]   = getPwKeyFile().toStdString();
 
   // Filter
   m_jsonConfig["priority-filter"] = m_filter.filter_priority;
@@ -475,12 +474,13 @@ CDlgConnSettingsTcpip::getJson(void)
   m_jsonConfig["guid-mask"] = str.c_str();
 
   // Save all fetched interfaces
-  QJsonArray interfaceArray;
+  json interfaceArray = json::array();
   for (int i = 0; i < ui->comboInterface->count(); i++) {
-    QJsonObject obj;
-    obj["if-item"] = ui->comboInterface->itemText(i);
-    interfaceArray.append(obj);
+    json j;
+    j["if-item"] = ui->comboInterface->itemText(i).toStdString();
+    interfaceArray.push_back(j);
   }
+
   m_jsonConfig["interfaces"] = interfaceArray;
 
   return m_jsonConfig;
@@ -491,96 +491,122 @@ CDlgConnSettingsTcpip::getJson(void)
 //
 
 void
-CDlgConnSettingsTcpip::setJson(const QJsonObject* pobj)
+CDlgConnSettingsTcpip::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
-  if (!m_jsonConfig["name"].isNull())
-    setName(m_jsonConfig["name"].toString());
-  if (!m_jsonConfig["host"].isNull())
-    setHost(m_jsonConfig["host"].toString());
-  if (!m_jsonConfig["user"].isNull())
-    setUser(m_jsonConfig["user"].toString());
-  if (!m_jsonConfig["password"].isNull())
-    setPassword(m_jsonConfig["password"].toString());
-  if (!m_jsonConfig["connection-timeout"].isNull())
-    setConnectionTimeout((uint32_t)m_jsonConfig["connection-timeout"].toInt());
-  if (!m_jsonConfig["response-timeout"].isNull())
-    setResponseTimeout((uint32_t)m_jsonConfig["response-timeout"].toInt());
-  if (!m_jsonConfig["bpoll"].isNull())
-    setPoll((short)m_jsonConfig["bpoll"].toBool());
-  if (!m_jsonConfig["bfull-l2"].isNull())
-    setFullL2((short)m_jsonConfig["bfull-l2"].toBool());
-  if (!m_jsonConfig["btls"].isNull())
-    enableTLS((short)m_jsonConfig["btls"].toBool());
+  if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
+    setName(m_jsonConfig["name"].get<std::string>().c_str());
+  }
 
-  if (!m_jsonConfig["bverifypeer"].isNull())
-    enableVerifyPeer((short)m_jsonConfig["bverifypeer"].toBool());
-  if (!m_jsonConfig["cafile"].isNull())
-    setCaFile(m_jsonConfig["cafile"].toString());
-  if (!m_jsonConfig["capath"].isNull())
-    setCaPath(m_jsonConfig["capath"].toString());
-  if (!m_jsonConfig["certfile"].isNull())
-    setCertFile(m_jsonConfig["certfile"].toString());
-  if (!m_jsonConfig["keyfile"].isNull())
-    setKeyFile(m_jsonConfig["keyfile"].toString());
-  if (!m_jsonConfig["pwkeyfile"].isNull())
-    setPwKeyFile(m_jsonConfig["pwkeyfile"].toString());
+  if (m_jsonConfig.contains("host") && m_jsonConfig["host"].is_string()) {
+    setHost(m_jsonConfig["host"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("user") && m_jsonConfig["user"].is_string()) {
+    setUser(m_jsonConfig["user"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("password") && m_jsonConfig["password"].is_string()) {
+    setPassword(m_jsonConfig["password"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
+    setConnectionTimeout(m_jsonConfig["connection-timeout"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {
+    setResponseTimeout(m_jsonConfig["response-timeout"].get<uint32_t>());
+  }
+
+  if (m_jsonConfig.contains("bpoll") && m_jsonConfig["bpoll"].is_boolean()) {
+    setPoll((short)m_jsonConfig["bpoll"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("bfull-l2") && m_jsonConfig["bfull-l2"].is_boolean()) {
+    setFullL2((short)m_jsonConfig["bfull-l2"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("btls") && m_jsonConfig["btls"].is_boolean()) {
+    enableTLS((short)m_jsonConfig["btls"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+    enableVerifyPeer((short)m_jsonConfig["bverifypeer"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("cafile") && m_jsonConfig["cafile"].is_string()) {
+    setCaFile(m_jsonConfig["cafile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("capath") && m_jsonConfig["capath"].is_string()) {
+    setCaPath(m_jsonConfig["capath"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("certfile") && m_jsonConfig["certfile"].is_string()) {
+    setCertFile(m_jsonConfig["certfile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("keyfile") && m_jsonConfig["keyfile"].is_string()) {
+    setKeyFile(m_jsonConfig["keyfile"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("pwkeyfile") && m_jsonConfig["pwkeyfile"].is_string()) {
+    setPwKeyFile(m_jsonConfig["pwkeyfile"].get<std::string>().c_str());
+  }
 
   // Get main filter
   memset(&m_filter, 0, sizeof(vscpEventFilter));
-  if (!m_jsonConfig["priority-filter"].isNull()) {
-    m_filter.filter_priority = (uint8_t)m_jsonConfig["priority-filter"].toInt();
+  if (m_jsonConfig.contains("priority-filter") && m_jsonConfig["priority-filter"].is_number()) {
+    m_filter.filter_priority = m_jsonConfig["priority-filter"].get<uint8_t>();
   }
 
-  if (!m_jsonConfig["priority-mask"].isNull()) {
-    m_filter.mask_priority = (uint8_t)m_jsonConfig["priority-mask"].toInt();
+  if (m_jsonConfig.contains("priority-mask") && m_jsonConfig["priority-mask"].is_number()) {
+    m_filter.mask_priority = m_jsonConfig["priority-mask"].get<uint8_t>();
   }
 
-  if (!m_jsonConfig["class-filter"].isNull()) {
-    m_filter.filter_class = (uint16_t)m_jsonConfig["class-filter"].toInt();
+  if (m_jsonConfig.contains("class-filter") && m_jsonConfig["class-filter"].is_number()) {
+    m_filter.filter_class = m_jsonConfig["class-filter"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["class-mask"].isNull()) {
-    m_filter.mask_class = (uint16_t)m_jsonConfig["class-mask"].toInt();
+  if (m_jsonConfig.contains("class-mask") && m_jsonConfig["class-mask"].is_number()) {
+    m_filter.mask_class = m_jsonConfig["class-mask"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["type-filter"].isNull()) {
-    m_filter.filter_type = (uint16_t)m_jsonConfig["type-filter"].toInt();
+  if (m_jsonConfig.contains("type-filter") && m_jsonConfig["type-filter"].is_number()) {
+    m_filter.filter_type = m_jsonConfig["type-filter"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["type-mask"].isNull()) {
-    m_filter.mask_type = (uint16_t)m_jsonConfig["type-mask"].toInt();
+  if (m_jsonConfig.contains("type-mask") && m_jsonConfig["type-mask"].is_number()) {
+    m_filter.mask_type = m_jsonConfig["type-mask"].get<uint16_t>();
   }
 
-  if (!m_jsonConfig["guid-filter"].isNull()) {
+  if (m_jsonConfig.contains("guid-filter") && m_jsonConfig["guid-filter"].is_string()) {
     vscp_getGuidFromStringToArray(m_filter.filter_GUID,
-                                  m_jsonConfig["guid-filter"].toString().toStdString());
+                                  m_jsonConfig["guid-filter"].get<std::string>());
   }
 
-  if (!m_jsonConfig["guid-mask"].isNull()) {
+  if (m_jsonConfig.contains("guid-mask") && m_jsonConfig["guid-mask"].is_string()) {
     vscp_getGuidFromStringToArray(m_filter.mask_GUID,
-                                  m_jsonConfig["guid-mask"].toString().toStdString());
+                                  m_jsonConfig["guid-mask"].get<std::string>());
   }
 
   // Interfaces
-  if (m_jsonConfig["interfaces"].isArray()) {
+  if (m_jsonConfig.contains("interfaces") && m_jsonConfig["interfaces"].is_array()) {
 
-    QJsonArray interfacesArray = m_jsonConfig["interfaces"].toArray();
+    json interfaceArray = m_jsonConfig["interfaces"];
 
-    for (auto v : interfacesArray) {
-      QString strInterface;
-      QJsonObject item = v.toObject();
-      if (!item["if-item"].isNull()) {
-        strInterface = item["if-item"].toString();
-        ui->comboInterface->addItem(strInterface);
+    for (auto v : interfaceArray) {
+      json item = v;
+      if (item.contains("if-item") && item["if-item"].is_string()) {
+        ui->comboInterface->addItem(item["if-item"].get<std::string>().c_str());
       }
     }
   }
 
   QString selectedInterface;
-  if (!m_jsonConfig["selected-interface"].isNull()) {
-    selectedInterface = m_jsonConfig["selected-interface"].toString();
+  if (m_jsonConfig.contains("selected-interface") && m_jsonConfig["selected-interface"].is_string()) {
+    selectedInterface = m_jsonConfig["selected-interface"].get<std::string>().c_str();
   }
 
   // Select interface

@@ -43,7 +43,6 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QInputDialog>
-#include <QJsonArray>
 #include <QMenu>
 #include <QMessageBox>
 
@@ -479,7 +478,7 @@ CDlgConnSettingsRawMqtt::setPwKeyFile(const QString& str)
 // getJson
 //
 
-QJsonObject
+json
 CDlgConnSettingsRawMqtt::getJson(void)
 {
   m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::RAWMQTT);
@@ -502,9 +501,10 @@ CDlgConnSettingsRawMqtt::getJson(void)
   m_jsonConfig["pwkeyfile"]   = getPwKeyFile();
 
   // Save all subscriptions
-  QJsonArray subscriptionArray;
+  json subscriptionArray = json::array();
+ 
   for (int i = 0; i < ui->listSubscribe->count(); i++) {
-    QJsonObject obj;
+    json obj;
     SubscribeItem* pitem = (SubscribeItem*)ui->listSubscribe->item(i);
     obj["topic"]         = pitem->getTopic();
     obj["format"]        = pitem->getFormatInt();
@@ -514,9 +514,10 @@ CDlgConnSettingsRawMqtt::getJson(void)
   m_jsonConfig["subscriptions"] = subscriptionArray;
 
   // Save all publishing
-  QJsonArray publishingArray;
+  json publishingArray = json::array();
+  
   for (int i = 0; i < ui->listPublish->count(); i++) {
-    QJsonObject obj;
+    json obj;
     PublishItem* pitem = (PublishItem*)ui->listPublish->item(i);
     obj["topic"]       = pitem->getTopic();
     obj["format"]      = pitem->getFormatInt();
@@ -534,7 +535,7 @@ CDlgConnSettingsRawMqtt::getJson(void)
 //
 
 void
-CDlgConnSettingsRawMqtt::setJson(const QJsonObject* pobj)
+CDlgConnSettingsRawMqtt::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
 
@@ -575,11 +576,11 @@ CDlgConnSettingsRawMqtt::setJson(const QJsonObject* pobj)
 
   // Subscriptions
   if (m_jsonConfig["subscriptions"].isArray()) {
-    QJsonArray interfacesArray = m_jsonConfig["subscriptions"].toArray();
+    json interfacesArray = m_jsonConfig["subscriptions"];
 
     for (auto v : interfacesArray) {
 
-      QJsonObject item = v.toObject();
+      json item = v.toObject();
       if (!item["topic"].isNull()) {
         SubscribeItem* pitem =
           new SubscribeItem(item["topic"].toString());
@@ -592,11 +593,11 @@ CDlgConnSettingsRawMqtt::setJson(const QJsonObject* pobj)
 
   // Publish
   if (m_jsonConfig["publishing"].isArray()) {
-    QJsonArray interfacesArray = m_jsonConfig["publishing"].toArray();
+    json interfacesArray = m_jsonConfig["publishing"];
 
     for (auto v : interfacesArray) {
 
-      QJsonObject item = v.toObject();
+      json item = v.toObject();
       if (!item["topic"].isNull() && !item["format"].isNull() &&
           !item["qos"].isNull() && !item["bretain"].isNull()) {
         PublishItem* pitem = new PublishItem(

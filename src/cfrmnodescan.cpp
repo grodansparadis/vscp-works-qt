@@ -127,12 +127,13 @@ eventReceived(vscpEvent& ev, void* pobj)
 // CFrmNodeScan
 //
 
-CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
+CFrmNodeScan::CFrmNodeScan(QWidget* parent, json* pconn)
   : QMainWindow(parent)
   , ui(new Ui::CFrmNodeScan)
 {
   ui->setupUi(this);
- 
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
   ui->treeFound->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeFound->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -140,8 +141,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
 
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  spdlog::debug(std::string(tr("Node configuration module opended").toStdString()));
+  spdlog::debug(std::string(tr("Node configuration module opened").toStdString()));
 
   if (nullptr == pconn) {
     spdlog::error(std::string(tr("pconn is null").toStdString()));
@@ -157,7 +157,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
   m_connObject = *pconn;
 
   // Must have a type
-  if (m_connObject["type"].isNull()) {
+  if (!(m_connObject.contains("type") && m_connObject["type"].is_number())) {
     spdlog::error(std::string(tr("Type is not defined in JSON data").toStdString()));
     QMessageBox::information(this,
                              tr(APPNAME),
@@ -167,13 +167,13 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     return;
   }
 
-  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].toInt());
+  m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
 
-  QString str; // = tr("VSCP Client Session - ");
+  QString str;
   str += pworks->getConnectionName(m_vscpConnType);
   str += tr(" - ");
-  if (!m_connObject["name"].isNull()) {
-    str += m_connObject["name"].toString();
+  if (m_connObject.contains("name") && m_connObject["name"].is_string()) {
+    str += m_connObject["name"].get<std::string>();
   }
   else {
     str += tr("Unknown");
@@ -197,8 +197,8 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
     }
   */
 
-  QJsonDocument doc(m_connObject);
-  QString strJson(doc.toJson(QJsonDocument::Compact));
+  // QJsonDocument doc(m_connObject);
+  // QString strJson(doc.toJson(QJsonDocument::Compact));
 
   using namespace std::placeholders;
   auto cb = std::bind(&CFrmNodeScan::receiveCallback, this, _1, _2);
@@ -212,14 +212,14 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::CANAL:
       m_vscpClient = new vscpClientCanal();
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(
           this,
@@ -234,7 +234,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 #ifndef WIN32
     case CVscpClient::connType::SOCKETCAN:
       m_vscpClient = new vscpClientSocketCan();
-      if (!m_vscpClient->initFromJson(strJson.toStdString())) {
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
         // Failed to initialize
         QMessageBox::warning(this,
                              tr(APPNAME),
@@ -248,34 +248,34 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, QJsonObject* pconn)
 
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::MQTT:
       m_vscpClient = new vscpClientMqtt();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::UDP:
       m_vscpClient = new vscpClientUdp();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(eventReceived, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::MULTICAST:
       m_vscpClient = new vscpClientMulticast();
-      m_vscpClient->initFromJson(strJson.toStdString());
+      m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
@@ -714,13 +714,17 @@ CFrmNodeScan::doScan(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  // QApplication::processEvents();
 
-  std::string interface = m_connObject["selected-interface"].toString().toStdString();
+  std::string interface = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  if (m_connObject.contains("selected-interface") &&
+      m_connObject["selected-interface"].is_string()) {
+    interface = m_connObject["selected-interface"].get<std::string>();
+  }
   cguid guidInterface(interface);
 
   ui->progressBarScan->setValue(30);
 
+  // nothing found yet
   std::set<uint16_t> found;
 
   // SLOW SCAN
@@ -946,7 +950,11 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   pItem->m_bStdRegs = false;
   pItem->m_bMdf     = false;
 
-  std::string interface = m_connObject["selected-interface"].toString().toStdString();
+  std::string interface = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+  if (m_connObject.contains("selected-interface") &&
+      m_connObject["selected-interface"].is_string()) {
+    interface = m_connObject["selected-interface"].get<std::string>();
+  }
   cguid guidInterface(interface);
 
   cguid guidNode;
@@ -1155,10 +1163,9 @@ CFrmNodeScan::goFirmwareUpdate(void)
     spdlog::error("Aborting bootloader wizard (initBootLoaderWizard) rv={}", rv);
     return;
   }
-  
-  CWizardPageNickname *pageNickname = (CWizardPageNickname *)wiz.page(CBootLoadWizard::Page_Nickname);
+
+  CWizardPageNickname* pageNickname = (CWizardPageNickname*)wiz.page(CBootLoadWizard::Page_Nickname);
   pageNickname->setNickname(pitem->m_nodeid);
 
   wiz.exec();
-
 }
