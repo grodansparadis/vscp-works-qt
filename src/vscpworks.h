@@ -531,7 +531,8 @@ public:
   std::map<int, QString> m_mapSensorIndexToSymbolicName;
 
   /// VSCP works database
-  QSqlDatabase m_worksdb;
+  //QSqlDatabase m_worksdb;
+  sqlite3 *m_db_vscp_works;
 
   /// Event database
   QSqlDatabase m_evdb;

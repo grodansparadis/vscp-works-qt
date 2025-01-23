@@ -123,23 +123,38 @@ CDlgKnownGuid::setInterfaceShow(bool b)
 // fillGuidFromDb
 //
 
-void
+bool
 CDlgKnownGuid::fillGuidFromDb(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   pworks->m_mutexGuidMap.lock();
 
-  QSqlQuery query("SELECT * FROM guid order by name", pworks->m_worksdb);
+  //  Query known GUID's
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(pworks->m_db_vscp_works,
+                            "SELECT * FROM guid order by name",
+                            -1,
+                            &ppStmt,
+                            NULL))) {
+    spdlog::error("cdlgknownguid: Failed to query GUID's. rv={0} {1}", rv, sqlite3_errmsg(pworks->m_db_vscp_works));
+    pworks->m_mutexGuidMap.unlock();
+    return false;
+  }
 
-  while (query.next()) {
-    QString guid = query.value(1).toString();
-    QString name = query.value(2).toString();
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    QString guid = QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 1));
+    QString name = QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 2));
 
     insertGuidItem(guid, name);
   }
+  sqlite3_finalize(ppStmt);
 
   pworks->m_mutexGuidMap.unlock();
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -197,9 +212,11 @@ CDlgKnownGuid::insertGuidItem(QString strguid, QString name)
 // listItemClicked
 //
 
-void
+bool
 CDlgKnownGuid::listItemClicked(QTableWidgetItem* item)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   int currentRow = ui->listGuid->selectionModel()->currentIndex().row();
@@ -211,30 +228,37 @@ CDlgKnownGuid::listItemClicked(QTableWidgetItem* item)
   QString strguid            = itemGuid->text();
 
   // Search db record for description
-  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
   pworks->m_mutexGuidMap.lock();
-  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-  if (QSqlError::NoError != query.lastError().type()) {
+  // Query known GUID's
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';").arg(strguid);
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(pworks->m_db_vscp_works,
+                            strQuery.toStdString().c_str(),
+                            -1,
+                            &ppStmt,
+                            NULL))) {
     pworks->m_mutexGuidMap.unlock();
+    spdlog::error("Unable to find guid {0}. rv={1} {2}", strguid.toStdString(), rv, sqlite3_errmsg(pworks->m_db_vscp_works));
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             tr("Unable to find GUID %1.\n\n rv=%2 %3").arg(strguid).arg(rv).arg(sqlite3_errmsg(pworks->m_db_vscp_works)),
                              QMessageBox::Ok);
-    spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()),
-                  query.lastError().text().toStdString());
-    return;
+    return false;
   }
 
-  if (query.next()) {
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
 #if QT_VERSION >= 0x050E00
-    ui->textDescription->setMarkdown(query.value(3).toString());
+    ui->textDescription->setMarkdown(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3)));
 #else
-    ui->textDescription->setText(query.value(3).toString());
+    ui->textDescription->setText(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3)));
 #endif
   }
+  sqlite3_finalize(ppStmt);
 
   pworks->m_mutexGuidMap.unlock();
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -419,6 +443,9 @@ CDlgKnownGuid::btnSearch(void)
 void
 CDlgKnownGuid::btnAdd(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
+
   CDlgEditGuid dlg;
   dlg.setWindowTitle(tr("Add new known GUID"));
 
@@ -458,21 +485,20 @@ again:
       goto again;
     }
 
-    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
+    // Add to the db table
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery
-                      .arg(strguid)
-                      .arg(dlg.getName())
-                      .arg(dlg.getDescription()),
-                    pworks->m_worksdb);
-    if (QSqlError::NoError != query.lastError().type()) {
+    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');")
+                         .arg(strguid)
+                         .arg(dlg.getName())
+                         .arg(dlg.getDescription());
+    if (SQLITE_OK != (rv = sqlite3_exec(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), NULL, NULL, NULL))) {
       pworks->m_mutexGuidMap.unlock();
+      spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
+                    sqlite3_errmsg(pworks->m_db_vscp_works));
       QMessageBox::information(this,
                                tr(APPNAME),
-                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text());
-      spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
-                    query.lastError().text().toStdString());
+                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
+                               QMessageBox::Ok);
       goto again;
     }
 
@@ -511,6 +537,8 @@ again:
 void
 CDlgKnownGuid::btnEdit(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
   CDlgEditGuid dlg;
   dlg.setWindowTitle(tr("Edit known GUID"));
   dlg.setEditMode();
@@ -529,26 +557,26 @@ CDlgKnownGuid::btnEdit(void)
   QString strguid            = itemGuid->text();
   strguid                    = strguid.trimmed();
 
-  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
   pworks->m_mutexGuidMap.lock();
-  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-  if (QSqlError::NoError != query.lastError().type()) {
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';").arg(strguid);
+  if (SQLITE_OK != (rv = sqlite3_prepare(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), -1, &ppStmt, NULL))) {
     pworks->m_mutexGuidMap.unlock();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             tr("Unable to find record in database.\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
                              QMessageBox::Ok);
     spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
-                  query.lastError().text().toStdString());
+                  sqlite3_errmsg(pworks->m_db_vscp_works));
     return;
   }
 
-  if (query.next()) {
-    dlg.setGuid(query.value(1).toString());
-    dlg.setName(query.value(2).toString());
-    dlg.setDescription(query.value(3).toString());
+  if (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    dlg.setGuid(QString::fromUtf8(sqlite3_column_text(ppStmt, 1)));
+    dlg.setName(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 2)));
+    dlg.setDescription(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3)));
   }
+  sqlite3_finalize(ppStmt);
 
   pworks->m_mutexGuidMap.unlock();
 
@@ -558,28 +586,28 @@ again:
     QString strname        = dlg.getName();
     QString strdescription = dlg.getDescription();
 
-    QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';");
+    // Add to the db table
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery
-                      .arg(strname)
-                      .arg(strdescription)
-                      .arg(strguid),
-                    pworks->m_worksdb);
-    if (QSqlError::NoError != query.lastError().type()) {
+    QString strQuery = tr("UPDATE guid SET name='%1', description='%2' WHERE guid='%3';")
+                         .arg(strname)
+                         .arg(strdescription)
+                         .arg(strguid);
+
+    if (SQLITE_OK != (rv = sqlite3_exec(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), NULL, NULL, NULL))) {
       pworks->m_mutexGuidMap.unlock();
       QMessageBox::information(this,
                                tr(APPNAME),
-                               tr("Unable to save edited GUID into database.\n\n Error =") + query.lastError().text(),
+                               tr("Unable to save edited GUID into database.\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
                                QMessageBox::Ok);
-
       spdlog::error(std::string(tr("Unable to save edited GUID into database. Err =").toStdString()) +
-                    query.lastError().text().toStdString());
+                    sqlite3_errmsg(pworks->m_db_vscp_works));
       goto again;
     }
 
-    // Add to the internal table
-    pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
     pworks->m_mutexGuidMap.unlock();
+
+    // Add to the internal table
+    pworks->m_mapGuidToSymbolicName[strguid] = strname;
 
     // Add to dialog List
     QTableWidgetItem* itemName = ui->listGuid->item(row, 1);
@@ -599,6 +627,8 @@ again:
 void
 CDlgKnownGuid::btnClone(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
   CDlgEditGuid dlg;
   dlg.setWindowTitle(tr("Clone GUID"));
 
@@ -616,26 +646,26 @@ CDlgKnownGuid::btnClone(void)
   QString strguid            = itemGuid->text();
   strguid                    = strguid.trimmed();
 
-  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';");
+  QString strQuery = tr("SELECT * FROM guid WHERE guid='%1';").arg(strguid);
   pworks->m_mutexGuidMap.lock();
-  QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-  if (QSqlError::NoError != query.lastError().type()) {
+  if (SQLITE_OK != (rv = sqlite3_prepare(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), -1, &ppStmt, NULL))) {
     pworks->m_mutexGuidMap.unlock();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Unable to find record in database.\n\n Error =") + query.lastError().text(),
+                             tr("Unable to find record in database.\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
                              QMessageBox::Ok);
     spdlog::error(std::string(tr("Unable to find record in database. Err =").toStdString()) +
-                  query.lastError().text().toStdString());
+                  sqlite3_errmsg(pworks->m_db_vscp_works));
     return;
   }
 
-  if (query.next()) {
-    dlg.setGuid(query.value(1).toString());
-    dlg.setName(query.value(2).toString());
-    dlg.setDescription(query.value(3).toString());
+  if (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    dlg.setGuid(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 1)));
+    dlg.setName(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 2)));
+    dlg.setDescription(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3)));
   }
+  sqlite3_finalize(ppStmt);
 
   pworks->m_mutexGuidMap.unlock();
 
@@ -670,28 +700,27 @@ again:
       goto again;
     }
 
-    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');");
-
+    QString strQuery = tr("INSERT INTO guid (guid, name, description) VALUES ('%1', '%2', '%3');")
+                         .arg(strguid)
+                         .arg(dlg.getName())
+                         .arg(dlg.getDescription());
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery
-                      .arg(strguid)
-                      .arg(dlg.getName())
-                      .arg(dlg.getDescription()),
-                    pworks->m_worksdb);
-    if (QSqlError::NoError != query.lastError().type()) {
+
+    if (SQLITE_OK != (rv = sqlite3_exec(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), NULL, NULL, NULL))) {
       pworks->m_mutexGuidMap.unlock();
       QMessageBox::information(this,
                                tr(APPNAME),
-                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + query.lastError().text(),
+                               tr("Unable to save GUID into database (duplicate?).\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
                                QMessageBox::Ok);
       spdlog::error(std::string(tr("Unable to save GUID into database (duplicate?). Err =").toStdString()) +
-                    query.lastError().text().toStdString());
+                    sqlite3_errmsg(pworks->m_db_vscp_works));
       goto again;
     }
 
+    pworks->m_mutexGuidMap.unlock();
+
     // Add to the internal table
     pworks->m_mapGuidToSymbolicName[strguid] = dlg.getName();
-    pworks->m_mutexGuidMap.unlock();
 
     // Add to dialog List
     insertGuidItem(strguid, dlg.getName());
@@ -705,6 +734,9 @@ again:
 void
 CDlgKnownGuid::btnDelete(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
+
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   int row = ui->listGuid->currentRow();
@@ -716,41 +748,35 @@ CDlgKnownGuid::btnDelete(void)
     return;
   }
 
-  int rv = QMessageBox::warning(this,
-                                tr(APPNAME),
-                                tr("Are you sure?"),
-                                QMessageBox::Ok | QMessageBox::Cancel);
+  rv = QMessageBox::warning(this,
+                            tr(APPNAME),
+                            tr("Are you sure?"),
+                            QMessageBox::Yes | QMessageBox::Cancel);
 
-  if (QMessageBox::Ok == rv) {
+  if (QMessageBox::Yes == rv) {
     QTableWidgetItem* item = ui->listGuid->item(row, 0);
     QString strguid        = item->text();
     strguid                = strguid.trimmed();
 
-    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';");
+    QString strQuery = tr("DELETE FROM guid WHERE guid='%1';").arg(strguid);
     pworks->m_mutexGuidMap.lock();
-    QSqlQuery query(strQuery.arg(strguid), pworks->m_worksdb);
 
-    if (QSqlError::NoError != query.lastError().type()) {
+    if (SQLITE_OK != (rv = sqlite3_exec(pworks->m_db_vscp_works, strQuery.toStdString().c_str(), NULL, NULL, NULL))) {
       pworks->m_mutexGuidMap.unlock();
       QMessageBox::information(this,
                                tr(APPNAME),
-                               tr("Unable to delete GUID.\n\n Error =") + query.lastError().text(),
+                               tr("Unable to delete GUID.\n\n Error =") + sqlite3_errmsg(pworks->m_db_vscp_works),
                                QMessageBox::Ok);
       spdlog::error(std::string(tr("Unable to delete GUID. Err =").toStdString()) +
-                    query.lastError().text().toStdString());
+                    sqlite3_errmsg(pworks->m_db_vscp_works));
       return;
     }
     else {
-
       // Delete row
       ui->listGuid->removeRow(row);
 
       // Delete from internal table
       pworks->m_mapGuidToSymbolicName.erase(strguid);
-      // std::map<QString, QString>::iterator it = pworks->m_mapGuidToSymbolicName.find(strguid);
-      // if (std::map::end != it) {
-
-      // }
     }
 
     pworks->m_mutexGuidMap.unlock();
@@ -769,7 +795,7 @@ CDlgKnownGuid::btnSensorIndex(void)
   // Must be a selected GUID
   int row = ui->listGuid->currentRow();
   if (-1 == row) {
-    QMessageBox::information(this,
+    QMessageBox::warning(this,
                              tr(APPNAME),
                              tr("No GUID is selected"),
                              QMessageBox::Ok);

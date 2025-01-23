@@ -159,13 +159,16 @@ vscpworks::vscpworks(int& argc, char** argv)
     QString path = ".local/share/VSCP/vscpworks+";
 #endif
     path += "/";
-    fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
 
     // If folder does not exist, create it
     QDir dir(path);
     if (!dir.exists()) {
       dir.mkpath(path);
     }
+
+    m_shareFolder = path;
+    fprintf(stderr, "Share folder: %s\n", m_shareFolder.toStdString().c_str());
+
     // Make a folder for  receive sets
     dir.mkpath("./rxsets");
     // Make a folder for transmission sets
@@ -207,10 +210,11 @@ vscpworks::~vscpworks()
     }
   }
 
+  // Close the database
+  sqlite3_close(m_db_vscp_works);
+
   // Clean up SQLite lib allocations
   sqlite3_shutdown();
-  
-  m_worksdb.close();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -668,8 +672,7 @@ vscpworks::writeSettings()
     j["mainwindow-dimensions"] = dim;
   }
 
-  //std::cout << j.dump(4);
-  spdlog::trace("{0}",j.dump(4).c_str());
+  spdlog::trace("{0}", j.dump(4).c_str());
 
   std::ofstream of(m_configFile.toStdString());
   of << std::setw(4) << j << std::endl;
@@ -682,7 +685,6 @@ vscpworks::writeSettings()
 bool
 vscpworks::addConnection(json& conn, bool bSave)
 {
-  //std::cout << conn.dump(4) << std::endl;
   spdlog::trace(conn.dump(4).c_str());
 
   // If no UUID is set, create one
@@ -791,54 +793,82 @@ vscpworks::loadEventDb(void)
 bool
 vscpworks::openVscpWorksDatabase(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
+
   // Set up database
   QString eventdbname = m_shareFolder + "vscpworks.sqlite3";
 
-  QString dbName(eventdbname);
-  m_worksdb = QSqlDatabase::addDatabase("QSQLITE", "vscpworks");
-  m_worksdb.setDatabaseName(dbName);
-  m_worksdb.open();
+  if (SQLITE_OK != sqlite3_open(eventdbname.toStdString().c_str(), &m_db_vscp_works)) {
+    spdlog::error("Failed to open database: {0}\n", eventdbname.toStdString().c_str());
+    return false;
+  }
 
   // Create GUID table if it does not exist
-  QSqlQuery query = QSqlQuery(m_worksdb);
-  if (!query.exec("CREATE TABLE IF NOT EXISTS guid ("
-                  "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-                  "guid	TEXT UNIQUE,"
-                  "name	TEXT,"
-                  "description   TEXT);")) {
-    qDebug() << query.lastError();
+  if (SQLITE_OK !=
+      (rv = sqlite3_exec(m_db_vscp_works,
+                         "CREATE TABLE IF NOT EXISTS guid ("
+                         "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                         "guid	TEXT UNIQUE,"
+                         "name	TEXT,"
+                         "description   TEXT);",
+                         NULL,
+                         NULL,
+                         NULL))) {
+    spdlog::error("Failed to create GUID table. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     return false;
   }
 
   // Create GUID name index
-  if (!query.exec("CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)")) {
-    qDebug() << query.lastError();
+  if (SQLITE_OK !=
+      (rv = sqlite3_exec(m_db_vscp_works,
+                         "CREATE INDEX IF NOT EXISTS \"idxGuidName\" ON \"guid\" (\"guid\" ASC)",
+                         NULL,
+                         NULL,
+                         NULL))) {
+    spdlog::error("Failed to create GUID table. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     return false;
   }
 
-  if (!query.exec("CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
-                  "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-                  "\"link_to_guid\"	INTEGER, "
-                  "\"sensor\"	        INTEGER, "
-                  "\"name\"	        TEXT, "
-                  "\"description\"	TEXT );")) {
-    qDebug() << query.lastError();
+  // Create sensor index table if it does not exist
+  if (SQLITE_OK !=
+      (rv = sqlite3_exec(m_db_vscp_works,
+                         "CREATE TABLE IF NOT EXISTS \"sensorindex\" ("
+                         "\"idx\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                         "\"link_to_guid\"	INTEGER, "
+                         "\"sensor\"	        INTEGER, "
+                         "\"name\"	        TEXT, "
+                         "\"description\"	TEXT );",
+                         NULL,
+                         NULL,
+                         NULL))) {
+    spdlog::error("Failed to create sensor index table. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     return false;
   }
 
   // Create sensor link + idx unique  index
-  if (!query.exec("CREATE UNIQUE INDEX IF NOT EXISTS \"idxSensors\" ON \"sensorindex\" (\"link_to_guid\" ASC, \"sensor\" ASC)")) {
-    qDebug() << query.lastError();
+  if (SQLITE_OK !=
+      (rv = sqlite3_exec(m_db_vscp_works,
+                         "CREATE UNIQUE INDEX IF NOT EXISTS \"idxSensors\" ON \"sensorindex\" (\"link_to_guid\" ASC, \"sensor\" ASC)",
+                         NULL,
+                         NULL,
+                         NULL))) {
+    spdlog::error("Failed to create GUID table. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     return false;
   }
 
   // Create log table if it does not exist
-  if (!query.exec("CREATE TABLE IF NOT EXISTS log ("
-                  "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
-                  "level INTEGER,"
-                  "datetime TEXT,"
-                  "message TEXT);")) {
-    qDebug() << query.lastError();
+  if (SQLITE_OK !=
+      (rv = sqlite3_exec(m_db_vscp_works,
+                         "CREATE TABLE IF NOT EXISTS log ("
+                         "idx	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                         "level INTEGER,"
+                         "datetime TEXT,"
+                         "message TEXT);",
+                         NULL,
+                         NULL,
+                         NULL))) {
+    spdlog::error("Failed to create log table. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     return false;
   }
 
@@ -858,19 +888,29 @@ vscpworks::openVscpWorksDatabase(void)
 bool
 vscpworks::loadGuidTable(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
+
   m_mutexGuidMap.lock();
 
-  QSqlQuery query("SELECT * FROM guid order by name", m_worksdb);
-  if (QSqlError::NoError != query.lastError().type()) {
+  // Query known GUID's
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(m_db_vscp_works,
+                            "SELECT * FROM guid order by name",
+                            -1,
+                            &ppStmt,
+                            NULL))) {
+    spdlog::error("Failed to query GUID's. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     m_mutexGuidMap.unlock();
     return false;
   }
 
-  while (query.next()) {
-    QString guid                  = query.value(1).toString();
-    QString name                  = query.value(2).toString();
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    QString guid                  = QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 1));
+    QString name                  = QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 2));
     m_mapGuidToSymbolicName[guid] = name;
   }
+  sqlite3_finalize(ppStmt);
 
   m_mutexGuidMap.unlock();
   return true;
@@ -883,20 +923,30 @@ vscpworks::loadGuidTable(void)
 bool
 vscpworks::loadSensorTable(void)
 {
+  int rv;
+  sqlite3_stmt* ppStmt;
+
   m_mutexSensorIndexMap.lock();
 
-  QSqlQuery query("SELECT * FROM sensorindex order by sensor", m_worksdb);
-  if (QSqlError::NoError != query.lastError().type()) {
+  // Query known GUID's
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(m_db_vscp_works,
+                            "SELECT * FROM sensorindex order by sensor",
+                            -1,
+                            &ppStmt,
+                            NULL))) {
+    spdlog::error("Failed to query sensor indexes. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
     m_mutexSensorIndexMap.unlock();
     return false;
   }
 
-  while (query.next()) {
-    int link_to_guid                                             = query.value(1).toInt();
-    int sensor                                                   = query.value(2).toInt();
-    QString name                                                 = query.value(3).toString();
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    int link_to_guid                                             = sqlite3_column_int(ppStmt, 1);
+    int sensor                                                   = sqlite3_column_int(ppStmt, 2);
+    QString name                                                 = QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3));
     m_mapSensorIndexToSymbolicName[(link_to_guid << 8) + sensor] = name;
   }
+  sqlite3_finalize(ppStmt);
 
   m_mutexSensorIndexMap.unlock();
   return true;
@@ -918,13 +968,21 @@ vscpworks::addGuid(QString guid, QString name)
     return true;
   }
 
-  QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
-  QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_worksdb);
-  if (queryClass.lastError().isValid()) {
+  // QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
+  // QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_db_vscp_works);
+  // if (queryClass.lastError().isValid()) {
+  //   spdlog::error(std::string(tr("Failed to insert GUID into database %s")
+  //                               .arg(queryClass.lastError().text())
+  //                               .toStdString()));
+  //   qDebug() << queryClass.lastError();
+  //   return false;
+  // }
+
+  QString strInsert = tr("INSERT INTO guid (guid, name) VALUES (%1,%2);").arg(guid).arg(name);
+  if (SQLITE_OK != sqlite3_exec(m_db_vscp_works, strInsert.toStdString().c_str(), NULL, NULL, NULL)) {
     spdlog::error(std::string(tr("Failed to insert GUID into database %s")
-                                .arg(queryClass.lastError().text())
+                                .arg(sqlite3_errmsg(m_db_vscp_works))
                                 .toStdString()));
-    qDebug() << queryClass.lastError();
     return false;
   }
 
@@ -943,21 +1001,20 @@ int
 vscpworks::getIdxForGuidRecord(const QString& guid)
 {
   int index = -1;
+  sqlite3_stmt* ppStmt;
 
   m_mutexGuidMap.lock();
 
-  QString strInsert = "SELECT * FROM guid WHERE guid='%1';";
-
-  QSqlQuery query(strInsert.arg(guid), m_worksdb);
-  if (query.lastError().isValid()) {
+  QString strInsert = tr("SELECT * FROM guid WHERE guid='%1';").arg(guid);
+  if (SQLITE_OK != sqlite3_prepare(m_db_vscp_works, strInsert.toStdString().c_str(), -1, &ppStmt, NULL)) {
     m_mutexGuidMap.unlock();
     return -1;
   }
 
-  if (query.next()) {
-    index = query.value(0).toInt();
+  if (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    index = sqlite3_column_int(ppStmt, 0);
   }
-
+  sqlite3_finalize(ppStmt);
   m_mutexGuidMap.unlock();
   return index;
 }

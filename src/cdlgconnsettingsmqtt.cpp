@@ -740,7 +740,7 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
   if (m_jsonConfig.contains("subscribe") && m_jsonConfig["subscribe"].is_array()) {
     json subscribeArray = json::array();
     subscribeArray      = m_jsonConfig["subscribe"];
-    std::cout << subscribeArray.dump(4) << std::endl;
+    spdlog::trace(subscribeArray.dump(4).c_str());
 
     for (auto v : subscribeArray) {
       int qos = 0;

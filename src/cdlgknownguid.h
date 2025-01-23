@@ -54,7 +54,7 @@ public:
   /*!
     Fill GUID's from database
   */
-  void fillGuidFromDb(void);
+  bool fillGuidFromDb(void);
 
   /*!
       Insert one GUID element into table
@@ -67,7 +67,7 @@ public:
       An item in the list has been clicked
       @param item The clicked item
   */
-  void listItemClicked(QTableWidgetItem* item);
+  bool listItemClicked(QTableWidgetItem* item);
 
   /*!
       An item in the list has been double clicked

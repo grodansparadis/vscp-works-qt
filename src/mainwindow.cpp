@@ -535,7 +535,7 @@ MainWindow::addLoadedConnections(void)
   while (it != pworks->m_mapConn.constEnd()) {
 
     json j = it.value();    
-    // std::cout << j.dump(4) << std::endl;
+
     spdlog::trace(j.dump(4).c_str());
 
     if (j.contains("type") && j["type"].is_number()) {
