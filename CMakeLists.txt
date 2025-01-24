@@ -57,12 +57,12 @@ include(GNUInstallDirs)
 list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 
 # --- Path to VSCP --- 
-if (NOT DEFINED VSCP_PATH)
-  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/third_party/vscp")
-endif()
+#if (NOT DEFINED VSCP_PATH)
+#  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/third_party/vscp")
+#endif()
 
-file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
-message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
+#file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
+#message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
 
 if (DEFINED QT_PATH)
 file(TO_CMAKE_PATH "$ENV{QT_ROOT_DIR}" QT_PATH)
@@ -161,48 +161,6 @@ IF(CURL_FOUND)
 ELSE(CURL_FOUND)
   MESSAGE(FATAL_ERROR "Could not find the CURL library.")
 ENDIF(CURL_FOUND)
-
-set(OPENSSL_VER "OPENSSL_API_${OPENSSL_VERSION_MAJOR}_${OPENSSL_VERSION_MINOR}")
-message(STATUS "OPENSSL Version: ${OPENSSL_VER} - ${OPENSSL_VERSION}")
-#add_definitions(-D${OPENSSL_VER}) 
-
-# 1.1.0 / 1.1.1 / 3.0 / 3.1 / 3.2 / 3.3df -h
-string(FIND "${OPENSSL_VERSION}" "1.0" SSL_VER_POS)
-if(NOT ${SSL_VER_POS} EQUAL -1)
-  add_definitions(-DOPENSSL_API_1_0)
-  message(STATUS "Open ssl version is 1.0")
-endif()    
-
-string(FIND "${OPENSSL_VERSION}" "1.1" SSL_VER_POS)
-if(NOT ${SSL_VER_POS} EQUAL -1)
-  add_definitions(-DOPENSSL_API_1_1)
-  message(STATUS "Open ssl version is 1.1")
-endif()
-
-string(FIND "${OPENSSL_VERSION}" "3.0" SSL_VER_POS)
-if(NOT SSL_VER_POS EQUAL -1)
-  add_definitions(-DOPENSSL_API_3_0)
-  message(STATUS "Open ssl version is 3.0")
-endif()  
-
-string(FIND "${OPENSSL_VERSION}" "3.1" SSL_VER_POS)
-if(NOT SSL_VER_POS EQUAL -1)
-  add_definitions(-DOPENSSL_API_3_1)
-  message(STATUS "Open ssl version is 3.1")
-endif()
-
-string(FIND "${OPENSSL_VERSION}" "3.2" SSL_VER_POS)
-if(NOT SSL_VER_POS EQUAL -1)
-  add_definitions(-DOPENSSL_API_3_2)
-  message(STATUS "Open ssl version is 3.2")
-endif()
-
-string(FIND "${OPENSSL_VERSION}" "3.3" SSL_VER_POS)
-if(NOT SSL_VER_POS EQUAL -1)
-  add_definitions(-DOPENSSL_API_3_3)
-  message(STATUS "Open ssl version is 3.3")
-endif()
-
 
 qt_add_executable(${PROJECT_NAME}
   src/vscpworks.qrc

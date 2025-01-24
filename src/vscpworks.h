@@ -145,7 +145,7 @@ public:
   /*!
     Save connections to disk
   */
-  //void writeSettings(void);
+  // void writeSettings(void);
 
   /*!
     Check the remote event information at
@@ -339,7 +339,18 @@ public:
   void clearChildWindow(QMainWindow* pwnd);
 
   /*!
+    Download file from URL
+    @param url URL to download from
+    @param tempFileName Temporary file name to use
+    @return CURLE_OK on success
+  */
+  CURLcode
+  downLoadFromURL(const std::string& url, const std::string& tempFileName);
+
+  /*!
     Download MDF
+    @param url URL to download from
+    @param tempFileName Temporary file name to use
     @return VSCP_ERROR_SUCCESS if all is OK and path to downloaded file is
       is in pathMDF
   */
@@ -498,7 +509,10 @@ public:
 
   // --------------------------------------------------
 
-  FileDownloader* m_pVersionCtrl;
+  /*!
+    Version control for VSCP event database
+  */
+  FileDownloader* m_pVersionEventDbCtrl;
 
   /// List with defined connections uuid,conf-obj
   QMap<std::string, json> m_mapConn;
@@ -531,8 +545,8 @@ public:
   std::map<int, QString> m_mapSensorIndexToSymbolicName;
 
   /// VSCP works database
-  //QSqlDatabase m_worksdb;
-  sqlite3 *m_db_vscp_works;
+  // QSqlDatabase m_worksdb;
+  sqlite3* m_db_vscp_works;
 
   /// Event database
   QSqlDatabase m_evdb;

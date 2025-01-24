@@ -124,6 +124,7 @@ private slots:
     void open();
     bool save();
     bool saveAs();
+    void chkUpdate();
     void about();
     void connectionsWasModified();
 #ifndef QT_NO_SESSIONMANAGER

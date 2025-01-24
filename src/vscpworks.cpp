@@ -1357,7 +1357,6 @@ vscpworks::downloadMDF(CStandardRegisters& stdregs,
   tempPath += tempMdfFileName;
 
   path = tempPath.c_str();
-
   spdlog::debug("Temporary path: {}", tempPath);
 
   if (nullptr != statusCallback) {
@@ -1397,4 +1396,43 @@ vscpworks::downloadMDF(CStandardRegisters& stdregs,
     statusCallback(100, "MDF downloaded and parsed");
   }
   return VSCP_ERROR_SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// write_data
+//
+
+static size_t
+write_data(void* ptr, size_t size, size_t nmemb, FILE* stream)
+{
+  spdlog::trace("curl write_data");
+  size_t written = fwrite(ptr, size, nmemb, stream);
+  return written;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// downLoadFromURL
+//
+
+CURLcode
+vscpworks::downLoadFromURL(const std::string& url, const std::string& tempFileName)
+{
+  CURL* curl;
+  FILE* fp;
+  CURLcode res;
+
+  curl = curl_easy_init();
+  if (curl) {
+    fp = fopen(tempFileName.c_str(), "wb");
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+    res = curl_easy_perform(curl);
+    // always cleanup
+    curl_easy_cleanup(curl);
+    fclose(fp);
+  }
+
+  return res;
 }

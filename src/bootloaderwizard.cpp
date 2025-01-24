@@ -933,13 +933,6 @@ CWizardPageFirmware::validatePage(void)
 
     spdlog::debug("Temporary path for firmware download: {}", path.toStdString());
 
-    // CURLcode curl_rv;
-    // curl_rv = CMDF::downLoadMDF(url.toStdString(), path.toStdString());
-    // if (CURLE_OK != curl_rv) {
-    //   spdlog::error("Failed to download MDF {0} curl rv={1}", url.toStdString(), (int)curl_rv);
-    //   return VSCP_ERROR_COMMUNICATION;
-    // }
-
     CURL* curl;
     FILE* fp;
     CURLcode res;
@@ -1063,7 +1056,7 @@ CWizardPageFlash::initializePage(void)
 
 void
 CWizardPageFlash::statusCallback(int progress, const char* str)
-{  
+{
   if (-1 != progress) {
     m_progress->setValue(progress);
     spdlog::trace("Status {0} {1}\n", progress, str);
@@ -1112,9 +1105,9 @@ CWizardPageFlash::flashDeviceVSCP(void)
   // auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
   // lambda version for reference
   auto callback = [this](auto a, auto b) { this->statusCallback(a, b); };
-  
+
   CBootDevice_VSCP boot(m_vscpClient, vscp_readStringValue(field("boot.nickname").toString().toStdString()), callback);
-  
+
   addStatusMessage("Downloaded Hex file path: " + field("boot.firmware.path").toString());
   boot.loadIntelHexFile(field("boot.firmware.path").toString().toStdString());
 
@@ -1261,28 +1254,28 @@ CWizardPageFlash::flashDeviceVSCP(void)
   }
   addStatusMessage("Firmware loaded to remote device.");
 
-/*
-  spdlog::info("Restart remote device");
-  addStatusMessage("Restart remote device.");
-  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceRestart())) {
-    spdlog::warn("Failed to confirm restart of device. (Usually not indicating an error) rv={}", rv);
-    addStatusMessage(QString("Failed to confirm restart of device. (Usually not indicating an error): rv = {%0}.").arg(rv));
-  }
-  addStatusMessage("Remote device restarted.");
+  /*
+    spdlog::info("Restart remote device");
+    addStatusMessage("Restart remote device.");
+    if (VSCP_ERROR_SUCCESS != (rv = boot.deviceRestart())) {
+      spdlog::warn("Failed to confirm restart of device. (Usually not indicating an error) rv={}", rv);
+      addStatusMessage(QString("Failed to confirm restart of device. (Usually not indicating an error): rv = {%0}.").arg(rv));
+    }
+    addStatusMessage("Remote device restarted.");
 
-  spdlog::info("Reboot remote device");
-  addStatusMessage("Reboot remote device.");
-  if (VSCP_ERROR_SUCCESS != (rv = boot.deviceReboot())) {
-    QApplication::restoreOverrideCursor();
-    spdlog::error("Failed to confirm reboot of device rv={}", rv);
-    addStatusMessage(QString("Failed to confirm reboot of device: rv = {%0}.").arg(rv));
-    QMessageBox::information(this,
-                             tr(APPNAME),
-                             tr("Failed to reboot remote device"),
-                             QMessageBox::Ok);
-    return;
-  }
-  addStatusMessage("Remote device rebooted.");*/
+    spdlog::info("Reboot remote device");
+    addStatusMessage("Reboot remote device.");
+    if (VSCP_ERROR_SUCCESS != (rv = boot.deviceReboot())) {
+      QApplication::restoreOverrideCursor();
+      spdlog::error("Failed to confirm reboot of device rv={}", rv);
+      addStatusMessage(QString("Failed to confirm reboot of device: rv = {%0}.").arg(rv));
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("Failed to reboot remote device"),
+                               QMessageBox::Ok);
+      return;
+    }
+    addStatusMessage("Remote device rebooted.");*/
 
   m_progress->setValue(100);
   addStatusMessage(QString("Success."));

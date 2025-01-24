@@ -78,6 +78,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <fstream>
+
 #include "mainwindow.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -375,9 +377,9 @@ MainWindow::initRemoteEventDbFetch()
 
   // Get version for remote event database
   QUrl versionUrl(pworks->URL_EVENT_VERSION);
-  pworks->m_pVersionCtrl = new FileDownloader(versionUrl, this);
+  pworks->m_pVersionEventDbCtrl = new FileDownloader(versionUrl, this);
 
-  bool success = connect(pworks->m_pVersionCtrl,
+  bool success = connect(pworks->m_pVersionEventDbCtrl,
                          &FileDownloader::downloaded,
                          this,
                          &MainWindow::checkRemoteEventDbVersion);
@@ -394,9 +396,9 @@ MainWindow::initForcedRemoteEventDbFetch()
 
   // Get version for remote events
   QUrl eventUrl(tr("https://www.vscp.org/events/vscp_events.sqlite3"));
-  pworks->m_pVersionCtrl = new FileDownloader(eventUrl, this);
+  pworks->m_pVersionEventDbCtrl = new FileDownloader(eventUrl, this);
 
-  bool success = connect(pworks->m_pVersionCtrl,
+  bool success = connect(pworks->m_pVersionEventDbCtrl,
                          &FileDownloader::downloaded,
                          this,
                          &MainWindow::downloadedEventDb);
@@ -412,7 +414,7 @@ MainWindow::checkRemoteEventDbVersion()
   json j;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QString ver(pworks->m_pVersionCtrl->downloadedData());
+  QString ver(pworks->m_pVersionEventDbCtrl->downloadedData());
   spdlog::debug("Remote event db version is {}", ver.toStdString());
   // qDebug() << "__Data: " << ver;
   if (-1 != ver.indexOf("<title>404 Not Found</title>")) {
@@ -441,9 +443,9 @@ MainWindow::checkRemoteEventDbVersion()
 
       // Get version for remote events
       QUrl eventUrl("https://www.vscp.org/events/vscp_events.sqlite3");
-      pworks->m_pVersionCtrl = new FileDownloader(eventUrl, this);
+      pworks->m_pVersionEventDbCtrl = new FileDownloader(eventUrl, this);
 
-      bool success = connect(pworks->m_pVersionCtrl,
+      bool success = connect(pworks->m_pVersionEventDbCtrl,
                              &FileDownloader::downloaded,
                              this,
                              &MainWindow::downloadedEventDb);
@@ -480,7 +482,7 @@ MainWindow::downloadedEventDb()
 
   file.setFileName(tmpPath);
   file.open(QIODevice::WriteOnly);
-  file.write(pworks->m_pVersionCtrl->downloadedData());
+  file.write(pworks->m_pVersionEventDbCtrl->downloadedData());
   file.close();
   qDebug() << "A new event database file has been download";
 
@@ -534,7 +536,7 @@ MainWindow::addLoadedConnections(void)
     pworks->m_mapConn.constBegin();
   while (it != pworks->m_mapConn.constEnd()) {
 
-    json j = it.value();    
+    json j = it.value();
 
     spdlog::trace(j.dump(4).c_str());
 
@@ -1195,9 +1197,176 @@ MainWindow::saveAs()
   QFileDialog dialog(this);
   dialog.setWindowModality(Qt::WindowModal);
   dialog.setAcceptMode(QFileDialog::AcceptSave);
-  if (dialog.exec() != QDialog::Accepted)
+  if (dialog.exec() != QDialog::Accepted) {
     return false;
+  }
   return saveFile(dialog.selectedFiles().first());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// chkUpdate
+//
+
+void
+MainWindow::chkUpdate()
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  std::string tempPath =
+    QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+      .toStdString();
+  tempPath += "/vscpworks-version.js";
+
+  if (CURLE_OK != pworks->downLoadFromURL(pworks->URL_VSCPWORKS_VERSION.toStdString(), tempPath)) {
+    // Failed to download version info file
+    spdlog::error("Failed to download file {0} to {1}",
+                  tempPath,
+                  tempPath);
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Failed to download file"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // Read the JSON file
+  json j;
+  try {
+    std::ifstream ifs(tempPath);
+    j = json::parse(ifs);
+  }
+  catch (...) {
+    spdlog::error("Failed to read version info file");
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Failed to read version info file"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  if (!(j.contains("version") && j["version"].is_object())) {
+    spdlog::error("Version file is in wrong format");
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Version file is in wrong format"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  uint16_t major   = 0;
+  uint16_t minor   = 0;
+  uint16_t release = 0;
+  uint16_t build   = 0;
+
+  json jj = j["version"];
+
+  if (jj.contains("major") && jj["major"].is_number()) {
+    major = jj["major"].get<uint16_t>();
+  }
+  else {
+    spdlog::error("Version file (major) is in wrong format");
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Version file (major) is in wrong format"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  if (jj.contains("minor") && jj["minor"].is_number()) {
+    minor = jj["minor"].get<uint16_t>();
+  }
+  else {
+    spdlog::error("Version file (minor) is in wrong format");
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Version file (minor) is in wrong format"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  if (jj.contains("release") && jj["release"].is_number()) {
+    release = jj["release"].get<uint16_t>();
+  }
+  else {
+    spdlog::error("Version file (release) is in wrong format");
+    QMessageBox::critical(this,
+                          tr(APPNAME),
+                          tr("Version file (release) is in wrong format"),
+                          QMessageBox::Ok);
+    return;
+  }
+
+  if ((major > VSCPWORKS_MAJOR_VERSION) ||
+      ((major == VSCPWORKS_MAJOR_VERSION) && (minor > VSCPWORKS_MINOR_VERSION)) ||
+      (((major == VSCPWORKS_MAJOR_VERSION) && (minor == VSCPWORKS_MINOR_VERSION) && (release > VSCPWORKS_RELEASE_VERSION)))) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("A new version of VSCP Works+ is available."),
+                             QMessageBox::Ok);
+  }
+  else {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("You are running the latest version of VSCP Works+"),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  std::string downloadURL;
+  std::string downloadPath =
+    QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)
+      .toStdString();
+  downloadPath += "/";
+
+  // messagebox that ask if file should be downloaded
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(this,
+                                tr(APPNAME),
+                                tr("Do you want to download the new version?"),
+                                QMessageBox::Yes | QMessageBox::No);
+  if (reply == QMessageBox::Yes) {
+#ifdef WIN32
+    if (jj.contains("win-x64") && jj["win-x64"].is_number()) {
+      downloadURL jj["win-x64"].get<std::string>();
+    }
+    else {
+      spdlog::error("There is no win-x64 version in version file");
+      QMessageBox::critical(this,
+                            tr(APPNAME),
+                            tr("Sorry, no version for your OS is available at the moment."),
+                            QMessageBox::Ok);
+      return;
+    }
+#else
+    if (jj.contains("linux-x64") && jj["linux-x64"].is_number()) {
+      downloadURL = jj["linux-x64"].get<std::string>();
+    }
+    else {
+      spdlog::error("There is no linux-x64 version in version file");
+      QMessageBox::critical(this,
+                            tr(APPNAME),
+                            tr("Sorry, no version for your OS is available at the moment."),
+                            QMessageBox::Ok);
+      return;
+    }
+#endif
+    if (CURLE_OK != pworks->downLoadFromURL(downloadURL, downloadPath)) {
+      // Failed to download version info file
+      spdlog::error("Failed to download installation file {0} to {1}",
+                    downloadURL,
+                    downloadPath);
+      QMessageBox::critical(this,
+                            tr(APPNAME),
+                            tr("Failed to download installation file"),
+                            QMessageBox::Ok);
+      return;
+    }
+
+    // Start the downloaded file
+    // std::string strCmd = "start ";
+    // strCmd += downloadPath;
+    // system(strCmd.c_str());
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1376,9 +1545,16 @@ MainWindow::createActions()
   settingsAct->setStatusTip(tr("Open settings..."));
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
-  QAction* helpAct =
+
+  QAction* checkUpdateAct =
+    helpMenu->addAction(tr("Check for updates..."), this, &MainWindow::chkUpdate);
+  checkUpdateAct->setStatusTip(tr("Check for program updates"));
+
+  helpMenu->addSeparator();
+
+  QAction* aboutAct =
     helpMenu->addAction(tr("&About"), this, &MainWindow::about);
-  helpAct->setStatusTip(tr("Show the application's About box"));
+  aboutAct->setStatusTip(tr("Show the application's About box"));
 
   QAction* aboutQtAct =
     helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
