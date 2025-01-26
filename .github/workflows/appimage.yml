@@ -25,6 +25,9 @@ jobs:
     - name: Update before installing packages
       run: sudo apt-get update
 
+    - name: Install libmosquitto-dev manually
+      run: sudo apt-get install libmosquitto-dev
+
     - name: Install libexpat-dev manually
       run: sudo apt-get install libexpat-dev
 
