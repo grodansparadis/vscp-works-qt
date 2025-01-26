@@ -54,11 +54,12 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: 6.8.1
+        version: 6.7.3
         host: 'linux'
         target: 'desktop'
         arch: 'gcc_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+#        extra: '--exclude-libs=libmimerapi'
 
     - name: Setup cmake
       uses: jwlawson/actions-setup-cmake@v2
