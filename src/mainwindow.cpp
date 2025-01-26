@@ -1326,7 +1326,7 @@ MainWindow::chkUpdate()
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::Yes) {
 #ifdef WIN32
-    if (jj.contains("win-x64") && jj["win-x64"].is_number()) {
+    if (jj.contains("win-x64") && jj["win-x64"].is_string()) {
       downloadURL jj["win-x64"].get<std::string>();
     }
     else {
@@ -1338,7 +1338,7 @@ MainWindow::chkUpdate()
       return;
     }
 #else
-    if (jj.contains("linux-x64") && jj["linux-x64"].is_number()) {
+    if (jj.contains("linux-x64") && jj["linux-x64"].is_string()) {
       downloadURL = jj["linux-x64"].get<std::string>();
     }
     else {
@@ -1351,7 +1351,7 @@ MainWindow::chkUpdate()
     }
 #endif
     if (CURLE_OK != pworks->downLoadFromURL(downloadURL, downloadPath)) {
-      // Failed to download version info file
+      // Failed to download install file
       spdlog::error("Failed to download installation file {0} to {1}",
                     downloadURL,
                     downloadPath);
