@@ -1316,7 +1316,7 @@ MainWindow::chkUpdate()
   std::string downloadPath =
     QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)
       .toStdString();
-  downloadPath += "/";
+  downloadPath += "/ttt";
 
   // messagebox that ask if file should be downloaded
   QMessageBox::StandardButton reply;
@@ -1326,8 +1326,8 @@ MainWindow::chkUpdate()
                                 QMessageBox::Yes | QMessageBox::No);
   if (reply == QMessageBox::Yes) {
 #ifdef WIN32
-    if (jj.contains("win-x64") && jj["win-x64"].is_string()) {
-      downloadURL jj["win-x64"].get<std::string>();
+    if (j.contains("win_x64") && j["win_x64"].is_string()) {
+      downloadURL j["win_x64"].get<std::string>();
     }
     else {
       spdlog::error("There is no win-x64 version in version file");
@@ -1338,8 +1338,8 @@ MainWindow::chkUpdate()
       return;
     }
 #else
-    if (jj.contains("linux-x64") && jj["linux-x64"].is_string()) {
-      downloadURL = jj["linux-x64"].get<std::string>();
+    if (j.contains("linux_x64") && j["linux_x64"].is_string()) {
+      downloadURL = j["linux_x64"].get<std::string>();
     }
     else {
       spdlog::error("There is no linux-x64 version in version file");

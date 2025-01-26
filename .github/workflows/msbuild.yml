@@ -39,12 +39,10 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
-        modules: 'qtcharts qtgraphs qtsensors qtserialbus qtserialport qtwebsockets'
-        #archives: 'qtbase qtsvg qttools qtcharts qtwebsockets qtdeclarative'
+        modules: 'qtcharts qtgraphs qtsensors qtserialbus qtserialport'
         cache: 'true'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
-        #tools: 'tools_qtcreator,qt.tools.qtcreator'
         set-env: 'true'
         tools-only: 'false'
         aqtversion: '==3.1.*'
@@ -117,7 +115,6 @@ jobs:
         C:/vcpkg/vcpkg.exe install pthread:x64-windows
         C:/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows
         C:/vcpkg/vcpkg.exe install openssl:x64-windows
-        C:/vcpkg/vcpkg.exe install paho-mqtt:x64-windows
         C:/vcpkg/vcpkg.exe install libwebsockets:x64-windows
 
     - name: Configure CMake and build

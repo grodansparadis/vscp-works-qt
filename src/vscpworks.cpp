@@ -525,7 +525,7 @@ vscpworks::loadSettings(void)
 
 #ifdef WIN32
   if (j.contains("vscpHomeFolder") && j["vscpHomeFolder"].is_string()) {
-    m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>();
+    m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>().c_str();
   }
   else {
     m_vscpHomeFolder = settings.value("vscpHomeFolder", "c:/program files/vscp").toString();
