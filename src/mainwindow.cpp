@@ -1316,7 +1316,7 @@ MainWindow::chkUpdate()
   std::string downloadPath =
     QStandardPaths::writableLocation(QStandardPaths::DownloadLocation)
       .toStdString();
-  downloadPath += "/ttt";
+  downloadPath += "/";
 
   // messagebox that ask if file should be downloaded
   QMessageBox::StandardButton reply;
@@ -1327,7 +1327,7 @@ MainWindow::chkUpdate()
   if (reply == QMessageBox::Yes) {
 #ifdef WIN32
     if (j.contains("win_x64") && j["win_x64"].is_string()) {
-      downloadURL j["win_x64"].get<std::string>();
+      downloadURL = j["win_x64"].get<std::string>();
     }
     else {
       spdlog::error("There is no win-x64 version in version file");
@@ -1350,6 +1350,25 @@ MainWindow::chkUpdate()
       return;
     }
 #endif
+
+    // Get the file name
+    downloadPath += downloadURL.substr(downloadURL.find_last_of("/") + 1);
+
+    try {
+      // Remove old file
+      if (QFile::exists(downloadPath.c_str())) {
+        QFile::remove(downloadPath.c_str());
+      }
+    }
+    catch (...) {
+      spdlog::error("Failed to remove old file {0}", downloadPath);
+      QMessageBox::critical(this,
+                            tr(APPNAME),
+                            tr("Failed to remove old file"),
+                            QMessageBox::Ok);
+      return;
+    }
+
     if (CURLE_OK != pworks->downLoadFromURL(downloadURL, downloadPath)) {
       // Failed to download install file
       spdlog::error("Failed to download installation file {0} to {1}",
@@ -1361,6 +1380,15 @@ MainWindow::chkUpdate()
                             QMessageBox::Ok);
       return;
     }
+
+    QMessageBox::information(this,
+                            tr(APPNAME),
+                            tr("Downloaded new version of VSCP Works+ %0.%1.%2 to %3\n Please install it manually.")
+                               .arg(major)
+                               .arg(minor)
+                               .arg(release)
+                               .arg(downloadPath.c_str()),
+                            QMessageBox::Ok);
 
     // Start the downloaded file
     // std::string strCmd = "start ";
