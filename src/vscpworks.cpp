@@ -529,7 +529,7 @@ vscpworks::loadSettings(void)
     m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>().c_str();
   }
   else {
-    m_vscpHomeFolder = j.value("vscpHomeFolder", "c:/program files/vscp").toString();
+    m_vscpHomeFolder = "c:/program files/vscp";
   }
 #else
   if (j.contains("vscpHomeFolder") && j["vscpHomeFolder"].is_string()) {
