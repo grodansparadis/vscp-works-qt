@@ -810,6 +810,7 @@ vscpworks::loadEventDb(void)
 
   sqlite3_finalize(ppStmt_class);
   m_mutexVscpEventsMaps.unlock();
+
   return true;
 }
 
@@ -994,16 +995,6 @@ vscpworks::addGuid(QString guid, QString name)
     m_mutexGuidMap.unlock();
     return true;
   }
-
-  // QString strInsert = "INSERT INTO guid (guid, name) VALUES (%1,%2);";
-  // QSqlQuery queryClass(strInsert.arg(guid).arg(name), m_db_vscp_works);
-  // if (queryClass.lastError().isValid()) {
-  //   spdlog::error(std::string(tr("Failed to insert GUID into database %s")
-  //                               .arg(queryClass.lastError().text())
-  //                               .toStdString()));
-  //   qDebug() << queryClass.lastError();
-  //   return false;
-  // }
 
   QString strInsert = tr("INSERT INTO guid (guid, name) VALUES (%1,%2);").arg(guid).arg(name);
   if (SQLITE_OK != sqlite3_exec(m_db_vscp_works, strInsert.toStdString().c_str(), NULL, NULL, NULL)) {
@@ -1257,8 +1248,6 @@ vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type
     sqlite3_finalize(ppStmt);
 
     // We do a new query for the main render code
-    // query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
-    // query.first();
     if (SQLITE_OK !=
         (rv = sqlite3_prepare(m_db_vscp_classtype,
                               strQuery.arg(type).arg(vscpClass).arg(-1).toStdString().c_str(),
@@ -1313,7 +1302,6 @@ bool
 vscpworks::getVscpRenderFunctions(std::map<std::string, std::string>& map,
                                   std::string& strVariables)
 {
-  // QStringList strlst = QString(strVariables.c_str())::split("\n");
   std::deque<std::string> strlst;
   vscp_split(strlst, strVariables, "\n");
 
