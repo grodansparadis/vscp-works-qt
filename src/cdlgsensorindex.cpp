@@ -442,8 +442,8 @@ CDlgSensorIndex::btnSearch(void)
 void
 CDlgSensorIndex::btnAdd(void)
 {
-  int rv;
-  sqlite3_stmt* ppStmt;
+  // int rv;
+  // sqlite3_stmt* ppStmt;
 
   CDlgEditSensorIndex dlg;
   dlg.setWindowTitle(tr("Add new sensor"));
@@ -457,7 +457,7 @@ again:
   if (QDialog::Accepted == dlg.exec()) {
 
     int rv;
-    sqlite3_stmt* ppStmt;
+    // sqlite3_stmt* ppStmt;
 
     QString strQuery = tr("INSERT INTO sensorindex (link_to_guid, sensor, name, description) VALUES (%1, %2, '%3', '%4');")
                          .arg(m_link_to_guid)
@@ -633,7 +633,7 @@ CDlgSensorIndex::btnClone(void)
   }
 
   if (SQLITE_ROW == sqlite3_step(ppStmt)) {
-    //dlg.setSensor(sqlite3_column_int(ppStmt, 2));
+    // dlg.setSensor(sqlite3_column_int(ppStmt, 2));
     dlg.setName(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 3)));
     dlg.setDescription(QString::fromUtf8((const char*)sqlite3_column_text(ppStmt, 4)));
   }
@@ -697,7 +697,7 @@ void
 CDlgSensorIndex::btnDelete(void)
 {
   int rv;
-  sqlite3_stmt* ppStmt;
+  // sqlite3_stmt* ppStmt;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   int row = ui->listSensors->currentRow();

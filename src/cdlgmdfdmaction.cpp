@@ -254,7 +254,7 @@ CDlgMdfDmAction::renderActionParams(void)
 void
 CDlgMdfDmAction::editActionParam(void)
 {
-  bool ok;
+  // bool ok;
 
   if (-1 != ui->listActionParams->currentRow()) {
 
@@ -288,7 +288,7 @@ CDlgMdfDmAction::editActionParam(void)
 void
 CDlgMdfDmAction::addActionParam(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActionParams->currentRow();
@@ -326,7 +326,7 @@ adddlg:
 void
 CDlgMdfDmAction::dupActionParam(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActionParams->currentRow();
@@ -375,7 +375,7 @@ adddlg:
 void
 CDlgMdfDmAction::deleteActionParam(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActionParams->currentRow();

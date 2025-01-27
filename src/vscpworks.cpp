@@ -117,7 +117,7 @@ vscpworks::vscpworks(int& argc, char** argv)
   path += "VSCP/";
   path += QCoreApplication::applicationName();
   path += ".json";
-  m_configFolder = path;
+  m_configFile = path;
 #else
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
@@ -529,7 +529,7 @@ vscpworks::loadSettings(void)
     m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>().c_str();
   }
   else {
-    m_vscpHomeFolder = settings.value("vscpHomeFolder", "c:/program files/vscp").toString();
+    m_vscpHomeFolder = j.value("vscpHomeFolder", "c:/program files/vscp").toString();
   }
 #else
   if (j.contains("vscpHomeFolder") && j["vscpHomeFolder"].is_string()) {

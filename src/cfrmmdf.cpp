@@ -949,7 +949,7 @@ void
 CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, bool bParentKnown)
 {
   QString str;
-  QMdfTreeWidgetItem* pItem;
+  // QMdfTreeWidgetItem* pItem;
 
   // Must be valid pointer
   if (nullptr == pParent) {
@@ -1033,7 +1033,7 @@ void
 CFrmMdf::renderValues(QTreeWidgetItem* pParent, std::deque<CMDF_Value*>& dequevalues, bool bParentKnown)
 {
   QString str;
-  QMdfTreeWidgetItem* pItem;
+  // QMdfTreeWidgetItem* pItem;
 
   // Must be valid pointer
   if (nullptr == pParent) {
@@ -1399,7 +1399,7 @@ CFrmMdf::renderRemoteVariables(QTreeWidgetItem* pParent)
 {
   QString str;
   QMdfTreeWidgetItem* pSubItem;
-  QMdfTreeWidgetItem* pItem;
+  // QMdfTreeWidgetItem* pItem;
 
   // Check pointers
   if (nullptr == pParent) {
@@ -2251,7 +2251,7 @@ CFrmMdf::renderActionParameters(QMdfTreeWidgetItem* pActionParamItem,
                                 CMDF_Action* pAction)
 {
   QString str;
-  QMdfTreeWidgetItem* pItem;
+  // QMdfTreeWidgetItem* pItem;
 
   if ((nullptr == pActionParamItem) && (nullptr == pAction)) {
     return;
@@ -2392,7 +2392,7 @@ CFrmMdf::renderDecisionMatrix(QMdfTreeWidgetItem* pItemDM,
     if (nullptr != pActionList) {
 
       QString str;
-      QMdfTreeWidgetItem* pSubItem;
+      // QMdfTreeWidgetItem* pSubItem;
 
       QMdfTreeWidgetItem* pItemAction = new QMdfTreeWidgetItem(pItemDM, &m_mdf, mdf_type_action);
       if (nullptr != pItemAction) {
@@ -2863,9 +2863,9 @@ CFrmMdf::loadMdf(void)
 
   // Registers
 
-  uint32_t nPages;
+  // uint32_t nPages;
   std::set<uint16_t> pages;
-  QMdfTreeWidgetItem* pSubItem;
+  // QMdfTreeWidgetItem* pSubItem;
 
   QMdfTreeWidgetItem* pItemRegister = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_register);
   m_headRegister                    = pItemRegister;
@@ -5793,7 +5793,7 @@ CFrmMdf::addRegister(void)
 
     case mdf_type_register_page: {
       // This is the main register level - We can add a register here
-      bool ok;
+      // bool ok;
       CMDF_Register* pregnew = new CMDF_Register();
       if (nullptr == pregnew) {
         spdlog::error("addRegister: Unable to allocate memory for new egister");
@@ -5826,7 +5826,7 @@ CFrmMdf::addRegister(void)
 
     case mdf_type_register: {
       // This is the main register level - We can add a register here
-      bool ok;
+      // bool ok;
       CMDF_Register* pregnew = new CMDF_Register();
 
     addregdlg:
@@ -5900,7 +5900,7 @@ CFrmMdf::editRegister(void)
 
     case mdf_type_register: {
       // This is the main register level - We can add a register here
-      bool ok;
+      // bool ok;
       CMDF_Register* pregnew = new CMDF_Register();
 
     addregdlg:

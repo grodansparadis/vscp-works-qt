@@ -71,7 +71,6 @@ CDlgMdfValueList::CDlgMdfValueList(QWidget* parent)
   connect(ui->listValues, &QListWidget::doubleClicked, this, &CDlgMdfValueList::editValue);
 
   this->setFixedSize(this->size());
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -174,8 +173,6 @@ CDlgMdfValueList::getValueList(void)
   return pvalues;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // addValue
 //
@@ -183,7 +180,7 @@ CDlgMdfValueList::getValueList(void)
 void
 CDlgMdfValueList::addValue(void)
 {
-  bool ok;
+  // bool ok;
   CMDF_Value* pvaluenew = new CMDF_Value();
   if (nullptr == pvaluenew) {
     QMessageBox::critical(this, tr("MDF value information"), tr("Memory problem"));
@@ -198,14 +195,14 @@ CDlgMdfValueList::addValue(void)
   dlg.initDialogData(pvaluenew);
   dlg.setWindowTitle(tr("Add value"));
 
-addvaluedlg:
+  // addvaluedlg:
 
   if (QDialog::Accepted == dlg.exec()) {
-    uint8_t mask;
-    // if ((mask = checkIfBitsOverlap(pvaluenew))) {
-    //   QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
-    //   goto addbitdlg;
-    // }
+    // uint8_t mask;
+    //  if ((mask = checkIfBitsOverlap(pvaluenew))) {
+    //    QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+    //    goto addbitdlg;
+    //  }
     std::deque<CMDF_Value*>* pvalues = getValueList();
     if (nullptr == pvalues) {
       QMessageBox::warning(this, tr(APPNAME), tr("Unable to add value as there is no valuelist [%s] ").arg(static_cast<int>(m_type)));
@@ -227,7 +224,7 @@ addvaluedlg:
 void
 CDlgMdfValueList::editValue(void)
 {
-  bool ok;
+  // bool ok;
 
   qDebug() << "Type = " << m_type;
 
@@ -237,19 +234,19 @@ CDlgMdfValueList::editValue(void)
     int idx = ui->listValues->currentRow();
 
     QListWidgetItem* pitem = ui->listValues->currentItem();
-    CMDF_Value* pvalue         = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
+    CMDF_Value* pvalue     = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
 
     CDlgMdfValue dlg(this);
     dlg.initDialogData(pvalue);
 
-  editvaluedlg:
+    // editvaluedlg:
 
     if (QDialog::Accepted == dlg.exec()) {
-      uint8_t mask;
-      // if ((mask = checkIfBitsOverlap(pvalue, true))) {
-      //   QMessageBox::warning(this, tr("Edit register value"), tr("Can not add register value. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
-      //   goto editvaluedlg;
-      // }
+      // uint8_t mask;
+      //  if ((mask = checkIfBitsOverlap(pvalue, true))) {
+      //    QMessageBox::warning(this, tr("Edit register value"), tr("Can not add register value. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+      //    goto editvaluedlg;
+      //  }
       ui->listValues->clear();
       renderValueItems();
       ui->listValues->setCurrentRow(idx);
@@ -330,14 +327,14 @@ CDlgMdfValueList::deleteValue(void)
     int idx = ui->listValues->currentRow();
 
     QListWidgetItem* pitem = ui->listValues->currentItem();
-    CMDF_Value* pvalue         = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
+    CMDF_Value* pvalue     = getValueList()->at(pitem->data(Qt::UserRole).toUInt());
 
     std::deque<CMDF_Value*>::iterator it = getValueList()->begin() + pitem->data(Qt::UserRole).toUInt();
     getValueList()->erase(it);
 
     ui->listValues->clear();
     renderValueItems();
-    int sel = idx;
+    size_t sel = idx;
     if (0 == idx) {
       sel = 0;
     }

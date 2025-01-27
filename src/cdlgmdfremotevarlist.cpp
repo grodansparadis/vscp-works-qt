@@ -156,12 +156,12 @@ CDlgMdfRemoteVarList::renderRemoteVarItems(void)
   // Make sorted set of registers on this page
   for (auto it = rvset->cbegin(); it != rvset->cend(); ++it) {
     uint64_t token = ((uint64_t)((*it)->getPage()) << 32) + (*it)->getOffset();
-    //qDebug() << Qt::hex << token << (*it)->getPage() << (*it)->getOffset();
+    // qDebug() << Qt::hex << token << (*it)->getPage() << (*it)->getOffset();
     sortedSet.insert(token + (*it)->getOffset());
     rvmap[token + (*it)->getOffset()] = *it;
   }
 
-  //qDebug() << rvset->size();
+  // qDebug() << rvset->size();
 
   for (auto it1 = sortedSet.cbegin(); it1 != sortedSet.cend(); ++it1) {
     CMDF_RemoteVariable* prvar = rvmap[*it1];
@@ -214,7 +214,7 @@ CDlgMdfRemoteVarList::setInitialFocus(void)
 void
 CDlgMdfRemoteVarList::addRemoteVar(void)
 {
-  bool ok;
+  // bool ok;
   CMDF_RemoteVariable* pvarnew = new CMDF_RemoteVariable();
 
   // Save the selected row
@@ -222,7 +222,7 @@ CDlgMdfRemoteVarList::addRemoteVar(void)
 
   CDlgMdfRemoteVar dlg(this);
   dlg.initDialogData(m_pmdf, pvarnew);
-addregdlg:
+  // addregdlg:
   if (QDialog::Accepted == dlg.exec()) {
     // Check if register is already defined
     // CMDF_RemoteVariable* preg = m_pmdf->getRemoteVariable(pvarnew->getOffset(), pvarnew->getPage());
@@ -237,7 +237,6 @@ addregdlg:
     if (-1 != idx) {
       ui->listRemoteVar->setCurrentRow(idx);
     }
-
   }
   else {
     delete pvarnew;
@@ -251,7 +250,7 @@ addregdlg:
 void
 CDlgMdfRemoteVarList::editRemoteVar(void)
 {
-  bool ok;
+  // bool ok;
 
   if (-1 != ui->listRemoteVar->currentRow()) {
 
@@ -259,8 +258,8 @@ CDlgMdfRemoteVarList::editRemoteVar(void)
     int idx = ui->listRemoteVar->currentRow();
 
     QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
-    CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), 
-                                                            pitem->data(Qt::UserRole + 1).toUInt());
+    CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(),
+                                                          pitem->data(Qt::UserRole + 1).toUInt());
 
     CDlgMdfRemoteVar dlg(this);
     dlg.initDialogData(m_pmdf, pvar);
@@ -289,8 +288,8 @@ CDlgMdfRemoteVarList::dupRemoteVar(void)
     // Save the selected row
     int idx = ui->listRemoteVar->currentRow();
 
-    QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
-    CMDF_RemoteVariable* prvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
+    QListWidgetItem* pitem        = ui->listRemoteVar->currentItem();
+    CMDF_RemoteVariable* prvar    = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
     CMDF_RemoteVariable* prvarnew = new CMDF_RemoteVariable();
 
     // Make copy
@@ -373,7 +372,7 @@ CDlgMdfRemoteVarList::deleteRemoteVar(void)
     QListWidgetItem* pitem    = ui->listRemoteVar->currentItem();
     CMDF_RemoteVariable* pvar = m_pmdf->getRemoteVariable(pitem->data(Qt::UserRole).toUInt(), pitem->data(Qt::UserRole + 1).toUInt());
     m_pmdf->deleteRemoteVariable(pvar);
-    //delete pvar;
+    // delete pvar;
     ui->listRemoteVar->removeItemWidget(pitem);
     renderRemoteVarItems();
     ui->listRemoteVar->setCurrentRow(idx);

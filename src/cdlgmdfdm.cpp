@@ -291,7 +291,7 @@ CDlgMdfDM::renderActions(void)
 void
 CDlgMdfDM::editAction(void)
 {
-  bool ok;
+  // bool ok;
 
   if (-1 != ui->listActions->currentRow()) {
 
@@ -322,25 +322,24 @@ CDlgMdfDM::editAction(void)
 void
 CDlgMdfDM::addAction(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActions->currentRow();
 
   QListWidgetItem* pitem = ui->listActions->currentItem();
-  CMDF_Action* paction = new CMDF_Action; // = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
+  CMDF_Action* paction   = new CMDF_Action; // = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == paction) {
     return;
   }
 
-
   CDlgMdfDmAction dlg(this);
-adddlg:  
+  // adddlg:
 
   dlg.initDialogData(m_pmdf, paction);
   if (QDialog::Accepted == dlg.exec()) {
     if (!m_pdm->addAction(paction)) {
-      QMessageBox::warning(this, tr("MDF add new action"), tr("Action with code %1 is already define. Must be unique.").arg(paction->getCode()));      
+      QMessageBox::warning(this, tr("MDF add new action"), tr("Action with code %1 is already define. Must be unique.").arg(paction->getCode()));
     }
     ui->listActions->clear();
     renderActions();
@@ -358,13 +357,13 @@ adddlg:
 void
 CDlgMdfDM::dupAction(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActions->currentRow();
 
   QListWidgetItem* pitem = ui->listActions->currentItem();
-  CMDF_Action* paction = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
+  CMDF_Action* paction   = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == paction) {
     return;
   }
@@ -382,7 +381,7 @@ adddlg:
   dlg.initDialogData(m_pmdf, pactionnew);
   // If DM is level I only offset 0 is allowd
   if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
-    //dlg.setOffsetReadOnly();
+    // dlg.setOffsetReadOnly();
   }
   if (QDialog::Accepted == dlg.exec()) {
     if (!m_pdm->addAction(pactionnew)) {
@@ -405,25 +404,25 @@ adddlg:
 void
 CDlgMdfDM::deleteAction(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listActions->currentRow();
 
   QListWidgetItem* pitem = ui->listActions->currentItem();
-  CMDF_Action* paction = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
+  CMDF_Action* paction   = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == paction) {
     return;
   }
 
-  if (QMessageBox::No == QMessageBox::question(this, 
-                          tr("MDF delete action"), 
-                          tr("Delete action with code %1.").arg(paction->getCode()))) {
+  if (QMessageBox::No == QMessageBox::question(this,
+                                               tr("MDF delete action"),
+                                               tr("Delete action with code %1.").arg(paction->getCode()))) {
     return;
   }
 
   if (!m_pdm->deleteAction(paction)) {
-    QMessageBox::warning(this, tr("MDF add new action"), tr("Failed to remove action with code %1.").arg(paction->getCode()));      
+    QMessageBox::warning(this, tr("MDF add new action"), tr("Failed to remove action with code %1.").arg(paction->getCode()));
   }
 
   renderActions();

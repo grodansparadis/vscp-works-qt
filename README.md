@@ -7,9 +7,17 @@
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 
-This is the project that eventually will be the next version of **vscpworks**. It is a total rewrite and is still far far far from a usable and stable state. There is no documentation. No user setup information and no help.
+This is the new version of **vscpworks** that replaces [the long since deprecated version](https://github.com/grodansparadis/vscpworks). It is a total rewrite and there is still a lot of things to add and fix. There is very little documentation but it will grow as we go. The state of the code should be regarded as alpha still for some time.  
 
-That said a lot of functionality works and it may be a useful tool in some situations (with some patience).
+That said a lot of functionality works and it may be a useful tool for VSCP developers. 
+
+  * Communication channels can be open over socketcan/CANAL/tcp/ip and MQTT to remote devices. 
+  * Configuration handling can be opended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
+  * Scan of devices can be handled for remote devices over socketcan/CANAL/tcp/ip and MQTT.
+  * Firmware loading can be done using the VSCP bootloader protocol and the PIC1 protocol. 
+  * mdf editor is available that can be used to build mdf-files in XML or json format. This solution may still have problems with some more advanced files so be careful and save often.
+
+Binary versions for Linux and windows is available in the release section.
 
 ## Build on Linux
 If you still want to build this project
@@ -158,7 +166,7 @@ _"Visual Studio 17 2022"_ may be _"Visual Studio 16 2019"_ or some other value d
 
 The windows build files can now be found in the build folder and all needed files to run the project can  after build - be found in build/release or build/Debug depending on CMAKE_BUILD_TYPE setting.
 
-Building and configuration is simplified with VS Code installed. Configure/build/run can be done (se lower toolbar). Using VS Code it ,ay be useful to add
+Building and configuration is simplified with VS Code installed. Configure/build/run can be done (see lower toolbar). Using VS Code it may be useful to add
 
 ```json
 "cmake.configureSettings": {

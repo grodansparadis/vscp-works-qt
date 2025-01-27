@@ -71,7 +71,6 @@ CDlgMdfRegisterList::CDlgMdfRegisterList(QWidget* parent)
   connect(ui->btnDelRegister, &QToolButton::clicked, this, &CDlgMdfRegisterList::deleteRegister);
 
   connect(ui->listRegister, &QListWidget::doubleClicked, this, &CDlgMdfRegisterList::editRegister);
-  
 
   setInitialFocus();
   this->setFixedSize(this->size());
@@ -218,7 +217,7 @@ CDlgMdfRegisterList::onPageComboChange(int idx)
 void
 CDlgMdfRegisterList::addRegister(void)
 {
-  bool ok;
+  // bool ok;
   CMDF_Register* pregnew = new CMDF_Register();
   pregnew->setPage(m_page);
 
@@ -265,7 +264,7 @@ addregdlg:
 void
 CDlgMdfRegisterList::editRegister(void)
 {
-  bool ok;
+  // bool ok;
 
   if (-1 != ui->listRegister->currentRow()) {
 
@@ -396,7 +395,7 @@ CDlgMdfRegisterList::deleteRegister(void)
     QListWidgetItem* pitem = ui->listRegister->currentItem();
     CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
     m_pmdf->deleteRegister(preg);
-    //delete preg;
+    // delete preg;
     ui->listRegister->removeItemWidget(pitem);
     renderRegisterItems();
     ui->listRegister->setCurrentRow(idx);

@@ -574,7 +574,7 @@ CWizardPageLoadMdf::isComplete(void) const
 bool
 CWizardPageLoadMdf::validatePage(void)
 {
-  int rv;
+  // int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   switch (m_vscpClient->getType()) {
@@ -599,6 +599,7 @@ CWizardPageLoadMdf::validatePage(void)
 
 #ifndef WIN32
     case CVscpClient::connType::SOCKETCAN: {
+      int rv;
       CStandardRegisters stdregs;
 
       cguid node_guid;
@@ -1426,7 +1427,7 @@ CWizardPageFlash::flashDevicePIC1(void)
 void
 CWizardPageFlash::flashDevice(void)
 {
-  int rv;
+  // int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Lets rock'n roll

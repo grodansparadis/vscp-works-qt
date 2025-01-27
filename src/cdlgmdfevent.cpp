@@ -469,7 +469,7 @@ CDlgMdfEvent::currentVscpClassIndexChanged(int index)
 void
 CDlgMdfEvent::editEventData(void)
 {
-  bool ok;
+  // bool ok;
   uint8_t offset; // set to offset of item before edit
 
   // Save the selected row
@@ -489,7 +489,7 @@ CDlgMdfEvent::editEventData(void)
   offset = pEventData->getOffset();
 
   CDlgMdfEventData dlg(this);
-adddlg:  
+adddlg:
   dlg.initDialogData(m_pmdf, pEventData);
   // If DM is level I only offset 0 is allowd
   if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
@@ -521,7 +521,7 @@ adddlg:
 void
 CDlgMdfEvent::addEventData(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listEventData->currentRow();
@@ -565,7 +565,7 @@ adddlg:
 void
 CDlgMdfEvent::dupEventData(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listEventData->currentRow();
@@ -622,7 +622,7 @@ adddlg:
 void
 CDlgMdfEvent::deleteEventData(void)
 {
-  bool ok;
+  // bool ok;
 
   // Save the selected row
   int idx = ui->listEventData->currentRow();

@@ -277,7 +277,7 @@ CDlgMdfBitList::checkIfBitsOverlap(CMDF_Bit* pbit2test, bool bEdit)
 void
 CDlgMdfBitList::addRegisterBit(void)
 {
-  bool ok;
+  // bool ok;
   std::deque<CMDF_Bit*>* pbits = nullptr;
 
   CMDF_Bit* pbitnew = new CMDF_Bit();
@@ -294,15 +294,15 @@ CDlgMdfBitList::addRegisterBit(void)
   dlg.initDialogData(pbitnew);
   dlg.setWindowTitle(tr("Add bit definition"));
 
-addbitdlg:
+  // addbitdlg:
 
   if (QDialog::Accepted == dlg.exec()) {
 
-    uint8_t mask;
-    // if ((mask = checkIfBitsOverlap(pbitnew))) {
-    //   QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
-    //   goto addbitdlg;
-    // }
+    // uint8_t mask;
+    //  if ((mask = checkIfBitsOverlap(pbitnew))) {
+    //    QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+    //    goto addbitdlg;
+    //  }
 
     // Get bitlist (for type)
     if (nullptr == (pbits = getBitList())) {
@@ -324,7 +324,7 @@ addbitdlg:
 void
 CDlgMdfBitList::editRegisterBit(void)
 {
-  bool ok;
+  // bool ok;
   CMDF_Bit* pbit = nullptr;
 
   if (-1 != ui->listBits->currentRow()) {
@@ -347,14 +347,14 @@ CDlgMdfBitList::editRegisterBit(void)
     CDlgMdfBit dlg(this);
     dlg.initDialogData(pbit, 0, m_type);
 
-  editbitdlg:
+    // editbitdlg:
 
     if (QDialog::Accepted == dlg.exec()) {
-      uint8_t mask;
-      // if ((mask = checkIfBitsOverlap(pbit, true))) {
-      //   QMessageBox::warning(this, tr("Edit bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
-      //   goto editbitdlg;
-      // }
+      // uint8_t mask;
+      //  if ((mask = checkIfBitsOverlap(pbit, true))) {
+      //    QMessageBox::warning(this, tr("Edit bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+      //    goto editbitdlg;
+      //  }
       ui->listBits->clear();
       renderBitItems();
       ui->listBits->setCurrentRow(idx);
@@ -400,13 +400,13 @@ CDlgMdfBitList::dupRegisterBit(void)
 
     CDlgMdfBit dlg(this);
     dlg.initDialogData(pbit, 0, m_type);
-  dupbitdlg:
+    // dupbitdlg:
     if (QDialog::Accepted == dlg.exec()) {
-      uint8_t mask;
-      // if ((mask = checkIfBitsOverlap(pbitnew))) {
-      //   QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
-      //   goto dupbitdlg;
-      // }
+      // uint8_t mask;
+      //  if ((mask = checkIfBitsOverlap(pbitnew))) {
+      //    QMessageBox::warning(this, tr("Add new bit definition"), tr("Can not add bit definition. Bits overlap with already defined bits 0b%1").arg(mask, 8, 2, QChar('0')));
+      //    goto dupbitdlg;
+      //  }
 
       // Get bitlist (for type)
       if (nullptr == (pbits = getBitList())) {
@@ -457,7 +457,7 @@ CDlgMdfBitList::deleteRegisterBit(void)
 
     ui->listBits->clear();
     renderBitItems();
-    int sel = idx;
+    size_t sel = idx;
     if (0 == idx) {
       sel = 0;
     }

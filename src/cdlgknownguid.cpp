@@ -444,7 +444,7 @@ void
 CDlgKnownGuid::btnAdd(void)
 {
   int rv;
-  sqlite3_stmt* ppStmt;
+  // sqlite3_stmt* ppStmt;
 
   CDlgEditGuid dlg;
   dlg.setWindowTitle(tr("Add new known GUID"));
@@ -735,7 +735,7 @@ void
 CDlgKnownGuid::btnDelete(void)
 {
   int rv;
-  sqlite3_stmt* ppStmt;
+  // sqlite3_stmt* ppStmt;
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -796,9 +796,9 @@ CDlgKnownGuid::btnSensorIndex(void)
   int row = ui->listGuid->currentRow();
   if (-1 == row) {
     QMessageBox::warning(this,
-                             tr(APPNAME),
-                             tr("No GUID is selected"),
-                             QMessageBox::Ok);
+                         tr(APPNAME),
+                         tr("No GUID is selected"),
+                         QMessageBox::Ok);
     return;
   }
 
