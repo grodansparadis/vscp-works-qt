@@ -4,14 +4,14 @@
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Linux Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/cmake.yml/badge.svg) 
 ![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 
 This is the new version of **vscpworks** that replaces [the long since deprecated version](https://github.com/grodansparadis/vscpworks). It is a total rewrite and there is still a lot of things to add and fix. There is very little documentation but it will grow as we go. The state of the code should be regarded as alpha still for some time.  
 
 That said a lot of functionality works and it may be a useful tool for VSCP developers. 
 
-  * Communication channels can be open over socketcan/CANAL/tcp/ip and MQTT to remote devices. 
+  * Communication channels can be opened over socketcan/CANAL/tcp/ip and MQTT to remote devices. GUID's and sensors can have symbolic names. Easy to investigate event values and timing.  
   * Configuration handling can be opended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Scan of devices can be handled for remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Firmware loading can be done using the VSCP bootloader protocol and the PIC1 protocol. 
@@ -19,8 +19,10 @@ That said a lot of functionality works and it may be a useful tool for VSCP deve
 
 Binary versions for Linux and windows is available in the release section.
 
+The manual is available [here]()
+
 ## Build on Linux
-If you still want to build this project
+If you want to build this project on linux follow the steps below
 
 ### Install Qt.
 

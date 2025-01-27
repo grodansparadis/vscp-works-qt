@@ -529,6 +529,7 @@ vscpworks::loadSettings(void)
     m_vscpHomeFolder = j["vscpHomeFolder"].get<std::string>().c_str();
   }
   else {
+    // Set default location
     m_vscpHomeFolder = "c:/program files/vscp";
   }
 #else
