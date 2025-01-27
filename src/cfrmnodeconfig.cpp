@@ -75,13 +75,11 @@
 #include <QFile>
 #include <QInputDialog>
 #include <QProgressBar>
-#include <QSqlTableModel>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QTreeWidgetItemIterator>
 #include <QXmlStreamReader>
-#include <QtSql>
 #include <QtWidgets>
 
 #include <expat.h>

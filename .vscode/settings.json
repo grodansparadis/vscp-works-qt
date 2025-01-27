@@ -82,7 +82,9 @@
       "charconv": "cpp",
       "semaphore": "cpp",
       "qserialport": "cpp",
-      "qcanbus": "cpp"
+      "qcanbus": "cpp",
+      "qtablewidgetitem": "cpp",
+      "expected": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

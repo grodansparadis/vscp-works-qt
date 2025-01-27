@@ -97,7 +97,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Sql Network Qml Charts Quick SerialBus SerialPort)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
 # pthreads
@@ -637,7 +637,6 @@ if (MSVC)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   Qt6::Widgets
   Qt6::Qml
-  Qt6::Sql
   Qt6::Charts    
   PThreads4W::PThreads4W
   OpenSSL::SSL
@@ -653,7 +652,6 @@ else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
   Qt6::Widgets
   Qt6::Qml
-  Qt6::Sql
   Qt6::Charts
   m
   dl

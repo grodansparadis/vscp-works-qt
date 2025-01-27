@@ -65,13 +65,11 @@
 #include <QFile>
 #include <QJSEngine>
 #include <QKeySequence>
-#include <QSqlTableModel>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QToolButton>
 #include <QXmlStreamReader>
-#include <QtSql>
 #include <QtWidgets>
 
 // ----------------------------------------------------------------------------

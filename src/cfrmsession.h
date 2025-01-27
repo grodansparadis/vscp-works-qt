@@ -43,8 +43,9 @@
 #include <QObject>
 #include <QTableView>
 #include <QTableWidgetItem>
-#include <QtSql>
 #include <QToolButton>
+#include <QComboBox>
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 class QAction;

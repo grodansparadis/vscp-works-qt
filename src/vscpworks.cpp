@@ -51,8 +51,6 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QSettings>
-#include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QTextDocument>
 #include <QUuid>
@@ -93,6 +91,9 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_session_bAutoConnect       = true;
   m_session_bShowFullTypeToken = false;
   m_session_bAutoSaveTxRows    = true;
+
+  m_db_vscp_works     = nullptr;
+  m_db_vscp_classtype = nullptr;
 
   // Config
   m_config_timeout = 1000;
@@ -738,9 +739,10 @@ vscpworks::removeConnection(const QString& uuid, bool bSave)
 bool
 vscpworks::loadEventDb(void)
 {
+  int rv;
+
   m_mutexVscpEventsMaps.lock();
 
-  m_evdb         = QSqlDatabase::addDatabase("QSQLITE", "vscpevents");
   QString dbpath = m_shareFolder;
   dbpath += "vscp_events.sqlite3";
 
@@ -752,36 +754,61 @@ vscpworks::loadEventDb(void)
     return false;
   }
 
-  m_evdb.setDatabaseName(dbpath);
-
-  if (!m_evdb.open()) {
+  // Set up database
+  if (SQLITE_OK != (rv = sqlite3_open(dbpath.toStdString().c_str(), &m_db_vscp_classtype))) {
     QString err = QString(tr("The VSCP event database could not be opened. Is it available? [%s]")).arg(dbpath);
-    fprintf(stderr, "%s", err.toStdString().c_str());
+    spdlog::error("Failed to open VSCP event database. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
     m_mutexVscpEventsMaps.unlock();
     return false;
   }
-  else {
-    QSqlQuery queryClass("SELECT * FROM vscp_class order by class", m_evdb);
 
-    while (queryClass.next()) {
-      uint16_t classid               = queryClass.value(0).toUInt();
-      QString className              = queryClass.value(1).toString();
-      QString classToken             = queryClass.value(2).toString();
-      m_mapVscpClassToToken[classid] = classToken;
-
-      QString sqlTypeQuery = QString("SELECT * FROM vscp_type WHERE link_to_class=%1").arg(classid);
-      QSqlQuery queryType(sqlTypeQuery, m_evdb);
-
-      while (queryType.next()) {
-        uint typeIdx                                               = queryType.value(0).toUInt();
-        uint16_t typeId                                            = queryType.value(1).toUInt();
-        QString typeToken                                          = queryType.value(3).toString();
-        uint32_t combined                                          = ((classid << 16) + typeId);
-        m_mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] = typeToken;
-      }
-    }
+  sqlite3_stmt* ppStmt_class;
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(m_db_vscp_classtype,
+                            "SELECT * FROM vscp_class order by class",
+                            -1,
+                            &ppStmt_class,
+                            NULL))) {
+    spdlog::error("Failed to prepare class fetch from class & type database. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
+    sqlite3_close(m_db_vscp_classtype);
+    m_mutexVscpEventsMaps.unlock();
+    return false;
   }
 
+  while (SQLITE_ROW == sqlite3_step(ppStmt_class)) {
+    uint16_t classid               = (uint16_t)sqlite3_column_int(ppStmt_class, 0);
+    QString className              = (const char*)sqlite3_column_text(ppStmt_class, 1);
+    QString classToken             = (const char*)sqlite3_column_text(ppStmt_class, 2);
+    m_mapVscpClassToToken[classid] = classToken;
+
+    QString sqlTypeQuery = QString("SELECT * FROM vscp_type WHERE link_to_class=%1").arg(classid);
+    sqlite3_stmt* ppStmt_type;
+    if (SQLITE_OK !=
+        (rv = sqlite3_prepare(m_db_vscp_classtype,
+                              sqlTypeQuery.toStdString().c_str(),
+                              -1,
+                              &ppStmt_type,
+                              NULL))) {
+      spdlog::error("Failed to prepare type fetch from class & type database. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
+      sqlite3_finalize(ppStmt_class);
+      sqlite3_close(m_db_vscp_classtype);
+      m_mutexVscpEventsMaps.unlock();
+      return false;
+    }
+
+    while (SQLITE_ROW == sqlite3_step(ppStmt_type)) {
+      uint typeIdx                                               = (uint16_t)sqlite3_column_int(ppStmt_type, 0);
+      uint16_t typeId                                            = (uint16_t)sqlite3_column_int(ppStmt_type, 1);
+      QString typeToken                                          = (const char*)sqlite3_column_text(ppStmt_type, 3);
+      uint32_t combined                                          = ((classid << 16) + typeId);
+      m_mapVscpTypeToToken[(((uint32_t)classid << 16) + typeId)] = typeToken;
+    } // while type
+
+    sqlite3_finalize(ppStmt_type);
+
+  } // while class
+
+  sqlite3_finalize(ppStmt_class);
   m_mutexVscpEventsMaps.unlock();
   return true;
 }
@@ -901,6 +928,7 @@ vscpworks::loadGuidTable(void)
                             &ppStmt,
                             NULL))) {
     spdlog::error("Failed to query GUID's. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
+    sqlite3_finalize(ppStmt);
     m_mutexGuidMap.unlock();
     return false;
   }
@@ -911,7 +939,6 @@ vscpworks::loadGuidTable(void)
     m_mapGuidToSymbolicName[guid] = name;
   }
   sqlite3_finalize(ppStmt);
-
   m_mutexGuidMap.unlock();
   return true;
 }
@@ -936,6 +963,7 @@ vscpworks::loadSensorTable(void)
                             &ppStmt,
                             NULL))) {
     spdlog::error("Failed to query sensor indexes. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_works));
+    sqlite3_finalize(ppStmt);
     m_mutexSensorIndexMap.unlock();
     return false;
   }
@@ -947,7 +975,6 @@ vscpworks::loadSensorTable(void)
     m_mapSensorIndexToSymbolicName[(link_to_guid << 8) + sensor] = name;
   }
   sqlite3_finalize(ppStmt);
-
   m_mutexSensorIndexMap.unlock();
   return true;
 }
@@ -1007,6 +1034,7 @@ vscpworks::getIdxForGuidRecord(const QString& guid)
 
   QString strInsert = tr("SELECT * FROM guid WHERE guid='%1';").arg(guid);
   if (SQLITE_OK != sqlite3_prepare(m_db_vscp_works, strInsert.toStdString().c_str(), -1, &ppStmt, NULL)) {
+    sqlite3_finalize(ppStmt);
     m_mutexGuidMap.unlock();
     return -1;
   }
@@ -1079,26 +1107,43 @@ vscpworks::getHelpUrlForType(uint16_t vscpClass, uint16_t vscpType)
 CVscpUnit
 vscpworks::getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit)
 {
+  int rv;
   CVscpUnit u(unit);
 
   u.m_vscp_class = vscpClass;
   u.m_vscp_type  = vscpType;
 
-  QString strQuery = "SELECT * FROM vscp_unit WHERE nunit='%1' AND link_to_class=%2 AND link_to_type=%3;";
+  m_mutexVscpEventsMaps.lock();
 
-  QSqlQuery query(m_evdb);
-  query.exec(strQuery.arg(unit).arg(vscpClass).arg(vscpType));
+  QString strQuery = tr("SELECT * FROM vscp_unit WHERE nunit='%1' AND link_to_class=%2 AND link_to_type=%3;")
+                       .arg(unit)
+                       .arg(vscpClass)
+                       .arg(vscpType);
 
-  while (query.next()) {
-    u.m_unit         = query.value(3).toInt();
-    u.m_name         = query.value(4).toString().toStdString();
-    u.m_description  = query.value(5).toString().toStdString();
-    u.m_conversion0  = query.value(6).toString().toStdString();
-    u.m_conversion   = query.value(7).toString().toStdString();
-    u.m_symbol_ascii = query.value(8).toString().toStdString();
-    u.m_symbol_utf8  = query.value(9).toString().toStdString();
+  sqlite3_stmt* ppStmt;
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(m_db_vscp_classtype,
+                            strQuery.toStdString().c_str(),
+                            -1,
+                            &ppStmt,
+                            NULL))) {
+    spdlog::error("Failed to prepare unit fetch from class & type database. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
+    sqlite3_finalize(ppStmt);
+    m_mutexVscpEventsMaps.unlock();
   }
 
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    u.m_unit         = sqlite3_column_int(ppStmt, 3);
+    u.m_name         = (const char*)sqlite3_column_text(ppStmt, 4);
+    u.m_description  = (const char*)sqlite3_column_text(ppStmt, 5);
+    u.m_conversion0  = (const char*)sqlite3_column_text(ppStmt, 6);
+    u.m_conversion   = (const char*)sqlite3_column_text(ppStmt, 7);
+    u.m_symbol_ascii = (const char*)sqlite3_column_text(ppStmt, 8);
+    u.m_symbol_utf8  = (const char*)sqlite3_column_text(ppStmt, 9);
+  }
+
+  sqlite3_finalize(ppStmt);
+  m_mutexVscpEventsMaps.unlock();
   return u;
 }
 
@@ -1180,28 +1225,59 @@ vscpworks::replaceVscpRenderVariables(const std::string& str)
 QStringList
 vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type)
 {
+  int rv;
   QStringList strList;
-  QString strQuery = "SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;";
+
+  m_mutexVscpEventsMaps.lock();
+
+  QString strQuery = tr("SELECT * FROM vscp_render WHERE type='%1' AND link_to_class=%2 AND link_to_type=%3;");
   qDebug() << strQuery.arg(type).arg(vscpClass).arg(vscpType);
 
-  QSqlQuery query(m_evdb);
-  query.exec(strQuery.arg(type).arg(vscpClass).arg(vscpType));
+  sqlite3_stmt* ppStmt;
+  if (SQLITE_OK !=
+      (rv = sqlite3_prepare(m_db_vscp_classtype,
+                            strQuery.arg(type).arg(vscpClass).arg(vscpType).toStdString().c_str(),
+                            -1,
+                            &ppStmt,
+                            NULL))) {
+    spdlog::error("Failed to prepare render fetch for class + type render code.. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
+    sqlite3_finalize(ppStmt);
+    m_mutexVscpEventsMaps.unlock();
+    return strList; // empty
+  }
+
   // Try if there is a general render definition if none
   // is defined for the event
-  qDebug() << query.size();
-  qDebug() << query.numRowsAffected();
-  if (query.next()) {
-    query.first();
+
+  if (SQLITE_ROW == sqlite3_step(ppStmt)) {
+    goto FILL_RENDER_DATA;
   }
   else {
-    // Definition for all events of class
-    query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
-    query.first();
+    // No results - thats an error, there should be a definition for all events of class
+    sqlite3_finalize(ppStmt);
+
+    // We do a new query for the main render code
+    // query.exec(strQuery.arg(type).arg(vscpClass).arg(-1));
+    // query.first();
+    if (SQLITE_OK !=
+        (rv = sqlite3_prepare(m_db_vscp_classtype,
+                              strQuery.arg(type).arg(vscpClass).arg(-1).toStdString().c_str(),
+                              -1,
+                              &ppStmt,
+                              NULL))) {
+      spdlog::error("Failed to prepare render fetch for class render code. rv={0} {1}", rv, sqlite3_errmsg(m_db_vscp_classtype));
+      sqlite3_finalize(ppStmt);
+      m_mutexVscpEventsMaps.unlock();
+      return strList; // empty
+    }
   }
-  do {
+
+  while (SQLITE_ROW == sqlite3_step(ppStmt)) {
+
+  FILL_RENDER_DATA:
 
     // * * * VARIABLES * * *
-    QString vscpVariables = query.value(4).toString();
+    QString vscpVariables = (const char*)sqlite3_column_text(ppStmt, 4); // query.value(4).toString();
     if (vscpVariables.startsWith("BASE64:", Qt::CaseInsensitive)) {
       vscpVariables = vscpVariables.right(vscpVariables.length() - 7);
       vscpVariables = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
@@ -1213,7 +1289,7 @@ vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type
     qDebug() << vscpVariables;
 
     // * * * TEMPLATES * * *
-    QString vscpTemplate = query.value(5).toString();
+    QString vscpTemplate = (const char*)sqlite3_column_text(ppStmt, 5); // query.value(5).toString();
     if (vscpTemplate.startsWith("BASE64:", Qt::CaseInsensitive)) {
       vscpTemplate = vscpTemplate.right(vscpTemplate.length() - 7);
       vscpTemplate = QByteArray::fromBase64(vscpVariables.toLatin1(), QByteArray::Base64Encoding);
@@ -1221,7 +1297,10 @@ vscpworks::getVscpRenderData(uint16_t vscpClass, uint16_t vscpType, QString type
     vscpTemplate.replace("\"", "&quote;").replace("&quote;", "'").replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
     qDebug() << vscpTemplate;
     strList << vscpVariables << vscpTemplate;
-  } while (query.next());
+  }
+
+  sqlite3_finalize(ppStmt);
+  m_mutexVscpEventsMaps.unlock();
 
   return strList;
 }

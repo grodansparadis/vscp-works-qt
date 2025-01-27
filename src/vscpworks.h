@@ -49,8 +49,6 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QObject>
-#include <QSqlDatabase>
-
 #include <list>
 
 #include <mustache.hpp>
@@ -548,8 +546,8 @@ public:
   // QSqlDatabase m_worksdb;
   sqlite3* m_db_vscp_works;
 
-  /// Event database
-  QSqlDatabase m_evdb;
+  /// VSCP event database
+  sqlite3* m_db_vscp_classtype;
 
   // List with open childwindows
   std::list<QMainWindow*> m_childWindows;

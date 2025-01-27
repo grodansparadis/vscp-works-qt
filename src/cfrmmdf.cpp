@@ -78,12 +78,10 @@
 #include <QClipboard>
 #include <QFile>
 #include <QJSEngine>
-#include <QSqlTableModel>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
 #include <QXmlStreamReader>
-#include <QtSql>
 #include <QtWidgets>
 
 // ----------------------------------------------------------------------------
