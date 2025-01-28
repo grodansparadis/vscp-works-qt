@@ -8,13 +8,29 @@
  * [Windows](setting_up_the_system_on_windows.md)
  * [Macintosh](setting_up_the_system_on_macintosh.md)
  * [Raspberry Pi](setting_up_the_system_on_raspberry_pi.md)
- * [Beaglebone](setting_up_the_system_on_beaglebone.md)
- * [ArchLinuxArm](setting_up_the_system_on_an_embeded_archlinuxarm_system.md)
 
 * Configure
  * [Configuration file format](configuring_the_vscp_daemon.md)
  * [Startup switches](startup_switches.md)
  * [Files and directory structure](files_and_directory_structure.md)
+
+* Connections
+ * [Introduction](connection.md)
+
+* Session window
+ * [Introduction](session.md)
+
+* Node scan window
+ * [Introduction](scan.md)
+
+* Node configuration window
+ * [Introduction](configuration.md)
+
+* Firmware update
+ * [Introduction](firmware_update.md)
+
+* Module Description Files (MDF)
+ * [Introduction](mdf.md) 
 
 * Logging, diagnostic and debugging
   * [Solving problems and troubleshooting](solving_problems.md)
