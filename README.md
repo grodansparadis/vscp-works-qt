@@ -46,7 +46,7 @@ You need expat, mosquitto, openssl and libcurl to build this project
   sudo apt install libpq-dev
 
 ```
-### Clone the vscp-works-qt repository in a folder (on the same level as vscp above).
+### Clone the vscp-works-qt repository in a folder.
 ```bash
   git clone  --recurse-submodules -j4 https://github.com/grodansparadis/vscp-works-qt.git
 ```  
@@ -57,7 +57,7 @@ You need expat, mosquitto, openssl and libcurl to build this project
   mkdir build
   cd build
   cmake -DCMAKE_PREFIX_PATH=~/Qt/6.8.1/gcc_64 ..
-  make  
+  make
 ```
 
 where **CMAKE_PREFIX_PATH** should point to the Qt version you installed previously

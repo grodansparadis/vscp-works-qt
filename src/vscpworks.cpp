@@ -823,7 +823,7 @@ bool
 vscpworks::openVscpWorksDatabase(void)
 {
   int rv;
-  sqlite3_stmt* ppStmt;
+  //sqlite3_stmt* ppStmt;
 
   // Set up database
   QString eventdbname = m_shareFolder + "vscpworks.sqlite3";
