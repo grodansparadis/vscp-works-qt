@@ -20,3 +20,6 @@ vscp-works-qt.sln
 vscp-works-qt.vcxproj
 vscp-works-qt.vcxproj.filters
 DistributionKit/
+deploy-qt-.cmake
+deploy-qt-linux.cmake
+deploy-qt-windows.cmake

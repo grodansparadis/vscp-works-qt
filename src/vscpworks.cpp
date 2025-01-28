@@ -327,7 +327,7 @@ vscpworks::loadSettings(void)
 
   fprintf(stderr, "Loading application data\n");
 
-  // If the database don't exist, bail out
+  // If the config file does't exist, bail out after writing defaults
   if (!QFile::exists(m_configFile)) {
     writeSettings();
     if (!QFile::exists(m_configFile)) {
@@ -747,7 +747,7 @@ vscpworks::loadEventDb(void)
   QString dbpath = m_shareFolder;
   dbpath += "vscp_events.sqlite3";
 
-  // If the database don't exist, bail out
+  // If the database does not exist, bail out
   if (!QFile::exists(dbpath)) {
     QString err = QString(tr("The VSCP event database does not exist. Is it available? [%s]")).arg(dbpath);
     fprintf(stderr, "%s", err.toStdString().c_str());

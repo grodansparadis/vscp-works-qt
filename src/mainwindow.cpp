@@ -436,7 +436,7 @@ MainWindow::checkRemoteEventDbVersion()
     QString path = pworks->m_shareFolder;
     path += "vscp_events.sqlite3";
 
-    // If there is a newer version we should download it
+    // If there is a newer version or it does not exist we should download it
     if (!QFile::exists(path) ||
         (pworks->m_lastEventDbServerDateTime.toSecsSinceEpoch() >
          pworks->m_lastEventDbLoadDateTime.toSecsSinceEpoch())) {

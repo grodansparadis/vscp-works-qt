@@ -57,6 +57,7 @@ You need expat, mosquitto, openssl and libcurl to build this project
   mkdir build
   cd build
   cmake -DCMAKE_PREFIX_PATH=~/Qt/6.8.1/gcc_64 ..
+  make  
 ```
 
 where **CMAKE_PREFIX_PATH** should point to the Qt version you installed previously
