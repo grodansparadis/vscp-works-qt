@@ -92,12 +92,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+set(REQUIRED_QT_VERSION "6.6.2")
 
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort)
+find_package(Qt6 6.6.2 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort)
 qt_standard_project_setup()
 
 # pthreads
@@ -685,24 +686,54 @@ set(CPACK_GENERATOR "IFW")
 if(WIN32)
 set(CPACK_IFW_ROOT "G:/Qt/QtIFW-4.8.1")
 else(WIN32)
-set(CPACK_IFW_ROOT "~/Qt/Tools/QtInstallerFramework/4.8")
+set(CPACK_IFW_ROOT "~/Qt/QtIFW-4.8.1")
 endif(WIN32)
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_VERSION_PATCH "1")
 include(CPack)
 if(WIN32)
 include(CPackIFW)
 endif(WIN32)
 
-#if(WIN32)
-#else
-#if(CPACK_GENERATOR MATCHES "DEB")
-#    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
-#elseif(CPACK_GENERATOR MATCHES "TGZ")
-#    set(CPACK_PACKAGING_INSTALL_PREFIX "")
-#endif()
-#endif()
+set (CPACK_IFW_PACKAGE_NAME "vscp-works-qt")
+set (CPACK_IFW_PACKAGE_TITLE "VSCP Works Installer")
+set (CPACK_IFW_PACKAGE_PUBLISHER "Grodans Paradis AB")
+set (CPACK_IFW_PACKAGE_WIZARD_STYLE "Aero")
+set (CPACK_IFW_PACKAGE_WIZARD_SHOW_PAGE_LIST OFF)
+
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/install/licence.txt)
+
+if(WIN32)
+
+# Adds license info to package.xml file
+# Also copies licence.txt to 'meta' directory to display the license text in the installer.
+cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "ICS License" ${CPACK_RESOURCE_FILE_LICENSE})
+
+# Customizing the UI with a script
+cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/installscript.qs)
+# ... and an associated .ui file
+cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} USER_INTERFACES ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/page.ui)
+
+find_program(WINDEPLOYQT windeployqt HINTS "${_qt_bin_dir}")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake" @ONLY)
+
+# Adds basic repository entries to config.xml file
+# Runs repogen command on the packages directory
+cpack_ifw_add_repository("vscpworks" URL "https://vscp.org/downloads/vscpworks" )
+
+else(WIN32)
+
+find_program(LINUXDEPLOYQT linuxdeployqt HINTS "${_qt_bin_dir}")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake" @ONLY)
+
+if(CPACK_GENERATOR MATCHES "IFW")
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
+elseif(CPACK_GENERATOR MATCHES "TGZ")
+    set(CPACK_PACKAGING_INSTALL_PREFIX "")
+endif()
+
+endif(WIN32)
 
 endif() # "${CMAKE_ROOT}/Modules/CPack.cmake"
 

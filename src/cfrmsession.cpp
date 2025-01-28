@@ -3659,7 +3659,12 @@ CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
   QString strClass  = getClassInfo(pev);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  item->setText(strClass);
+  if (strClass.length()) {
+    item->setText(strClass);
+  }
+  else {
+    item->setText(vscp_str_format("? class=0x%04X %d", pev->vscp_type, pev->vscp_type).c_str());
+  }
 
   // Tooltip
   item->setToolTip(
@@ -3743,7 +3748,12 @@ CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
   QString strType   = getTypeInfo(pev);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  item->setText(strType);
+  if (strType.length()) {
+    item->setText(strType);
+  }
+  else {
+    item->setText(vscp_str_format("? type=0x%04X %d", pev->vscp_type, pev->vscp_type).c_str());
+  }
 
   // Tooltip
   item->setToolTip(

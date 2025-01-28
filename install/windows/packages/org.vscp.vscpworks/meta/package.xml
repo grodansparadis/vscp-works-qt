@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>VSCP Works Qt</DisplayName>
+    <Description>The VSCP toolbox</Description>
+    <Version>0.0.1</Version>
+    <ReleaseDate>2025-01-28</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <UpdateText>Update</UpdateText>
+    <Dependencies>
+        <Dependency name="vscp-works-qt" version="0.0.1" />
+    </Dependencies>
+    <Licenses>
+        <License nam="MIT" file="license.txt" />
+    </Licenses>
+</Package>

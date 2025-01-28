@@ -1,4 +1,4 @@
-# Building install package on linux
+# Building install package on Linux
 
 The installation package for Linux is built on a Ubuntu 20.04.2 LTS system (oldest supported LTS) using linuxdeployqt. 
 

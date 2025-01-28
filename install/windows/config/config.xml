@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>vscp-works-qt</Name>
+    <Version>0.0.1</Version>
+    <Title>VSCP Works +</Title>
+    <Publisher>Grodans Paradis AB</Publisher>
+    <StartMenuDir>VSCP</StartMenuDir>
+    <TargetDir>@HomeDir@/VSCP/VSCP Works Qt</TargetDir>
+    <RemoteRepositories>
+        <Repository>
+            <Url>https://vscp.org/packages</Url>
+            <Enabled>true</Enabled>
+            <DisplayName>VSCP Project</DisplayName>
+        </Repository>
+    </RemoteRepositories>
+    <ControlScript>installscript.qs</ControlScript>
+    <PackageInfo>package.xml</PackageInfo>
+    <UserInterfaces>
+        <UserInterface>ui/installer.ui</UserInterface>
+    </UserInterfaces>
+    <InstallerWindowIcon>icon.ico</InstallerWindowIcon> 
+</Installer>
