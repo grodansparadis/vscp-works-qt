@@ -6,10 +6,17 @@
 ![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
+  * [Introduction](https://github.com/grodansparadis/vscp-works-qt#Introduction)
+  * [Install from binary file](https://github.com/grodansparadis/vscp-works-qt#install-from-binary-file)
+  * [Build on Linux](https://github.com/grodansparadis/vscp-works-qt#build-on-linux)
+  * [Build on windows](https://github.com/grodansparadis/vscp-works-qt#build-on-windows) 
+  * [Configuration](https://github.com/grodansparadis/vscp-works-qt#configuration)
 
-This is the new version of **vscpworks** that replaces [the long since deprecated version](https://github.com/grodansparadis/vscpworks). It is a total rewrite and there is still a lot of things to add and fix. There is very little documentation but it will grow as we go. The state of the code should be regarded as alpha still for some time.  
+![](docs/images/session-event.png) 
 
-That said a lot of functionality works and it may be a useful tool for VSCP developers. 
+## Introduction
+
+This is the new version of **vscpworks** that replaces [the long since deprecated version](https://github.com/grodansparadis/vscpworks). It is a total rewrite and there is still a lot of things to add and fix. There is currently very little documentation but it will grow as we go. The state of the code should be regarded as alpha still for some time.  That said a lot of functionality works and it may be a useful tool for VSCP developers. 
 
   * Communication channels can be opened over socketcan/CANAL/tcp/ip and MQTT to remote devices. GUID's and sensors can have symbolic names. Easy to investigate event values and timing.  
   * Configuration handling can be opended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
@@ -19,7 +26,10 @@ That said a lot of functionality works and it may be a useful tool for VSCP deve
 
 Binary versions for Linux and windows is available in the release section.
 
-The manual is available [here]()
+The manual is available [here](https://grodansparadis.github.io/vscp-works-qt/#/)
+
+## Install from binary file
+tbd.
 
 ## Build on Linux
 If you want to build this project on linux follow the steps below
@@ -199,7 +209,7 @@ Note that you must have a *developer command prompt*
 
 **Internal project Notes and trouble shooting below**
 
-## config
+## configuration
 
 The config file for VSCP works qt is JSON based and have the following format
 
