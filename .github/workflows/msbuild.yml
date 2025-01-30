@@ -7,7 +7,7 @@ env:
   # -G "Visual Studio 16 2019"
   SOLUTION_FILE_PATH: .
   VSCP_PATH: ${{github.workspace}}/third_party/vscp
-  ENVIRONMENT_SCRIPT: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+  #ENVIRONMENT_SCRIPT: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
   GENERATORS: "Visual Studio 17 2022"
   BUILD_CONFIGURATION: Release
   TRIPLET: x64-windows
@@ -29,18 +29,19 @@ jobs:
     - name: Install ms-dev environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
-        arch: x64
+        arch: amd_x64
+        toolset: 17.0
   
     # https://ddalcino.github.io/aqt-list-server/      
     - name: Prepare Qt Libraries
       uses: Kidev/install-qt-action@v4.4.2
       with:
-        version: '6.2.0'
+        version: '6.8.1'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport'
-        cache: 'false'
+        cache: 'true'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
         set-env: 'true'
@@ -54,13 +55,6 @@ jobs:
       with:
         submodules: 'recursive'
 
-    # - name: Install vcpkg
-    #   uses: lukka/run-vcpkg@v2
-    #   with:
-    #     vcpkgDirectory: 'C:/vcpkg/'
-    #     vcpkgArguments: '@C:/vcpkg/.txt'
-    #     appendedCacheKey: ${{ hashFiles(env.vcpkgResponseFile) }}
-
     # Install latest CMake.
     - name: Get latest CMake and ninja
       uses: lukka/get-cmake@latest
@@ -68,7 +62,7 @@ jobs:
         # Just install vcpkg for now, do not install any ports in this step yet.
         setupOnly: true
         # Location of the vcpkg as submodule of the repository.
-        vcpkgDirectory: 'C:/vcpkg/'
+        vcpkgDirectory: '${{github.workspace}}/vcpkg/'
         # Since the cache must be invalidated when content of the vcpkg.json file changes, let's
         # compute its hash and append this to the computed cache's key.
         appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
@@ -85,37 +79,21 @@ jobs:
       shell: powershell
       run: Install-Module 7Zip4PowerShell -Force -Verbose
 
-    #- name: Prepare Qt Libraries
-    #  uses: jurplel/install-qt-action@v2
-
-    # - name: Cache vcpkg
-    #   id: cache-vcpkg
-    #   uses: actions/cache@v2
-    #   with:
-    #     path: vcpkg
-    #     key: ${{ runner.os }}-vcpkg
-
-    # - name: Checkout vcpkg repo
-    #   uses: actions/checkout@v4
-    #   with:
-    #     repository: microsoft/vcpkg
-    #     path: C:/vcpkg
-
     - name: Integrate with development environment and install
       shell: cmd
-      working-directory: C:/vcpkg/
+      working-directory: ${{github.workspace}}/vcpkg/
       run: |
-        call C:/vcpkg/vcpkg.exe/bootstrap-vcpkg.bat
-        C:/vcpkg/vcpkg.exe integrate install
-        C:/vcpkg/vcpkg.exe install curl:x64-windows
-        C:/vcpkg/vcpkg.exe install expat:x64-windows
-        C:/vcpkg/vcpkg.exe install spdlog:x64-windows
-        C:/vcpkg/vcpkg.exe install libmosquitto:x64-windows
-        C:/vcpkg/vcpkg.exe install mosquitto:x64-windows
-        C:/vcpkg/vcpkg.exe install pthread:x64-windows
-        C:/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows
-        C:/vcpkg/vcpkg.exe install openssl:x64-windows
-        C:/vcpkg/vcpkg.exe install libwebsockets:x64-windows
+        call ${{github.workspace}}/vcpkg/vcpkg.exe/bootstrap-vcpkg.bat
+        ${{github.workspace}}/vcpkg/vcpkg.exe integrate install
+        ${{github.workspace}}/vcpkg/vcpkg.exe install curl:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install expat:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install spdlog:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install libmosquitto:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install mosquitto:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install pthread:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install dlfcn-win32:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install openssl:x64-windows
+        ${{github.workspace}}/vcpkg/vcpkg.exe install libwebsockets:x64-windows
 
     - name: Configure CMake and build
       run: |    
