@@ -114,6 +114,7 @@ private slots:
     void setDriverPath();
     void wizard();
     void filterwizard();
+    void showHelp();
 
 private:
 

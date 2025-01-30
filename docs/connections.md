@@ -67,6 +67,26 @@ The `wizard button` can give you a view of what events are filtered out an not. 
 
 In all above cases the numerical base dialog can be used to set the display numerical base for all values. The default is hexadecimal but you can also use decimal, octal or binary. Numbers can be entered using any base. Just proceed hexadecimals with `0x`, octals with `0o` and binary with `0b`. No prefix will be read as decimal values.
 
+### Socketcan
+![](./images/add_connection_socketcan.png)
+
+ - `Description`: Set a descriptive name. This value will be used to identify the connection in the treeview.
+ - `Device`: Set the device name for the CAN interface. This is usually something like `can0` or `can1`. The exact name is system dependent. You can find the names in the `/sys/class/net/` folder.
+ - `Flags`: Socketcan flags. The flags are used to set some special options for the CAN interface. The exact meaning of the flags is system dependent
+ - `Response timeout`: The time in milliseconds to wait for a response from the device. If no response is received the operation will be aborted.
+  - `Filters`: You can set any number of filters for the CAN interface. The filter is a 32-bit value that is used to filter out messages that are not of interest. If the mask is zero all messages are passed. If the mask is not zero only messages that match the filter are passed. The filter is a bitwise AND operation between the mask and the message id. If the result is equal to the filter the message is passed.
+
+#### Test button
+Press the `Test connection` button to check if your socketcan settings works.
+
+#### Handling filters
+You can use the `Add filter` button to add a filter, `Edit filter` button to edit a selected a filter, `Clone filter` button to clone a selected filter and `Delete filter` button to remove a selected filter.
+
+See [CANAL filters](connections.md) for more information about filters.
+
+### tcp/ip
+
+
 # Remove a connection
 
 Select the connection you want to remove in the treeview and right click. Select `Remove connection` in the context menu. The connection will be removed.

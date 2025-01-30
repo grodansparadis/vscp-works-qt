@@ -44,6 +44,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QPushButton>
 
 #include <string>
 
@@ -63,12 +64,15 @@ CDlgConnSettingsCanal::CDlgConnSettingsCanal(QWidget* parent)
   ui->setupUi(this);
 
   // Clear filter
-  //memset(&m_filter, 0, sizeof(vscpEventFilter));
+  // memset(&m_filter, 0, sizeof(vscpEventFilter));
 
   connect(ui->btnTest, SIGNAL(clicked()), this, SLOT(testDriver()));
   connect(ui->btnSetPath, SIGNAL(clicked()), this, SLOT(setDriverPath()));
   connect(ui->btnWizard, SIGNAL(clicked()), this, SLOT(wizard()));
   connect(ui->btnFilterWizard, SIGNAL(clicked()), this, SLOT(filterwizard()));
+  // Add help functionality
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -900,4 +904,15 @@ CDlgConnSettingsCanal::filterwizard()
     ui->editFilter->setText(pworks->decimalToStringInBase(canid));
     ui->editMask->setText(pworks->decimalToStringInBase(mask));
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgConnSettingsCanal::showHelp()
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QDesktopServices::openUrl(QUrl(link));
 }

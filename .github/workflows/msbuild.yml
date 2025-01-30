@@ -29,7 +29,7 @@ jobs:
     - name: Install ms-dev environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
-        arch: amd_x86
+        arch: amd64_x86
         toolset: 17.0
   
     # https://ddalcino.github.io/aqt-list-server/      
