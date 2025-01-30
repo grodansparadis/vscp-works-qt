@@ -1,55 +1,47 @@
-* Introduction
- * [Start](start.md)
- * [Introduction](introduction.md)
+* **Introduction**
+  * [Start](start.md)
+  * [Introduction](introduction.md)
 
-* Setup
-* [Setting up the system - intro](setting_up_the_system.md)
- * [Linux/Unix](setting_up_the_system_on_linux.md)
- * [Windows](setting_up_the_system_on_windows.md)
- * [Macintosh](setting_up_the_system_on_macintosh.md)
- * [Raspberry Pi](setting_up_the_system_on_raspberry_pi.md)
+* **Setup**
+  * _[General](setting_up_the_system.md)_
+    * [Linux/Unix](setting_up_the_system_on_linux.md)
+     * [Windows](setting_up_the_system_on_windows.md)
+     * [Macintosh](setting_up_the_system_on_macintosh.md)
+     * [Raspberry Pi](setting_up_the_system_on_raspberry_pi.md)
 
-* Configure
- * [Configuration file format](configuring_the_vscp_daemon.md)
- * [Startup switches](startup_switches.md)
- * [Files and directory structure](files_and_directory_structure.md)
+* **Configure**
+  * [Configuration file format](configure.md)
+  * [Files and directory structure](files_and_directory_structure.md)
 
-* Connections
- * [Introduction](connection.md)
+* **Connections**
+  * [Introduction](connections.md)
 
-* Session window
- * [Introduction](session.md)
+* **Session window**
+  * [Introduction](session_window.md)
 
-* Node scan window
- * [Introduction](scan.md)
+* **Node scan window**
+  * [Introduction](scan_window.md)
 
-* Node configuration window
- * [Introduction](configuration.md)
+* **Node configuration window**
+  * [Introduction](config_window.md)
 
-* Firmware update
- * [Introduction](firmware_update.md)
+* **Firmware update**
+  * [Firmware](bootload_window.md)
 
-* Module Description Files (MDF)
- * [Introduction](mdf.md) 
+* **Module Description Files (MDF)**
+  * [Introduction](mdf.md) 
 
-* Logging, diagnostic and debugging
+* **Logging, diagnostic and debugging**
   * [Solving problems and troubleshooting](solving_problems.md)
   * [logging](logging.md)
 
-* Server/Service Discovery
- * [General](server_disovery.md)
- * [High end server probe](server_disovery_probe.md)
- * [Heartbeats](server_disovery_heartbeats.md)	
+* **Server/Service Discovery**
+  * [General](server_disovery.md)
+  * [High end server probe](server_disovery_probe.md)
+  * [Heartbeats](server_disovery_heartbeats.md)	
 
-* Drivers
- *  [Driver Interfaces](driver_interfaces.md)
-  * [Level I Drivers](level_i_drivers.md)
-  * [Level II Drivers](level_ii_drivers.md)
+* **Appendix**
+  * tbd
 
-* Appendix
- * [History](./history.md)
- * [Setting up a Mosquitto MQTT broker](./mosquitto_set_up_broker.md)
- * [Setting up websockets on a Mosquitto MQTT broker](./mosquitto_set_up_websockets.md)
-
-* Other documentation
- *  [Documentation Site](https://docs.vscp.org)
+* **Other documentation**
+  *  [Documentation Site](https://docs.vscp.org)

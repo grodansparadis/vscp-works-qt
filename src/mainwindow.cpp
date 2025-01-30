@@ -1382,13 +1382,13 @@ MainWindow::chkUpdate()
     }
 
     QMessageBox::information(this,
-                            tr(APPNAME),
-                            tr("Downloaded new version of VSCP Works+ %0.%1.%2 to %3\n Please install it manually.")
+                             tr(APPNAME),
+                             tr("Downloaded new version of VSCP Works+ %0.%1.%2 to %3\n Please install it manually.")
                                .arg(major)
                                .arg(minor)
                                .arg(release)
                                .arg(downloadPath.c_str()),
-                            QMessageBox::Ok);
+                             QMessageBox::Ok);
 
     // Start the downloaded file
     // std::string strCmd = "start ";
@@ -1514,6 +1514,8 @@ MainWindow::createActions()
 
   exitAct->setStatusTip(tr("Exit the application"));
 
+  // ----------------------------------------------------------------
+
   QMenu* editMenu       = menuBar()->addMenu(tr("&Edit"));
   QToolBar* editToolBar = addToolBar(tr("Edit"));
 
@@ -1524,8 +1526,6 @@ MainWindow::createActions()
   cutAct->setShortcuts(QKeySequence::Cut);
   cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                           "clipboard"));
-  // connect(cutAct, &QAction::triggered, m_connTreeTable,
-  // &QPlainTextEdit::cut);
   editMenu->addAction(cutAct);
   editToolBar->addAction(cutAct);
 
@@ -1535,8 +1535,6 @@ MainWindow::createActions()
   copyAct->setShortcuts(QKeySequence::Copy);
   copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                            "clipboard"));
-  // connect(copyAct, &QAction::triggered, m_connTreeTable,
-  // &QPlainTextEdit::copy);
   editMenu->addAction(copyAct);
   editToolBar->addAction(copyAct);
 
@@ -1546,14 +1544,22 @@ MainWindow::createActions()
   pasteAct->setShortcuts(QKeySequence::Paste);
   pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                             "selection"));
-  // connect(pasteAct, &QAction::triggered, m_connTreeTable,
-  // &QPlainTextEdit::paste);
   editMenu->addAction(pasteAct);
   editToolBar->addAction(pasteAct);
 
-  menuBar()->addSeparator();
-
 #endif // !QT_NO_CLIPBOARD
+
+  menuBar()->addSeparator();
+  editMenu->addSeparator();
+
+  const QIcon preferenceIcon =
+    QIcon::fromTheme("edit-paste", QIcon(":/images/paste.png"));
+  QAction* preferenceAct = editMenu->addAction(tr("&Settings..."), this, &MainWindow::showMainsettings);
+  preferenceAct->setShortcuts(QKeySequence::Paste);
+  preferenceAct->setStatusTip(tr("Set preferences..."));
+  //editToolBar->addAction(preferenceAct);
+
+  // ----------------------------------------------------------------
 
   QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
   // QAction* settingsAct = toolsMenu->addAction(tr("&Settings"),
@@ -1567,10 +1573,15 @@ MainWindow::createActions()
                                                    this,
                                                    &MainWindow::sessionFilter);
   knownGuidAct->setStatusTip(tr("Edit/Add session filters..."));
-  QMenu* configMenu = menuBar()->addMenu(tr("&Configuration"));
-  QAction* settingsAct =
-    configMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
-  settingsAct->setStatusTip(tr("Open settings..."));
+
+  // ----------------------------------------------------------------
+
+  // QMenu* configMenu = menuBar()->addMenu(tr("&Configuration"));
+  // QAction* settingsAct =
+  //   configMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
+  // settingsAct->setStatusTip(tr("Open settings..."));
+
+  // ----------------------------------------------------------------
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
 

@@ -35,12 +35,12 @@ jobs:
     - name: Prepare Qt Libraries
       uses: Kidev/install-qt-action@v4.4.2
       with:
-        version: '6.8.1'
+        version: '6.2.0'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport'
-        cache: 'true'
+        cache: 'false'
         cache-key-prefix: 'install-qt-action'
         setup-python: 'true'
         set-env: 'true'

@@ -5,6 +5,8 @@
 **Describe software version**:${/var/document-version}      
 **Doc update:** ${/var/creation-time}       
 
+![](./images/session-event.png)
+
 This is the official documentation for the VSCP Works. Software that is part of the VSCP & Friends package. VSCP is an IoT framework mainly built for resource limited devices.
 
 Apart from going through this document you can read all about and download VSCP from [the VSCP site](https://www.vscp.org "The VSCP site"). 

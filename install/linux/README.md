@@ -77,3 +77,4 @@ It is now possible to to use the Qt installation framework to create an installe
  * [Qt Installer Framework](https://doc.qt.io/qtinstallerframework/ifw-tutorial.html)
  * [linuxdeployqt](https://github.com/probonopd/linuxdeployqt/releases)
  * [AppImage](https://github.com/AppImage/AppImageKit)
+ * [Qt Installer Framework with Qt 6 ](https://www.youtube.com/watch?v=3xuq985YKI0)
