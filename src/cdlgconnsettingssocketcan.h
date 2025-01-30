@@ -36,6 +36,7 @@
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QList>
+#include <QDesktopServices>
 
 // ----------------------------------------------------------------------------
 
@@ -155,6 +156,11 @@ public:
         Called when the set filter button is clicked
     */
     void onSetFlags(void);
+
+    /*!
+        Show help
+    */
+    void showHelp(void);
 
  private:
 

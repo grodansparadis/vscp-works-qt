@@ -7825,3 +7825,14 @@ CFrmMdf::deleteEvent(void)
       break;
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CFrmMdf::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QDesktopServices::openUrl(QUrl(link));
+}

@@ -44,6 +44,7 @@
 
 #include <QMessageBox>
 #include <QMenu>
+#include <QDesktopServices>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -96,6 +97,11 @@ CDlgConnSettingsSocketCan::CDlgConnSettingsSocketCan(QWidget* parent)
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onTestConnection);
 
   connect(ui->btnSetFlags, &QPushButton::clicked, this, &CDlgConnSettingsSocketCan::onSetFlags);
+
+  QPushButton *helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -490,10 +496,10 @@ CDlgConnSettingsSocketCan::onSetFlags(void)
 {
   CFilterListItem* item = (CFilterListItem*)ui->listFilters->currentItem();
 
-  if (nullptr == item) {
-    QMessageBox::warning(this, tr(APPNAME), tr("A filter must be selected from the list before you can set it"), QMessageBox::Ok);
-    return;
-  }
+  // if (nullptr == item) {
+  //   QMessageBox::warning(this, tr(APPNAME), tr("A filter must be selected from the list before you can set it"), QMessageBox::Ok);
+  //   return;
+  // }
 
   CDlgSocketCanFlags dlg(this);
 
@@ -561,3 +567,14 @@ CDlgConnSettingsSocketCan::onTestConnection(void)
 }
 
 #endif // WIN32
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgConnSettingsSocketCan::showHelp()
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=socketcan";
+  QDesktopServices::openUrl(QUrl(link));
+}

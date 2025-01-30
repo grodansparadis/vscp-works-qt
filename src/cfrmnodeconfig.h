@@ -798,14 +798,21 @@ public slots:
   void onSearchNextRemoteVariable(void);
 
   /*!
-    Select regsters from search result
+    Select registers from search result
   */
   void onSelectSearchRemoteVars(void);
+
+  /*!
+    Show help
+  */
+  void showHelp(void);
 
 signals:
 
   /// Data received from callback
   void dataReceived(vscpEvent* pev);
+
+  
 
 private:
   /// True if full Level II handling

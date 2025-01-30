@@ -625,7 +625,14 @@ public slots:
 
   int deleteMdfWidgetChildItems(QMdfTreeWidgetItem* pItem, mdf_record_type type);
 
+  /*!
+    Show help
+  */
+  void showHelp(void);
+
 signals:
+
+
 
 private:
   // The UI definition

@@ -1167,3 +1167,14 @@ CFrmNodeScan::goFirmwareUpdate(void)
 
   wiz.exec();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CFrmNodeScan::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QDesktopServices::openUrl(QUrl(link));
+}

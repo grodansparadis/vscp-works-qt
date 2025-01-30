@@ -38,141 +38,137 @@ namespace Ui {
 class CDlgLevel1Filter;
 }
 
-
-class CDlgLevel1Filter : public QDialog
-{
-    Q_OBJECT
+class CDlgLevel1Filter : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgLevel1Filter(QWidget *parent = nullptr);
-    ~CDlgLevel1Filter();
+  explicit CDlgLevel1Filter(QWidget* parent = nullptr);
+  ~CDlgLevel1Filter();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        set combo numbase index
-    */
-    void setNumBaseComboIndex(uint8_t index);
+  /*!
+      set combo numbase index
+  */
+  void setNumBaseComboIndex(uint8_t index);
 
-    /*!
-        Get combo numbase index
-    */
-    uint8_t getNumComboIndex(void);
+  /*!
+      Get combo numbase index
+  */
+  uint8_t getNumComboIndex(void);
 
-    // ----------------------------------------------------------------------------
-    //                             Getters & Setters
-    // ----------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------
+  //                             Getters & Setters
+  // ----------------------------------------------------------------------------
 
-    /*!
-        Priority filter getter/setters
-    */
-    void setDescription(const std::string& description);
-    std::string getDescription(void);
+  /*!
+      Priority filter getter/setters
+  */
+  void setDescription(const std::string& description);
+  std::string getDescription(void);
 
-    /*!
-        Priority filter getter/setters
-    */
-    void setVscpPriorityFilter(uint8_t value);
-    uint8_t getVscpPriorityFilter(void);
+  /*!
+      Priority filter getter/setters
+  */
+  void setVscpPriorityFilter(uint8_t value);
+  uint8_t getVscpPriorityFilter(void);
 
-    /*!
-        Priority mask getter/setters
-    */
-    void setVscpPriorityMask(uint8_t value);
-    uint8_t getVscpPriorityMask(void);
+  /*!
+      Priority mask getter/setters
+  */
+  void setVscpPriorityMask(uint8_t value);
+  uint8_t getVscpPriorityMask(void);
 
-    /*!
-        Class filter getter/setters
-    */
-    void setVscpClassFilter(uint16_t value);
-    uint16_t getVscpClassFilter(void);
+  /*!
+      Class filter getter/setters
+  */
+  void setVscpClassFilter(uint16_t value);
+  uint16_t getVscpClassFilter(void);
 
-    /*!
-        Class mask getter/setters
-    */
-    void setVscpClassMask(uint16_t value);
-    uint16_t getVscpClassMask(void);
+  /*!
+      Class mask getter/setters
+  */
+  void setVscpClassMask(uint16_t value);
+  uint16_t getVscpClassMask(void);
 
-    /*!
-        Type filter getter/setters
-    */
-    void setVscpTypeFilter(uint8_t value);
-    uint8_t getVscpTypeFilter(void);
+  /*!
+      Type filter getter/setters
+  */
+  void setVscpTypeFilter(uint8_t value);
+  uint8_t getVscpTypeFilter(void);
 
-    /*!
-        Type mask getter/setters
-    */
-    void setVscpTypeMask(uint8_t value);
-    uint8_t getVscpTypeMask(void);
+  /*!
+      Type mask getter/setters
+  */
+  void setVscpTypeMask(uint8_t value);
+  uint8_t getVscpTypeMask(void);
 
-    /*!
-        Nodeid filter getter/setters
-    */
-    void setVscpNodeIdFilter(uint8_t value);
-    uint8_t getVscpNodeIdFilter(void);
+  /*!
+      Nodeid filter getter/setters
+  */
+  void setVscpNodeIdFilter(uint8_t value);
+  uint8_t getVscpNodeIdFilter(void);
 
-    /*!
-        Nodeid mask getter/setters
-    */
-    void setVscpNodeIdMask(uint8_t value);
-    uint8_t getVscpNodeIdMask(void);
-    
-    /*!
-        Set value for hardcoded checkbox
-    */
-    void setHardcoded(bool val);
-    bool getHardcoded(void);
+  /*!
+      Nodeid mask getter/setters
+  */
+  void setVscpNodeIdMask(uint8_t value);
+  uint8_t getVscpNodeIdMask(void);
 
-    /*!
-        Set/get value for inverted checkbox
-    */
-    void setInverted(bool val);
-    bool getInverted(void);
+  /*!
+      Set value for hardcoded checkbox
+  */
+  void setHardcoded(bool val);
+  bool getHardcoded(void);
 
-    /*!
-        Enable disable the description field
-    */
-    void disableDescriptionField(void);
-    void enableDescriptionField(void);
+  /*!
+      Set/get value for inverted checkbox
+  */
+  void setInverted(bool val);
+  bool getInverted(void);
 
-    
+  /*!
+      Enable disable the description field
+  */
+  void disableDescriptionField(void);
+  void enableDescriptionField(void);
 
- public slots:
+public slots:
 
-    /*!
-        Wizard button has been clicked
-    */
-    void onWizard(void);
+  /*!
+      Wizard button has been clicked
+  */
+  void onWizard(void);
 
-    /*!
-        Numerical base changed -recalc
-    */
-    void onBaseChange(int index);
+  /*!
+      Numerical base changed -recalc
+  */
+  void onBaseChange(int index);
 
-    // void onBaseChange(const QString&);
+  // void onBaseChange(const QString&);
 
-    /*!
-        ID and MASK should be entered
-    */
-    void onIdMask(void);
+  /*!
+      ID and MASK should be entered
+  */
+  void onIdMask(void);
+
+  /*!
+    Show help
+  */
+  void showHelp();
 
 private:
+  Ui::CDlgLevel1Filter* ui;
 
-    Ui::CDlgLevel1Filter *ui;
-
-    numerical_base m_baseIndex;
-    // void createMenu();
-    // void createHorizontalGroupBox();
-    // void createGridGroupBox();
-    // void createFormGroupBox();
-
+  numerical_base m_baseIndex;
+  // void createMenu();
+  // void createHorizontalGroupBox();
+  // void createGridGroupBox();
+  // void createFormGroupBox();
 };
-
 
 #endif // CDLGLEVEL1FILTER_H

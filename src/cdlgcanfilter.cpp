@@ -34,6 +34,8 @@
 #include "ui_cdlgcanfilter.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -44,13 +46,16 @@
 // CTor
 //
 
-CDlgCanFilter::CDlgCanFilter(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgCanFilter)
+CDlgCanFilter::CDlgCanFilter(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgCanFilter)
 {
-    ui->setupUi(this);
-    
-    setInitialFocus();
+  ui->setupUi(this);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,53 +64,66 @@ CDlgCanFilter::CDlgCanFilter(QWidget *parent) :
 
 CDlgCanFilter::~CDlgCanFilter()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void CDlgCanFilter::setInitialFocus(void)
+void
+CDlgCanFilter::setInitialFocus(void)
 {
-    ui->canid->setFocus();
+  ui->canid->setFocus();
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getCanId
 //
 
-std::string CDlgCanFilter::getCanId(void)
+std::string
+CDlgCanFilter::getCanId(void)
 {
-    return (ui->canid->text().toStdString()); 
+  return (ui->canid->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setCanId
 //
 
-void CDlgCanFilter::setCanId(const std::string& str)
+void
+CDlgCanFilter::setCanId(const std::string& str)
 {
-    ui->canid->setText(str.c_str());
+  ui->canid->setText(str.c_str());
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getCanMask
 //
 
-std::string CDlgCanFilter::getCanMask(void)
+std::string
+CDlgCanFilter::getCanMask(void)
 {
-    return (ui->canmask->text().toStdString()); 
+  return (ui->canmask->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setCanMask
 //
 
-void CDlgCanFilter::setCanMask(const std::string& str)
+void
+CDlgCanFilter::setCanMask(const std::string& str)
 {
-    ui->canmask->setText(str.c_str());
+  ui->canmask->setText(str.c_str());
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgCanFilter::showHelp()
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=filter";
+  QDesktopServices::openUrl(QUrl(link));
+}

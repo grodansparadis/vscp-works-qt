@@ -216,10 +216,17 @@ public slots:
   /// Open firmware update window from selected node found
   void goFirmwareUpdate(void);
 
+  /*!
+    Show help
+  */
+  void showHelp(void);
+
 signals:
 
   /// Data received from callback
   void dataReceived(vscpEvent* pev);
+
+  
 
 private:
   /// The VSCP client type

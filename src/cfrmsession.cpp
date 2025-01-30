@@ -125,7 +125,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
-  
+
   spdlog::debug(std::string(tr("Session: Session module opened").toStdString()));
 
   if (nullptr == pconn) {
@@ -201,6 +201,11 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
           SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
           SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
 
+  // Handle help requests
+  // QAction *helpAction;
+  // helpAction->setShortcut(QKeySequence::HelpContents);
+  // connect(helpAction, &QAction::triggered, this, &CFrmSession::showHelp);
+
   // Lay out things
   QVBoxLayout* mainLayout = new QVBoxLayout;
   mainLayout->setMenuBar(m_menuBar);
@@ -234,7 +239,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
       break;
 
     case CVscpClient::connType::TCPIP:
-      m_vscpClient = new vscpClientTcp();      
+      m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(m_connObject.dump());
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       // m_connectActBar->setChecked(true);
@@ -432,9 +437,9 @@ CFrmSession::createMenu()
                                       &CFrmSession::saveTxEventsAct);
 
   m_saveTxAllAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
-                                      tr("Write ALL TX rows to file..."),
-                                      this,
-                                      &CFrmSession::saveTxEventsAllAct);                                      
+                                         tr("Write ALL TX rows to file..."),
+                                         this,
+                                         &CFrmSession::saveTxEventsAllAct);
 
   m_exitAct = m_fileMenu->addAction(windowCloseIcon,
                                     tr("Close window"),
@@ -1093,11 +1098,11 @@ CFrmSession::showTxContextMenu(const QPoint& pos)
 
   menu->addAction(QString(tr("Save SELECTED transmission rows...")),
                   this,
-                  /*SLOT(saveTxEvents("",true))*/&CFrmSession::saveTxEventsAllAct);
+                  /*SLOT(saveTxEvents("",true))*/ &CFrmSession::saveTxEventsAllAct);
 
   menu->addAction(QString(tr("Save ALL transmission rows...")),
                   this,
-                  /*SLOT(saveTxEvents("",false))*/&CFrmSession::saveTxEventsAllAct);                
+                  /*SLOT(saveTxEvents("",false))*/ &CFrmSession::saveTxEventsAllAct);
 
   menu->addAction(QString(tr("Load transmission rows...")),
                   this,
@@ -4217,4 +4222,15 @@ CFrmSession::receiveCallback(vscpEvent& ev, void* pobj)
   // Alternative method for reference
   // CFrmSession* pSession = (CFrmSession*)pobj;
   // pSession->threadReceive(pevnew);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CFrmSession::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/sessions.md";
+  QDesktopServices::openUrl(QUrl(link));
 }

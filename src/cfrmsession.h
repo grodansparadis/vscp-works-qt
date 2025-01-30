@@ -285,7 +285,10 @@ public slots:
   */
   void receiveRxRow(vscpEvent* pev);
 
-  
+  /*!
+    Show help
+  */
+  void showHelp(void);
 
   /*!
       Add a TX event to the receive list
@@ -476,6 +479,8 @@ signals:
 
   /// Data received from callback
   void dataReceived(vscpEvent* pev);
+
+  
 
 private:
   void createMenu();

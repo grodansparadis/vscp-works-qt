@@ -247,6 +247,11 @@ private slots:
 
     void onVscpTypeItemClicked(QListWidgetItem *item);
 
+    /*!
+        Show help
+    */
+    void showHelp();
+
 private:
 
     Ui::CDlgLevel1FilterWizard *ui;

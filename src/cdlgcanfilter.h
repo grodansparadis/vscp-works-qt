@@ -54,6 +54,7 @@ public:
     */
     void setInitialFocus(void);
 
+
     /*!
         Setters/getters for canid
     */
@@ -66,6 +67,12 @@ public:
     std::string getCanMask(void);
     void setCanMask(const std::string& str);
 
+public slots:
+    /*!
+        Show help
+    */
+    void showHelp(void);
+    
 private:
 
     Ui::CDlgCanFilter *ui;
