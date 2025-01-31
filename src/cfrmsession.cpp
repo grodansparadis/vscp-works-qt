@@ -202,9 +202,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
           SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
 
   // Handle help requests
-  // QAction *helpAction;
-  // helpAction->setShortcut(QKeySequence::HelpContents);
-  // connect(helpAction, &QAction::triggered, this, &CFrmSession::showHelp);
+
   QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
 
