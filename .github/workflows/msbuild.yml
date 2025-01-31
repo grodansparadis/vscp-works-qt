@@ -59,19 +59,21 @@ jobs:
     # Install latest CMake.
     - name: Get latest CMake and ninja
       uses: lukka/get-cmake@latest
-      
+      with:
+        cmakeVersion: 'latest'
+        ninjaVersion: 'latest'
 
       # Setup vcpkg: ensures vcpkg is downloaded and built.
       # Since vcpkg.json is being used later on to install the packages
       # when `run-cmake` runs, no packages are installed at this time
       # (and vcpkg does not run).
-      - name: Setup anew (or from cache) vcpkg (and does not build any package)
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: '${{github.workspace}}/vcpkg/'
-          vcpkgTriplet: '${{ env.TRIPLET }}'
-          # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
-          additionalCachedPaths: '${{ env.buildDir }}/vcpkg_installed'  
+    - name: Setup anew (or from cache) vcpkg (and does not build any package)
+      uses: lukka/run-vcpkg@v11
+      with:
+        vcpkgDirectory: '${{github.workspace}}/vcpkg/'
+        vcpkgTriplet: '${{ env.TRIPLET }}'
+        # Ensure the vcpkg artifacts are cached, they are generated in the 'CMAKE_BINARY_DIR/vcpkg_installed'.
+        additionalCachedPaths: '${{ env.buildDir }}/vcpkg_installed'  
        
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
