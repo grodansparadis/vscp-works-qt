@@ -35,7 +35,7 @@ jobs:
     # https://ddalcino.github.io/aqt-list-server/      
     - name: Prepare Qt Libraries
     #  uses: Kidev/install-qt-action@v4.4.2
-      uses: install-qt-action@v4
+      uses: jurplel/install-qt-action@v4
       with:
         version: '6.8.1'
         host: 'windows'
