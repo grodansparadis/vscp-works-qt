@@ -205,6 +205,8 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   // QAction *helpAction;
   // helpAction->setShortcut(QKeySequence::HelpContents);
   // connect(helpAction, &QAction::triggered, this, &CFrmSession::showHelp);
+  QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
   // Lay out things
   QVBoxLayout* mainLayout = new QVBoxLayout;

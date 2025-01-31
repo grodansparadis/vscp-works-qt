@@ -84,6 +84,7 @@ jobs:
       shell: cmd
       working-directory: ${{github.workspace}}/vcpkg/
       run: |
+        ls ${{github.workspace}}/vcpkg/
         call ${{github.workspace}}/vcpkg/vcpkg.exe/bootstrap-vcpkg.bat
         ${{github.workspace}}/vcpkg/vcpkg.exe integrate install
         ${{github.workspace}}/vcpkg/vcpkg.exe install curl:x64-windows
