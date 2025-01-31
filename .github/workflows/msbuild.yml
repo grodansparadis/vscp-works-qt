@@ -30,7 +30,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: amd64_x86
-        toolset: 14.0
+        toolset: 19.0
   
     # https://ddalcino.github.io/aqt-list-server/      
     - name: Prepare Qt Libraries
