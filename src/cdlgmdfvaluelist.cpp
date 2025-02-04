@@ -353,7 +353,7 @@ CDlgMdfValueList::deleteValue(void)
     else {
       sel = idx + 1;
     }
-    ui->listValues->setCurrentRow(sel);
+    ui->listValues->setCurrentRow((int)sel);
   }
 }
 

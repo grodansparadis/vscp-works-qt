@@ -173,6 +173,6 @@ public:
     vscpClientSocketCan m_clientSocketcan;
 };
 
-#endif  // WIN32
+#endif  // !WIN32
 
 #endif // CDLGCONNSETTINGSSOCKETCAN_H

@@ -476,7 +476,7 @@ CDlgMdfBitList::deleteRegisterBit(void)
     else {
       sel = idx + 1;
     }
-    ui->listBits->setCurrentRow(sel);
+    ui->listBits->setCurrentRow((int)sel);
   }
 }
 

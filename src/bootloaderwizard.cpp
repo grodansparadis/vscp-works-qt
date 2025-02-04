@@ -68,8 +68,9 @@
 
 #include <list>
 #include <string>
+#include <QUrl>
 #include <QShortcut>
-
+#include <QDesktopServices>
 #include <QStandardPaths>
 
 #include <spdlog/async.h>

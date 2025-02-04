@@ -570,8 +570,6 @@ CDlgConnSettingsSocketCan::onTestConnection(void)
   }
 }
 
-#endif // WIN32
-
 ///////////////////////////////////////////////////////////////////////////////
 // showHelp
 //
@@ -582,3 +580,6 @@ CDlgConnSettingsSocketCan::showHelp()
   QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=socketcan";
   QDesktopServices::openUrl(QUrl(link));
 }
+
+#endif // !WIN32
+
