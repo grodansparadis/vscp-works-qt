@@ -45,6 +45,8 @@
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -113,6 +115,12 @@ CDlgConnSettingsRawMqtt::CDlgConnSettingsRawMqtt(QWidget* parent)
           &QListWidget::customContextMenuRequested,
           this,
           &CDlgConnSettingsRawMqtt::onPublishContextMenu);
+
+          QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(ui->helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -962,4 +970,16 @@ CDlgConnSettingsRawMqtt::onPublishContextMenu(const QPoint& pos)
                   SLOT(onDeletePublish()));
 
   menu->popup(ui->listPublish->viewport()->mapToGlobal(pos));
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgConnSettingsRawMqtt::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QDesktopServices::openUrl(QUrl(link));
 }

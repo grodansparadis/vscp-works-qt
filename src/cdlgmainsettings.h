@@ -36,43 +36,39 @@ namespace Ui {
 class CDlgMainSettings;
 }
 
-
-class CDlgMainSettings : public QDialog
-{
-    Q_OBJECT
+class CDlgMainSettings : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgMainSettings(QWidget *parent = nullptr);
-    ~CDlgMainSettings();
+  explicit CDlgMainSettings(QWidget* parent = nullptr);
+  ~CDlgMainSettings();
 
-    /*!
-        set Initial focus
-    */
-    void setInitialFocus(void);
+  /*!
+      set Initial focus
+  */
+  void setInitialFocus(void);
 
 public slots:
-    /*!
-        Numerical base changed -recalc
-    */
-    void onBaseChange(int index);
+  /*!
+      Numerical base changed -recalc
+  */
+  void onBaseChange(int index);
 
-    /// Download VSCP event db
-    void onDownloadEventDb(void);
+  /// Download VSCP event db
+  void onDownloadEventDb(void);
 
-    /// Reload VSCP event db
-    void onReLoadEventDb(void);
-    
-    /// Dialog return 
-    void done(int r);    
+  /// Reload VSCP event db
+  void onReLoadEventDb(void);
+
+  /// Dialog return
+  void done(int r);
+  
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgMainSettings *ui;
-
+  Ui::CDlgMainSettings* ui;
 };
-
 
 #endif // CDLGMAINSETTINGS_H

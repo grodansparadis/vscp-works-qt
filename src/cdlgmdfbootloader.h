@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_bootloader_index {
   index_bootloader_none = 0,
@@ -45,9 +45,9 @@ typedef enum mdf_bootloader_index {
 } mdf_bootloader_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_BOOTLOADER_BLOCKSIZE tr("Block size : ")
+#define PREFIX_MDF_BOOTLOADER_BLOCKSIZE        tr("Block size : ")
 #define PREFIX_MDF_BOOTLOADER_NUMBER_OF_BLOCKS tr("Number of blocks: ")
-#define PREFIX_MDF_BOOTLOADER_ALGORITHM tr("Algorithm: ")
+#define PREFIX_MDF_BOOTLOADER_ALGORITHM        tr("Algorithm: ")
 
 namespace Ui {
 class CDlgMdfBootLoader;
@@ -69,10 +69,9 @@ public:
     Init dialog data
     @param pmdfobject Pointer to MDF object
     @param index The index for the field that will get focus
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_bootloader_index index = index_bootloader_blocksize);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -96,10 +95,10 @@ public:
   void setAlgorithm(uint16_t nAlgorithm);
   uint16_t getAlgorithm(void);
 
-
 public slots:
   void accept(void);
-
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfBootLoader* ui;

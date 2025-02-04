@@ -34,8 +34,6 @@
 
 #include <QDialog>
 
-
-
 namespace Ui {
 class CDlgMdfDM;
 }
@@ -48,12 +46,12 @@ public:
   explicit CDlgMdfDM(QWidget* parent = nullptr);
   ~CDlgMdfDM();
 
-  static const int index_level = 0;
-  static const int index_start_page = 1;
+  static const int index_level        = 0;
+  static const int index_start_page   = 1;
   static const int index_start_offset = 2;
-  static const int index_rows = 3;
-  static const int index_row_size = 4;
-  static const int index_actions = 5;
+  static const int index_rows         = 3;
+  static const int index_row_size     = 4;
+  static const int index_actions      = 5;
 
   static const char pre_str_dm[];
 
@@ -62,11 +60,9 @@ public:
     @param CMDF *pmdf Pointer to MDF
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
-  */
-  void initDialogData(CMDF *pmdf, CMDF_DecisionMatrix* pdm, int index = 0);
 
-  
+  */
+  void initDialogData(CMDF* pmdf, CMDF_DecisionMatrix* pdm, int index = 0);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -114,15 +110,16 @@ public slots:
   */
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfDM* ui;
 
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   CMDF_DecisionMatrix* m_pdm;
-
 };
 
 #endif // CDLGMDFDM_H

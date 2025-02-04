@@ -36,32 +36,27 @@ namespace Ui {
 class CDlgSelectBootAlgorithm;
 }
 
-
-class CDlgSelectBootAlgorithm : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectBootAlgorithm : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectBootAlgorithm(QWidget *parent = nullptr);
-    ~CDlgSelectBootAlgorithm();
+  explicit CDlgSelectBootAlgorithm(QWidget* parent = nullptr);
+  ~CDlgSelectBootAlgorithm();
 
 public:
-    
-    /// Get set data size value
-    uint8_t getBootAlgorithm();
+  /// Get set data size value
+  uint8_t getBootAlgorithm();
 
-    /// Set data size value
-    void setBootAlgorithm(uint8_t algorithm);
-
+  /// Set data size value
+  void setBootAlgorithm(uint8_t algorithm);
 
 private slots:
-    
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectBootAlgorithm *ui;
-
+  Ui::CDlgSelectBootAlgorithm* ui;
 };
-
 
 #endif // CDLGSELECTDATASIZE_H

@@ -44,6 +44,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QDesktopServices>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -69,6 +70,13 @@ CDlgBootFirmware::CDlgBootFirmware(QWidget* parent)
   connect(ui->listFirmware, &QListWidget::itemClicked, this, &CDlgBootFirmware::selectFirmwareFile);
   connect(ui->listFirmware, &QListWidget::itemDoubleClicked, this, &CDlgBootFirmware::accept);
   connect(ui->BtnSelectFile, &QPushButton::clicked, this, &CDlgBootFirmware::selectLocalFile);
+  
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -214,7 +222,7 @@ QString
 CDlgBootFirmware::getFileType(void)
 {
   switch (ui->comboFormat->currentIndex()) {
-    
+
     case 1:
       return "IHEX16";
 
@@ -222,8 +230,8 @@ CDlgBootFirmware::getFileType(void)
       return "IHEX32";
 
     case 0:
-    default:   
-      return "IHEX8";  
+    default:
+      return "IHEX8";
   }
 }
 
@@ -270,4 +278,15 @@ CDlgBootFirmware::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgBootFirmware::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/bootload_window";
+  QDesktopServices::openUrl(QUrl(link));
 }

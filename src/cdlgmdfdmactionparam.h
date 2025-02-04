@@ -34,8 +34,6 @@
 
 #include <QDialog>
 
-
-
 namespace Ui {
 class CDlgMdfDmActionParam;
 }
@@ -48,10 +46,10 @@ public:
   explicit CDlgMdfDmActionParam(QWidget* parent = nullptr);
   ~CDlgMdfDmActionParam();
 
-  static const int index_name = 0;
+  static const int index_name   = 0;
   static const int index_offset = 1;
-  static const int index_min = 2;
-  static const int index_max = 3;
+  static const int index_min    = 2;
+  static const int index_max    = 3;
 
   static const char pre_str_actionparam[];
 
@@ -60,9 +58,9 @@ public:
     @param CMDF *pmdf Pointer to MDF
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
+
   */
-  void initDialogData(CMDF *pmdf, CMDF_ActionParameter* pactionparam, int index = 0);
+  void initDialogData(CMDF* pmdf, CMDF_ActionParameter* pactionparam, int index = 0);
 
   /*!
     Set offset input field to read only
@@ -95,22 +93,21 @@ public:
 
 public slots:
 
-
+  /// Help
+  void showHelp(void);
 
   /*!
     Accept dialog data and write to register
   */
   void accept(void);
 
-
 private:
   Ui::CDlgMdfDmActionParam* ui;
 
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   CMDF_ActionParameter* m_pactionparam;
-
 };
 
 #endif // CDLGMDFDM_ACTION_PARAM_H

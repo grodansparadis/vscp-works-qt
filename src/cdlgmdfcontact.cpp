@@ -43,6 +43,8 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -71,6 +73,13 @@ CDlgMdfContact::CDlgMdfContact(QWidget* parent)
   connect(ui->btnEditInfo, &QToolButton::clicked, this, &CDlgMdfContact::editInfo);
   connect(ui->btnDupInfo, &QToolButton::clicked, this, &CDlgMdfContact::dupInfo);
   connect(ui->btnDelInfo, &QToolButton::clicked, this, &CDlgMdfContact::deleteInfo);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -391,4 +400,15 @@ CDlgMdfContact::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfContact::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

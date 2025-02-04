@@ -35,6 +35,7 @@
 
 #include <QMessageBox>
 #include <QPushButton>
+#include <QShortcut>
 #include <QDesktopServices>
 
 #include <spdlog/async.h>
@@ -54,6 +55,9 @@ CDlgCanFilter::CDlgCanFilter(QWidget* parent)
 
   QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
   connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
   setInitialFocus();
 }

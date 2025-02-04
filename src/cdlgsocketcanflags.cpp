@@ -34,6 +34,10 @@
 #include "ui_cdlgsocketcanflags.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QUrl>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -44,12 +48,18 @@
 // CTor
 //
 
-CDlgSocketCanFlags::CDlgSocketCanFlags(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSocketCanFlags)
+CDlgSocketCanFlags::CDlgSocketCanFlags(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSocketCanFlags)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,44 +68,56 @@ CDlgSocketCanFlags::CDlgSocketCanFlags(QWidget *parent) :
 
 CDlgSocketCanFlags::~CDlgSocketCanFlags()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDebug
 //
 
-void CDlgSocketCanFlags::setDebug(bool bDebug)
+void
+CDlgSocketCanFlags::setDebug(bool bDebug)
 {
-    ui->chkEnableDebug->setChecked(bDebug);
+  ui->chkEnableDebug->setChecked(bDebug);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDebug
 //
 
-bool CDlgSocketCanFlags::getDebug(void)
+bool
+CDlgSocketCanFlags::getDebug(void)
 {
-    return ui->chkEnableDebug->isChecked();
+  return ui->chkEnableDebug->isChecked();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setFd
 //
 
-void CDlgSocketCanFlags::setFd(bool bFd)
+void
+CDlgSocketCanFlags::setFd(bool bFd)
 {
-    ui->chkEnableFd->setChecked(bFd);
+  ui->chkEnableFd->setChecked(bFd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getFd
 //
 
-bool CDlgSocketCanFlags::getFd(void)
+bool
+CDlgSocketCanFlags::getFd(void)
 {
-    return ui->chkEnableFd->isChecked();
+  return ui->chkEnableFd->isChecked();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
+void
+CDlgSocketCanFlags::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=socketcan";
+  QDesktopServices::openUrl(QUrl(link));
+}

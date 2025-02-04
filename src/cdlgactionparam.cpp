@@ -38,6 +38,9 @@
 
 #include <QMessageBox>
 #include <QSpinBox>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -48,13 +51,13 @@
 // QTableWidgetItemBits
 //
 
-QTableWidgetItemBits::QTableWidgetItemBits(const QString &text)
-                                            : QTableWidgetItem(text)
+QTableWidgetItemBits::QTableWidgetItemBits(const QString& text)
+  : QTableWidgetItem(text)
 {
   m_pBit = nullptr;
-  //m_pos = 0;
-  //m_width = 0;
-  m_mask = 0;
+  // m_pos = 0;
+  // m_width = 0;
+  m_mask  = 0;
   m_value = 0;
 }
 
@@ -71,9 +74,9 @@ QTableWidgetItemBits::~QTableWidgetItemBits(void)
 // CTor
 //
 
-CDlgActionParam::CDlgActionParam(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgActionParam)
+CDlgActionParam::CDlgActionParam(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgActionParam)
 {
   ui->setupUi(this);
 
@@ -88,13 +91,19 @@ CDlgActionParam::CDlgActionParam(QWidget *parent) :
   connect(ui->tableWidgetBits,
           SIGNAL(cellClicked(int, int)),
           this,
-          SLOT(cellClicked(int,int)));
+          SLOT(cellClicked(int, int)));
 
   connect(ui->tableWidgetBits,
           SIGNAL(cellChanged(int, int)),
           this,
-          SLOT(valueChanged(int,int)));
-  
+          SLOT(valueChanged(int, int)));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
   setInitialFocus();
 }
 
@@ -111,39 +120,39 @@ CDlgActionParam::~CDlgActionParam()
 // setInitialFocus
 //
 
-void 
+void
 CDlgActionParam::setInitialFocus(void)
 {
-  //ui->editAddressOrigin->setFocus();
+  // ui->editAddressOrigin->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // showValues
 //
 
-void 
-CDlgActionParam::showValues(bool bShow) 
-{  
-  ui->labelValueList->setVisible(bShow); 
-  ui->comboValues->setVisible(bShow); 
+void
+CDlgActionParam::showValues(bool bShow)
+{
+  ui->labelValueList->setVisible(bShow);
+  ui->comboValues->setVisible(bShow);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // showBits
 //
 
-void 
-CDlgActionParam::showBits(bool bShow) 
-{  
-  ui->labelBitList->setVisible(bShow); 
-  ui->tableWidgetBits->setVisible(bShow); 
+void
+CDlgActionParam::showBits(bool bShow)
+{
+  ui->labelBitList->setVisible(bShow);
+  ui->tableWidgetBits->setVisible(bShow);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // addValue
 //
 
-void 
+void
 CDlgActionParam::addValue(int value, std::string& name)
 {
   ui->comboValues->addItem(QString::fromStdString(name), value);
@@ -153,41 +162,41 @@ CDlgActionParam::addValue(int value, std::string& name)
 // addBitValue
 //
 
-void 
-CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
+void
+CDlgActionParam::addBitValue(std::deque<CMDF_Bit*>* pbitlist)
 {
-  QTableWidgetItem *pitem;
+  QTableWidgetItem* pitem;
   std::string str;
-  for (int i=0; i<pbitlist->size(); i++) {
+  for (int i = 0; i < pbitlist->size(); i++) {
 
     ui->tableWidgetBits->insertRow(i);
     str = QString::number(pbitlist->at(i)->getPos()).toStdString();
     if (pbitlist->at(i)->getWidth() > 1) {
       str += "-";
-      str += QString::number(pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth() - 1 ).toStdString();
+      str += QString::number(pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth() - 1).toStdString();
     }
 
     // -- Bits
     pitem = new QTableWidgetItem(str.c_str());
     pitem->setTextAlignment(Qt::AlignCenter);
-    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->tableWidgetBits->setItem(i, 0, pitem);
 
     // -- Value
 
     // Construct mask
     uint8_t mask = 0;
-    for (int k=pbitlist->at(i)->getPos(); k<pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth(); k++) {
+    for (int k = pbitlist->at(i)->getPos(); k < pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth(); k++) {
       mask |= (1 << k);
     }
 
     uint8_t value = (m_actionParam & mask) >> pbitlist->at(i)->getPos();
 
-    QTableWidgetItemBits *pitemValue = new QTableWidgetItemBits(QString::number(value));
-    pitemValue->m_pBit = pbitlist->at(i);
-    pitemValue->m_value = value;
-    //pitemValue->m_pos = pbitlist->at(i)->getPos();
-    //pitemValue->m_width = pbitlist->at(i)->getWidth();
+    QTableWidgetItemBits* pitemValue = new QTableWidgetItemBits(QString::number(value));
+    pitemValue->m_pBit               = pbitlist->at(i);
+    pitemValue->m_value              = value;
+    // pitemValue->m_pos = pbitlist->at(i)->getPos();
+    // pitemValue->m_width = pbitlist->at(i)->getWidth();
     pitemValue->m_mask = mask;
     pitemValue->setTextAlignment(Qt::AlignCenter);
     pitemValue->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -197,24 +206,24 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
     }
     else {
       str += " - ";
-      str += QString::number((1 << pbitlist->at(i)->getWidth())-1).toStdString();
-    }    
+      str += QString::number((1 << pbitlist->at(i)->getWidth()) - 1).toStdString();
+    }
     pitemValue->setToolTip(str.c_str());
     ui->tableWidgetBits->setItem(i, 1, pitemValue);
 
     // -- Name
     pitem = new QTableWidgetItem(pbitlist->at(i)->getName().c_str());
     pitem->setToolTip(QString::fromStdString(pbitlist->at(i)->getDescription()));
-    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+    pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->tableWidgetBits->setItem(i, 2, pitem);
   }
 
   // ui->tableWidgetBits->insertRow(8);
-  // pitem = new QTableWidgetItem();  
+  // pitem = new QTableWidgetItem();
   // ui->tableWidgetBits->setItem(8, 2, pitem);
 
   // ui->tableWidgetBits->insertRow(9);
-  // pitem = new QTableWidgetItem();  
+  // pitem = new QTableWidgetItem();
   // ui->tableWidgetBits->setItem(9, 2, pitem);
 
   // QComboBox *pComboBox = new QComboBox();
@@ -231,31 +240,31 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit *> *pbitlist)
 // cellClicked
 //
 
-void 
+void
 CDlgActionParam::cellClicked(int row, int column)
 {
-  QTableWidgetItemBits *pitem = (QTableWidgetItemBits *)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
+  QTableWidgetItemBits* pitem = (QTableWidgetItemBits*)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
   if (NULL == pitem) {
     ui->infoArea->setText("INTERNAL ERROR: No bit defintion.");
     return;
   }
 
-  //ui->infoArea->setText(tr("Cell clicked: %1, %2").arg(row).arg(column));
+  // ui->infoArea->setText(tr("Cell clicked: %1, %2").arg(row).arg(column));
   std::string str;
   str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head>";
   str += "<meta name=\"qrichtext\" content=\"1\" />";
   str += "<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>";
   str += "</head><body>";
-  //str += "<body style=\"font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">";
-  //str += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">";
-  //str += "<br /></p><p>";
+  // str += "<body style=\"font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;\">";
+  // str += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">";
+  // str += "<br /></p><p>";
   str += "<h4>";
   str += pitem->m_pBit->getName();
   str += "</h4>";
   str += "<p>";
   str += pitem->m_pBit->getDescription();
   str += "</p>";
-  //str += tr("<b>Cell clicked:</b> %1, %2<br>").arg(row).arg(column).toStdString();
+  // str += tr("<b>Cell clicked:</b> %1, %2<br>").arg(row).arg(column).toStdString();
   str += tr("<b>Pos:</b> %1<br>").arg(pitem->m_pBit->getPos()).toStdString();
   str += tr("<b>Width:</b> %1<br>").arg(pitem->m_pBit->getWidth()).toStdString();
   str += tr("<b>Min:</b> %1<br>").arg(pitem->m_pBit->getMin()).toStdString();
@@ -269,9 +278,9 @@ CDlgActionParam::cellClicked(int row, int column)
   str += pitem->m_pBit->getInfoURL();
   str += "</a></p>";
   str += "<p>";
-  std::deque<CMDF_Value *> *plistValues = pitem->m_pBit->getListValues();
+  std::deque<CMDF_Value*>* plistValues = pitem->m_pBit->getListValues();
   if (nullptr != plistValues) {
-    for (int i=0; i<pitem->m_pBit->getListValues()->size(); i++) {
+    for (int i = 0; i < pitem->m_pBit->getListValues()->size(); i++) {
       str += "<b>";
       str += plistValues->at(i)->getValue();
       str += "</b> - ";
@@ -290,22 +299,21 @@ CDlgActionParam::cellClicked(int row, int column)
   ui->infoArea->setHtml(str.c_str());
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // valueChanged
 //
 
-void 
+void
 CDlgActionParam::valueChanged(int row, int column)
 {
   if (BIT_COLUMN_VALUE != column) {
     return;
   }
 
-  QTableWidgetItemBits *pitem = (QTableWidgetItemBits *)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
+  QTableWidgetItemBits* pitem = (QTableWidgetItemBits*)ui->tableWidgetBits->item(row, BIT_COLUMN_VALUE);
   if (NULL != pitem) {
     uint8_t mask = pitem->m_mask >> pitem->m_pBit->getPos();
-    //std::cout << "Row: " << row << "Value: " << pitem->text().toStdString() << std::endl;
+    // std::cout << "Row: " << row << "Value: " << pitem->text().toStdString() << std::endl;
     uint8_t value = vscp_readStringValue(pitem->text().toStdString());
     value &= mask;
     pitem->setText(QString::number(value));
@@ -317,14 +325,25 @@ CDlgActionParam::valueChanged(int row, int column)
 // getActionParameter
 //
 
-uint8_t 
+uint8_t
 CDlgActionParam::getActionParameter(void)
 {
-  //Calculate new action parameter
+  // Calculate new action parameter
   m_actionParam = 0;
-  for (int i=0; i<ui->tableWidgetBits->rowCount(); i++) {
-    QTableWidgetItemBits *pitemtbl = (QTableWidgetItemBits *)ui->tableWidgetBits->item(i, BIT_COLUMN_VALUE);
+  for (int i = 0; i < ui->tableWidgetBits->rowCount(); i++) {
+    QTableWidgetItemBits* pitemtbl = (QTableWidgetItemBits*)ui->tableWidgetBits->item(i, BIT_COLUMN_VALUE);
     m_actionParam += pitemtbl->m_value;
   }
   return m_actionParam;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgActionParam::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/config_window?id=actions";
+  QDesktopServices::openUrl(QUrl(link));
 }

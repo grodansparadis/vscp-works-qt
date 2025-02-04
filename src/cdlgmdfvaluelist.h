@@ -69,7 +69,7 @@ public:
     Get pointer to value list
     @return Pointer to value list or null pointer if not found
   */
-  std::deque<CMDF_Value*> *getValueList(void);
+  std::deque<CMDF_Value*>* getValueList(void);
 
   /*!
     Get pointer to value object
@@ -120,6 +120,9 @@ public slots:
   void editValue(void);
   void dupValue(void);
   void deleteValue(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfValueList* ui;

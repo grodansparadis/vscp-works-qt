@@ -43,6 +43,8 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -64,6 +66,13 @@ CDlgMdfRegister::CDlgMdfRegister(QWidget* parent)
 
   // m_type = mdf_type_unknown;
   m_preg = nullptr;
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -553,4 +562,15 @@ CDlgMdfRegister::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfRegister::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

@@ -39,6 +39,8 @@
 #include "ui_cdlgeditguid.h"
 
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QShortcut>
 #include <QDebug>
 
 #include <spdlog/async.h>
@@ -50,17 +52,24 @@
 // CTor
 //
 
-CDlgEditGuid::CDlgEditGuid(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgEditGuid)
+CDlgEditGuid::CDlgEditGuid(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgEditGuid)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();        
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &CDlgEditGuid::setDummyGuid);
-    
-    setInitialFocus();             
+  connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &CDlgEditGuid::setDummyGuid);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,38 +78,40 @@ CDlgEditGuid::CDlgEditGuid(QWidget *parent) :
 
 CDlgEditGuid::~CDlgEditGuid()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void CDlgEditGuid::setInitialFocus(void)
+void
+CDlgEditGuid::setInitialFocus(void)
 {
-    ui->editGuid->setFocus();
+  ui->editGuid->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setEditMode
 //
 
-void CDlgEditGuid::setEditMode(void)
+void
+CDlgEditGuid::setEditMode(void)
 {
-    ui->editGuid->setReadOnly(true);
-    ui->btnSetDummyGuid->setVisible(false);
-    ui->editName->setFocus();
+  ui->editGuid->setReadOnly(true);
+  ui->btnSetDummyGuid->setVisible(false);
+  ui->editName->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDummyGuid
 //
 
-void CDlgEditGuid::setDummyGuid(void)
+void
+CDlgEditGuid::setDummyGuid(void)
 {
-    ui->editGuid->setText("00:00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx");
+  ui->editGuid->setText("00:00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx");
 }
-
 
 // ----------------------------------------------------------------------------
 //                             Getters & Setters
@@ -110,63 +121,78 @@ void CDlgEditGuid::setDummyGuid(void)
 // getGuid
 //
 
-QString CDlgEditGuid::getGuid(void)
+QString
+CDlgEditGuid::getGuid(void)
 {
-    return (ui->editGuid->text()); 
+  return (ui->editGuid->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setGuid
 //
 
-void CDlgEditGuid::setGuid(const QString& str)
+void
+CDlgEditGuid::setGuid(const QString& str)
 {
-    ui->editGuid->setText(str);
+  ui->editGuid->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-QString CDlgEditGuid::getName(void)
+QString
+CDlgEditGuid::getName(void)
 {
-    return (ui->editName->text()); 
+  return (ui->editName->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgEditGuid::setName(const QString& str)
+void
+CDlgEditGuid::setName(const QString& str)
 {
-    ui->editName->setText(str);
+  ui->editName->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDescription
 //
 
-QString CDlgEditGuid::getDescription(void)
+QString
+CDlgEditGuid::getDescription(void)
 {
-#if QT_VERSION >= 0x050E00     
-    //return (ui->editDescription->toMarkdown());
-    return (ui->editDescription->toPlainText());
+#if QT_VERSION >= 0x050E00
+  // return (ui->editDescription->toMarkdown());
+  return (ui->editDescription->toPlainText());
 #else
-    return (ui->editDescription->toPlainText());
-#endif    
+  return (ui->editDescription->toPlainText());
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDescription
 //
 
-void CDlgEditGuid::setDescription(const QString& str)
+void
+CDlgEditGuid::setDescription(const QString& str)
 {
-#if QT_VERSION >= 0x050E00    
-    ui->editDescription->setMarkdown(str);
+#if QT_VERSION >= 0x050E00
+  ui->editDescription->setMarkdown(str);
 #else
-    ui->editDescription->setText(str);
-#endif    
+  ui->editDescription->setText(str);
+#endif
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
+void
+CDlgEditGuid::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/settings?id=guid";
+  QDesktopServices::openUrl(QUrl(link));
+}

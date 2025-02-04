@@ -162,6 +162,9 @@ public slots:
   */
   void accept(void);
 
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgMdfRegister* ui;
 

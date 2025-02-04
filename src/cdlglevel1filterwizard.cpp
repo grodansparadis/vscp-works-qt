@@ -41,6 +41,7 @@
 #include <QMessageBox>
 #include <QMenu>
 #include <QDebug>
+#include <QShortcut>
 #include <QDesktopServices>
 
 #include <spdlog/async.h>
@@ -150,6 +151,9 @@ CDlgLevel1FilterWizard::CDlgLevel1FilterWizard(QWidget* parent)
 
   QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
   connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
   // Add items to the listboxes
   fillPriorities();

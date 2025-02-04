@@ -173,6 +173,9 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   int nWidth  = ui->centralwidget->width();
   int nHeight = ui->centralwidget->height();
 
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
   // Load MDF has been selected in the menu
   // connect(ui->actionLoadMdf, SIGNAL(triggered()), this, SLOT(loadSelectedMdf()));
 
@@ -7833,6 +7836,6 @@ CFrmMdf::deleteEvent(void)
 void
 CFrmMdf::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
   QDesktopServices::openUrl(QUrl(link));
 }

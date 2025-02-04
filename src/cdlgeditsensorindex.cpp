@@ -40,6 +40,9 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -50,17 +53,24 @@
 // CTor
 //
 
-CDlgEditSensorIndex::CDlgEditSensorIndex(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgEditSensorIndex)
+CDlgEditSensorIndex::CDlgEditSensorIndex(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgEditSensorIndex)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance();        
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    //connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &CDlgEditGuid::setDummyGuid);
-    
-    setInitialFocus();             
+  // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &CDlgEditGuid::setDummyGuid);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,97 +79,110 @@ CDlgEditSensorIndex::CDlgEditSensorIndex(QWidget *parent) :
 
 CDlgEditSensorIndex::~CDlgEditSensorIndex()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void CDlgEditSensorIndex::setInitialFocus(void)
+void
+CDlgEditSensorIndex::setInitialFocus(void)
 {
-    ui->editSensorIndex->setFocus();
+  ui->editSensorIndex->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setEditMode
 //
 
-void CDlgEditSensorIndex::setEditMode(void)
+void
+CDlgEditSensorIndex::setEditMode(void)
 {
-    ui->editSensorIndex->setReadOnly(true);
-    ui->editName->setFocus();
+  ui->editSensorIndex->setReadOnly(true);
+  ui->editName->setFocus();
 }
-
-
 
 // ----------------------------------------------------------------------------
 //                             Getters & Setters
 // ----------------------------------------------------------------------------
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // getSensor
 //
 
-uint8_t CDlgEditSensorIndex::getSensor(void)
+uint8_t
+CDlgEditSensorIndex::getSensor(void)
 {
-    return (ui->editSensorIndex->text().toInt()); 
+  return (ui->editSensorIndex->text().toInt());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setSensor
 //
 
-void CDlgEditSensorIndex::setSensor(uint8_t sensorindex)
+void
+CDlgEditSensorIndex::setSensor(uint8_t sensorindex)
 {
-    ui->editSensorIndex->setText(QString::number(sensorindex));
+  ui->editSensorIndex->setText(QString::number(sensorindex));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-QString CDlgEditSensorIndex::getName(void)
+QString
+CDlgEditSensorIndex::getName(void)
 {
-    return (ui->editName->text()); 
+  return (ui->editName->text());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void CDlgEditSensorIndex::setName(const QString& str)
+void
+CDlgEditSensorIndex::setName(const QString& str)
 {
-    ui->editName->setText(str);
+  ui->editName->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDescription
 //
 
-QString CDlgEditSensorIndex::getDescription(void)
+QString
+CDlgEditSensorIndex::getDescription(void)
 {
-#if QT_VERSION >= 0x050E00     
-    return (ui->editDescription->toMarkdown());
+#if QT_VERSION >= 0x050E00
+  return (ui->editDescription->toMarkdown());
 #else
-    return (ui->editDescription->toPlainText());
-#endif    
+  return (ui->editDescription->toPlainText());
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDescription
 //
 
-void CDlgEditSensorIndex::setDescription(const QString& str)
+void
+CDlgEditSensorIndex::setDescription(const QString& str)
 {
-#if QT_VERSION >= 0x050E00    
-    //ui->editDescription->setMarkdown(str);
-    ui->editDescription->setText(str);
+#if QT_VERSION >= 0x050E00
+  // ui->editDescription->setMarkdown(str);
+  ui->editDescription->setText(str);
 #else
-    ui->editDescription->setText(str);
-#endif    
+  ui->editDescription->setText(str);
+#endif
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
+void
+CDlgEditSensorIndex::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/settings?id=sensor-index";
+  QDesktopServices::openUrl(QUrl(link));
+}

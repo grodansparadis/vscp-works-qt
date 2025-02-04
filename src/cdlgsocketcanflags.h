@@ -29,7 +29,6 @@
 #ifndef CDLGSOCKETCANFLAGS_H
 #define CDLGSOCKETCANFLAGS_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -37,30 +36,28 @@ namespace Ui {
 class CDlgSocketCanFlags;
 }
 
-
-class CDlgSocketCanFlags : public QDialog
-{
-    Q_OBJECT
+class CDlgSocketCanFlags : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSocketCanFlags(QWidget *parent = nullptr);
-    ~CDlgSocketCanFlags();
-    
-public:
-    /// Setters/getters for debug
-    void setDebug(bool bDebug = true);
-    bool getDebug(void);
+  explicit CDlgSocketCanFlags(QWidget* parent = nullptr);
+  ~CDlgSocketCanFlags();
 
-    /// Setters/getters for FD
-    void setFd(bool bFd = true);
-    bool getFd(void);
+  /// Setters/getters for debug
+  void setDebug(bool bDebug = true);
+  bool getDebug(void);
 
+  /// Setters/getters for FD
+  void setFd(bool bFd = true);
+  bool getFd(void);
+
+private slots:
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSocketCanFlags *ui;
-
+  Ui::CDlgSocketCanFlags* ui;
 };
-
 
 #endif // CDLGSOCKETCANFLAGS_H

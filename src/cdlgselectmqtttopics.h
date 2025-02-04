@@ -92,6 +92,9 @@ public slots:
   */
   // void onRowDoubleClicked(void);
 
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgSelectMqttTopics* ui;
 

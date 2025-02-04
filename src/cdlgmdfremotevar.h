@@ -34,8 +34,6 @@
 
 #include <QDialog>
 
-
-
 namespace Ui {
 class CDlgMdfRemoteVar;
 }
@@ -48,16 +46,16 @@ public:
   explicit CDlgMdfRemoteVar(QWidget* parent = nullptr);
   ~CDlgMdfRemoteVar();
 
-  static const int index_name = 0;
-  static const int index_type = 1;
-  static const int index_span = 2;
-  static const int index_page = 3;
-  static const int index_offset = 4;
+  static const int index_name       = 0;
+  static const int index_type       = 1;
+  static const int index_span       = 2;
+  static const int index_page       = 3;
+  static const int index_offset     = 4;
   static const int index_bit_offset = 5;
-  static const int index_access = 6;
-  static const int index_default = 7;
-  static const int index_fgcolor = 8;
-  static const int index_bgcolor = 9;
+  static const int index_access     = 6;
+  static const int index_default    = 7;
+  static const int index_fgcolor    = 8;
+  static const int index_bgcolor    = 9;
 
   static const char pre_str_remote_variable[];
 
@@ -71,16 +69,14 @@ public:
     @param CMDF *pmdf Pointer to MDF
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
+
   */
-  void initDialogData(CMDF *pmdf, CMDF_RemoteVariable* pvar, int index = 0);
+  void initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int index = 0);
 
   /*!
     Prevent page and offset from being edited
   */
   void setReadOnly(void);
-
-  
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -128,9 +124,9 @@ public:
 
 public slots:
 
-    /*!
-    Show dialog to select foregrund color
-  */
+  /*!
+  Show dialog to select foregrund color
+*/
   void showFgColorDlg(void);
 
   /*!
@@ -141,19 +137,21 @@ public slots:
   /*
     Set UNDEF for default value
   */
- void setUndef(void);
+  void setUndef(void);
 
   /*!
     Accept dialog data and write to register
   */
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfRemoteVar* ui;
 
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   /// Pointer to register information
   CMDF_RemoteVariable* m_pvar;

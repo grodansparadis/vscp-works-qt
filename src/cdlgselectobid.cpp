@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,11 +55,18 @@
 // CTor
 //
 
-CDlgSelectObId::CDlgSelectObId(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectObId)
+CDlgSelectObId::CDlgSelectObId(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectObId)
 {
-    ui->setupUi(this);  
+  ui->setupUi(this);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,50 +75,60 @@ CDlgSelectObId::CDlgSelectObId(QWidget *parent) :
 
 CDlgSelectObId::~CDlgSelectObId()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getObidValue
 //
 
-uint32_t CDlgSelectObId::getObidValue(void)
+uint32_t
+CDlgSelectObId::getObidValue(void)
 {
-    return vscp_readStringValue(ui->editObid->text().toStdString());
+  return vscp_readStringValue(ui->editObid->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setObidValue
 //
 
-void CDlgSelectObId::setObidValue(uint32_t value)
+void
+CDlgSelectObId::setObidValue(uint32_t value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    ui->editObid->setText(pworks->decimalToStringInBase(value));
+  ui->editObid->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getObidConstraint
 //
 
-CSessionFilter::constraint CDlgSelectObId::getObidConstraint(void)
+CSessionFilter::constraint
+CDlgSelectObId::getObidConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboConstraintObid->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboConstraintObid->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getObidConstraint
 //
 
-void CDlgSelectObId::setObidConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectObId::setObidConstraint(CSessionFilter::constraint op)
 {
-    ui->comboConstraintObid->setCurrentIndex(static_cast<int>(op));
+  ui->comboConstraintObid->setCurrentIndex(static_cast<int>(op));
 }
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
-
+void
+CDlgSelectObId::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
+}

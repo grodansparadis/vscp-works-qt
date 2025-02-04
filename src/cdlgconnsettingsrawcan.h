@@ -137,6 +137,9 @@ public:
     */
     void onSetFlags(void);
 
+private slots:
+    void showHelp();    
+
 private:
 
     Ui::CDlgConnSettingsRawCan *ui;

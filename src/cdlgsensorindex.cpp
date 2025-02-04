@@ -44,6 +44,9 @@
 
 #include <QMessageBox>
 #include <QMenu>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -85,6 +88,14 @@ CDlgSensorIndex::CDlgSensorIndex(QWidget* parent, int link_to_guid)
   connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSensorIndex::btnDelete);
   connect(ui->btnLoad, &QPushButton::clicked, this, &CDlgSensorIndex::btnLoad);
   connect(ui->btnSave, &QPushButton::clicked, this, &CDlgSensorIndex::btnSave);
+
+
+// Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   ui->textDescription->acceptRichText();
 
@@ -753,4 +764,15 @@ void
 CDlgSensorIndex::btnSave(void)
 {
   int i = 8;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSensorIndex::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
 }

@@ -45,7 +45,6 @@
 //   dlg_type_contact_social,
 // } mdf_dlg_contact_type;
 
-
 namespace Ui {
 class CDlgMdfContactList;
 }
@@ -75,14 +74,13 @@ public:
     @param title Dialog title
   */
   void initDialogData(CMDF_Manufacturer* pManufacturer,
-                        mdf_dlg_contact_type type,
-                        QString title);
+                      mdf_dlg_contact_type type,
+                      QString title);
 
   /*!
     Fill in contact items
   */
   void fillContactItems(void);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -102,6 +100,8 @@ public slots:
   void editContact(void);
   void dupContact(void);
   void deleteContact(void);
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfContactList* ui;
@@ -113,7 +113,7 @@ private:
   CMDF_Manufacturer* m_pManufacturer;
 
   /// Hold pointer to contact item
-  std::deque<CMDF_Item *> *m_pContactList;
+  std::deque<CMDF_Item*>* m_pContactList;
 };
 
 #endif // CDLGMDFCONTACTList_H

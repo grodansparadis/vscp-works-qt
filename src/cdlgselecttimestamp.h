@@ -38,36 +38,33 @@ namespace Ui {
 class CDlgSelectTimeStamp;
 }
 
-
-class CDlgSelectTimeStamp : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectTimeStamp : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectTimeStamp(QWidget *parent = nullptr);
-    ~CDlgSelectTimeStamp();
+  explicit CDlgSelectTimeStamp(QWidget* parent = nullptr);
+  ~CDlgSelectTimeStamp();
 
 public:
-    /// Get set TimeStamp value
-    uint32_t getTimeStampValue();
+  /// Get set TimeStamp value
+  uint32_t getTimeStampValue();
 
-    /// Set TimeStamp value
-    void setTimeStampValue(uint32_t value);
+  /// Set TimeStamp value
+  void setTimeStampValue(uint32_t value);
 
-    /// Get set TimeStamp constraint
-    CSessionFilter::constraint getTimeStampConstraint();
+  /// Get set TimeStamp constraint
+  CSessionFilter::constraint getTimeStampConstraint();
 
-    /// Set TimeStamp constraint
-    void setTimeStampConstraint(CSessionFilter::constraint op);
+  /// Set TimeStamp constraint
+  void setTimeStampConstraint(CSessionFilter::constraint op);
 
 private slots:
-    
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectTimeStamp *ui;
-
+  Ui::CDlgSelectTimeStamp* ui;
 };
-
 
 #endif // CDLGSELECTTIMESTAMP_H

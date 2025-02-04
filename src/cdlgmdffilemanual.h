@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_file_manual_index {
   index_file_manual_none = 0,
@@ -47,10 +47,10 @@ typedef enum mdf_file_manual_index {
 } mdf_file_manual_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_FILE_MANUAL_NAME tr("Name: ")
-#define PREFIX_MDF_FILE_MANUAL_URL tr("URL: ")
-#define PREFIX_MDF_FILE_MANUAL_FORMAT tr("Format: ")
-#define PREFIX_MDF_FILE_MANUAL_DATE tr("Date: ")
+#define PREFIX_MDF_FILE_MANUAL_NAME     tr("Name: ")
+#define PREFIX_MDF_FILE_MANUAL_URL      tr("URL: ")
+#define PREFIX_MDF_FILE_MANUAL_FORMAT   tr("Format: ")
+#define PREFIX_MDF_FILE_MANUAL_DATE     tr("Date: ")
 #define PREFIX_MDF_FILE_MANUAL_LANGUAGE tr("Language: ")
 
 namespace Ui {
@@ -74,10 +74,9 @@ public:
     Init dialog data
     @param pmdfobject Pointer to MDF object
     @param index The index for the field that will get focus
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_file_manual_index index = index_file_manual_name);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -113,14 +112,15 @@ public:
   void setLanguage(const QString& strdate);
   QString getLanguage(void);
 
-
 public slots:
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfFileManual* ui;
-  CMDF_Manual * m_pmanual;
+  CMDF_Manual* m_pmanual;
 };
 
 #endif // CDLGMDFFILEMANUAL_H

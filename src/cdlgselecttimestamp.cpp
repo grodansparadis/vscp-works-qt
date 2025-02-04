@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -63,6 +66,13 @@ CDlgSelectTimeStamp::CDlgSelectTimeStamp(QWidget *parent) :
     // connect(ui->btnSetCertFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetCertFile ); 
     // connect(ui->btnSetKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetKeyFile ); 
     // connect(ui->btnSetPasswordKeyFile, &QPushButton::clicked, this, &CDlgSelectClass::onSetPwKeyFile );   
+
+    // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,4 +125,15 @@ CSessionFilter::constraint CDlgSelectTimeStamp::getTimeStampConstraint(void)
 void CDlgSelectTimeStamp::setTimeStampConstraint(CSessionFilter::constraint op)
 {
     ui->comboConstraintTimeStamp->setCurrentIndex(static_cast<int>(op));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectTimeStamp::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
 }

@@ -29,7 +29,6 @@
 #ifndef CDLGSELECTDATE_H
 #define CDLGSELECTDATE_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 #include <QDate>
@@ -39,63 +38,59 @@ namespace Ui {
 class CDlgSelectDate;
 }
 
-
-class CDlgSelectDate : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectDate : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectDate(QWidget *parent = nullptr);
-    ~CDlgSelectDate();
+  explicit CDlgSelectDate(QWidget* parent = nullptr);
+  ~CDlgSelectDate();
 
 public:
-    
-    // getters/setters for year
-    uint16_t getYearValue(void);
-    void setYearValue(uint16_t year);
-    CSessionFilter::constraint getYearConstraint(void);
-    void setYearConstraint(CSessionFilter::constraint op);
+  // getters/setters for year
+  uint16_t getYearValue(void);
+  void setYearValue(uint16_t year);
+  CSessionFilter::constraint getYearConstraint(void);
+  void setYearConstraint(CSessionFilter::constraint op);
 
-    // getters/setters for month
-    uint8_t getMonthValue(void);
-    void setMonthValue(uint8_t month);
-    CSessionFilter::constraint getMonthConstraint(void);
-    void setMonthConstraint(CSessionFilter::constraint op);
+  // getters/setters for month
+  uint8_t getMonthValue(void);
+  void setMonthValue(uint8_t month);
+  CSessionFilter::constraint getMonthConstraint(void);
+  void setMonthConstraint(CSessionFilter::constraint op);
 
-    // getters/setters for day
-    uint8_t getDayValue(void);
-    void setDayValue(uint8_t day);
-    CSessionFilter::constraint getDayConstraint(void);
-    void setDayConstraint(CSessionFilter::constraint op);
+  // getters/setters for day
+  uint8_t getDayValue(void);
+  void setDayValue(uint8_t day);
+  CSessionFilter::constraint getDayConstraint(void);
+  void setDayConstraint(CSessionFilter::constraint op);
 
-    // getters/setters for hour
-    uint8_t getHourValue(void);
-    void setHourValue(uint8_t hour);
-    CSessionFilter::constraint getHourConstraint(void);
-    void setHourConstraint(CSessionFilter::constraint op);
+  // getters/setters for hour
+  uint8_t getHourValue(void);
+  void setHourValue(uint8_t hour);
+  CSessionFilter::constraint getHourConstraint(void);
+  void setHourConstraint(CSessionFilter::constraint op);
 
-    // getters/setters for minute
-    uint8_t getMinuteValue(void);
-    void setMinuteValue(uint8_t minute);
-    CSessionFilter::constraint getMinuteConstraint(void);
-    void setMinuteConstraint(CSessionFilter::constraint op);
+  // getters/setters for minute
+  uint8_t getMinuteValue(void);
+  void setMinuteValue(uint8_t minute);
+  CSessionFilter::constraint getMinuteConstraint(void);
+  void setMinuteConstraint(CSessionFilter::constraint op);
 
-    // getters/setters for second
-    uint8_t getSecondValue(void);
-    void setSecondValue(uint8_t second);
-    CSessionFilter::constraint getSecondConstraint(void);
-    void setSecondConstraint(CSessionFilter::constraint op);
-
+  // getters/setters for second
+  uint8_t getSecondValue(void);
+  void setSecondValue(uint8_t second);
+  CSessionFilter::constraint getSecondConstraint(void);
+  void setSecondConstraint(CSessionFilter::constraint op);
 
 private slots:
-    /// Date clicked in the date widget
-    void dateClicked(const QDate &date);
+  /// Date clicked in the date widget
+  void dateClicked(const QDate& date);
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectDate *ui;
-
+  Ui::CDlgSelectDate* ui;
 };
-
 
 #endif // CDLGSELECTDATE_H

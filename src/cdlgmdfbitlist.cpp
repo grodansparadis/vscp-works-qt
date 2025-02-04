@@ -41,7 +41,9 @@
 
 #include <QDebug>
 #include <QInputDialog>
+#include <QPushButton>
 #include <QMessageBox>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -70,6 +72,13 @@ CDlgMdfBitList::CDlgMdfBitList(QWidget* parent)
   connect(ui->btnDelRegisterBit, &QToolButton::clicked, this, &CDlgMdfBitList::deleteRegisterBit);
 
   connect(ui->listBits, &QListWidget::doubleClicked, this, &CDlgMdfBitList::editRegisterBit);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   this->setFixedSize(this->size());
 }
@@ -487,4 +496,15 @@ CDlgMdfBitList::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfBitList::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

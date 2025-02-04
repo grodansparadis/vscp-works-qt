@@ -38,130 +38,127 @@ namespace Ui {
 class CDlgEditSessionFilter;
 }
 
-
-class CDlgEditSessionFilter : public QDialog
-{
-    Q_OBJECT
+class CDlgEditSessionFilter : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgEditSessionFilter(QWidget *parent = nullptr);
-    ~CDlgEditSessionFilter();
+  explicit CDlgEditSessionFilter(QWidget* parent = nullptr);
+  ~CDlgEditSessionFilter();
 
-    // Use to store constraint type
-    const uint16_t role_constraint_type = Qt::UserRole;
+  // Use to store constraint type
+  const uint16_t role_constraint_type = Qt::UserRole;
 
 public:
-    
-    /// Set focus on
-    void setInitialFocus(void);
+  /// Set focus on
+  void setInitialFocus(void);
 
-    /*!
-        Check if a constraint is already defined
-        @param chk Constraint to check for
-        @return True if allready defined
-    */
-    bool isConstraintDefined(uint8_t chk);
+  /*!
+      Check if a constraint is already defined
+      @param chk Constraint to check for
+      @return True if allready defined
+  */
+  bool isConstraintDefined(uint8_t chk);
 
-    /*! 
-        Get pointer to session filter
-        @return Pointer to session filter
-    */
-    CSessionFilter *getSessionFilter(void) { return &m_sessionFilter; };
+  /*!
+      Get pointer to session filter
+      @return Pointer to session filter
+  */
+  CSessionFilter* getSessionFilter(void) { return &m_sessionFilter; };
 
-    // add/edit constraint for Receive
-    void addConstraintReceive(void);
-    void editConstraintReceive(void);
+  // add/edit constraint for Receive
+  void addConstraintReceive(void);
+  void editConstraintReceive(void);
 
-    // add/edit constraint for Transmit
-    void addConstraintTransmit(void);
-    void editConstraintTransmit(void);
+  // add/edit constraint for Transmit
+  void addConstraintTransmit(void);
+  void editConstraintTransmit(void);
 
-    // add/edit constraint for Level I
-    void addConstraintLevel1(void);
-    void editConstraintLevel1(void);
+  // add/edit constraint for Level I
+  void addConstraintLevel1(void);
+  void editConstraintLevel1(void);
 
-    // add/edit constraint for Level II
-    void addConstraintLevel2(void);
-    void editConstraintLevel2(void);
+  // add/edit constraint for Level II
+  void addConstraintLevel2(void);
+  void editConstraintLevel2(void);
 
-    // add/edit constraint for Class/Type
-    void addConstraintClass(void);
-    void editConstraintClass(void);
+  // add/edit constraint for Class/Type
+  void addConstraintClass(void);
+  void editConstraintClass(void);
 
-    // add/edit constraint for GUID
-    void addConstraintGuid(void);
-    void editConstraintGuid(void);
+  // add/edit constraint for GUID
+  void addConstraintGuid(void);
+  void editConstraintGuid(void);
 
-    // add/edit constraint for OBID
-    void addConstraintObid(void);
-    void editConstraintObid(void);
+  // add/edit constraint for OBID
+  void addConstraintObid(void);
+  void editConstraintObid(void);
 
-    // add/edit constraint for Date
-    void addConstraintDate(void);
-    void editConstraintDate(void);
+  // add/edit constraint for Date
+  void addConstraintDate(void);
+  void editConstraintDate(void);
 
-    // add/edit constraint for TimeStamp
-    void addConstraintTimeStamp(void);
-    void editConstraintTimeStamp(void);
+  // add/edit constraint for TimeStamp
+  void addConstraintTimeStamp(void);
+  void editConstraintTimeStamp(void);
 
-    // add/edit constraint for Data
-    void addConstraintData(void);
-    void editConstraintData(void);
+  // add/edit constraint for Data
+  void addConstraintData(void);
+  void editConstraintData(void);
 
-    // add/edit constraint for Data Size
-    void addConstraintDataSize(void);
-    void editConstraintDataSize(void);
+  // add/edit constraint for Data Size
+  void addConstraintDataSize(void);
+  void editConstraintDataSize(void);
 
-    // add/edit constraint for Priority
-    void addConstraintPriority(void);
-    void editConstraintPriority(void);
+  // add/edit constraint for Priority
+  void addConstraintPriority(void);
+  void editConstraintPriority(void);
 
-    // add/edit constraint for Must be measurement
-    void addConstraintMeasurement(void);
-    void editConstraintMeasurement(void);
+  // add/edit constraint for Must be measurement
+  void addConstraintMeasurement(void);
+  void editConstraintMeasurement(void);
 
-    // add/edit constraint for sensor index
-    void addConstraintSensorIndex(void);
-    void editConstraintSensorIndex(void);
+  // add/edit constraint for sensor index
+  void addConstraintSensorIndex(void);
+  void editConstraintSensorIndex(void);
 
-    // add/edit constraint for measurement value
-    void addConstraintValue(void);
-    void editConstraintValue(void);
+  // add/edit constraint for measurement value
+  void addConstraintValue(void);
+  void editConstraintValue(void);
 
-    // add/edit constraint for unit
-    void addConstraintUnit(void);
-    void editConstraintUnit(void);
+  // add/edit constraint for unit
+  void addConstraintUnit(void);
+  void editConstraintUnit(void);
 
-    // add/edit constraint for data coding
-    void addConstraintDataCoding(void);
-    void editConstraintDataCoding(void);
+  // add/edit constraint for data coding
+  void addConstraintDataCoding(void);
+  void editConstraintDataCoding(void);
 
-    // add/edit constraint for script
-    void addConstraintScript(void);
-    void editConstraintScript(void);
+  // add/edit constraint for script
+  void addConstraintScript(void);
+  void editConstraintScript(void);
 
 private slots:
 
-    /// Add filter constraint
-    void addConstraint(void);
-    
-    /// Edit filter constraint
-    void editConstraint(void);
+  /// Add filter constraint
+  void addConstraint(void);
 
-    /// Delete filter constraint
-    void deleteConstraint(void);
+  /// Edit filter constraint
+  void editConstraint(void);
 
-    /// Context menu
-    void showContextMenu(const QPoint& pos);
-    
+  /// Delete filter constraint
+  void deleteConstraint(void);
+
+  /// Context menu
+  void showContextMenu(const QPoint& pos);
+
+  /// Help
+  void showHelp(void);
+
 private:
+  Ui::CDlgEditSessionFilter* ui;
 
-    Ui::CDlgEditSessionFilter *ui;
-
-    // Settings for the filter
-    CSessionFilter m_sessionFilter;
-
+  // Settings for the filter
+  CSessionFilter m_sessionFilter;
 };
-
 
 #endif // CDLGEDITSESSIONFILTER_H

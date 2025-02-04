@@ -41,7 +41,9 @@
 #include <QColorDialog>
 #include <QDate>
 #include <QDebug>
+#include <QPushButton>
 #include <QMessageBox>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -62,10 +64,17 @@ CDlgMdfBit::CDlgMdfBit(QWidget* parent)
   ui->setupUi(this);
 
   // m_type = mdf_type_unknown;
-  m_pbit = nullptr;
-  m_index = 0;
-  m_type = mdf_type_unknown;
+  m_pbit            = nullptr;
+  m_index           = 0;
+  m_type            = mdf_type_unknown;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
   this->setFixedSize(this->size());
@@ -94,9 +103,9 @@ CDlgMdfBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
     return;
   }
 
-  m_pbit = pbit;
+  m_pbit  = pbit;
   m_index = index;
-  m_type = type;
+  m_type  = type;
 
   setName(pbit->getName().c_str());
   setPos(pbit->getPos());
@@ -159,7 +168,6 @@ CDlgMdfBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
     ui->comboAccess->setCurrentIndex(3);
     ui->comboAccess->setEnabled(false);
   }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,7 +209,6 @@ CDlgMdfBit::setPos(uint8_t span)
 {
   ui->spinPos->setValue(span);
 }
-
 
 // -----------------------------------------------------------------------
 
@@ -275,8 +282,6 @@ CDlgMdfBit::setAccess(uint8_t access)
   }
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // accept
 //
@@ -300,4 +305,15 @@ CDlgMdfBit::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfBit::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

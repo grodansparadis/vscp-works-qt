@@ -29,7 +29,6 @@
 #ifndef CDLGMQTTPUBLISH_H
 #define CDLGMQTTPUBLISH_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -37,38 +36,35 @@ namespace Ui {
 class CDlgMqttPublish;
 }
 
-
-class CDlgMqttPublish : public QDialog
-{
-    Q_OBJECT
+class CDlgMqttPublish : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgMqttPublish(QWidget *parent = nullptr);
-    ~CDlgMqttPublish();
-    
+  explicit CDlgMqttPublish(QWidget* parent = nullptr);
+  ~CDlgMqttPublish();
+
 public:
+  /// Setters/getters for topic
+  void setTopic(const QString& topic);
+  QString getTopic(void);
 
-    /// Setters/getters for topic
-    void setTopic(const QString& topic);
-    QString getTopic(void);
+  /// Setters/getters for qos
+  void setQos(int qos);
+  int getQos(void);
 
-    /// Setters/getters for qos
-    void setQos(int qos);
-    int getQos(void);
+  /// Setters/getters for retain
+  void setRetain(bool bRetain = true);
+  bool getRetain(void);
 
-    /// Setters/getters for retain
-    void setRetain(bool bRetain = true);
-    bool getRetain(void);
+  /// Setters/getters for publish format
+  void setFormat(enumMqttMsgFormat format);
+  enumMqttMsgFormat getFormat(void);
 
-    /// Setters/getters for publish format
-    void setFormat(enumMqttMsgFormat format);
-    enumMqttMsgFormat getFormat(void);
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgMqttPublish *ui;
-
+  Ui::CDlgMqttPublish* ui;
 };
-
 
 #endif // CDLGMQTTPUBLISH_H

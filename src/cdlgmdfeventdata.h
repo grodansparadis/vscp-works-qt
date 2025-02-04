@@ -81,11 +81,14 @@ public:
 public slots:
   void accept(void);
 
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgMdfEventData* ui;
 
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   /// Pointer to eventdata
   CMDF_EventData* m_peventdata;

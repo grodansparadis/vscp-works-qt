@@ -48,6 +48,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -55,12 +57,12 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-const char CDlgMdfFile:: pre_str_picture[] = "Picture: ";
-const char CDlgMdfFile:: pre_str_video[] = "Video: ";
-const char CDlgMdfFile:: pre_str_firmware[] = "Firmware: ";
-const char CDlgMdfFile:: pre_str_driver[] = "Driver: ";
-const char CDlgMdfFile:: pre_str_setup[] = "Setup script: ";
-const char CDlgMdfFile:: pre_str_manual[] = "Manual: ";
+const char CDlgMdfFile::pre_str_picture[]  = "Picture: ";
+const char CDlgMdfFile::pre_str_video[]    = "Video: ";
+const char CDlgMdfFile::pre_str_firmware[] = "Firmware: ";
+const char CDlgMdfFile::pre_str_driver[]   = "Driver: ";
+const char CDlgMdfFile::pre_str_setup[]    = "Setup script: ";
+const char CDlgMdfFile::pre_str_manual[]   = "Manual: ";
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -74,6 +76,13 @@ CDlgMdfFile::CDlgMdfFile(QWidget* parent)
 
   m_type = mdf_type_unknown;
   m_pmdf = nullptr;
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -276,7 +285,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
       break;
 
     default:
-    break;  
+      break;
   }
 
   // ui->editName->setText(m_pfile->getName().c_str());
@@ -337,7 +346,7 @@ CDlgMdfFile::initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, in
 void
 CDlgMdfFile::setInitialFocus(void)
 {
-  //ui->editName->setFocus();
+  // ui->editName->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -354,7 +363,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Picture* pobjnew = new CMDF_Picture();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CDlgMdfFilePicture dlg(this);
@@ -373,7 +382,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Video* pobjnew = new CMDF_Video();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CMDF_Video* pobj = m_pmdf->getVideoObj(ui->listFile->currentRow());
@@ -393,7 +402,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Firmware* pobjnew = new CMDF_Firmware();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CDlgMdfFileFirmware dlg(this);
@@ -412,7 +421,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Driver* pobjnew = new CMDF_Driver();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CDlgMdfFileDriver dlg(this);
@@ -431,7 +440,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Setup* pobjnew = new CMDF_Setup();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CDlgMdfFileSetup dlg(this);
@@ -450,7 +459,7 @@ CDlgMdfFile::addFileItem(void)
       CMDF_Manual* pobjnew = new CMDF_Manual();
       if (nullptr == pobjnew) {
         QMessageBox::warning(this, tr("APPNAME"), tr("Out of memory problem"), QMessageBox::Ok);
-         return;
+        return;
       }
 
       CDlgMdfFileManual dlg(this);
@@ -539,7 +548,7 @@ CDlgMdfFile::editFileItem(void)
       } break;
 
       default:
-      break;
+        break;
     }
   }
   else {
@@ -720,7 +729,7 @@ CDlgMdfFile::dupFileItem(void)
       } break;
 
       default:
-      break;
+        break;
     } // switch
   }
   else {
@@ -780,7 +789,7 @@ CDlgMdfFile::deleteFileItem(void)
       } break;
 
       default:
-      break;
+        break;
     }
   }
   else {
@@ -818,4 +827,15 @@ CDlgMdfFile::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfFile::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

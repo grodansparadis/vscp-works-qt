@@ -37,6 +37,10 @@
 #include "ui_cdlgselectmqtttopics.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QUrl>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -68,10 +72,15 @@ CDlgSelectMqttTopics::CDlgSelectMqttTopics(QWidget* parent)
   //   this,
   //   &CDlgSelectMqttTopics::onRowDoubleClicked);
 
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
   m_type        = CDlgSelectMqttTopics::SUBSCRIBE; // Subscription topics is default
   m_pvscpClient = nullptr;                         // No client yet
-
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,10 +165,10 @@ CDlgSelectMqttTopics::fillPublishTopics(void)
 int
 CDlgSelectMqttTopics::init(CDlgSelectMqttTopics::dlgtype type, const CVscpClient* pvscpClient)
 {
-  m_type        = type;
+  m_type = type;
 
   // Check pointer
-  if (nullptr == pvscpClient)  {
+  if (nullptr == pvscpClient) {
     return VSCP_ERROR_INVALID_POINTER;
   }
 
@@ -223,9 +232,20 @@ CDlgSelectMqttTopics::accepted(void)
     std::list<publishTopic*>* plist = m_pvscpClient->getPublishList();
     for (std::list<publishTopic*>::iterator it = plist->begin(); it != plist->end(); ++it) {
       publishTopic* ppub = *it;
-      std::string str = ppub->getTopic();
+      std::string str    = ppub->getTopic();
       m_pvscpClient->clearRetain4Topic(str);
       pos++;
     }
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectMqttTopics::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
 }

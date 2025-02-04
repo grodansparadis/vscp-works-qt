@@ -53,28 +53,28 @@ public:
 
   /*!
     Init dialog data
-    @param pmap Pointer to description map      
-    @param pselstr Pointer to ISO639 language string to handle. 
+    @param pmap Pointer to description map
+    @param pselstr Pointer to ISO639 language string to handle.
       Set to nullptr to add new item
   */
-  void initDialogData(std::map<std::string, std::string> *pmap, QString *pselstr = nullptr);
+  void initDialogData(std::map<std::string, std::string>* pmap, QString* pselstr = nullptr);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
   // ----------------------------------------------------------------------------
 
-
-
 public slots:
   void accept(void);
   void setLang(void);
-  
+
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfDescription* ui;
 
   // Description map
-  std::map<std::string, std::string> *m_pMapDesc;
+  std::map<std::string, std::string>* m_pMapDesc;
 
   // Initial selstr
   QString m_initial_selstr;

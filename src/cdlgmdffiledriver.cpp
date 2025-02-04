@@ -41,6 +41,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -57,6 +59,13 @@ CDlgMdfFileDriver::CDlgMdfFileDriver(QWidget* parent)
   , ui(new Ui::CDlgMdfFileDriver)
 {
   ui->setupUi(this);
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -358,4 +367,15 @@ CDlgMdfFileDriver::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfFileDriver::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

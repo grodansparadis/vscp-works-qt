@@ -63,6 +63,8 @@ public:
 
 private slots:
     
+    /// Help
+void showHelp(void); 
 
 private:
 

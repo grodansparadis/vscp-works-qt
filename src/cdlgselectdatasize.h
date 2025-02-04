@@ -38,37 +38,32 @@ namespace Ui {
 class CDlgSelectDataSize;
 }
 
-
-class CDlgSelectDataSize : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectDataSize : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectDataSize(QWidget *parent = nullptr);
-    ~CDlgSelectDataSize();
+  explicit CDlgSelectDataSize(QWidget* parent = nullptr);
+  ~CDlgSelectDataSize();
 
 public:
-    
-    /// Get set data size value
-    uint16_t getDataSizeValue();
+  /// Get set data size value
+  uint16_t getDataSizeValue();
 
-    /// Set data size value
-    void setDataSizeValue(uint16_t value);
+  /// Set data size value
+  void setDataSizeValue(uint16_t value);
 
-    /// Get set data size constraint
-    CSessionFilter::constraint getDataSizeConstraint();
+  /// Get set data size constraint
+  CSessionFilter::constraint getDataSizeConstraint();
 
-    /// Set data size constraint
-    void setDataSizeConstraint(CSessionFilter::constraint op);
+  /// Set data size constraint
+  void setDataSizeConstraint(CSessionFilter::constraint op);
 
 private slots:
-    
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectDataSize *ui;
-
+  Ui::CDlgSelectDataSize* ui;
 };
-
 
 #endif // CDLGSELECTDATASIZE_H

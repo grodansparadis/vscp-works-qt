@@ -88,8 +88,6 @@ public:
   /// Set initial nickname
   void setNickname(uint16_t nickname) { m_nickname = nickname; }
 
-  
-
 private:
   /// A pointer to a VSCP Client
   CVscpClient* m_vscpClient;
@@ -242,7 +240,6 @@ public:
 public slots:
 
 private:
-
   /*!
     Checkbox that select if MDF should be
     loaded locally or from url fetched from device
@@ -299,7 +296,6 @@ public slots:
   void toggleLocalFile(bool checked);
 
 private:
-
   CMDF m_mdf;
 
   /// Selected firmware file
@@ -371,7 +367,7 @@ public:
 public slots:
 
   /// Flash the device
-  void flashDevice(void);  
+  void flashDevice(void);
 
 private:
   /// A pointer to a VSCP Client
@@ -381,11 +377,10 @@ private:
   CBootDevice* m_bootDev;
 
   /// Boot progress
-  QProgressBar *m_progress;
+  QProgressBar* m_progress;
 
   /// Last info message from boot process
-  QTextEdit *m_infomsg;
-  
+  QTextEdit* m_infomsg;
 };
 
 // ----------------------------------------------------------------------------
@@ -415,6 +410,9 @@ public:
     Start the bootloader wizard
   */
   int initBootLoaderWizard(void);
+
+private slots:
+  void showHelp(void);
 
 private:
   /// The VSCP client type

@@ -130,6 +130,13 @@ public slots:
     */
     void valueChanged(int row, int column);
 
+private slots:
+
+/*
+  Show help for this dialog
+*/
+void showHelp();
+
 private:
 
     Ui::CDlgActionParam *ui;

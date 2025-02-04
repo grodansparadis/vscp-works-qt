@@ -39,86 +39,83 @@ namespace Ui {
 class CDlgConnSettingsWs2;
 }
 
-
-class CDlgConnSettingsWs2 : public QDialog
-{
-    Q_OBJECT
+class CDlgConnSettingsWs2 : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgConnSettingsWs2(QWidget *parent = nullptr);
-    ~CDlgConnSettingsWs2();
+  explicit CDlgConnSettingsWs2(QWidget* parent = nullptr);
+  ~CDlgConnSettingsWs2();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Setters/getters for name/description
-    */
-    QString getName(void);
-    void setName(const QString& str);
+  /*!
+      Setters/getters for name/description
+  */
+  QString getName(void);
+  void setName(const QString& str);
 
-    /*!
-        Setters/getters for path
-    */
-    QString getUrl(void);
-    void setUrl(const QString& str);
+  /*!
+      Setters/getters for path
+  */
+  QString getUrl(void);
+  void setUrl(const QString& str);
 
-    /*!
-        Setters/getters for encryption
-    */
-    QString getUser(void);
-    void setUser(const QString& str );
+  /*!
+      Setters/getters for encryption
+  */
+  QString getUser(void);
+  void setUser(const QString& str);
 
-    /*!
-        Setters/getters for key
-    */
-    QString getPassword(void);
-    void setPassword(const QString& str);
+  /*!
+      Setters/getters for key
+  */
+  QString getPassword(void);
+  void setPassword(const QString& str);
 
-    /*!
-        Setters/getters for connection timeout
-    */
-    uint32_t getConnectionTimeout(void);
-    void setConnectionTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for connection timeout
+  */
+  uint32_t getConnectionTimeout(void);
+  void setConnectionTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for response timeout
-    */
-    uint32_t getResponseTimeout(void);
-    void setResponseTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for response timeout
+  */
+  uint32_t getResponseTimeout(void);
+  void setResponseTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for JSON config object
-    */
-    json getJson(void);
-    void setJson(const json *pobj);
+  /*!
+      Setters/getters for JSON config object
+  */
+  json getJson(void);
+  void setJson(const json* pobj);
 
- private slots:
+private slots:
 
-    /// Set filter button clicked
-    void onSetFilter(void);
+  /// Set filter button clicked
+  void onSetFilter(void);
 
-    /// Test connection button clicked
-    void onTestConnection(void);
+  /// Test connection button clicked
+  void onTestConnection(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
+  Ui::CDlgConnSettingsWs2* ui;
 
-    Ui::CDlgConnSettingsWs2 *ui;
+  // JSON configuration object
+  json m_jsonConfig;
 
-    // JSON configuration object
-    json m_jsonConfig;
+  /// VSCP tcp/ip client
+  vscpClientWs2 m_client;
 
-    /// VSCP tcp/ip client
-    vscpClientWs2 m_client;
-
-    /// VSCP tcp/ip main filter
-    vscpEventFilter m_filter;
+  /// VSCP tcp/ip main filter
+  vscpEventFilter m_filter;
 };
-
 
 #endif // CDLGCONNSETTINGSWS2_H

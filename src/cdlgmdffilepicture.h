@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_file_picture_index {
   index_file_picture_none = 0,
@@ -46,10 +46,10 @@ typedef enum mdf_file_picture_index {
 } mdf_file_picture_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_FILE_PICTURE_NAME tr("Name: ")
-#define PREFIX_MDF_FILE_PICTURE_URL tr("URL: ")
+#define PREFIX_MDF_FILE_PICTURE_NAME   tr("Name: ")
+#define PREFIX_MDF_FILE_PICTURE_URL    tr("URL: ")
 #define PREFIX_MDF_FILE_PICTURE_FORMAT tr("Format: ")
-#define PREFIX_MDF_FILE_PICTURE_DATE tr("Date: ")
+#define PREFIX_MDF_FILE_PICTURE_DATE   tr("Date: ")
 
 namespace Ui {
 class CDlgMdfFilePicture;
@@ -72,10 +72,9 @@ public:
     Init dialog data
     @param pmdfobject Pointer to MDF object
     @param index The index for the field that will get focus
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_file_picture_index index = index_file_picture_name);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -105,14 +104,15 @@ public:
   void setDate(const QString& strdate);
   QString getDate(void);
 
-
 public slots:
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfFilePicture* ui;
-  CMDF_Picture * m_ppicture;
+  CMDF_Picture* m_ppicture;
 };
 
 #endif // CDLGMDFFILEPICTURE_H

@@ -44,6 +44,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -63,8 +65,9 @@ CDlgMdfModule::CDlgMdfModule(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
-  connect(shortcut, &QShortcut::activated, this, &CDlgMdfModule::editDesc);
+  QShortcut* shortcut_E = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
+  shortcut_E->setAutoRepeat(false);
+  connect(shortcut_E, &QShortcut::activated, this, &CDlgMdfModule::editDesc);
 
   // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &cdlgmdfmodule::setDummyGuid);
 
@@ -77,6 +80,13 @@ CDlgMdfModule::CDlgMdfModule(QWidget* parent)
   connect(ui->btnEditInfo, &QToolButton::clicked, this, &CDlgMdfModule::editInfo);
   connect(ui->btnDupInfo, &QToolButton::clicked, this, &CDlgMdfModule::dupInfo);
   connect(ui->btnDelInfo, &QToolButton::clicked, this, &CDlgMdfModule::deleteInfo);
+
+  // Help
+  QShortcut* shortcut_F1 = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut_F1->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -206,7 +216,7 @@ CDlgMdfModule::fillInfoUrl()
   std::map<std::string, std::string>* pmapHelpUrl     = m_pmdf->getHelpUrlMap();
   std::map<std::string, std::string>::iterator itInfo = pmapHelpUrl->begin();
   while (itInfo != pmapHelpUrl->end()) {
-    std::string lang = itInfo->first;   // key
+    std::string lang = itInfo->first; // key
     std::string info = itInfo->second;
     str              = lang.c_str() + tr(" - ") + info.c_str();
     ui->listInfo->addItem(str);
@@ -259,7 +269,6 @@ CDlgMdfModule::setName(const QString& str)
   ui->editName->setText(str);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // accept
 //
@@ -306,7 +315,7 @@ CDlgMdfModule::addDesc(void)
   QString selstr = "en"; // Default language
 
   CDlgMdfDescription dlg(this);
-  dlg.initDialogData(m_pmdf->getMapDescription()/*, &selstr*/);
+  dlg.initDialogData(m_pmdf->getMapDescription() /*, &selstr*/);
   if (QDialog::Accepted == dlg.exec()) {
     ui->listDescription->clear();
     fillDescription();
@@ -379,7 +388,6 @@ CDlgMdfModule::deleteDesc(void)
     m_pmdf->getMapDescription()->erase(selstr.toStdString());
     ui->listDescription->clear();
     fillDescription();
-
   }
 }
 
@@ -393,7 +401,7 @@ CDlgMdfModule::addInfo(void)
   QString selstr = "en"; // Default language
 
   CDlgMdfInfoUrl dlg(this);
-  dlg.initDialogData(m_pmdf->getHelpUrlMap()/*, &selstr*/);
+  dlg.initDialogData(m_pmdf->getHelpUrlMap() /*, &selstr*/);
   if (QDialog::Accepted == dlg.exec()) {
     ui->listInfo->clear();
     fillInfoUrl();
@@ -455,7 +463,7 @@ CDlgMdfModule::dupInfo(void)
 void
 CDlgMdfModule::deleteInfo(void)
 {
-    if (-1 != ui->listInfo->currentRow()) {
+  if (-1 != ui->listInfo->currentRow()) {
 
     // Save the row
     int idx = ui->listInfo->currentRow();
@@ -466,6 +474,16 @@ CDlgMdfModule::deleteInfo(void)
     m_pmdf->getHelpUrlMap()->erase(selstr.toStdString());
     ui->listInfo->clear();
     fillInfoUrl();
-
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfModule::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

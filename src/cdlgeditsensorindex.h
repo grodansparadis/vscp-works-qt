@@ -33,67 +33,57 @@
 
 #include <QDialog>
 
-
 namespace Ui {
 class CDlgEditSensorIndex;
 }
 
-
-class CDlgEditSensorIndex : public QDialog
-{
-    Q_OBJECT
+class CDlgEditSensorIndex : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgEditSensorIndex(QWidget *parent = nullptr);
-    ~CDlgEditSensorIndex();
+  explicit CDlgEditSensorIndex(QWidget* parent = nullptr);
+  ~CDlgEditSensorIndex();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Set edit mode. 
-        GUID will be READ ONLY
-    */
-    void setEditMode(void);
+  /*!
+      Set edit mode.
+      GUID will be READ ONLY
+  */
+  void setEditMode(void);
 
+  // ----------------------------------------------------------------------------
+  //                             Getters & Setters
+  // ----------------------------------------------------------------------------
 
-    // ----------------------------------------------------------------------------
-    //                             Getters & Setters
-    // ----------------------------------------------------------------------------
+  /*!
+      GUID getter/setters
+  */
+  void setSensor(uint8_t sensorindex);
+  uint8_t getSensor(void);
 
-    /*!
-        GUID getter/setters
-    */
-    void setSensor(uint8_t sensorindex);
-    uint8_t getSensor(void);
+  /*!
+      Name getter/setters
+  */
+  void setName(const QString& name);
+  QString getName(void);
 
-    /*!
-        Name getter/setters
-    */
-    void setName(const QString& name);
-    QString getName(void);
+  /*!
+      Priority filter getter/setters
+  */
+  void setDescription(const QString& description);
+  QString getDescription(void);
 
-    /*!
-        Priority filter getter/setters
-    */
-    void setDescription(const QString& description);
-    QString getDescription(void);
-
-    
-
- public slots:
-
+public slots:
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgEditSensorIndex *ui;
-
+  Ui::CDlgEditSensorIndex* ui;
 };
-
 
 #endif // CDLGLEDITSENSORINDEX_H

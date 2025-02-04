@@ -33,72 +33,62 @@
 
 #include <QDialog>
 
-
 namespace Ui {
 class CDlgEditGuid;
 }
 
-
-class CDlgEditGuid : public QDialog
-{
-    Q_OBJECT
+class CDlgEditGuid : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgEditGuid(QWidget *parent = nullptr);
-    ~CDlgEditGuid();
+  explicit CDlgEditGuid(QWidget* parent = nullptr);
+  ~CDlgEditGuid();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Set edit mode. 
-        GUID will be READ ONLY
-    */
-    void setEditMode(void);
+  /*!
+      Set edit mode.
+      GUID will be READ ONLY
+  */
+  void setEditMode(void);
 
-    /*!
-        Set Dummy GUID
-    */
-    void setDummyGuid(void);
+  /*!
+      Set Dummy GUID
+  */
+  void setDummyGuid(void);
 
+  // ----------------------------------------------------------------------------
+  //                             Getters & Setters
+  // ----------------------------------------------------------------------------
 
-    // ----------------------------------------------------------------------------
-    //                             Getters & Setters
-    // ----------------------------------------------------------------------------
+  /*!
+      GUID getter/setters
+  */
+  void setGuid(const QString& guid);
+  QString getGuid(void);
 
-    /*!
-        GUID getter/setters
-    */
-    void setGuid(const QString& guid);
-    QString getGuid(void);
+  /*!
+      Name getter/setters
+  */
+  void setName(const QString& name);
+  QString getName(void);
 
-    /*!
-        Name getter/setters
-    */
-    void setName(const QString& name);
-    QString getName(void);
+  /*!
+      Priority filter getter/setters
+  */
+  void setDescription(const QString& description);
+  QString getDescription(void);
 
-    /*!
-        Priority filter getter/setters
-    */
-    void setDescription(const QString& description);
-    QString getDescription(void);
-
-    
-
- public slots:
-
+private slots:
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgEditGuid *ui;
-
+  Ui::CDlgEditGuid* ui;
 };
-
 
 #endif // CDLGLEDITGUID_H

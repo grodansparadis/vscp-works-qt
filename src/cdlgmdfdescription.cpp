@@ -41,6 +41,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -84,6 +86,13 @@ CDlgMdfDescription::CDlgMdfDescription(QWidget* parent)
   }
 
   connect(ui->btnSetLanguage, &QToolButton::clicked, this, &CDlgMdfDescription::setLang);
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -192,4 +201,15 @@ void
 CDlgMdfDescription::setLang()
 {
   ui->editLanguage->setText(ui->comboBoxLang->currentText());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfDescription::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

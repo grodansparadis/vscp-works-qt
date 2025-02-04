@@ -34,8 +34,6 @@
 
 #include <QDialog>
 
-
-
 namespace Ui {
 class CDlgMdfDmAction;
 }
@@ -57,9 +55,9 @@ public:
     @param CMDF *pmdf Pointer to MDF
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
+
   */
-  void initDialogData(CMDF *pmdf, CMDF_Action* paction, int index = 0);
+  void initDialogData(CMDF* pmdf, CMDF_Action* paction, int index = 0);
 
   /*!
     Only enable parameter list
@@ -100,15 +98,16 @@ public slots:
   */
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfDmAction* ui;
 
   /// Pointer to MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   CMDF_Action* m_paction;
-
 };
 
 #endif // CDLGMDFDM_ACTIONS_H

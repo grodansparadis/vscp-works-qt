@@ -43,6 +43,9 @@
 #include <QFileDialog>
 #include <QMenu>
 #include <QInputDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -78,7 +81,12 @@ CDlgSessionFilter::CDlgSessionFilter(QWidget *parent) :
             this,
             &CDlgSessionFilter::showTxContextMenu);
 
-           
+           // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -218,3 +226,14 @@ CDlgSessionFilter::saveFilter()
           QMessageBox::Ok);
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSessionFilter::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=filter";
+  QDesktopServices::openUrl(QUrl(link));
+}

@@ -202,7 +202,6 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
           SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
 
   // Handle help requests
-
   QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
 
@@ -4231,6 +4230,6 @@ CFrmSession::receiveCallback(vscpEvent& ev, void* pobj)
 void
 CFrmSession::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/sessions.md";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window.md";
   QDesktopServices::openUrl(QUrl(link));
 }

@@ -108,13 +108,13 @@ public:
       behaviour
     @param b Set to true to let double click select and accept GUID
   */
-  void enableAccept(bool b=true) { m_bEnableDblClickAccept = b; };
+  void enableAccept(bool b = true) { m_bEnableDblClickAccept = b; };
 
   /*!
     Show only interfaces if set to true
     @param b Set to true to show only interfaces, false to show everything.
   */
-  void setInterfaceShow(bool b=true);
+  void setInterfaceShow(bool b = true);
 
 public slots:
 
@@ -148,8 +148,11 @@ public slots:
   /// Toggle show only interfaces
   void showOnlyInterfaces(void);
 
-private:
+private slots:
+  /// Help
+  void showHelp(void);
 
+private:
   /*!
     Set to true of only interfaces GUID's
     should be shown

@@ -45,6 +45,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QShortcut>
 
 #include <string>
 
@@ -73,6 +74,9 @@ CDlgConnSettingsCanal::CDlgConnSettingsCanal(QWidget* parent)
   // Add help functionality
   QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
   connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

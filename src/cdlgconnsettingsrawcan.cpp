@@ -45,6 +45,8 @@
 
 #include <QMessageBox>
 #include <QMenu>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -75,6 +77,12 @@ CDlgConnSettingsRawCan::CDlgConnSettingsRawCan(QWidget* parent)
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsRawCan::onTestConnection);
 
   connect(ui->btnSetFlags, &QPushButton::clicked, this, &CDlgConnSettingsRawCan::onSetFlags);
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(ui->helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -524,6 +532,17 @@ CDlgConnSettingsRawCan::onTestConnection(void)
                           tr("Failed to disconnect from interface."),
                           QMessageBox::Ok);
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgConnSettingsRawCan::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/rawcan_window";
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 #endif // WIN32

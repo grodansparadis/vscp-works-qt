@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -57,6 +60,13 @@ CDlgSelectMeasurementValue::CDlgSelectMeasurementValue(QWidget *parent) :
     ui(new Ui::CDlgSelectMeasurementValue)
 {
     ui->setupUi(this);
+
+    // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,3 +123,13 @@ void CDlgSelectMeasurementValue::setMeasurementValueConstraint(CSessionFilter::c
 
 
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectMeasurementValue::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

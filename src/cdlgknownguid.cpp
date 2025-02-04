@@ -45,6 +45,9 @@
 
 #include <QMenu>
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QShortcut>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CTor
@@ -84,6 +87,13 @@ CDlgKnownGuid::CDlgKnownGuid(QWidget* parent)
   connect(ui->btnSave, &QPushButton::clicked, this, &CDlgKnownGuid::btnSave);
 
   connect(ui->checkShowInterfaces, &QCheckBox::clicked, this, &CDlgKnownGuid::showOnlyInterfaces);
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   ui->textDescription->acceptRichText();
 
@@ -865,4 +875,15 @@ CDlgKnownGuid::showOnlyInterfaces(void)
   ui->listGuid->clearContents();
   ui->listGuid->model()->removeRows(0, ui->listGuid->rowCount());
   fillGuidFromDb();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgKnownGuid::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/settings?id=guid";
+  QDesktopServices::openUrl(QUrl(link));
 }

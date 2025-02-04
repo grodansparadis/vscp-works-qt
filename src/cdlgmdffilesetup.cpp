@@ -41,6 +41,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -61,13 +63,19 @@ CDlgMdfFileSetup::CDlgMdfFileSetup(QWidget* parent)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   // Fill combo with predefined bootloader algorithms (vscp.h)
-  //ui->comboBoxAlgorithm->addItem("VSCP", VSCP_BOOTLOADER_VSCP); // VSCP boot loader algorithm
-  
+  // ui->comboBoxAlgorithm->addItem("VSCP", VSCP_BOOTLOADER_VSCP); // VSCP boot loader algorithm
 
   // QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
   // connect(shortcut, &QShortcut::activated, this, &CDlgMdfFileSetup::editDesc);
 
   // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &cdlgmdfmodule::setDummyGuid);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -101,8 +109,8 @@ CDlgMdfFileSetup::initDialogData(const CMDF_Object* pmdfobj, mdf_file_setup_inde
   ui->editUrl->setText(m_psetup->getUrl().c_str());
   ui->editFormat->setText(m_psetup->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_psetup->getDate().c_str(),"YY-MM_DD");
-    ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(m_psetup->getDate().c_str(), "YY-MM_DD");
+  ui->date->setDate(dd);
 
   switch (index) {
     case index_file_setup_url:
@@ -198,7 +206,6 @@ CDlgMdfFileSetup::getFormat(void)
   return ui->editFormat->text();
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // setDate
 //
@@ -206,8 +213,8 @@ CDlgMdfFileSetup::getFormat(void)
 void
 CDlgMdfFileSetup::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate,"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
+  ui->date->setDate(dd);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -217,7 +224,7 @@ CDlgMdfFileSetup::setDate(const QString& strdate)
 QString
 CDlgMdfFileSetup::getDate(void)
 {
-  QDate dd = ui->date->date(); 
+  QDate dd = ui->date->date();
   return dd.toString("YY-MM-DD");
 }
 
@@ -240,7 +247,7 @@ CDlgMdfFileSetup::accept()
     str = ui->editFormat->text().toStdString();
     m_psetup->setFormat(str);
 
-    QDate dd = ui->date->date(); 
+    QDate dd = ui->date->date();
     m_psetup->setDate(dd.toString("YY-MM-DD").toStdString());
   }
   else {
@@ -248,4 +255,15 @@ CDlgMdfFileSetup::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfFileSetup::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

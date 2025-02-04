@@ -38,36 +38,33 @@ namespace Ui {
 class CDlgSelectDataCoding;
 }
 
-
-class CDlgSelectDataCoding : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectDataCoding : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectDataCoding(QWidget *parent = nullptr);
-    ~CDlgSelectDataCoding();
+  explicit CDlgSelectDataCoding(QWidget* parent = nullptr);
+  ~CDlgSelectDataCoding();
 
 public:
-    /// Get set data coding value
-    uint8_t getDataCodingValue();
+  /// Get set data coding value
+  uint8_t getDataCodingValue();
 
-    /// Set data coding value
-    void setDataCodingValue(uint8_t value);
+  /// Set data coding value
+  void setDataCodingValue(uint8_t value);
 
-    /// Get set data coding constraint
-    CSessionFilter::constraint getDataCodingConstraint();
+  /// Get set data coding constraint
+  CSessionFilter::constraint getDataCodingConstraint();
 
-    /// Set data coding constraint
-    void setDataCodingConstraint(CSessionFilter::constraint op);
+  /// Set data coding constraint
+  void setDataCodingConstraint(CSessionFilter::constraint op);
 
 private slots:
-    
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectDataCoding *ui;
-
+  Ui::CDlgSelectDataCoding* ui;
 };
-
 
 #endif // CDLGSELECTDATACODING_H

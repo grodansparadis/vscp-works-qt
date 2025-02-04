@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,11 +55,18 @@
 // CTor
 //
 
-CDlgSelectMeasurementUnit::CDlgSelectMeasurementUnit(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectMeasurementUnit)
+CDlgSelectMeasurementUnit::CDlgSelectMeasurementUnit(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectMeasurementUnit)
 {
-    ui->setupUi(this);  
+  ui->setupUi(this);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,51 +75,59 @@ CDlgSelectMeasurementUnit::CDlgSelectMeasurementUnit(QWidget *parent) :
 
 CDlgSelectMeasurementUnit::~CDlgSelectMeasurementUnit()
 {
-    delete ui;
+  delete ui;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getMeasurementValue
 //
 
-uint8_t CDlgSelectMeasurementUnit::getMeasurementUnitValue(void)
+uint8_t
+CDlgSelectMeasurementUnit::getMeasurementUnitValue(void)
 {
-    return vscp_readStringValue(ui->editUnit->text().toStdString());
+  return vscp_readStringValue(ui->editUnit->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setMeasurementValue
 //
 
-void CDlgSelectMeasurementUnit::setMeasurementUnitValue(uint8_t value)
+void
+CDlgSelectMeasurementUnit::setMeasurementUnitValue(uint8_t value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
-    ui->editUnit->setText(pworks->decimalToStringInBase(value));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  ui->editUnit->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getMeasurementUnitConstraint
 //
 
-CSessionFilter::constraint 
+CSessionFilter::constraint
 CDlgSelectMeasurementUnit::getMeasurementUnitConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboCompareUnit->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboCompareUnit->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setMeasurementUnitConstraint
 //
 
-void CDlgSelectMeasurementUnit::setMeasurementUnitConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectMeasurementUnit::setMeasurementUnitConstraint(CSessionFilter::constraint op)
 {
-    ui->comboCompareUnit->setCurrentIndex(static_cast<int>(op));
+  ui->comboCompareUnit->setCurrentIndex(static_cast<int>(op));
 }
-
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
+void
+CDlgSelectMeasurementUnit::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
+}

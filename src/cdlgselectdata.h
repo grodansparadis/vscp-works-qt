@@ -29,7 +29,6 @@
 #ifndef CDLGSELECTDATA_H
 #define CDLGSELECTDATA_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -37,51 +36,48 @@ namespace Ui {
 class CDlgSelectData;
 }
 
-
-class CDlgSelectData : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectData : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectData(QWidget *parent = nullptr);
-    ~CDlgSelectData();
+  explicit CDlgSelectData(QWidget* parent = nullptr);
+  ~CDlgSelectData();
 
 public:
+  /*!
+      Add value to list
+      @param pos Position for value to add
+      @param value Value to add
+      @param op Constraint value
+  */
+  void addValue(uint16_t pos, uint8_t value, uint8_t op);
 
-    /*!
-        Add value to list
-        @param pos Position for value to add
-        @param value Value to add
-        @param op Constraint value
-    */
-    void addValue(uint16_t pos, uint8_t value, uint8_t op);
-    
-    /*! 
-        Set data 
-        @param listData List with defined values (pos(8):op(8):value(8))
+  /*!
+      Set data
+      @param listData List with defined values (pos(8):op(8):value(8))
 
-    */
-    void setData(std::deque<uint32_t> listData);
+  */
+  void setData(std::deque<uint32_t> listData);
 
-    /*!
-        Get data
-        @return List with defined values (pos(8):op(8):value(8))
-    */
-    std::deque<uint32_t> getData(void);
+  /*!
+      Get data
+      @return List with defined values (pos(8):op(8):value(8))
+  */
+  std::deque<uint32_t> getData(void);
 
 private slots:
 
-    /// Add data value to listbox
-    void onAddValue(void);
+  /// Add data value to listbox
+  void onAddValue(void);
 
-    /// Delete data value from listbox
-    void onDeleteValue(void);
+  /// Delete data value from listbox
+  void onDeleteValue(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectData *ui;
-
+  Ui::CDlgSelectData* ui;
 };
-
 
 #endif // CDLGSELECTDATA_H

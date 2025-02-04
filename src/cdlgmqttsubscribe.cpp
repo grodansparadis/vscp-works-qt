@@ -34,6 +34,9 @@
 #include "ui_cdlgmqttsubscribe.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -44,12 +47,18 @@
 // CTor
 //
 
-CDlgMqttSubscribe::CDlgMqttSubscribe(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgMqttSubscribe)
+CDlgMqttSubscribe::CDlgMqttSubscribe(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgMqttSubscribe)
 {
-    ui->setupUi(this);
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  ui->setupUi(this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,66 +67,77 @@ CDlgMqttSubscribe::CDlgMqttSubscribe(QWidget *parent) :
 
 CDlgMqttSubscribe::~CDlgMqttSubscribe()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setTopic
 //
 
-void CDlgMqttSubscribe::setTopic(const QString& topic)
+void
+CDlgMqttSubscribe::setTopic(const QString& topic)
 {
-    ui->editTopic->setText(topic);
+  ui->editTopic->setText(topic);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getTopic
 //
 
-QString CDlgMqttSubscribe::getTopic(void)
+QString
+CDlgMqttSubscribe::getTopic(void)
 {
-    return ui->editTopic->text();
+  return ui->editTopic->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setFormat
 //
 
-void CDlgMqttSubscribe::setFormat(enumMqttMsgFormat format)
+void
+CDlgMqttSubscribe::setFormat(enumMqttMsgFormat format)
 {
-    return ui->comboSubscribeFormat->setCurrentIndex(static_cast<int>(format));
+  return ui->comboSubscribeFormat->setCurrentIndex(static_cast<int>(format));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getFormat
 //
 
-enumMqttMsgFormat CDlgMqttSubscribe::getFormat(void)
+enumMqttMsgFormat
+CDlgMqttSubscribe::getFormat(void)
 {
-    return static_cast<enumMqttMsgFormat>(ui->comboSubscribeFormat->currentIndex());
+  return static_cast<enumMqttMsgFormat>(ui->comboSubscribeFormat->currentIndex());
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // setQos
 //
 
-void CDlgMqttSubscribe::setQos(int qos)
+void
+CDlgMqttSubscribe::setQos(int qos)
 {
-    qos &= 0x03;
-    return ui->comboQos->setCurrentIndex(qos);
+  qos &= 0x03;
+  return ui->comboQos->setCurrentIndex(qos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getQos
 //
 
-int CDlgMqttSubscribe::getQos(void)
+int
+CDlgMqttSubscribe::getQos(void)
 {
-    return ui->comboQos->currentIndex();
+  return ui->comboQos->currentIndex();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
-
+void
+CDlgMqttSubscribe::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
+}

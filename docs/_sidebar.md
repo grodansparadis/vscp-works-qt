@@ -14,6 +14,7 @@
 * **Configure**
   * [Configuration file format](configure.md)
   * [Files and directory structure](files_and_directory_structure.md)
+  * [Settings](settings.md)
 
 * **Connections**
   * [Introduction](connections.md)

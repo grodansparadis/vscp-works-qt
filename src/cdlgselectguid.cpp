@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -61,7 +64,14 @@ CDlgSelectGuid::CDlgSelectGuid(QWidget *parent) :
     connect(ui->btnFillGuid, &QPushButton::clicked, this, &CDlgSelectGuid::fillGuid );
     connect(ui->btnGetGuid, &QPushButton::clicked, this, &CDlgSelectGuid::getGuid );
     connect(ui->btnAskGuid, &QPushButton::clicked, this, &CDlgSelectGuid::askGuid ); 
-    connect(ui->btnFetchKnownGuid, &QPushButton::clicked, this, &CDlgSelectGuid::fetchKnownGuid );   
+    connect(ui->btnFetchKnownGuid, &QPushButton::clicked, this, &CDlgSelectGuid::fetchKnownGuid );
+
+    // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -554,4 +564,13 @@ void CDlgSelectGuid::fetchKnownGuid(void)
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
+void
+CDlgSelectGuid::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

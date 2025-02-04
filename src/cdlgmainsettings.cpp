@@ -42,6 +42,8 @@
 #include "cfrmsession.h"
 
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -59,6 +61,13 @@ CDlgMainSettings::CDlgMainSettings(QWidget* parent)
   ui->setupUi(this);
 
   connect(ui->comboNumberBase, SIGNAL(currentIndexChanged(int)), this, SLOT(onBaseChange(int)));
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -400,4 +409,15 @@ CDlgMainSettings::onReLoadEventDb(void)
                              tr("Events reloaded from event database."),
                              QMessageBox::Ok);
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMainSettings::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/settings";
+  QDesktopServices::openUrl(QUrl(link));
 }

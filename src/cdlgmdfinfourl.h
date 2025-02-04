@@ -73,8 +73,10 @@ public slots:
   void accept(void);
   void setLang(void);
 
-private:
+  /// Help
+  void showHelp(void);
 
+private:
   Ui::CDlgMdfInfoUrl* ui;
 
   // info URL map
@@ -82,7 +84,6 @@ private:
 
   // Initial selstr
   QString m_initial_selstr;
-  
 };
 
 #endif // CDLGMDFINFOURL_H

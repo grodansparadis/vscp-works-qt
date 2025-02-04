@@ -38,34 +38,32 @@ namespace Ui {
 class CDlgMqttSubscribe;
 }
 
-
-class CDlgMqttSubscribe : public QDialog
-{
-    Q_OBJECT
+class CDlgMqttSubscribe : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgMqttSubscribe(QWidget *parent = nullptr);
-    ~CDlgMqttSubscribe();
-    
+  explicit CDlgMqttSubscribe(QWidget* parent = nullptr);
+  ~CDlgMqttSubscribe();
+
 public:
+  /// Setters/getters for topic
+  void setTopic(const QString& topic);
+  QString getTopic(void);
 
-    /// Setters/getters for topic
-    void setTopic(const QString& topic);
-    QString getTopic(void);
+  /// Setters/getters for publish format
+  void setFormat(enumMqttMsgFormat format);
+  enumMqttMsgFormat getFormat(void);
 
-    /// Setters/getters for publish format
-    void setFormat(enumMqttMsgFormat format);
-    enumMqttMsgFormat getFormat(void);
+  /// Setters/getters for qos
+  void setQos(int qos);
+  int getQos(void);
 
-    /// Setters/getters for qos
-    void setQos(int qos);
-    int getQos(void);
+private slots:
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgMqttSubscribe *ui;
-
+  Ui::CDlgMqttSubscribe* ui;
 };
-
 
 #endif // CDLGMQTTSUBSCRIBE_H

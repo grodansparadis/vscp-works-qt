@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,12 +55,18 @@
 // CTor
 //
 
-CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectDataCoding)
+CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectDataCoding)
 {
-    ui->setupUi(this);
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  ui->setupUi(this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,51 +75,59 @@ CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget *parent) :
 
 CDlgSelectDataCoding::~CDlgSelectDataCoding()
 {
-    delete ui;
+  delete ui;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDataCodingValue
 //
 
-uint8_t CDlgSelectDataCoding::getDataCodingValue(void)
+uint8_t
+CDlgSelectDataCoding::getDataCodingValue(void)
 {
-    return vscp_readStringValue(ui->editDataCoding->text().toStdString());
+  return vscp_readStringValue(ui->editDataCoding->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDataCodingValue
 //
 
-void CDlgSelectDataCoding::setDataCodingValue(uint8_t value)
+void
+CDlgSelectDataCoding::setDataCodingValue(uint8_t value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
-    ui->editDataCoding->setText(pworks->decimalToStringInBase(value));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  ui->editDataCoding->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDataCodingConstraint
 //
 
-CSessionFilter::constraint CDlgSelectDataCoding::getDataCodingConstraint(void)
+CSessionFilter::constraint
+CDlgSelectDataCoding::getDataCodingConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboCompareDataCoding->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboCompareDataCoding->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDataCodingConstraint
 //
 
-void CDlgSelectDataCoding::setDataCodingConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectDataCoding::setDataCodingConstraint(CSessionFilter::constraint op)
 {
-    ui->comboCompareDataCoding->setCurrentIndex(static_cast<int>(op));
+  ui->comboCompareDataCoding->setCurrentIndex(static_cast<int>(op));
 }
-
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
-
+void
+CDlgSelectDataCoding::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

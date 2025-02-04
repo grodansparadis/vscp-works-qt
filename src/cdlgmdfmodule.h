@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_module_index {
   index_module_name = 0,
@@ -48,13 +48,13 @@ typedef enum mdf_module_index {
 } mdf_module_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_MODULE_NAME tr("Name : ")
-#define PREFIX_MDF_MODULE_MODEL tr("Model: ")
-#define PREFIX_MDF_MODULE_LEVEL tr("VSCP Level: ")
-#define PREFIX_MDF_MODULE_VERSION tr("Version: ")
+#define PREFIX_MDF_MODULE_NAME        tr("Name : ")
+#define PREFIX_MDF_MODULE_MODEL       tr("Model: ")
+#define PREFIX_MDF_MODULE_LEVEL       tr("VSCP Level: ")
+#define PREFIX_MDF_MODULE_VERSION     tr("Version: ")
 #define PREFIX_MDF_MODULE_CHANGE_DATE tr("Change Date: ")
 #define PREFIX_MDF_MODULE_BUFFER_SIZE tr("Buffer Size: ")
-#define PREFIX_MDF_MODULE_COPYRIGHT tr("Copyright: ")
+#define PREFIX_MDF_MODULE_COPYRIGHT   tr("Copyright: ")
 
 namespace Ui {
 class CDlgMdfModule;
@@ -89,7 +89,7 @@ public:
       4 - Module date
       5 - Module buffer size
       6 - Module copyright
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index = index_module_name);
 
@@ -163,6 +163,9 @@ public slots:
   void editInfo(void);
   void dupInfo(void);
   void deleteInfo(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfModule* ui;

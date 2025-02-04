@@ -29,7 +29,6 @@
 #ifndef CDLGSESSIONFILTER_H
 #define CDLGSESSIONFILTER_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -37,47 +36,42 @@ namespace Ui {
 class CDlgSessionFilter;
 }
 
-
-class CDlgSessionFilter : public QDialog
-{
-    Q_OBJECT
+class CDlgSessionFilter : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSessionFilter(QWidget *parent = nullptr);
-    ~CDlgSessionFilter();
+  explicit CDlgSessionFilter(QWidget* parent = nullptr);
+  ~CDlgSessionFilter();
 
 public:
-    
-    
-
 private slots:
 
-    /// Context menu
-    void showTxContextMenu(const QPoint& pos);
+  /// Context menu
+  void showTxContextMenu(const QPoint& pos);
 
-    /// Add filter
-    void addFilter(void);
+  /// Add filter
+  void addFilter(void);
 
-    /// Edit filter
-    void editFilter(void);
+  /// Edit filter
+  void editFilter(void);
 
-    /// Clone filter
-    void cloneFilter(void);
+  /// Clone filter
+  void cloneFilter(void);
 
-    /// Delete filter
-    void deleteFilter(void);
+  /// Delete filter
+  void deleteFilter(void);
 
-    /// Load filter
-    void loadFilter(void);
+  /// Load filter
+  void loadFilter(void);
 
-    /// Save filter
-    void saveFilter(void);
+  /// Save filter
+  void saveFilter(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSessionFilter *ui;
-
+  Ui::CDlgSessionFilter* ui;
 };
-
 
 #endif // CDLGSESSIONFILTER_H

@@ -43,7 +43,9 @@
 
 #include <QDate>
 #include <QDebug>
+#include <QPushButton>
 #include <QMessageBox>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -63,15 +65,24 @@ CDlgEditMap::CDlgEditMap(QWidget* parent)
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  // QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
-  // connect(shortcut, &QShortcut::activated, this, &CDlgEditMap::editDesc);
-
-  // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &cdlgmdfmodule::setDummyGuid);
+  
 
   connect(ui->btnAddMapItem, &QToolButton::clicked, this, &CDlgEditMap::addMapItem);
   connect(ui->btnEditMapItem, &QToolButton::clicked, this, &CDlgEditMap::editMapItem);
   connect(ui->btnDupMapItem, &QToolButton::clicked, this, &CDlgEditMap::dupMapItem);
   connect(ui->btnDelMapItem, &QToolButton::clicked, this, &CDlgEditMap::deleteMapItem);
+
+  // QShortcut* shortcut = new QShortcut(QKeySequence(tr("Ctrl+E", "Edit")), ui->editDate);
+  // connect(shortcut, &QShortcut::activated, this, &CDlgEditMap::editDesc);
+
+  // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &cdlgmdfmodule::setDummyGuid);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -180,7 +191,6 @@ CDlgEditMap::accept()
 {
   std::string str;
   if (nullptr != m_pMap) {
-
   }
   else {
     spdlog::error("MDF map information - Invalid map object (accept)");
@@ -361,3 +371,14 @@ CDlgEditMap::deleteMapItem(void)
 
 //   }
 // }
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgEditMap::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
+}

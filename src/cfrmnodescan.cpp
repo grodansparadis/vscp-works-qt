@@ -183,6 +183,9 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, json* pconn)
   int nWidth  = ui->centralwidget->width();
   int nHeight = ui->centralwidget->height();
 
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
   /*
     if (parent != NULL) {
       setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
@@ -1175,6 +1178,6 @@ CFrmNodeScan::goFirmwareUpdate(void)
 void
 CFrmNodeScan::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/scan_window";
   QDesktopServices::openUrl(QUrl(link));
 }

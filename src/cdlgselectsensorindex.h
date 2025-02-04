@@ -31,7 +31,6 @@
 #ifndef CDLGSELECTSENSORINDEX_H
 #define CDLGSELECTSENSORINDEX_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -39,36 +38,33 @@ namespace Ui {
 class CDlgSelectSensorIndex;
 }
 
-
-class CDlgSelectSensorIndex : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectSensorIndex : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectSensorIndex(QWidget *parent = nullptr);
-    ~CDlgSelectSensorIndex();
+  explicit CDlgSelectSensorIndex(QWidget* parent = nullptr);
+  ~CDlgSelectSensorIndex();
 
 public:
-    /// Get set Sensor Index value
-    uint8_t getSensorIndexValue();
+  /// Get set Sensor Index value
+  uint8_t getSensorIndexValue();
 
-    /// Set Sensor Index value
-    void setSensorIndexValue(uint8_t value);
+  /// Set Sensor Index value
+  void setSensorIndexValue(uint8_t value);
 
-    /// Get set Sensor Index constraint
-    CSessionFilter::constraint getSensorIndexConstraint();
+  /// Get set Sensor Index constraint
+  CSessionFilter::constraint getSensorIndexConstraint();
 
-    /// Set Sensor Index constraint
-    void setSensorIndexConstraint(CSessionFilter::constraint op);
+  /// Set Sensor Index constraint
+  void setSensorIndexConstraint(CSessionFilter::constraint op);
 
 private slots:
-    
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectSensorIndex *ui;
-
+  Ui::CDlgSelectSensorIndex* ui;
 };
-
 
 #endif // CDLGSELECTSENSORINDEX_H

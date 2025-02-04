@@ -146,7 +146,9 @@ public:
 
 public slots:
   void accept(void);
-
+  
+/// Help
+void showHelp(void); 
 
 private:
   Ui::CDlgMdfFileFirmware* ui;

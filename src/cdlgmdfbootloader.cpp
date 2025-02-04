@@ -41,6 +41,8 @@
 #include <QDate>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -92,7 +94,7 @@ CDlgMdfBootLoader::CDlgMdfBootLoader(QWidget* parent)
   ui->comboBoxAlgorithm->addItem("Reserved (0x1C)", 0x1C);
   ui->comboBoxAlgorithm->addItem("Reserved (0x1D)", 0x1D);
   ui->comboBoxAlgorithm->addItem("Reserved (0x1E)", 0x1E);
-  ui->comboBoxAlgorithm->addItem("NXP1", VSCP_BOOTLOADER_LPC1);            //  NXP/Philips/Freescale algorithm 0
+  ui->comboBoxAlgorithm->addItem("NXP1", VSCP_BOOTLOADER_LPC1); //  NXP/Philips/Freescale algorithm 0
   ui->comboBoxAlgorithm->addItem("Reserved (0x21)", 0x21);
   ui->comboBoxAlgorithm->addItem("Reserved (0x22)", 0x22);
   ui->comboBoxAlgorithm->addItem("Reserved (0x23)", 0x23);
@@ -107,7 +109,7 @@ CDlgMdfBootLoader::CDlgMdfBootLoader(QWidget* parent)
   ui->comboBoxAlgorithm->addItem("Reserved (0x2C)", 0x2C);
   ui->comboBoxAlgorithm->addItem("Reserved (0x2D)", 0x2D);
   ui->comboBoxAlgorithm->addItem("Reserved (0x2E)", 0x2E);
-  ui->comboBoxAlgorithm->addItem("ST", VSCP_BOOTLOADER_ST);                //  ST STR algorithm 0
+  ui->comboBoxAlgorithm->addItem("ST", VSCP_BOOTLOADER_ST); //  ST STR algorithm 0
   ui->comboBoxAlgorithm->addItem("Reserved (0x31)", 0x31);
   ui->comboBoxAlgorithm->addItem("Reserved (0x32)", 0x32);
   ui->comboBoxAlgorithm->addItem("Reserved (0x33)", 0x33);
@@ -122,7 +124,7 @@ CDlgMdfBootLoader::CDlgMdfBootLoader(QWidget* parent)
   ui->comboBoxAlgorithm->addItem("Reserved (0x3C)", 0x3C);
   ui->comboBoxAlgorithm->addItem("Reserved (0x3D)", 0x3D);
   ui->comboBoxAlgorithm->addItem("Reserved (0x3E)", 0x3E);
-  ui->comboBoxAlgorithm->addItem("FREESCALE", VSCP_BOOTLOADER_FREESCALE);  //  Freescale Kinetics algorithm 0
+  ui->comboBoxAlgorithm->addItem("FREESCALE", VSCP_BOOTLOADER_FREESCALE); //  Freescale Kinetics algorithm 0
   ui->comboBoxAlgorithm->addItem("Reserved (0x41)", 0x41);
   ui->comboBoxAlgorithm->addItem("Reserved (0x42)", 0x42);
   ui->comboBoxAlgorithm->addItem("Reserved (0x43)", 0x43);
@@ -137,8 +139,8 @@ CDlgMdfBootLoader::CDlgMdfBootLoader(QWidget* parent)
   ui->comboBoxAlgorithm->addItem("Reserved (0x4C)", 0x4C);
   ui->comboBoxAlgorithm->addItem("Reserved (0x4D)", 0x4D);
   ui->comboBoxAlgorithm->addItem("Reserved (0x4E)", 0x4E);
-  ui->comboBoxAlgorithm->addItem("ESP", VSCP_BOOTLOADER_ESP);              //  Espressif algorithm 0
-  for ( int i=0x51; i<VSCP_BOOTLOADER_NONE0; i++) {
+  ui->comboBoxAlgorithm->addItem("ESP", VSCP_BOOTLOADER_ESP); //  Espressif algorithm 0
+  for (int i = 0x51; i < VSCP_BOOTLOADER_NONE0; i++) {
     QString str = QString("Reserved 0x%d").arg(i, 2, 16);
     ui->comboBoxAlgorithm->addItem(str, i);
   }
@@ -163,6 +165,13 @@ CDlgMdfBootLoader::CDlgMdfBootLoader(QWidget* parent)
   // connect(shortcut, &QShortcut::activated, this, &CDlgMdfBootLoader::editDesc);
 
   // connect(ui->btnSetDummyGuid, &QPushButton::clicked, this, &cdlgmdfmodule::setDummyGuid);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
 }
@@ -273,4 +282,15 @@ CDlgMdfBootLoader::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfBootLoader::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

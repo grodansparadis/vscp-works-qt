@@ -136,6 +136,9 @@ MainWindow::MainWindow()
           this,
           &MainWindow::showConnectionContextMenu);
 
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
   // TODO
   // if (QCanBus::instance()->plugins().contains(QStringLiteral("socketcan")))
   // {
@@ -1557,7 +1560,7 @@ MainWindow::createActions()
   QAction* preferenceAct = editMenu->addAction(tr("&Settings..."), this, &MainWindow::showMainsettings);
   preferenceAct->setShortcuts(QKeySequence::Paste);
   preferenceAct->setStatusTip(tr("Set preferences..."));
-  //editToolBar->addAction(preferenceAct);
+  // editToolBar->addAction(preferenceAct);
 
   // ----------------------------------------------------------------
 
@@ -2800,6 +2803,17 @@ MainWindow::mdfEdit()
   w->raise();
   // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
   w->activateWindow();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+MainWindow::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections.md";
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 #endif

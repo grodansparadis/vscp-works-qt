@@ -40,6 +40,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -50,19 +53,26 @@
 // CTor
 //
 
-CDlgSelectClass::CDlgSelectClass(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectClass)
+CDlgSelectClass::CDlgSelectClass(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectClass)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    connect(ui->btnClearClasses, &QPushButton::clicked, this, &CDlgSelectClass::clearClassSelections );
-    connect(ui->btnClearTypes, &QPushButton::clicked, this, &CDlgSelectClass::clearTypeSelections ); 
-    connect(ui->listClass, &QListWidget::itemClicked, this, &CDlgSelectClass::itemClassClicked );   
-    connect(ui->listType, &QListWidget::itemClicked, this, &CDlgSelectClass::itemTypeClicked );  
+  connect(ui->btnClearClasses, &QPushButton::clicked, this, &CDlgSelectClass::clearClassSelections);
+  connect(ui->btnClearTypes, &QPushButton::clicked, this, &CDlgSelectClass::clearTypeSelections);
+  connect(ui->listClass, &QListWidget::itemClicked, this, &CDlgSelectClass::itemClassClicked);
+  connect(ui->listType, &QListWidget::itemClicked, this, &CDlgSelectClass::itemTypeClicked);
 
-    fillVscpClasses();
-    fillVscpTypes();   
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  fillVscpClasses();
+  fillVscpTypes();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,7 +81,7 @@ CDlgSelectClass::CDlgSelectClass(QWidget *parent) :
 
 CDlgSelectClass::~CDlgSelectClass()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,12 +91,12 @@ CDlgSelectClass::~CDlgSelectClass()
 std::deque<uint16_t>
 CDlgSelectClass::getSelectedClasses(void)
 {
-    std::deque<uint16_t> selClasses;
-    QList<QListWidgetItem *> _selectedClasses = ui->listClass->selectedItems();
-    for (int i=0; i<_selectedClasses.size(); i++) {
-        selClasses.push_back(_selectedClasses[i]->data(Qt::UserRole).toUInt());
-    }
-    return selClasses;
+  std::deque<uint16_t> selClasses;
+  QList<QListWidgetItem*> _selectedClasses = ui->listClass->selectedItems();
+  for (int i = 0; i < _selectedClasses.size(); i++) {
+    selClasses.push_back(_selectedClasses[i]->data(Qt::UserRole).toUInt());
+  }
+  return selClasses;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,55 +106,57 @@ CDlgSelectClass::getSelectedClasses(void)
 std::deque<uint32_t>
 CDlgSelectClass::getSelectedTypes(void)
 {
-    std::deque<uint32_t> selTypes;
-    QList<QListWidgetItem *> _selectedTypes = ui->listType->selectedItems();
-    for (int i=0; i<_selectedTypes.size(); i++) {
-        selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
-    }
-    return selTypes;
+  std::deque<uint32_t> selTypes;
+  QList<QListWidgetItem*> _selectedTypes = ui->listType->selectedItems();
+  for (int i = 0; i < _selectedTypes.size(); i++) {
+    selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
+  }
+  return selTypes;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // selectClasses
 //
 
-void CDlgSelectClass::selectClasses(const std::deque<uint16_t>& listClass)
+void
+CDlgSelectClass::selectClasses(const std::deque<uint16_t>& listClass)
 {
-    for (auto const& vscp_class: listClass) {
-        for (int i=0; i<ui->listClass->count(); i++) {
-            QListWidgetItem *item = ui->listClass->item(i);
-            if (nullptr == item) continue;
-            if (vscp_class == item->data(Qt::UserRole)) {
-                item->setSelected(true);
-                break;
-            }
-        }
+  for (auto const& vscp_class : listClass) {
+    for (int i = 0; i < ui->listClass->count(); i++) {
+      QListWidgetItem* item = ui->listClass->item(i);
+      if (nullptr == item)
+        continue;
+      if (vscp_class == item->data(Qt::UserRole)) {
+        item->setSelected(true);
+        break;
+      }
     }
+  }
 
-    // Fill type for selected classes
-    fillVscpTypes();
+  // Fill type for selected classes
+  fillVscpTypes();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // selectTypes
 //
 
-void CDlgSelectClass::selectTypes(const std::deque<uint32_t>& listType)
+void
+CDlgSelectClass::selectTypes(const std::deque<uint32_t>& listType)
 {
-    for (auto const& vscp_type: listType) {
-        for (int i=0; i<ui->listType->count(); i++) {
-            QListWidgetItem *item = ui->listType->item(i);
-            if (nullptr == item) continue;
-            if (vscp_type == item->data(Qt::UserRole)) {
-                item->setSelected(true);
-            }
-        }
+  for (auto const& vscp_type : listType) {
+    for (int i = 0; i < ui->listType->count(); i++) {
+      QListWidgetItem* item = ui->listType->item(i);
+      if (nullptr == item)
+        continue;
+      if (vscp_type == item->data(Qt::UserRole)) {
+        item->setSelected(true);
+      }
     }
+  }
 }
 
-
 // ----------------------------------------------------------------------------
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // clearClassSelections
@@ -153,8 +165,8 @@ void CDlgSelectClass::selectTypes(const std::deque<uint32_t>& listType)
 void
 CDlgSelectClass::clearClassSelections(void)
 {
-    // Clear selections
-    ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
+  // Clear selections
+  ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -164,8 +176,8 @@ CDlgSelectClass::clearClassSelections(void)
 void
 CDlgSelectClass::clearTypeSelections(void)
 {
-    // Clear selections
-    ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
+  // Clear selections
+  ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,9 +185,9 @@ CDlgSelectClass::clearTypeSelections(void)
 //
 
 void
-CDlgSelectClass::itemClassClicked(QListWidgetItem *item)
+CDlgSelectClass::itemClassClicked(QListWidgetItem* item)
 {
-    fillVscpTypes();
+  fillVscpTypes();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -183,9 +195,9 @@ CDlgSelectClass::itemClassClicked(QListWidgetItem *item)
 //
 
 void
-CDlgSelectClass::itemTypeClicked(QListWidgetItem *item)
+CDlgSelectClass::itemTypeClicked(QListWidgetItem* item)
 {
-    int iiii = 01;
+  int iiii = 01;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,29 +207,29 @@ CDlgSelectClass::itemTypeClicked(QListWidgetItem *item)
 void
 CDlgSelectClass::fillVscpClasses(void)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // Clear selections
-    ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
+  // Clear selections
+  ui->listClass->setCurrentRow(0, QItemSelectionModel::Clear);
 
-    std::map<uint16_t, QString>::iterator it;
-    for (it = pworks->m_mapVscpClassToToken.begin();
-         it != pworks->m_mapVscpClassToToken.end();
-         ++it) {
+  std::map<uint16_t, QString>::iterator it;
+  for (it = pworks->m_mapVscpClassToToken.begin();
+       it != pworks->m_mapVscpClassToToken.end();
+       ++it) {
 
-        uint16_t classId   = it->first;
-        QString classToken = it->second;
+    uint16_t classId   = it->first;
+    QString classToken = it->second;
 
-        QString listItem =
-            vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
-        // while (listItem.length() < 30) listItem += " ";
-        listItem +=
-            vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
-            .c_str();
-        QListWidgetItem *item = new QListWidgetItem(listItem, ui->listClass);
-        item->setData(Qt::UserRole, classId);
-        ui->listClass->addItem(item);        
-    }
+    QString listItem =
+      vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
+    // while (listItem.length() < 30) listItem += " ";
+    listItem +=
+      vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
+        .c_str();
+    QListWidgetItem* item = new QListWidgetItem(listItem, ui->listClass);
+    item->setData(Qt::UserRole, classId);
+    ui->listClass->addItem(item);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -227,66 +239,78 @@ CDlgSelectClass::fillVscpClasses(void)
 void
 CDlgSelectClass::fillVscpTypes(void)
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // Clear selections
-    //ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
-    
-    // Save selections
-    std::deque<uint32_t> selTypes;
-    QList<QListWidgetItem *> _selectedTypes = ui->listType->selectedItems();
-    for (int i=0; i<_selectedTypes.size(); i++) {
-        qDebug() << _selectedTypes[i]->data(Qt::UserRole).toUInt();
-        selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
+  // Clear selections
+  // ui->listType->setCurrentRow(0, QItemSelectionModel::Clear);
+
+  // Save selections
+  std::deque<uint32_t> selTypes;
+  QList<QListWidgetItem*> _selectedTypes = ui->listType->selectedItems();
+  for (int i = 0; i < _selectedTypes.size(); i++) {
+    qDebug() << _selectedTypes[i]->data(Qt::UserRole).toUInt();
+    selTypes.push_back(_selectedTypes[i]->data(Qt::UserRole).toUInt());
+  }
+
+  ui->listType->clear();
+
+  // Get selected classes
+  QList<QListWidgetItem*> selected = ui->listClass->selectedItems();
+  if (!selected.size())
+    return;
+
+  std::map<uint32_t, QString>::iterator it;
+  for (it = pworks->m_mapVscpTypeToToken.begin();
+       it != pworks->m_mapVscpTypeToToken.end();
+       ++it) {
+
+    uint16_t classId  = (it->first >> 16) & 0xffff;
+    uint16_t typeId   = it->first & 0xfff;
+    QString typeToken = it->second;
+
+    bool bFound = false;
+    for (int i = 0; i < selected.size(); i++) {
+      if (classId == selected[i]->data(Qt::UserRole)) {
+        bFound = true;
+        break;
+      }
     }
+    if (!bFound)
+      continue;
 
-    ui->listType->clear();
+    QString listItem =
+      vscp_str_format(
+        "%s ",
+        typeToken.toStdString().c_str())
+        .c_str();
 
-    // Get selected classes
-    QList<QListWidgetItem *> selected = ui->listClass->selectedItems();
-    if (!selected.size()) return;
+    listItem +=
+      vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
+        .c_str();
+    QListWidgetItem* item = new QListWidgetItem(listItem, ui->listType);
 
-    std::map<uint32_t, QString>::iterator it;
-    for (it = pworks->m_mapVscpTypeToToken.begin();
-         it != pworks->m_mapVscpTypeToToken.end();
-         ++it) {
+    item->setData(Qt::UserRole, (((uint32_t)classId) << 16) + typeId);
+    ui->listType->addItem(item);
+  }
 
-        uint16_t classId  = (it->first >> 16) & 0xffff;
-        uint16_t typeId   = it->first & 0xfff;
-        QString typeToken = it->second;
-
-        bool bFound = false;
-        for (int i=0; i<selected.size(); i++) {
-            if (classId == selected[i]->data(Qt::UserRole)) {
-                bFound = true;
-                break;
-            }
-        }
-        if (!bFound) continue;
-
-        QString listItem =
-            vscp_str_format(
-            "%s ",
-            typeToken.toStdString().c_str())
-            .c_str();
-
-        listItem +=
-            vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
-            .c_str();
-        QListWidgetItem *item = new QListWidgetItem(listItem, ui->listType);
-
-        item->setData(Qt::UserRole, (((uint32_t)classId) << 16) + typeId);    
-        ui->listType->addItem(item);
+  // Restore selections (where possible)
+  for (int i = 0; i < selTypes.size(); i++) {
+    for (int j = 0; j < ui->listType->count(); j++) {
+      if (ui->listType->item(j)->data(Qt::UserRole).toUInt() == selTypes[i]) {
+        ui->listType->item(j)->setSelected(true);
+        break;
+      }
     }
-
-    // Restore selections (where possible)
-    for (int i=0; i<selTypes.size(); i++) {
-        for (int j=0; j < ui->listType->count(); j++) {
-            if (ui->listType->item(j)->data(Qt::UserRole).toUInt() == selTypes[i]) {
-                ui->listType->item(j)->setSelected(true);
-                break;
-            }
-        }
-    }
+  }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectClass::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

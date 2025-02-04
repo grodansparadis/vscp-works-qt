@@ -36,6 +36,9 @@
 #include "ui_cdlgmqttpublish.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,6 +55,12 @@ CDlgMqttPublish::CDlgMqttPublish(QWidget *parent) :
 {
     ui->setupUi(this);
 
+// Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,5 +145,15 @@ enumMqttMsgFormat CDlgMqttPublish::getFormat(void)
     return static_cast<enumMqttMsgFormat>(ui->comboPublishFormat->currentIndex());
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMqttPublish::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
+}
 
 

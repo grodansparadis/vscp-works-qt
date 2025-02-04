@@ -36,9 +36,6 @@
 
 #include <QDialog>
 
-
-
-
 namespace Ui {
 class CDlgMdfRegisterList;
 }
@@ -65,7 +62,7 @@ public:
     Init dialog data
     @param pmdf Pointer to MDF object
   */
-  void initDialogData(CMDF *pmdf, uint16_t page=0);
+  void initDialogData(CMDF* pmdf, uint16_t page = 0);
 
   /*!
     Fill page combo box with page information
@@ -76,7 +73,6 @@ public:
     Fill in contact items
   */
   void renderRegisterItems(void);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -100,17 +96,20 @@ public slots:
   void dupRegister(void);
   void deleteRegister(void);
 
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgMdfRegisterList* ui;
 
   // MDF
-  CMDF *m_pmdf;
+  CMDF* m_pmdf;
 
   // Register page
   uint16_t m_page;
 
   // Used to get a sorted list of registers
-  std::set<uint32_t> m_registersSet ;
+  std::set<uint32_t> m_registersSet;
 };
 
 #endif // CDLGMDFREGISTERLIST_H

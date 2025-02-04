@@ -47,7 +47,6 @@ class CDlgEditMap : public QDialog {
   Q_OBJECT
 
 public:
-public:
   explicit CDlgEditMap(QWidget* parent = nullptr);
   ~CDlgEditMap();
 
@@ -58,22 +57,21 @@ public:
 
   /*!
     Init dialog data
-    @param pmap Pointer to map      
-    @param pselstr Pointer to ISO639 language string to handle. 
+    @param pmap Pointer to map
+    @param pselstr Pointer to ISO639 language string to handle.
       Set to nullptr to add new item
   */
-  void initDialogData(std::map<std::string, std::string> *pmap, descriptionMap type, const QString *pselstr = nullptr);
+  void initDialogData(std::map<std::string, std::string>* pmap, descriptionMap type, const QString* pselstr = nullptr);
 
   /*!
     Fill in Info URL items
     @param pselstr Pointer to language string or nullptr
   */
-  void fillMapData(const QString *pselstr = nullptr);
+  void fillMapData(const QString* pselstr = nullptr);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
   // ----------------------------------------------------------------------------
-
 
 public slots:
   void accept(void);
@@ -84,11 +82,16 @@ public slots:
   void dupMapItem(void);
   void deleteMapItem(void);
 
+private slots:
+
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgEditMap* ui;
 
   // map data
-  std::map<std::string, std::string> *m_pMap;
+  std::map<std::string, std::string>* m_pMap;
 
   // Initial selstr
   QString m_initial_selstr;

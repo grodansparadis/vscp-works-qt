@@ -43,7 +43,6 @@ typedef enum mdf_dlg_contact_type {
   dlg_type_contact_social,
 } mdf_dlg_contact_type;
 
-
 namespace Ui {
 class CDlgMdfContact;
 }
@@ -73,9 +72,9 @@ public:
     @param type Contact type
     @param title Dialog title
   */
-  void initDialogData(const CMDF_Object* pitemobj, 
-                        mdf_dlg_contact_type type,
-                        QString title);
+  void initDialogData(const CMDF_Object* pitemobj,
+                      mdf_dlg_contact_type type,
+                      QString title);
 
   /*!
     Fill in contact descriptions
@@ -111,6 +110,9 @@ public slots:
   void editInfo(void);
   void dupInfo(void);
   void deleteInfo(void);
+  
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfContact* ui;

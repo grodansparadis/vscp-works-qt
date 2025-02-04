@@ -40,6 +40,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -57,7 +60,14 @@ CDlgSelectData::CDlgSelectData(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->btnAddValue, &QPushButton::clicked, this, &CDlgSelectData::onAddValue );
-    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSelectData::onDeleteValue );   
+    connect(ui->btnDelete, &QPushButton::clicked, this, &CDlgSelectData::onDeleteValue ); 
+
+    // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -191,3 +201,14 @@ std::deque<uint32_t> CDlgSelectData::getData(void)
     return listData;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectData::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

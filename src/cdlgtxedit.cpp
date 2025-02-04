@@ -41,6 +41,10 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
+
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -62,6 +66,13 @@ CDlgTxEdit::CDlgTxEdit(QWidget *parent) :
 
     connect(ui->comboClass, QOverload<int>::of(&QComboBox::currentIndexChanged), 
                 this, &CDlgTxEdit::currentVscpClassIndexChanged );
+
+                // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
     fillVscpClass(0);
     setInitialFocus();    
@@ -391,4 +402,13 @@ CDlgTxEdit::setPeriod(uint32_t period)
 // ----------------------------------------------------------------------------
 
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
+void
+CDlgTxEdit::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window";
+  QDesktopServices::openUrl(QUrl(link));
+}

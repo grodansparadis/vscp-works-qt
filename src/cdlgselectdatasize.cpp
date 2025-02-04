@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,11 +55,18 @@
 // CTor
 //
 
-CDlgSelectDataSize::CDlgSelectDataSize(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectDataSize)
+CDlgSelectDataSize::CDlgSelectDataSize(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectDataSize)
 {
-    ui->setupUi(this);  
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  ui->setupUi(this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,52 +75,59 @@ CDlgSelectDataSize::CDlgSelectDataSize(QWidget *parent) :
 
 CDlgSelectDataSize::~CDlgSelectDataSize()
 {
-    delete ui;
+  delete ui;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDataSizeValue
 //
 
-uint16_t CDlgSelectDataSize::getDataSizeValue(void)
+uint16_t
+CDlgSelectDataSize::getDataSizeValue(void)
 {
-    return vscp_readStringValue(ui->editDataSize->text().toStdString());
+  return vscp_readStringValue(ui->editDataSize->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDataSizeValue
 //
 
-void CDlgSelectDataSize::setDataSizeValue(uint16_t value)
+void
+CDlgSelectDataSize::setDataSizeValue(uint16_t value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
-    ui->editDataSize->setText(pworks->decimalToStringInBase(value));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  ui->editDataSize->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDataSizeConstraint
 //
 
-CSessionFilter::constraint CDlgSelectDataSize::getDataSizeConstraint(void)
+CSessionFilter::constraint
+CDlgSelectDataSize::getDataSizeConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboCompareDataSize->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboCompareDataSize->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDataSizeConstraint
 //
 
-void CDlgSelectDataSize::setDataSizeConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectDataSize::setDataSizeConstraint(CSessionFilter::constraint op)
 {
-    ui->comboCompareDataSize->setCurrentIndex(static_cast<int>(op));
+  ui->comboCompareDataSize->setCurrentIndex(static_cast<int>(op));
 }
-
-
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
-
+void
+CDlgSelectDataSize::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QDesktopServices::openUrl(QUrl(link));
+}

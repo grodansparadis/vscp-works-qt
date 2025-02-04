@@ -38,6 +38,8 @@
 
 #include <QMessageBox>
 #include <QMenu>
+#include <QDesktopServices>
+#include <QShortcut>
 #include <QDebug>
 
 #include <spdlog/async.h>
@@ -132,6 +134,13 @@ CDlgLevel2Filter::CDlgLevel2Filter(QWidget* parent)
           &QListWidget::itemClicked,
           this,
           &CDlgLevel2Filter::onVscpTypeItemClicked);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   // Add items to the listboxes
   fillPriorities();
@@ -1008,4 +1017,15 @@ CDlgLevel2Filter::getFilter(vscpEventFilter* pfilter)
 
   vscp_getGuidFromStringToArray(pfilter->filter_GUID,
                                 ui->editVscpGuidFilter->text().toStdString());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgLevel2Filter::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=filters";
+  QDesktopServices::openUrl(QUrl(link));
 }

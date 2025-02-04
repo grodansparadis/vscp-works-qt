@@ -42,6 +42,8 @@
 
 #include <QMessageBox>
 #include <QDebug>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -66,6 +68,13 @@ CDlgConnSettingsMulticast::CDlgConnSettingsMulticast(QWidget* parent)
 
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsMulticast::onSetFilter);
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsMulticast::onTestConnection);
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -394,4 +403,15 @@ CDlgConnSettingsMulticast::onTestConnection(void)
   msg += "\n";
   msg += "NOT IMPLEMENTED YET!";
   QMessageBox::information(this, tr(APPNAME), msg);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgConnSettingsMulticast::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=multicast";
+  QDesktopServices::openUrl(QUrl(link));
 }

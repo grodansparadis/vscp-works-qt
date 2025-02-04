@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_manufacturer_index {
   index_manufacturer_name = 0,
@@ -54,19 +54,19 @@ typedef enum mdf_manufacturer_index {
 } mdf_manufacturer_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_MANUFACTURER_NAME tr("Name : ")
-#define PREFIX_MDF_MANUFACTURER_STREET tr("Street: ")
-#define PREFIX_MDF_MANUFACTURER_CITY tr("City: ")
-#define PREFIX_MDF_MANUFACTURER_TOWN tr("Town: ")
+#define PREFIX_MDF_MANUFACTURER_NAME      tr("Name : ")
+#define PREFIX_MDF_MANUFACTURER_STREET    tr("Street: ")
+#define PREFIX_MDF_MANUFACTURER_CITY      tr("City: ")
+#define PREFIX_MDF_MANUFACTURER_TOWN      tr("Town: ")
 #define PREFIX_MDF_MANUFACTURER_POST_CODE tr("Post Code: ")
-#define PREFIX_MDF_MANUFACTURER_REGION tr("Region: ")
-#define PREFIX_MDF_MANUFACTURER_STATE tr("State: ")
-#define PREFIX_MDF_MANUFACTURER_COUNTRY tr("Country: ")
-#define PREFIX_MDF_MANUFACTURER_PHONE tr("phone: ")
-#define PREFIX_MDF_MANUFACTURER_FAX tr("fax: ")
-#define PREFIX_MDF_MANUFACTURER_EMAIL tr("email: ")
-#define PREFIX_MDF_MANUFACTURER_WEB tr("web: ")
-#define PREFIX_MDF_MANUFACTURER_SOCIAL tr("social: ")
+#define PREFIX_MDF_MANUFACTURER_REGION    tr("Region: ")
+#define PREFIX_MDF_MANUFACTURER_STATE     tr("State: ")
+#define PREFIX_MDF_MANUFACTURER_COUNTRY   tr("Country: ")
+#define PREFIX_MDF_MANUFACTURER_PHONE     tr("phone: ")
+#define PREFIX_MDF_MANUFACTURER_FAX       tr("fax: ")
+#define PREFIX_MDF_MANUFACTURER_EMAIL     tr("email: ")
+#define PREFIX_MDF_MANUFACTURER_WEB       tr("web: ")
+#define PREFIX_MDF_MANUFACTURER_SOCIAL    tr("social: ")
 
 namespace Ui {
 class CDlgMdfManufacturer;
@@ -93,8 +93,8 @@ public:
 
   /*!
     Init dialog data
-    @param pmdfobject Pointer to MDF object 
-    @param index The index for the field that will get focus      
+    @param pmdfobject Pointer to MDF object
+    @param index The index for the field that will get focus
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_manufacturer_index index = index_manufacturer_name);
 
@@ -102,7 +102,6 @@ public:
     Fill in contact items
   */
   void fillContactItems(void);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -165,6 +164,8 @@ public slots:
   void dupContact(void);
   void deleteContact(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfManufacturer* ui;

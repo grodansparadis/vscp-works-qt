@@ -38,92 +38,89 @@ namespace Ui {
 class CDlgConnSettingsMulticast;
 }
 
-
-class CDlgConnSettingsMulticast : public QDialog
-{
-    Q_OBJECT
+class CDlgConnSettingsMulticast : public QDialog {
+  Q_OBJECT
 
 public:
-    
-
 public:
-    explicit CDlgConnSettingsMulticast(QWidget *parent = nullptr);
-    ~CDlgConnSettingsMulticast();
+  explicit CDlgConnSettingsMulticast(QWidget* parent = nullptr);
+  ~CDlgConnSettingsMulticast();
 
-    /*!
-        Set inital focus to description
-    */
-    void setInitialFocus(void);
+  /*!
+      Set inital focus to description
+  */
+  void setInitialFocus(void);
 
-    /*!
-        Setters/getters for name/description
-    */
-    QString getName(void);
-    void setName(const QString& str);
+  /*!
+      Setters/getters for name/description
+  */
+  QString getName(void);
+  void setName(const QString& str);
 
-    /*!
-        Setters/getters for path
-    */
-    QString getIp(void);
-    void setIp(const QString& str);
+  /*!
+      Setters/getters for path
+  */
+  QString getIp(void);
+  void setIp(const QString& str);
 
-    /*!
-        Setters/getters for encryption
-    */
-    int getEncryption(void);
-    void setEncryption(int encryption);
+  /*!
+      Setters/getters for encryption
+  */
+  int getEncryption(void);
+  void setEncryption(int encryption);
 
-    /*!
-        Setters/getters for key
-    */
-    QString getKey(void);
-    void setKey(const QString& str);
+  /*!
+      Setters/getters for key
+  */
+  QString getKey(void);
+  void setKey(const QString& str);
 
-    /*!
-        Setters/getters for connection timeout
-    */
-    uint32_t getConnectionTimeout(void);
-    void setConnectionTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for connection timeout
+  */
+  uint32_t getConnectionTimeout(void);
+  void setConnectionTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for response timeout
-    */
-    uint32_t getResponseTimeout(void);
-    void setResponseTimeout(uint32_t timeout);
+  /*!
+      Setters/getters for response timeout
+  */
+  uint32_t getResponseTimeout(void);
+  void setResponseTimeout(uint32_t timeout);
 
-    /*!
-        Setters/getters for JSON config object
-    */
-    json getJson(void);
-    void setJson(const json *pobj);
+  /*!
+      Setters/getters for JSON config object
+  */
+  json getJson(void);
+  void setJson(const json* pobj);
 
- private slots:
+private slots:
 
-    /// Set filter button clicked
-    void onSetFilter(void);
+  /// Set filter button clicked
+  void onSetFilter(void);
 
-    /// Test connection button clicked
-    void onTestConnection(void);
+  /// Test connection button clicked
+  void onTestConnection(void);
+
+  /// Help
+  void showHelp(void);
 
 private:
+  Ui::CDlgConnSettingsMulticast* ui;
 
-    Ui::CDlgConnSettingsMulticast *ui;
+  /*!
+      This variable holds the connection type that
+      the used select
+  */
+  CVscpClient::connType m_selected_type;
 
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
+  // JSON configuration object
+  json m_jsonConfig;
 
-    // JSON configuration object
-    json m_jsonConfig;
+  /// VSCP tcp/ip client
+  vscpClientMulticast m_client;
 
-    /// VSCP tcp/ip client
-    vscpClientMulticast m_client;
-
-    /// VSCP tcp/ip main filter
-    vscpEventFilter m_filter;
+  /// VSCP tcp/ip main filter
+  vscpEventFilter m_filter;
 };
-
 
 #endif // CDLGCONNSETTINGSMULTICAST_H

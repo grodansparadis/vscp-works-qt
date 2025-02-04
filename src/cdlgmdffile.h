@@ -34,8 +34,6 @@
 
 #include <QDialog>
 
-
-
 namespace Ui {
 class CDlgMdfFile;
 }
@@ -48,12 +46,12 @@ public:
   explicit CDlgMdfFile(QWidget* parent = nullptr);
   ~CDlgMdfFile();
 
-  static const int index_picture = 0;
-  static const int index_video = 1;
+  static const int index_picture  = 0;
+  static const int index_video    = 1;
   static const int index_firmware = 2;
-  static const int index_driver = 3;
-  static const int index_setup = 4;
-  static const int index_manual = 5;
+  static const int index_driver   = 3;
+  static const int index_setup    = 4;
+  static const int index_manual   = 5;
 
   static const char pre_str_picture[];
   static const char pre_str_video[];
@@ -71,15 +69,13 @@ public:
     Init dialog data
     @param pmdfobject Pointer to MDF object
     @param index Selected file item
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_record_type type, int index = 0);
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
   // ----------------------------------------------------------------------------
-
-
 
 public slots:
 
@@ -91,6 +87,8 @@ public slots:
 
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfFile* ui;

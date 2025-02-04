@@ -43,6 +43,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -72,6 +73,9 @@ CDlgLevel1Filter::CDlgLevel1Filter(QWidget* parent)
 
   QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
   connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
   setInitialFocus();
 }

@@ -38,36 +38,33 @@ namespace Ui {
 class CDlgSelectMeasurementUnit;
 }
 
-
-class CDlgSelectMeasurementUnit : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectMeasurementUnit : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectMeasurementUnit(QWidget *parent = nullptr);
-    ~CDlgSelectMeasurementUnit();
+  explicit CDlgSelectMeasurementUnit(QWidget* parent = nullptr);
+  ~CDlgSelectMeasurementUnit();
 
 public:
-    /// Get set Unit value
-    uint8_t getMeasurementUnitValue();
+  /// Get set Unit value
+  uint8_t getMeasurementUnitValue();
 
-    /// Set Unit value
-    void setMeasurementUnitValue(uint8_t value);
+  /// Set Unit value
+  void setMeasurementUnitValue(uint8_t value);
 
-    /// Get unit constraint
-    CSessionFilter::constraint getMeasurementUnitConstraint();
+  /// Get unit constraint
+  CSessionFilter::constraint getMeasurementUnitConstraint();
 
-    /// Set Priority constraint
-    void setMeasurementUnitConstraint(CSessionFilter::constraint op);
+  /// Set Priority constraint
+  void setMeasurementUnitConstraint(CSessionFilter::constraint op);
 
 private slots:
-    
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectMeasurementUnit *ui;
-
+  Ui::CDlgSelectMeasurementUnit* ui;
 };
-
 
 #endif // CDLGSELECTUNIT_H

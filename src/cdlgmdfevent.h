@@ -110,7 +110,7 @@ public:
         Show information page for the currently selected
         VSCP type
     */
-    void showVscpTypeInfo();
+  void showVscpTypeInfo();
 
   /*!
         Fill the VSCP class combobox with
@@ -154,6 +154,9 @@ private slots:
       @param index New selected index
   */
   void currentVscpClassIndexChanged(int index);
+
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfEvent* ui;

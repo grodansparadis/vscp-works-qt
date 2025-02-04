@@ -43,6 +43,8 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
 #include <QShortcut>
 
 #include <spdlog/async.h>
@@ -69,6 +71,13 @@ CDlgMdfRemoteVarList::CDlgMdfRemoteVarList(QWidget* parent)
   connect(ui->btnDelRemoteVar, &QToolButton::clicked, this, &CDlgMdfRemoteVarList::deleteRemoteVar);
 
   connect(ui->listRemoteVar, &QListWidget::doubleClicked, this, &CDlgMdfRemoteVarList::editRemoteVar);
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   setInitialFocus();
   this->setFixedSize(this->size());
@@ -413,4 +422,15 @@ CDlgMdfRemoteVarList::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgMdfRemoteVarList::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
+  QDesktopServices::openUrl(QUrl(link));
 }

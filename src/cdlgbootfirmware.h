@@ -91,7 +91,7 @@ public slots:
   void selectLocalFile(void);
   void chkLocalFile(bool checked);
   void selectFirmwareFile(QListWidgetItem *item);
-
+  void showHelp(void);
   void accept(void);
 
 private:

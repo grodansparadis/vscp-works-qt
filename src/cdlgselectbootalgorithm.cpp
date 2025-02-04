@@ -42,6 +42,9 @@
 
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -57,6 +60,13 @@ CDlgSelectBootAlgorithm::CDlgSelectBootAlgorithm(QWidget* parent)
   , ui(new Ui::CDlgSelectBootAlgorithm)
 {
   ui->setupUi(this);
+
+  // Help
+QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+shortcut->setAutoRepeat(false);
+
+QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   ui->comboBootAlgorithm->clear();
   ui->comboBootAlgorithm->addItem("VSCP Algorithm", VSCP_BOOTLOADER_VSCP);
@@ -117,3 +127,14 @@ CDlgSelectBootAlgorithm::setBootAlgorithm(uint8_t value)
 }
 
 // ----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgSelectBootAlgorithm::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/bootload_window";
+  QDesktopServices::openUrl(QUrl(link));
+}

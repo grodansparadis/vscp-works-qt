@@ -29,7 +29,6 @@
 #ifndef CDLGSELECTCLASS_H
 #define CDLGSELECTCLASS_H
 
-
 #include <QDialog>
 #include <QListWidgetItem>
 
@@ -37,54 +36,51 @@ namespace Ui {
 class CDlgSelectClass;
 }
 
-
-class CDlgSelectClass : public QDialog
-{
-    Q_OBJECT
+class CDlgSelectClass : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit CDlgSelectClass(QWidget *parent = nullptr);
-    ~CDlgSelectClass();
+  explicit CDlgSelectClass(QWidget* parent = nullptr);
+  ~CDlgSelectClass();
 
 public:
+  /// Get selected VSCP classes
+  std::deque<uint16_t> getSelectedClasses(void);
 
-    /// Get selected VSCP classes
-    std::deque<uint16_t> getSelectedClasses(void);
-    
-    /// Get selected VSCP types
-    std::deque<uint32_t> getSelectedTypes(void);
+  /// Get selected VSCP types
+  std::deque<uint32_t> getSelectedTypes(void);
 
-    /// Select classes from configured list
-    void selectClasses(const std::deque<uint16_t>& mapClass);
+  /// Select classes from configured list
+  void selectClasses(const std::deque<uint16_t>& mapClass);
 
-    /// Select types from configured list
-    void selectTypes(const std::deque<uint32_t>& mapType);
+  /// Select types from configured list
+  void selectTypes(const std::deque<uint32_t>& mapType);
 
-    /// Fill classes into list
-    void fillVscpClasses(void);
+  /// Fill classes into list
+  void fillVscpClasses(void);
 
-    /// Fill type into list
-    void fillVscpTypes(void);
+  /// Fill type into list
+  void fillVscpTypes(void);
 
 private slots:
 
-    /// Clear selections in class list
-    void clearClassSelections(void);
+  /// Clear selections in class list
+  void clearClassSelections(void);
 
-    /// Clear selections in type list
-    void clearTypeSelections(void);
+  /// Clear selections in type list
+  void clearTypeSelections(void);
 
-    /// Item in class listbox clicked
-    void itemClassClicked(QListWidgetItem *item);
+  /// Item in class listbox clicked
+  void itemClassClicked(QListWidgetItem* item);
 
-    /// Item in type listbox clicked
-    void itemTypeClicked(QListWidgetItem *item);
+  /// Item in type listbox clicked
+  void itemTypeClicked(QListWidgetItem* item);
+
+  /// Help
+  void showHelp(void);
 
 private:
-
-    Ui::CDlgSelectClass *ui;
-
+  Ui::CDlgSelectClass* ui;
 };
-
 
 #endif // CDLGSELECTCLASS_H

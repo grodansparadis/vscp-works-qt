@@ -35,7 +35,7 @@
 #include <QDialog>
 
 // Id for fields to identify them in the UI.
-// Use to set focus on edit and to write changed values 
+// Use to set focus on edit and to write changed values
 // in correct position among other things.
 typedef enum mdf_driver_index {
   index_file_driver_none = 0,
@@ -51,12 +51,12 @@ typedef enum mdf_driver_index {
 } mdf_file_driver_index;
 
 // Tree prefixes (Text before value in tree table)
-#define PREFIX_MDF_DRIVER_NAME tr("Name: ")
-#define PREFIX_MDF_DRIVER_TYPE tr("Type: ")
-#define PREFIX_MDF_DRIVER_OS tr("OS: ")
+#define PREFIX_MDF_DRIVER_NAME         tr("Name: ")
+#define PREFIX_MDF_DRIVER_TYPE         tr("Type: ")
+#define PREFIX_MDF_DRIVER_OS           tr("OS: ")
 #define PREFIX_MDF_DRIVER_ARCHITECTURE tr("Architecture: ")
-#define PREFIX_MDF_DRIVER_DATE tr("Date: ")
-#define PREFIX_MDF_DRIVER_OS_VERSION tr("OS Version: ")
+#define PREFIX_MDF_DRIVER_DATE         tr("Date: ")
+#define PREFIX_MDF_DRIVER_OS_VERSION   tr("OS Version: ")
 
 namespace Ui {
 class CDlgMdfFileDriver;
@@ -79,10 +79,9 @@ public:
     Init dialog data
     @param pmdfobject Pointer to MDF object
     @param index The index for the field that will get focus
-      
+
   */
   void initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index index = index_file_driver_none);
-
 
   // ----------------------------------------------------------------------------
   //                             Getters & Setters
@@ -116,7 +115,7 @@ public:
       Architecture getter/setters
   */
   void setArchitecture(const QString& arch);
-  QString getArchitecture(void); 
+  QString getArchitecture(void);
 
   /*!
       OS Version getter/setters
@@ -139,6 +138,8 @@ public:
 public slots:
   void accept(void);
 
+  /// Help
+  void showHelp(void);
 
 private:
   Ui::CDlgMdfFileDriver* ui;

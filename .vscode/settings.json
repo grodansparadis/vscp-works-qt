@@ -84,7 +84,8 @@
       "qserialport": "cpp",
       "qcanbus": "cpp",
       "qtablewidgetitem": "cpp",
-      "expected": "cpp"
+      "expected": "cpp",
+      "qdesktopservices": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3",
         "files.exclude": {

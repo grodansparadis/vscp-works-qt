@@ -308,6 +308,9 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
   int nWidth  = 1200;
   int nHeight = 800;
 
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
   if (parent != NULL) {
     setGeometry(parent->x() + parent->width() / 2 - nWidth / 2,
                 parent->y() + parent->height() / 2 - nHeight / 2,
@@ -6022,7 +6025,6 @@ CFrmNodeConfig::onSelectSearchRemoteVars(void)
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // showHelp
 //
@@ -6030,6 +6032,6 @@ CFrmNodeConfig::onSelectSearchRemoteVars(void)
 void
 CFrmNodeConfig::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/config_window";
   QDesktopServices::openUrl(QUrl(link));
 }

@@ -68,6 +68,7 @@
 
 #include <list>
 #include <string>
+#include <QShortcut>
 
 #include <QStandardPaths>
 
@@ -1563,6 +1564,9 @@ CBootLoadWizard::CBootLoadWizard(QWidget* parent, json* pconn)
   setPixmap(QWizard::WatermarkPixmap, QPixmap(":canal_watermark"));
 
   setWindowTitle(tr("VSCP Works Bootloader Wizard"));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1831,4 +1835,15 @@ CBootLoadWizard::createIntroPage(void)
   page->setLayout(layout);
 
   return page;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CBootLoadWizard::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/bootload_window";
+  QDesktopServices::openUrl(QUrl(link));
 }

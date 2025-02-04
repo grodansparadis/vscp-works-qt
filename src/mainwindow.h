@@ -176,6 +176,10 @@ private slots:
     */
     void onDoubleClicked(QTreeWidgetItem* item);
     
+    /*!
+        Show help
+    */
+    void showHelp(void);
 
 protected:        
 

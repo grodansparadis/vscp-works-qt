@@ -39,6 +39,8 @@
 #include "cdlgactionparam.h"
 
 #include <QMessageBox>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -49,79 +51,86 @@
 // CTor
 //
 
-CDlgEditDm::CDlgEditDm(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CDlgEditDm)
+CDlgEditDm::CDlgEditDm(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgEditDm)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    //m_pDM = nullptr;
-    m_pMDF = nullptr;
+  // m_pDM = nullptr;
+  m_pMDF = nullptr;
 
-    // Node id change
-    connect(ui->chkEnableRow,
+  // Node id change
+  connect(ui->chkEnableRow,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(enableRow_stateChanged(int)));
 
-    // Node id change
-    connect(ui->chkEnableRow,
+  // Node id change
+  connect(ui->chkEnableRow,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(enableRow_stateChanged(int)));
 
-    // Origin address check
-    connect(ui->chkOriginAddressMatch,
+  // Origin address check
+  connect(ui->chkOriginAddressMatch,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(originAddressMatch_stateChanged(int)));
 
-    // Origin address is hardcoded
-    connect(ui->chkOriginHardcoded,
+  // Origin address is hardcoded
+  connect(ui->chkOriginHardcoded,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(originHardcoded_stateChanged(int)));
 
-    // Match zone
-    connect(ui->chkMatchZone,
+  // Match zone
+  connect(ui->chkMatchZone,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(matchZone_stateChanged(int)));
 
-    // Match subzone
-    connect(ui->chkMatchSubzone,
+  // Match subzone
+  connect(ui->chkMatchSubzone,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(matchSubzone_stateChanged(int)));
 
-    // Class mask bit 8 changed
-    connect(ui->chkClassMaskBit8,
+  // Class mask bit 8 changed
+  connect(ui->chkClassMaskBit8,
           SIGNAL(stateChanged(int)),
           this,
           SLOT(classMaskBit8_stateChanged(int)));
 
-    // Class filter bit 8 changed
-    connect(ui->chkClassFilterBit8,
+  // Class filter bit 8 changed
+  connect(ui->chkClassFilterBit8,
           SIGNAL(stateChanged(int)),
           this,
-          SLOT(classFilterBit8_stateChanged(int)));       
-  
-    connect(ui->btnFilterWizard,
-            SIGNAL(clicked(bool)),
-            this,
-            SLOT(filterWizard(void)));
+          SLOT(classFilterBit8_stateChanged(int)));
 
-    connect(ui->btnActionParameterWizard,
-            SIGNAL(clicked()),
-            this,
-            SLOT(actionParameterWizard()));
+  connect(ui->btnFilterWizard,
+          SIGNAL(clicked(bool)),
+          this,
+          SLOT(filterWizard(void)));
 
-    connect(ui->comboAction,
-            SIGNAL(currentIndexChanged(int)),
-            this,
-            SLOT(currentIndexChangedActions(int)));            
-    
-    setInitialFocus();
+  connect(ui->btnActionParameterWizard,
+          SIGNAL(clicked()),
+          this,
+          SLOT(actionParameterWizard()));
+
+  connect(ui->comboAction,
+          SIGNAL(currentIndexChanged(int)),
+          this,
+          SLOT(currentIndexChangedActions(int)));
+
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,24 +139,24 @@ CDlgEditDm::CDlgEditDm(QWidget *parent) :
 
 CDlgEditDm::~CDlgEditDm()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void 
+void
 CDlgEditDm::setInitialFocus(void)
 {
-    ui->editAddressOrigin->setFocus();
+  ui->editAddressOrigin->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // flagsToValue
 //
 
-void 
+void
 CDlgEditDm::flagsToValue(void)
 {
   uint8_t value = 0;
@@ -182,14 +191,14 @@ CDlgEditDm::flagsToValue(void)
 
   QString str = "0x" + QString::number(value, 16).toUpper();
   str += " (" + QString::number(value, 10) + ")";
-  ui->labelFlags->setText(str);  
+  ui->labelFlags->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // valueToFlags
 //
 
-void 
+void
 CDlgEditDm::valueToFlags(void)
 {
   uint8_t value = vscp_readStringValue(ui->labelFlags->text().toStdString());
@@ -255,9 +264,9 @@ CDlgEditDm::valueToFlags(void)
 // setDm
 //
 
-void 
-//CDlgEditDm::setDm(CMDF_DecisionMatrix *pDM)
-CDlgEditDm::setMDF(CMDF *pMDF)
+void
+// CDlgEditDm::setDm(CMDF_DecisionMatrix *pDM)
+CDlgEditDm::setMDF(CMDF* pMDF)
 {
   if (nullptr == pMDF) {
     return;
@@ -270,7 +279,7 @@ CDlgEditDm::setMDF(CMDF *pMDF)
     ui->comboAction->clear();
     for (auto const& item : *pMDF->getDM()->getActionList()) {
       ui->comboAction->addItem(item->getName().c_str(), QVariant(item->getCode()));
-    }  
+    }
     fillHtmlInfo();
   }
   else {
@@ -282,88 +291,88 @@ CDlgEditDm::setMDF(CMDF *pMDF)
 // enableRow_stateChanged
 //
 
-void 
+void
 CDlgEditDm::enableRow_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // originAddressMatch_stateChanged
 //
 
-void 
+void
 CDlgEditDm::originAddressMatch_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // originHardcoded_stateChanged
 //
 
-void 
+void
 CDlgEditDm::originHardcoded_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // matchZone_stateChanged
 //
 
-void 
+void
 CDlgEditDm::matchZone_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // matchSubzone_stateChanged
 //
 
-void 
+void
 CDlgEditDm::matchSubzone_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // classMaskBit8_stateChanged
 //
 
-void 
+void
 CDlgEditDm::classMaskBit8_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // classFilterBit8_stateChanged
 //
 
-void 
+void
 CDlgEditDm::classFilterBit8_stateChanged(int state)
 {
-  flagsToValue();  
+  flagsToValue();
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getDmAddressOrigin
 //
 
-uint8_t CDlgEditDm::getDmAddressOrigin(void)
+uint8_t
+CDlgEditDm::getDmAddressOrigin(void)
 {
-  return vscp_readStringValue(ui->editAddressOrigin->text().toStdString()); 
+  return vscp_readStringValue(ui->editAddressOrigin->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmAddressOrigin
 //
 
-void CDlgEditDm::setDmAddressOrigin(const std::string& str)
+void
+CDlgEditDm::setDmAddressOrigin(const std::string& str)
 {
   ui->editAddressOrigin->setText(str.c_str());
 }
@@ -372,8 +381,9 @@ void CDlgEditDm::setDmAddressOrigin(const std::string& str)
 // getDmFlags
 //
 
-uint8_t CDlgEditDm::getDmFlags(void)
-{   
+uint8_t
+CDlgEditDm::getDmFlags(void)
+{
   flagsToValue();
   return vscp_readStringValue(ui->labelFlags->text().toStdString());
 }
@@ -382,7 +392,8 @@ uint8_t CDlgEditDm::getDmFlags(void)
 // setDmFlags
 //
 
-void CDlgEditDm::setDmFlags(const std::string& str)
+void
+CDlgEditDm::setDmFlags(const std::string& str)
 {
   ui->labelFlags->setText(str.c_str());
   valueToFlags();
@@ -392,16 +403,18 @@ void CDlgEditDm::setDmFlags(const std::string& str)
 // getDmClassMask
 //
 
-uint8_t CDlgEditDm::getDmClassMask(void)
+uint8_t
+CDlgEditDm::getDmClassMask(void)
 {
-  return vscp_readStringValue(ui->editClassMask->text().toStdString()); 
+  return vscp_readStringValue(ui->editClassMask->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmClassMask
 //
 
-void CDlgEditDm::setDmClassMask(const std::string& str)
+void
+CDlgEditDm::setDmClassMask(const std::string& str)
 {
   ui->editClassMask->setText(str.c_str());
 }
@@ -410,16 +423,18 @@ void CDlgEditDm::setDmClassMask(const std::string& str)
 // getDmClassFilter
 //
 
-uint8_t CDlgEditDm::getDmClassFilter(void)
+uint8_t
+CDlgEditDm::getDmClassFilter(void)
 {
-  return vscp_readStringValue(ui->editClassFilter->text().toStdString()); 
+  return vscp_readStringValue(ui->editClassFilter->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmClassFilter
 //
 
-void CDlgEditDm::setDmClassFilter(const std::string& str)
+void
+CDlgEditDm::setDmClassFilter(const std::string& str)
 {
   ui->editClassFilter->setText(str.c_str());
 }
@@ -428,16 +443,18 @@ void CDlgEditDm::setDmClassFilter(const std::string& str)
 // getDmTypeMask
 //
 
-uint8_t CDlgEditDm::getDmTypeMask(void)
+uint8_t
+CDlgEditDm::getDmTypeMask(void)
 {
-  return vscp_readStringValue(ui->editTypeMask->text().toStdString()); 
+  return vscp_readStringValue(ui->editTypeMask->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmTypeMask
 //
 
-void CDlgEditDm::setDmTypeMask(const std::string& str)
+void
+CDlgEditDm::setDmTypeMask(const std::string& str)
 {
   ui->editTypeMask->setText(str.c_str());
 }
@@ -446,16 +463,18 @@ void CDlgEditDm::setDmTypeMask(const std::string& str)
 // getDmTypFilter
 //
 
-uint8_t CDlgEditDm::getDmTypeFilter(void)
+uint8_t
+CDlgEditDm::getDmTypeFilter(void)
 {
-  return vscp_readStringValue(ui->editTypeFilter->text().toStdString()); 
+  return vscp_readStringValue(ui->editTypeFilter->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmTypeFilter
 //
 
-void CDlgEditDm::setDmTypeFilter(const std::string& str)
+void
+CDlgEditDm::setDmTypeFilter(const std::string& str)
 {
   ui->editTypeFilter->setText(str.c_str());
 }
@@ -464,7 +483,8 @@ void CDlgEditDm::setDmTypeFilter(const std::string& str)
 // getDmAction
 //
 
-uint8_t CDlgEditDm::getDmAction(void)
+uint8_t
+CDlgEditDm::getDmAction(void)
 {
   return ui->comboAction->currentData().toInt();
 }
@@ -473,7 +493,8 @@ uint8_t CDlgEditDm::getDmAction(void)
 // setDmAction
 //
 
-void CDlgEditDm::setDmAction(int idx)
+void
+CDlgEditDm::setDmAction(int idx)
 {
   ui->comboAction->setCurrentIndex(idx);
 }
@@ -482,9 +503,10 @@ void CDlgEditDm::setDmAction(int idx)
 // setDmActionFromCode
 //
 
-void CDlgEditDm::setDmActionFromCode(uint8_t code)
+void
+CDlgEditDm::setDmActionFromCode(uint8_t code)
 {
-  for (int i=0; i<ui->comboAction->count(); i++) {
+  for (int i = 0; i < ui->comboAction->count(); i++) {
     if (ui->comboAction->itemData(i).toInt() == code) {
       ui->comboAction->setCurrentIndex(i);
       break;
@@ -496,16 +518,18 @@ void CDlgEditDm::setDmActionFromCode(uint8_t code)
 // getDmActionParameter
 //
 
-uint8_t CDlgEditDm::getDmActionParameter(void)
+uint8_t
+CDlgEditDm::getDmActionParameter(void)
 {
-  return vscp_readStringValue(ui->editActionParameter->text().toStdString()); 
+  return vscp_readStringValue(ui->editActionParameter->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setDmActionParameter
 //
 
-void CDlgEditDm::setDmActionParameter(const std::string& str)
+void
+CDlgEditDm::setDmActionParameter(const std::string& str)
 {
   ui->editActionParameter->setText(str.c_str());
 }
@@ -514,27 +538,26 @@ void CDlgEditDm::setDmActionParameter(const std::string& str)
 // currentIndexChangedActions
 //
 
-void 
+void
 CDlgEditDm::currentIndexChangedActions(int index)
 {
   if (-1 == index) {
     return;
   }
-  
-  std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
-  CMDF_Action *pAction = actionList->at(ui->comboAction->currentIndex());
-  std::deque<CMDF_ActionParameter *> *pActionParams = pAction->getListActionParameter();
 
+  std::deque<CMDF_Action*>* actionList             = m_pMDF->getDM()->getActionList();
+  CMDF_Action* pAction                             = actionList->at(ui->comboAction->currentIndex());
+  std::deque<CMDF_ActionParameter*>* pActionParams = pAction->getListActionParameter();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // accept
 //
 
-void 
+void
 CDlgEditDm::accept(void)
 {
-  //saveData();
+  // saveData();
   done(QDialog::Accepted);
 }
 
@@ -545,17 +568,17 @@ CDlgEditDm::accept(void)
 
 void CDlgEditDm::reject(void)
 {
-  reject();  
+  reject();
 } */
 
 ///////////////////////////////////////////////////////////////////////////////
 // filterWizard
 //
 
-void 
+void
 CDlgEditDm::filterWizard(void)
 {
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   CDlgLevel1FilterWizard dlg(this);
 
   dlg.setVscpPriorityFilter(0);
@@ -564,20 +587,20 @@ CDlgEditDm::filterWizard(void)
 
   dlg.setVscpClassFilter(vscp_readStringValue(ui->editClassMask->text().toStdString()));
   dlg.setVscpClassMask(vscp_readStringValue(ui->editClassFilter->text().toStdString()));
-    
+
   dlg.setVscpTypeFilter(vscp_readStringValue(ui->editTypeFilter->text().toStdString()));
   dlg.setVscpTypeMask(vscp_readStringValue(ui->editTypeMask->text().toStdString()));
-    
+
   dlg.setVscpNodeIdFilter(0);
   dlg.setVscpNodeIdMask(0);
   dlg.disableNodeIdFields();
 
-  //dlg.setNumBaseComboIndex(parent()->ui->m_baseComboBox->currentIndex());
-    
+  // dlg.setNumBaseComboIndex(parent()->ui->m_baseComboBox->currentIndex());
+
   if (QDialog::Accepted == dlg.exec()) {
 
-    //setVscpPriorityFilter( dlg.getVscpPriorityFilter() );
-    //setVscpPriorityMask( dlg.getVscpPriorityMask() );
+    // setVscpPriorityFilter( dlg.getVscpPriorityFilter() );
+    // setVscpPriorityMask( dlg.getVscpPriorityMask() );
 
     ui->editClassFilter->setText(pworks->decimalToStringInBase(dlg.getVscpClassFilter()));
     ui->editClassMask->setText(pworks->decimalToStringInBase(dlg.getVscpClassMask()));
@@ -585,11 +608,10 @@ CDlgEditDm::filterWizard(void)
     ui->editTypeFilter->setText(pworks->decimalToStringInBase(dlg.getVscpTypeFilter()));
     ui->editTypeMask->setText(pworks->decimalToStringInBase(dlg.getVscpTypeMask()));
 
-    //setVscpNodeIdFilter( dlg.getVscpNodeIdFilter() );
-    //setVscpNodeIdMask( dlg.getVscpNodeIdMask() );
+    // setVscpNodeIdFilter( dlg.getVscpNodeIdFilter() );
+    // setVscpNodeIdMask( dlg.getVscpNodeIdMask() );
 
-    //ui->m_baseComboBox->setCurrentIndex(dlg.getNumComboIndex());
-  
+    // ui->m_baseComboBox->setCurrentIndex(dlg.getNumComboIndex());
   }
 }
 
@@ -597,12 +619,12 @@ CDlgEditDm::filterWizard(void)
 // fillHtmlInfo
 //
 
-void 
+void
 CDlgEditDm::fillHtmlInfo(void)
-{  
+{
   QString html;
   std::string str;
-  vscpworks *pworks = (vscpworks *)QCoreApplication::instance();
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   html = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" "
          "\"http://www.w3.org/TR/REC-html40/strict.dtd\">";
@@ -634,14 +656,14 @@ CDlgEditDm::fillHtmlInfo(void)
 
     // Actions
     html += "<h2><font color=\"#1a53ff\">Actions</font></h2>";
-    std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
+    std::deque<CMDF_Action*>* actionList = m_pMDF->getDM()->getActionList();
     if (nullptr == actionList) {
       html += "<p>No actions defined.</p>";
     }
     else {
       html += "<p>";
-      for (auto const& item : *actionList) {      
-        html += "<p><b><font color=\"#009900\">";               
+      for (auto const& item : *actionList) {
+        html += "<p><b><font color=\"#009900\">";
         html += QString::number((int)item->getCode());
         html += " -- ";
         html += item->getName().c_str();
@@ -657,12 +679,12 @@ CDlgEditDm::fillHtmlInfo(void)
         html += str.c_str();
         if (item->getListActionParameter()->size()) {
           html += "<br><b>Parameters</b><br>";
-          for (auto const& itemParam : *item->getListActionParameter()) { 
+          for (auto const& itemParam : *item->getListActionParameter()) {
             html += "<b><font color=\"#cc8800\">";
             html += itemParam->getName().c_str();
             html += "</font></b><br>";
             if (itemParam->getListValues()->size()) {
-              for (auto const& itemValue : *itemParam->getListValues()) { 
+              for (auto const& itemValue : *itemParam->getListValues()) {
                 html += "<b><font color=\"#8585ad\"> ";
                 html += itemValue->getValue().c_str();
                 html += " -- ";
@@ -676,7 +698,7 @@ CDlgEditDm::fillHtmlInfo(void)
               }
             }
             if (itemParam->getListBits()->size()) {
-              for (auto const& itemBit : *itemParam->getListBits()) { 
+              for (auto const& itemBit : *itemParam->getListBits()) {
                 html += " -- bit ";
                 html += QString::number(itemBit->getPos());
                 html += " - <b><font color=\"#8585ad\">";
@@ -689,7 +711,7 @@ CDlgEditDm::fillHtmlInfo(void)
                 html += "</a><br>";
               }
             }
-          }          
+          }
         }
         html += "</p>";
       }
@@ -699,79 +721,86 @@ CDlgEditDm::fillHtmlInfo(void)
 
   html += "</body></html>";
 
-  
   // Write the HTML to the text browser
   ui->infoArea->setHtml(html);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // actionParameterWizard
-//  
+//
 
-void 
+void
 CDlgEditDm::actionParameterWizard(void)
 {
   CDlgActionParam dlg(this);
 
-  std::deque<CMDF_Action *> *actionList = m_pMDF->getDM()->getActionList();
-  CMDF_Action *pAction = actionList->at(ui->comboAction->currentIndex());
-  std::deque<CMDF_ActionParameter *> *pActionParams = pAction->getListActionParameter();
+  std::deque<CMDF_Action*>* actionList             = m_pMDF->getDM()->getActionList();
+  CMDF_Action* pAction                             = actionList->at(ui->comboAction->currentIndex());
+  std::deque<CMDF_ActionParameter*>* pActionParams = pAction->getListActionParameter();
 
   dlg.setActionParameter(vscp_readStringValue(ui->editActionParameter->text().toStdString()));
-  
+
   if (pActionParams->size()) {
 
     // Level I has only one parameter
-    CMDF_ActionParameter *pActionParam = pActionParams->at(0);
-  
+    CMDF_ActionParameter* pActionParam = pActionParams->at(0);
+
     // -- values
     if (pActionParam->getListValues()->size()) {
       dlg.showValues(true);
       dlg.showBits(false);
       for (auto const& itemValue : *pActionParam->getListValues()) {
         std::string strvalue = itemValue->getValue().c_str();
-        std::string name = itemValue->getName().c_str();
-        uint32_t value = vscp_readStringValue(strvalue);
+        std::string name     = itemValue->getName().c_str();
+        uint32_t value       = vscp_readStringValue(strvalue);
         dlg.addValue(value, name);
       }
     }
     // -- bits
     else if (pActionParam->getListBits()->size()) {
       dlg.showBits(true);
-      dlg.showValues(false);      
+      dlg.showValues(false);
       dlg.addBitValue(pActionParam->getListBits());
     }
-    else  {
+    else {
       QMessageBox::information(
-          this,
-          tr(APPNAME),
-          tr("This action does not have any paramerters defined."),
-          QMessageBox::Ok);
-      return;    
+        this,
+        tr(APPNAME),
+        tr("This action does not have any paramerters defined."),
+        QMessageBox::Ok);
+      return;
     }
   }
   else {
     // No parameters
     QMessageBox::information(
-          this,
-          tr(APPNAME),
-          tr("This action does not have any paramerters defined."),
-          QMessageBox::Ok);
-      return; 
+      this,
+      tr(APPNAME),
+      tr("This action does not have any paramerters defined."),
+      QMessageBox::Ok);
+    return;
   }
 
   if (QDialog::Accepted == dlg.exec()) {
 
     // Level I has only one parameter
-    CMDF_ActionParameter *pActionParam = pActionParams->at(0);
+    CMDF_ActionParameter* pActionParam = pActionParams->at(0);
 
     if (pActionParam->getListValues()->size()) {
-      
     }
     else if (pActionParam->getListBits()->size()) {
-      ui->editActionParameter->setText(QString::number(dlg.getActionParameter()));  
+      ui->editActionParameter->setText(QString::number(dlg.getActionParameter()));
     }
-
   }
+}
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CDlgEditDm::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/config_window?id=decision-matrix";
+  QDesktopServices::openUrl(QUrl(link));
 }

@@ -42,6 +42,9 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -52,11 +55,18 @@
 // CTor
 //
 
-CDlgSelectSensorIndex::CDlgSelectSensorIndex(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectSensorIndex)
+CDlgSelectSensorIndex::CDlgSelectSensorIndex(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectSensorIndex)
 {
+  ui->setupUi(this);
 
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,51 +75,59 @@ CDlgSelectSensorIndex::CDlgSelectSensorIndex(QWidget *parent) :
 
 CDlgSelectSensorIndex::~CDlgSelectSensorIndex()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getSensorIndexValue
 //
 
-uint8_t CDlgSelectSensorIndex::getSensorIndexValue(void)
+uint8_t
+CDlgSelectSensorIndex::getSensorIndexValue(void)
 {
-    return vscp_readStringValue(ui->editSensorIndex->text().toStdString());
+  return vscp_readStringValue(ui->editSensorIndex->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setSensorIndexValue
 //
 
-void CDlgSelectSensorIndex::setSensorIndexValue(uint8_t value)
+void
+CDlgSelectSensorIndex::setSensorIndexValue(uint8_t value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
-    ui->editSensorIndex->setText(pworks->decimalToStringInBase(value));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  ui->editSensorIndex->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getSensorIndexConstraint
 //
 
-CSessionFilter::constraint 
+CSessionFilter::constraint
 CDlgSelectSensorIndex::getSensorIndexConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboCompareSensorIndex->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboCompareSensorIndex->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setSensorIndexConstraint
 //
 
-void CDlgSelectSensorIndex::setSensorIndexConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectSensorIndex::setSensorIndexConstraint(CSessionFilter::constraint op)
 {
-    ui->comboCompareSensorIndex->setCurrentIndex(static_cast<int>(op));
+  ui->comboCompareSensorIndex->setCurrentIndex(static_cast<int>(op));
 }
-
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
 
-
-
-
+void
+CDlgSelectSensorIndex::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QDesktopServices::openUrl(QUrl(link));
+}

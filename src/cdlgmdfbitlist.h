@@ -110,6 +110,9 @@ public slots:
   void dupRegisterBit(void);
   void deleteRegisterBit(void);
 
+  /// Help
+  void showHelp(void);
+
 private:
   Ui::CDlgMdfBitList* ui;
 
