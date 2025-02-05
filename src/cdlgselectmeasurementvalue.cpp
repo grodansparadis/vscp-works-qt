@@ -55,18 +55,18 @@
 // CTor
 //
 
-CDlgSelectMeasurementValue::CDlgSelectMeasurementValue(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgSelectMeasurementValue)
+CDlgSelectMeasurementValue::CDlgSelectMeasurementValue(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgSelectMeasurementValue)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    // Help
-QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
-shortcut->setAutoRepeat(false);
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
-QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
-connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,53 +75,51 @@ connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
 CDlgSelectMeasurementValue::~CDlgSelectMeasurementValue()
 {
-    delete ui;
+  delete ui;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getMeasurementValue
 //
 
-double CDlgSelectMeasurementValue::getMeasurementValue(void)
+double
+CDlgSelectMeasurementValue::getMeasurementValue(void)
 {
-    return vscp_readStringValue(ui->editMeasurementValue->text().toStdString());
+  return vscp_readStringValue(ui->editMeasurementValue->text().toStdString());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setMeasurementValueValue
 //
 
-void CDlgSelectMeasurementValue::setMeasurementValue(double value)
+void
+CDlgSelectMeasurementValue::setMeasurementValue(double value)
 {
-    vscpworks *pworks = (vscpworks *)QCoreApplication::instance(); 
-    ui->editMeasurementValue->setText(pworks->decimalToStringInBase(value));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  ui->editMeasurementValue->setText(pworks->decimalToStringInBase(value));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getMeasurementValueConstraint
 //
 
-CSessionFilter::constraint CDlgSelectMeasurementValue::getMeasurementValueConstraint(void)
+CSessionFilter::constraint
+CDlgSelectMeasurementValue::getMeasurementValueConstraint(void)
 {
-    return static_cast<CSessionFilter::constraint>(ui->comboCompareMeasurementValue->currentIndex());
+  return static_cast<CSessionFilter::constraint>(ui->comboCompareMeasurementValue->currentIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setMeasurementValueConstraint
 //
 
-void CDlgSelectMeasurementValue::setMeasurementValueConstraint(CSessionFilter::constraint op)
+void
+CDlgSelectMeasurementValue::setMeasurementValueConstraint(CSessionFilter::constraint op)
 {
-    ui->comboCompareMeasurementValue->setCurrentIndex(static_cast<int>(op));
+  ui->comboCompareMeasurementValue->setCurrentIndex(static_cast<int>(op));
 }
 
-
 // ----------------------------------------------------------------------------
-
-
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // showHelp

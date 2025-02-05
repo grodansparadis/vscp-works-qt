@@ -1,6 +1,6 @@
 # Setting up on Linux
 
-This document describes how to set up the VSCP Works application on a Linux system. You can either build the executable from source yourself or more convenient download a binary version. Instructions on how t5o get the binary is [here](./setting_up_the_system.md).
+This document describes how to set up the VSCP Works application on a Linux system. You can either build the executable from source yourself or more convenient download a binary version. Instructions on how to get the binary is [here](./setting_up_the_system.md).
 
 ## Build from source
 

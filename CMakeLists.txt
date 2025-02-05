@@ -21,16 +21,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
-# VSCP_PATH - set to path to local vscp repository. Default is "../vscp". Set with
-# -DVSCP_PATH="path"
-#
-# windows
-# -------
-# cmake .. -G "Visual Studio 17 2022" -DVCPKG_TARGET_TRIPLET=x64-windows  -DCMAKE_TOOLCHAIN_FILE=G:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_PREFIX_PATH=G:\Qt\6.7.2\msvc2019_64\
-# cmake --build . --config Debug
-# set PATH=G:\Qt\Qt-6.7.2\msvc2019_64\bin;%PATH%
-#
+
 
 cmake_minimum_required(VERSION 3.5)
 project(vscp-works-qt LANGUAGES CXX C)
@@ -56,18 +47,10 @@ include(GNUInstallDirs)
 # Added extensions for curl lib find
 list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 
-# --- Path to VSCP --- 
-#if (NOT DEFINED VSCP_PATH)
-#  set (VSCP_PATH "${PROJECT_SOURCE_DIR}/third_party/vscp")
+#if (DEFINED QT_PATH)
+#file(TO_CMAKE_PATH "$ENV{QT_ROOT_DIR}" QT_PATH)
+#message(STATUS "QT_ROOT_DIR = $ENV{QT_ROOT_DIR}")
 #endif()
-
-#file(TO_CMAKE_PATH "$ENV{VSCP_ROOT}" VSCP_PATH)
-#message(STATUS "VSCP path = $ENV{VSCP_ROOT}")
-
-if (DEFINED QT_PATH)
-file(TO_CMAKE_PATH "$ENV{QT_ROOT_DIR}" QT_PATH)
-message(STATUS "QT_ROOT_DIR = $ENV{QT_ROOT_DIR}")
-endif()
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)

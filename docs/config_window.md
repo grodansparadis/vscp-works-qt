@@ -1,11 +1,13 @@
 # Configuration window
 
+![](images/config-standard-registers.png)
+
 ## Key shortcuts
 
 | Key | Description |
 | --- | --- | 
-| **ctrl + 0** / ESC |  Unselect all  | 
-| **ctrl + C** / F3 |  Connect/disconnect  | 
+| **ESC**  |  Unselect all  | 
+| **F3**  |  Connect/disconnect  | 
 | **ctrl + D** |  defaults |
 | **ctrl + E** |  Edit |
 | **ctrl + F** |  Search |

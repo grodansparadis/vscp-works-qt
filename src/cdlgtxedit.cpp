@@ -45,7 +45,6 @@
 #include <QDesktopServices>
 #include <QShortcut>
 
-
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -55,27 +54,26 @@
 // CTor
 //
 
-CDlgTxEdit::CDlgTxEdit(QWidget *parent) :
-        QDialog(parent),
-    ui(new Ui::CDlgTxEdit)
+CDlgTxEdit::CDlgTxEdit(QWidget* parent)
+  : QDialog(parent)
+  , ui(new Ui::CDlgTxEdit)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpClassInfo);
-    connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpTypeInfo);
+  connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpClassInfo);
+  connect(ui->btnClassHelp, &QToolButton::clicked, this, &CDlgTxEdit::showVscpTypeInfo);
 
-    connect(ui->comboClass, QOverload<int>::of(&QComboBox::currentIndexChanged), 
-                this, &CDlgTxEdit::currentVscpClassIndexChanged );
+  connect(ui->comboClass, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &CDlgTxEdit::currentVscpClassIndexChanged);
 
-                // Help
-QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
-shortcut->setAutoRepeat(false);
+  // Help
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 
-QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
-connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
-    fillVscpClass(0);
-    setInitialFocus();    
+  fillVscpClass(0);
+  setInitialFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,171 +82,175 @@ connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
 CDlgTxEdit::~CDlgTxEdit()
 {
-    delete ui;
+  delete ui;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setInitialFocus
 //
 
-void CDlgTxEdit::setInitialFocus(void)
+void
+CDlgTxEdit::setInitialFocus(void)
 {
-    ui->editName->setFocus();
+  ui->editName->setFocus();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // showVscpClassInfo
 //
 
-void CDlgTxEdit::showVscpClassInfo()
+void
+CDlgTxEdit::showVscpClassInfo()
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    QString str = pworks->getHelpUrlForClass(getVscpClass());
-    QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString str       = pworks->getHelpUrlForClass(getVscpClass());
+  QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // showVscpClassInfo
 //
 
-void CDlgTxEdit::showVscpTypeInfo()
+void
+CDlgTxEdit::showVscpTypeInfo()
 {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-    QString str =  pworks->getHelpUrlForType(getVscpClass(), getVscpType());
-    QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString str       = pworks->getHelpUrlForType(getVscpClass(), getVscpType());
+  QDesktopServices::openUrl(QUrl(str, QUrl::TolerantMode));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // fillVscpClass
 //
 
-void CDlgTxEdit::fillVscpClass(uint16_t vscpclass)
+void
+CDlgTxEdit::fillVscpClass(uint16_t vscpclass)
 {
-    int selidx;
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  int selidx;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // Clear all items
-    ui->comboType->clear();
+  // Clear all items
+  ui->comboType->clear();
 
-    std::map<uint16_t, QString>::iterator it;
-    for (it = pworks->m_mapVscpClassToToken.begin();
-         it != pworks->m_mapVscpClassToToken.end();
-         ++it) {
+  std::map<uint16_t, QString>::iterator it;
+  for (it = pworks->m_mapVscpClassToToken.begin();
+       it != pworks->m_mapVscpClassToToken.end();
+       ++it) {
 
-        uint16_t classId   = it->first;
-        QString classToken = it->second;
+    uint16_t classId   = it->first;
+    QString classToken = it->second;
 
-        QString listItem =
-            vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
-        listItem +=
-            vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
-            .c_str();
-        ui->comboClass->addItem(listItem, classId);
+    QString listItem =
+      vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
+    listItem +=
+      vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
+        .c_str();
+    ui->comboClass->addItem(listItem, classId);
 
-        // Save index for requested sel
-        if (classId == vscpclass) {
-            selidx = ui->comboClass->count()-1;
-        }
+    // Save index for requested sel
+    if (classId == vscpclass) {
+      selidx = ui->comboClass->count() - 1;
+    }
+  }
 
-    }    
-
-    // Select the requested item
-    ui->comboClass->setCurrentIndex(selidx);
+  // Select the requested item
+  ui->comboClass->setCurrentIndex(selidx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // fillVscpType
 //
 
-void CDlgTxEdit::fillVscpType(uint16_t vscpclass, uint16_t vscptype)
+void
+CDlgTxEdit::fillVscpType(uint16_t vscpclass, uint16_t vscptype)
 {
-    int selidx;
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  int selidx;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-    // Clear all items
-    ui->comboType->clear();
+  // Clear all items
+  ui->comboType->clear();
 
-    std::map<uint32_t, QString>::iterator it;
-    for (it = pworks->m_mapVscpTypeToToken.begin();
-         it != pworks->m_mapVscpTypeToToken.end();
-         ++it) {
+  std::map<uint32_t, QString>::iterator it;
+  for (it = pworks->m_mapVscpTypeToToken.begin();
+       it != pworks->m_mapVscpTypeToToken.end();
+       ++it) {
 
-        uint16_t classId  = (it->first >> 16) & 0xffff;
-        uint16_t typeId   = it->first & 0xfff;
-        QString typeToken = it->second;
+    uint16_t classId  = (it->first >> 16) & 0xffff;
+    uint16_t typeId   = it->first & 0xfff;
+    QString typeToken = it->second;
 
-        if (classId == vscpclass) {
-            QString listItem =
-                vscp_str_format(
-                "%s ",
-                typeToken.toStdString().c_str())
-                .c_str();
-            // while (listItem.length() < 30) listItem += " ";
-            listItem +=
-                vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
-                .c_str();
-            ui->comboType->addItem(listItem, typeId);
-            
-            // Save index for requested sel
-            if (typeId == vscptype) {
-                selidx = ui->comboType->count()-1;
-            }
-        }
+    if (classId == vscpclass) {
+      QString listItem =
+        vscp_str_format(
+          "%s ",
+          typeToken.toStdString().c_str())
+          .c_str();
+      // while (listItem.length() < 30) listItem += " ";
+      listItem +=
+        vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
+          .c_str();
+      ui->comboType->addItem(listItem, typeId);
+
+      // Save index for requested sel
+      if (typeId == vscptype) {
+        selidx = ui->comboType->count() - 1;
+      }
     }
+  }
 
-    // Select the requested item
-    ui->comboType->setCurrentIndex(selidx);
+  // Select the requested item
+  ui->comboType->setCurrentIndex(selidx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // currentVscpClassIndexChanged
 //
 
-void CDlgTxEdit::currentVscpClassIndexChanged(int index)
+void
+CDlgTxEdit::currentVscpClassIndexChanged(int index)
 {
-    int selected = ui->comboClass->currentIndex();
-    fillVscpType(ui->comboClass->itemData(selected).toInt(), 0);
+  int selected = ui->comboClass->currentIndex();
+  fillVscpType(ui->comboClass->itemData(selected).toInt(), 0);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // geEnable
 //
 
-bool 
+bool
 CDlgTxEdit::getEnable(void)
 {
-    return ui->chkActive->isChecked(); 
+  return ui->chkActive->isChecked();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setEnable
 //
 
-void 
+void
 CDlgTxEdit::setEnable(bool bActive)
 {
-    return ui->chkActive->setChecked(bActive);
+  return ui->chkActive->setChecked(bActive);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getName
 //
 
-QString 
+QString
 CDlgTxEdit::getName(void)
 {
-    return ui->editName->text();
+  return ui->editName->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setName
 //
 
-void 
+void
 CDlgTxEdit::setName(const QString& str)
 {
-    ui->editName->setText(str);
+  ui->editName->setText(str);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -258,63 +260,63 @@ CDlgTxEdit::setName(const QString& str)
 uint16_t
 CDlgTxEdit::getCount(void)
 {
-    return (uint16_t)ui->spinCount->value(); 
+  return (uint16_t)ui->spinCount->value();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setCount
 //
 
-void 
+void
 CDlgTxEdit::setCount(uint16_t cnt)
 {
-    ui->spinCount->setValue(cnt);
+  ui->spinCount->setValue(cnt);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getVscpClass
 //
 
-uint16_t 
+uint16_t
 CDlgTxEdit::getVscpClass(void)
 {
-    int selected = ui->comboClass->currentIndex();
-    return ui->comboClass->itemData(selected).toInt(); 
+  int selected = ui->comboClass->currentIndex();
+  return ui->comboClass->itemData(selected).toInt();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getVscpType
 //
 
-uint16_t 
+uint16_t
 CDlgTxEdit::getVscpType(void)
 {
-    int selected = ui->comboType->currentIndex();
-    return ui->comboType->itemData(selected).toInt(); 
+  int selected = ui->comboType->currentIndex();
+  return ui->comboType->itemData(selected).toInt();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setVscpClassType
 //
 
-void 
+void
 CDlgTxEdit::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
 {
-    // Select requested VSCP Class item
-    for (int i=0; i<ui->comboClass->count(); i++ ) {
-        if (vscpClass == ui->comboClass->itemData(i).toInt()) {
-            ui->comboClass->setCurrentIndex(i);
-            break;
-        }        
+  // Select requested VSCP Class item
+  for (int i = 0; i < ui->comboClass->count(); i++) {
+    if (vscpClass == ui->comboClass->itemData(i).toInt()) {
+      ui->comboClass->setCurrentIndex(i);
+      break;
     }
+  }
 
-    // Select requested VSCP Type item
-    for (int i=0; i<ui->comboType->count(); i++ ) {
-        if (vscpType == ui->comboType->itemData(i).toInt()) {
-            ui->comboType->setCurrentIndex(i);
-            break;
-        }        
+  // Select requested VSCP Type item
+  for (int i = 0; i < ui->comboType->count(); i++) {
+    if (vscpType == ui->comboType->itemData(i).toInt()) {
+      ui->comboType->setCurrentIndex(i);
+      break;
     }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -324,59 +326,58 @@ CDlgTxEdit::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
 uint8_t
 CDlgTxEdit::getPriority(void)
 {
-    return ui->comboPriority->currentIndex(); 
+  return ui->comboPriority->currentIndex();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setPriority
 //
 
-void 
+void
 CDlgTxEdit::setPriority(uint8_t priority)
 {
-    ui->comboPriority->setCurrentIndex(priority & 7);
+  ui->comboPriority->setCurrentIndex(priority & 7);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getGuid
 //
 
-QString 
+QString
 CDlgTxEdit::getGuid(void)
 {
-    return ui->editGuid->text(); 
+  return ui->editGuid->text();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setGuid
 //
 
-void 
+void
 CDlgTxEdit::setGuid(const QString& guid)
 {
-    ui->editGuid->setText(guid);
+  ui->editGuid->setText(guid);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getData
 //
 
-QString 
+QString
 CDlgTxEdit::getData(void)
 {
-    return ui->textData->toPlainText().simplified(); 
+  return ui->textData->toPlainText().simplified();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setData
 //
 
-void 
+void
 CDlgTxEdit::setData(const QString& data)
 {
-    ui->textData->setPlainText(data);
+  ui->textData->setPlainText(data);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // getPeriod
@@ -385,22 +386,20 @@ CDlgTxEdit::setData(const QString& data)
 uint32_t
 CDlgTxEdit::getPeriod(void)
 {
-    return ui->spinPeriod->value(); 
+  return ui->spinPeriod->value();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // setPeriod
 //
 
-void 
+void
 CDlgTxEdit::setPeriod(uint32_t period)
 {
-    ui->spinPeriod->setValue(period);
+  ui->spinPeriod->setValue(period);
 }
 
-
 // ----------------------------------------------------------------------------
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // showHelp

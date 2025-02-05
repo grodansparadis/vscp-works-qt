@@ -31,6 +31,6 @@ Binary versions for Linux and windows is available in the release section.
 The manual is available [here](https://grodansparadis.github.io/vscp-works-qt/#/)
 
 ## Install from binary file
-tbd.
+See the [release section]() for binary files for Linux and Windows.
 
 

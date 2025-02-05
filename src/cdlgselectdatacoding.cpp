@@ -59,6 +59,8 @@ CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgSelectDataCoding)
 {
+  ui->setupUi(this);
+  
   // Help
   QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
@@ -66,7 +68,7 @@ CDlgSelectDataCoding::CDlgSelectDataCoding(QWidget* parent)
   QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
   connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
-  ui->setupUi(this);
+  
 }
 
 ///////////////////////////////////////////////////////////////////////////////

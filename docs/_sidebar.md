@@ -1,5 +1,3 @@
-
-
 * **Introduction**
   * [Start](start.md)
   * [Introduction](introduction.md)
@@ -17,22 +15,22 @@
   * [Settings](settings.md)
 
 * **Connections**
-  * [Introduction](connections.md)
+  * [General](connections.md)
 
 * **Session window**
-  * [Introduction](session_window.md)
+  * [General](session_window.md)
 
 * **Node scan window**
-  * [Introduction](scan_window.md)
+  * [General](scan_window.md)
 
 * **Node configuration window**
-  * [Introduction](config_window.md)
+  * [General](config_window.md)
 
 * **Firmware update**
   * [Firmware](bootload_window.md)
 
 * **Module Description Files (MDF)**
-  * [Introduction](mdf.md) 
+  * [General](mdf.md) 
 
 * **Logging, diagnostic and debugging**
   * [Solving problems and troubleshooting](solving_problems.md)
@@ -44,7 +42,7 @@
   * [Heartbeats](server_disovery_heartbeats.md)	
 
 * **Appendix**
-  * tbd
+  * VSCP Works + initial release walkthrough video - https://youtu.be/re_sKEjg66s
 
 * **Other documentation**
   *  [Documentation Site](https://docs.vscp.org)
