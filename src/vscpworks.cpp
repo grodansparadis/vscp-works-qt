@@ -113,13 +113,14 @@ vscpworks::vscpworks(int& argc, char** argv)
   // Linux: "/home/<USER>/.config/VSCP/vscpworks+"                      Config file is here (VSCP/vscp-works-qt)
   // Windows: c:\Users\<USER>\Appdata\roaming\vscpworks+
 #ifdef WIN32
-  QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+  QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation); 
+  path += "/"; 
   QDir dir(path);
-  path += "VSCP/";
-  dir.mkpath(path); // Create inc ase it does not exist
+  dir.mkpath(path); // Create in case it does not exist
   path += QCoreApplication::applicationName();
   path += ".json";
   m_configFile = path;
+  fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
 #else
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
@@ -131,10 +132,11 @@ vscpworks::vscpworks(int& argc, char** argv)
     path += QCoreApplication::applicationName();
     path += ".json";
     m_configFile = path;
+    fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
   }
 #endif
 
-  fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
+  
 
 #ifdef WIN32
   {
@@ -342,7 +344,7 @@ vscpworks::loadSettings(void)
 
   // If the config file does't exist, bail out after writing defaults
   if (!QFile::exists(m_configFile)) {
-    writeSettings();
+    writeSettings();  // Write defaults
     if (!QFile::exists(m_configFile)) {
       QString err = QString(tr("The VSCP works configuration file does not exist.  [%0]\n")).arg(m_configFile);
       fprintf(stderr, "%s", err.toStdString().c_str());
