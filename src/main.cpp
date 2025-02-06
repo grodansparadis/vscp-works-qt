@@ -42,7 +42,9 @@ main(int argc, char* argv[])
                                            QCoreApplication::translate("main", "Set <directory> as home."),
                                            QCoreApplication::translate("main", "directory"));
   parser.process(app);
-  
+
+
+
   // Load settings
   if (!app.loadSettings()) {
     fprintf(stderr, "Application data could not be loaded. Aborting!\n");
@@ -50,6 +52,12 @@ main(int argc, char* argv[])
   }
 
   fprintf(stderr, "Application data loaded\n");
+
+// Hide console window
+#ifdef WIN32
+  HWND hWnd = GetConsoleWindow();
+  ShowWindow( hWnd, SW_HIDE );
+#endif
 
 
   //////////////////////////////////////////////////////////////////////////////

@@ -19,4 +19,14 @@
         <UserInterface>ui/installer.ui</UserInterface>
     </UserInterfaces>
     <InstallerWindowIcon>icon.ico</InstallerWindowIcon> 
+    <ProductImages>
+        <ProductImage>
+            <Image>Built_with_Qt.png</Image>
+            <Url>https://www.qt.io/blog</Url>
+        </ProductImage>
+        <ProductImage>
+            <Image>Built_with_Qt_logo.png</Image>
+            <Url>https://www.qt.io/</Url>
+        </ProductImage>
+    </ProductImages>
 </Installer>
