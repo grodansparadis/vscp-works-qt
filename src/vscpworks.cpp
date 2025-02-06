@@ -142,8 +142,7 @@ vscpworks::vscpworks(int& argc, char** argv)
   {
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     path += "/";
-    path += QCoreApplication::applicationName();
-    path += "/logs/";
+    path += "logs/";
     QDir dir(path);
     dir.mkpath(path); // Create in case it does not exist
     path += "vscpworks.log";
