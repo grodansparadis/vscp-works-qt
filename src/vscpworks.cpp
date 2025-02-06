@@ -126,8 +126,9 @@ vscpworks::vscpworks(int& argc, char** argv)
     path += ".json";
     m_configFile = path;
   }
-  fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
 #endif
+
+fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
 
 #ifdef WIN32
   {
@@ -675,6 +676,9 @@ vscpworks::writeSettings()
   }
 
   spdlog::trace("{0}", j.dump(4).c_str());
+
+  // Save a copy of the old configuration file
+  QFile::copy(m_configFile, m_configFile + ".bak");
 
   std::ofstream of(m_configFile.toStdString());
   of << std::setw(4) << j << std::endl;
