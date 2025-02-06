@@ -114,7 +114,9 @@ vscpworks::vscpworks(int& argc, char** argv)
   // Windows: c:\Users\<USER>\Appdata\roaming\vscpworks+
 #ifdef WIN32
   QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+  QDir dir(path);
   path += "VSCP/";
+  dir.mkpath(path); // Create inc ase it does not exist
   path += QCoreApplication::applicationName();
   path += ".json";
   m_configFile = path;
@@ -122,20 +124,27 @@ vscpworks::vscpworks(int& argc, char** argv)
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
     QString path = ".config/VSCP/";
+
+    QDir dir(".");
+    dir.mkpath(path); // Create in case it does not exist
+
     path += QCoreApplication::applicationName();
     path += ".json";
     m_configFile = path;
   }
 #endif
 
-fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
+  fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
 
 #ifdef WIN32
   {
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     path += "/";
     path += QCoreApplication::applicationName();
-    path += "/logs/vscpworks.log";
+    path += "/logs/";
+    QDir dir(path);
+    dir.mkpath(path); // Create in case it does not exist
+    path += "vscpworks.log";
     m_fileLogPath = path.toStdString();
     fprintf(stderr, "log file: %s\n", m_fileLogPath.c_str());
   }
@@ -144,6 +153,8 @@ fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
     // QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QString path = "./.local/share/VSCP/logs/";
     path += QCoreApplication::applicationName();
+    QDir dir(path);
+    dir.mkpath(path); // Create in case it does not exist
     path += "/vscpworks.log";
     m_fileLogPath = path.toStdString();
     fprintf(stderr, "log file: %s\n", m_fileLogPath.c_str());
@@ -156,9 +167,10 @@ fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
   // Windows: C:/Users/<USER>/AppData/Local/vscpworks+"
   {
 #if WIN32
-    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);    
 #else
-    QString path = ".local/share/VSCP/vscpworks+";
+    QString path = ".local/share/VSCP/";
+    path += QCoreApplication::applicationName();
 #endif
     path += "/";
 
@@ -827,7 +839,7 @@ bool
 vscpworks::openVscpWorksDatabase(void)
 {
   int rv;
-  //sqlite3_stmt* ppStmt;
+  // sqlite3_stmt* ppStmt;
 
   // Set up database
   QString eventdbname = m_shareFolder + "vscpworks.sqlite3";

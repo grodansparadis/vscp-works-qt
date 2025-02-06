@@ -309,6 +309,17 @@ CFrmMdf::saveMdf_XML()
 
   if (path.length()) {
     qInfo() << "Selected MDF filename: " << path;
+
+    /* 
+      Save a copy of the old mdf file if
+      one already exist with this name 
+    */
+    QDir dir(path);
+    if (!dir.exists()) {
+      // Save a copy of the old mdf file
+      QFile::copy(path, path + ".bak");
+    }
+
     int rv = m_mdf.save(path.toStdString(), MDF_FORMAT_XML);
     if (VSCP_ERROR_SUCCESS != rv) {
       spdlog::error("Failed to save MDF file {0}", path.toStdString());
@@ -326,16 +337,28 @@ CFrmMdf::saveMdf_XML()
 void
 CFrmMdf::saveMdf_JSON()
 {
-  QString fileName = QFileDialog::getSaveFileName(this,
+  QString path = QFileDialog::getSaveFileName(this,
                                                   tr("Save Module Description File (MDF)"),
                                                   "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/ttt.json"*/,
                                                   tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
-  if (fileName.length()) {
-    qInfo() << "Selected MDF filename: " << fileName;
-    int rv = m_mdf.save(fileName.toStdString(), MDF_FORMAT_JSON);
+  if (path.length()) {
+
+    qInfo() << "Selected MDF filename: " << path;
+
+    /* 
+      Save a copy of the old mdf file if
+      one already exist with this name 
+    */
+    QDir dir(path);
+    if (!dir.exists()) {
+      // Save a copy of the old mdf file
+      QFile::copy(path, path + ".bak");
+    }
+
+    int rv = m_mdf.save(path.toStdString(), MDF_FORMAT_JSON);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", fileName.toStdString());
+      spdlog::error("Failed to save MDF file {0}", path.toStdString());
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
