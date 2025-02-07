@@ -23,18 +23,18 @@ We use Qt Installer Framework to build the install package. You can download the
     <Title>VSCP Works Installer</Title>
     <Publisher>Grodans Paradis AB</Publisher>
     <StartMenuDir>VSCP</StartMenuDir>
-    <TargetDir>@HomeDir@/VSCP/VSCP Works Qt</TargetDir>
+    <TargetDir>@HomeDir@/VSCP/vscp-works-qt</TargetDir>
     <RemoteRepositories>
-        <Repository>
-            <Url>https://vscp.org/packages</Url>
-            <Enabled>true</Enabled>
-            <DisplayName>VSCP Project</DisplayName>
-        </Repository>
+      <Repository>
+          <Url>https://vscp.org/packages</Url>
+          <Enabled>true</Enabled>
+          <DisplayName>VSCP Project</DisplayName>
+      </Repository>
     </RemoteRepositories>
     <ControlScript>installscript.qs</ControlScript>
     <PackageInfo>package.xml</PackageInfo>
     <UserInterfaces>
-        <UserInterface>ui/installer.ui</UserInterface>
+      <UserInterface>ui/installer.ui</UserInterface>
     </UserInterfaces>
     <InstallerWindowIcon>icon.ico</InstallerWindowIcon> 
 </Installer>
@@ -59,7 +59,7 @@ function Component()
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
-    <DisplayName>VSCP Works Qt</DisplayName>
+    <DisplayName>VSCP Works +</DisplayName>
     <Description>The VSCP toolbox</Description>
     <Version>0.0.1</Version>
     <ReleaseDate>2025-01-28</ReleaseDate>
@@ -84,14 +84,14 @@ function Component()
   * Run the following command to build the install package: 
 
 ```bash
- G:\Qt\QtIFW-4.8.1\bin\binarycreator.exe -c config/config.xml -p packages installer
+ G:\Qt\QtIFW-4.8.2\bin\binarycreator.exe binarycreator.exe -c config/config.xml --offline-only -p packages vscp-works+-windows-installer-x.y.z
 ```
 
 
- * Run the following command to build the install package:
+ * Run the following command to get the dependencies:
 
 ```bash
-G:\qt\6.8.1\msvc2022_64\bin\windeployqt.exe -c config\config.xml -p packages vscpworks-installer.exe
+G:\Qt\6.8.2\msvc2022_64\bin\windeployqt.exe vscp-works-qt.exe
 ```
 
 

@@ -10,7 +10,7 @@
         <Repository>
             <Url>https://vscp.org/packages</Url>
             <Enabled>true</Enabled>
-            <DisplayName>VSCP Project</DisplayName>
+            <DisplayName>VSCP Projects</DisplayName>
         </Repository>
     </RemoteRepositories>
     <ControlScript>installscript.qs</ControlScript>

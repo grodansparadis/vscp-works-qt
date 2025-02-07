@@ -1,6 +1,7 @@
 * **Introduction**
   * [Start](start.md)
   * [Introduction](introduction.md)
+  * [Demo](demo.md)
 
 * **Setup**
   * _[General](setting_up_the_system.md)_
