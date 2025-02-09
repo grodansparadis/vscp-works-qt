@@ -23,7 +23,7 @@ VSCP Works can communicate with a diverse number of different hardware devices u
 
 Select the connection type you want to add in the treeview and right click. Select `Add connection` in the context menu. A dialog will open where you can enter the parameters for the connection.
 
-### CANAL
+## CANAL
 
 ![](./images/add_connection_canal.png)
 
@@ -33,7 +33,7 @@ Select the connection type you want to add in the treeview and right click. Sele
 - `Device flags`: This is a bit mask that can be used to set some flags for the driver. The exact meaning of the bits is driver dependent. The driver documentation will tell you what the bits mean.
 - `Datarate`: This is a device specific value for the communication rate. It is usually in bits per second but the exact meaning is driver dependent. The driver documentation will tell you what the value should be. In most cases you can leave this value to the default value zero.
 
-#### Filter
+### Filter
 
 The filter for a CANAL driver is two 32-bit values that are used to filter out messages that are not of interest. The first value is the mask and the second value is the filter. If the mask is zero all messages are passed. If the mask is not zero only messages that match the filter are passed. The filter is a bitwise AND operation between the mask and the message id. If the result is equal to the filter the message is passed. 
 
@@ -67,7 +67,7 @@ The `wizard button` can give you a view of what events are filtered out an not. 
 
 In all above cases the numerical base dialog can be used to set the display numerical base for all values. The default is hexadecimal but you can also use decimal, octal or binary. Numbers can be entered using any base. Just proceed hexadecimals with `0x`, octals with `0o` and binary with `0b`. No prefix will be read as decimal values.
 
-### Socketcan
+## Socketcan
 ![](./images/add_connection_socketcan.png)
 
  - `Description`: Set a descriptive name. This value will be used to identify the connection in the treeview.
@@ -76,20 +76,49 @@ In all above cases the numerical base dialog can be used to set the display nume
  - `Response timeout`: The time in milliseconds to wait for a response from the device. If no response is received the operation will be aborted.
   - `Filters`: You can set any number of filters for the CAN interface. The filter is a 32-bit value that is used to filter out messages that are not of interest. If the mask is zero all messages are passed. If the mask is not zero only messages that match the filter are passed. The filter is a bitwise AND operation between the mask and the message id. If the result is equal to the filter the message is passed.
 
-#### Test button
+### Test button
 Press the `Test connection` button to check if your socketcan settings works.
 
-#### Handling filters
+### Filters
 You can use the `Add filter` button to add a filter, `Edit filter` button to edit a selected a filter, `Clone filter` button to clone a selected filter and `Delete filter` button to remove a selected filter.
 
 - Click on a filter item to select it.
-- Doubelclick on a filter item to edit it.
+- Double click on a filter item to edit it.
 - Right click on a filter item to get a context menu where you can edit, clone or delete the filter.
 
 See [CANAL filters](connections.md) for more information about filters.
 
-### tcp/ip
+## tcp/ip
 
+![](./images/add_connection_tcpip.png)
+
+### SSL/TLS
+
+![](./images/add_connection_tcpip_tls.png)
+
+### Filters
+![](./images/add_connection_tcpip_filter.png)
+
+### Test connection
+![](./images/add_connection_tcpip_test.png)
+
+### Get Interfaces
+![](./images/add_connection_tcpip_interfaces.png)
+
+## MQTT
+![](./images/add_connection_mqtt.png)
+
+## WS1
+![](./images/add_connection_ws1.png)
+
+## WS2
+![](./images/add_connection_ws2.png)
+
+## UDP
+![](./images/add_connection_udp.png)
+
+## Multicast
+![](./images/add_connection_multicast.png)
 
 # Remove a connection
 
