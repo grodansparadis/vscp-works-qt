@@ -17,6 +17,14 @@
 
 * **Connections**
   * [General](connections.md)
+    * [CANAL](connection_canal.md)
+    * [Socketcan](connection_socketcan.md)
+    * [tcp/ip](connection_tcpip.md)
+    * [MQTT](connection_mqtt.md)
+    * [WS1](connection_ws1.md)
+    * [WS2](connection_ws2.md)
+    * [UDP](connection_udp.md)
+    * [Multicast](connection_multicast.md)
 
 * **Session window**
   * [General](session_window.md)
