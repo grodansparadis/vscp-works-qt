@@ -731,7 +731,7 @@ MainWindow::editConnectionItem(void)
         case static_cast<int>(CVscpClient::connType::SOCKETCAN):
           editSocketCanConnection(itemConn);
           break;
-#endif          
+#endif
 
         case static_cast<int>(CVscpClient::connType::WS1):
           editWs1Connection(itemConn);
@@ -960,7 +960,7 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
         newSocketCanConnection();
         break;
-#endif        
+#endif
 
       case static_cast<int>(CVscpClient::connType::WS1):
         newWs1Connection();
@@ -1031,7 +1031,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         this,
                         SLOT(newSocketCanConnection()));
         break;
-#endif        
+#endif
 
       case static_cast<int>(CVscpClient::connType::WS1):
         menu->addAction(QString(tr("Add new websocket WS1 connection...")),
@@ -2210,6 +2210,8 @@ restart:
 #endif
 }
 
+// ----------------------------------------------------------------------------
+
 ///////////////////////////////////////////////////////////////////////////////
 // newMqttConnection
 //
@@ -2241,14 +2243,6 @@ restart:
                                tr("Failed to add new connection."),
                                QMessageBox::Ok);
     }
-
-    // Create a new local communication object
-    // vscpClientMqtt *pClient = new vscpClientMqtt();
-    // pClient->setName(strName.toStdString());
-
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
 
     // Add connection to connection tree
     addChildItemToConnectionTree(m_topitem_mqtt, conn);

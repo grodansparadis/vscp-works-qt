@@ -60,9 +60,9 @@
 SubscribeItem::SubscribeItem(const QString& topic, enumMqttMsgFormat fmt, int qos, uint32_t v5_options)
   : QListWidgetItem(topic)
 {
-  m_topic  = topic;
-  m_format = fmt;
-  m_qos    = qos & 3;
+  m_topic      = topic;
+  m_format     = fmt;
+  m_qos        = qos & 3;
   m_v5_options = v5_options;
 
   m_bActive = true; // Active by default
@@ -353,26 +353,6 @@ CDlgConnSettingsMqtt::setPassword(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getConnectionTimeout
-//
-
-uint32_t
-CDlgConnSettingsMqtt::getConnectionTimeout(void)
-{
-  return m_client.getConnectionTimeout();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// setConnectionTimeout
-//
-
-void
-CDlgConnSettingsMqtt::setConnectionTimeout(uint32_t timeout)
-{
-  m_client.setConnectionTimeout(timeout);
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // getResponseTimeout
 //
 
@@ -417,7 +397,31 @@ CDlgConnSettingsMqtt::setKeepAlive(uint32_t timeout)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// isCleabSessionEnabled
+// getConnectionTimeout
+//
+
+uint32_t
+CDlgConnSettingsMqtt::getConnectTimeout(void)
+{
+  uint32_t timeout = vscp_readStringValue(ui->editConnectTimeout->text().toStdString());
+  m_client.setConnectionTimeout(timeout);
+  return timeout;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setConnectionTimeout
+//
+
+void
+CDlgConnSettingsMqtt::setConnectTimeout(uint32_t timeout)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  QString str       = pworks->decimalToStringInBase(timeout, 10);
+  ui->editConnectTimeout->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isCleanSessionEnabled
 //
 
 bool
@@ -609,7 +613,7 @@ CDlgConnSettingsMqtt::getJson(void)
   m_jsonConfig["clientid"]           = getClientId().toStdString();
   m_jsonConfig["user"]               = getUser().toStdString();
   m_jsonConfig["password"]           = getPassword().toStdString();
-  m_jsonConfig["connection-timeout"] = (int)getConnectionTimeout();
+  m_jsonConfig["connection-timeout"] = (int)getConnectTimeout();
   m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
   m_jsonConfig["keepalive"]          = (int)getKeepAlive();
   m_jsonConfig["cleansession"]       = isCleanSessionEnabled();
@@ -688,8 +692,7 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
   }
 
   if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
-    setConnectionTimeout(
-      m_jsonConfig["connection-timeout"].get<uint32_t>());
+    setConnectTimeout(m_jsonConfig["connection-timeout"].get<uint32_t>());
   }
 
   if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {
@@ -743,9 +746,9 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
     spdlog::trace(subscribeArray.dump(4).c_str());
 
     for (auto v : subscribeArray) {
-      int qos = 0;
+      int qos             = 0;
       uint32_t v5_options = 0;
-      json item = v;
+      json item           = v;
       if (item.contains("topic") && item.contains("format")) {
         if (item.contains("qos")) {
           qos = item["qos"].get<int>();
@@ -754,10 +757,10 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
           v5_options = item["v5_options"].get<uint32_t>();
         }
         SubscribeItem* pitem =
-          new SubscribeItem(item["topic"].get<std::string>().c_str(), 
-                static_cast<enumMqttMsgFormat>(item["format"].get<int>()),
-                qos,
-                v5_options);
+          new SubscribeItem(item["topic"].get<std::string>().c_str(),
+                            static_cast<enumMqttMsgFormat>(item["format"].get<int>()),
+                            qos,
+                            v5_options);
         ui->listSubscribe->addItem(pitem);
       }
     }

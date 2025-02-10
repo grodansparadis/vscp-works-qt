@@ -1,4 +1,6 @@
 Changelog for VSCP Works QT
 ===========================
 
+250210 AKHE Fixed connection problem for slow connections using the MQTT client.
+250207 AKHE *** Release 0.0.1 ***
 210923 AKHE Updated spdlog to 1.9.2

@@ -187,11 +187,6 @@ public:
   */
   QString getPassword(void);
   void setPassword(const QString& str);
-  /*!
-      Setters/getters for connection timeout
-  */
-  uint32_t getConnectionTimeout(void);
-  void setConnectionTimeout(uint32_t timeout);
 
   /*!
       Setters/getters for response timeout
@@ -204,6 +199,12 @@ public:
   */
   uint32_t getKeepAlive(void);
   void setKeepAlive(uint32_t timeout);
+
+  /*!
+      Setters/getters for connection timeout period
+  */
+ uint32_t getConnectTimeout(void);
+ void setConnectTimeout(uint32_t timeout);
 
   /*!
       Setters/getters for clean session

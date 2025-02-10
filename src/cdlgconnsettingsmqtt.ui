@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>632</width>
-    <height>564</height>
+    <height>602</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -27,16 +27,16 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>530</y>
+     <y>570</y>
      <width>611</width>
      <height>21</height>
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Orientation::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Help|QDialogButtonBox::StandardButton::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>
@@ -48,7 +48,7 @@
      <x>20</x>
      <y>10</y>
      <width>501</width>
-     <height>491</height>
+     <height>531</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -58,7 +58,7 @@
        <string>Description :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editDescription</cstring>
@@ -81,7 +81,7 @@
        <string>Broker URL :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editHost</cstring>
@@ -104,7 +104,7 @@
        <string>Client Id</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editClientId</cstring>
@@ -133,7 +133,7 @@
        <string>Username :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editUser</cstring>
@@ -153,7 +153,7 @@
        <string>Password :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editPassword</cstring>
@@ -170,10 +170,10 @@
     <item row="5" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
-       <string>Keepalive</string>
+       <string>Keepalive (s):</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editPassword</cstring>
@@ -192,14 +192,14 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Keep alive intervall in seconds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="statusTip">
-       <string>Keepalive interval in milliseconds (zero disables)</string>
+       <string>Keepalive interval in seconds (zero disables)</string>
       </property>
       <property name="text">
        <string>30</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="7" column="1">
      <widget class="QCheckBox" name="chkCleanSession">
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Every connection is a clean session. If not checked you have to give a client id.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -212,7 +212,7 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
+    <item row="8" column="1">
      <widget class="QCheckBox" name="chkExtendedSecurity">
       <property name="toolTip">
        <string>Enable extended security</string>
@@ -222,23 +222,23 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="0">
+    <item row="10" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
        <string>Subscribe :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>listSubscribe</cstring>
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
+    <item row="10" column="1">
      <widget class="QListWidget" name="listSubscribe">
       <property name="contextMenuPolicy">
-       <enum>Qt::CustomContextMenu</enum>
+       <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
       </property>
       <property name="toolTip">
        <string>Subscriptions topics</string>
@@ -248,23 +248,23 @@
       </property>
      </widget>
     </item>
-    <item row="10" column="0">
+    <item row="11" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
        <string>Publish :</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>listPublish</cstring>
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
+    <item row="11" column="1">
      <widget class="QListWidget" name="listPublish">
       <property name="contextMenuPolicy">
-       <enum>Qt::CustomContextMenu</enum>
+       <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
       </property>
       <property name="toolTip">
        <string>Publish topics</string>
@@ -274,13 +274,45 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
+    <item row="9" column="1">
      <widget class="QCheckBox" name="chkFullLevel2">
       <property name="toolTip">
        <string>Handle as full Level II interface</string>
       </property>
       <property name="text">
        <string>Full Level II</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="editConnectTimeout">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time to wait for a connection in milliseconds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="statusTip">
+       <string>Time to wait for a connection in milliseconds</string>
+      </property>
+      <property name="text">
+       <string>5000</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Connect Timeout (ms):</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>editPassword</cstring>
       </property>
      </widget>
     </item>
@@ -322,7 +354,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>400</y>
+     <y>430</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -338,7 +370,7 @@
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>290</y>
+     <y>320</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -354,13 +386,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>510</y>
+     <y>540</y>
      <width>611</width>
      <height>20</height>
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Orientation::Horizontal</enum>
    </property>
   </widget>
  </widget>
