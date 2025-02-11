@@ -60,8 +60,14 @@ CanalConfigWizard::CanalConfigWizard(QWidget* parent)
 
   setWindowTitle(tr("VSCP level I (CANAL) driver configuration Wizard"));
 
+  // Size content
   connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(fitContents(int)));
 
+  // Connect help request with button
+  setOption(QWizard::HaveHelpButton);
+  connect(this, SIGNAL(helpRequested()), this, SLOT(showHelp()));
+
+  // Connect F1 key with help
   QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
 }
@@ -103,7 +109,7 @@ void CanalConfigWizard::fitContents(int id)
 void
 CanalConfigWizard::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/bootload_window";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_canal?id=config-wizard";
   QDesktopServices::openUrl(QUrl(link));
 }
 

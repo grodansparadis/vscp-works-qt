@@ -54,8 +54,7 @@ class CanalConfigWizard : public QWizard {
 public:
   CanalConfigWizard(QWidget* parent = nullptr);
 
-  /// Show help
-  void showHelp(void);
+  
 
   void accept() override;
 
@@ -63,6 +62,9 @@ private slots:
 
   /// Fit window to content
   void fitContents(int id);
+
+  /// Show help
+  void showHelp(void);
 };
 
 // ----------------------------------------------------------------------------

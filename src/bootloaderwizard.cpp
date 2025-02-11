@@ -1566,8 +1566,13 @@ CBootLoadWizard::CBootLoadWizard(QWidget* parent, json* pconn)
 
   setWindowTitle(tr("VSCP Works Bootloader Wizard"));
 
+  // Autosize
   connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(fitContents(int)));
 
+  // Connect help request with button
+  connect(this, SIGNAL(helpRequested()), this, SLOT(showHelp()));
+
+  // Connect F1 key to help
   QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
 }
@@ -1851,12 +1856,12 @@ CBootLoadWizard::showHelp(void)
   QDesktopServices::openUrl(QUrl(link));
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 // fitContents
 //
 
-void CBootLoadWizard::fitContents(int id)
+void
+CBootLoadWizard::fitContents(int id)
 {
-    adjustSize(); // this automagically resizes the window to fit the contents
+  adjustSize(); // this automagically resizes the window to fit the contents
 }
