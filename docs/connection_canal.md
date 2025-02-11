@@ -46,6 +46,9 @@ The `wizard button` can give you a view of what events are filtered out an not. 
 
 In all above cases the numerical base dialog can be used to set the display numerical base for all values. The default is hexadecimal but you can also use decimal, octal or binary. Numbers can be entered using any base. Just proceed hexadecimals with `0x`, octals with `0o` and binary with `0b`. No prefix will be read as decimal values.
 
+### Configure Wizard
+Some modern drivers have a `wizard` that can help you to construct the configuration string. Press `wizard...` button to open this dialog. It opens if there is help available in the driver. If you are interested in the details of how a CANAL driver supply information for this wizard you can read more [here](https://grodansparadis.github.io/vscp-doc-canal/#/canalgetdriverinfo).
+
 ## Remove a connection
 
 Select the connection you want to remove in the treeview and right click. Select `Remove connection` in the context menu. The connection will be removed.

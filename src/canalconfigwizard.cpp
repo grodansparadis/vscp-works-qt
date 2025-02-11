@@ -97,9 +97,10 @@ CanalConfigWizard::accept()
 // fitContents
 //
 
-void CanalConfigWizard::fitContents(int id)
+void
+CanalConfigWizard::fitContents(int id)
 {
-    adjustSize(); // this automagically resizes the window to fit the contents
+  adjustSize(); // this automagically resizes the window to fit the contents
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,7 +110,7 @@ void CanalConfigWizard::fitContents(int id)
 void
 CanalConfigWizard::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_canal?id=config-wizard";
+  QString link = "http://localhost:3000/#/connection_canal?id=configure-wizard";
   QDesktopServices::openUrl(QUrl(link));
 }
 
@@ -453,4 +454,3 @@ void
 ConfigChoicePage::cleanupPage()
 {
 }
-
