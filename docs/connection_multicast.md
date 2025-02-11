@@ -1,6 +1,6 @@
 # Multicast
 
-[Multicast](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast?id=vscp-multicast)  VSCP multicast. 
+You can read more about [VSCP multicast](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast?id=vscp-multicast) in the VSCP specification. 
 
 ## Add a connection
 

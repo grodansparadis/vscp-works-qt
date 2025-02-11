@@ -1,6 +1,6 @@
 # UDP
 
-[UDP](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp) | VSCP connection less UDP communication protocol.
+You can read more about [VSCP over UDP](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp) in the VSCP specification.
 
 ## Add a connection
 ![](./images/add_connection_udp.png)

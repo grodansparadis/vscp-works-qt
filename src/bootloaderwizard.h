@@ -412,7 +412,12 @@ public:
   int initBootLoaderWizard(void);
 
 private slots:
+
+  /// Show help
   void showHelp(void);
+
+  /// Fit window to content
+  void fitContents(int id);
 
 private:
   /// The VSCP client type

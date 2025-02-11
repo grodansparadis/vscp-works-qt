@@ -1,6 +1,7 @@
 Changelog for VSCP Works QT
 ===========================
 
+250211 AKHE Wizards now autoadjust there size to the content.
 250211 AKHE Added user escapes for topics in MQTT.
 250210 AKHE Added switch to fill in missing parts of events from topics in MQTT.
 250210 AKHE Fixed connection problem for slow connections using the MQTT client.

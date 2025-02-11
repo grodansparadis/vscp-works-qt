@@ -107,7 +107,7 @@ CDlgConnSettingsTcpip::setInitialFocus(void)
 void
 CDlgConnSettingsTcpip::onGetHelp()
 {
-  QUrl helpUrl("https://docs.vscp.org/");
+  QUrl helpUrl("https://grodansparadis.github.io/vscp-works-qt/#/connections_tcpip");
   QDesktopServices::openUrl(helpUrl);
 }
 

@@ -1,6 +1,6 @@
 # Socketcan
 
-[**Socketcan**](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)  The Linux kernel supports the CAN bus via the `socketcan` interface. This is also a VSCP level I communication that is based on a CAN frame. Needless to say only available on Linux systems. 
+You can read more about [VSCP over Socketcan](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp) in the VSCP specification. The Linux kernel supports the CAN bus via the `socketcan` interface. This is also a VSCP level I communication that is based on a CAN frame. Needless to say only available on Linux systems. 
 
 Socketcan is only available on Linux systems.
 

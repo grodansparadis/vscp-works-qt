@@ -37,7 +37,6 @@
 
 #include <QWizard>
 
-
 QT_BEGIN_NAMESPACE
 class QCheckBox;
 class QGroupBox;
@@ -47,225 +46,212 @@ class QRadioButton;
 class QListWidget;
 QT_END_NAMESPACE
 
-
 // ----------------------------------------------------------------------------
 
-
-class CanalConfigWizard : public QWizard
-{
-    Q_OBJECT
+class CanalConfigWizard : public QWizard {
+  Q_OBJECT
 
 public:
-    CanalConfigWizard(QWidget *parent = nullptr);
+  CanalConfigWizard(QWidget* parent = nullptr);
 
-    void accept() override;
+  /// Show help
+  void showHelp(void);
+
+  void accept() override;
+
+private slots:
+
+  /// Fit window to content
+  void fitContents(int id);
 };
 
-
 // ----------------------------------------------------------------------------
 
-
-class IntroPage : public QWizardPage
-{
-    Q_OBJECT
+class IntroPage : public QWizardPage {
+  Q_OBJECT
 
 public:
-    IntroPage(QWidget *parent, const QString& title, const QString& lbltext, const QString& infolink="");
+  IntroPage(QWidget* parent, const QString& title, const QString& lbltext, const QString& infolink = "");
 
 protected:
-    void  initializePage() override;
-    
+  void initializePage() override;
+
 private:
-    QLabel *m_label;
-    QLabel *m_labelInfo;
+  QLabel* m_label;
+  QLabel* m_labelInfo;
 
-    QString m_labelText;
+  QString m_labelText;
 };
-
 
 // ----------------------------------------------------------------------------
 
-
-class ConclusionPage : public QWizardPage
-{
-    Q_OBJECT
+class ConclusionPage : public QWizardPage {
+  Q_OBJECT
 
 public:
-    ConclusionPage(QWidget *parent = nullptr);
+  ConclusionPage(QWidget* parent = nullptr);
 
 protected:
-    void  initializePage() override;
+  void initializePage() override;
 
 private:
-    QLabel *label;
-      
+  QLabel* label;
 };
-
 
 // ----------------------------------------------------------------------------
 //                                    Pages
 // ----------------------------------------------------------------------------
 
-
 // ----------------------------------------------------------------------------
 
-
-class ConfigStringPage : public QWizardPage
-{
-    Q_OBJECT
+class ConfigStringPage : public QWizardPage {
+  Q_OBJECT
 
 public:
-    /*!
-        CTor - Create config string class object
-        @param parent Pointer to window that owns the wizard or nullptr
-        @param fieldname Resulting name for the string field collted in action
-        @param title Title to use in the wizard page
-        @param subtitle Subtitle to use in the wizard page
-        @param value Initial value on string form
-        @param infolink Link to information about setting
-        @param width Number of bits for numerical value - determines maximum value
-    */
-    ConfigStringPage(QWidget *parent, 
-                        wizardStepBase::wizardType type,
-                        const QString& fieldname,
-                        const QString& labeltext = "String value",
-                        const QString& title = "Set configuration: string",
-                        const QString& subtitle = "",
-                        const QString& value = "",
-                        const QString& infolink="",
-                        uint8_t width = 0);
+  /*!
+      CTor - Create config string class object
+      @param parent Pointer to window that owns the wizard or nullptr
+      @param fieldname Resulting name for the string field collted in action
+      @param title Title to use in the wizard page
+      @param subtitle Subtitle to use in the wizard page
+      @param value Initial value on string form
+      @param infolink Link to information about setting
+      @param width Number of bits for numerical value - determines maximum value
+  */
+  ConfigStringPage(QWidget* parent,
+                   wizardStepBase::wizardType type,
+                   const QString& fieldname,
+                   const QString& labeltext = "String value",
+                   const QString& title     = "Set configuration: string",
+                   const QString& subtitle  = "",
+                   const QString& value     = "",
+                   const QString& infolink  = "",
+                   uint8_t width            = 0);
 
-    /*! 
-        Set text for label
-        @param labeltext Labeltext to set
-    */
-    void setLabelText(const QString& labeltext);                       
+  /*!
+      Set text for label
+      @param labeltext Labeltext to set
+  */
+  void setLabelText(const QString& labeltext);
 
 public slots:
-    /// Show info link URL content in browser
-    void showInfo(void);
+  /// Show info link URL content in browser
+  void showInfo(void);
 
 protected:
+  /// Initialize the wizard page
+  void initializePage() override;
 
-    /// Initialize the wizard page
-    void  initializePage() override;
-
-    /// Prevent load of defaults on "back"
-    void  cleanupPage() override;
+  /// Prevent load of defaults on "back"
+  void cleanupPage() override;
 
 private:
-    QLabel *m_label;
-    QLineEdit *m_edit;
-    QLabel *m_labelInfo;
+  QLabel* m_label;
+  QLineEdit* m_edit;
+  QLabel* m_labelInfo;
 
-    wizardStepBase::wizardType m_type;
-    QString m_fieldName;
-    QString m_labelText;
-    QString m_value;
-    QString m_infolink;
+  wizardStepBase::wizardType m_type;
+  QString m_fieldName;
+  QString m_labelText;
+  QString m_value;
+  QString m_infolink;
 };
-
 
 // ----------------------------------------------------------------------------
 
-
-class ConfigBoolPage : public QWizardPage
-{
-    Q_OBJECT
+class ConfigBoolPage : public QWizardPage {
+  Q_OBJECT
 
 public:
-    /*!
-        CTor - Create config boolean class object
-        @param parent Pointer to window that owns the wizard or nullptr
-        @param fieldname Resulting name for the string field collted in action
-        @param title Title to use in the wizard page
-        @param subtitle Subtitle to use in the wizard page
-    */
-    ConfigBoolPage(QWidget *parent, 
-                    const QString& fieldname,
-                    const QString& labeltext = "String value",
-                    const QString& title = "Set configuration: string",
-                    const QString& subtitle = "",
-                    bool bvalue = false,
-                    const QString& infolink="");
+  /*!
+      CTor - Create config boolean class object
+      @param parent Pointer to window that owns the wizard or nullptr
+      @param fieldname Resulting name for the string field collted in action
+      @param title Title to use in the wizard page
+      @param subtitle Subtitle to use in the wizard page
+  */
+  ConfigBoolPage(QWidget* parent,
+                 const QString& fieldname,
+                 const QString& labeltext = "String value",
+                 const QString& title     = "Set configuration: string",
+                 const QString& subtitle  = "",
+                 bool bvalue              = false,
+                 const QString& infolink  = "");
 
-    /*! 
-        Set text for label
-        @param labeltext Labeltext to set
-    */
-    void setLabelText(const QString& labeltext);                       
+  /*!
+      Set text for label
+      @param labeltext Labeltext to set
+  */
+  void setLabelText(const QString& labeltext);
 
 public slots:
-    /// Show info link URL content in browser
-    void showInfo(void);                    
+  /// Show info link URL content in browser
+  void showInfo(void);
 
 protected:
-    /// Initialize the wizard page
-    void  initializePage() override;
+  /// Initialize the wizard page
+  void initializePage() override;
 
-    /// Prevent load of defaults on "back"
-    void  cleanupPage() override;       
+  /// Prevent load of defaults on "back"
+  void cleanupPage() override;
 
 private:
-    QCheckBox *m_checkbox;
-    QLabel *m_labelInfo;
+  QCheckBox* m_checkbox;
+  QLabel* m_labelInfo;
 
-    QString m_fieldName;
-    QString m_labelText;
-    QString m_infolink;
+  QString m_fieldName;
+  QString m_labelText;
+  QString m_infolink;
 
-    bool m_bvalue;
+  bool m_bvalue;
 };
-
 
 // ----------------------------------------------------------------------------
 
-
-class ConfigChoicePage : public QWizardPage
-{
-    Q_OBJECT
+class ConfigChoicePage : public QWizardPage {
+  Q_OBJECT
 
 public:
-    /*!
-        CTor - Create config choice class object
-        @param parent Pointer to window that owns the wizard or nullptr
-        @param fieldname Resulting name for the string field collted in action
-        @param title Title to use in the wizard page
-        @param subtitle Subtitle to use in the wizard page
-    */
-    ConfigChoicePage(QWidget *parent,
-                        const QString& fieldname,
-                        const std::list<std::string>& strlist,
-                        const QString& labeltext = "String value",
-                        const QString& title = "Set configuration: string",
-                        const QString& subtitle = "",
-                        uint8_t nSelect = 0,
-                        const QString& infolink="");
+  /*!
+      CTor - Create config choice class object
+      @param parent Pointer to window that owns the wizard or nullptr
+      @param fieldname Resulting name for the string field collted in action
+      @param title Title to use in the wizard page
+      @param subtitle Subtitle to use in the wizard page
+  */
+  ConfigChoicePage(QWidget* parent,
+                   const QString& fieldname,
+                   const std::list<std::string>& strlist,
+                   const QString& labeltext = "String value",
+                   const QString& title     = "Set configuration: string",
+                   const QString& subtitle  = "",
+                   uint8_t nSelect          = 0,
+                   const QString& infolink  = "");
 
-    /*! 
-        Set text for label
-        @param labeltext Labeltext to set
-    */
-    void setLabelText(const QString& labeltext);                       
+  /*!
+      Set text for label
+      @param labeltext Labeltext to set
+  */
+  void setLabelText(const QString& labeltext);
 
-// public slots:
-//     /// Show info link URL content in browser
-//     void showInfo(void);
-    
+  // public slots:
+  //     /// Show info link URL content in browser
+  //     void showInfo(void);
+
 protected:
-    /// Initialize the wizard page
-    void  initializePage() override;
+  /// Initialize the wizard page
+  void initializePage() override;
 
-    /// Prevent load of defaults on "back"
-    void  cleanupPage() override;       
+  /// Prevent load of defaults on "back"
+  void cleanupPage() override;
 
 private:
-    QLabel *m_label;
-    QListWidget *m_list;
-    QLabel *m_labelInfo;
+  QLabel* m_label;
+  QListWidget* m_list;
+  QLabel* m_labelInfo;
 
-    QString m_fieldName;
-    QString m_labelText;
+  QString m_fieldName;
+  QString m_labelText;
 };
 
 #endif

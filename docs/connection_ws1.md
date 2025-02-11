@@ -1,6 +1,6 @@
 # ws1
 
-[ws1](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws1-description)  A VSCP websocket protocol that is string based.
+You can read more about string based VSCP websocket protocol [ws1](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws1-description) in the VSCP specification. 
 
 ## Add a connection
 ![](./images/add_connection_ws1.png)

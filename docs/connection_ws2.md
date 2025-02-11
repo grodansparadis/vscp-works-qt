@@ -1,6 +1,6 @@
 # ws2
 
-[wsw](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description) | A VSCP websocket protocol that is JSON based.
+You can read more about string based VSCP websocket protocol [ws2](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description) in the VSCP specification. 
 
 ## Add a connection
 ![](./images/add_connection_ws2.png)

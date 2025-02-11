@@ -32,6 +32,9 @@
 
 #include <QDebug>
 #include <QtWidgets>
+#include <QUrl>
+#include <QShortcut>
+#include <QDesktopServices>
 
 #include "canalconfigwizard.h"
 #include <vscphelper.h>
@@ -56,6 +59,11 @@ CanalConfigWizard::CanalConfigWizard(QWidget* parent)
   setPixmap(QWizard::BackgroundPixmap, QPixmap(":/images/background.png"));
 
   setWindowTitle(tr("VSCP level I (CANAL) driver configuration Wizard"));
+
+  connect(this, SIGNAL(currentIdChanged(int)), this, SLOT(fitContents(int)));
+
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,6 +85,26 @@ CanalConfigWizard::accept()
   // }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// fitContents
+//
+
+void CanalConfigWizard::fitContents(int id)
+{
+    adjustSize(); // this automagically resizes the window to fit the contents
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+
+void
+CanalConfigWizard::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/bootload_window";
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 // ----------------------------------------------------------------------------
@@ -419,3 +447,4 @@ void
 ConfigChoicePage::cleanupPage()
 {
 }
+

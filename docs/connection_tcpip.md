@@ -1,6 +1,6 @@
 # tcp/ip
 
-[tcp/ip](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_tcp_ip)  VSCP tcp/ip link protocol.
+You can read more about [VSCP tcp/ip link protocol](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_tcp_ip) in the VSCP Specification.
 
 ## Add a connection
 

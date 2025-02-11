@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MQTT Subscribe</string>
+   <string>MQTT Add User Escape</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>

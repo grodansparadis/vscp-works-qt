@@ -297,7 +297,7 @@ CDlgConnSettingsMqtt::setInitialFocus(void)
 void
 CDlgConnSettingsMqtt::onGetHelp()
 {
-  QUrl helpUrl("https://docs.vscp.org/");
+  QUrl helpUrl("https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt");
   QDesktopServices::openUrl(helpUrl);
 }
 

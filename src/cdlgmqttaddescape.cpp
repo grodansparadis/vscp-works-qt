@@ -115,7 +115,7 @@ QString CDlgMqttAddEscape::getValue(void)
 void
 CDlgMqttAddEscape::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt?id=escapes";
+  QString link = "http://localhost:3000/#/connection_mqtt?id=user-escapes";
   QDesktopServices::openUrl(QUrl(link));
 }
 

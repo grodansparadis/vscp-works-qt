@@ -917,6 +917,6 @@ CDlgConnSettingsCanal::filterwizard()
 void
 CDlgConnSettingsCanal::showHelp()
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_canal";
   QDesktopServices::openUrl(QUrl(link));
 }

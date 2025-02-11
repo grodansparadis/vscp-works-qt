@@ -412,6 +412,6 @@ CDlgConnSettingsMulticast::onTestConnection(void)
 void
 CDlgConnSettingsMulticast::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=multicast";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_multicast";
   QDesktopServices::openUrl(QUrl(link));
 }
