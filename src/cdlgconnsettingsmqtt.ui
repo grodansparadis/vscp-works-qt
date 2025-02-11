@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
-    <height>602</height>
+    <width>673</width>
+    <height>719</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -26,9 +26,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>570</y>
-     <width>611</width>
+     <x>0</x>
+     <y>690</y>
+     <width>661</width>
      <height>21</height>
     </rect>
    </property>
@@ -45,10 +45,10 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>0</x>
      <y>10</y>
-     <width>501</width>
-     <height>531</height>
+     <width>661</width>
+     <height>649</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -83,20 +83,41 @@
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
-      <property name="buddy">
-       <cstring>editHost</cstring>
-      </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="editHost">
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;URL for MQTT broker. Format is  tcp://srv.at.com:1883.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string>tcp://localhost:1883</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLineEdit" name="editHost">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;URL for MQTT broker. Format is  tcp://srv.at.com:1883.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>mqt://localhost:1883</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnTestConnection">
+        <property name="toolTip">
+         <string>Test connection to MQTT broker´</string>
+        </property>
+        <property name="text">
+         <string>Test...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnTLS">
+        <property name="toolTip">
+         <string>Define TLS/SSL settings</string>
+        </property>
+        <property name="text">
+         <string>TLS/SSL</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_7">
@@ -199,88 +220,16 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="1">
-     <widget class="QCheckBox" name="chkCleanSession">
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Every connection is a clean session. If not checked you have to give a client id.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_9">
       <property name="text">
-       <string>Clean Session</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="1">
-     <widget class="QCheckBox" name="chkExtendedSecurity">
-      <property name="toolTip">
-       <string>Enable extended security</string>
-      </property>
-      <property name="text">
-       <string>Extended security</string>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Subscribe :</string>
+       <string>Connect Timeout (ms):</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
-       <cstring>listSubscribe</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="10" column="1">
-     <widget class="QListWidget" name="listSubscribe">
-      <property name="contextMenuPolicy">
-       <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
-      </property>
-      <property name="toolTip">
-       <string>Subscriptions topics</string>
-      </property>
-      <property name="statusTip">
-       <string>Right click to add/delete subscriptions</string>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="0">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>Publish :</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-      <property name="buddy">
-       <cstring>listPublish</cstring>
-      </property>
-     </widget>
-    </item>
-    <item row="11" column="1">
-     <widget class="QListWidget" name="listPublish">
-      <property name="contextMenuPolicy">
-       <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
-      </property>
-      <property name="toolTip">
-       <string>Publish topics</string>
-      </property>
-      <property name="statusTip">
-       <string>Right click to add/delete  publishing topics</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="1">
-     <widget class="QCheckBox" name="chkFullLevel2">
-      <property name="toolTip">
-       <string>Handle as full Level II interface</string>
-      </property>
-      <property name="text">
-       <string>Full Level II</string>
+       <cstring>editPassword</cstring>
       </property>
      </widget>
     </item>
@@ -303,91 +252,262 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_9">
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="chkFullLevel2">
+      <property name="toolTip">
+       <string>Handle as full Level II interface</string>
+      </property>
+      <property name="statusTip">
+       <string>Handle as full Level II interface</string>
+      </property>
       <property name="text">
-       <string>Connect Timeout (ms):</string>
+       <string>Full Level II</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="1">
+     <widget class="QCheckBox" name="chkCleanSession">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Every connection is a clean session. If not checked you have to give a client id.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="statusTip">
+       <string>Every connection is a clean session. If not checked you have to give a client id.</string>
+      </property>
+      <property name="text">
+       <string>Clean Session</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QCheckBox" name="chkExtendedSecurity">
+      <property name="toolTip">
+       <string>Enable extended security</string>
+      </property>
+      <property name="statusTip">
+       <string>Enable extended security</string>
+      </property>
+      <property name="text">
+       <string>Extended security</string>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QCheckBox" name="chkEnableTopicEscapes">
+      <property name="toolTip">
+       <string>Enable topic escapes</string>
+      </property>
+      <property name="statusTip">
+       <string>Enable topic escapes</string>
+      </property>
+      <property name="text">
+       <string>Enable topic escapes</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QCheckBox" name="chkUseTopicForEventDefaults">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use topic as source for default event data if it is missing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="statusTip">
+       <string>Use topic as source for default event data if it is missing</string>
+      </property>
+      <property name="text">
+       <string>Use VSCP Topic For Event Defaults</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="0">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>User escapes:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
-      <property name="buddy">
-       <cstring>editPassword</cstring>
+     </widget>
+    </item>
+    <item row="14" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QListWidget" name="listUserEscapes">
+        <property name="contextMenuPolicy">
+         <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
+        </property>
+        <property name="toolTip">
+         <string>Subscriptions topics</string>
+        </property>
+        <property name="statusTip">
+         <string>Right click to add/delete subscriptions</string>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 243, 212);</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+        </property>
+        <item>
+         <widget class="QPushButton" name="btnAddUserEscape">
+          <property name="toolTip">
+           <string>Add Subscription</string>
+          </property>
+          <property name="text">
+           <string>Add...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="16" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Subscribe :</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
      </widget>
     </item>
+    <item row="16" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QListWidget" name="listSubscribe">
+        <property name="contextMenuPolicy">
+         <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
+        </property>
+        <property name="toolTip">
+         <string>Subscriptions topics</string>
+        </property>
+        <property name="statusTip">
+         <string>Right click to add/delete subscriptions</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 243, 212);</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QPushButton" name="btnAddSubscription">
+          <property name="toolTip">
+           <string>Add Subscription</string>
+          </property>
+          <property name="text">
+           <string>Add...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="17" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Publish :</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="17" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QListWidget" name="listPublish">
+        <property name="contextMenuPolicy">
+         <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
+        </property>
+        <property name="toolTip">
+         <string>Publish topics</string>
+        </property>
+        <property name="statusTip">
+         <string>Right click to add/delete  publishing topics</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 243, 212);</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QPushButton" name="btnAddPublish">
+          <property name="toolTip">
+           <string>Add Publish</string>
+          </property>
+          <property name="text">
+           <string>Add...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
    </layout>
-  </widget>
-  <widget class="QPushButton" name="btnTestConnection">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>40</y>
-     <width>91</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Test connection to MQTT broker´</string>
-   </property>
-   <property name="text">
-    <string>Test...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnTLS">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>100</y>
-     <width>91</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Define TLS/SSL settings</string>
-   </property>
-   <property name="text">
-    <string>TLS/SSL</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnAddPublish">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>430</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Add Publish</string>
-   </property>
-   <property name="text">
-    <string>Add...</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnAddSubscription">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>320</y>
-     <width>89</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>Add Subscription</string>
-   </property>
-   <property name="text">
-    <string>Add...</string>
-   </property>
   </widget>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>540</y>
-     <width>611</width>
+     <x>0</x>
+     <y>660</y>
+     <width>661</width>
      <height>20</height>
     </rect>
    </property>
@@ -398,17 +518,12 @@
  </widget>
  <tabstops>
   <tabstop>editDescription</tabstop>
-  <tabstop>editHost</tabstop>
   <tabstop>editClientId</tabstop>
   <tabstop>editUser</tabstop>
   <tabstop>editPassword</tabstop>
   <tabstop>chkExtendedSecurity</tabstop>
-  <tabstop>listSubscribe</tabstop>
-  <tabstop>listPublish</tabstop>
   <tabstop>btnTLS</tabstop>
   <tabstop>btnTestConnection</tabstop>
-  <tabstop>btnAddSubscription</tabstop>
-  <tabstop>btnAddPublish</tabstop>
  </tabstops>
  <resources>
   <include location="vscpworks.qrc"/>

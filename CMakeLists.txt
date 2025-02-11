@@ -188,6 +188,10 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgmqttpublish.h
   src/cdlgmqttpublish.cpp
 
+  src/cdlgmqttaddescape.ui
+  src/cdlgmqttaddescape.h
+  src/cdlgmqttaddescape.cpp
+
   src/cdlgmqttsubscribe.ui
   src/cdlgmqttsubscribe.h
   src/cdlgmqttsubscribe.cpp

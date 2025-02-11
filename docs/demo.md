@@ -12,7 +12,10 @@ To test CANAL you must install a CANAL driver. We recommend [TouCAN CAN adapter]
 ## SocketCan
 Download and install the [VSCP Simulator](https://github.com/grodansparadis/vscp-simulator) software. It will allow you to simulate level I and level II nodes with all functionality.
 
+Another alternative is to use a virtual CAN interface. You can read more about this [here](connection_socketcan?id=testing).
+
 A CAN adapter like TouCAN described above that supports SocketCan id definitely needed if you are serious using socketcan.
+
 
 ## tcp/ip
 ![](./images/vscp1.vscp.org.png)

@@ -1,23 +1,23 @@
 # Introduction
 
-In the mainwindow of VSCP Works you have a treeview with all communication channels that are available. This is the place where you add, remove and configure connections to your remote hardware devices. Normally you right click on the treeview and select the operation you want to perform. You can also use the file menu items or the toolbar for the same task. It is perfectly fine for most cases to have several windows open at the same time to a selected communication item. 
-
-
+In the mainwindow of VSCP Works you have a treeview with all communication types that are available. This is the place where you add, remove and configure connections to your remote hardware devices. Normally you right click on the treeview and select the operation you want to perform. You can also use the file menu items or the toolbar for the same task. It is perfectly fine for most cases to have several windows open at the same time to a selected communication item. 
 
 # Communication types/protocols
 
 ![](./images/connections.png)
 
-VSCP Works can communicate with a diverse number of different hardware devices using many different communication protocols. The following protocols are currently supported:
+VSCP Works can communicate with a diverse number of different hardware devices using many different communication protocols. The following communication methods/protocols are currently supported:
 
-  * [CANAL](./connections?id=canal)
-  * [Socketcan](./connections?id=socketcan)
-  * [tcp/ip](./connections?id=tcp/ip)
-  * [MQTT](./connections?id=mqtt)
-  * [WS1](./connections?id=ws1)
-  * [WS2](./connections?id=ws2)
-  * [UDP](./connections?id=udp)
-  * [Multicast](./connections?id=multicast)
+  * [CANAL](./connection_canal)
+  * [Socketcan](./connection_socketcan)
+  * [tcp/ip](./connections_tcpip)
+  * [MQTT](./connection_mqtt)
+  * [WS1](./connections_ws1)
+  * [WS2](./connection_ws2)
+  * [UDP](./connections_udp)
+  * [Multicast](./connections_multicast)
+
+The following table gives a short description of the protocols.Click on the protocol name to get more information about the protocol.
 
 | Protocol | Description |
 |----------|-------------|
@@ -26,11 +26,11 @@ VSCP Works can communicate with a diverse number of different hardware devices u
 | [tcp/ip](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_tcp_ip) | VSCP tcp/ip link protocol. |
 | [MQTT](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_mqtt) | VSCP over MQTT.  |
 | [ws1](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws1-description) | A VSCP websocket protocol that is string based. |
-| [wsw](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description) | A VSCP websocket protocol that is JSON based. |
+| [ws2](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description) | A VSCP websocket protocol that is JSON based. |
 | [UDP](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp) | VSCP connection less UDP communication protocol. |
 | [Multicast](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast?id=vscp-multicast) | VSCP multicast.  |
 
-Click on the protocol name to get more information about the protocol.
+
 
 
 

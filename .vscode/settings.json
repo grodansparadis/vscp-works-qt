@@ -117,7 +117,8 @@
       "Grodans",
       "Hedman",
       "MQTT",
-      "Paradis"
+      "Paradis",
+      "socketcan"
     ],
     "cmake.clearOutputBeforeBuild": false,
     "cmake.configureEnvironment": {

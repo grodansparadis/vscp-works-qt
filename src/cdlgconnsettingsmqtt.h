@@ -136,6 +136,30 @@ private:
 
 // ----------------------------------------------------------------------------
 
+class UserEscapeItem : public QListWidgetItem {
+
+public:
+  UserEscapeItem(const QString& name, const QString& value);
+  ~UserEscapeItem();
+
+  /// Getters/setters for name
+  QString getName(void) { return m_name; };
+  void setName(const QString& name);
+
+  /// Getters/setters for value
+  QString getValue(void) { return m_value; };
+  void setValue(const QString& value);
+
+private:
+  // Escape name
+  QString m_name;
+
+  // Escape value
+  QString m_value;
+};
+
+// ----------------------------------------------------------------------------
+
 namespace Ui {
 class CDlgConnSettingsMqtt;
 }
@@ -203,8 +227,8 @@ public:
   /*!
       Setters/getters for connection timeout period
   */
- uint32_t getConnectTimeout(void);
- void setConnectTimeout(uint32_t timeout);
+  uint32_t getConnectTimeout(void);
+  void setConnectTimeout(uint32_t timeout);
 
   /*!
       Setters/getters for clean session
@@ -217,6 +241,12 @@ public:
   */
   bool isExtendedSecurityEnabled(void);
   void enableExtendedSecurity(bool bExtendedSecurity);
+
+  /*!
+      Setters/getters for UseTopicForEventDefaults
+  */
+  bool isUseTopicForEventDefaults(void);
+  void enableUseTopicForEventDefaults(bool b);
 
   /*!
       Setters/getters for TLS enable
@@ -292,6 +322,18 @@ private slots:
   /// Delete publish
   void onDeletePublish(void);
 
+  /// Add UserEscape
+  void onAddUserEscape(void);
+
+  /// Edit UserEscape
+  void onEditUserEscape(void);
+
+  /// Clone UserEscape
+  void onCloneUserEscape(void);
+
+  /// Delete UserEscape
+  void onDeleteUserEscape(void);
+
   /// Test connection button clicked
   void onTestConnection(void);
 
@@ -306,6 +348,9 @@ private slots:
 
   /// Publish context menu
   void onPublishContextMenu(const QPoint& pos);
+
+  /// User escape context menu
+  void onUserEscapeContextMenu(const QPoint& pos);
 
 private:
   Ui::CDlgConnSettingsMqtt* ui;

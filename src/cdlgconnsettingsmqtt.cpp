@@ -39,6 +39,7 @@
 #include "cdlgmqttpublish.h"
 #include "cdlgmqttsubscribe.h"
 #include "cdlgtls.h"
+#include "cdlgmqttaddescape.h"
 
 #include <QDebug>
 #include <QDesktopServices>
@@ -125,6 +126,58 @@ PublishItem::setTopic(const QString& topic)
 // CTor
 //
 
+UserEscapeItem::UserEscapeItem(const QString& name, const QString& value)
+  : QListWidgetItem(vscp_str_format("%s - %s",
+                                    name.toStdString().c_str(),
+                                    value.toStdString().c_str())
+                      .c_str())
+{
+  m_name  = name;
+  m_value = value;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// DTor
+//
+
+UserEscapeItem::~UserEscapeItem()
+{
+  ;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setName
+//
+
+void
+UserEscapeItem::setName(const QString& name)
+{
+  m_name = name;
+  setText(vscp_str_format("%s - %s",
+                          m_name.toStdString().c_str(),
+                          m_value.toStdString().c_str())
+            .c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setValue
+//
+
+void
+UserEscapeItem::setValue(const QString& value)
+{
+  m_value = value;
+  setText(vscp_str_format("%s - %s",
+                          m_name.toStdString().c_str(),
+                          m_value.toStdString().c_str())
+            .c_str());
+}
+// ----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+// CTor
+//
+
 CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgConnSettingsMqtt)
@@ -141,7 +194,7 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   m_bTLS = false;
   // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
   // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
-  setBroker("tcp://localhost:1883");
+  setBroker("mqtt://localhost:1883");
   setClientId(clientid);
   setUser("vscp");
   setPassword("secret");
@@ -152,14 +205,22 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
           &QPushButton::clicked,
           this,
           &CDlgConnSettingsMqtt::onTLSSettings);
+
   connect(ui->btnAddSubscription,
           &QPushButton::clicked,
           this,
           &CDlgConnSettingsMqtt::onAddSubscription);
+
   connect(ui->btnAddPublish,
           &QPushButton::clicked,
           this,
           &CDlgConnSettingsMqtt::onAddPublish);
+
+  connect(ui->btnAddUserEscape,
+          &QPushButton::clicked,
+          this,
+          &CDlgConnSettingsMqtt::onAddUserEscape);
+
   connect(ui->btnTestConnection,
           &QPushButton::clicked,
           this,
@@ -194,6 +255,18 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
           &QListWidget::doubleClicked,
           this,
           &CDlgConnSettingsMqtt::onEditPublish);
+
+  // Open pop up menu on right click on VSCP type listbox
+  connect(ui->listUserEscapes,
+          &QListWidget::customContextMenuRequested,
+          this,
+          &CDlgConnSettingsMqtt::onUserEscapeContextMenu);
+
+  // Open edit dialog on item double click
+  connect(ui->listUserEscapes,
+          &QListWidget::doubleClicked,
+          this,
+          &CDlgConnSettingsMqtt::onEditUserEscape);
 
   setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 }
@@ -461,6 +534,26 @@ CDlgConnSettingsMqtt::enableExtendedSecurity(bool extended)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// isUseTopicForEventDefaults
+//
+
+bool
+CDlgConnSettingsMqtt::isUseTopicForEventDefaults(void)
+{
+  return ui->chkUseTopicForEventDefaults->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// enableUseTopicForEventDefaults
+//
+
+void
+CDlgConnSettingsMqtt::enableUseTopicForEventDefaults(bool b)
+{
+  ui->chkUseTopicForEventDefaults->setChecked(b);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // isTLSEnabled
 //
 
@@ -607,18 +700,19 @@ CDlgConnSettingsMqtt::setPwKeyFile(const QString& str)
 json
 CDlgConnSettingsMqtt::getJson(void)
 {
-  m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::MQTT);
-  m_jsonConfig["name"]               = getName().toStdString();
-  m_jsonConfig["host"]               = getBroker().toStdString();
-  m_jsonConfig["clientid"]           = getClientId().toStdString();
-  m_jsonConfig["user"]               = getUser().toStdString();
-  m_jsonConfig["password"]           = getPassword().toStdString();
-  m_jsonConfig["connection-timeout"] = (int)getConnectTimeout();
-  m_jsonConfig["response-timeout"]   = (int)getResponseTimeout();
-  m_jsonConfig["keepalive"]          = (int)getKeepAlive();
-  m_jsonConfig["cleansession"]       = isCleanSessionEnabled();
-  m_jsonConfig["extended-security"]  = isExtendedSecurityEnabled();
-  m_jsonConfig["bfull-l2"]           = getFullL2();
+  m_jsonConfig["type"]                      = static_cast<int>(CVscpClient::connType::MQTT);
+  m_jsonConfig["name"]                      = getName().toStdString();
+  m_jsonConfig["host"]                      = getBroker().toStdString();
+  m_jsonConfig["clientid"]                  = getClientId().toStdString();
+  m_jsonConfig["user"]                      = getUser().toStdString();
+  m_jsonConfig["password"]                  = getPassword().toStdString();
+  m_jsonConfig["connection-timeout"]        = (int)getConnectTimeout();
+  m_jsonConfig["response-timeout"]          = (int)getResponseTimeout();
+  m_jsonConfig["keepalive"]                 = (int)getKeepAlive();
+  m_jsonConfig["cleansession"]              = isCleanSessionEnabled();
+  m_jsonConfig["extended-security"]         = isExtendedSecurityEnabled();
+  m_jsonConfig["bfull-l2"]                  = getFullL2();
+  m_jsonConfig["bUseTopicForEventDefaults"] = isUseTopicForEventDefaults();
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
@@ -627,6 +721,18 @@ CDlgConnSettingsMqtt::getJson(void)
   m_jsonConfig["certfile"]    = getCertFile().toStdString();
   m_jsonConfig["keyfile"]     = getKeyFile().toStdString();
   m_jsonConfig["pwkeyfile"]   = getPwKeyFile().toStdString();
+
+  // Save all user escapes
+  json userEscapeObj = json::array();
+
+  for (int i = 0; i < ui->listUserEscapes->count(); i++) {
+    json j;
+    UserEscapeItem* pitem = (UserEscapeItem*)ui->listUserEscapes->item(i);
+    j["name"]             = pitem->getName().toStdString();
+    j["value"]            = pitem->getValue().toStdString();
+    userEscapeObj.push_back(j);
+  }
+  m_jsonConfig["user-escapes"] = userEscapeObj;
 
   // Save all subscriptions
   json subscriptionArray = json::array();
@@ -699,6 +805,10 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
     setResponseTimeout(m_jsonConfig["response-timeout"].get<uint32_t>());
   }
 
+  if (m_jsonConfig.contains("bUseTopicForEventDefaults") && m_jsonConfig["bUseTopicForEventDefaults"].is_boolean()) {
+    setResponseTimeout(m_jsonConfig["bUseTopicForEventDefaults"].get<bool>());
+  }
+
   if (m_jsonConfig.contains("keepalive") && m_jsonConfig["keepalive"].is_number()) {
     setKeepAlive(m_jsonConfig["keepalive"].get<uint32_t>());
   }
@@ -709,6 +819,10 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("extended-security") && m_jsonConfig["extended-security"].is_boolean()) {
     enableExtendedSecurity(m_jsonConfig["extended-security"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("bUseTopicForEventDefaults") && m_jsonConfig["bUseTopicForEventDefaults"].is_boolean()) {
+    enableUseTopicForEventDefaults(m_jsonConfig["bUseTopicForEventDefaults"].get<bool>());
   }
 
   if (m_jsonConfig.contains("btls") && m_jsonConfig["btls"].is_boolean()) {
@@ -737,6 +851,25 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("pwkeyfile") && m_jsonConfig["pwkeyfile"].is_string()) {
     setPwKeyFile(m_jsonConfig["pwkeyfile"].get<std::string>().c_str());
+  }
+
+  // User Escapes
+  if (m_jsonConfig.contains("user-escapes") && m_jsonConfig["user-escapes"].is_array()) {
+    json userEscapes = json::array();
+    userEscapes      = m_jsonConfig["user-escapes"];
+
+    for (auto v : userEscapes) {
+
+      json item = v;
+      if (item.contains("name") && item.contains("value")) {
+        UserEscapeItem* pitem = new UserEscapeItem(
+          item["name"].get<std::string>().c_str(),
+          item["value"].get<std::string>().c_str());
+        ui->listUserEscapes->addItem(pitem);
+      }
+    }
+
+    ui->listUserEscapes->sortItems();
   }
 
   // Subscriptions
@@ -1001,7 +1134,7 @@ CDlgConnSettingsMqtt::onDeleteSubscription(void)
       QMessageBox::question(
         this,
         tr(APPNAME),
-        tr("Are you sure the subscription topic should be deleted?"),
+        tr("Are you sure the selected subscription topic should be deleted?"),
         QMessageBox::Yes | QMessageBox::No)) {
 
     ui->listSubscribe->takeItem(row);
@@ -1009,6 +1142,8 @@ CDlgConnSettingsMqtt::onDeleteSubscription(void)
     delete pitem;
   }
 }
+
+// ------
 
 ///////////////////////////////////////////////////////////////////////////////
 // onAddPublish
@@ -1088,8 +1223,109 @@ CDlgConnSettingsMqtt::onClonePublish(void)
   ui->listPublish->sortItems();
 }
 
+// ----------------------------------------------------------------------------
+
 ///////////////////////////////////////////////////////////////////////////////
-// onDeleteSubscription
+// onAddUserEscape
+//
+
+void
+CDlgConnSettingsMqtt::onAddUserEscape(void)
+{
+  CDlgMqttAddEscape dlg(this);
+
+  if (QDialog::Accepted == dlg.exec()) {
+    ui->listUserEscapes->addItem(new UserEscapeItem(dlg.getName(),
+                                                    dlg.getValue()));
+    ui->listUserEscapes->sortItems();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onEditUserEscape
+//
+
+void
+CDlgConnSettingsMqtt::onEditUserEscape(void)
+{
+  CDlgMqttAddEscape dlg(this);
+
+  // Get selected row
+  int row = ui->listUserEscapes->currentRow();
+  if (-1 == row) {
+    return;
+  }
+
+  UserEscapeItem* pitem = (UserEscapeItem*)ui->listUserEscapes->item(row);
+  if (nullptr == pitem)
+    return;
+
+  dlg.setName(pitem->getName());
+  dlg.setValue(pitem->getValue());
+
+  if (QDialog::Accepted == dlg.exec()) {
+    pitem->setName(dlg.getName());
+    pitem->setValue(dlg.getValue());
+    ui->listUserEscapes->sortItems();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onCloneUserEscape
+//
+
+void
+CDlgConnSettingsMqtt::onCloneUserEscape(void)
+{
+  // Get selected row
+  int row = ui->listUserEscapes->currentRow();
+  if (-1 == row) {
+    return;
+  }
+
+  UserEscapeItem* pitem = (UserEscapeItem*)ui->listUserEscapes->item(row);
+  if (nullptr == pitem) {
+    return;
+  }
+
+  ui->listUserEscapes->addItem(new UserEscapeItem(pitem->getName(),
+                                                  pitem->getValue()));
+
+  ui->listUserEscapes->sortItems();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onDeleteUserEscape
+//
+
+void
+CDlgConnSettingsMqtt::onDeleteUserEscape(void)
+{
+  // Get selected row
+  int row = ui->listUserEscapes->currentRow();
+  if (-1 == row)
+    return;
+
+  PublishItem* pitem = (PublishItem*)ui->listUserEscapes->item(row);
+  if (nullptr == pitem)
+    return;
+
+  if (QMessageBox::Yes ==
+      QMessageBox::question(
+        this,
+        tr(APPNAME),
+        tr("Are you sure the selected user escape should be deleted?"),
+        QMessageBox::Yes | QMessageBox::No)) {
+
+    ui->listUserEscapes->takeItem(row);
+    delete pitem;
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+// onDeletePublish
 //
 
 void
@@ -1108,7 +1344,7 @@ CDlgConnSettingsMqtt::onDeletePublish(void)
       QMessageBox::question(
         this,
         tr(APPNAME),
-        tr("Are you sure the publish topic should be deleted?"),
+        tr("Are you sure the selected publish topic should be deleted?"),
         QMessageBox::Yes | QMessageBox::No)) {
 
     ui->listPublish->takeItem(row);
@@ -1117,7 +1353,7 @@ CDlgConnSettingsMqtt::onDeletePublish(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// onSubscribeItemClicked
+// onSubscribeContextMenu
 //
 
 void
@@ -1142,7 +1378,7 @@ CDlgConnSettingsMqtt::onSubscribeContextMenu(const QPoint& pos)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// onPublishItemClicked
+// onPublishContextMenu
 //
 
 void
@@ -1150,12 +1386,31 @@ CDlgConnSettingsMqtt::onPublishContextMenu(const QPoint& pos)
 {
   QMenu* menu = new QMenu(this);
 
-  menu->addAction(QString("New publishing"), this, SLOT(onAddPublish()));
-  menu->addAction(QString("Edit publishing"), this, SLOT(onEditPublish()));
-  menu->addAction(QString("Clone publishing"), this, SLOT(onClonePublish()));
-  menu->addAction(QString("delete publishing"),
+  menu->addAction(QString("Add new publish topic"), this, SLOT(onAddPublish()));
+  menu->addAction(QString("Edit publish topic"), this, SLOT(onEditPublish()));
+  menu->addAction(QString("Clone publish topic"), this, SLOT(onClonePublish()));
+  menu->addAction(QString("delete publish topic"),
                   this,
                   SLOT(onDeletePublish()));
 
   menu->popup(ui->listPublish->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onUserEscapeContextMenu
+//
+
+void
+CDlgConnSettingsMqtt::onUserEscapeContextMenu(const QPoint& pos)
+{
+  QMenu* menu = new QMenu(this);
+
+  menu->addAction(QString("Add new user escape"), this, SLOT(onAddUserEscape()));
+  menu->addAction(QString("Edit user escape"), this, SLOT(onEditUserEscape()));
+  menu->addAction(QString("Clone user escape"), this, SLOT(onCloneUserEscape()));
+  menu->addAction(QString("delete user escape"),
+                  this,
+                  SLOT(onDeleteUserEscape()));
+
+  menu->popup(ui->listUserEscapes->viewport()->mapToGlobal(pos));
 }
