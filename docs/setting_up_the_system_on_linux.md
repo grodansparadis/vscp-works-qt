@@ -51,7 +51,7 @@ You need expat, mosquitto, websockets, openssl and libcurl to build this project
   cd vscp-works-qt
   mkdir build
   cd build
-  cmake -DCMAKE_PREFIX_PATH=~/Qt/6.8.1/gcc_64 ..
+  cmake -DCMAKE_PREFIX_PATH=~/Qt/6.9.1/gcc_64 ..
   make
   make install
 ```

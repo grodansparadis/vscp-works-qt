@@ -58,10 +58,22 @@ public:
   void setName(const QString& str);
 
   /*!
-      Setters/getters for path
+      Setters/getters for interface
+  */
+  QString getInterface(void);
+  void setInterface(const QString& str);
+
+  /*!
+      Setters/getters for group IP address
   */
   QString getIp(void);
   void setIp(const QString& str);
+
+  /*!
+      Setters/getters for ttl (Time To Live)
+  */
+  int getTtl(void);
+  void setTtl(int value);
 
   /*!
       Setters/getters for encryption

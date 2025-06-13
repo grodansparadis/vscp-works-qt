@@ -21,7 +21,7 @@ This is the new version of **vscpworks** that replaces [the long since deprecate
 The VSCP system consists of the VSCP daemon, VSCP Works, and the VSCP helper libraries and a lot of other systems, code and hardware. The VSCP daemon is the core of the VSCP system and is responsible for handling events and actions. VSCP Works is a graphical user interface that is used to configure and manage VSCP nodes. The VSCP helper libraries are a set of libraries that provide functionality for working with VSCP events and actions.
 
   * Communication channels can be opened over socketcan/CANAL/tcp/ip and MQTT to remote devices. GUID's and sensors can have symbolic names. Easy to investigate event values and timing.  
-  * Configuration handling can be opended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
+  * Configuration handling can be onended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Scan of devices can be handled for remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Firmware loading can be done using the VSCP bootloader protocol and the PIC1 protocol. 
   * mdf editor is available that can be used to build mdf-files in XML or json format. This solution may still have problems with some more advanced files so be careful and save often.

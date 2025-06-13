@@ -38,10 +38,10 @@
 // 39/40/41/42/43/44/45/46 I M P O T A N T ! ! !
 #define VSCPWORKS_MAJOR_VERSION     0
 #define VSCPWORKS_MINOR_VERSION     0
-#define VSCPWORKS_RELEASE_VERSION   1
+#define VSCPWORKS_RELEASE_VERSION   2
 #define VSCPWORKS_BUILD_VERSION     0   
 
-#define VSCPWORKS_DISPLAY_VERSION   "0.0.1-0 Alpha"
+#define VSCPWORKS_DISPLAY_VERSION   "0.0.2-0"
 
 #define VSCPWORKS_COPYRIGHT                                                    \
     "Copyright © 2000-2025 Ake Hedman, Grodans Paradis AB, "                   \

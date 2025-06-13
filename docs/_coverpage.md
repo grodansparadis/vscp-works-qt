@@ -4,9 +4,7 @@
 
 # VSCP Works+
 
-**VARNING**
-
-This documentation is for the next version of VSCP Works+ (vscp-works-qt) and content (may) change frequently.
+This documentation is for the latest version of VSCP Works+ (vscp-works-qt) and the content (may) change frequently.
 
 ---
 

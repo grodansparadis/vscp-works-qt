@@ -202,7 +202,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
           SLOT(rxSelectionChange(const QItemSelection&, const QItemSelection&)));
 
   // Handle help requests
-  QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
   shortcut->setAutoRepeat(false);
 
   // Lay out things
@@ -1371,7 +1371,7 @@ CFrmSession::sendTxEvent(void)
   }
 
   QApplication::setOverrideCursor(Qt::WaitCursor);
-  QApplication::processEvents();
+  // QApplication::processEvents();
 
   QList<QModelIndex>::iterator it;
   for (it = selection.begin(); it != selection.end(); it++) {
@@ -1399,7 +1399,7 @@ CFrmSession::sendTxEvent(void)
   }
 
   QApplication::restoreOverrideCursor();
-  QApplication::processEvents();
+  // QApplication::processEvents();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1510,6 +1510,9 @@ CFrmSession::addTxEvent(void)
       m_txTable->setRowHeight(i, 10);
     }
     m_txTable->setUpdatesEnabled(true);
+
+    // Autosave TX data
+    saveTxOnExit();
   }
 }
 
@@ -1607,6 +1610,9 @@ CFrmSession::editTxEvent(void)
       itemEvent->setText(strEvent);
     }
   }
+
+  // Autosave TX data
+  saveTxOnExit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1725,6 +1731,9 @@ CFrmSession::cloneTxEvent(void)
       m_txTable->setRowHeight(i, 10);
     }
     m_txTable->setUpdatesEnabled(true);
+
+    // Autosave TX data
+    saveTxOnExit();
   }
 }
 
@@ -1749,6 +1758,9 @@ CFrmSession::deleteTxEvent(void)
   for (it = selection.begin(); it != selection.end(); it++) {
     m_txTable->removeRow(it->row());
   }
+
+  // Autosave TX data
+  saveTxOnExit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2139,9 +2151,43 @@ CFrmSession::doConnectToRemoteHost(void)
       break;
 
     case CVscpClient::connType::UDP:
+      if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
+        QIcon disconnectIcon(":/disconnect.png");
+        m_connect->setIcon(disconnectIcon);
+        m_connect->setChecked(false);
+        spdlog::error(std::string(tr("Session: Unable to connect to UDP interface").toStdString()));
+        QMessageBox::information(
+          this,
+          tr(APPNAME),
+          tr("Failed to open a connection to the UDP interface (see log for more info)."),
+          QMessageBox::Ok);
+      }
+      else {
+        QIcon connectIcon(":/connect.png");
+        m_connect->setIcon(connectIcon);
+        m_connect->setChecked(true);
+        spdlog::info(std::string(tr("Session: Successful connect to UDP interface").toStdString()));
+      }
       break;
 
     case CVscpClient::connType::MULTICAST:
+      if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
+        QIcon disconnectIcon(":/disconnect.png");
+        m_connect->setIcon(disconnectIcon);
+        m_connect->setChecked(false);
+        spdlog::error(std::string(tr("Session: Unable to connect to multicast interface").toStdString()));
+        QMessageBox::information(
+          this,
+          tr(APPNAME),
+          tr("Failed to open a connection to the multicast interface (see log for more info)."),
+          QMessageBox::Ok);
+      }
+      else {
+        QIcon connectIcon(":/connect.png");
+        m_connect->setIcon(connectIcon);
+        m_connect->setChecked(true);
+        spdlog::info(std::string(tr("Session: Successful connect to multicast interface").toStdString()));
+      }
       break;
   }
 }
@@ -3980,6 +4026,19 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+  if (nullptr == pev) {
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Null event pointer received. ");
+    return;
+  }
+
+  // If we have no rx table then we cannot do anything
+  if (nullptr == m_rxTable) {
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Null rx table pointer. ");
+    return;
+  }
+
   m_mutexRxList.lock();
 
   int row = m_rxTable->rowCount();
@@ -3988,9 +4047,15 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
   // Make copy of event
   vscpEvent* pevnew = new vscpEvent;
   if (pevnew == nullptr) {
-    // TODO log error
+    m_mutexRxList.unlock();
+    QMessageBox::critical(
+      this,
+      tr("Error"),
+      tr("Could not allocate memory for new event. "
+         "Please check your system resources."));
     return;
   }
+
   pevnew->sizeData = 0;
   pevnew->pdata    = nullptr;
   vscp_copyEvent(pevnew, pev);
@@ -4000,6 +4065,12 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
 
   // * * * Direction * * *
   QTableWidgetItem* itemDir = new QTableWidgetItem("◀"); // ➤ ➜ ➡ ➤ ᐊ
+  if (nullptr == itemDir) {
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Could not create itemDir for tx row"
+      "Please check your system resources.");
+    return;
+  }
   itemDir->setTextAlignment(Qt::AlignCenter);
   itemDir->setData(rxrow_role_flags, RX_ROW_FLAG_TX);
 
@@ -4019,21 +4090,49 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
 
   // * * * Class * * *
   QTableWidgetItem* itemClass = new QTableWidgetItem();
+  if (nullptr == itemClass) {
+    m_mutexRxList.unlock();
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Could not create itemClass for tx row"
+      "Please check your system resources.");
+    return;
+  }
   setClassInfoForRow(itemClass, pevnew);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
 
   // * * * Type * * *
   QTableWidgetItem* itemType = new QTableWidgetItem();
+  if (nullptr == itemType) {
+    m_mutexRxList.unlock();
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Could not create itemType for tx row"
+      "Please check your system resources.");
+    return;
+  }
   setTypeInfoForRow(itemType, pevnew);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
 
   // * * * Node id * * *
   QTableWidgetItem* itemNodeId = new QTableWidgetItem();
+  if (nullptr == itemNodeId) {
+    m_mutexRxList.unlock();
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Could not create itemNodeId for tx row"
+      "Please check your system resources.");
+    return;
+  }
   setNodeIdInfoForRow(itemNodeId, pevnew);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
 
   // * * * Guid * * *
   QTableWidgetItem* itemGuid = new QTableWidgetItem();
+  if (nullptr == itemGuid) {
+    m_mutexRxList.unlock();
+    spdlog::critical(
+      "CFrmSession::receiveTxRow - Could not create itemGuid for tx row"
+      "Please check your system resources.");
+    return;
+  }
   setGuidInfoForRow(itemGuid, pevnew);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
 

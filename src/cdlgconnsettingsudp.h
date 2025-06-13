@@ -59,6 +59,12 @@ public:
   void setName(const QString& str);
 
   /*!
+      Setters/getters for interface
+  */
+  QString getInterface(void);
+  void setInterface(const QString& str);
+  
+  /*!
       Setters/getters for path
   */
   QString getIp(void);

@@ -33,6 +33,8 @@ Go to the [qt site](https://www.qt.io/download) and follow the instructions
 
 ### Install the vcpkg package manager
 
+Full info about this step is [here](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-powershell)
+
 Install the vcpkg package manager by cloning its github repository in a folder
 
 ```bash
@@ -68,8 +70,6 @@ vcpkg install expat:x64-windows
 vcpkg install openssl:x64-windows
 vcpkg install paho-mqtt:x64-windows
 ```
-
-The Qt installation may take some time
 
 ```bash
 vcpkg list

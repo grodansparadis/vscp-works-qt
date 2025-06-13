@@ -121,6 +121,26 @@ CDlgConnSettingsMulticast::setName(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getInterface
+//
+
+QString
+CDlgConnSettingsMulticast::getInterface(void)
+{
+  return (ui->editInterface->text());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setInterface
+//
+
+void
+CDlgConnSettingsMulticast::setInterface(const QString& str)
+{
+  ui->editInterface->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // getIp
 //
 
@@ -138,6 +158,26 @@ void
 CDlgConnSettingsMulticast::setIp(const QString& str)
 {
   ui->editIp->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getTtl
+//
+
+int
+CDlgConnSettingsMulticast::getTtl(void)
+{
+  return ui->spinBoxTtl->value();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setTtl
+//
+
+void
+CDlgConnSettingsMulticast::setTtl(int value)
+{
+  ui->spinBoxTtl->setValue(value);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -233,8 +273,9 @@ CDlgConnSettingsMulticast::getJson(void)
 
   m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::MULTICAST);
   m_jsonConfig["name"] = getName().toStdString();
-  qDebug() << getName();
+  m_jsonConfig["interface"] = getInterface().toStdString();
   m_jsonConfig["ip"]         = getIp().toStdString();
+  m_jsonConfig["ttl"]         = getTtl();
   m_jsonConfig["encryption"] = getEncryption();
   m_jsonConfig["key"]        = getKey().toStdString();
 
@@ -266,8 +307,16 @@ CDlgConnSettingsMulticast::setJson(const json* pobj)
     setName(m_jsonConfig["name"].get<std::string>().c_str());
   }
 
+  if (m_jsonConfig.contains("interface") && m_jsonConfig["interface"].is_string()) {
+    setInterface(m_jsonConfig["interface"].get<std::string>().c_str());
+  }
+
   if (m_jsonConfig.contains("ip") && m_jsonConfig["ip"].is_string()) {
     setIp(m_jsonConfig["ip"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("ttl") && m_jsonConfig["ttl"].is_number()) {
+    setTtl(m_jsonConfig["ttl"].get<short>());
   }
 
   if (m_jsonConfig.contains("encryption") && m_jsonConfig["encryption"].is_number()) {

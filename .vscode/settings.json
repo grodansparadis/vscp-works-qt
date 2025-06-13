@@ -120,10 +120,13 @@
       "Paradis",
       "socketcan"
     ],
-    "cmake.clearOutputBeforeBuild": false,
+    "cmake.clearOutputBeforeBuild": true,
     "cmake.configureEnvironment": {
-      "CMAKE_PREFIX_PATH": "~/Qt/6.8.1/gcc_64"
+      "CMAKE_PREFIX_PATH": "~/Qt/6.9.1/gcc_64"
     },
+    "cmake.configureArgs": [
+      "-DCMAKE_PREFIX_PATH=~/Qt/6.9.1/gcc_64"
+    ]
     "vcpkg.general.enable": true,
     "vcpkg.target.hostTriplet": "x64-windows",
     "vcpkg.target.defaultTriplet": "",

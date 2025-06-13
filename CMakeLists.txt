@@ -491,6 +491,10 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgselectbootalgorithm.h
   src/cdlgselectbootalgorithm.cpp
 
+  src/cdlgselectinterface.cpp
+  src/cdlgselectinterface.h
+  src/cdlgselectinterface.ui
+
   ./third_party/vscp/src/vscp/common/version.h
   ./third_party/vscp/src/vscp/common/vscp.h
   ./third_party/vscp/src/vscp/common/vscpremotetcpif.h

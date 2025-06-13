@@ -121,6 +121,26 @@ CDlgConnSettingsUdp::setName(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getInterface
+//
+
+QString
+CDlgConnSettingsUdp::getInterface(void)
+{
+  return (ui->editInterface->text());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setInterface
+//
+
+void
+CDlgConnSettingsUdp::setInterface(const QString& str)
+{
+  ui->editInterface->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // getIp
 //
 
@@ -233,7 +253,7 @@ CDlgConnSettingsUdp::getJson(void)
 
   m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::UDP);
   m_jsonConfig["name"] = getName().toStdString().c_str();
-  qDebug() << getName();
+  m_jsonConfig["interface"] = getInterface().toStdString().c_str();
   m_jsonConfig["ip"]         = getIp().toStdString();
   m_jsonConfig["encryption"] = getEncryption();
   m_jsonConfig["key"]        = getKey().toStdString();
@@ -264,6 +284,10 @@ CDlgConnSettingsUdp::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
     setName(m_jsonConfig["name"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("interface") && m_jsonConfig["interface"].is_string()) {
+    setInterface(m_jsonConfig["interface"].get<std::string>().c_str());
   }
 
   if (m_jsonConfig.contains("ip") && m_jsonConfig["ip"].is_string()) {
