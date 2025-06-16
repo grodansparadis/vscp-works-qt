@@ -59,6 +59,7 @@ private slots:
   /// Fill in network interfaces for machine
   void fillInterfaces(void);
 
+  void onListItemDoubleClicked(QListWidgetItem* item);
   
 
 

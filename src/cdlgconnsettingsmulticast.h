@@ -41,7 +41,7 @@ class CDlgConnSettingsMulticast;
 class CDlgConnSettingsMulticast : public QDialog {
   Q_OBJECT
 
-public:
+
 public:
   explicit CDlgConnSettingsMulticast(QWidget* parent = nullptr);
   ~CDlgConnSettingsMulticast();
@@ -112,6 +112,9 @@ private slots:
 
   /// Test connection button clicked
   void onTestConnection(void);
+
+  /// Select nwtwork interface button clicked
+  void onSelectInterface(void);
 
   /// Help
   void showHelp(void);

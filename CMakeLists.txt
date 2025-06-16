@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.31)
 project(vscp-works-qt LANGUAGES CXX C)
 
 option(USE_SSL "Use SSL" TRUE)
@@ -83,7 +83,7 @@ set(REQUIRED_QT_VERSION "6.6.2")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 6.6.2 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort)
+find_package(Qt6 6.6.2 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help)
 qt_standard_project_setup()
 
 # pthreads
@@ -631,11 +631,13 @@ if (MSVC)
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   Qt6::Widgets
   Qt6::Qml
-  Qt6::Charts    
+  Qt6::Charts
+  Qt6::Help
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
-  OpenSSL::SSL OpenSSL::Crypto        
+  OpenSSL::SSL 
+  OpenSSL::Crypto
   ${MOSQUITTO_LIBRARIES}
   ${LIBWEBSOCKETS_LIBRARIES}
   expat::expat
@@ -647,6 +649,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Widgets
   Qt6::Qml
   Qt6::Charts
+  Qt6::Help
   m
   dl
   Threads::Threads

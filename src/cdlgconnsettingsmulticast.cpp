@@ -39,6 +39,7 @@
 #include "ui_cdlgconnsettingsmulticast.h"
 
 #include "cdlglevel2filter.h"
+#include "cdlgselectinterface.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -68,6 +69,7 @@ CDlgConnSettingsMulticast::CDlgConnSettingsMulticast(QWidget* parent)
 
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsMulticast::onSetFilter);
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsMulticast::onTestConnection);
+  connect(ui->btnSelectInterface, &QPushButton::clicked, this, &CDlgConnSettingsMulticast::onSelectInterface);
 
   // Help
   QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
@@ -452,6 +454,21 @@ CDlgConnSettingsMulticast::onTestConnection(void)
   msg += "\n";
   msg += "NOT IMPLEMENTED YET!";
   QMessageBox::information(this, tr(APPNAME), msg);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSelectInterface
+//
+
+void
+CDlgConnSettingsMulticast::onSelectInterface(void)
+{
+  CDlgSelectInterface dlg;
+
+  if (QDialog::Accepted == dlg.exec()) {
+    QString strInterface = dlg.getInterface();
+    ui->editInterface->setText(strInterface);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

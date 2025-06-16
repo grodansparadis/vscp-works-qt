@@ -108,6 +108,9 @@ private slots:
   /// Test connection button clicked
   void onTestConnection(void);
 
+  /// Select nwtwork interface button clicked
+  void onSelectInterface(void);
+
   /// Help
   void showHelp(void);
 

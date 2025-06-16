@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QListWidget" name="listINterface">
+  <widget class="QListWidget" name="listInterface">
    <property name="geometry">
     <rect>
      <x>10</x>

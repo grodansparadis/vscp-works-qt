@@ -39,6 +39,7 @@
 #include "ui_cdlgconnsettingsudp.h"
 
 #include "cdlglevel2filter.h"
+#include "cdlgselectinterface.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -68,6 +69,7 @@ CDlgConnSettingsUdp::CDlgConnSettingsUdp(QWidget* parent)
 
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsUdp::onSetFilter);
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsUdp::onTestConnection);
+  connect(ui->btnSelectInterface, &QPushButton::clicked, this, &CDlgConnSettingsUdp::onSelectInterface);
 
   // Help
 QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
@@ -427,6 +429,21 @@ CDlgConnSettingsUdp::onTestConnection(void)
   msg += "\n";
   msg += "NOT IMPLEMENTED YET!";
   QMessageBox::information(this, tr(APPNAME), msg);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onSelectInterface
+//
+
+void
+CDlgConnSettingsUdp::onSelectInterface(void)
+{
+  CDlgSelectInterface dlg;
+
+  if (QDialog::Accepted == dlg.exec()) {
+    QString strInterface = dlg.getInterface();
+    ui->editInterface->setText(strInterface);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
