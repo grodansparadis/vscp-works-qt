@@ -154,7 +154,7 @@
       <item>
        <widget class="QLineEdit" name="editInterface">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Leave blank to use all/default interfaces&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Leave blank to use all/default interfaces.  If a specific interface should be used (e.g &amp;quot;eth0&amp;quot;) set it here. You can added a note (e.g. ip-address of interface) after the name if yuu seperate it with a space.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string/>
