@@ -774,7 +774,7 @@ MainWindow::cloneConnectionItem(void)
 
   foreach (QTreeWidgetItem* item, itemList) {
 
-    // Not intereste din top level items
+    // Not interested din top level items
     if (NULL != item->parent()) {
 
       // Get item
@@ -790,6 +790,12 @@ MainWindow::cloneConnectionItem(void)
       if ((*pconn).contains("type") && (*pconn)["type"].is_number()) {
         type = (*pconn)["type"].get<int>();
       }
+
+      // New connection so new uuid (addConnection adds it)
+      conn_copy["uuid"] = "";
+
+      // Set new name
+      conn_copy["name"] = conn_copy["name"].get<std::string>() + " (copy)";
 
       // Add to main table
       pworks->addConnection(conn_copy, true);
