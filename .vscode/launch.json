@@ -35,7 +35,8 @@
             "ignoreFailures": true
           }
         ],
-        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/d72528fbb83d085c45ab08282511f72f/tonka3000.qtvsctools/qt.natvis.xml"
+        "visualizerFile": "/home/akhe/.config/Code/User/workspaceStorage/d72528fbb83d085c45ab08282511f72f/tonka3000.qtvsctools/qt.natvis.xml",
+        "preLaunchTask": "CMake: build",
       },
       {
         "name": "(gdb) Launch",
@@ -61,7 +62,8 @@
             "text": "-enable-pretty-printing",
             "ignoreFailures": true
           }
-        ]
+        ],
+        "preLaunchTask": "CMake: build",
       },
       {
         "name": "g++ build and debug active file",

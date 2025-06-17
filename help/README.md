@@ -1,5 +1,8 @@
 # Generate context sensitive help
 
+Use **generate.sh** to generate context help for the vscp-works-qt application
+
+
 ```bash
 qhelpgenerator mycollection.qhcp -o mycollection.qhc
 ```
