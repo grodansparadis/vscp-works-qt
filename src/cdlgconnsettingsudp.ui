@@ -91,10 +91,10 @@
     <item row="2" column="1">
      <widget class="QLineEdit" name="editIp">
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote UDP client address and port on the form address:port. Use &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;255.255.255.255:port&lt;/span&gt; for broadcast&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remote UDP client address and port on the form [udp://]address[:port]. Use &lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;255.255.255.255:port&lt;/span&gt; for broadcast&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string/>
+       <string>udp://255.255.255.255:9598</string>
       </property>
      </widget>
     </item>

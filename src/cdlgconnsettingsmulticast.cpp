@@ -143,23 +143,23 @@ CDlgConnSettingsMulticast::setInterface(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// getIp
+// getGroup
 //
 
 QString
-CDlgConnSettingsMulticast::getIp(void)
+CDlgConnSettingsMulticast::getGroup(void)
 {
-  return (ui->editIp->text());
+  return (ui->editGroup->text()); // addr:port
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// setIp
+// setGroup
 //
 
 void
-CDlgConnSettingsMulticast::setIp(const QString& str)
+CDlgConnSettingsMulticast::setGroup(const QString& str)
 {
-  ui->editIp->setText(str);
+  ui->editGroup->setText(str); // addr:port
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -273,11 +273,11 @@ CDlgConnSettingsMulticast::getJson(void)
 {
   std::string str;
 
-  m_jsonConfig["type"] = static_cast<int>(CVscpClient::connType::MULTICAST);
-  m_jsonConfig["name"] = getName().toStdString();
-  m_jsonConfig["interface"] = getInterface().toStdString();
-  m_jsonConfig["ip"]         = getIp().toStdString();
-  m_jsonConfig["ttl"]         = getTtl();
+  m_jsonConfig["type"]       = static_cast<int>(CVscpClient::connType::MULTICAST);
+  m_jsonConfig["name"]       = getName().toStdString();
+  m_jsonConfig["interface"]  = getInterface().toStdString();
+  m_jsonConfig["ip"]      = getGroup().toStdString(); // addr:port
+  m_jsonConfig["ttl"]        = getTtl();
   m_jsonConfig["encryption"] = getEncryption();
   m_jsonConfig["key"]        = getKey().toStdString();
 
@@ -314,7 +314,7 @@ CDlgConnSettingsMulticast::setJson(const json* pobj)
   }
 
   if (m_jsonConfig.contains("ip") && m_jsonConfig["ip"].is_string()) {
-    setIp(m_jsonConfig["ip"].get<std::string>().c_str());
+    setGroup(m_jsonConfig["ip"].get<std::string>().c_str());
   }
 
   if (m_jsonConfig.contains("ttl") && m_jsonConfig["ttl"].is_number()) {
@@ -402,58 +402,59 @@ CDlgConnSettingsMulticast::onTestConnection(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
-  // // Initialize host connection
-  // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-  //                                             getPort(),
-  //                                             getUser().toStdString().c_str(),
-  //                                             getPassword().toStdString().c_str() ) ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));
-  //     return;
-  // }
+  // Initialize host connection
+  json jConfig = getJson();
+  if (!m_client.initFromJson(jConfig.dump())) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize multicast interface"));
+    return;
+  }
 
-  // // Connect to remote host
-  // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
-  //     m_client.disconnect();
-  //     return;
-  // }
+  // Connect to remote host
+  if (VSCP_ERROR_SUCCESS != m_client.connect()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to multicast interface"));
+    m_client.disconnect();
+    return;
+  }
 
-  // // Get server version
-  // uint8_t major_ver;
-  // uint8_t minor_ver;
-  // uint8_t release_ver;
-  // uint8_t build_ver;
-  // QString strVersion;
-  // if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
-  //                                                 &minor_ver,
-  //                                                 &release_ver,
-  //                                                 &build_ver ) ) {
+  // Get client interface version
+  uint8_t major_ver;
+  uint8_t minor_ver;
+  uint8_t release_ver;
+  uint8_t build_ver;
+  QString strVersion;
+  if (VSCP_ERROR_SUCCESS == m_client.getversion(&major_ver,
+                                                &minor_ver,
+                                                &release_ver,
+                                                &build_ver)) {
+    strVersion = vscp_str_format("Multicast interface version: %d.%d.%d.%d",
+                                 (int)major_ver,
+                                 (int)minor_ver,
+                                 (int)release_ver,
+                                 (int)build_ver)
+                   .c_str();
+  }
+  else {
+    strVersion = tr("Failed to get version from multicast interface");
+  }
 
-  //     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
-  //                                     (int)major_ver,
-  //                                     (int)minor_ver,
-  //                                     (int)release_ver,
-  //                                     (int)build_ver ).c_str();
-  // }
-  // else {
-  //     strVersion = tr("Failed to get version from server");
-  // }
-
-  // // Disconnect from remote host
-  // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));
-  //     return;
-  // }
+  // Disconnect from remote host
+  if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from multicast interface"));
+    return;
+  }
 
   QApplication::restoreOverrideCursor();
 
-  QString msg = tr("Connection test was successful");
-  msg += "\n";
-  msg += "NOT IMPLEMENTED YET!";
-  QMessageBox::information(this, tr(APPNAME), msg);
+  std::string str = vscp_str_format("The driver is OK. \n\n%s",
+                                    strVersion.toStdString().c_str());
+
+  QMessageBox::information(this,
+                           tr(APPNAME),
+                           str.c_str(),
+                           QMessageBox::Ok);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -66,8 +66,14 @@ public:
   /*!
       Setters/getters for group IP address
   */
-  QString getIp(void);
-  void setIp(const QString& str);
+  QString getGroup(void);
+  void setGroup(const QString& str);
+
+  /*!
+      Setters/getters for port
+  */
+  int getPort(void);
+  void setPort(int value);
 
   /*!
       Setters/getters for ttl (Time To Live)
@@ -113,7 +119,7 @@ private slots:
   /// Test connection button clicked
   void onTestConnection(void);
 
-  /// Select nwtwork interface button clicked
+  /// Select network interface button clicked
   void onSelectInterface(void);
 
   /// Help
