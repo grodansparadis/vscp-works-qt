@@ -4306,12 +4306,13 @@ CFrmSession::fillReceiveEventDiff()
 void
 CFrmSession::receiveCallback(vscpEvent& ev, void* pobj)
 {
+  m_mutexReceiveCallBack.lock();
   vscpEvent* pevnew = new vscpEvent;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);
-
   emit dataReceived(pevnew);
+  m_mutexReceiveCallBack.unlock();
 
   // Alternative method for reference
   // CFrmSession* pSession = (CFrmSession*)pobj;

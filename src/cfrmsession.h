@@ -546,6 +546,9 @@ private:
   /// List for received events
   QTableWidget* m_rxTable;
 
+  // Protect callback from multiple threads
+  QMutex m_mutexReceiveCallBack;  
+
   /// Mutex that protect the rx -lists
   QMutex m_mutexRxList;
 
