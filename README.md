@@ -6,11 +6,6 @@
 ![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-  * [Introduction](https://github.com/grodansparadis/vscp-works-qt#Introduction)
-  * [Install from binary file](https://github.com/grodansparadis/vscp-works-qt#install-from-binary-file)
-  * [Build on Linux](https://github.com/grodansparadis/vscp-works-qt#build-on-linux)
-  * [Build on windows](https://github.com/grodansparadis/vscp-works-qt#build-on-windows) 
-  * [Configuration](https://github.com/grodansparadis/vscp-works-qt#configuration)
 
 ![](docs/images/session-event.png) 
 
@@ -28,7 +23,7 @@ The VSCP system consists of the VSCP daemon, VSCP Works, and the VSCP helper lib
 
 Binary versions for Linux and windows is available in the release section.
 
-The manual is available [here](https://grodansparadis.github.io/vscp-works-qt/#/)
+The full documentation is available [here](https://grodansparadis.github.io/vscp-works-qt/#/)
 
 ## Install from binary file
 See the [release section]() for binary files for Linux and Windows.
