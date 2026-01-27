@@ -4,7 +4,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright © 2000-2025 Ake Hedman, Grodans Paradis AB
+// Copyright (C) 2000-2026 Ake Hedman, Grodans Paradis AB
 // <info@grodansparadis.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,10 +44,10 @@
 #define VSCPWORKS_DISPLAY_VERSION   "0.0.2-0"
 
 #define VSCPWORKS_COPYRIGHT                                                    \
-    "Copyright © 2000-2025 Ake Hedman, Grodans Paradis AB, "                   \
+    "Copyright (C) 2000-2026 Ake Hedman, Grodans Paradis AB, "                   \
     "https://www.grodansparadis.com"
 #define VSCPWORKS_COPYRIGHT_HTML                                               \
-    "Copyright © 2000-2025 Åke Hedman, <a "                                    \
+    "Copyright (C) 2000-2025 Åke Hedman, <a "                                    \
     "href=\"mailto:info@grodansparadis.com\">Grodans Paradis AB</a><br><a "    \
     "href=\"https://www.grodansparadis.com\">https://"                         \
     "www.grodansparadis.com</a>"
