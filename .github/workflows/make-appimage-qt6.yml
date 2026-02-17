@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:  
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest]
+        os: [ubuntu-22.04, ubuntu-latest]
     #runs-on: ubuntu-latest
     continue-on-error: true
 
