@@ -70,7 +70,7 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
   setPassword("secret");
 
   // Clear filter
-  memset(&m_filter, 0, sizeof(vscpEventFilter));
+  memset(&m_filter, 0, sizeof(vscp_event_filter_t));
 
   connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings);
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter);
@@ -556,7 +556,7 @@ CDlgConnSettingsTcpip::setJson(const json* pobj)
   }
 
   // Get main filter
-  memset(&m_filter, 0, sizeof(vscpEventFilter));
+  memset(&m_filter, 0, sizeof(vscp_event_filter_t));
   if (m_jsonConfig.contains("priority-filter") && m_jsonConfig["priority-filter"].is_number()) {
     m_filter.filter_priority = m_jsonConfig["priority-filter"].get<uint8_t>();
   }

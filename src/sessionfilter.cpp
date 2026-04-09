@@ -113,7 +113,7 @@ CSessionFilter::removeClassConstraint(uint16_t vscp_class)
 //
 
 bool
-CSessionFilter::isClassAccepted(const vscpEvent* pev)
+CSessionFilter::isClassAccepted(const vscp_event_t* pev)
 {
   if (nullptr == pev)
     return false;
@@ -163,7 +163,7 @@ CSessionFilter::removeTypeConstraint(uint32_t type)
 //
 
 bool
-CSessionFilter::isTypeAccepted(const vscpEvent* pev)
+CSessionFilter::isTypeAccepted(const vscp_event_t* pev)
 {
   if (nullptr == pev)
     return false;
@@ -214,7 +214,7 @@ CSessionFilter::removeGuidConstraint(uint8_t pos)
 //
 
 bool
-CSessionFilter::isGuidAccepted(const vscpEvent* pev)
+CSessionFilter::isGuidAccepted(const vscp_event_t* pev)
 {
   for (auto const& item : m_mapGuid) {
 
@@ -322,7 +322,7 @@ CSessionFilter::removeDateConstraint(uint8_t pos)
 //
 
 bool
-CSessionFilter::isDateAccepted(const vscpEvent* pev)
+CSessionFilter::isDateAccepted(const vscp_event_t* pev)
 {
   if (m_mapDateTime.size()) {
 
@@ -407,7 +407,7 @@ CSessionFilter::removeObidConstraint(void)
 //
 
 bool
-CSessionFilter::isObidAccepted(const vscpEvent* pev)
+CSessionFilter::isObidAccepted(const vscp_event_t* pev)
 {
   if (!checkValue(m_obid, pev->obid, m_constraint_obid)) {
     return false;
@@ -447,7 +447,7 @@ CSessionFilter::removeTimeStampConstraint(void)
 //
 
 bool
-CSessionFilter::isTimeStampAccepted(const vscpEvent* pev)
+CSessionFilter::isTimeStampAccepted(const vscp_event_t* pev)
 {
   if (!checkValue(m_obid, pev->timestamp, m_constraint_timestamp)) {
     return false;
@@ -518,7 +518,7 @@ CSessionFilter::removeDataConstraint(uint16_t pos)
 //
 
 bool
-CSessionFilter::isDataAccepted(const vscpEvent* pev)
+CSessionFilter::isDataAccepted(const vscp_event_t* pev)
 {
   for (auto const& item : m_mapData) {
 
@@ -667,7 +667,7 @@ CSessionFilter::checkValue(uint32_t val,
 //
 
 bool
-CSessionFilter::check(const vscpEvent* pev)
+CSessionFilter::check(const vscp_event_t* pev)
 {
   if (nullptr == pev)
     return false;

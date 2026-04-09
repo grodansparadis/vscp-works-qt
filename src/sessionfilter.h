@@ -126,7 +126,7 @@ public:
         @param Event to check
         @return true if event should be displayed.
     */
-    bool check(const vscpEvent *pev);
+    bool check(const vscp_event_t *pev);
 
     // Direction RX  constraint handling
     void addReceiveConstraint(bool b=true) { m_bReceive = b; };
@@ -151,14 +151,14 @@ public:
     // Class constraint handling
     bool addClassConstraint(uint16_t vscp_class);
     bool removeClassConstraint(uint16_t vscp_class);
-    bool isClassAccepted(const vscpEvent *pev);
+    bool isClassAccepted(const vscp_event_t *pev);
     std::deque<uint16_t> getClasses(void);
     void clearClasses(void) { m_mapClass.clear(); };
 
     // Type Constraint handling
     bool addTypeConstraint(uint32_t type);
     bool removeTypeConstraint(uint32_t type);
-    bool isTypeAccepted(const vscpEvent *pev);
+    bool isTypeAccepted(const vscp_event_t *pev);
     std::deque<uint32_t> getTypes(void);
     void clearTypes(void) { m_mapType.clear(); };
 
@@ -167,7 +167,7 @@ public:
     void addDataConstraints(const std::deque<uint32_t>& listData);
     bool removeDataConstraint(uint16_t pos);
     std::deque<uint32_t> getDataConstraints(void);
-    bool isDataAccepted(const vscpEvent *pev);
+    bool isDataAccepted(const vscp_event_t *pev);
 
     // Data size constraint handling
     constraint getDataSizeConstraint(void) { return m_constraint_data_size; };
@@ -177,26 +177,26 @@ public:
     // GUID constraint handling
     bool addGuidConstraint(uint8_t pos, uint8_t val, constraint chk = constraint::ANY);
     bool removeGuidConstraint(uint8_t pos);
-    bool isGuidAccepted(const vscpEvent *pev);
+    bool isGuidAccepted(const vscp_event_t *pev);
     std::deque<uint32_t> getGuids(void);
 
     // Date constraint handling
     bool addDateConstraint(uint8_t pos, uint16_t val, constraint chk = constraint::ANY);
     uint32_t getDateConstraint(uint8_t pos);
     bool removeDateConstraint(uint8_t pos);
-    bool isDateAccepted(const vscpEvent *pev);
+    bool isDateAccepted(const vscp_event_t *pev);
 
     // OBID constraint
     bool addObidConstraint(uint32_t val, constraint chk = constraint::ANY);
     bool removeObidConstraint(void);
-    bool isObidAccepted(const vscpEvent *pev);
+    bool isObidAccepted(const vscp_event_t *pev);
     uint32_t getObidValue(void) { return m_obid; }
     constraint getObidConstraint(void) { return m_constraint_obid; }
 
     // TimeStamp constraint
     bool addTimeStampConstraint(uint32_t val, constraint chk = constraint::ANY);
     bool removeTimeStampConstraint(void);
-    bool isTimeStampAccepted(const vscpEvent *pev);
+    bool isTimeStampAccepted(const vscp_event_t *pev);
     uint32_t getTimeStampValue(void) { return m_timestamp; }
     constraint getTimeStampConstraint(void) { return m_constraint_timestamp; }    
 

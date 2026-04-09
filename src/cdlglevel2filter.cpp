@@ -949,7 +949,7 @@ CDlgLevel2Filter::clearFilter(void)
 //
 
 void
-CDlgLevel2Filter::setFilter(const vscpEventFilter* pfilter)
+CDlgLevel2Filter::setFilter(const vscp_event_filter_t* pfilter)
 {
   QString qstr;
 
@@ -988,7 +988,7 @@ CDlgLevel2Filter::setFilter(const vscpEventFilter* pfilter)
 //
 
 void
-CDlgLevel2Filter::getFilter(vscpEventFilter* pfilter)
+CDlgLevel2Filter::getFilter(vscp_event_filter_t* pfilter)
 {
   QString qstr;
 

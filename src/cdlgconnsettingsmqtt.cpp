@@ -199,7 +199,7 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   setUser("vscp");
   setPassword("secret");
   // Clear filter
-  // memset(&m_filter, 0, sizeof(vscpEventFilter));
+  // memset(&m_filter, 0, sizeof(vscp_event_filter_t));
 
   connect(ui->btnTLS,
           &QPushButton::clicked,

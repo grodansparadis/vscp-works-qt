@@ -155,16 +155,16 @@ CMdfFileWidgetItem::~CMdfFileWidgetItem()
 // vscp-client-ack
 //
 
-// void CVscpClientCallback::eventReceived(vscpEvent *pev)
+// void CVscpClientCallback::eventReceived(vscp_event_t *pev)
 // {
-//     vscpEvent ev;
+//     vscp_event_t ev;
 //     //emit CFrmSession::receiveRow(pev, true);
 // }
 
 // static void
-// eventReceived(vscpEvent &ev, void* pobj)
+// eventReceived(vscp_event_t &ev, void* pobj)
 // {
-//   vscpEvent* pevnew = new vscpEvent;
+//   vscp_event_t* pevnew = new vscp_event_t;
 //   pevnew->sizeData  = 0;
 //   pevnew->pdata     = nullptr;
 //   vscp_copyEvent(pevnew, &ev);
@@ -1149,7 +1149,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
 }
 
 void
-CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
+CFrmNodeConfig::receiveRxRow(vscp_event_t* pev)
 {
   ;
 }
@@ -1159,7 +1159,7 @@ CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
 //
 
 // void
-// CFrmNodeConfig::threadReceive(vscpEvent* pev)
+// CFrmNodeConfig::threadReceive(vscp_event_t* pev)
 // {
 //   emit dataReceived(pev);
 // }
@@ -1169,9 +1169,9 @@ CFrmNodeConfig::receiveRxRow(vscpEvent* pev)
 //
 
 void
-CFrmNodeConfig::receiveCallback(vscpEvent& ev, void* pobj)
+CFrmNodeConfig::receiveCallback(vscp_event_t& ev, void* pobj)
 {
-  vscpEvent* pevnew = new vscpEvent;
+  vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);

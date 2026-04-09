@@ -77,10 +77,10 @@ QT_END_NAMESPACE
 //     int value() const { return m_value; }
 
 // public slots:
-//     void eventReceived(vscpEvent *pev);
+//     void eventReceived(vscp_event_t *pev);
 
 // signals:
-//     void addRow(vscpEvent *pev, bool bReceive);
+//     void addRow(vscp_event_t *pev, bool bReceive);
 
 // private:
 //     int m_value;
@@ -175,14 +175,14 @@ public:
       and to the receive event table.
       @param pev Pointer to received event
   */
-  //void threadReceive(vscpEvent* pev);
+  //void threadReceive(vscp_event_t* pev);
 
   /*!
     This is the callback used by client thread to deliver events
     @param ev Reference to VSCP event
     @param pobj Pointer to object CFrmSession)
   */
-  void receiveCallback(vscpEvent& ev, void *pobj);
+  void receiveCallback(vscp_event_t& ev, void *pobj);
 
   /*!
       Connect to remote host
@@ -218,42 +218,42 @@ public:
       @param pev VSCP Event
       @param Formatted string for VSCVP class.
   */
-  QString getClassInfo(const vscpEvent* pev);
+  QString getClassInfo(const vscp_event_t* pev);
 
   /*!
       Update VSCP class info for row
       @param item Pointer to QTableWidgetItem for row
       @param pev Pointer to event for which information should be filled in
   */
-  void setClassInfoForRow(QTableWidgetItem* item, const vscpEvent* pev);
+  void setClassInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev);
 
   /*!
       Get type info string as of settings
       @param pev VSCP Event
       @param Formatted string for VSCVP class.
   */
-  QString getTypeInfo(const vscpEvent* pev);
+  QString getTypeInfo(const vscp_event_t* pev);
 
   /*!
       Update VSCP type info for row
       @param item Pointer to QTableWidgetItem for row
       @param pev Pointer to event for which information should be filled in
   */
-  void setTypeInfoForRow(QTableWidgetItem* item, const vscpEvent* pev);
+  void setTypeInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev);
 
   /*!
       Update node id info for row
       @param item Pointer to QTableWidgetItem for row
       @param pev Pointer to event for which information should be filled in
   */
-  void setNodeIdInfoForRow(QTableWidgetItem* item, const vscpEvent* pev);
+  void setNodeIdInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev);
 
   /*!
       Update GUID info for row
       @param item Pointer to QTableWidgetItem for row
       @param pev Pointer to event for which information should be filled in
   */
-  void setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev);
+  void setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev);
 
   /*!
       Add a new row to the TX list
@@ -283,7 +283,7 @@ public slots:
       @param ev Event to add
       @param bReceive Set to true if this is a received event
   */
-  void receiveRxRow(vscpEvent* pev);
+  void receiveRxRow(vscp_event_t* pev);
 
   /*!
     Show help
@@ -295,7 +295,7 @@ public slots:
       @param ev Event to add
       @param bReceive Set to true if this is a received event
   */
-  void receiveTxRow(vscpEvent* pev);
+  void receiveTxRow(vscp_event_t* pev);
 
   /*!
       Update the current row info.
@@ -478,7 +478,7 @@ public slots:
 signals:
 
   /// Data received from callback
-  void dataReceived(vscpEvent* pev);
+  void dataReceived(vscp_event_t* pev);
 
   
 
@@ -553,7 +553,7 @@ private:
   QMutex m_mutexRxList;
 
   /// Queue that holds received events
-  std::deque<vscpEvent*> m_rxEvents;
+  std::deque<vscp_event_t*> m_rxEvents;
 
   /// VSCP (class-id + token-id) -> received count
   std::map<uint32_t, uint32_t> m_mapRxEventToCount;

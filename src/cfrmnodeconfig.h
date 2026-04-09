@@ -236,7 +236,7 @@ public:
       and to the receive event table.
       @param pev Pointer to received event
   */
-  //void threadReceive(vscpEvent* pev);
+  //void threadReceive(vscp_event_t* pev);
 
   /*!
   This is the callback used by client thread to deliver events
@@ -244,7 +244,7 @@ public:
   @param pobj Pointer to object CFrmSession)
 */
 
-  void receiveCallback(vscpEvent& ev, void* pobj);
+  void receiveCallback(vscp_event_t& ev, void* pobj);
 
   /*!
       Connect to remote host
@@ -286,7 +286,7 @@ public slots:
       @param bReceive Set to true if this is a received event
   */
   void
-  receiveRxRow(vscpEvent* pev);
+  receiveRxRow(vscp_event_t* pev);
 
   /*!
       Connect to remote host and update UI to
@@ -810,7 +810,7 @@ public slots:
 signals:
 
   /// Data received from callback
-  void dataReceived(vscpEvent* pev);
+  void dataReceived(vscp_event_t* pev);
 
   
 

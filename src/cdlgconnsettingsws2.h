@@ -115,7 +115,7 @@ private:
   vscpClientWs2 m_client;
 
   /// VSCP tcp/ip main filter
-  vscpEventFilter m_filter;
+  vscp_event_filter_t m_filter;
 };
 
 #endif // CDLGCONNSETTINGSWS2_H

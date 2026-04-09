@@ -61,7 +61,7 @@ CDlgConnSettingsWs1::CDlgConnSettingsWs1(QWidget* parent)
   ui->setupUi(this);
 
   // Clear filter
-  memset(&m_filter, 0, sizeof(vscpEventFilter));
+  memset(&m_filter, 0, sizeof(vscp_event_filter_t));
 
   setInitialFocus();
 
@@ -283,7 +283,7 @@ CDlgConnSettingsWs1::setJson(const json* pobj)
   }
 
   // Get main filter
-  memset(&m_filter, 0, sizeof(vscpEventFilter));
+  memset(&m_filter, 0, sizeof(vscp_event_filter_t));
   if (m_jsonConfig.contains("priority-filter") && m_jsonConfig["priority-filter"].is_number()) {
     m_filter.filter_priority = m_jsonConfig["priority-filter"].get<uint8_t>();
   }

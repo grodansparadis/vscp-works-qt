@@ -203,8 +203,8 @@ vscpworks::vscpworks(int& argc, char** argv)
 
   // After the following it is possible to create and destroy event objects
   // dynamically at run-time - https://doc.qt.io/qt-6/qmetatype.html
-  int idEvent   = qRegisterMetaType<vscpEvent>();
-  int idEventEx = qRegisterMetaType<vscpEventEx>();
+  int idEvent   = qRegisterMetaType<vscp_event_t>();
+  int idEventEx = qRegisterMetaType<vscp_event_ex_t>();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1161,7 +1161,7 @@ vscpworks::getUnitInfo(uint16_t vscpClass, uint16_t vscpType, uint8_t unit)
 //
 
 bool
-vscpworks::addVscpEventToJsRenderFunction(QJSEngine& engine, vscpEvent* pev)
+vscpworks::addVscpEventToJsRenderFunction(QJSEngine& engine, vscp_event_t* pev)
 {
   QJSValue result;
   std::string str;

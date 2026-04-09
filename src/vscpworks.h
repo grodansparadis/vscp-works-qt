@@ -64,8 +64,8 @@ using json = nlohmann::json;
 using namespace kainjow::mustache;
 
 // Register to be used for signals
-Q_DECLARE_METATYPE(vscpEvent)
-Q_DECLARE_METATYPE(vscpEventEx)
+Q_DECLARE_METATYPE(vscp_event_t)
+Q_DECLARE_METATYPE(vscp_event_ex_t)
 
 /*!
   Set to true to remove development functionality
@@ -322,7 +322,7 @@ public:
       @param pev VSCP Event to fill in
       @return True on success, false on failure
   */
-  bool addVscpEventToJsRenderFunction(QJSEngine& engine, vscpEvent* pev);
+  bool addVscpEventToJsRenderFunction(QJSEngine& engine, vscp_event_t* pev);
 
   /*!
     A client adds itself to the list of child windows

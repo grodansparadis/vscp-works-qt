@@ -65,7 +65,7 @@ CDlgConnSettingsCanal::CDlgConnSettingsCanal(QWidget* parent)
   ui->setupUi(this);
 
   // Clear filter
-  // memset(&m_filter, 0, sizeof(vscpEventFilter));
+  // memset(&m_filter, 0, sizeof(vscp_event_filter_t));
 
   connect(ui->btnTest, SIGNAL(clicked()), this, SLOT(testDriver()));
   connect(ui->btnSetPath, SIGNAL(clicked()), this, SLOT(setDriverPath()));

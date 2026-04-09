@@ -99,18 +99,18 @@ CFoundNodeWidgetItem::~CFoundNodeWidgetItem()
 // vscp-client-ack
 //
 
-// void CVscpClientCallback::eventReceived(vscpEvent *pev)
+// void CVscpClientCallback::eventReceived(vscp_event_t *pev)
 // {
-//     vscpEvent ev;
+//     vscp_event_t ev;
 //     //emit CFrmNode Scan::receiveRow(pev, true);
 // }
 
 static void
-eventReceived(vscpEvent& ev, void* pobj)
+eventReceived(vscp_event_t& ev, void* pobj)
 {
   // printf("Scan event: %X:%X\n", pev->vscp_class, pev->vscp_type);
 
-  vscpEvent* pevnew = new vscpEvent;
+  vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);
@@ -336,7 +336,7 @@ CFrmNodeScan::~CFrmNodeScan()
 
   // Remove receive events
   while (m_rxEvents.size()) {
-    vscpEvent* pev = m_rxEvents.front();
+    vscp_event_t* pev = m_rxEvents.front();
     m_rxEvents.pop_front();
     vscp_deleteEvent(pev);
     pev = nullptr;
@@ -577,7 +577,7 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 }
 
 void
-CFrmNodeScan::receiveRxRow(vscpEvent* pev)
+CFrmNodeScan::receiveRxRow(vscp_event_t* pev)
 {
   ;
 }
@@ -587,7 +587,7 @@ CFrmNodeScan::receiveRxRow(vscpEvent* pev)
 //
 
 void
-CFrmNodeScan::threadReceive(vscpEvent* pev)
+CFrmNodeScan::threadReceive(vscp_event_t* pev)
 {
   emit dataReceived(pev);
 }
@@ -597,9 +597,9 @@ CFrmNodeScan::threadReceive(vscpEvent* pev)
 //
 
 void
-CFrmNodeScan::receiveCallback(vscpEvent& ev, void* pobj)
+CFrmNodeScan::receiveCallback(vscp_event_t& ev, void* pobj)
 {
-  vscpEvent* pevnew = new vscpEvent;
+  vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);

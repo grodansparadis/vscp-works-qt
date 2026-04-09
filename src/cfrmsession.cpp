@@ -91,16 +91,16 @@ CTxWidgetItem::~CTxWidgetItem()
 // vscp-client-ack
 //
 
-// void CVscpClientCallback::eventReceived(vscpEvent *pev)
+// void CVscpClientCallback::eventReceived(vscp_event_t *pev)
 // {
-//     vscpEvent ev;
+//     vscp_event_t ev;
 //     //emit CFrmSession::receiveRow(pev, true);
 // }
 
 // static void
-// eventReceived(vscpEvent &ev, void* pobj)
+// eventReceived(vscp_event_t &ev, void* pobj)
 // {
-//   vscpEvent* pevnew = new vscpEvent;
+//   vscp_event_t* pevnew = new vscp_event_t;
 //   pevnew->sizeData  = 0;
 //   pevnew->pdata     = nullptr;
 //   vscp_copyEvent(pevnew, &ev);
@@ -376,7 +376,7 @@ CFrmSession::~CFrmSession()
 
   // Remove receive events
   while (m_rxEvents.size()) {
-    vscpEvent* pev = m_rxEvents.front();
+    vscp_event_t* pev = m_rxEvents.front();
     m_rxEvents.pop_front();
     vscp_deleteEvent(pev);
     pev = nullptr;
@@ -992,7 +992,7 @@ CFrmSession::menu_clear_rxlist(void)
 
   // Remove receive events
   while (m_rxEvents.size()) {
-    vscpEvent* pev = m_rxEvents.front();
+    vscp_event_t* pev = m_rxEvents.front();
     m_rxEvents.pop_front();
     vscp_deleteEvent(pev);
     pev = nullptr;
@@ -1192,7 +1192,7 @@ CFrmSession::addTxRow(bool bEnable,
     return false;
   }
 
-  vscpEvent* pev = itemEvent->m_tx.getEvent();
+  vscp_event_t* pev = itemEvent->m_tx.getEvent();
   if (!vscp_convertStringToEvent(pev, event.toStdString())) {
     delete itemEvent;
     return false;
@@ -1298,7 +1298,7 @@ CFrmSession::copyTxToClipboard(void)
   for (it = selection.begin(); it != selection.end(); it++) {
 
     CTxWidgetItem* itemEvent = (CTxWidgetItem*)m_txTable->item(it->row(), txrow_event);
-    vscpEvent* pev           = itemEvent->m_tx.getEvent();
+    vscp_event_t* pev           = itemEvent->m_tx.getEvent();
     if (nullptr != pev) {
 
       bool rv;
@@ -1377,7 +1377,7 @@ CFrmSession::sendTxEvent(void)
   for (it = selection.begin(); it != selection.end(); it++) {
 
     CTxWidgetItem* itemEvent = (CTxWidgetItem*)m_txTable->item(it->row(), txrow_event);
-    vscpEvent* pev           = itemEvent->m_tx.getEvent();
+    vscp_event_t* pev           = itemEvent->m_tx.getEvent();
     pev->timestamp           = vscp_makeTimeStamp(); // Set timestamp
     vscp_setEventToNow(pev);                         // Set time information to "now"
 
@@ -1475,7 +1475,7 @@ CFrmSession::addTxEvent(void)
       return;
     }
 
-    vscpEvent* pev = itemEvent->m_tx.getEvent();
+    vscp_event_t* pev = itemEvent->m_tx.getEvent();
 
     pev->vscp_class = dlg.getVscpClass();
     pev->vscp_type  = dlg.getVscpType();
@@ -1540,7 +1540,7 @@ CFrmSession::editTxEvent(void)
   for (it = selection.begin(); it != selection.end(); it++) {
 
     CTxWidgetItem* itemEvent = (CTxWidgetItem*)m_txTable->item(it->row(), txrow_event);
-    vscpEvent* pev           = itemEvent->m_tx.getEvent();
+    vscp_event_t* pev           = itemEvent->m_tx.getEvent();
 
     dlg.setEnable(itemEvent->m_tx.getEnable());
     dlg.setName(itemEvent->m_tx.getName());
@@ -1622,7 +1622,7 @@ CFrmSession::editTxEvent(void)
 void
 CFrmSession::cloneTxEvent(void)
 {
-  vscpEvent* pev;
+  vscp_event_t* pev;
   QModelIndexList selection = m_txTable->selectionModel()->selectedRows();
 
   if (!selection.size()) {
@@ -1652,7 +1652,7 @@ CFrmSession::cloneTxEvent(void)
     vscp_copyEvent(itemTargetEvent->m_tx.getEvent(), itemSourceEvent->m_tx.getEvent());
 
     // Save data
-    // vscpEvent* pevSource = itemSourceEvent->m_tx.getEvent();
+    // vscp_event_t* pevSource = itemSourceEvent->m_tx.getEvent();
     bool bEnable = itemSourceEvent->m_tx.getEnable();
     QString name = itemSourceEvent->m_tx.getName();
     name += tr("_copy");
@@ -2621,7 +2621,7 @@ CFrmSession::copyRxToClipboard(void)
 
   QList<QModelIndex>::iterator it;
   for (it = selection.begin(); it != selection.end(); it++) {
-    vscpEvent* pev = m_rxEvents[it->row()];
+    vscp_event_t* pev = m_rxEvents[it->row()];
     if (nullptr != pev) {
 
       bool rv;
@@ -2689,7 +2689,7 @@ CFrmSession::copyRxToTx(void)
   QList<QModelIndex>::iterator it;
   for (it = selection.begin(); it != selection.end(); it++) {
     // m_rxTable->item(it->row(), 2)->setIcon(icon);
-    vscpEvent* pev = m_rxEvents[it->row()];
+    vscp_event_t* pev = m_rxEvents[it->row()];
     if (nullptr != pev) {
       std::string strevent;
       if (vscp_convertEventToString(strevent, pev)) {
@@ -2710,7 +2710,7 @@ void
 CFrmSession::saveMarkRxToFile(void)
 {
   QString fileName;
-  // vscpEvent* pev;
+  // vscp_event_t* pev;
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -2754,7 +2754,7 @@ CFrmSession::saveMarkRxToFile(void)
         stream.writeAttribute("comment", strVscpComment);
 
         std::string str;
-        vscpEvent* pev = m_rxEvents[i];
+        vscp_event_t* pev = m_rxEvents[i];
         if (nullptr != pev) {
           vscp_convertEventToString(str, pev);
           stream.writeAttribute("event", str.c_str());
@@ -2779,7 +2779,7 @@ void
 CFrmSession::saveRxToFile(void)
 {
   QString fileName;
-  // vscpEvent* pev;
+  // vscp_event_t* pev;
 
   vscpworks* pworks         = (vscpworks*)QCoreApplication::instance();
   QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
@@ -2842,7 +2842,7 @@ CFrmSession::saveRxToFile(void)
         stream.writeAttribute("comment", strVscpComment);
 
         std::string str;
-        vscpEvent* pev = m_rxEvents[it->row()];
+        vscp_event_t* pev = m_rxEvents[it->row()];
         if (nullptr != pev) {
           vscp_convertEventToString(str, pev);
           stream.writeAttribute("event", str.c_str());
@@ -2885,7 +2885,7 @@ CFrmSession::saveRxToFile(void)
         stream.writeAttribute("comment", strVscpComment);
 
         std::string str;
-        vscpEvent* pev = m_rxEvents[i];
+        vscp_event_t* pev = m_rxEvents[i];
         if (nullptr != pev) {
           vscp_convertEventToString(str, pev);
           stream.writeAttribute("event", str.c_str());
@@ -3001,7 +3001,7 @@ CFrmSession::loadRxFromFile(void)
         qDebug() << comment;
         qDebug() << event;
 
-        vscpEvent* pev;
+        vscp_event_t* pev;
         vscp_newEvent(&pev);
         vscp_convertStringToEvent(pev, event.toStdString());
 
@@ -3151,7 +3151,7 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  vscpEvent* pev = m_rxEvents[selectedRow];
+  vscp_event_t* pev = m_rxEvents[selectedRow];
   if (nullptr == pev) {
     return;
   }
@@ -3659,7 +3659,7 @@ CFrmSession::openClearMqttRetainPublishTopics(void)
 //
 
 QString
-CFrmSession::getClassInfo(const vscpEvent* pev)
+CFrmSession::getClassInfo(const vscp_event_t* pev)
 {
   QString strClass;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3700,7 +3700,7 @@ CFrmSession::getClassInfo(const vscpEvent* pev)
 //
 
 void
-CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 {
   QString strClass  = getClassInfo(pev);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3729,7 +3729,7 @@ CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 //
 
 QString
-CFrmSession::getTypeInfo(const vscpEvent* pev)
+CFrmSession::getTypeInfo(const vscp_event_t* pev)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   QString strType;
@@ -3789,7 +3789,7 @@ CFrmSession::getTypeInfo(const vscpEvent* pev)
 //
 
 void
-CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 {
   QString strType   = getTypeInfo(pev);
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3822,7 +3822,7 @@ CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 //
 
 void
-CFrmSession::setNodeIdInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+CFrmSession::setNodeIdInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -3846,7 +3846,7 @@ CFrmSession::setNodeIdInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 //
 
 void
-CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
+CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 {
   std::string strGuid;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -3940,7 +3940,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscpEvent* pev)
 //
 
 void
-CFrmSession::receiveRxRow(vscpEvent* pev)
+CFrmSession::receiveRxRow(vscp_event_t* pev)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -4022,7 +4022,7 @@ CFrmSession::receiveRxRow(vscpEvent* pev)
 //
 
 void
-CFrmSession::receiveTxRow(vscpEvent* pev)
+CFrmSession::receiveTxRow(vscp_event_t* pev)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -4045,7 +4045,7 @@ CFrmSession::receiveTxRow(vscpEvent* pev)
   m_rxTable->insertRow(row);
 
   // Make copy of event
-  vscpEvent* pevnew = new vscpEvent;
+  vscp_event_t* pevnew = new vscp_event_t;
   if (pevnew == nullptr) {
     m_mutexRxList.unlock();
     QMessageBox::critical(
@@ -4241,7 +4241,7 @@ CFrmSession::fillReceiveEventDiff()
       "VscpMinute}}:{{VscpSecond}}</span><br>"
     };
 
-    std::map<int, vscpEvent*> mapRowEvent;
+    std::map<int, vscp_event_t*> mapRowEvent;
 
     QList<QModelIndex>::iterator it;
     for (it = selection.begin(); it != selection.end(); it++) {
@@ -4249,10 +4249,10 @@ CFrmSession::fillReceiveEventDiff()
       mapRowEvent[it->row()] = m_rxEvents[it->row()];
     }
 
-    std::map<int, vscpEvent*>::iterator itmap;
+    std::map<int, vscp_event_t*>::iterator itmap;
     for (itmap = mapRowEvent.begin(); itmap != mapRowEvent.end(); itmap++) {
 
-      vscpEvent* pev = itmap->second;
+      vscp_event_t* pev = itmap->second;
 
       kainjow::mustache::data _data;
       _data.set("VscpYear", vscp_str_format("%d", pev->year));
@@ -4294,7 +4294,7 @@ CFrmSession::fillReceiveEventDiff()
 //
 
 // void
-// CFrmSession::threadReceive(vscpEvent* pev)
+// CFrmSession::threadReceive(vscp_event_t* pev)
 // {
 //   emit dataReceived(pev);
 // }
@@ -4304,10 +4304,10 @@ CFrmSession::fillReceiveEventDiff()
 //
 
 void
-CFrmSession::receiveCallback(vscpEvent& ev, void* pobj)
+CFrmSession::receiveCallback(vscp_event_t& ev, void* pobj)
 {
   m_mutexReceiveCallBack.lock();
-  vscpEvent* pevnew = new vscpEvent;
+  vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;
   vscp_copyEvent(pevnew, &ev);

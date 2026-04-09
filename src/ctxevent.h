@@ -67,8 +67,8 @@ class CTxEvent : public QObject
 
     // Events setters/getters
     bool newEvent(void);
-    void setEvent(vscpEvent *pEvent) { m_pev = pEvent; }
-    vscpEvent *getEvent(void) { return m_pev; };
+    void setEvent(vscp_event_t *pEvent) { m_pev = pEvent; }
+    vscp_event_t *getEvent(void) { return m_pev; };
 
  private:
 
@@ -85,7 +85,7 @@ class CTxEvent : public QObject
     uint32_t m_period;
 
     /// Event to send
-    vscpEvent *m_pev;    
+    vscp_event_t *m_pev;    
 
     /// Timer used for periodic events
     QTimer m_timer;

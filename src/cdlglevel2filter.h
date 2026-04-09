@@ -48,8 +48,8 @@ public:
 
 public:
   // Getters setters for filter
-  void getFilter(vscpEventFilter* pfilter);
-  void setFilter(const vscpEventFilter* pfilter);
+  void getFilter(vscp_event_filter_t* pfilter);
+  void setFilter(const vscp_event_filter_t* pfilter);
 
   /*!
       set Initial focus
