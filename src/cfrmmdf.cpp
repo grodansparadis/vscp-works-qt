@@ -278,9 +278,10 @@ CFrmMdf::openMdf(void)
 
   if (path.length()) {
     qInfo() << "Selected MDF filename: " << path;
-    int rv = m_mdf.parseMDF(path.toStdString());
+    const std::string pathUtf8 = path.toUtf8().toStdString();
+    int rv                     = m_mdf.parseMDF(pathUtf8);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to parse MDF file {0}", path.toStdString());
+      spdlog::error("Failed to parse MDF file {0}", pathUtf8);
       QMessageBox::warning(this, APPNAME, tr("Failed to parse MDF file."));
       return;
     }
@@ -314,15 +315,16 @@ CFrmMdf::saveMdf_XML()
       Save a copy of the old mdf file if
       one already exist with this name 
     */
-    QDir dir(path);
-    if (!dir.exists()) {
+    if (QFile::exists(path)) {
       // Save a copy of the old mdf file
+      QFile::remove(path + ".bak");
       QFile::copy(path, path + ".bak");
     }
 
-    int rv = m_mdf.save(path.toStdString(), MDF_FORMAT_XML);
+    const std::string pathUtf8 = path.toUtf8().toStdString();
+    int rv                     = m_mdf.save(pathUtf8, MDF_FORMAT_XML);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", path.toStdString());
+      spdlog::error("Failed to save MDF file {0}", pathUtf8);
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
@@ -350,15 +352,16 @@ CFrmMdf::saveMdf_JSON()
       Save a copy of the old mdf file if
       one already exist with this name 
     */
-    QDir dir(path);
-    if (!dir.exists()) {
+    if (QFile::exists(path)) {
       // Save a copy of the old mdf file
+      QFile::remove(path + ".bak");
       QFile::copy(path, path + ".bak");
     }
 
-    int rv = m_mdf.save(path.toStdString(), MDF_FORMAT_JSON);
+    const std::string pathUtf8 = path.toUtf8().toStdString();
+    int rv                     = m_mdf.save(pathUtf8, MDF_FORMAT_JSON);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", path.toStdString());
+      spdlog::error("Failed to save MDF file {0}", pathUtf8);
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
@@ -839,10 +842,9 @@ CFrmMdf::renderDescriptionItems(QTreeWidgetItem* pParent,
   int idx                                  = 0;
   std::map<std::string, std::string>* pmap = pObjMap;
   for (auto const& x : *pmap) {
-    str   = x.first.c_str() + QString(": ") + x.second.c_str();
+    str   = QString::fromUtf8(x.first.c_str()) + QString(": ") + QString::fromUtf8(x.second.c_str());
     pItem = new QMdfTreeWidgetItem(pItemModuleDescription, pobj, mdf_type_generic_description_item, idx);
     pItem->setText(0, str);
-    pParent->addChild(pItem);
     idx++;
   }
 }

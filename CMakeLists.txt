@@ -77,13 +77,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(REQUIRED_QT_VERSION "6.6.2")
+set(REQUIRED_QT_VERSION "6.11.1")
 
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 6.6.2 REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help)
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help)
 qt_standard_project_setup()
 
 # pthreads
@@ -744,4 +744,3 @@ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${INSTALL_PATH}/s
 
 # Event database etc
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${INSTALL_PATH}/share/${PROJECT_NAME}/)
-
