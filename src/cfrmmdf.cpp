@@ -275,12 +275,6 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
           this,
           &CFrmMdf::onItemDoubleClicked);
 
-  // Some platforms/styles emit activation for double-click/enter instead.
-  connect(ui->treeMDF,
-          &QTreeWidget::itemActivated,
-          this,
-          &CFrmMdf::onItemDoubleClicked);
-
   this->setFixedSize(this->size());
 
   newMdf(); // Render defaults
