@@ -354,6 +354,11 @@ CFrmMdf::eventFilter(QObject* watched, QEvent* event)
             onItemDoubleClicked(item, ui->treeMDF->currentColumn());
             return true;
           }
+
+          // Fallback path: keep click timing inside the event filter in case
+          // itemClicked/itemDoubleClicked signals are not emitted on a platform.
+          m_lastClickedItem = item;
+          m_lastClickedMsec = now;
         }
       }
     }
