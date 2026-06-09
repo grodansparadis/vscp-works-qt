@@ -211,6 +211,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
 
   ui->treeMDF->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeMDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui->treeMDF->setExpandsOnDoubleClick(false);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   spdlog::debug(std::string(tr("Node configuration module opened").toStdString()));
@@ -269,6 +270,12 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   // MDF row has been double clicked.
   connect(ui->treeMDF,
           &QTreeWidget::itemDoubleClicked,
+          this,
+          &CFrmMdf::onItemDoubleClicked);
+
+  // Some platforms/styles emit activation for double-click/enter instead.
+  connect(ui->treeMDF,
+          &QTreeWidget::itemActivated,
           this,
           &CFrmMdf::onItemDoubleClicked);
 
