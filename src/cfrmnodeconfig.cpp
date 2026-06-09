@@ -92,34 +92,6 @@
 
 // ----------------------------------------------------------------------------
 
-static std::string
-replaceAll(std::string text, const std::string& from, const std::string& to)
-{
-  size_t pos = 0;
-  while (std::string::npos != (pos = text.find(from, pos))) {
-    text.replace(pos, from.length(), to);
-    pos += to.length();
-  }
-
-  return text;
-}
-
-static std::string
-normalizeBoldTags(const std::string& text)
-{
-  std::string rv = replaceAll(text, "<bold>", "<b>");
-  rv             = replaceAll(rv, "</bold>", "</b>");
-  rv             = replaceAll(rv, "<BOLD>", "<b>");
-  rv             = replaceAll(rv, "</BOLD>", "</b>");
-  rv             = replaceAll(rv, "&lt;bold&gt;", "<b>");
-  rv             = replaceAll(rv, "&lt;/bold&gt;", "</b>");
-  rv             = replaceAll(rv, "&lt;BOLD&gt;", "<b>");
-  rv             = replaceAll(rv, "&lt;/BOLD&gt;", "</b>");
-  return rv;
-}
-
-// ----------------------------------------------------------------------------
-
 CRegisterWidgetItem::CRegisterWidgetItem(const QString& text)
   : QTreeWidgetItem(TREE_LIST_REGISTER_TYPE)
 {
@@ -2071,8 +2043,7 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   html += "<br>";
 
   html += "</font><b>Module description:</b><font color=\"#009900\"> ";
-  std::string moduleDesc = normalizeBoldTags(m_mdf.getModuleDescription());
-  html += m_mdf.format(moduleDesc);
+  html += m_mdf.getModuleDescription();
   html += "<br>";
 
   html += "</font><b>Module URL</b><font color=\"#009900\"> : ";
@@ -4039,7 +4010,6 @@ CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     str = preg->getDescription();
-    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     // str = "# test\n";
     // str += "This _is_ som **test** text\n\nAnd some more text\n\n";
@@ -4528,7 +4498,6 @@ CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     std::string desc = prv->getDescription();
-    desc = normalizeBoldTags(desc);
     html += m_mdf.format(desc);
   }
   html += "<p>";
@@ -5286,11 +5255,9 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
     html += "</font>";
     html += "<br> <b>Name:</b><font color=\"#000099\"> ";
     str = pAction->getName();
-    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     html += "</font><br> <b>Description:</b><font color=\"#000099\"> ";
     str = pAction->getDescription();
-    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     html += "</font>";
   }
@@ -5307,7 +5274,6 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     std::string desc = QString::number(pitem->m_row).toStdString();
-    desc  = normalizeBoldTags(desc);
     html += m_mdf.format(desc);
   }
   html += "<p>";
