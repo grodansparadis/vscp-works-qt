@@ -77,6 +77,7 @@
 
 #include <QClipboard>
 #include <QDate>
+#include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
@@ -3160,18 +3161,26 @@ CFrmMdf::loadMdf(void)
 void
 CFrmMdf::onItemClicked(QTreeWidgetItem* item, int column)
 {
+  Q_UNUSED(column);
+
   QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)item;
   if (nullptr == pItem) {
     return;
   }
 
-  QMessageBox msgBox;
-  msgBox.setText("Item has been Clicked.");
-  msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-  msgBox.setDefaultButton(QMessageBox::Save);
-  // int ret = msgBox.exec();
+  const qint64 now = QDateTime::currentMSecsSinceEpoch();
+  if ((m_lastClickedItem == item) &&
+      ((now - m_lastClickedMsec) <= QApplication::doubleClickInterval())) {
+    m_lastClickedItem = nullptr;
+    m_lastClickedMsec = 0;
+    onItemDoubleClicked(item, column);
+    return;
+  }
+
+  m_lastClickedItem = item;
+  m_lastClickedMsec = now;
+
   if (nullptr != pItem->getObject()) {
-    // ui->statusbar->showMessage(/*pItem->text(0)*/pItem->getObject()->getObjectTypeString().c_str(), 5000);
     ui->statusbar->showMessage("object", 1000);
   }
 }

@@ -677,6 +677,10 @@ private:
   /// path for last successfully opened MDF
   QString m_last_path;
 
+  /// fallback double-click tracking for platforms that miss dbl-click signals
+  QTreeWidgetItem* m_lastClickedItem = nullptr;
+  qint64 m_lastClickedMsec = 0;
+
   /// True if a loadeed file has been edited
   bool m_bChanged;
 };
