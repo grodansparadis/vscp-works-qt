@@ -97,6 +97,7 @@ CRegisterWidgetItem::CRegisterWidgetItem(const QString& text)
 {
   m_regPage   = 0;
   m_regOffset = 0;
+  m_regSpan   = 1;
 }
 
 CRegisterWidgetItem::~CRegisterWidgetItem()
@@ -3775,6 +3776,7 @@ CFrmNodeConfig::renderRegisters(void)
       // Save reister info so we can find info later
       itemReg->m_regPage   = page;
       itemReg->m_regOffset = pregmdf->getOffset();
+      itemReg->m_regSpan   = pregmdf->getSpan();
 
       // Save a pointer to register information
       // itemReg->m_pmdfreg = pregmdf;
@@ -3827,7 +3829,7 @@ CFrmNodeConfig::renderRegisters(void)
       itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
       itemTopReg1->addChild(itemReg);
 
-      CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(itemReg->m_regOffset, itemReg->m_regPage);
+      CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(itemReg->m_regOffset, itemReg->m_regPage, itemReg->m_regSpan);
       QPushButton* pRemoteVarButton        = new QPushButton(ui->treeWidgetRegisters);
       pRemoteVarButton->setAutoDefault(false);
       pRemoteVarButton->setDefault(false);
@@ -3837,7 +3839,7 @@ CFrmNodeConfig::renderRegisters(void)
         connect(pRemoteVarButton,
                 &QPushButton::clicked,
                 this,
-                [this, page = itemReg->m_regPage, offset = itemReg->m_regOffset]() { openRemoteVariableForRegister(offset, page); });
+                [this, page = itemReg->m_regPage, offset = itemReg->m_regOffset, span = itemReg->m_regSpan]() { openRemoteVariableForRegister(offset, page, span); });
       }
       else {
         pRemoteVarButton->setText(tr("Add remote variable"));
@@ -4203,12 +4205,16 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
 //
 
 CMDF_RemoteVariable*
-CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page)
+CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span)
 {
   std::deque<CMDF_RemoteVariable*>* pRemoteVariableList = m_mdf.getRemoteVariableList();
   if (nullptr == pRemoteVariableList) {
     return nullptr;
   }
+
+  const uint16_t regSpan = (0 == span) ? 1 : span;
+  const uint64_t regStart = static_cast<uint64_t>(offset);
+  const uint64_t regEnd   = regStart + static_cast<uint64_t>(regSpan);
 
   for (auto* pRemoteVariable : *pRemoteVariableList) {
     if (nullptr == pRemoteVariable) {
@@ -4219,8 +4225,10 @@ CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page)
       continue;
     }
 
-    if ((offset >= pRemoteVariable->getOffset()) &&
-        (offset < (pRemoteVariable->getOffset() + pRemoteVariable->getTypeByteCount()))) {
+    const uint8_t rvSpan   = (0 == pRemoteVariable->getTypeByteCount()) ? 1 : pRemoteVariable->getTypeByteCount();
+    const uint64_t rvStart = static_cast<uint64_t>(pRemoteVariable->getOffset());
+    const uint64_t rvEnd   = rvStart + static_cast<uint64_t>(rvSpan);
+    if ((regStart < rvEnd) && (rvStart < regEnd)) {
       return pRemoteVariable;
     }
   }
@@ -4233,9 +4241,9 @@ CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page)
 //
 
 void
-CFrmNodeConfig::openRemoteVariableForRegister(uint32_t offset, uint16_t page)
+CFrmNodeConfig::openRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span)
 {
-  CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(offset, page);
+  CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(offset, page, span);
   if (nullptr == pRemoteVariable) {
     addRemoteVariableForRegister(offset, page);
     return;

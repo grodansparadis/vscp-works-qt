@@ -144,6 +144,11 @@ public:
     Register offset
   */
   uint32_t m_regOffset;
+
+  /*!
+    Register span in bytes.
+  */
+  uint16_t m_regSpan;
 };
 
 // ----------------------------------------------------------------------------
@@ -759,12 +764,12 @@ public slots:
   /*!
     Get remote variable containing register offset on page.
   */
-  CMDF_RemoteVariable* findRemoteVariableForRegister(uint32_t offset, uint16_t page);
+  CMDF_RemoteVariable* findRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span = 1);
 
   /*!
     Open remote variable dialog for register.
   */
-  void openRemoteVariableForRegister(uint32_t offset, uint16_t page);
+  void openRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span = 1);
 
   /*!
     Add a new remote variable with page/offset prefilled from register.
