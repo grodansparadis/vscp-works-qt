@@ -607,7 +607,7 @@ CDlgMdfRegister::findLinkedRemoteVariable(void)
   const uint16_t page         = getPage();
   const uint32_t regStart     = getOffset();
   const uint32_t regSpan      = (nullptr != m_preg) ? std::max<uint16_t>(1, m_preg->getSpan()) : 1;
-  const uint64_t regRangeEnd  = static_cast<uint64_t>(regStart) + static_cast<uint64_t>(regSpan);
+  const uint64_t regEnd       = static_cast<uint64_t>(regStart) + static_cast<uint64_t>(regSpan - 1);
   std::deque<CMDF_RemoteVariable*>* pRemoteVariables = m_pmdf->getRemoteVariableList();
   if (nullptr == pRemoteVariables) {
     return nullptr;
@@ -624,10 +624,8 @@ CDlgMdfRegister::findLinkedRemoteVariable(void)
 
     const uint64_t rvStart    = static_cast<uint64_t>(pRemoteVariable->getOffset());
     const uint64_t rvSpan     = static_cast<uint64_t>(std::max<uint8_t>(1, pRemoteVariable->getTypeByteCount()));
-    const uint64_t rvRangeEnd = rvStart + rvSpan;
-
-    // Linked if register range and remote variable range overlap.
-    if ((static_cast<uint64_t>(regStart) < rvRangeEnd) && (rvStart < regRangeEnd)) {
+    const uint64_t rvEnd      = rvStart + rvSpan;
+    if ((static_cast<uint64_t>(regStart) <= rvEnd) && (rvStart <= regEnd)) {
       return pRemoteVariable;
     }
   }

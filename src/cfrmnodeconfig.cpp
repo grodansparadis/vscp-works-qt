@@ -4214,7 +4214,7 @@ CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page, ui
 
   const uint16_t regSpan = (0 == span) ? 1 : span;
   const uint64_t regStart = static_cast<uint64_t>(offset);
-  const uint64_t regEnd   = regStart + static_cast<uint64_t>(regSpan);
+  const uint64_t regEnd   = regStart + static_cast<uint64_t>(regSpan - 1);
 
   for (auto* pRemoteVariable : *pRemoteVariableList) {
     if (nullptr == pRemoteVariable) {
@@ -4228,7 +4228,7 @@ CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page, ui
     const uint8_t rvSpan   = (0 == pRemoteVariable->getTypeByteCount()) ? 1 : pRemoteVariable->getTypeByteCount();
     const uint64_t rvStart = static_cast<uint64_t>(pRemoteVariable->getOffset());
     const uint64_t rvEnd   = rvStart + static_cast<uint64_t>(rvSpan);
-    if ((regStart < rvEnd) && (rvStart < regEnd)) {
+    if ((regStart <= rvEnd) && (rvStart <= regEnd)) {
       return pRemoteVariable;
     }
   }
