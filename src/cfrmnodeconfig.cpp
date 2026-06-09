@@ -92,6 +92,30 @@
 
 // ----------------------------------------------------------------------------
 
+static std::string
+replaceAll(std::string text, const std::string& from, const std::string& to)
+{
+  size_t pos = 0;
+  while (std::string::npos != (pos = text.find(from, pos))) {
+    text.replace(pos, from.length(), to);
+    pos += to.length();
+  }
+
+  return text;
+}
+
+static std::string
+normalizeBoldTags(const std::string& text)
+{
+  std::string rv = replaceAll(text, "<bold>", "<b>");
+  rv             = replaceAll(rv, "</bold>", "</b>");
+  rv             = replaceAll(rv, "<BOLD>", "<b>");
+  rv             = replaceAll(rv, "</BOLD>", "</b>");
+  return rv;
+}
+
+// ----------------------------------------------------------------------------
+
 CRegisterWidgetItem::CRegisterWidgetItem(const QString& text)
   : QTreeWidgetItem(TREE_LIST_REGISTER_TYPE)
 {
@@ -882,6 +906,50 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
           &QAction::triggered,
           this,
           &CFrmNodeConfig::fillDeviceHtmlInfo);
+
+  QMenu* operationsMenu = new QMenu(tr("&Operations"), this);
+  auto addOpAction      = [this, operationsMenu](const QString& text, const char* slot) {
+    operationsMenu->addAction(text, this, slot);
+  };
+
+  operationsMenu->addSection(tr("Register operations"));
+  addOpAction(tr("Update"), SLOT(update()));
+  addOpAction(tr("Full update"), SLOT(updateFull()));
+  addOpAction(tr("Full update with local MDF"), SLOT(updateLocal()));
+  operationsMenu->addSeparator();
+  addOpAction(tr("Read value(s) for selected row(s)"), SLOT(readSelectedRegisterValues()));
+  addOpAction(tr("Write value(s) for selected row(s)"), SLOT(writeSelectedRegisterValues()));
+  addOpAction(tr("Write default value(s) for selected row(s)"), SLOT(defaultSelectedRegisterValues()));
+  addOpAction(tr("Set default values for ALL rows"), SLOT(defaultRegisterAll()));
+  operationsMenu->addSeparator();
+  addOpAction(tr("Save selected registers"), SLOT(saveSelectedRegisterValues()));
+  addOpAction(tr("Save ALL registers"), SLOT(saveAllRegisterValues()));
+  addOpAction(tr("Load registers"), SLOT(loadRegisterValues()));
+  addOpAction(tr("Goto register page..."), SLOT(gotoRegisterPage()));
+
+  operationsMenu->addSeparator();
+  operationsMenu->addSection(tr("Remote variable operations"));
+  addOpAction(tr("Go to register(s) for this remote variable"), SLOT(gotoRemoteVarRegisterPos()));
+  addOpAction(tr("Read value(s) for selected row(s)"), SLOT(readSelectedRegisterValues()));
+  addOpAction(tr("Write value(s) for selected row(s)"), SLOT(writeSelectedRegisterValues()));
+  addOpAction(tr("Write default value(s) for selected row(s)"), SLOT(defaultSelectedRegisterValues()));
+  addOpAction(tr("Set default values for ALL rows"), SLOT(defaultRegisterAll()));
+  addOpAction(tr("Save register value(s) for selected row(s) to disk"), SLOT(saveSelectedRegisterValues()));
+  addOpAction(tr("Save ALL register values to disk"), SLOT(saveAllRegisterValues()));
+  addOpAction(tr("Load register values from disk"), SLOT(loadRegisterValues()));
+
+  operationsMenu->addSeparator();
+  operationsMenu->addSection(tr("Decision Matrix operations"));
+  addOpAction(tr("Edit row"), SLOT(editDMRow()));
+  addOpAction(tr("Go to register position for row"), SLOT(gotoDMRegisterPos()));
+  addOpAction(tr("Enable/Disable selected row(s)"), SLOT(toggleDMRow()));
+  addOpAction(tr("Read selected DM row(s)"), SLOT(readSelectedDMRow()));
+  addOpAction(tr("Write selected DM row(s)"), SLOT(writeSelectedDMRow()));
+  addOpAction(tr("Save DM values for selected row(s) to disk"), SLOT(saveSelectedRegisterValues()));
+  addOpAction(tr("Save DM registers to disk"), SLOT(saveAllRegisterValues()));
+  addOpAction(tr("Load DM values from disk"), SLOT(loadRegisterValues()));
+
+  ui->menuBar->insertMenu(ui->menuHelp->menuAction(), operationsMenu);
 
   // MDF file item has been double clicked
 }
@@ -1999,7 +2067,8 @@ CFrmNodeConfig::fillDeviceHtmlInfo(void)
   html += "<br>";
 
   html += "</font><b>Module description:</b><font color=\"#009900\"> ";
-  html += m_mdf.getModuleDescription();
+  std::string moduleDesc = normalizeBoldTags(m_mdf.getModuleDescription());
+  html += m_mdf.format(moduleDesc);
   html += "<br>";
 
   html += "</font><b>Module URL</b><font color=\"#009900\"> : ";
@@ -3966,6 +4035,7 @@ CFrmNodeConfig::fillRegisterHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     str = preg->getDescription();
+    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     // str = "# test\n";
     // str += "This _is_ som **test** text\n\nAnd some more text\n\n";
@@ -5211,9 +5281,11 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
     html += "</font>";
     html += "<br> <b>Name:</b><font color=\"#000099\"> ";
     str = pAction->getName();
+    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     html += "</font><br> <b>Description:</b><font color=\"#000099\"> ";
     str = pAction->getDescription();
+    str  = normalizeBoldTags(str);
     html += m_mdf.format(str);
     html += "</font>";
   }
@@ -5230,6 +5302,7 @@ CFrmNodeConfig::fillDMHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     std::string desc = QString::number(pitem->m_row).toStdString();
+    desc  = normalizeBoldTags(desc);
     html += m_mdf.format(desc);
   }
   html += "<p>";
