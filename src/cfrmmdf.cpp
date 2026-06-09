@@ -77,6 +77,7 @@
 
 #include <QClipboard>
 #include <QFile>
+#include <QFileInfo>
 #include <QJSEngine>
 #include <QStandardPaths>
 #include <QTableView>
@@ -87,6 +88,35 @@
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
+
+namespace {
+
+mdf_format
+detectMdfFormatForPath(const QString& path)
+{
+  QFileInfo fi(path);
+  const QString suffix = fi.suffix().toLower();
+
+  if ("json" == suffix) {
+    return MDF_FORMAT_JSON;
+  }
+
+  if (QFile::exists(path)) {
+    QFile f(path);
+    if (f.open(QIODevice::ReadOnly)) {
+      while (!f.atEnd()) {
+        const QByteArray line = f.readLine().trimmed();
+        if (!line.isEmpty()) {
+          return line.startsWith('{') ? MDF_FORMAT_JSON : MDF_FORMAT_XML;
+        }
+      }
+    }
+  }
+
+  return MDF_FORMAT_XML;
+}
+
+} // anonymous namespace
 
 // ----------------------------------------------------------------------------
 
@@ -154,8 +184,10 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
 
   ui->setupUi(this);
 
-  QStatusBar* m_bar = new QStatusBar(this);
-  ui->statusbar->addWidget(m_bar);
+  m_bar             = ui->statusbar;
+  m_labelOpenedFile = new QLabel(this);
+  m_labelOpenedFile->setText(tr("File: (none)"));
+  ui->statusbar->addPermanentWidget(m_labelOpenedFile);
 
   ui->treeMDF->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeMDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -196,6 +228,11 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
 
   // Save has been selected in the menu - Save MDF file on JSON format
   connect(ui->actionSave_JSON, SIGNAL(triggered()), this, SLOT(saveMdf_JSON()));
+
+  QAction* actionSave = new QAction(tr("Save"), this);
+  actionSave->setShortcut(QKeySequence::Save);
+  ui->menuFile->insertAction(ui->actionSave_XML, actionSave);
+  connect(actionSave, SIGNAL(triggered()), this, SLOT(saveMdf()));
 
   // Open has been selected in the menu - Edit Module info
   connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editItem()));
@@ -259,6 +296,8 @@ CFrmMdf::newMdf(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   m_mdf.clearStorage();
+  m_last_path.clear();
+  m_labelOpenedFile->setText(tr("File: (none)"));
   loadMdf();
 }
 
@@ -311,6 +350,7 @@ CFrmMdf::openMdf(void)
 
     // Save the path
     m_last_path = path;
+    m_labelOpenedFile->setText(tr("File: %1").arg(path));
 
     // Load the tree with parsed objects
     loadMdf();
@@ -351,6 +391,8 @@ CFrmMdf::saveMdf_XML()
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
+    m_last_path = path;
+    m_labelOpenedFile->setText(tr("File: %1").arg(path));
     m_bChanged = false;
   }
 }
@@ -388,8 +430,45 @@ CFrmMdf::saveMdf_JSON()
       QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
       return;
     }
+    m_last_path = path;
+    m_labelOpenedFile->setText(tr("File: %1").arg(path));
     m_bChanged = false;
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveMdf
+//
+
+void
+CFrmMdf::saveMdf()
+{
+  if (m_last_path.isEmpty()) {
+    QMessageBox::warning(this, APPNAME, tr("No opened MDF file to save."));
+    return;
+  }
+
+  if (QFile::exists(m_last_path)) {
+    QFile::remove(m_last_path + ".bak");
+    QFile::copy(m_last_path, m_last_path + ".bak");
+  }
+
+  const mdf_format format       = detectMdfFormatForPath(m_last_path);
+  const std::string pathUtf8    = m_last_path.toUtf8().toStdString();
+  const int rv                  = m_mdf.save(pathUtf8, format);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    spdlog::error("Failed to save MDF file {0}", pathUtf8);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                           .arg(m_last_path)
+                           .arg(rv));
+    return;
+  }
+
+  m_labelOpenedFile->setText(tr("File: %1").arg(m_last_path));
+  ui->statusbar->showMessage(tr("Saved %1").arg(m_last_path), 2000);
+  m_bChanged = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

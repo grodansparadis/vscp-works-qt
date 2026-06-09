@@ -607,6 +607,9 @@ public slots:
   /// Save MDF to external storage on JSON format
   void saveMdf_JSON(void);
 
+  /// Save MDF to currently opened file
+  void saveMdf(void);
+
   /*!
     Find next MDF type item in tree
     @param Pointer to MDF widget item
@@ -643,6 +646,7 @@ private:
 
   // The statusbar
   QStatusBar* m_bar;
+  QLabel* m_labelOpenedFile;
 
   /*!
     Headers in the tree that are used as reference for updates.
