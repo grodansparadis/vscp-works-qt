@@ -92,7 +92,9 @@ enum registerColumns {
   REG_COL_POS = 0,
   REG_COL_ACCESS,
   REG_COL_VALUE,
-  REG_COL_NAME
+  REG_COL_NAME,
+  REG_COL_REMOTEVAR,
+  REG_COL_COUNT
 };
 
 enum remotevarColumns {
@@ -142,6 +144,11 @@ public:
     Register offset
   */
   uint32_t m_regOffset;
+
+  /*!
+    Register span in bytes.
+  */
+  uint16_t m_regSpan;
 };
 
 // ----------------------------------------------------------------------------
@@ -753,6 +760,21 @@ public slots:
     @param bFromRegUpdate True if called from register update
   */
   void updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool bFromRegUpdate = false);
+
+  /*!
+    Get remote variable containing register offset on page.
+  */
+  CMDF_RemoteVariable* findRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span = 1);
+
+  /*!
+    Open remote variable dialog for register.
+  */
+  void openRemoteVariableForRegister(uint32_t offset, uint16_t page, uint16_t span = 1);
+
+  /*!
+    Add a new remote variable with page/offset prefilled from register.
+  */
+  void addRemoteVariableForRegister(uint32_t offset, uint16_t page);
 
   /*!
     Update DM listing

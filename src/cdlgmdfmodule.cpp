@@ -81,6 +81,7 @@ CDlgMdfModule::CDlgMdfModule(QWidget* parent)
   connect(ui->btnEditInfo, &QToolButton::clicked, this, &CDlgMdfModule::editInfo);
   connect(ui->btnDupInfo, &QToolButton::clicked, this, &CDlgMdfModule::dupInfo);
   connect(ui->btnDelInfo, &QToolButton::clicked, this, &CDlgMdfModule::deleteInfo);
+  connect(ui->comboModuleLevel, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int) { updateBufferSizeLockForLevel(); });
 
   // Help
   QShortcut* shortcut_F1 = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
@@ -130,6 +131,7 @@ CDlgMdfModule::initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index
     ui->editDate->setDate(date);
   }
   ui->editBufferSize->setValue(m_pmdf->getModuleBufferSize());
+  updateBufferSizeLockForLevel();
   ui->editCopyright->setText(m_pmdf->getModuleCopyright().c_str());
 
   switch (index) {
@@ -300,6 +302,7 @@ CDlgMdfModule::accept()
     str = ui->editDate->date().toString(Qt::ISODate).toStdString();
     m_pmdf->setModuleChangeDate(str);
 
+    updateBufferSizeLockForLevel();
     m_pmdf->setModuleBufferSize(ui->editBufferSize->value());
 
     str = ui->editCopyright->text().toStdString();
@@ -310,6 +313,24 @@ CDlgMdfModule::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateBufferSizeLockForLevel
+//
+
+void
+CDlgMdfModule::updateBufferSizeLockForLevel(void)
+{
+  // Combo index 0 corresponds to Level 1.
+  const bool isLevel1 = (0 == ui->comboModuleLevel->currentIndex());
+  if (isLevel1) {
+    ui->editBufferSize->setValue(8);
+    ui->editBufferSize->setEnabled(false);
+  }
+  else {
+    ui->editBufferSize->setEnabled(true);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

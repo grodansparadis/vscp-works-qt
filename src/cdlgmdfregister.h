@@ -165,7 +165,22 @@ public slots:
   /// Help
   void showHelp(void);
 
+  /*!
+    Open linked remote variable dialog or add a new one.
+  */
+  void onRemoteVariableAction(void);
+
 private:
+  /*!
+    Find remote variable linked to current register page/offset.
+  */
+  CMDF_RemoteVariable* findLinkedRemoteVariable(void);
+
+  /*!
+    Refresh remote variable link text/button state.
+  */
+  void updateRemoteVariableLinkUi(void);
+
   Ui::CDlgMdfRegister* ui;
 
   /// Register pages

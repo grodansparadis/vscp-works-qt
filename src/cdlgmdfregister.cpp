@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdfregister.h"
+#include "cdlgmdfremotevar.h"
 #include "ui_cdlgmdfregister.h"
 
 #include <QColorDialog>
@@ -51,6 +52,8 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
+
+#include <algorithm>
 
 const char CDlgMdfRegister::pre_str_register[] = "Register: ";
 
@@ -136,6 +139,11 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
           this,
           SLOT(setUndef()));
 
+  connect(ui->toolButton_6,
+          SIGNAL(clicked()),
+          this,
+          SLOT(onRemoteVariableAction()));
+
   setName(preg->getName().c_str());
   setPage(preg->getPage());
   setOffset(preg->getOffset());
@@ -218,6 +226,16 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
       ui->editName->setFocus();
       break;
   }
+
+  connect(ui->comboPage,
+          qOverload<int>(&QComboBox::currentIndexChanged),
+          this,
+          [this](int) { updateRemoteVariableLinkUi(); });
+  connect(ui->editOffset,
+          &QLineEdit::textChanged,
+          this,
+          [this](const QString&) { updateRemoteVariableLinkUi(); });
+  updateRemoteVariableLinkUi();
 
   this->setFixedSize(this->size());
 }
@@ -573,4 +591,114 @@ CDlgMdfRegister::showHelp(void)
 {
   QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf";
   QDesktopServices::openUrl(QUrl(link));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// findLinkedRemoteVariable
+//
+
+CMDF_RemoteVariable*
+CDlgMdfRegister::findLinkedRemoteVariable(void)
+{
+  if (nullptr == m_pmdf) {
+    return nullptr;
+  }
+
+  const uint16_t page         = getPage();
+  const uint32_t regStart     = getOffset();
+  const uint32_t regSpan      = (nullptr != m_preg) ? std::max<uint16_t>(1, m_preg->getSpan()) : 1;
+  const uint64_t regEnd       = static_cast<uint64_t>(regStart) + static_cast<uint64_t>(regSpan - 1);
+  std::deque<CMDF_RemoteVariable*>* pRemoteVariables = m_pmdf->getRemoteVariableList();
+  if (nullptr == pRemoteVariables) {
+    return nullptr;
+  }
+
+  for (auto* pRemoteVariable : *pRemoteVariables) {
+    if (nullptr == pRemoteVariable) {
+      continue;
+    }
+
+    if (page != pRemoteVariable->getPage()) {
+      continue;
+    }
+
+    const uint64_t rvStart    = static_cast<uint64_t>(pRemoteVariable->getOffset());
+    const uint64_t rvSpan     = static_cast<uint64_t>(std::max<uint8_t>(1, pRemoteVariable->getTypeByteCount()));
+    const uint64_t rvEnd      = rvStart + rvSpan;
+    if ((static_cast<uint64_t>(regStart) <= rvEnd) && (rvStart <= regEnd)) {
+      return pRemoteVariable;
+    }
+  }
+
+  return nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateRemoteVariableLinkUi
+//
+
+void
+CDlgMdfRegister::updateRemoteVariableLinkUi(void)
+{
+  CMDF_RemoteVariable* pRemoteVariable = findLinkedRemoteVariable();
+  if (nullptr != pRemoteVariable) {
+    ui->labelRemoteVariable->setText(QString(tr("Remote variable %1")).arg(pRemoteVariable->getName().c_str()));
+    ui->toolButton_6->setText(tr("Edit..."));
+  }
+  else {
+    ui->labelRemoteVariable->setText(tr("Add remote variable"));
+    ui->toolButton_6->setText(tr("Add..."));
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// onRemoteVariableAction
+//
+
+void
+CDlgMdfRegister::onRemoteVariableAction(void)
+{
+  if (nullptr == m_pmdf) {
+    spdlog::error("MDF register information - Invalid MDF object (onRemoteVariableAction)");
+    return;
+  }
+
+  CMDF_RemoteVariable* pRemoteVariable = findLinkedRemoteVariable();
+  if (nullptr != pRemoteVariable) {
+    CDlgMdfRemoteVar dlg(this);
+    dlg.initDialogData(m_pmdf, pRemoteVariable, CDlgMdfRemoteVar::index_name);
+    dlg.exec();
+    updateRemoteVariableLinkUi();
+    return;
+  }
+
+  CMDF_RemoteVariable* pNewRemoteVariable = new CMDF_RemoteVariable();
+  if (nullptr == pNewRemoteVariable) {
+    spdlog::critical("Failed to allocate remote variable");
+    return;
+  }
+
+  const uint16_t page   = getPage();
+  const uint32_t offset = getOffset();
+  pNewRemoteVariable->setPage(page);
+  pNewRemoteVariable->setOffset(offset);
+  pNewRemoteVariable->setName(QString("remote_var_%1_%2").arg(page).arg(offset).toStdString());
+
+  CDlgMdfRemoteVar dlg(this);
+  dlg.initDialogData(m_pmdf, pNewRemoteVariable, CDlgMdfRemoteVar::index_name);
+  if (QDialog::Accepted == dlg.exec()) {
+    if (nullptr != findLinkedRemoteVariable()) {
+      QMessageBox::warning(this,
+                           tr(APPNAME),
+                           tr("A remote variable is already linked to this register."),
+                           QMessageBox::Ok);
+      delete pNewRemoteVariable;
+      return;
+    }
+    m_pmdf->getRemoteVariableList()->push_back(pNewRemoteVariable);
+    updateRemoteVariableLinkUi();
+  }
+  else {
+    delete pNewRemoteVariable;
+  }
 }
