@@ -133,7 +133,7 @@ CDlgMdfDescription::initDialogData(std::map<std::string, std::string>* pmap, QSt
   if (nullptr != pselstr) {
     const std::string description = pmap->at(pselstr->toUtf8().toStdString());
     ui->editLanguage->setText(*pselstr);
-    ui->editDescription->setText(QString::fromUtf8(description.c_str()));
+    ui->editDescription->setPlainText(QString::fromUtf8(description.c_str()));
   }
   else {
     ui->editLanguage->setText("en");

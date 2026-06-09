@@ -315,9 +315,9 @@ CFrmMdf::saveMdf_XML()
       Save a copy of the old mdf file if
       one already exist with this name 
     */
-    QDir dir(path);
-    if (!dir.exists()) {
+    if (QFile::exists(path)) {
       // Save a copy of the old mdf file
+      QFile::remove(path + ".bak");
       QFile::copy(path, path + ".bak");
     }
 
@@ -352,9 +352,9 @@ CFrmMdf::saveMdf_JSON()
       Save a copy of the old mdf file if
       one already exist with this name 
     */
-    QDir dir(path);
-    if (!dir.exists()) {
+    if (QFile::exists(path)) {
       // Save a copy of the old mdf file
+      QFile::remove(path + ".bak");
       QFile::copy(path, path + ".bak");
     }
 
@@ -845,7 +845,6 @@ CFrmMdf::renderDescriptionItems(QTreeWidgetItem* pParent,
     str   = QString::fromUtf8(x.first.c_str()) + QString(": ") + QString::fromUtf8(x.second.c_str());
     pItem = new QMdfTreeWidgetItem(pItemModuleDescription, pobj, mdf_type_generic_description_item, idx);
     pItem->setText(0, str);
-    pParent->addChild(pItem);
     idx++;
   }
 }
