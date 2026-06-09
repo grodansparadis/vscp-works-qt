@@ -107,10 +107,14 @@ replaceAll(std::string text, const std::string& from, const std::string& to)
 static std::string
 normalizeBoldTags(const std::string& text)
 {
-  std::string rv = replaceAll(text, "<bold>", "**");
-  rv             = replaceAll(rv, "</bold>", "**");
-  rv             = replaceAll(rv, "<BOLD>", "**");
-  rv             = replaceAll(rv, "</BOLD>", "**");
+  std::string rv = replaceAll(text, "<bold>", "<b>");
+  rv             = replaceAll(rv, "</bold>", "</b>");
+  rv             = replaceAll(rv, "<BOLD>", "<b>");
+  rv             = replaceAll(rv, "</BOLD>", "</b>");
+  rv             = replaceAll(rv, "&lt;bold&gt;", "<b>");
+  rv             = replaceAll(rv, "&lt;/bold&gt;", "</b>");
+  rv             = replaceAll(rv, "&lt;BOLD&gt;", "<b>");
+  rv             = replaceAll(rv, "&lt;/BOLD&gt;", "</b>");
   return rv;
 }
 
