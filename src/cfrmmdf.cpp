@@ -77,7 +77,6 @@
 
 #include <QClipboard>
 #include <QDate>
-#include <QDateTime>
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
@@ -335,30 +334,6 @@ CFrmMdf::eventFilter(QObject* watched, QEvent* event)
         if (QTreeWidgetItem* item = ui->treeMDF->itemAt(pos)) {
           onItemDoubleClicked(item, ui->treeMDF->currentColumn());
           return true;
-        }
-      }
-    }
-    else if (QEvent::MouseButtonRelease == event->type()) {
-      QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-      if (Qt::LeftButton == mouseEvent->button()) {
-        QPoint pos = mouseEvent->pos();
-        if (watched == ui->treeMDF) {
-          pos = ui->treeMDF->viewport()->mapFrom(ui->treeMDF, pos);
-        }
-        if (QTreeWidgetItem* item = ui->treeMDF->itemAt(pos)) {
-          const qint64 now = QDateTime::currentMSecsSinceEpoch();
-          if ((m_lastClickedItem == item) &&
-              ((now - m_lastClickedMsec) <= QApplication::doubleClickInterval())) {
-            m_lastClickedItem = nullptr;
-            m_lastClickedMsec = 0;
-            onItemDoubleClicked(item, ui->treeMDF->currentColumn());
-            return true;
-          }
-
-          // Fallback path: keep click timing inside the event filter in case
-          // itemClicked/itemDoubleClicked signals are not emitted on a platform.
-          m_lastClickedItem = item;
-          m_lastClickedMsec = now;
         }
       }
     }
@@ -3197,18 +3172,6 @@ CFrmMdf::onItemClicked(QTreeWidgetItem* item, int column)
   if (nullptr == pItem) {
     return;
   }
-
-  const qint64 now = QDateTime::currentMSecsSinceEpoch();
-  if ((m_lastClickedItem == item) &&
-      ((now - m_lastClickedMsec) <= QApplication::doubleClickInterval())) {
-    m_lastClickedItem = nullptr;
-    m_lastClickedMsec = 0;
-    onItemDoubleClicked(item, column);
-    return;
-  }
-
-  m_lastClickedItem = item;
-  m_lastClickedMsec = now;
 
   if (nullptr != pItem->getObject()) {
     ui->statusbar->showMessage("object", 1000);
