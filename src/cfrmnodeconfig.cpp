@@ -107,10 +107,10 @@ replaceAll(std::string text, const std::string& from, const std::string& to)
 static std::string
 normalizeBoldTags(const std::string& text)
 {
-  std::string rv = replaceAll(text, "<bold>", "<b>");
-  rv             = replaceAll(rv, "</bold>", "</b>");
-  rv             = replaceAll(rv, "<BOLD>", "<b>");
-  rv             = replaceAll(rv, "</BOLD>", "</b>");
+  std::string rv = replaceAll(text, "<bold>", "**");
+  rv             = replaceAll(rv, "</bold>", "**");
+  rv             = replaceAll(rv, "<BOLD>", "**");
+  rv             = replaceAll(rv, "</BOLD>", "**");
   return rv;
 }
 
@@ -4524,6 +4524,7 @@ CFrmNodeConfig::fillRemoteVariableHtmlInfo(QTreeWidgetItem* item, int column)
   }
   else {
     std::string desc = prv->getDescription();
+    desc = normalizeBoldTags(desc);
     html += m_mdf.format(desc);
   }
   html += "<p>";
