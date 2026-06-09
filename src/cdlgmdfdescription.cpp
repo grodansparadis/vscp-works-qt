@@ -131,9 +131,20 @@ CDlgMdfDescription::initDialogData(std::map<std::string, std::string>* pmap, QSt
   QString lang = (nullptr == pselstr) ? "en" : *pselstr;
 
   if (nullptr != pselstr) {
-    const std::string description = pmap->at(pselstr->toUtf8().toStdString());
+    auto it = pmap->find(pselstr->toUtf8().toStdString());
+    if (pmap->end() == it) {
+      // Fall back to local 8-bit conversion for compatibility with legacy/non-UTF language keys.
+      it = pmap->find(pselstr->toStdString());
+    }
+
     ui->editLanguage->setText(*pselstr);
-    ui->editDescription->setPlainText(QString::fromUtf8(description.c_str()));
+    if (pmap->end() != it) {
+      ui->editDescription->setPlainText(QString::fromUtf8(it->second.c_str()));
+    }
+    else {
+      spdlog::warn("MDF description dialog - language key '{}' not found in description map", pselstr->toStdString());
+      ui->editDescription->clear();
+    }
   }
   else {
     ui->editLanguage->setText("en");
