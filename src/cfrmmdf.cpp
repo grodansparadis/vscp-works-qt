@@ -212,6 +212,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   ui->treeMDF->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeMDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeMDF->setExpandsOnDoubleClick(false);
+  ui->treeMDF->viewport()->installEventFilter(this);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   spdlog::debug(std::string(tr("Node configuration module opened").toStdString()));
@@ -312,6 +313,27 @@ CFrmMdf::~CFrmMdf()
   m_headAlarm              = nullptr;
   m_headDecisionMatrix     = nullptr;
   m_headEvent              = nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// eventFilter
+//
+
+bool
+CFrmMdf::eventFilter(QObject* watched, QEvent* event)
+{
+  if ((watched == ui->treeMDF->viewport()) &&
+      (QEvent::MouseButtonDblClick == event->type())) {
+    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+    if (Qt::LeftButton == mouseEvent->button()) {
+      if (QTreeWidgetItem* item = ui->treeMDF->itemAt(mouseEvent->pos())) {
+        onItemDoubleClicked(item, ui->treeMDF->currentColumn());
+        return true;
+      }
+    }
+  }
+
+  return QMainWindow::eventFilter(watched, event);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

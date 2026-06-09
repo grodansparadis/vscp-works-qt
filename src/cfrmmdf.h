@@ -160,6 +160,7 @@ class CFrmMdf : public QMainWindow {
 public:
   explicit CFrmMdf(QWidget* parent = nullptr, const char* path = nullptr);
   virtual ~CFrmMdf();
+  bool eventFilter(QObject* watched, QEvent* event) override;
 
   /*!
       set Initial focus
