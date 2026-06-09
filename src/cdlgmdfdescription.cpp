@@ -131,15 +131,15 @@ CDlgMdfDescription::initDialogData(std::map<std::string, std::string>* pmap, QSt
   QString lang = (nullptr == pselstr) ? "en" : *pselstr;
 
   if (nullptr != pselstr) {
-    std::string description = pmap->at(pselstr->toStdString());
-    ui->editLanguage->setText(pselstr->toStdString().c_str());
-    ui->editDescription->setText(description.c_str());
+    const std::string description = pmap->at(pselstr->toUtf8().toStdString());
+    ui->editLanguage->setText(*pselstr);
+    ui->editDescription->setText(QString::fromUtf8(description.c_str()));
   }
   else {
     ui->editLanguage->setText("en");
   }
 
-  int idx = ui->comboBoxLang->findText(lang.toStdString().c_str());
+  int idx = ui->comboBoxLang->findText(lang);
   if (-1 != idx) {
     ui->comboBoxLang->setCurrentIndex(idx);
   }
@@ -169,7 +169,7 @@ CDlgMdfDescription::accept()
   std::string str;
   if (nullptr != m_pMapDesc) {
 
-    str = ui->editLanguage->text().trimmed().left(2).toStdString();
+    str = ui->editLanguage->text().trimmed().left(2).toUtf8().toStdString();
 
     if (str.length() < 2) {
       QMessageBox::warning(this, tr(APPNAME), tr("Invalid description object. Language must be set to IOS639 value."), QMessageBox::Ok);
@@ -179,11 +179,10 @@ CDlgMdfDescription::accept()
     // If selstr has been change in edit mode we have to take
     // special care (we remove the old key).
     if (m_initial_selstr.length() && (m_initial_selstr != str.c_str())) {
-      m_pMapDesc->erase(m_initial_selstr.toStdString());
+      m_pMapDesc->erase(m_initial_selstr.toUtf8().toStdString());
     }
 
-    QString desc       = ui->editDescription->toPlainText();
-    (*m_pMapDesc)[str] = ui->editDescription->toPlainText().toStdString();
+    (*m_pMapDesc)[str] = ui->editDescription->toPlainText().toUtf8().toStdString();
   }
   else {
     spdlog::error("MDF module information - Invalid MDF description object (accept)");
