@@ -266,6 +266,21 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   ui->menuFile->insertSeparator(ui->actionClose);
   loadRecentSavedFiles();
 
+  QMenu* operationsMenu = new QMenu(tr("&Operations"), this);
+  QAction* actionShowOperations = operationsMenu->addAction(tr("Show operations for selected item"));
+  connect(actionShowOperations,
+          &QAction::triggered,
+          this,
+          [this]() {
+            QPoint menuPos = ui->treeMDF->viewport()->rect().center();
+            QTreeWidgetItem* selected = ui->treeMDF->currentItem();
+            if (nullptr != selected) {
+              menuPos = ui->treeMDF->visualItemRect(selected).center();
+            }
+            showMdfContextMenu(menuPos);
+          });
+  ui->menubar->insertMenu(ui->menuHelp->menuAction(), operationsMenu);
+
   // Open has been selected in the menu - Edit Module info
   connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editItem()));
 
