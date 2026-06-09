@@ -1021,7 +1021,19 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   // * * * Parse  MDF * * *
 
   ui->statusBar->showMessage(tr("Parsing MDF file..."));
-  rv = pItem->m_mdf.parseMDF(tempPath);
+  try {
+    rv = pItem->m_mdf.parseMDF(tempPath);
+  }
+  catch (const std::exception &ex) {
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
+    spdlog::error("Failed to parse MDF {0}: {1}", tempPath, ex.what());
+    return;
+  }
+  catch (...) {
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
+    spdlog::error("Failed to parse MDF {0}: Unknown exception", tempPath);
+    return;
+  }
   if (VSCP_ERROR_SUCCESS != rv) {
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);

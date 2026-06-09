@@ -1617,7 +1617,25 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
   // * * * Parse  MDF * * *
 
   ui->statusBar->showMessage(tr("Parsing MDF file..."));
-  rv = m_mdf.parseMDF(tempPath);
+  try {
+    rv = m_mdf.parseMDF(tempPath);
+  }
+  catch (const std::exception& ex) {
+    QApplication::beep();
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
+    spdlog::error("Failed to parse MDF {0}: {1}", tempPath, ex.what());
+    QApplication::restoreOverrideCursor();
+    ui->statusBar->removeWidget(pbar);
+    return VSCP_ERROR_PARSING;
+  }
+  catch (...) {
+    QApplication::beep();
+    ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
+    spdlog::error("Failed to parse MDF {0}: Unknown exception", tempPath);
+    QApplication::restoreOverrideCursor();
+    ui->statusBar->removeWidget(pbar);
+    return VSCP_ERROR_PARSING;
+  }
   if (VSCP_ERROR_SUCCESS != rv) {
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));

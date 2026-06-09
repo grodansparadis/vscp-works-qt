@@ -647,7 +647,18 @@ CWizardPageLoadMdf::validatePage(void)
                                                     tr("Set local MDF file"),
                                                     "/home/jana",
                                                     tr("MDF Files (*.xml *.json *.mdf);;All (*.*)"));
-        int rv       = mdf.parseMDF(path.toStdString());
+        int rv       = VSCP_ERROR_ERROR;
+        try {
+          rv = mdf.parseMDF(path.toStdString());
+        }
+        catch (const std::exception &ex) {
+          spdlog::error("Failed to parse MDF {0}: {1}", path.toStdString(), ex.what());
+          return false;
+        }
+        catch (...) {
+          spdlog::error("Failed to parse MDF {0}: Unknown exception", path.toStdString());
+          return false;
+        }
         if (VSCP_ERROR_SUCCESS != rv) {
           // if (nullptr != statusCallback) {
           //   statusCallback(80, "Failed to parse MDF");
@@ -782,7 +793,18 @@ CWizardPageFirmware::initializePage(void)
   connect(m_btnSelectFirmware, &QPushButton::clicked, this, &CWizardPageFirmware::setFirmwareFile);
   connect(m_chkLocalFile, &QCheckBox::clicked, this, &CWizardPageFirmware::toggleLocalFile);
 
-  int rv = m_mdf.parseMDF(field("boot.firmware.mdf").toString().toStdString());
+  int rv = VSCP_ERROR_ERROR;
+  try {
+    rv = m_mdf.parseMDF(field("boot.firmware.mdf").toString().toStdString());
+  }
+  catch (const std::exception &ex) {
+    spdlog::error("Failed to parse MDF {0}: {1}", field("boot.firmware.mdf").toString().toStdString(), ex.what());
+    return;
+  }
+  catch (...) {
+    spdlog::error("Failed to parse MDF {0}: Unknown exception", field("boot.firmware.mdf").toString().toStdString());
+    return;
+  }
   if (VSCP_ERROR_SUCCESS != rv) {
     spdlog::error("Failed to parse MDF {0} rv={1}", field("boot.firmware.mdf").toString().toStdString(), rv);
     return;

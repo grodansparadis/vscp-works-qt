@@ -1467,7 +1467,24 @@ vscpworks::downloadMDF(CStandardRegisters& stdregs,
   // * * * Parse  MDF * * *
 
   spdlog::debug("Parsing MDF");
-  int rv = mdf.parseMDF(tempPath);
+  int rv = VSCP_ERROR_ERROR;
+  try {
+    rv = mdf.parseMDF(tempPath);
+  }
+  catch (const std::exception &ex) {
+    if (nullptr != statusCallback) {
+      statusCallback(80, "Faild to parse MDF");
+    }
+    spdlog::error("Failed to parse MDF {0}: {1}", tempPath, ex.what());
+    return VSCP_ERROR_PARSING;
+  }
+  catch (...) {
+    if (nullptr != statusCallback) {
+      statusCallback(80, "Faild to parse MDF");
+    }
+    spdlog::error("Failed to parse MDF {0}: Unknown exception", tempPath);
+    return VSCP_ERROR_PARSING;
+  }
   if (VSCP_ERROR_SUCCESS != rv) {
     if (nullptr != statusCallback) {
       statusCallback(80, "Faild to parse MDF");
