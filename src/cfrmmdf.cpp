@@ -213,6 +213,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   ui->treeMDF->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeMDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeMDF->setExpandsOnDoubleClick(false);
+  ui->treeMDF->installEventFilter(this);
   ui->treeMDF->viewport()->installEventFilter(this);
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
@@ -323,13 +324,37 @@ CFrmMdf::~CFrmMdf()
 bool
 CFrmMdf::eventFilter(QObject* watched, QEvent* event)
 {
-  if ((watched == ui->treeMDF->viewport()) &&
-      (QEvent::MouseButtonDblClick == event->type())) {
-    QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
-    if (Qt::LeftButton == mouseEvent->button()) {
-      if (QTreeWidgetItem* item = ui->treeMDF->itemAt(mouseEvent->pos())) {
-        onItemDoubleClicked(item, ui->treeMDF->currentColumn());
-        return true;
+  if ((watched == ui->treeMDF->viewport()) || (watched == ui->treeMDF)) {
+    if (QEvent::MouseButtonDblClick == event->type()) {
+      QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+      if (Qt::LeftButton == mouseEvent->button()) {
+        QPoint pos = mouseEvent->pos();
+        if (watched == ui->treeMDF) {
+          pos = ui->treeMDF->viewport()->mapFrom(ui->treeMDF, pos);
+        }
+        if (QTreeWidgetItem* item = ui->treeMDF->itemAt(pos)) {
+          onItemDoubleClicked(item, ui->treeMDF->currentColumn());
+          return true;
+        }
+      }
+    }
+    else if (QEvent::MouseButtonRelease == event->type()) {
+      QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
+      if (Qt::LeftButton == mouseEvent->button()) {
+        QPoint pos = mouseEvent->pos();
+        if (watched == ui->treeMDF) {
+          pos = ui->treeMDF->viewport()->mapFrom(ui->treeMDF, pos);
+        }
+        if (QTreeWidgetItem* item = ui->treeMDF->itemAt(pos)) {
+          const qint64 now = QDateTime::currentMSecsSinceEpoch();
+          if ((m_lastClickedItem == item) &&
+              ((now - m_lastClickedMsec) <= QApplication::doubleClickInterval())) {
+            m_lastClickedItem = nullptr;
+            m_lastClickedMsec = 0;
+            onItemDoubleClicked(item, ui->treeMDF->currentColumn());
+            return true;
+          }
+        }
       }
     }
   }
