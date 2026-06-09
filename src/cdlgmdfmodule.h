@@ -151,6 +151,7 @@ public:
 
 public slots:
   void accept(void);
+  void updateBufferSizeLockForLevel(void);
 
   // Description buttons
   void addDesc(void);
