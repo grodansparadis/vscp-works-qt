@@ -413,6 +413,7 @@ CFrmMdf::openMdfFromPath(const QString& path)
 
   m_last_path = path;
   m_labelOpenedFile->setText(tr("File: %1").arg(path));
+  addRecentSavedFile(path);
   loadMdf();
   m_bChanged = false;
 

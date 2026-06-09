@@ -53,6 +53,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
+
 const char CDlgMdfRegister::pre_str_register[] = "Register: ";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -602,8 +604,10 @@ CDlgMdfRegister::findLinkedRemoteVariable(void)
     return nullptr;
   }
 
-  const uint16_t page   = getPage();
-  const uint32_t offset = getOffset();
+  const uint16_t page         = getPage();
+  const uint32_t regStart     = getOffset();
+  const uint32_t regSpan      = (nullptr != m_preg) ? std::max<uint16_t>(1, m_preg->getSpan()) : 1;
+  const uint64_t regRangeEnd  = static_cast<uint64_t>(regStart) + static_cast<uint64_t>(regSpan);
   std::deque<CMDF_RemoteVariable*>* pRemoteVariables = m_pmdf->getRemoteVariableList();
   if (nullptr == pRemoteVariables) {
     return nullptr;
@@ -618,8 +622,12 @@ CDlgMdfRegister::findLinkedRemoteVariable(void)
       continue;
     }
 
-    if ((offset >= pRemoteVariable->getOffset()) &&
-        (offset < (pRemoteVariable->getOffset() + pRemoteVariable->getTypeByteCount()))) {
+    const uint64_t rvStart    = static_cast<uint64_t>(pRemoteVariable->getOffset());
+    const uint64_t rvSpan     = static_cast<uint64_t>(std::max<uint8_t>(1, pRemoteVariable->getTypeByteCount()));
+    const uint64_t rvRangeEnd = rvStart + rvSpan;
+
+    // Linked if register range and remote variable range overlap.
+    if ((static_cast<uint64_t>(regStart) < rvRangeEnd) && (rvStart < regRangeEnd)) {
       return pRemoteVariable;
     }
   }
