@@ -80,6 +80,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
+#include <QSettings>
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
@@ -91,6 +92,9 @@
 // ----------------------------------------------------------------------------
 
 namespace {
+
+constexpr int MAX_RECENT_SAVED_FILES = 10;
+const char *RECENT_SAVED_FILES_KEY = "mdf/recent_saved_files";
 
 mdf_format
 detectMdfFormatForPath(const QString& path)
@@ -257,6 +261,11 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
   ui->menuFile->insertAction(ui->actionSave_XML, actionSave);
   connect(actionSave, SIGNAL(triggered()), this, SLOT(saveMdf()));
 
+  m_menuRecentSaved = new QMenu(tr("Recent Saved Files"), this);
+  ui->menuFile->insertMenu(ui->actionClose, m_menuRecentSaved);
+  ui->menuFile->insertSeparator(ui->actionClose);
+  loadRecentSavedFiles();
+
   // Open has been selected in the menu - Edit Module info
   connect(ui->actionEdit_item, SIGNAL(triggered()), this, SLOT(editItem()));
 
@@ -357,55 +366,57 @@ CFrmMdf::newMdf(void)
 void
 CFrmMdf::openMdf(void)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
   QString path = QFileDialog::getOpenFileName(this,
                                               tr("Open MDF (Module Description File)"),
                                               "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/beijing_2.xml"*/,
                                               tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
-  if (path.length()) {
-    qInfo() << "Selected MDF filename: " << path;
-    const std::string pathUtf8 = path.toUtf8().toStdString();
-    try {
-      int rv = m_mdf.parseMDF(pathUtf8);
-      if (VSCP_ERROR_SUCCESS != rv) {
-        spdlog::error("Failed to parse MDF file {0}", pathUtf8);
-        QMessageBox::warning(this,
-                             APPNAME,
-                             tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
-                               .arg(path)
-                               .arg(rv));
-        return;
-      }
-    }
-    catch (const std::exception &ex) {
-      spdlog::error("Failed to parse MDF file {0}: {1}", pathUtf8, ex.what());
-      QMessageBox::warning(this,
-                           APPNAME,
-                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
-                             .arg(path)
-                             .arg(QString::fromUtf8(ex.what())));
-      return;
-    }
-    catch (...) {
-      spdlog::error("Failed to parse MDF file {0}: Unknown exception", pathUtf8);
-      QMessageBox::warning(this,
-                           APPNAME,
-                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
-                             .arg(path));
-      return;
-    }
-
-    // Save the path
-    m_last_path = path;
-    m_labelOpenedFile->setText(tr("File: %1").arg(path));
-
-    // Load the tree with parsed objects
-    loadMdf();
-
-    m_bChanged = false;
+  if (!path.isEmpty()) {
+    openMdfFromPath(path);
   }
+}
+
+bool
+CFrmMdf::openMdfFromPath(const QString& path)
+{
+  qInfo() << "Selected MDF filename: " << path;
+  const std::string pathUtf8 = path.toUtf8().toStdString();
+  try {
+    int rv = m_mdf.parseMDF(pathUtf8);
+    if (VSCP_ERROR_SUCCESS != rv) {
+      spdlog::error("Failed to parse MDF file {0}", pathUtf8);
+      QMessageBox::warning(this,
+                           APPNAME,
+                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                             .arg(path)
+                             .arg(rv));
+      return false;
+    }
+  }
+  catch (const std::exception &ex) {
+    spdlog::error("Failed to parse MDF file {0}: {1}", pathUtf8, ex.what());
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                           .arg(path)
+                           .arg(QString::fromUtf8(ex.what())));
+    return false;
+  }
+  catch (...) {
+    spdlog::error("Failed to parse MDF file {0}: Unknown exception", pathUtf8);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                           .arg(path));
+    return false;
+  }
+
+  m_last_path = path;
+  m_labelOpenedFile->setText(tr("File: %1").arg(path));
+  loadMdf();
+  m_bChanged = false;
+
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -422,27 +433,7 @@ CFrmMdf::saveMdf_XML()
 
   if (path.length()) {
     qInfo() << "Selected MDF filename: " << path;
-
-    /* 
-      Save a copy of the old mdf file if
-      one already exist with this name 
-    */
-    if (QFile::exists(path)) {
-      // Save a copy of the old mdf file
-      QFile::remove(path + ".bak");
-      QFile::copy(path, path + ".bak");
-    }
-
-    const std::string pathUtf8 = path.toUtf8().toStdString();
-    int rv                     = m_mdf.save(pathUtf8, MDF_FORMAT_XML);
-    if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", pathUtf8);
-      QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
-      return;
-    }
-    m_last_path = path;
-    m_labelOpenedFile->setText(tr("File: %1").arg(path));
-    m_bChanged = false;
+    saveMdfToPath(path, MDF_FORMAT_XML);
   }
 }
 
@@ -459,29 +450,8 @@ CFrmMdf::saveMdf_JSON()
                                                   tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
 
   if (path.length()) {
-
     qInfo() << "Selected MDF filename: " << path;
-
-    /* 
-      Save a copy of the old mdf file if
-      one already exist with this name 
-    */
-    if (QFile::exists(path)) {
-      // Save a copy of the old mdf file
-      QFile::remove(path + ".bak");
-      QFile::copy(path, path + ".bak");
-    }
-
-    const std::string pathUtf8 = path.toUtf8().toStdString();
-    int rv                     = m_mdf.save(pathUtf8, MDF_FORMAT_JSON);
-    if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to save MDF file {0}", pathUtf8);
-      QMessageBox::warning(this, APPNAME, tr("Failed to save MDF file."));
-      return;
-    }
-    m_last_path = path;
-    m_labelOpenedFile->setText(tr("File: %1").arg(path));
-    m_bChanged = false;
+    saveMdfToPath(path, MDF_FORMAT_JSON);
   }
 }
 
@@ -497,27 +467,140 @@ CFrmMdf::saveMdf()
     return;
   }
 
-  if (QFile::exists(m_last_path)) {
-    QFile::remove(m_last_path + ".bak");
-    QFile::copy(m_last_path, m_last_path + ".bak");
+  if (!saveMdfToPath(m_last_path, detectMdfFormatForPath(m_last_path))) {
+    return;
+  }
+}
+
+bool
+CFrmMdf::saveMdfToPath(const QString& path, mdf_format format)
+{
+  if (!createBackupForPath(path)) {
+    return false;
   }
 
-  const mdf_format format       = detectMdfFormatForPath(m_last_path);
-  const std::string pathUtf8    = m_last_path.toUtf8().toStdString();
-  const int rv                  = m_mdf.save(pathUtf8, format);
+  const std::string pathUtf8 = path.toUtf8().toStdString();
+  const int rv               = m_mdf.save(pathUtf8, format);
   if (VSCP_ERROR_SUCCESS != rv) {
     spdlog::error("Failed to save MDF file {0}", pathUtf8);
     QMessageBox::warning(this,
                          APPNAME,
                          tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
-                           .arg(m_last_path)
+                           .arg(path)
                            .arg(rv));
+    return false;
+  }
+
+  m_last_path = path;
+  m_labelOpenedFile->setText(tr("File: %1").arg(path));
+  ui->statusbar->showMessage(tr("Saved %1").arg(path), 2000);
+  m_bChanged = false;
+  addRecentSavedFile(path);
+  return true;
+}
+
+bool
+CFrmMdf::createBackupForPath(const QString& path)
+{
+  if (!QFile::exists(path)) {
+    return true;
+  }
+
+  const QString backupPath = path + ".bak";
+  if (QFile::exists(backupPath) && !QFile::remove(backupPath)) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to remove existing backup.")
+                           .arg(backupPath));
+    return false;
+  }
+
+  if (!QFile::copy(path, backupPath)) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to copy current file.")
+                           .arg(path));
+    return false;
+  }
+
+  return true;
+}
+
+void
+CFrmMdf::addRecentSavedFile(const QString& path)
+{
+  const QString normalized = QFileInfo(path).canonicalFilePath().isEmpty()
+                              ? QFileInfo(path).absoluteFilePath()
+                              : QFileInfo(path).canonicalFilePath();
+  m_recentSavedFiles.removeAll(normalized);
+  m_recentSavedFiles.prepend(normalized);
+
+  while (m_recentSavedFiles.size() > MAX_RECENT_SAVED_FILES) {
+    m_recentSavedFiles.removeLast();
+  }
+
+  QSettings settings;
+  settings.setValue(RECENT_SAVED_FILES_KEY, m_recentSavedFiles);
+  rebuildRecentSavedFilesMenu();
+}
+
+void
+CFrmMdf::loadRecentSavedFiles()
+{
+  QSettings settings;
+  m_recentSavedFiles = settings.value(RECENT_SAVED_FILES_KEY).toStringList();
+  while (m_recentSavedFiles.size() > MAX_RECENT_SAVED_FILES) {
+    m_recentSavedFiles.removeLast();
+  }
+  rebuildRecentSavedFilesMenu();
+}
+
+void
+CFrmMdf::rebuildRecentSavedFilesMenu()
+{
+  if (nullptr == m_menuRecentSaved) {
     return;
   }
 
-  m_labelOpenedFile->setText(tr("File: %1").arg(m_last_path));
-  ui->statusbar->showMessage(tr("Saved %1").arg(m_last_path), 2000);
-  m_bChanged = false;
+  m_menuRecentSaved->clear();
+  if (m_recentSavedFiles.isEmpty()) {
+    QAction* emptyAction = m_menuRecentSaved->addAction(tr("(No saved files yet)"));
+    emptyAction->setEnabled(false);
+    return;
+  }
+
+  for (const QString& path : m_recentSavedFiles) {
+    QAction* action = m_menuRecentSaved->addAction(path);
+    action->setData(path);
+    connect(action, &QAction::triggered, this, &CFrmMdf::openRecentSavedFile);
+  }
+}
+
+void
+CFrmMdf::openRecentSavedFile()
+{
+  QAction* action = qobject_cast<QAction*>(sender());
+  if (nullptr == action) {
+    return;
+  }
+
+  const QString path = action->data().toString();
+  if (path.isEmpty()) {
+    return;
+  }
+
+  if (!QFile::exists(path)) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Saved MDF file not found.\n\nWhere: %1").arg(path));
+    m_recentSavedFiles.removeAll(path);
+    QSettings settings;
+    settings.setValue(RECENT_SAVED_FILES_KEY, m_recentSavedFiles);
+    rebuildRecentSavedFilesMenu();
+    return;
+  }
+
+  openMdfFromPath(path);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

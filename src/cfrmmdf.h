@@ -42,7 +42,9 @@
 #include <set>
 
 #include <QDialog>
+#include <QMenu>
 #include <QObject>
+#include <QStringList>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -598,6 +600,8 @@ public slots:
 
   /// Do the open operation
   void openMdf(void);
+  bool openMdfFromPath(const QString& path);
+  void openRecentSavedFile(void);
 
   /// Load MDF for selected node
   void loadMdf(void);
@@ -610,6 +614,11 @@ public slots:
 
   /// Save MDF to currently opened file
   void saveMdf(void);
+  bool saveMdfToPath(const QString& path, mdf_format format);
+  bool createBackupForPath(const QString& path);
+  void addRecentSavedFile(const QString& path);
+  void loadRecentSavedFiles();
+  void rebuildRecentSavedFilesMenu();
 
   /*!
     Find next MDF type item in tree
@@ -676,10 +685,8 @@ private:
 
   /// path for last successfully opened MDF
   QString m_last_path;
-
-  /// fallback double-click tracking for platforms that miss dbl-click signals
-  QTreeWidgetItem* m_lastClickedItem = nullptr;
-  qint64 m_lastClickedMsec = 0;
+  QStringList m_recentSavedFiles;
+  QMenu* m_menuRecentSaved = nullptr;
 
   /// True if a loadeed file has been edited
   bool m_bChanged;
