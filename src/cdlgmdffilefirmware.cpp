@@ -59,6 +59,7 @@ CDlgMdfFileFirmware::CDlgMdfFileFirmware(QWidget* parent)
   , ui(new Ui::CDlgMdfFileFirmware)
 {
   ui->setupUi(this);
+  ui->date->setDisplayFormat("yyyy-MM-dd");
 
   // Help
 QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
@@ -108,8 +109,13 @@ CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_file_firmwar
   ui->editUrl->setText(m_pfirmware->getUrl().c_str());
   ui->editFormat->setText(m_pfirmware->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_pfirmware->getDate().c_str(),"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(m_pfirmware->getDate().c_str(), Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(m_pfirmware->getDate().c_str(), "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 
   ui->editVersion->setText(m_pfirmware->getVersion().c_str());
   ui->editSize->setText(QString::number(m_pfirmware->getSize()));
@@ -277,8 +283,13 @@ CDlgMdfFileFirmware::getFormat(void)
 void
 CDlgMdfFileFirmware::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate,"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(strdate, Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(strdate, "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -289,7 +300,7 @@ QString
 CDlgMdfFileFirmware::getDate(void)
 {
   QDate dd = ui->date->date(); 
-  return dd.toString("YY-MM-DD");
+  return dd.toString(Qt::ISODate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -373,6 +384,8 @@ CDlgMdfFileFirmware::accept()
 
     str = ui->editFormat->text().toStdString();
     m_pfirmware->setFormat(str);
+
+    m_pfirmware->setDate(ui->date->date().toString(Qt::ISODate).toStdString());
 
     str = ui->editVersion->text().toStdString();
     m_pfirmware->setVersion(str);

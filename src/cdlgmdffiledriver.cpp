@@ -59,6 +59,7 @@ CDlgMdfFileDriver::CDlgMdfFileDriver(QWidget* parent)
   , ui(new Ui::CDlgMdfFileDriver)
 {
   ui->setupUi(this);
+  ui->date->setDisplayFormat("yyyy-MM-dd");
 
   // Help
 QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
@@ -105,8 +106,13 @@ CDlgMdfFileDriver::initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index i
   ui->editOsVersion->setText(m_pdriver->getOSVer().c_str());
   ui->editVersion->setText(m_pdriver->getVersion().c_str());
 
-  QDate dd = QDate::fromString(m_pdriver->getDate().c_str(), "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(m_pdriver->getDate().c_str(), Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(m_pdriver->getDate().c_str(), "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 
   switch (index) {
     case index_file_driver_name:
@@ -293,8 +299,13 @@ CDlgMdfFileDriver::getOsVersion(void)
 void
 CDlgMdfFileDriver::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(strdate, Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(strdate, "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -305,7 +316,7 @@ QString
 CDlgMdfFileDriver::getDate(void)
 {
   QDate dd = ui->date->date();
-  return dd.toString("YY-MM-DD");
+  return dd.toString(Qt::ISODate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -360,7 +371,7 @@ CDlgMdfFileDriver::accept()
     m_pdriver->setMd5(str);
 
     QDate dd = ui->date->date();
-    m_pdriver->setDate(dd.toString("YY-MM-DD").toStdString());
+    m_pdriver->setDate(dd.toString(Qt::ISODate).toStdString());
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

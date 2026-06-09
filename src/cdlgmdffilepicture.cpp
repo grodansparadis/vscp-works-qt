@@ -59,6 +59,7 @@ CDlgMdfFilePicture::CDlgMdfFilePicture(QWidget* parent)
   , ui(new Ui::CDlgMdfFilePicture)
 {
   ui->setupUi(this);
+  ui->date->setDisplayFormat("yyyy-MM-dd");
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -110,8 +111,13 @@ CDlgMdfFilePicture::initDialogData(const CMDF_Object* pmdfobj, mdf_file_picture_
   ui->editUrl->setText(m_ppicture->getUrl().c_str());
   ui->editFormat->setText(m_ppicture->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_ppicture->getDate().c_str(),"YY-MM_DD");
-    ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(m_ppicture->getDate().c_str(), Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(m_ppicture->getDate().c_str(), "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 
   switch (index) {
 
@@ -216,8 +222,13 @@ CDlgMdfFilePicture::getFormat(void)
 void
 CDlgMdfFilePicture::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate,"YY-MM_DD");
-  ui->date->setDate(dd); 
+  QDate dd = QDate::fromString(strdate, Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(strdate, "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,7 +239,7 @@ QString
 CDlgMdfFilePicture::getDate(void)
 {
   QDate dd = ui->date->date(); 
-  return dd.toString("YY-MM-DD");
+  return dd.toString(Qt::ISODate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

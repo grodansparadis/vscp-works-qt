@@ -76,6 +76,7 @@
 #include "cdlgmdfvaluelist.h"
 
 #include <QClipboard>
+#include <QDate>
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
@@ -114,6 +115,25 @@ detectMdfFormatForPath(const QString& path)
   }
 
   return MDF_FORMAT_XML;
+}
+
+QString
+formatIsoDate(const std::string& dateValue)
+{
+  const QString source = QString::fromStdString(dateValue).trimmed();
+  if (source.isEmpty()) {
+    return source;
+  }
+
+  QDate date = QDate::fromString(source, Qt::ISODate);
+  if (!date.isValid()) {
+    date = QDate::fromString(source, "yy-MM-dd");
+  }
+  if (!date.isValid()) {
+    date = QDate::fromString(source, "yyyy-MM-dd");
+  }
+
+  return date.isValid() ? date.toString(Qt::ISODate) : source;
 }
 
 } // anonymous namespace
@@ -1819,7 +1839,7 @@ CFrmMdf::renderPictureSubItems(QMdfTreeWidgetItem* pPictureItem, CMDF_Picture* p
 
   pSubItem = new QMdfTreeWidgetItem(pPictureItem, pPictureObj, mdf_type_picture_sub_item, static_cast<int>(index_file_picture_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: %1").arg(pPictureObj->getDate().c_str());
+    str = QString("Date: %1").arg(formatIsoDate(pPictureObj->getDate()));
     pSubItem->setText(0, str);
     pPictureItem->addChild(pSubItem);
   }
@@ -1905,7 +1925,7 @@ CFrmMdf::renderVideoSubItems(QMdfTreeWidgetItem* pVideoItem, CMDF_Video* pVideoO
 
   pSubItem = new QMdfTreeWidgetItem(pVideoItem, pVideoObj, mdf_type_video_sub_item, static_cast<int>(index_file_video_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: %1").arg(pVideoObj->getDate().c_str());
+    str = QString("Date: %1").arg(formatIsoDate(pVideoObj->getDate()));
     pSubItem->setText(0, str);
     pVideoItem->addChild(pSubItem);
   }
@@ -1986,7 +2006,7 @@ CFrmMdf::renderManualSubItems(QMdfTreeWidgetItem* pManualItem, CMDF_Manual* pMan
 
   pSubItem = new QMdfTreeWidgetItem(pManualItem, pManualObj, mdf_type_manual_sub_item, static_cast<int>(index_file_manual_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: %1").arg(pManualObj->getDate().c_str());
+    str = QString("Date: %1").arg(formatIsoDate(pManualObj->getDate()));
     pSubItem->setText(0, str);
     pManualItem->addChild(pSubItem);
   }
@@ -2015,7 +2035,8 @@ CFrmMdf::renderDriverItems(QMdfTreeWidgetItem* pItemDriver, uint16_t selectedInd
     pDriverObj = m_mdf.getDriverObj(index);
     if (nullptr != pDriverObj) {
       QMdfTreeWidgetItem* pItem = new QMdfTreeWidgetItem(pItemDriver, pDriverObj, mdf_type_driver_item, index);
-      str                       = QString(CDlgMdfFile::pre_str_driver) + QString(" %1 %2").arg(pDriverObj->getName().c_str()).arg(pDriverObj->getDate().c_str());
+      str = QString(CDlgMdfFile::pre_str_driver) +
+            QString(" %1 %2").arg(pDriverObj->getName().c_str()).arg(formatIsoDate(pDriverObj->getDate()));
       pItem->setText(0, str);
       pItemDriver->addChild(pItem);
 
@@ -2060,7 +2081,7 @@ CFrmMdf::renderDriverSubItems(QMdfTreeWidgetItem* pDriverItem, CMDF_Driver* pDri
 
   pSubItem = new QMdfTreeWidgetItem(pDriverItem, pDriverObj, mdf_type_driver_sub_item, static_cast<int>(index_file_driver_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: ") + pDriverObj->getDate().c_str();
+    str = QString("Date: %1").arg(formatIsoDate(pDriverObj->getDate()));
     pSubItem->setText(0, str);
     pDriverItem->addChild(pSubItem);
   }
@@ -2187,7 +2208,7 @@ CFrmMdf::renderSetupSubItems(QMdfTreeWidgetItem* pSetupItem, CMDF_Setup* pSetupO
 
   pSubItem = new QMdfTreeWidgetItem(pSetupItem, pSetupObj, mdf_type_setup_sub_item, static_cast<int>(index_file_setup_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: %1").arg(pSetupObj->getDate().c_str());
+    str = QString("Date: %1").arg(formatIsoDate(pSetupObj->getDate()));
     pSubItem->setText(0, str);
     pSetupItem->addChild(pSubItem);
   }
@@ -2216,7 +2237,8 @@ CFrmMdf::renderFirmwareItems(QMdfTreeWidgetItem* pItemFirmware, uint16_t selecte
     pFirmwareObj = m_mdf.getFirmwareObj(index);
     if (nullptr != pFirmwareObj) {
       QMdfTreeWidgetItem* pItem = new QMdfTreeWidgetItem(pItemFirmware, pFirmwareObj, mdf_type_firmware_item, index);
-      str                       = QString(CDlgMdfFile::pre_str_firmware) + QString(" %1 %2").arg(pFirmwareObj->getDate().c_str()).arg(pFirmwareObj->getName().c_str());
+      str = QString(CDlgMdfFile::pre_str_firmware) +
+            QString(" %1 %2").arg(formatIsoDate(pFirmwareObj->getDate())).arg(pFirmwareObj->getName().c_str());
       pItem->setText(0, str);
       pItemFirmware->addChild(pItem);
 
@@ -2268,7 +2290,7 @@ CFrmMdf::renderFirmwareSubItems(QMdfTreeWidgetItem* pFirmwareItem, CMDF_Firmware
 
   pSubItem = new QMdfTreeWidgetItem(pFirmwareItem, pFirmwareObj, mdf_type_firmware_sub_item, static_cast<int>(index_file_firmware_date));
   if (nullptr != pSubItem) {
-    str = QString("Date: %1").arg(pFirmwareObj->getDate().c_str());
+    str = QString("Date: %1").arg(formatIsoDate(pFirmwareObj->getDate()));
     pSubItem->setText(0, str);
     pFirmwareItem->addChild(pSubItem);
   }
@@ -2750,7 +2772,7 @@ CFrmMdf::loadMdf(void)
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
 
-  str   = PREFIX_MDF_MODULE_CHANGE_DATE + m_mdf.getModuleChangeDate().c_str();
+  str   = PREFIX_MDF_MODULE_CHANGE_DATE + formatIsoDate(m_mdf.getModuleChangeDate());
   pItem = new QMdfTreeWidgetItem(pItemModule, &m_mdf, mdf_type_mdf_item, index_module_change_date);
   pItem->setText(0, str);
   pItemModule->addChild(pItem);
@@ -3132,236 +3154,15 @@ CFrmMdf::onItemClicked(QTreeWidgetItem* item, int column)
 void
 CFrmMdf::onItemDoubleClicked(QTreeWidgetItem* item, int column)
 {
-  QString str;
+  Q_UNUSED(column);
+
   QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)item;
   if (nullptr == pItem) {
     return;
   }
 
-  // QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
-
-  switch (pItem->getObjectType()) {
-    case mdf_type_unknown:
-      str = tr("Unknown");
-      break;
-
-    case mdf_type_redirection:
-      str = tr("redirection");
-      break;
-
-    case mdf_type_mdf:
-      str = tr("MDF");
-      break;
-
-    case mdf_type_mdf_item:
-      str = tr("MDF item");
-      break;
-
-    case mdf_type_value:
-      str = tr("Value");
-      break;
-
-    case mdf_type_bit:
-      str = tr("Bit");
-      break;
-
-    case mdf_type_bit_item:
-      str = tr("Bit item");
-      break;
-
-    case mdf_type_register_page:
-      str = tr("Register Page");
-      break;
-
-    case mdf_type_register:
-      str = tr("Register");
-      break;
-
-    case mdf_type_register_item:
-      str = tr("Register item");
-      break;
-
-    case mdf_type_remotevar:
-      str = tr("Remote Variable");
-      break;
-
-    case mdf_type_remotevar_item:
-      str = tr("Remote Variable Item");
-      break;
-
-    case mdf_type_action_param:
-      str = tr("Action Param");
-      break;
-
-    case mdf_type_action:
-      str = tr("Action");
-      break;
-
-    case mdf_type_action_item:
-      str = tr("Action item");
-      break;
-
-    case mdf_type_action_sub_item:
-      str = tr("Action sub item");
-      break;
-
-    case mdf_type_decision_matrix:
-      str = tr("DM");
-      break;
-
-    case mdf_type_event_data:
-      str = tr("Event Data");
-      break;
-
-    case mdf_type_event_data_item:
-      str = tr("Event Data item");
-      break;
-
-    case mdf_type_event:
-      str = tr("Event");
-      break;
-
-    case mdf_type_event_item:
-      str = tr("Event item");
-      break;
-
-    case mdf_type_value_item:
-      str = tr("Value Item");
-      break;
-
-    case mdf_type_bootloader:
-      str = tr("Bootloader");
-      break;
-
-    case mdf_type_alarm:
-      str = tr("Alarm");
-      break;
-
-    case mdf_type_address:
-      str = tr("Address");
-      break;
-
-    case mdf_type_manufacturer:
-      str = tr("Manufacturer");
-      break;
-
-    case mdf_type_file:
-      str = tr("File");
-      break;
-
-    case mdf_type_picture:
-      str = tr("Picture");
-      break;
-
-    case mdf_type_picture_item:
-      str = tr("Picture item");
-      break;
-
-    case mdf_type_video:
-      str = tr("Video");
-      break;
-
-    case mdf_type_video_item:
-      str = tr("Video item");
-      break;
-
-    case mdf_type_firmware:
-      str = tr("Firmware");
-      break;
-
-    case mdf_type_firmware_item:
-      str = tr("Firmware item");
-      break;
-
-    case mdf_type_driver:
-      str = tr("Driver");
-      break;
-
-    case mdf_type_driver_item:
-      str = tr("Driver");
-      break;
-
-    case mdf_type_setup:
-      str = tr("Setup");
-      break;
-
-    case mdf_type_setup_item:
-      str = tr("Setup");
-      break;
-
-    case mdf_type_manual:
-      str = tr("Manual");
-      break;
-
-    case mdf_type_manual_item:
-      str = tr("Manual item");
-      break;
-
-    case mdf_type_email:
-      str = tr("email");
-      break;
-
-    case mdf_type_phone:
-      str = tr("phone");
-      break;
-
-    case mdf_type_fax:
-      str = tr("fax");
-      break;
-
-    case mdf_type_web:
-      str = tr("web");
-      break;
-
-    case mdf_type_social:
-      str = tr("social");
-      break;
-
-    case mdf_type_generic_string:
-      str = tr("string");
-      break;
-
-    case mdf_type_generic_number:
-      str = tr("number");
-      break;
-
-    case mdf_type_generic_url:
-      str = tr("url");
-      break;
-
-    case mdf_type_generic_date:
-      str = tr("date");
-      break;
-
-    case mdf_type_generic_access:
-      str = tr("access");
-      break;
-
-    case mdf_type_generic_description:
-      str = tr("description");
-      break;
-
-    case mdf_type_generic_description_item:
-      str = tr("description item");
-      break;
-
-    case mdf_type_generic_help_url:
-      str = tr("help url");
-      break;
-
-    case mdf_type_generic_help_url_item:
-      str = tr("help url item");
-      break;
-
-    default:
-      str = tr("Default");
-      break;
-  }
-
-  // QMessageBox msgBox;
-  // msgBox.setText(str);
-  // msgBox.exec();
-  ui->statusbar->showMessage(str, 1000);
+  ui->treeMDF->setCurrentItem(pItem);
+  editItem();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3428,6 +3229,9 @@ void
 CFrmMdf::editItem()
 {
   QMdfTreeWidgetItem* pItem = (QMdfTreeWidgetItem*)ui->treeMDF->currentItem();
+  if (nullptr == pItem) {
+    return;
+  }
 
   switch (pItem->getObjectType() /*pItem->type() - QTreeWidgetItem::UserType*/) {
     case mdf_type_unknown:
@@ -3454,11 +3258,19 @@ CFrmMdf::editItem()
       editValueDefinition();
       break;
 
+    case mdf_type_value_sub_item:
+      editValueDefinition();
+      break;
+
     case mdf_type_bit:
       editBitDefinition();
       break;
 
     case mdf_type_bit_item:
+      editBitDefinition();
+      break;
+
+    case mdf_type_bit_sub_item:
       editBitDefinition();
       break;
 
@@ -3514,21 +3326,21 @@ CFrmMdf::editItem()
       break;
 
     case mdf_type_event_data:
-      break;
-
     case mdf_type_event_data_item:
-      break;
-
+    case mdf_type_event_data_sub_item:
     case mdf_type_event:
-      break;
-
     case mdf_type_event_item:
+    case mdf_type_event_sub_item:
+      editEvent();
       break;
 
     case mdf_type_bootloader:
+    case mdf_type_bootloader_item:
+      editBootLoader();
       break;
 
     case mdf_type_alarm:
+      editAlarm();
       break;
 
     case mdf_type_address:
@@ -4078,7 +3890,7 @@ CFrmMdf::editModuleData()
           break;
 
         case index_module_change_date:
-          piter->setText(0, PREFIX_MDF_MODULE_CHANGE_DATE + m_mdf.getModuleChangeDate().c_str());
+          piter->setText(0, PREFIX_MDF_MODULE_CHANGE_DATE + formatIsoDate(m_mdf.getModuleChangeDate()));
           break;
 
         case index_module_buffer_size: {

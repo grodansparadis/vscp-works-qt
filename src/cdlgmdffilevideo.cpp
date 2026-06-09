@@ -59,6 +59,7 @@ CDlgMdfFileVideo::CDlgMdfFileVideo(QWidget* parent)
   , ui(new Ui::CDlgMdfFileVideo)
 {
   ui->setupUi(this);
+  ui->date->setDisplayFormat("yyyy-MM-dd");
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -109,8 +110,13 @@ CDlgMdfFileVideo::initDialogData(const CMDF_Object* pmdfobj, mdf_file_video_inde
   ui->editUrl->setText(m_pvideo->getUrl().c_str());
   ui->editFormat->setText(m_pvideo->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_pvideo->getDate().c_str(), "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(m_pvideo->getDate().c_str(), Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(m_pvideo->getDate().c_str(), "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 
   switch (index) {
     case index_file_video_url:
@@ -213,8 +219,13 @@ CDlgMdfFileVideo::getFormat(void)
 void
 CDlgMdfFileVideo::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(strdate, Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(strdate, "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -225,7 +236,7 @@ QString
 CDlgMdfFileVideo::getDate(void)
 {
   QDate dd = ui->date->date();
-  return dd.toString("YY-MM-DD");
+  return dd.toString(Qt::ISODate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -248,7 +259,7 @@ CDlgMdfFileVideo::accept()
     m_pvideo->setFormat(str);
 
     QDate dd = ui->date->date();
-    m_pvideo->setDate(dd.toString("YY-MM-DD").toStdString());
+    m_pvideo->setDate(dd.toString(Qt::ISODate).toStdString());
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

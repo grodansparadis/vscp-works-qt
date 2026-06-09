@@ -59,6 +59,7 @@ CDlgMdfFileManual::CDlgMdfFileManual(QWidget* parent)
   , ui(new Ui::CDlgMdfFileManual)
 {
   ui->setupUi(this);
+  ui->date->setDisplayFormat("yyyy-MM-dd");
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -110,8 +111,13 @@ CDlgMdfFileManual::initDialogData(const CMDF_Object* pmdfobj, mdf_file_manual_in
   ui->editFormat->setText(m_pmanual->getFormat().c_str());
   ui->editLanguage->setText(m_pmanual->getLanguage().c_str());
 
-  QDate dd = QDate::fromString(m_pmanual->getDate().c_str(), "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(m_pmanual->getDate().c_str(), Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(m_pmanual->getDate().c_str(), "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 
   switch (index) {
     case index_file_manual_url:
@@ -238,8 +244,13 @@ CDlgMdfFileManual::getLanguage(void)
 void
 CDlgMdfFileManual::setDate(const QString& strdate)
 {
-  QDate dd = QDate::fromString(strdate, "YY-MM_DD");
-  ui->date->setDate(dd);
+  QDate dd = QDate::fromString(strdate, Qt::ISODate);
+  if (!dd.isValid()) {
+    dd = QDate::fromString(strdate, "yy-MM-dd");
+  }
+  if (dd.isValid()) {
+    ui->date->setDate(dd);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -250,7 +261,7 @@ QString
 CDlgMdfFileManual::getDate(void)
 {
   QDate dd = ui->date->date();
-  return dd.toString("YY-MM-DD");
+  return dd.toString(Qt::ISODate);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -276,7 +287,7 @@ CDlgMdfFileManual::accept()
     m_pmanual->setLanguage(str);
 
     QDate dd = ui->date->date();
-    m_pmanual->setDate(dd.toString("YY-MM-DD").toStdString());
+    m_pmanual->setDate(dd.toString(Qt::ISODate).toStdString());
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

@@ -62,6 +62,7 @@ CDlgMdfModule::CDlgMdfModule(QWidget* parent)
   , ui(new Ui::CDlgMdfModule)
 {
   ui->setupUi(this);
+  ui->editDate->setDisplayFormat("yyyy-MM-dd");
 
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -121,7 +122,13 @@ CDlgMdfModule::initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index
   ui->comboModuleLevel->setCurrentIndex(m_pmdf->getModuleLevel());
   ui->editVersion->setText(m_pmdf->getModuleVersion().c_str());
   str = m_pmdf->getModuleChangeDate().c_str();
-  ui->editDate->setDate(QDate::fromString(str, Qt::ISODate));
+  QDate date = QDate::fromString(str, Qt::ISODate);
+  if (!date.isValid()) {
+    date = QDate::fromString(str, "yy-MM-dd");
+  }
+  if (date.isValid()) {
+    ui->editDate->setDate(date);
+  }
   ui->editBufferSize->setValue(m_pmdf->getModuleBufferSize());
   ui->editCopyright->setText(m_pmdf->getModuleCopyright().c_str());
 
@@ -290,7 +297,7 @@ CDlgMdfModule::accept()
     str = ui->editVersion->text().toStdString();
     m_pmdf->setModuleVersion(str);
 
-    str = ui->editDate->text().toStdString();
+    str = ui->editDate->date().toString(Qt::ISODate).toStdString();
     m_pmdf->setModuleChangeDate(str);
 
     m_pmdf->setModuleBufferSize(ui->editBufferSize->value());
