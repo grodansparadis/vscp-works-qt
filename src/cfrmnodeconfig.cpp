@@ -1624,6 +1624,11 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0}: {1}", tempPath, ex.what());
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                           .arg(QString::fromStdString(tempPath))
+                           .arg(QString::fromUtf8(ex.what())));
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return VSCP_ERROR_PARSING;
@@ -1632,6 +1637,10 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0}: Unknown exception", tempPath);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                           .arg(QString::fromStdString(tempPath)));
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return VSCP_ERROR_PARSING;
@@ -1640,6 +1649,11 @@ CFrmNodeConfig::doUpdate(std::string mdfpath)
     QApplication::beep();
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                           .arg(QString::fromStdString(tempPath))
+                           .arg(rv));
     QApplication::restoreOverrideCursor();
     ui->statusBar->removeWidget(pbar);
     return VSCP_ERROR_PARSING;

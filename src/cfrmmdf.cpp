@@ -283,18 +283,29 @@ CFrmMdf::openMdf(void)
       int rv = m_mdf.parseMDF(pathUtf8);
       if (VSCP_ERROR_SUCCESS != rv) {
         spdlog::error("Failed to parse MDF file {0}", pathUtf8);
-        QMessageBox::warning(this, APPNAME, tr("Failed to parse MDF file."));
+        QMessageBox::warning(this,
+                             APPNAME,
+                             tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                               .arg(path)
+                               .arg(rv));
         return;
       }
     }
     catch (const std::exception &ex) {
       spdlog::error("Failed to parse MDF file {0}: {1}", pathUtf8, ex.what());
-      QMessageBox::warning(this, APPNAME, tr("Failed to parse MDF file."));
+      QMessageBox::warning(this,
+                           APPNAME,
+                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                             .arg(path)
+                             .arg(QString::fromUtf8(ex.what())));
       return;
     }
     catch (...) {
       spdlog::error("Failed to parse MDF file {0}: Unknown exception", pathUtf8);
-      QMessageBox::warning(this, APPNAME, tr("Failed to parse MDF file."));
+      QMessageBox::warning(this,
+                           APPNAME,
+                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                             .arg(path));
       return;
     }
 

@@ -653,10 +653,21 @@ CWizardPageLoadMdf::validatePage(void)
         }
         catch (const std::exception &ex) {
           spdlog::error("Failed to parse MDF {0}: {1}", path.toStdString(), ex.what());
+          QMessageBox::warning(this,
+                               tr(APPNAME),
+                               tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                                 .arg(path)
+                                 .arg(QString::fromUtf8(ex.what())),
+                               QMessageBox::Ok);
           return false;
         }
         catch (...) {
           spdlog::error("Failed to parse MDF {0}: Unknown exception", path.toStdString());
+          QMessageBox::warning(this,
+                               tr(APPNAME),
+                               tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                                 .arg(path),
+                               QMessageBox::Ok);
           return false;
         }
         if (VSCP_ERROR_SUCCESS != rv) {
@@ -664,6 +675,12 @@ CWizardPageLoadMdf::validatePage(void)
           //   statusCallback(80, "Failed to parse MDF");
           // }
           spdlog::error("Failed to parse MDF {0} rv={1}", path.toStdString(), rv);
+          QMessageBox::warning(this,
+                               tr(APPNAME),
+                               tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                                 .arg(path)
+                                 .arg(rv),
+                               QMessageBox::Ok);
           return false;
         }
       }
@@ -799,14 +816,31 @@ CWizardPageFirmware::initializePage(void)
   }
   catch (const std::exception &ex) {
     spdlog::error("Failed to parse MDF {0}: {1}", field("boot.firmware.mdf").toString().toStdString(), ex.what());
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                           .arg(field("boot.firmware.mdf").toString())
+                           .arg(QString::fromUtf8(ex.what())),
+                         QMessageBox::Ok);
     return;
   }
   catch (...) {
     spdlog::error("Failed to parse MDF {0}: Unknown exception", field("boot.firmware.mdf").toString().toStdString());
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                           .arg(field("boot.firmware.mdf").toString()),
+                         QMessageBox::Ok);
     return;
   }
   if (VSCP_ERROR_SUCCESS != rv) {
     spdlog::error("Failed to parse MDF {0} rv={1}", field("boot.firmware.mdf").toString().toStdString(), rv);
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                           .arg(field("boot.firmware.mdf").toString())
+                           .arg(rv),
+                         QMessageBox::Ok);
     return;
   }
 }

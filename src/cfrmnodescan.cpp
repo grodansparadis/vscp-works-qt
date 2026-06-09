@@ -1027,16 +1027,30 @@ CFrmNodeScan::doLoadMdf(uint16_t nodeid)
   catch (const std::exception &ex) {
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0}: {1}", tempPath, ex.what());
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: %2")
+                           .arg(QString::fromStdString(tempPath))
+                           .arg(QString::fromUtf8(ex.what())));
     return;
   }
   catch (...) {
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0}: Unknown exception", tempPath);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Unknown exception while parsing.")
+                           .arg(QString::fromStdString(tempPath)));
     return;
   }
   if (VSCP_ERROR_SUCCESS != rv) {
     ui->statusBar->showMessage(tr("Failed to parse MDF file for device."));
     spdlog::error("Failed to parse MDF {0} rv={1}", tempPath, rv);
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                           .arg(QString::fromStdString(tempPath))
+                           .arg(rv));
     return;
   }
 
