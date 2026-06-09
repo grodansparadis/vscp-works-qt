@@ -57,6 +57,7 @@
 
 #include "cdlgeditdm.h"
 #include "cdlgknownguid.h"
+#include "cdlgmdfremotevar.h"
 #include "cdlgtxtsearch.h"
 
 #include "cfrmnodeconfig.h"
@@ -207,11 +208,14 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
   // Setup register tab
   QHeaderView* treeViewHeaderRegisters = ui->treeWidgetRegisters->header();
   ui->treeWidgetRegisters->clear();
+  ui->treeWidgetRegisters->setColumnCount(REG_COL_COUNT);
+  ui->treeWidgetRegisters->setHeaderLabels({ tr("Page:Offset"), tr("Access"), tr("Value"), tr("Name"), tr("Remote variable") });
   ui->treeWidgetRegisters->setContextMenuPolicy(Qt::CustomContextMenu);
   ui->treeWidgetRegisters->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 200);
   ui->treeWidgetRegisters->setColumnWidth(REG_COL_ACCESS, 80);
-  ui->treeWidgetRegisters->setColumnWidth(REG_COL_POS, 160);
+  ui->treeWidgetRegisters->setColumnWidth(REG_COL_NAME, 220);
+  ui->treeWidgetRegisters->setColumnWidth(REG_COL_REMOTEVAR, 260);
 
   // Setup remote variable tab
   QHeaderView* treeViewHeaderRemoteVariables = ui->treeWidgetRemoteVariables->header();
@@ -1235,7 +1239,7 @@ CFrmNodeConfig::disableColors(bool bColors)
     for (int i = 0; i < m_StandardRegTopPage->childCount(); i++) {
       CRegisterWidgetItem* child =
         (CRegisterWidgetItem*)m_StandardRegTopPage->child(i);
-      for (int j = 0; j < 4; j++) {
+      for (int j = 0; j < REG_COL_COUNT; j++) {
         if (child->type() == TREE_LIST_REGISTER_TYPE) {
           // child->setForeground(j, child->parent()->foreground(j));
           child->setBackground(j, child->parent()->background(j));
@@ -1247,7 +1251,7 @@ CFrmNodeConfig::disableColors(bool bColors)
     for (int i = 0; i < m_StandardRegTopPage->childCount(); i++) {
       CRegisterWidgetItem* child =
         (CRegisterWidgetItem*)m_StandardRegTopPage->child(i);
-      for (int j = 0; j < 4; j++) {
+      for (int j = 0; j < REG_COL_COUNT; j++) {
         if (child->type() == TREE_LIST_REGISTER_TYPE) {
           // child->setForeground(j, QBrush(QColor("black")));
           child->setBackground(
@@ -3613,7 +3617,7 @@ CFrmNodeConfig::renderStandardRegisters(void)
       Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemNeverHasChildren;
 
     // Set foreground and background colors from MDF
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < REG_COL_COUNT; j++) {
       itemReg->setForeground(j, QBrush(QColor("black")));
       itemReg->setBackground(
         j,
@@ -3762,7 +3766,7 @@ CFrmNodeConfig::renderRegisters(void)
 
       // Set foreground and background colors from MDF
       if (!pworks->m_config_bDisableColors) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < REG_COL_COUNT; i++) {
           itemReg->setForeground(i, QBrush(QColor(pregmdf->getForegroundColor())));
           itemReg->setBackground(i, QBrush(QColor(pregmdf->getBackgroundColor())));
         }
@@ -3822,6 +3826,27 @@ CFrmNodeConfig::renderRegisters(void)
       itemReg->setText(REG_COL_NAME, pregmdf->getName().c_str());
       itemReg->setTextAlignment(REG_COL_NAME, Qt::AlignLeft);
       itemTopReg1->addChild(itemReg);
+
+      CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(itemReg->m_regOffset, itemReg->m_regPage);
+      QPushButton* pRemoteVarButton        = new QPushButton(ui->treeWidgetRegisters);
+      pRemoteVarButton->setAutoDefault(false);
+      pRemoteVarButton->setDefault(false);
+      pRemoteVarButton->setFocusPolicy(Qt::NoFocus);
+      if (nullptr != pRemoteVariable) {
+        pRemoteVarButton->setText(QString(tr("Remote variable %1")).arg(pRemoteVariable->getName().c_str()));
+        connect(pRemoteVarButton,
+                &QPushButton::clicked,
+                this,
+                [this, page = itemReg->m_regPage, offset = itemReg->m_regOffset]() { openRemoteVariableForRegister(offset, page); });
+      }
+      else {
+        pRemoteVarButton->setText(tr("Add remote variable"));
+        connect(pRemoteVarButton,
+                &QPushButton::clicked,
+                this,
+                [this, page = itemReg->m_regPage, offset = itemReg->m_regOffset]() { addRemoteVariableForRegister(offset, page); });
+      }
+      ui->treeWidgetRegisters->setItemWidget(itemReg, REG_COL_REMOTEVAR, pRemoteVarButton);
     }
   }
 
@@ -4170,6 +4195,112 @@ CFrmNodeConfig::updateChangeRemoteVariable(uint32_t offset, uint16_t page, bool 
       }
     }
     ++it;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// findRemoteVariableForRegister
+//
+
+CMDF_RemoteVariable*
+CFrmNodeConfig::findRemoteVariableForRegister(uint32_t offset, uint16_t page)
+{
+  std::deque<CMDF_RemoteVariable*>* pRemoteVariableList = m_mdf.getRemoteVariableList();
+  if (nullptr == pRemoteVariableList) {
+    return nullptr;
+  }
+
+  for (auto* pRemoteVariable : *pRemoteVariableList) {
+    if (nullptr == pRemoteVariable) {
+      continue;
+    }
+
+    if (pRemoteVariable->getPage() != page) {
+      continue;
+    }
+
+    if ((offset >= pRemoteVariable->getOffset()) &&
+        (offset < (pRemoteVariable->getOffset() + pRemoteVariable->getTypeByteCount()))) {
+      return pRemoteVariable;
+    }
+  }
+
+  return nullptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// openRemoteVariableForRegister
+//
+
+void
+CFrmNodeConfig::openRemoteVariableForRegister(uint32_t offset, uint16_t page)
+{
+  CMDF_RemoteVariable* pRemoteVariable = findRemoteVariableForRegister(offset, page);
+  if (nullptr == pRemoteVariable) {
+    addRemoteVariableForRegister(offset, page);
+    return;
+  }
+
+  CDlgMdfRemoteVar dlg(this);
+  dlg.initDialogData(&m_mdf, pRemoteVariable);
+  dlg.setReadOnly();
+  if (QDialog::Accepted == dlg.exec()) {
+    renderRegisters();
+    renderRemoteVariables();
+  }
+
+  ui->session_tabWidget->setCurrentIndex(TAB_BAR_INDEX_REMOTEVARS);
+  for (int i = 0; i < ui->treeWidgetRemoteVariables->topLevelItemCount(); ++i) {
+    CRemoteVariableWidgetItem* item = (CRemoteVariableWidgetItem*)ui->treeWidgetRemoteVariables->topLevelItem(i);
+    if ((nullptr != item) && (item->m_pRemoteVariable == pRemoteVariable)) {
+      ui->treeWidgetRemoteVariables->setCurrentItem(item);
+      item->setSelected(true);
+      ui->treeWidgetRemoteVariables->scrollToItem(item, QAbstractItemView::PositionAtTop);
+      onRemoteVariableTreeWidgetItemClicked(item, REMOTEVAR_COL_NAME);
+      break;
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addRemoteVariableForRegister
+//
+
+void
+CFrmNodeConfig::addRemoteVariableForRegister(uint32_t offset, uint16_t page)
+{
+  CMDF_RemoteVariable* pRemoteVariable = new CMDF_RemoteVariable();
+  if (nullptr == pRemoteVariable) {
+    spdlog::critical("Failed to allocate remote variable");
+    return;
+  }
+
+  pRemoteVariable->setPage(page);
+  pRemoteVariable->setOffset(offset);
+  pRemoteVariable->setName(QString("remote_var_%1_%2").arg(page).arg(offset).toStdString());
+
+  CDlgMdfRemoteVar dlg(this);
+  dlg.initDialogData(&m_mdf, pRemoteVariable, CDlgMdfRemoteVar::index_name);
+  if (QDialog::Accepted == dlg.exec()) {
+    CMDF_RemoteVariable* pExisting = m_mdf.getRemoteVariable(pRemoteVariable->getOffset(), pRemoteVariable->getPage());
+    if ((nullptr != pExisting) && (pExisting != pRemoteVariable)) {
+      QMessageBox::warning(this,
+                           tr(APPNAME),
+                           tr("Remote variable page=%1 offset=%2 is already defined.")
+                             .arg(pRemoteVariable->getPage())
+                             .arg(pRemoteVariable->getOffset()),
+                           QMessageBox::Ok);
+      delete pRemoteVariable;
+      return;
+    }
+
+    m_mdf.getRemoteVariableList()->push_back(pRemoteVariable);
+    renderRegisters();
+    renderRemoteVariables();
+    openRemoteVariableForRegister(offset, page);
+  }
+  else {
+    delete pRemoteVariable;
   }
 }
 
