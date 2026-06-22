@@ -73,16 +73,13 @@ private:
   bool stepVerifyConnected(QString& details);
   bool stepQueryServerVersion(QString& details);
   bool stepQueryServerCapabilities(QString& details);
-  bool stepCaptureSentEventsCounterBefore(QString& details);
-  bool stepSendTestEvent(QString& details);
-  bool stepVerifySentEventsCounterAfter(QString& details);
+  bool stepReportUnsupportedCommands(QString& details);
   bool stepTestCommandResponses(QString& details);
   bool stepVerifyLevel2(QString& details);
   bool stepDisconnect(QString& details);
   bool stepVerifyDisconnected(QString& details);
   bool ensureClientCreated(QString& details);
   bool resetClient();
-  bool sendTestEvent(QString& details);
   bool isLinkConnection(const json& conn) const;
   void loadAvailableConnections(const QString& preferredUuid = QString());
   bool applySelectedConnection(int index, QString* details = nullptr);

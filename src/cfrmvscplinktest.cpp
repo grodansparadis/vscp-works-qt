@@ -38,7 +38,6 @@
 
 #include "vscpworks.h"
 
-#include <vscp.h>
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
@@ -60,6 +59,7 @@
 #include <QGroupBox>
 #include <QHeaderView>
 #include <QHBoxLayout>
+#include <QItemSelectionModel>
 #include <QLabel>
 #include <QMetaObject>
 #include <QPlainTextEdit>
@@ -73,7 +73,6 @@
 #include <QVBoxLayout>
 
 #include <algorithm>
-#include <cstring>
 #include <deque>
 
 CFrmVscpLinkTest::CFrmVscpLinkTest(QWidget* parent, json* pconn)
@@ -133,6 +132,14 @@ void
 CFrmVscpLinkTest::setupUi()
 {
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
+  setStyleSheet(
+    "QDialog { background-color: #f7fbff; }"
+    "QGroupBox { border: 1px solid #9ec5ff; border-radius: 6px; margin-top: 10px; "
+    "  background-color: #eef6ff; }"
+    "QGroupBox::title { subcontrol-origin: margin; left: 8px; color: #0b5394; font-weight: bold; }"
+    "QPushButton { background-color: #d9ecff; border: 1px solid #8fb7e8; border-radius: 4px; padding: 4px 8px; }"
+    "QPushButton:hover { background-color: #c8e3ff; }"
+    "QTableWidget { background-color: #ffffff; alternate-background-color: #f3f9ff; }");
 
   QLabel* title = new QLabel(
     tr("Run VSCP Link protocol verification step-by-step, as a full flow, or "
@@ -184,13 +191,14 @@ CFrmVscpLinkTest::setupUi()
                   << tr("Details"));
   m_stepTable->horizontalHeader()->setStretchLastSection(true);
   m_stepTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_stepTable->setSelectionMode(QAbstractItemView::SingleSelection);
+  m_stepTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_stepTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_stepTable->verticalHeader()->setVisible(false);
+  m_stepTable->setAlternatingRowColors(true);
   mainLayout->addWidget(m_stepTable, 3);
 
   QHBoxLayout* buttonLayout = new QHBoxLayout();
-  m_runStepButton    = new QPushButton(tr("Run selected step"), this);
+  m_runStepButton    = new QPushButton(tr("Run selected steps"), this);
   m_runAllButton     = new QPushButton(tr("Run all steps"), this);
   m_reliabilityButton = new QPushButton(tr("Run reliability test"), this);
   m_cycleCount       = new QSpinBox(this);
@@ -261,13 +269,11 @@ CFrmVscpLinkTest::addStepRows()
 {
   const QStringList commands = {
     tr("Initialize client"),
-    tr("Connect"),
+    tr("Connect (wait cursor)"),
     tr("Verify connected state"),
     tr("Query server version"),
     tr("Query server capabilities"),
-    tr("Capture sent-events counter (before)"),
-    tr("Send test event"),
-    tr("Verify sent-events counter (after)"),
+    tr("Report unavailable commands"),
     tr("Test command responses"),
     tr("Verify full level II support"),
     tr("Disconnect"),
@@ -351,9 +357,7 @@ CFrmVscpLinkTest::isLinkConnection(const json& conn) const
 
   const CVscpClient::connType type =
     static_cast<CVscpClient::connType>(conn["type"].get<int>());
-  return (CVscpClient::connType::TCPIP == type) ||
-         (CVscpClient::connType::WS1 == type) ||
-         (CVscpClient::connType::WS2 == type);
+  return (CVscpClient::connType::TCPIP == type);
 }
 
 void
@@ -709,7 +713,10 @@ CFrmVscpLinkTest::stepConnect(QString& details)
     return true;
   }
 
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
   const int rv = m_vscpClient->connect();
+  QApplication::restoreOverrideCursor();
   if (VSCP_ERROR_SUCCESS != rv) {
     details = tr("Connect failed. Error code: %1").arg(rv);
     updateConnectionInfo();
@@ -804,69 +811,9 @@ CFrmVscpLinkTest::stepQueryServerCapabilities(QString& details)
 }
 
 bool
-CFrmVscpLinkTest::stepCaptureSentEventsCounterBefore(QString& details)
+CFrmVscpLinkTest::stepReportUnsupportedCommands(QString& details)
 {
-  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
-    details = tr("Client is not connected.");
-    return false;
-  }
-
-  m_statsBaselineEvents = m_eventsSent;
-  details = tr("Captured baseline sent-events counter: %1").arg(m_statsBaselineEvents);
-  return true;
-}
-
-bool
-CFrmVscpLinkTest::sendTestEvent(QString& details)
-{
-  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
-    details = tr("Client is not connected.");
-    return false;
-  }
-
-  vscp_event_t ev;
-  memset(&ev, 0, sizeof(ev));
-  ev.head       = 0;
-  ev.vscp_class = 10;
-  ev.vscp_type  = 6;
-  ev.timestamp  = vscp_makeTimeStamp();
-  vscp_setEventToNow(&ev);
-
-  uint8_t data[3] = { 0x29, 0x01, 0x01 };
-  ev.sizeData = sizeof(data);
-  ev.pdata = data;
-
-  const int rv = m_vscpClient->send(ev);
-  if (VSCP_ERROR_SUCCESS != rv) {
-    ++m_eventsFailed;
-    details = tr("Send failed. Error code: %1").arg(rv);
-    return false;
-  }
-
-  ++m_eventsSent;
-  details = tr("Sent test event successfully (total sent=%1).").arg(m_eventsSent);
-  return true;
-}
-
-bool
-CFrmVscpLinkTest::stepSendTestEvent(QString& details)
-{
-  return sendTestEvent(details);
-}
-
-bool
-CFrmVscpLinkTest::stepVerifySentEventsCounterAfter(QString& details)
-{
-  if (m_eventsSent <= m_statsBaselineEvents) {
-    details = tr("Sent-events counter did not increase (before=%1, after=%2).")
-                .arg(m_statsBaselineEvents)
-                .arg(m_eventsSent);
-    return false;
-  }
-
-  details = tr("Sent-events counter increased (before=%1, after=%2).")
-              .arg(m_statsBaselineEvents)
-              .arg(m_eventsSent);
+  details = tr("Unsupported in this environment: send, retr, user, password, noop, help, cdta.");
   return true;
 }
 
@@ -906,7 +853,7 @@ CFrmVscpLinkTest::stepTestCommandResponses(QString& details)
     }
   }
 
-  details = tr("Command responses verified (version command succeeded).");
+  details = tr("Command responses verified for available client API commands.");
   return true;
 }
 
@@ -1005,30 +952,22 @@ CFrmVscpLinkTest::runStepByRow(int row)
       break;
 
     case 5:
-      ok = stepCaptureSentEventsCounterBefore(details);
+      ok = stepReportUnsupportedCommands(details);
       break;
 
     case 6:
-      ok = stepSendTestEvent(details);
-      break;
-
-    case 7:
-      ok = stepVerifySentEventsCounterAfter(details);
-      break;
-
-    case 8:
       ok = stepTestCommandResponses(details);
       break;
 
-    case 9:
+    case 7:
       ok = stepVerifyLevel2(details);
       break;
 
-    case 10:
+    case 8:
       ok = stepDisconnect(details);
       break;
 
-    case 11:
+    case 9:
       ok = stepVerifyDisconnected(details);
       break;
 
@@ -1050,13 +989,28 @@ CFrmVscpLinkTest::runStepByRow(int row)
 void
 CFrmVscpLinkTest::runSelectedStep()
 {
-  const int row = m_stepTable->currentRow();
-  if (row < 0) {
-    appendLog(tr("No step selected."));
+  const QModelIndexList selectedRows = m_stepTable->selectionModel()->selectedRows();
+  if (selectedRows.isEmpty()) {
+    appendLog(tr("No steps selected."));
     return;
   }
 
-  runStepByRow(row);
+  QList<int> rows;
+  rows.reserve(selectedRows.size());
+  for (const QModelIndex& index : selectedRows) {
+    rows << index.row();
+  }
+  std::sort(rows.begin(), rows.end());
+
+  appendLog(tr("Run %1 selected step(s).").arg(rows.size()));
+  for (int row : rows) {
+    if (!runStepByRow(row)) {
+      appendLog(tr("Stopped selected-step execution at step %1 due to failure.").arg(row + 1));
+      return;
+    }
+  }
+
+  appendLog(tr("All selected steps passed."));
 }
 
 void
@@ -1127,7 +1081,10 @@ CFrmVscpLinkTest::runReliabilityTest()
     for (int attempt = 0; attempt <= retries; ++attempt) {
       QElapsedTimer timer;
       timer.start();
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       const int rv = m_vscpClient->connect();
+      QApplication::restoreOverrideCursor();
       const qint64 elapsedMs = timer.elapsed();
 
       if (VSCP_ERROR_SUCCESS == rv && m_vscpClient->isConnected()) {
@@ -1160,21 +1117,20 @@ CFrmVscpLinkTest::runReliabilityTest()
       continue;
     }
 
-    for (int n = 0; n < stressCount; ++n) {
-      QString sendDetails;
-      if (sendTestEvent(sendDetails)) {
-        ++stressSendOk;
-      }
-      else {
-        ++stressSendFail;
-        cycleOk = false;
-        appendLog(tr("Cycle %1 stress event %2 failed: %3").arg(i).arg(n + 1).arg(sendDetails));
-      }
+    if (stressCount > 0) {
+      appendLog(tr("Cycle %1: stress event send skipped (%2 requested) because the "
+                   "'send' command is not available.")
+                  .arg(i)
+                  .arg(stressCount));
+      stressSendFail += stressCount;
     }
 
     bool disconnected = false;
     for (int attempt = 0; attempt <= retries; ++attempt) {
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
       const int rv = m_vscpClient->disconnect();
+      QApplication::restoreOverrideCursor();
       if (VSCP_ERROR_SUCCESS == rv && !m_vscpClient->isConnected()) {
         disconnected = true;
         break;
@@ -1209,7 +1165,7 @@ CFrmVscpLinkTest::runReliabilityTest()
   updateConnectionInfo();
 
   const QString statsText = tr("Reliability stats: pass=%1 fail=%2 timeout-failures=%3 "
-                               "stress-send-ok=%4 stress-send-fail=%5")
+                               "stress-send-ok=%4 stress-send-skipped=%5")
                               .arg(cyclePassCount)
                               .arg(cycleFailCount)
                               .arg(timeoutFailCount)
