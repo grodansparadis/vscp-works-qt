@@ -73,9 +73,9 @@ private:
   bool stepVerifyConnected(QString& details);
   bool stepQueryServerVersion(QString& details);
   bool stepQueryServerCapabilities(QString& details);
-  bool stepCaptureEventStatisticsBefore(QString& details);
+  bool stepCaptureSentEventsCounterBefore(QString& details);
   bool stepSendTestEvent(QString& details);
-  bool stepVerifyEventStatisticsAfter(QString& details);
+  bool stepVerifySentEventsCounterAfter(QString& details);
   bool stepTestCommandResponses(QString& details);
   bool stepVerifyLevel2(QString& details);
   bool stepDisconnect(QString& details);

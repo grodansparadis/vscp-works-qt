@@ -265,9 +265,9 @@ CFrmVscpLinkTest::addStepRows()
     tr("Verify connected state"),
     tr("Query server version"),
     tr("Query server capabilities"),
-    tr("Capture event statistics (before)"),
+    tr("Capture sent-events counter (before)"),
     tr("Send test event"),
-    tr("Verify event statistics (after)"),
+    tr("Verify sent-events counter (after)"),
     tr("Test command responses"),
     tr("Verify full level II support"),
     tr("Disconnect"),
@@ -804,7 +804,7 @@ CFrmVscpLinkTest::stepQueryServerCapabilities(QString& details)
 }
 
 bool
-CFrmVscpLinkTest::stepCaptureEventStatisticsBefore(QString& details)
+CFrmVscpLinkTest::stepCaptureSentEventsCounterBefore(QString& details)
 {
   if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
     details = tr("Client is not connected.");
@@ -855,7 +855,7 @@ CFrmVscpLinkTest::stepSendTestEvent(QString& details)
 }
 
 bool
-CFrmVscpLinkTest::stepVerifyEventStatisticsAfter(QString& details)
+CFrmVscpLinkTest::stepVerifySentEventsCounterAfter(QString& details)
 {
   if (m_eventsSent <= m_statsBaselineEvents) {
     details = tr("Sent-events counter did not increase (before=%1, after=%2).")
@@ -1005,7 +1005,7 @@ CFrmVscpLinkTest::runStepByRow(int row)
       break;
 
     case 5:
-      ok = stepCaptureEventStatisticsBefore(details);
+      ok = stepCaptureSentEventsCounterBefore(details);
       break;
 
     case 6:
@@ -1013,7 +1013,7 @@ CFrmVscpLinkTest::runStepByRow(int row)
       break;
 
     case 7:
-      ok = stepVerifyEventStatisticsAfter(details);
+      ok = stepVerifySentEventsCounterAfter(details);
       break;
 
     case 8:
