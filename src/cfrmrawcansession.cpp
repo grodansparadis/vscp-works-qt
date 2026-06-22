@@ -661,10 +661,10 @@ CFrmRawCanSession::rowBackgroundColorForDirection(const QString& direction) cons
 QColor
 CFrmRawCanSession::rowForegroundColorForDirection(const QString& direction) const
 {
-  if (direction == tr("TX")) {
+  if (direction == QStringLiteral("TX")) {
     return QColor(13, 71, 161);
   }
-  if (direction == tr("RX")) {
+  if (direction == QStringLiteral("RX")) {
     return QColor(27, 94, 32);
   }
 
