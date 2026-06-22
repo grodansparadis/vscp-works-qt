@@ -68,6 +68,7 @@
 #include "cfrmmdf.h"
 #include "cfrmnodeconfig.h"
 #include "cfrmnodescan.h"
+#include "cfrmrawcansession.h"
 #include "cfrmsession.h"
 #include "cfrmvscplinktest.h"
 #include "filedownloader.h"
@@ -1163,6 +1164,14 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                     QString(tr("Session")),
                     this,
                     SLOT(newSession()));
+#ifndef WIN32
+    if (static_cast<int>(CVscpClient::connType::SOCKETCAN) == item->parent()->type()) {
+      menu->addAction(newSessionIcon,
+                      QString(tr("SocketCAN frame session")),
+                      this,
+                      SLOT(newRawCanSession()));
+    }
+#endif
 
     const QIcon devConfigIcon = QIcon(":/page_process.png");
     menu->addAction(devConfigIcon,
@@ -1485,6 +1494,16 @@ MainWindow::createActions()
   connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
   fileMenu->addAction(newSessionAct);
   fileToolBar->addAction(newSessionAct);
+
+#ifndef WIN32
+  const QIcon newRawCanSessionIcon = QIcon(":/page.png");
+  QAction* newRawCanSessionAct =
+    new QAction(newRawCanSessionIcon, tr("SocketCAN &frame session..."), this);
+  newRawCanSessionAct->setStatusTip(tr("Open a SocketCAN raw frame session window"));
+  connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
+  fileMenu->addAction(newRawCanSessionAct);
+  fileToolBar->addAction(newRawCanSessionAct);
+#endif
 
   // Node configuration
   const QIcon newDevConfigIcon = QIcon(":/page_process.png");
@@ -1902,6 +1921,52 @@ MainWindow::newSession()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// newRawCanSession
+//
+
+void
+MainWindow::newRawCanSession()
+{
+#ifndef WIN32
+  QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
+
+  if (!itemList.size()) {
+    QMessageBox::warning(this,
+                         tr("VSCP Works+"),
+                         tr("No connection selected.\n"
+                            "Please select a SocketCAN connection first."));
+    return;
+  }
+
+  foreach (QTreeWidgetItem* item, itemList) {
+
+    // Not interested in top level items
+    if (NULL == item->parent()) {
+      continue;
+    }
+
+    treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
+    json* pconn                  = itemConn->getJson();
+    if (!(pconn->contains("type") && (*pconn)["type"].is_number())) {
+      continue;
+    }
+
+    if ((*pconn)["type"].get<int>() != static_cast<int>(CVscpClient::connType::SOCKETCAN)) {
+      continue;
+    }
+
+    CFrmRawCanSession* w = new CFrmRawCanSession(this, pconn);
+    w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
+    w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    w->setWindowFlags(Qt::Window);
+    w->show();
+    w->raise();
+    w->activateWindow();
+  }
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////////////
 // newVscpLinkProtocolTest
 //
 
