@@ -36,6 +36,9 @@
 
 #include "cfrmvscplinktest.h"
 
+#include "vscpworks.h"
+
+#include <vscp.h>
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
@@ -47,43 +50,78 @@
 #include <vscp-client-ws1.h>
 #include <vscp-client-ws2.h>
 
+#include <QAbstractItemView>
+#include <QApplication>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QCoreApplication>
+#include <QElapsedTimer>
+#include <QFormLayout>
+#include <QGroupBox>
 #include <QHeaderView>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QMetaObject>
 #include <QPlainTextEdit>
 #include <QProgressDialog>
 #include <QPushButton>
-#include <QApplication>
+#include <QSignalBlocker>
 #include <QSpinBox>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QVariant>
 #include <QVBoxLayout>
+
+#include <algorithm>
+#include <cstring>
+#include <deque>
 
 CFrmVscpLinkTest::CFrmVscpLinkTest(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_connType(CVscpClient::connType::NONE)
   , m_vscpClient(nullptr)
+  , m_eventsSent(0)
+  , m_eventsFailed(0)
+  , m_statsBaselineEvents(0)
+  , m_connectionCombo(nullptr)
+  , m_refreshConnectionsButton(nullptr)
+  , m_newTcpipButton(nullptr)
+  , m_connNameLabel(nullptr)
+  , m_connTypeLabel(nullptr)
+  , m_connEndpointLabel(nullptr)
+  , m_connUserLabel(nullptr)
+  , m_connSslLabel(nullptr)
+  , m_connTimeoutLabel(nullptr)
+  , m_connProtocolLabel(nullptr)
+  , m_connStateLabel(nullptr)
+  , m_serverVersionLabel(nullptr)
+  , m_serverCapabilitiesLabel(nullptr)
   , m_stepTable(nullptr)
   , m_logEdit(nullptr)
   , m_cycleCount(nullptr)
+  , m_retryCount(nullptr)
+  , m_stressEventCount(nullptr)
+  , m_validateTimeoutCheck(nullptr)
+  , m_reliabilityStatsLabel(nullptr)
   , m_runStepButton(nullptr)
   , m_runAllButton(nullptr)
   , m_reliabilityButton(nullptr)
   , m_clearLogButton(nullptr)
 {
   setWindowTitle(tr("VSCP Link protocol test tool"));
-  resize(950, 620);
+  resize(1050, 760);
 
+  QString preferredUuid;
   if (nullptr != pconn) {
     m_connObject = *pconn;
-    if (m_connObject.contains("type") && m_connObject["type"].is_number()) {
-      m_connType =
-        static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
+    if (m_connObject.contains("uuid") && m_connObject["uuid"].is_string()) {
+      preferredUuid = m_connObject["uuid"].get<std::string>().c_str();
     }
   }
 
   setupUi();
   addStepRows();
+  loadAvailableConnections(preferredUuid);
 }
 
 CFrmVscpLinkTest::~CFrmVscpLinkTest()
@@ -97,10 +135,47 @@ CFrmVscpLinkTest::setupUi()
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
 
   QLabel* title = new QLabel(
-    tr("Run VSCP Link protocol verification step-by-step, all steps, or as a "
-       "reliability loop."),
+    tr("Run VSCP Link protocol verification step-by-step, as a full flow, or "
+       "as a reliability loop."),
     this);
   mainLayout->addWidget(title);
+
+  QHBoxLayout* connLayout = new QHBoxLayout();
+  connLayout->addWidget(new QLabel(tr("Connection:"), this));
+  m_connectionCombo = new QComboBox(this);
+  m_connectionCombo->setSizeAdjustPolicy(QComboBox::AdjustToContentsOnFirstShow);
+  m_refreshConnectionsButton = new QPushButton(tr("Refresh"), this);
+  m_newTcpipButton = new QPushButton(tr("Create TCP/IP interface..."), this);
+  connLayout->addWidget(m_connectionCombo, 1);
+  connLayout->addWidget(m_refreshConnectionsButton);
+  connLayout->addWidget(m_newTcpipButton);
+  mainLayout->addLayout(connLayout);
+
+  QGroupBox* connInfoGroup = new QGroupBox(tr("Selected connection information"), this);
+  QFormLayout* connInfoLayout = new QFormLayout(connInfoGroup);
+  m_connNameLabel         = new QLabel("-", connInfoGroup);
+  m_connTypeLabel         = new QLabel("-", connInfoGroup);
+  m_connEndpointLabel     = new QLabel("-", connInfoGroup);
+  m_connUserLabel         = new QLabel("-", connInfoGroup);
+  m_connSslLabel          = new QLabel("-", connInfoGroup);
+  m_connTimeoutLabel      = new QLabel("-", connInfoGroup);
+  m_connProtocolLabel     = new QLabel("-", connInfoGroup);
+  m_connStateLabel        = new QLabel(tr("Disconnected"), connInfoGroup);
+  m_serverVersionLabel    = new QLabel("-", connInfoGroup);
+  m_serverCapabilitiesLabel = new QLabel("-", connInfoGroup);
+  m_connProtocolLabel->setWordWrap(true);
+  m_serverCapabilitiesLabel->setWordWrap(true);
+  connInfoLayout->addRow(tr("Name:"), m_connNameLabel);
+  connInfoLayout->addRow(tr("Type:"), m_connTypeLabel);
+  connInfoLayout->addRow(tr("Server / endpoint:"), m_connEndpointLabel);
+  connInfoLayout->addRow(tr("Username:"), m_connUserLabel);
+  connInfoLayout->addRow(tr("SSL/TLS:"), m_connSslLabel);
+  connInfoLayout->addRow(tr("Connection timeout:"), m_connTimeoutLabel);
+  connInfoLayout->addRow(tr("Protocol settings:"), m_connProtocolLabel);
+  connInfoLayout->addRow(tr("State:"), m_connStateLabel);
+  connInfoLayout->addRow(tr("Server version:"), m_serverVersionLabel);
+  connInfoLayout->addRow(tr("Server capabilities:"), m_serverCapabilitiesLabel);
+  mainLayout->addWidget(connInfoGroup);
 
   m_stepTable = new QTableWidget(this);
   m_stepTable->setColumnCount(4);
@@ -115,13 +190,23 @@ CFrmVscpLinkTest::setupUi()
   mainLayout->addWidget(m_stepTable, 3);
 
   QHBoxLayout* buttonLayout = new QHBoxLayout();
-  m_runStepButton = new QPushButton(tr("Run selected step"), this);
-  m_runAllButton = new QPushButton(tr("Run all steps"), this);
+  m_runStepButton    = new QPushButton(tr("Run selected step"), this);
+  m_runAllButton     = new QPushButton(tr("Run all steps"), this);
   m_reliabilityButton = new QPushButton(tr("Run reliability test"), this);
-  m_cycleCount = new QSpinBox(this);
+  m_cycleCount       = new QSpinBox(this);
+  m_retryCount       = new QSpinBox(this);
+  m_stressEventCount = new QSpinBox(this);
+  m_validateTimeoutCheck = new QCheckBox(tr("Validate connect timeout"), this);
   m_cycleCount->setMinimum(1);
   m_cycleCount->setMaximum(10000);
   m_cycleCount->setValue(25);
+  m_retryCount->setMinimum(0);
+  m_retryCount->setMaximum(20);
+  m_retryCount->setValue(2);
+  m_stressEventCount->setMinimum(0);
+  m_stressEventCount->setMaximum(10000);
+  m_stressEventCount->setValue(10);
+  m_validateTimeoutCheck->setChecked(true);
   m_clearLogButton = new QPushButton(tr("Clear log"), this);
 
   buttonLayout->addWidget(m_runStepButton);
@@ -129,14 +214,34 @@ CFrmVscpLinkTest::setupUi()
   buttonLayout->addWidget(m_reliabilityButton);
   buttonLayout->addWidget(new QLabel(tr("Cycles:"), this));
   buttonLayout->addWidget(m_cycleCount);
+  buttonLayout->addWidget(new QLabel(tr("Retries:"), this));
+  buttonLayout->addWidget(m_retryCount);
+  buttonLayout->addWidget(new QLabel(tr("Stress events/cycle:"), this));
+  buttonLayout->addWidget(m_stressEventCount);
+  buttonLayout->addWidget(m_validateTimeoutCheck);
   buttonLayout->addStretch(1);
   buttonLayout->addWidget(m_clearLogButton);
   mainLayout->addLayout(buttonLayout);
+
+  m_reliabilityStatsLabel = new QLabel(tr("Reliability stats: not run"), this);
+  mainLayout->addWidget(m_reliabilityStatsLabel);
 
   m_logEdit = new QPlainTextEdit(this);
   m_logEdit->setReadOnly(true);
   mainLayout->addWidget(m_logEdit, 2);
 
+  connect(m_connectionCombo,
+          QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this,
+          &CFrmVscpLinkTest::onConnectionSelectionChanged);
+  connect(m_refreshConnectionsButton,
+          &QPushButton::clicked,
+          this,
+          &CFrmVscpLinkTest::refreshConnections);
+  connect(m_newTcpipButton,
+          &QPushButton::clicked,
+          this,
+          &CFrmVscpLinkTest::createTcpipConnection);
   connect(m_runStepButton,
           &QPushButton::clicked,
           this,
@@ -158,8 +263,15 @@ CFrmVscpLinkTest::addStepRows()
     tr("Initialize client"),
     tr("Connect"),
     tr("Verify connected state"),
+    tr("Query server version"),
+    tr("Query server capabilities"),
+    tr("Capture event statistics (before)"),
+    tr("Send test event"),
+    tr("Verify event statistics (after)"),
+    tr("Test command responses"),
     tr("Verify full level II support"),
-    tr("Disconnect")
+    tr("Disconnect"),
+    tr("Verify disconnected state")
   };
 
   m_stepTable->setRowCount(commands.size());
@@ -225,8 +337,288 @@ CFrmVscpLinkTest::resetClient()
 
   delete m_vscpClient;
   m_vscpClient = nullptr;
+  updateConnectionInfo();
 
   return true;
+}
+
+bool
+CFrmVscpLinkTest::isLinkConnection(const json& conn) const
+{
+  if (!(conn.contains("type") && conn["type"].is_number())) {
+    return false;
+  }
+
+  const CVscpClient::connType type =
+    static_cast<CVscpClient::connType>(conn["type"].get<int>());
+  return (CVscpClient::connType::TCPIP == type) ||
+         (CVscpClient::connType::WS1 == type) ||
+         (CVscpClient::connType::WS2 == type);
+}
+
+void
+CFrmVscpLinkTest::loadAvailableConnections(const QString& preferredUuid)
+{
+  m_connections.clear();
+  QSignalBlocker blocker(m_connectionCombo);
+  m_connectionCombo->clear();
+
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  if (nullptr != pworks) {
+    QVector<json> sortedConnections;
+    QMap<std::string, json>::const_iterator it = pworks->m_mapConn.constBegin();
+    while (it != pworks->m_mapConn.constEnd()) {
+      const json& conn = it.value();
+      if (isLinkConnection(conn)) {
+        sortedConnections.push_back(conn);
+      }
+      ++it;
+    }
+
+    std::sort(sortedConnections.begin(),
+              sortedConnections.end(),
+              [](const json& a, const json& b) {
+                QString aname = a.contains("name") && a["name"].is_string()
+                                  ? a["name"].get<std::string>().c_str()
+                                  : QString();
+                QString bname = b.contains("name") && b["name"].is_string()
+                                  ? b["name"].get<std::string>().c_str()
+                                  : QString();
+                return aname.toLower() < bname.toLower();
+              });
+
+    m_connections = sortedConnections;
+  }
+
+  int selectedIndex = -1;
+  for (int i = 0; i < m_connections.size(); ++i) {
+    const json& conn = m_connections.at(i);
+    const QString name =
+      conn.contains("name") && conn["name"].is_string()
+        ? conn["name"].get<std::string>().c_str()
+        : tr("<unnamed>");
+    const CVscpClient::connType type = conn.contains("type") && conn["type"].is_number()
+                                         ? static_cast<CVscpClient::connType>(
+                                             conn["type"].get<int>())
+                                         : CVscpClient::connType::NONE;
+    QString itemText =
+      tr("%1 (%2)").arg(name, connectionTypeToString(type));
+    m_connectionCombo->addItem(itemText);
+
+    if (!preferredUuid.isEmpty() &&
+        conn.contains("uuid") && conn["uuid"].is_string()) {
+      const QString uuid = conn["uuid"].get<std::string>().c_str();
+      if (uuid == preferredUuid) {
+        selectedIndex = i;
+      }
+    }
+  }
+
+  if (selectedIndex < 0 && !m_connections.isEmpty()) {
+    selectedIndex = 0;
+  }
+
+  if (selectedIndex >= 0) {
+    m_connectionCombo->setCurrentIndex(selectedIndex);
+    QString details;
+    applySelectedConnection(selectedIndex, &details);
+  }
+  else {
+    m_connObject = json::object();
+    m_connType = CVscpClient::connType::NONE;
+    m_serverVersion.clear();
+    m_serverCapabilities.clear();
+    updateConnectionInfo();
+    appendLog(tr("No VSCP Link-capable connections found. Create a TCP/IP "
+                 "interface to start testing."));
+  }
+}
+
+bool
+CFrmVscpLinkTest::applySelectedConnection(int index, QString* details)
+{
+  if (index < 0 || index >= m_connections.size()) {
+    if (nullptr != details) {
+      *details = tr("Invalid connection selection.");
+    }
+    return false;
+  }
+
+  resetClient();
+  m_connObject = m_connections.at(index);
+  m_connType = m_connObject.contains("type") && m_connObject["type"].is_number()
+                 ? static_cast<CVscpClient::connType>(m_connObject["type"].get<int>())
+                 : CVscpClient::connType::NONE;
+  m_serverVersion.clear();
+  m_serverCapabilities.clear();
+  m_eventsSent = 0;
+  m_eventsFailed = 0;
+  m_statsBaselineEvents = 0;
+  resetStepResults();
+  updateConnectionInfo();
+
+  if (nullptr != details) {
+    const QString name =
+      m_connObject.contains("name") && m_connObject["name"].is_string()
+        ? m_connObject["name"].get<std::string>().c_str()
+        : tr("<unnamed>");
+    *details = tr("Selected %1.").arg(name);
+  }
+
+  return true;
+}
+
+void
+CFrmVscpLinkTest::resetStepResults()
+{
+  for (int row = 0; row < m_stepTable->rowCount(); ++row) {
+    setStepResult(row, StepResult::NotRun, tr("Not run"));
+  }
+}
+
+QString
+CFrmVscpLinkTest::connectionTypeToString(CVscpClient::connType type) const
+{
+  switch (type) {
+    case CVscpClient::connType::TCPIP:
+      return tr("TCP/IP");
+    case CVscpClient::connType::WS1:
+      return tr("WebSocket WS1");
+    case CVscpClient::connType::WS2:
+      return tr("WebSocket WS2");
+    case CVscpClient::connType::MQTT:
+      return tr("MQTT");
+    case CVscpClient::connType::UDP:
+      return tr("UDP");
+    case CVscpClient::connType::MULTICAST:
+      return tr("Multicast");
+    case CVscpClient::connType::CANAL:
+      return tr("CANAL");
+#ifndef WIN32
+    case CVscpClient::connType::SOCKETCAN:
+      return tr("SocketCAN");
+#endif
+    default:
+      break;
+  }
+  return tr("Unknown");
+}
+
+QString
+CFrmVscpLinkTest::connectionEndpoint(const json& conn) const
+{
+  if (conn.contains("host") && conn["host"].is_string()) {
+    return conn["host"].get<std::string>().c_str();
+  }
+  if (conn.contains("url") && conn["url"].is_string()) {
+    return conn["url"].get<std::string>().c_str();
+  }
+  return tr("-");
+}
+
+QString
+CFrmVscpLinkTest::connectionProtocolDetails(const json& conn) const
+{
+  QStringList details;
+  if (conn.contains("selected-interface") && conn["selected-interface"].is_string()) {
+    details << tr("interface=%1").arg(conn["selected-interface"].get<std::string>().c_str());
+  }
+  if (conn.contains("bpoll") && conn["bpoll"].is_boolean()) {
+    details << tr("poll=%1").arg(conn["bpoll"].get<bool>() ? tr("yes") : tr("no"));
+  }
+  if (conn.contains("bfull-l2") && conn["bfull-l2"].is_boolean()) {
+    details << tr("full-l2=%1").arg(conn["bfull-l2"].get<bool>() ? tr("yes") : tr("no"));
+  }
+
+  if (details.isEmpty()) {
+    return tr("-");
+  }
+  return details.join(", ");
+}
+
+int
+CFrmVscpLinkTest::connectionTimeoutSeconds() const
+{
+  if (m_connObject.contains("connection-timeout") &&
+      m_connObject["connection-timeout"].is_number()) {
+    return m_connObject["connection-timeout"].get<int>();
+  }
+  return 0;
+}
+
+void
+CFrmVscpLinkTest::updateConnectionInfo()
+{
+  const QString name =
+    m_connObject.contains("name") && m_connObject["name"].is_string()
+      ? m_connObject["name"].get<std::string>().c_str()
+      : tr("-");
+  const QString user =
+    m_connObject.contains("user") && m_connObject["user"].is_string()
+      ? m_connObject["user"].get<std::string>().c_str()
+      : tr("-");
+  const QString tls =
+    m_connObject.contains("btls") && m_connObject["btls"].is_boolean()
+      ? (m_connObject["btls"].get<bool>() ? tr("Enabled") : tr("Disabled"))
+      : tr("-");
+  const QString timeout =
+    m_connObject.contains("connection-timeout") && m_connObject["connection-timeout"].is_number()
+      ? tr("%1 s").arg(m_connObject["connection-timeout"].get<int>())
+      : tr("-");
+
+  m_connNameLabel->setText(name);
+  m_connTypeLabel->setText(connectionTypeToString(m_connType));
+  m_connEndpointLabel->setText(connectionEndpoint(m_connObject));
+  m_connUserLabel->setText(user);
+  m_connSslLabel->setText(tls);
+  m_connTimeoutLabel->setText(timeout);
+  m_connProtocolLabel->setText(connectionProtocolDetails(m_connObject));
+  m_connStateLabel->setText((nullptr != m_vscpClient && m_vscpClient->isConnected())
+                              ? tr("Connected")
+                              : tr("Disconnected"));
+  m_serverVersionLabel->setText(m_serverVersion.isEmpty() ? tr("-") : m_serverVersion);
+  m_serverCapabilitiesLabel->setText(
+    m_serverCapabilities.isEmpty() ? tr("-") : m_serverCapabilities);
+}
+
+void
+CFrmVscpLinkTest::onConnectionSelectionChanged(int index)
+{
+  QString details;
+  if (applySelectedConnection(index, &details)) {
+    appendLog(details);
+  }
+}
+
+void
+CFrmVscpLinkTest::refreshConnections()
+{
+  QString preferredUuid;
+  if (m_connObject.contains("uuid") && m_connObject["uuid"].is_string()) {
+    preferredUuid = m_connObject["uuid"].get<std::string>().c_str();
+  }
+  loadAvailableConnections(preferredUuid);
+  appendLog(tr("Connection list refreshed."));
+}
+
+void
+CFrmVscpLinkTest::createTcpipConnection()
+{
+  QWidget* wnd = parentWidget();
+  if (nullptr == wnd) {
+    appendLog(tr("Unable to create a TCP/IP connection from this context."));
+    return;
+  }
+
+  const bool invoked = QMetaObject::invokeMethod(wnd, "newTcpipConnection");
+  if (!invoked) {
+    appendLog(tr("Failed to open TCP/IP connection dialog."));
+    return;
+  }
+
+  appendLog(tr("TCP/IP connection dialog closed. Refreshing available "
+               "interfaces."));
+  refreshConnections();
 }
 
 bool
@@ -295,6 +687,7 @@ CFrmVscpLinkTest::ensureClientCreated(QString& details)
   }
 
   details = tr("Client initialized from selected connection.");
+  updateConnectionInfo();
   return true;
 }
 
@@ -313,16 +706,19 @@ CFrmVscpLinkTest::stepConnect(QString& details)
 
   if (m_vscpClient->isConnected()) {
     details = tr("Already connected.");
+    updateConnectionInfo();
     return true;
   }
 
   const int rv = m_vscpClient->connect();
   if (VSCP_ERROR_SUCCESS != rv) {
     details = tr("Connect failed. Error code: %1").arg(rv);
+    updateConnectionInfo();
     return false;
   }
 
   details = tr("Connected successfully.");
+  updateConnectionInfo();
   return true;
 }
 
@@ -336,10 +732,182 @@ CFrmVscpLinkTest::stepVerifyConnected(QString& details)
 
   if (!m_vscpClient->isConnected()) {
     details = tr("Client is not connected.");
+    updateConnectionInfo();
     return false;
   }
 
   details = tr("Client reports an active connection.");
+  updateConnectionInfo();
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepQueryServerVersion(QString& details)
+{
+  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
+    details = tr("Client is not connected.");
+    return false;
+  }
+
+  uint8_t major_ver = 0;
+  uint8_t minor_ver = 0;
+  uint8_t release_ver = 0;
+  uint8_t build_ver = 0;
+  const int rv = m_vscpClient->getversion(&major_ver,
+                                          &minor_ver,
+                                          &release_ver,
+                                          &build_ver);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    details = tr("Failed to query server version. Error code: %1").arg(rv);
+    return false;
+  }
+
+  m_serverVersion =
+    tr("%1.%2.%3.%4")
+      .arg(major_ver)
+      .arg(minor_ver)
+      .arg(release_ver)
+      .arg(build_ver);
+  details = tr("Server version: %1").arg(m_serverVersion);
+  updateConnectionInfo();
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepQueryServerCapabilities(QString& details)
+{
+  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
+    details = tr("Client is not connected.");
+    return false;
+  }
+
+  QStringList cap;
+  cap << tr("full-level-II=%1").arg(m_vscpClient->isFullLevel2() ? tr("yes") : tr("no"));
+
+  if (CVscpClient::connType::TCPIP == m_connType) {
+    vscpClientTcp* ptcp = dynamic_cast<vscpClientTcp*>(m_vscpClient);
+    if (nullptr != ptcp) {
+      std::deque<std::string> interfaces;
+      const int rv = ptcp->getinterfaces(interfaces);
+      if (VSCP_ERROR_SUCCESS == rv) {
+        cap << tr("interfaces=%1").arg(interfaces.size());
+      }
+      else {
+        cap << tr("interfaces=query-failed(%1)").arg(rv);
+      }
+    }
+  }
+
+  m_serverCapabilities = cap.join(", ");
+  details = tr("Capabilities: %1").arg(m_serverCapabilities);
+  updateConnectionInfo();
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepCaptureEventStatisticsBefore(QString& details)
+{
+  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
+    details = tr("Client is not connected.");
+    return false;
+  }
+
+  m_statsBaselineEvents = m_eventsSent;
+  details = tr("Captured baseline sent-events counter: %1").arg(m_statsBaselineEvents);
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::sendTestEvent(QString& details)
+{
+  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
+    details = tr("Client is not connected.");
+    return false;
+  }
+
+  vscp_event_t ev;
+  memset(&ev, 0, sizeof(ev));
+  ev.head       = 0;
+  ev.vscp_class = 10;
+  ev.vscp_type  = 6;
+  ev.timestamp  = vscp_makeTimeStamp();
+  vscp_setEventToNow(&ev);
+
+  uint8_t data[3] = { 0x29, 0x01, 0x01 };
+  ev.sizeData = sizeof(data);
+  ev.pdata = data;
+
+  const int rv = m_vscpClient->send(ev);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    ++m_eventsFailed;
+    details = tr("Send failed. Error code: %1").arg(rv);
+    return false;
+  }
+
+  ++m_eventsSent;
+  details = tr("Sent test event successfully (total sent=%1).").arg(m_eventsSent);
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepSendTestEvent(QString& details)
+{
+  return sendTestEvent(details);
+}
+
+bool
+CFrmVscpLinkTest::stepVerifyEventStatisticsAfter(QString& details)
+{
+  if (m_eventsSent <= m_statsBaselineEvents) {
+    details = tr("Sent-events counter did not increase (before=%1, after=%2).")
+                .arg(m_statsBaselineEvents)
+                .arg(m_eventsSent);
+    return false;
+  }
+
+  details = tr("Sent-events counter increased (before=%1, after=%2).")
+              .arg(m_statsBaselineEvents)
+              .arg(m_eventsSent);
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepTestCommandResponses(QString& details)
+{
+  if (nullptr == m_vscpClient || !m_vscpClient->isConnected()) {
+    details = tr("Client is not connected.");
+    return false;
+  }
+
+  uint8_t major_ver = 0;
+  uint8_t minor_ver = 0;
+  uint8_t release_ver = 0;
+  uint8_t build_ver = 0;
+  int rv = m_vscpClient->getversion(&major_ver,
+                                    &minor_ver,
+                                    &release_ver,
+                                    &build_ver);
+  if (VSCP_ERROR_SUCCESS != rv) {
+    details = tr("Version command failed in command-response test. Error code: %1").arg(rv);
+    return false;
+  }
+
+  if (CVscpClient::connType::TCPIP == m_connType) {
+    vscpClientTcp* ptcp = dynamic_cast<vscpClientTcp*>(m_vscpClient);
+    if (nullptr != ptcp) {
+      std::deque<std::string> interfaces;
+      rv = ptcp->getinterfaces(interfaces);
+      if (VSCP_ERROR_SUCCESS != rv) {
+        details = tr("TCP/IP interface listing command failed. Error code: %1").arg(rv);
+        return false;
+      }
+      details = tr("Command responses verified (version + interfaces=%1).")
+                  .arg(interfaces.size());
+      return true;
+    }
+  }
+
+  details = tr("Command responses verified (version command succeeded).");
   return true;
 }
 
@@ -375,16 +943,38 @@ CFrmVscpLinkTest::stepDisconnect(QString& details)
 
   if (!m_vscpClient->isConnected()) {
     details = tr("Already disconnected.");
+    updateConnectionInfo();
     return true;
   }
 
   const int rv = m_vscpClient->disconnect();
   if (VSCP_ERROR_SUCCESS != rv) {
     details = tr("Disconnect failed. Error code: %1").arg(rv);
+    updateConnectionInfo();
     return false;
   }
 
   details = tr("Disconnected successfully.");
+  updateConnectionInfo();
+  return true;
+}
+
+bool
+CFrmVscpLinkTest::stepVerifyDisconnected(QString& details)
+{
+  if (nullptr == m_vscpClient) {
+    details = tr("Client is not initialized.");
+    return true;
+  }
+
+  if (m_vscpClient->isConnected()) {
+    details = tr("Client still reports connected state.");
+    updateConnectionInfo();
+    return false;
+  }
+
+  details = tr("Client reports disconnected state.");
+  updateConnectionInfo();
   return true;
 }
 
@@ -408,11 +998,39 @@ CFrmVscpLinkTest::runStepByRow(int row)
       break;
 
     case 3:
-      ok = stepVerifyLevel2(details);
+      ok = stepQueryServerVersion(details);
       break;
 
     case 4:
+      ok = stepQueryServerCapabilities(details);
+      break;
+
+    case 5:
+      ok = stepCaptureEventStatisticsBefore(details);
+      break;
+
+    case 6:
+      ok = stepSendTestEvent(details);
+      break;
+
+    case 7:
+      ok = stepVerifyEventStatisticsAfter(details);
+      break;
+
+    case 8:
+      ok = stepTestCommandResponses(details);
+      break;
+
+    case 9:
+      ok = stepVerifyLevel2(details);
+      break;
+
+    case 10:
       ok = stepDisconnect(details);
+      break;
+
+    case 11:
+      ok = stepVerifyDisconnected(details);
       break;
 
     default:
@@ -445,9 +1063,7 @@ CFrmVscpLinkTest::runSelectedStep()
 void
 CFrmVscpLinkTest::runAllSteps()
 {
-  for (int row = 0; row < m_stepTable->rowCount(); ++row) {
-    setStepResult(row, StepResult::NotRun, tr("Not run"));
-  }
+  resetStepResults();
 
   appendLog(tr("Run all protocol verification steps."));
   for (int row = 0; row < m_stepTable->rowCount(); ++row) {
@@ -473,9 +1089,22 @@ CFrmVscpLinkTest::runReliabilityTest()
     m_vscpClient->disconnect();
   }
 
-  const int cycles = m_cycleCount->value();
-  appendLog(tr("Run reliability test (%1 connect/disconnect cycles).")
-              .arg(cycles));
+  const int cycles      = m_cycleCount->value();
+  const int retries     = m_retryCount->value();
+  const int stressCount = m_stressEventCount->value();
+  const bool validateTimeout = m_validateTimeoutCheck->isChecked();
+  const int timeoutSeconds = connectionTimeoutSeconds();
+
+  int cyclePassCount = 0;
+  int cycleFailCount = 0;
+  int timeoutFailCount = 0;
+  uint64_t stressSendOk = 0;
+  uint64_t stressSendFail = 0;
+
+  appendLog(tr("Run reliability test (%1 cycles, retries=%2, stress-events/cycle=%3).")
+              .arg(cycles)
+              .arg(retries)
+              .arg(stressCount));
 
   QProgressDialog progress(tr("Running reliability test..."),
                            tr("Cancel"),
@@ -490,27 +1119,87 @@ CFrmVscpLinkTest::runReliabilityTest()
     QApplication::processEvents();
     if (progress.wasCanceled()) {
       appendLog(tr("Reliability test canceled at cycle %1.").arg(i - 1));
-      return;
+      break;
     }
 
-    int rv = m_vscpClient->connect();
-    if (VSCP_ERROR_SUCCESS != rv) {
-      appendLog(
-        tr("Cycle %1 failed at connect. Error code: %2").arg(i).arg(rv));
-      return;
+    bool cycleOk = true;
+    bool connected = false;
+
+    for (int attempt = 0; attempt <= retries; ++attempt) {
+      QElapsedTimer timer;
+      timer.start();
+      const int rv = m_vscpClient->connect();
+      const qint64 elapsedMs = timer.elapsed();
+
+      if (VSCP_ERROR_SUCCESS == rv && m_vscpClient->isConnected()) {
+        if (validateTimeout && timeoutSeconds > 0 &&
+            elapsedMs > (timeoutSeconds * 1000LL)) {
+          ++timeoutFailCount;
+          cycleOk = false;
+          appendLog(tr("Cycle %1 connect timeout validation failed (%2 ms > %3 ms).")
+                      .arg(i)
+                      .arg(elapsedMs)
+                      .arg(timeoutSeconds * 1000LL));
+          m_vscpClient->disconnect();
+          break;
+        }
+
+        connected = true;
+        break;
+      }
+
+      appendLog(tr("Cycle %1 connect attempt %2/%3 failed. Error code: %4")
+                  .arg(i)
+                  .arg(attempt + 1)
+                  .arg(retries + 1)
+                  .arg(rv));
     }
 
-    if (!m_vscpClient->isConnected()) {
-      appendLog(tr("Cycle %1 failed: client does not report connected state.")
-                  .arg(i));
-      return;
+    if (!connected) {
+      ++cycleFailCount;
+      progress.setValue(i);
+      continue;
     }
 
-    rv = m_vscpClient->disconnect();
-    if (VSCP_ERROR_SUCCESS != rv) {
-      appendLog(
-        tr("Cycle %1 failed at disconnect. Error code: %2").arg(i).arg(rv));
-      return;
+    for (int n = 0; n < stressCount; ++n) {
+      QString sendDetails;
+      if (sendTestEvent(sendDetails)) {
+        ++stressSendOk;
+      }
+      else {
+        ++stressSendFail;
+        cycleOk = false;
+        appendLog(tr("Cycle %1 stress event %2 failed: %3").arg(i).arg(n + 1).arg(sendDetails));
+      }
+    }
+
+    bool disconnected = false;
+    for (int attempt = 0; attempt <= retries; ++attempt) {
+      const int rv = m_vscpClient->disconnect();
+      if (VSCP_ERROR_SUCCESS == rv && !m_vscpClient->isConnected()) {
+        disconnected = true;
+        break;
+      }
+
+      appendLog(tr("Cycle %1 disconnect attempt %2/%3 failed. Error code: %4")
+                  .arg(i)
+                  .arg(attempt + 1)
+                  .arg(retries + 1)
+                  .arg(rv));
+    }
+
+    if (!disconnected) {
+      cycleOk = false;
+      if (m_vscpClient->isConnected()) {
+        m_vscpClient->disconnect();
+      }
+    }
+
+    if (cycleOk) {
+      ++cyclePassCount;
+    }
+    else {
+      ++cycleFailCount;
     }
 
     progress.setValue(i);
@@ -518,7 +1207,17 @@ CFrmVscpLinkTest::runReliabilityTest()
   }
 
   progress.setValue(cycles);
-  appendLog(tr("Reliability test passed for %1 cycles.").arg(cycles));
+  updateConnectionInfo();
+
+  const QString statsText = tr("Reliability stats: pass=%1 fail=%2 timeout-failures=%3 "
+                               "stress-send-ok=%4 stress-send-fail=%5")
+                              .arg(cyclePassCount)
+                              .arg(cycleFailCount)
+                              .arg(timeoutFailCount)
+                              .arg(stressSendOk)
+                              .arg(stressSendFail);
+  m_reliabilityStatsLabel->setText(statsText);
+  appendLog(statsText);
 }
 
 void
