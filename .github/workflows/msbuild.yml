@@ -25,10 +25,10 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 5.15.14
+          version: 6.8.1
           host: windows
           target: desktop
-          arch: win64_msvc2019_64
+          arch: win64_msvc2022_64
           modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
           cache: true
 
@@ -64,6 +64,7 @@ jobs:
       - name: Configure
         shell: pwsh
         run: |
+          $env:CXXFLAGS = "/W3 /permissive /Zc:__cplusplus"
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}\.vcpkg\scripts\buildsystems\vcpkg.cmake" -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl
 
       - name: Build
