@@ -616,8 +616,7 @@ CFrmVscpLinkTest::createTcpipConnection()
     return;
   }
 
-  appendLog(tr("TCP/IP connection dialog closed. Refreshing available "
-               "interfaces."));
+  appendLog(tr("TCP/IP connection dialog closed. Refreshing available connections."));
   refreshConnections();
 }
 
