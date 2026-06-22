@@ -240,6 +240,8 @@ qt_add_executable(${PROJECT_NAME}
   src/cfrmsession.cpp
   src/cfrmmqttexplorer.h
   src/cfrmmqttexplorer.cpp
+  src/cfrmrawcansession.h
+  src/cfrmrawcansession.cpp
   src/cfrmvscplinktest.h
   src/cfrmvscplinktest.cpp
 
@@ -637,6 +639,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Qml
   Qt6::Charts
   Qt6::Help
+  Qt6::SerialBus
+  Qt6::SerialPort
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
@@ -654,6 +658,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Qml
   Qt6::Charts
   Qt6::Help
+  Qt6::SerialBus
+  Qt6::SerialPort
   m
   dl
   Threads::Threads

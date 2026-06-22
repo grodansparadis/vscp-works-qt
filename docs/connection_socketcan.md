@@ -44,6 +44,10 @@ Select the connection you want to clone in the treeview and right click. Select 
 
 Select the connection you want to connect to in the treeview and right click. Select the service your want (session/configure/scan/firmware load) in the context menu. The connection will be established.
 
+## Open a raw SocketCAN frame session
+
+For SocketCAN connections there is also a dedicated frame session window available from the connection context menu as **SocketCAN frame session**. This window can send and receive both standard CAN and CAN FD frames.
+
 ## Testing
 
 If you have can utils installed you can use the `cansend` and `candump` utilities to test your the socketcan support of VSCP Works. You can install can-utils with the following commands.
@@ -114,5 +118,4 @@ This will send a [CLASS1.INFORMATION, VSCP_TYPE_INFORMATION_ON](https://grodansp
 ![](./images/socketcan_test_vcan0_response.png)
 
 The socketcan representation may be awkward at first but this is just the way VSCP packs VSCP events into CAN frames. You can read more about this [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp).
-
 

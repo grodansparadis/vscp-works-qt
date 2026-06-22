@@ -132,6 +132,7 @@ private slots:
 #endif
     void newSession();
     void newMqttExplorer();
+    void newRawCanSession();
     void newNodeConfiguration();
     void newNodeScan();
     void newNodeBootload();
