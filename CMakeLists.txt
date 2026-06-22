@@ -583,6 +583,7 @@ if (MSVC)
     ./build
     ./ui
     ./third_party/vscp/src/vscp/common/  
+    ./third_party/vscp/src/vscp/common/win32helpers
     ./third_party/vscp/src/common
     ./third_party
     ./third_party/nlohmann/include/
