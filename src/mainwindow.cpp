@@ -1914,7 +1914,7 @@ MainWindow::newVscpLinkProtocolTest()
   // If no item is selected then complain
   if (!itemList.size()) {
     QMessageBox::warning(this,
-                         tr("VSVP Works+"),
+                         tr("VSCP Works+"),
                          tr("No connection selected.\n"
                             "Please select a connection first."));
     return;

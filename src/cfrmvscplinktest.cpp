@@ -51,7 +51,9 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPlainTextEdit>
+#include <QProgressDialog>
 #include <QPushButton>
+#include <QApplication>
 #include <QSpinBox>
 #include <QTableWidget>
 #include <QTableWidgetItem>
@@ -200,7 +202,7 @@ CFrmVscpLinkTest::setStepResult(int row,
   }
 
   statusItem->setText(statusText);
-  statusItem->setForeground(statusColor);
+  statusItem->setForeground(QBrush(statusColor));
   detailItem->setText(details);
 }
 
@@ -443,6 +445,10 @@ CFrmVscpLinkTest::runSelectedStep()
 void
 CFrmVscpLinkTest::runAllSteps()
 {
+  for (int row = 0; row < m_stepTable->rowCount(); ++row) {
+    setStepResult(row, StepResult::NotRun, tr("Not run"));
+  }
+
   appendLog(tr("Run all protocol verification steps."));
   for (int row = 0; row < m_stepTable->rowCount(); ++row) {
     if (!runStepByRow(row)) {
@@ -471,7 +477,21 @@ CFrmVscpLinkTest::runReliabilityTest()
   appendLog(tr("Run reliability test (%1 connect/disconnect cycles).")
               .arg(cycles));
 
+  QProgressDialog progress(tr("Running reliability test..."),
+                           tr("Cancel"),
+                           0,
+                           cycles,
+                           this);
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setMinimumDuration(0);
+  progress.setValue(0);
+
   for (int i = 1; i <= cycles; ++i) {
+    QApplication::processEvents();
+    if (progress.wasCanceled()) {
+      appendLog(tr("Reliability test canceled at cycle %1.").arg(i - 1));
+      return;
+    }
 
     int rv = m_vscpClient->connect();
     if (VSCP_ERROR_SUCCESS != rv) {
@@ -492,8 +512,12 @@ CFrmVscpLinkTest::runReliabilityTest()
         tr("Cycle %1 failed at disconnect. Error code: %2").arg(i).arg(rv));
       return;
     }
+
+    progress.setValue(i);
+    QApplication::processEvents();
   }
 
+  progress.setValue(cycles);
   appendLog(tr("Reliability test passed for %1 cycles.").arg(cycles));
 }
 
