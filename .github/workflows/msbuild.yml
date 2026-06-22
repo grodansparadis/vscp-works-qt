@@ -44,9 +44,10 @@ jobs:
           ninjaVersion: latest
 
       - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: ${{ github.workspace }}/.vcpkg
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/.vcpkg"
+          & "${{ github.workspace }}/.vcpkg/bootstrap-vcpkg.bat"
 
       - name: Install dependencies
         shell: pwsh
