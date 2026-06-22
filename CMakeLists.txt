@@ -33,6 +33,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
+# MSVC compiler options - relax strict conformance for third-party code compatibility
+if(MSVC)
+  string(REGEX REPLACE "/permissive-" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  add_compile_options(/W3 /Zc:__cplusplus)
+endif()
+
 # Generate position-independent code (-fPIC on UNIX)
 #set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
