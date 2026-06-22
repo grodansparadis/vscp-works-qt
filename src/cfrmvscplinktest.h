@@ -36,8 +36,12 @@
 #include <vscp-client-base.h>
 
 #include <QDialog>
+#include <QVector>
 
 QT_BEGIN_NAMESPACE
+class QCheckBox;
+class QComboBox;
+class QLabel;
 class QPlainTextEdit;
 class QPushButton;
 class QSpinBox;
@@ -52,6 +56,9 @@ public:
   ~CFrmVscpLinkTest();
 
 private slots:
+  void onConnectionSelectionChanged(int index);
+  void refreshConnections();
+  void createTcpipConnection();
   void runSelectedStep();
   void runAllSteps();
   void runReliabilityTest();
@@ -64,10 +71,27 @@ private:
   bool stepInitializeClient(QString& details);
   bool stepConnect(QString& details);
   bool stepVerifyConnected(QString& details);
+  bool stepQueryServerVersion(QString& details);
+  bool stepQueryServerCapabilities(QString& details);
+  bool stepCaptureSentEventsCounterBefore(QString& details);
+  bool stepSendTestEvent(QString& details);
+  bool stepVerifySentEventsCounterAfter(QString& details);
+  bool stepTestCommandResponses(QString& details);
   bool stepVerifyLevel2(QString& details);
   bool stepDisconnect(QString& details);
+  bool stepVerifyDisconnected(QString& details);
   bool ensureClientCreated(QString& details);
   bool resetClient();
+  bool sendTestEvent(QString& details);
+  bool isLinkConnection(const json& conn) const;
+  void loadAvailableConnections(const QString& preferredUuid = QString());
+  bool applySelectedConnection(int index, QString* details = nullptr);
+  void updateConnectionInfo();
+  QString connectionTypeToString(CVscpClient::connType type) const;
+  QString connectionEndpoint(const json& conn) const;
+  QString connectionProtocolDetails(const json& conn) const;
+  int connectionTimeoutSeconds() const;
+  void resetStepResults();
   void setupUi();
   void addStepRows();
   void setStepResult(int row, StepResult result, const QString& details);
@@ -76,10 +100,33 @@ private:
   json m_connObject;
   CVscpClient::connType m_connType;
   CVscpClient* m_vscpClient;
+  QVector<json> m_connections;
+  uint64_t m_eventsSent;
+  uint64_t m_eventsFailed;
+  uint64_t m_statsBaselineEvents;
+  QString m_serverVersion;
+  QString m_serverCapabilities;
 
+  QComboBox* m_connectionCombo;
+  QPushButton* m_refreshConnectionsButton;
+  QPushButton* m_newTcpipButton;
+  QLabel* m_connNameLabel;
+  QLabel* m_connTypeLabel;
+  QLabel* m_connEndpointLabel;
+  QLabel* m_connUserLabel;
+  QLabel* m_connSslLabel;
+  QLabel* m_connTimeoutLabel;
+  QLabel* m_connProtocolLabel;
+  QLabel* m_connStateLabel;
+  QLabel* m_serverVersionLabel;
+  QLabel* m_serverCapabilitiesLabel;
   QTableWidget* m_stepTable;
   QPlainTextEdit* m_logEdit;
   QSpinBox* m_cycleCount;
+  QSpinBox* m_retryCount;
+  QSpinBox* m_stressEventCount;
+  QCheckBox* m_validateTimeoutCheck;
+  QLabel* m_reliabilityStatsLabel;
 
   QPushButton* m_runStepButton;
   QPushButton* m_runAllButton;
