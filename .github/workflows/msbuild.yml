@@ -52,7 +52,7 @@ jobs:
           vcpkg install curl:${env:TRIPLET}
           vcpkg install dlfcn-win32:${env:TRIPLET}
           vcpkg install expat:${env:TRIPLET}
-          vcpkg install libmosquitto:${env:TRIPLET}
+          vcpkg install mosquitto:${env:TRIPLET}
           vcpkg install libwebsockets:${env:TRIPLET}
           vcpkg install openssl:${env:TRIPLET}
           vcpkg install pthreads:${env:TRIPLET}
