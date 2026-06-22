@@ -35,6 +35,7 @@
 #include <QtSerialBus/QCanBusFrame>
 
 #include <QCheckBox>
+#include <QColor>
 #include <QComboBox>
 #include <QDateTime>
 #include <QDialog>
@@ -96,6 +97,10 @@ private:
   void refreshFrameView();
   void refreshSummaryView();
   void refreshFilterModelFromTable();
+  QColor rowBackgroundColorForDirection(const QString& direction) const;
+  QColor rowForegroundColorForDirection(const QString& direction) const;
+  QColor frameTypeBackgroundColor(const QCanBusFrame& frame) const;
+  QColor frameTypeForegroundColor(const QCanBusFrame& frame) const;
   QString formatId(uint32_t id, bool extended) const;
   QString formatPayload(const QByteArray& payload) const;
   QString frameFlagsToString(const QCanBusFrame& frame) const;
