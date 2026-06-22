@@ -1205,7 +1205,7 @@ CFrmVscpLinkTest::runReliabilityTest()
     QApplication::processEvents();
   }
 
-  progress.setValue(cycles);
+  progress.setValue(progress.wasCanceled() ? progress.value() : cycles);
   updateConnectionInfo();
 
   const QString statsText = tr("Reliability stats: pass=%1 fail=%2 timeout-failures=%3 "
