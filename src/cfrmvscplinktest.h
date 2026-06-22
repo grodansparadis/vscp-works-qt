@@ -99,9 +99,6 @@ private:
   CVscpClient::connType m_connType;
   CVscpClient* m_vscpClient;
   QVector<json> m_connections;
-  uint64_t m_eventsSent;
-  uint64_t m_eventsFailed;
-  uint64_t m_statsBaselineEvents;
   QString m_serverVersion;
   QString m_serverCapabilities;
 
