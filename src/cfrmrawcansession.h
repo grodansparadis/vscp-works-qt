@@ -41,6 +41,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QShowEvent>
 #include <QStackedWidget>
 #include <QTableWidget>
 #include <QVector>
@@ -67,6 +68,9 @@ private slots:
   void addIdFilter();
   void removeSelectedIdFilter();
   void onFilterTableChanged(QTableWidgetItem* item);
+
+protected:
+  void showEvent(QShowEvent* event) override;
 
 private:
   struct FrameRecord {
@@ -102,6 +106,7 @@ private:
   QCanBusDevice* m_canDevice;
   QVector<FrameRecord> m_frameHistory;
   QVector<IdFilterRange> m_idFilters;
+  bool m_autoConnectAttempted;
 
   QLabel* m_statusLabel;
   QComboBox* m_comboViewMode;

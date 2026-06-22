@@ -43,7 +43,6 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QSignalBlocker>
-#include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
@@ -53,6 +52,7 @@
 CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_canDevice(nullptr)
+  , m_autoConnectAttempted(false)
   , m_statusLabel(nullptr)
   , m_comboViewMode(nullptr)
   , m_tableIdFilters(nullptr)
@@ -79,10 +79,8 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   if (m_connObject.contains("device") && m_connObject["device"].is_string()) {
     m_interfaceName = m_connObject["device"].get<std::string>().c_str();
   }
-
   setupUi();
   setConnectedState(false);
-  QTimer::singleShot(0, this, &CFrmRawCanSession::connectOrDisconnect);
 }
 
 CFrmRawCanSession::~CFrmRawCanSession()
@@ -91,6 +89,18 @@ CFrmRawCanSession::~CFrmRawCanSession()
     m_canDevice->disconnectDevice();
     delete m_canDevice;
     m_canDevice = nullptr;
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::showEvent(QShowEvent* event)
+{
+  QDialog::showEvent(event);
+  if (!m_autoConnectAttempted && (nullptr == m_canDevice)) {
+    m_autoConnectAttempted = true;
+    connectOrDisconnect();
   }
 }
 
@@ -491,6 +501,7 @@ CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, const QString& directi
 // ----------------------------------------------------------------------------
 
 void
+CFrmRawCanSession::refreshViews()
 {
   if (m_stackViews->currentWidget() == m_tableFrames) {
     refreshFrameView();
