@@ -69,6 +69,7 @@
 #include "cfrmnodeconfig.h"
 #include "cfrmnodescan.h"
 #include "cfrmsession.h"
+#include "cfrmvscplinktest.h"
 #include "filedownloader.h"
 #include "version.h"
 #include "vscp-client-base.h"
@@ -1603,6 +1604,16 @@ MainWindow::createActions()
 
   // ----------------------------------------------------------------
 
+  QMenu* testsMenu = menuBar()->addMenu(tr("&Tests"));
+  QAction* vscpLinkProtocolTestAct =
+    testsMenu->addAction(tr("&VSCP Link protocol test tool..."),
+                         this,
+                         &MainWindow::newVscpLinkProtocolTest);
+  vscpLinkProtocolTestAct->setStatusTip(
+    tr("Open the VSCP Link protocol step-by-step verifier"));
+
+  // ----------------------------------------------------------------
+
   // QMenu* configMenu = menuBar()->addMenu(tr("&Configuration"));
   // QAction* settingsAct =
   //   configMenu->addAction(tr("&Settings"), this, &MainWindow::showMainsettings);
@@ -1891,6 +1902,48 @@ MainWindow::newSession()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// newVscpLinkProtocolTest
+//
+
+void
+MainWindow::newVscpLinkProtocolTest()
+{
+  QList<QTreeWidgetItem*> itemList;
+  itemList = m_connTreeTable->selectedItems();
+
+  // If no item is selected then complain
+  if (!itemList.size()) {
+    QMessageBox::warning(this,
+                         tr("VSCP Works+"),
+                         tr("No connection selected.\n"
+                            "Please select a connection first."));
+    return;
+  }
+
+  foreach (QTreeWidgetItem* item, itemList) {
+
+    // Not interested in top level items
+    if (NULL != item->parent()) {
+
+      // Get item
+      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
+
+      // Get the connection object
+      json* pconn = itemConn->getJson();
+
+      CFrmVscpLinkTest* w = new CFrmVscpLinkTest(this, pconn);
+      w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+      w->setWindowFlags(Qt::Window);
+      w->show();
+      w->raise();
+      // https://wiki.qt.io/Technical_FAQ#QWidget_::activateWindow.28.29_-_behavior_under_windows
+      w->activateWindow();
+    }
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
 // showMainsettings
 //
 
