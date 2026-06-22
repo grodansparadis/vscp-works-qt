@@ -74,9 +74,15 @@ protected:
   void showEvent(QShowEvent* event) override;
 
 private:
+  enum class FrameDirection
+  {
+    Tx,
+    Rx
+  };
+
   struct FrameRecord {
     QDateTime timestamp;
-    QString direction;
+    FrameDirection direction;
     QCanBusFrame frame;
   };
 
@@ -87,7 +93,7 @@ private:
   };
 
   void setupUi();
-  void appendFrame(const QCanBusFrame& frame, const QString& direction);
+  void appendFrame(const QCanBusFrame& frame, FrameDirection direction);
   void setConnectedState(bool connected);
   bool parseFrameId(uint32_t& id);
   bool parsePayload(QByteArray& payload);
@@ -97,8 +103,9 @@ private:
   void refreshFrameView();
   void refreshSummaryView();
   void refreshFilterModelFromTable();
-  QColor rowBackgroundColorForDirection(const QString& direction) const;
-  QColor rowForegroundColorForDirection(const QString& direction) const;
+  QString directionText(FrameDirection direction) const;
+  QColor rowBackgroundColorForDirection(FrameDirection direction) const;
+  QColor rowForegroundColorForDirection(FrameDirection direction) const;
   QColor frameTypeBackgroundColor(const QCanBusFrame& frame) const;
   QColor frameTypeForegroundColor(const QCanBusFrame& frame) const;
   QString formatId(uint32_t id, bool extended) const;
