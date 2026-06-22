@@ -963,8 +963,8 @@ bool
 CFrmVscpLinkTest::stepVerifyDisconnected(QString& details)
 {
   if (nullptr == m_vscpClient) {
-    details = tr("Client is not initialized.");
-    return true;
+    details = tr("Run 'Initialize client' first.");
+    return false;
   }
 
   if (m_vscpClient->isConnected()) {
