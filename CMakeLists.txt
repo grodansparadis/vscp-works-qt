@@ -81,13 +81,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(REQUIRED_QT_VERSION "6.8.1")
+set(REQUIRED_QT_VERSION "5.15.0")
 
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help)
+find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Widgets Core Network Qml Charts SerialBus SerialPort Help)
 qt_standard_project_setup()
 
 # pthreads
@@ -639,12 +639,12 @@ if (MSVC)
   link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-  Qt6::Widgets
-  Qt6::Qml
-  Qt6::Charts
-  Qt6::Help
-  Qt6::SerialBus
-  Qt6::SerialPort
+  Qt5::Widgets
+  Qt5::Qml
+  Qt5::Charts
+  Qt5::Help
+  Qt5::SerialBus
+  Qt5::SerialPort
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
@@ -658,12 +658,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
-  Qt6::Widgets
-  Qt6::Qml
-  Qt6::Charts
-  Qt6::Help
-  Qt6::SerialBus
-  Qt6::SerialPort
+  Qt5::Widgets
+  Qt5::Qml
+  Qt5::Charts
+  Qt5::Help
+  Qt5::SerialBus
+  Qt5::SerialPort
   m
   dl
   Threads::Threads
