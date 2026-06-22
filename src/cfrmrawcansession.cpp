@@ -550,7 +550,7 @@ CFrmRawCanSession::refreshSummaryView()
   QMap<QString, SummaryData> summaryMap;
 
   for (const FrameRecord& rec : m_frameHistory) {
-    if ("RX" != rec.direction) {
+    if (tr("RX") != rec.direction) {
       continue;
     }
     if (!isFrameVisibleByFilter(rec.frame)) {
