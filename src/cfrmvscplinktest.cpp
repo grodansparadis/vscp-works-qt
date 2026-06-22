@@ -630,7 +630,7 @@ CFrmVscpLinkTest::failureInsightForStep(int row, const QString& details) const
       break;
   }
 
-  if (details.contains("Error code:")) {
+  if (details.contains(tr("Error code:"))) {
     hints << tr("Use the reported error code to map to VSCP error constants for exact root cause.");
   }
 
