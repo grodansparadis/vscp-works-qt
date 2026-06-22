@@ -576,7 +576,7 @@ CFrmVscpLinkTest::failureInsightForStep(int row, const QString& details) const
       break;
 
     case 1:
-      if ("-" == endpoint || endpoint.trimmed().isEmpty()) {
+      if (endpoint.trimmed().isEmpty() || endpoint == tr("-")) {
         hints << tr("No server endpoint is configured.");
       }
       if (!hasUser) {
