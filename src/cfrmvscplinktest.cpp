@@ -56,6 +56,7 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QFormLayout>
+#include <QFont>
 #include <QGroupBox>
 #include <QHeaderView>
 #include <QHBoxLayout>
@@ -139,7 +140,10 @@ CFrmVscpLinkTest::setupUi()
     "QGroupBox::title { subcontrol-origin: margin; left: 8px; color: #0b5394; font-weight: bold; }"
     "QPushButton { background-color: #d9ecff; border: 1px solid #8fb7e8; border-radius: 4px; padding: 4px 8px; }"
     "QPushButton:hover { background-color: #c8e3ff; }"
-    "QTableWidget { background-color: #ffffff; alternate-background-color: #f3f9ff; }");
+    "QHeaderView::section { background-color: #d4e9ff; color: #0b3f76; font-weight: bold; "
+    "  border: 1px solid #a9c9eb; padding: 4px; }"
+    "QTableWidget { background-color: #ffffff; alternate-background-color: #f3f9ff; gridline-color: #c6dbef; }"
+    "QTableWidget::item:selected { background-color: #ffe9a8; color: #1d3557; }");
 
   QLabel* title = new QLabel(
     tr("Run VSCP Link protocol verification step-by-step, as a full flow, or "
@@ -190,6 +194,9 @@ CFrmVscpLinkTest::setupUi()
     QStringList() << tr("Step") << tr("Command") << tr("Result")
                   << tr("Details"));
   m_stepTable->horizontalHeader()->setStretchLastSection(true);
+  m_stepTable->setColumnWidth(0, 48);
+  m_stepTable->setColumnWidth(1, 360);
+  m_stepTable->setColumnWidth(2, 90);
   m_stepTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_stepTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_stepTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -282,8 +289,18 @@ CFrmVscpLinkTest::addStepRows()
 
   m_stepTable->setRowCount(commands.size());
   for (int i = 0; i < commands.size(); ++i) {
-    m_stepTable->setItem(i, 0, new QTableWidgetItem(QString::number(i + 1)));
-    m_stepTable->setItem(i, 1, new QTableWidgetItem(commands.at(i)));
+    QTableWidgetItem* stepItem = new QTableWidgetItem(QString::number(i + 1));
+    stepItem->setBackground(QColor(242, 248, 255));
+    stepItem->setForeground(QBrush(QColor(33, 64, 98)));
+    m_stepTable->setItem(i, 0, stepItem);
+
+    QTableWidgetItem* commandItem = new QTableWidgetItem(commands.at(i));
+    QFont commandFont = commandItem->font();
+    commandFont.setBold(true);
+    commandItem->setFont(commandFont);
+    commandItem->setBackground(QColor(227, 240, 255));
+    commandItem->setForeground(QBrush(QColor(18, 63, 110)));
+    m_stepTable->setItem(i, 1, commandItem);
     setStepResult(i, StepResult::NotRun, tr("Not run"));
   }
 
