@@ -567,7 +567,7 @@ CFrmVscpLinkTest::failureInsightForStep(int row, const QString& details) const
                        !QString(m_connObject["user"].get<std::string>().c_str()).trimmed().isEmpty();
   const bool hasPassword = m_connObject.contains("password") &&
                            m_connObject["password"].is_string() &&
-                           !QString(m_connObject["password"].get<std::string>().c_str()).isEmpty();
+                           !QString(m_connObject["password"].get<std::string>().c_str()).trimmed().isEmpty();
   const int timeout = connectionTimeoutSeconds();
 
   switch (row) {
