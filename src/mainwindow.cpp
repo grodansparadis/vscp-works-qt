@@ -69,6 +69,7 @@
 #include "cfrmnodeconfig.h"
 #include "cfrmnodescan.h"
 #include "cfrmsession.h"
+#include "cfrmmqttexplorer.h"
 #include "cfrmvscplinktest.h"
 #include "filedownloader.h"
 #include "version.h"
@@ -1164,6 +1165,13 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                     this,
                     SLOT(newSession()));
 
+    if (static_cast<int>(CVscpClient::connType::MQTT) == item->parent()->type()) {
+      menu->addAction(newSessionIcon,
+                      QString(tr("MQTT Explorer")),
+                      this,
+                      SLOT(newMqttExplorer()));
+    }
+
     const QIcon devConfigIcon = QIcon(":/page_process.png");
     menu->addAction(devConfigIcon,
                     QString(tr("Configuration")),
@@ -1485,6 +1493,16 @@ MainWindow::createActions()
   connect(newSessionAct, &QAction::triggered, this, &MainWindow::newSession);
   fileMenu->addAction(newSessionAct);
   fileToolBar->addAction(newSessionAct);
+
+  QAction* newMqttExplorerAct =
+    new QAction(newSessionIcon, tr("MQTT &Explorer window..."), this);
+  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT Explorer window"));
+  connect(newMqttExplorerAct,
+          &QAction::triggered,
+          this,
+          &MainWindow::newMqttExplorer);
+  fileMenu->addAction(newMqttExplorerAct);
+  fileToolBar->addAction(newMqttExplorerAct);
 
   // Node configuration
   const QIcon newDevConfigIcon = QIcon(":/page_process.png");
@@ -1882,6 +1900,7 @@ MainWindow::newSession()
       // Get the connection object
 
       json* pconn    = itemConn->getJson();
+      const int type = (*pconn)["type"].get<int>();
       CFrmSession* w = new CFrmSession(this, pconn);
       if (!w->isConnected() && (pworks->m_session_bAutoConnect)) {
         delete w;
@@ -1898,6 +1917,47 @@ MainWindow::newSession()
       // eFlags |= Qt::WindowStaysOnTopHint;
       // setWindowFlags(eFlags);
     }
+}
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// newMqttExplorer
+//
+
+void
+MainWindow::newMqttExplorer()
+{
+  QList<QTreeWidgetItem*> itemList;
+  itemList = m_connTreeTable->selectedItems();
+
+  // If no item is selected then complain
+  if (!itemList.size()) {
+    QMessageBox::warning(this,
+                         tr("VSCP Works+"),
+                         tr("No connection selected.\n"
+                            "Please select a connection first."));
+    return;
+  }
+
+  foreach (QTreeWidgetItem* item, itemList) {
+    if (NULL == item->parent()) {
+      continue;
+    }
+
+    treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
+    json* pconn                  = itemConn->getJson();
+    const int type               = (*pconn)["type"].get<int>();
+    if (static_cast<int>(CVscpClient::connType::MQTT) != type) {
+      continue;
+    }
+
+    CFrmMqttExplorer* w = new CFrmMqttExplorer(this, pconn);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    w->setWindowFlags(Qt::Window);
+    w->show();
+    w->raise();
+    w->activateWindow();
   }
 }
 
