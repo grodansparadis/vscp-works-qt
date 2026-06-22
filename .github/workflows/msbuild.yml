@@ -63,7 +63,7 @@ jobs:
 
       - name: Configure
         shell: cmd
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\.vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DCMAKE_CXX_FLAGS="/W3 /permissive" -DCMAKE_CXX_FLAGS_RELEASE="/O2 /permissive"
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\.vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl "-DCMAKE_CXX_FLAGS=/W3 /WX- /wd3646 /wd4430"
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_CONFIGURATION }} --parallel
