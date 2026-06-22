@@ -43,6 +43,7 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QSignalBlocker>
+#include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
@@ -100,7 +101,7 @@ CFrmRawCanSession::showEvent(QShowEvent* event)
   QDialog::showEvent(event);
   if (!m_autoConnectAttempted && (nullptr == m_canDevice)) {
     m_autoConnectAttempted = true;
-    connectOrDisconnect();
+    QTimer::singleShot(0, this, &CFrmRawCanSession::connectOrDisconnect);
   }
 }
 
@@ -384,7 +385,7 @@ CFrmRawCanSession::sendFrame()
     return;
   }
 
-  appendFrame(frame, tr("TX"));
+  appendFrame(frame, FrameDirection::Tx);
 }
 
 // ----------------------------------------------------------------------------
@@ -393,7 +394,7 @@ void
 CFrmRawCanSession::processReceivedFrames()
 {
   while ((nullptr != m_canDevice) && m_canDevice->framesAvailable()) {
-    appendFrame(m_canDevice->readFrame(), tr("RX"));
+    appendFrame(m_canDevice->readFrame(), FrameDirection::Rx);
   }
 }
 
@@ -487,7 +488,7 @@ CFrmRawCanSession::onFilterTableChanged(QTableWidgetItem* item)
 // ----------------------------------------------------------------------------
 
 void
-CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, const QString& direction)
+CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, FrameDirection direction)
 {
   FrameRecord rec;
   rec.timestamp = QDateTime::currentDateTime();
@@ -532,7 +533,7 @@ CFrmRawCanSession::refreshFrameView()
                                                                                                 : tr("Other");
 
     QTableWidgetItem* timeItem = new QTableWidgetItem(rec.timestamp.toString(Qt::ISODateWithMs));
-    QTableWidgetItem* dirItem  = new QTableWidgetItem(rec.direction);
+    QTableWidgetItem* dirItem  = new QTableWidgetItem(directionText(rec.direction));
     QTableWidgetItem* idItem =
       new QTableWidgetItem(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
     QTableWidgetItem* formatItem =
@@ -584,7 +585,7 @@ CFrmRawCanSession::refreshSummaryView()
   QMap<QString, SummaryData> summaryMap;
 
   for (const FrameRecord& rec : m_frameHistory) {
-    if (tr("RX") != rec.direction) {
+    if (FrameDirection::Rx != rec.direction) {
       continue;
     }
     if (!isFrameVisibleByFilter(rec.frame)) {
@@ -643,13 +644,28 @@ CFrmRawCanSession::refreshSummaryView()
 
 // ----------------------------------------------------------------------------
 
-QColor
-CFrmRawCanSession::rowBackgroundColorForDirection(const QString& direction) const
+QString
+CFrmRawCanSession::directionText(FrameDirection direction) const
 {
-  if (direction == tr("TX")) {
+  switch (direction) {
+    case FrameDirection::Tx:
+      return tr("TX");
+    case FrameDirection::Rx:
+      return tr("RX");
+    default:
+      return tr("?");
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+QColor
+CFrmRawCanSession::rowBackgroundColorForDirection(FrameDirection direction) const
+{
+  if (FrameDirection::Tx == direction) {
     return QColor(235, 244, 255);
   }
-  if (direction == tr("RX")) {
+  if (FrameDirection::Rx == direction) {
     return QColor(236, 248, 236);
   }
 
@@ -659,12 +675,12 @@ CFrmRawCanSession::rowBackgroundColorForDirection(const QString& direction) cons
 // ----------------------------------------------------------------------------
 
 QColor
-CFrmRawCanSession::rowForegroundColorForDirection(const QString& direction) const
+CFrmRawCanSession::rowForegroundColorForDirection(FrameDirection direction) const
 {
-  if (direction == QStringLiteral("TX")) {
+  if (FrameDirection::Tx == direction) {
     return QColor(13, 71, 161);
   }
-  if (direction == QStringLiteral("RX")) {
+  if (FrameDirection::Rx == direction) {
     return QColor(27, 94, 32);
   }
 
