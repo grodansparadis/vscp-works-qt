@@ -45,17 +45,20 @@ jobs:
 
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/.vcpkg
 
       - name: Install dependencies
         shell: pwsh
         run: |
-          vcpkg install curl:${env:TRIPLET}
-          vcpkg install dlfcn-win32:${env:TRIPLET}
-          vcpkg install expat:${env:TRIPLET}
-          vcpkg install mosquitto:${env:TRIPLET}
-          vcpkg install libwebsockets:${env:TRIPLET}
-          vcpkg install openssl:${env:TRIPLET}
-          vcpkg install pthreads:${env:TRIPLET}
+          $vcpkg = "${{ github.workspace }}/.vcpkg/vcpkg.exe"
+          & $vcpkg install curl:${env:TRIPLET}
+          & $vcpkg install dlfcn-win32:${env:TRIPLET}
+          & $vcpkg install expat:${env:TRIPLET}
+          & $vcpkg install mosquitto:${env:TRIPLET}
+          & $vcpkg install libwebsockets:${env:TRIPLET}
+          & $vcpkg install openssl:${env:TRIPLET}
+          & $vcpkg install pthreads:${env:TRIPLET}
 
       - name: Configure
         shell: pwsh
@@ -65,7 +68,7 @@ jobs:
             -A x64 `
             -DCMAKE_BUILD_TYPE=${env:BUILD_CONFIGURATION} `
             -DVCPKG_TARGET_TRIPLET=${env:TRIPLET} `
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/.vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_CONFIGURATION }} --parallel
