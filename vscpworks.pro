@@ -43,6 +43,7 @@ SOURCES +=  src/main.cpp \
     src/cdlgcanfilter.cpp \
     src/cdlgtls.cpp \
     src/cfrmsession.cpp \
+    src/cfrmrawcansession.cpp \
     src/cfrmvscplinktest.cpp \
     src/vscpworks.cpp \
     src/canalconfigwizard.cpp \
@@ -101,6 +102,7 @@ HEADERS  += src/vscpworks.h \
     src/cdlgcanfilter.h \
     src/cdlgtls.h \
     src/cfrmsession.h \
+    src/cfrmrawcansession.h \
     src/cfrmvscplinktest.h \
     src/canalconfigwizard.h \
     vscp/src/vscp/common/version.h \

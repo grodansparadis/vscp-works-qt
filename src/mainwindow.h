@@ -131,6 +131,7 @@ private slots:
     void commitData(QSessionManager &);
 #endif
     void newSession();
+    void newRawCanSession();
     void newNodeConfiguration();
     void newNodeScan();
     void newNodeBootload();
