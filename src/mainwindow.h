@@ -134,6 +134,7 @@ private slots:
     void newNodeConfiguration();
     void newNodeScan();
     void newNodeBootload();
+    void newVscpLinkProtocolTest();
     void mdfEdit();
 
     /// Handle app. settings.
