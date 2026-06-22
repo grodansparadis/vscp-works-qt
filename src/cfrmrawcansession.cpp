@@ -491,10 +491,13 @@ CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, const QString& directi
 // ----------------------------------------------------------------------------
 
 void
-CFrmRawCanSession::refreshViews()
 {
-  refreshFrameView();
-  refreshSummaryView();
+  if (m_stackViews->currentWidget() == m_tableFrames) {
+    refreshFrameView();
+  }
+  else {
+    refreshSummaryView();
+  }
 }
 
 // ----------------------------------------------------------------------------
