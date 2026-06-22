@@ -87,6 +87,7 @@ private:
   QString connectionTypeToString(CVscpClient::connType type) const;
   QString connectionEndpoint(const json& conn) const;
   QString connectionProtocolDetails(const json& conn) const;
+  QString failureInsightForStep(int row, const QString& details) const;
   int connectionTimeoutSeconds() const;
   void resetStepResults();
   void setupUi();

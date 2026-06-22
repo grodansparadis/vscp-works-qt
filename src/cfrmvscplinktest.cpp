@@ -56,6 +56,7 @@
 #include <QCoreApplication>
 #include <QElapsedTimer>
 #include <QFormLayout>
+#include <QFont>
 #include <QGroupBox>
 #include <QHeaderView>
 #include <QHBoxLayout>
@@ -139,7 +140,10 @@ CFrmVscpLinkTest::setupUi()
     "QGroupBox::title { subcontrol-origin: margin; left: 8px; color: #0b5394; font-weight: bold; }"
     "QPushButton { background-color: #d9ecff; border: 1px solid #8fb7e8; border-radius: 4px; padding: 4px 8px; }"
     "QPushButton:hover { background-color: #c8e3ff; }"
-    "QTableWidget { background-color: #ffffff; alternate-background-color: #f3f9ff; }");
+    "QHeaderView::section { background-color: #d4e9ff; color: #0b3f76; font-weight: bold; "
+    "  border: 1px solid #a9c9eb; padding: 4px; }"
+    "QTableWidget { background-color: #ffffff; alternate-background-color: #f3f9ff; gridline-color: #c6dbef; }"
+    "QTableWidget::item:selected { background-color: #ffe9a8; color: #1d3557; }");
 
   QLabel* title = new QLabel(
     tr("Run VSCP Link protocol verification step-by-step, as a full flow, or "
@@ -190,6 +194,9 @@ CFrmVscpLinkTest::setupUi()
     QStringList() << tr("Step") << tr("Command") << tr("Result")
                   << tr("Details"));
   m_stepTable->horizontalHeader()->setStretchLastSection(true);
+  m_stepTable->setColumnWidth(0, 48);
+  m_stepTable->setColumnWidth(1, 360);
+  m_stepTable->setColumnWidth(2, 90);
   m_stepTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_stepTable->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_stepTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -282,8 +289,18 @@ CFrmVscpLinkTest::addStepRows()
 
   m_stepTable->setRowCount(commands.size());
   for (int i = 0; i < commands.size(); ++i) {
-    m_stepTable->setItem(i, 0, new QTableWidgetItem(QString::number(i + 1)));
-    m_stepTable->setItem(i, 1, new QTableWidgetItem(commands.at(i)));
+    QTableWidgetItem* stepItem = new QTableWidgetItem(QString::number(i + 1));
+    stepItem->setBackground(QColor(242, 248, 255));
+    stepItem->setForeground(QBrush(QColor(33, 64, 98)));
+    m_stepTable->setItem(i, 0, stepItem);
+
+    QTableWidgetItem* commandItem = new QTableWidgetItem(commands.at(i));
+    QFont commandFont = commandItem->font();
+    commandFont.setBold(true);
+    commandItem->setFont(commandFont);
+    commandItem->setBackground(QColor(227, 240, 255));
+    commandItem->setForeground(QBrush(QColor(18, 63, 110)));
+    m_stepTable->setItem(i, 1, commandItem);
     setStepResult(i, StepResult::NotRun, tr("Not run"));
   }
 
@@ -538,6 +555,90 @@ CFrmVscpLinkTest::connectionProtocolDetails(const json& conn) const
     return tr("-");
   }
   return details.join(", ");
+}
+
+QString
+CFrmVscpLinkTest::failureInsightForStep(int row, const QString& details) const
+{
+  QStringList hints;
+  const QString endpoint = connectionEndpoint(m_connObject);
+  const bool hasUser = m_connObject.contains("user") &&
+                       m_connObject["user"].is_string() &&
+                       !QString(m_connObject["user"].get<std::string>().c_str()).trimmed().isEmpty();
+  const bool hasPassword = m_connObject.contains("password") &&
+                           m_connObject["password"].is_string() &&
+                           !QString(m_connObject["password"].get<std::string>().c_str()).trimmed().isEmpty();
+  const int timeout = connectionTimeoutSeconds();
+
+  switch (row) {
+    case 0:
+      hints << tr("The selected connection JSON may be incomplete or invalid for the TCP/IP client.");
+      break;
+
+    case 1:
+      if (endpoint.trimmed().isEmpty() || endpoint == tr("-")) {
+        hints << tr("No server endpoint is configured.");
+      }
+      if (!hasUser) {
+        hints << tr("Username is empty; verify whether the server requires authentication.");
+      }
+      if (!hasPassword) {
+        hints << tr("Password is empty; verify whether the server requires authentication.");
+      }
+      if (timeout > 0 && timeout < 2) {
+        hints << tr("Connection timeout is very low (%1 s).").arg(timeout);
+      }
+      hints << tr("Check daemon reachability, firewall rules, and host/port values.");
+      break;
+
+    case 2:
+      hints << tr("The connect call may have succeeded partially but transport was dropped immediately.");
+      hints << tr("Check server logs for authentication or policy rejection.");
+      break;
+
+    case 3:
+      hints << tr("The link is up, but the server may not support the version command on this channel.");
+      hints << tr("Check protocol compatibility between client library and server.");
+      break;
+
+    case 4:
+      hints << tr("Capabilities query can fail when interface listing is disabled on the server.");
+      hints << tr("Verify server permissions for interface introspection.");
+      break;
+
+    case 6:
+      hints << tr("A command response failed; check command availability and user privileges.");
+      hints << tr("Inspect server-side logs around the same timestamp for protocol errors.");
+      break;
+
+    case 7:
+      hints << tr("This connection does not report full Level II capability.");
+      hints << tr("Verify interface type and server-side full-level-II configuration.");
+      break;
+
+    case 8:
+      hints << tr("Disconnect command failed; connection state may already be inconsistent.");
+      hints << tr("Retry once and inspect server transport logs.");
+      break;
+
+    case 9:
+      hints << tr("Client still reports connected state after disconnect.");
+      hints << tr("Possible stale socket/session state; retry disconnect or reinitialize client.");
+      break;
+
+    default:
+      break;
+  }
+
+  if (details.contains(tr("Error code:"))) {
+    hints << tr("Use the reported error code to map to VSCP error constants for exact root cause.");
+  }
+
+  if (hints.isEmpty()) {
+    return QString();
+  }
+
+  return hints.join(" ");
 }
 
 int
@@ -975,6 +1076,13 @@ CFrmVscpLinkTest::runStepByRow(int row)
       details = tr("Unknown step.");
       ok = false;
       break;
+  }
+
+  if (!ok) {
+    const QString insight = failureInsightForStep(row, details);
+    if (!insight.isEmpty()) {
+      details += tr(" Possible cause: %1").arg(insight);
+    }
   }
 
   setStepResult(row, ok ? StepResult::Pass : StepResult::Fail, details);
