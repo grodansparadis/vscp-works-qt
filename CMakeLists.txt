@@ -238,6 +238,8 @@ qt_add_executable(${PROJECT_NAME}
 
   src/cfrmsession.h
   src/cfrmsession.cpp
+  src/cfrmmqttexplorer.h
+  src/cfrmmqttexplorer.cpp
   src/cfrmrawcansession.h
   src/cfrmrawcansession.cpp
   src/cfrmvscplinktest.h

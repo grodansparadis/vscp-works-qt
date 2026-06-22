@@ -43,6 +43,7 @@ SOURCES +=  src/main.cpp \
     src/cdlgcanfilter.cpp \
     src/cdlgtls.cpp \
     src/cfrmsession.cpp \
+    src/cfrmmqttexplorer.cpp \
     src/cfrmrawcansession.cpp \
     src/cfrmvscplinktest.cpp \
     src/vscpworks.cpp \
@@ -94,7 +95,6 @@ HEADERS  += src/vscpworks.h \
     src/cdlgconnsettingsudp.h \
     src/cdlgconnsettingsmulticast.h \
     src/cdlgconnsettingsrawcan.h \
-    src/cdlgconnsettingsrawmqtt.h \
     src/cdlgconnsettingsrest.h \
     src/cdlglevel1filter.h \
     src/cdlglevel1filterwizard.h \
@@ -102,6 +102,7 @@ HEADERS  += src/vscpworks.h \
     src/cdlgcanfilter.h \
     src/cdlgtls.h \
     src/cfrmsession.h \
+    src/cfrmmqttexplorer.h \
     src/cfrmrawcansession.h \
     src/cfrmvscplinktest.h \
     src/canalconfigwizard.h \
