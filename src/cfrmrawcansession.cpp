@@ -652,9 +652,9 @@ CFrmRawCanSession::directionText(FrameDirection direction) const
       return tr("TX");
     case FrameDirection::Rx:
       return tr("RX");
+    default:
+      return tr("?");
   }
-
-  return tr("?");
 }
 
 // ----------------------------------------------------------------------------
