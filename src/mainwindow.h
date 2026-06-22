@@ -131,6 +131,7 @@ private slots:
     void commitData(QSessionManager &);
 #endif
     void newSession();
+    void newMqttExplorer();
     void newRawCanSession();
     void newNodeConfiguration();
     void newNodeScan();
@@ -232,7 +233,6 @@ private:
   QTreeWidgetItem *m_topitem_multicast;
   QTreeWidgetItem *m_topitem_rest;
   QTreeWidgetItem *m_topitem_rawcan;
-  QTreeWidgetItem *m_topitem_rawmqtt;
  
   
 };
