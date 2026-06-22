@@ -1,79 +1,60 @@
 name: CMake-Mac
 
-on: [push]
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  VSCP_ROOT: ${{ github.workspace }}/third_party/vscp
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
-      with:
-        vs-version: '[16.4,16.5)'
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.11.1
+          host: mac
+          target: desktop
+          arch: clang_64
+          modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
 
-    - name: Checkout vscp repo
-      uses: actions/checkout@v4
-      with:
-        repository: grodansparadis/vscp
-        path: vscp
-        ref: development
+      - name: Install system dependencies
+        run: |
+          brew update
+          brew install expat libwebsockets mosquitto openssl@3
 
-    - name: Checkout eclipse paho repo
-      uses: actions/checkout@v4
-      with:
-        repository: eclipse/paho.mqtt.c
-        path: paho
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+            -DVSCP_ROOT=${VSCP_ROOT} \
+            -DVSCP_PATH=${VSCP_ROOT} \
+            -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3)
 
-    - name: Install qt5
-      run: brew update && brew install qt5 && brew link qt5 --force
+      - name: Build
+        run: cmake --build build --config ${BUILD_TYPE} --parallel
 
-    - name: Install openssl
-      run: brew install openssl@1.1 && cp /usr/local/opt/openssl@1.1/lib/pkgconfig/*.pc /usr/local/lib/pkgconfig/
+      - name: Install
+        run: cmake --install build --config ${BUILD_TYPE} --prefix "${{ github.workspace }}/install"
 
-    - name: Install libcurl4-openssl-dev manually 
-      run: sudo apt install libcurl4-openssl-dev   
+      - name: Pack install tree
+        run: |
+          tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz" install
 
-    - name: Install expat
-      run: brew install expat
-
-    - name: Install paho manually
-      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install        
-
-    - name: Create Build Environment
-      # Some projects don't allow in-source building, so create a separate build directory
-      # We'll use this as our working directory for all subsequent commands
-      run: cmake -E make_directory ${{github.workspace}}/build
-
-    - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
-      shell: bash
-      working-directory: ${{github.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-
-    - name: Build
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      shell: bash
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C $BUILD_TYPE
+      - name: Upload install artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscp-works-qt-macos-install
+          path: ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
