@@ -678,6 +678,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 endif()
 
+# Force permissive C++ mode for MSVC to allow third-party code with older syntax
+if(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /permissive)
+endif()
+
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
