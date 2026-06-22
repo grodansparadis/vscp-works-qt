@@ -647,7 +647,14 @@ CFrmRawCanSession::refreshSummaryView()
 QString
 CFrmRawCanSession::directionText(FrameDirection direction) const
 {
-  return (FrameDirection::Tx == direction) ? tr("TX") : tr("RX");
+  switch (direction) {
+    case FrameDirection::Tx:
+      return tr("TX");
+    case FrameDirection::Rx:
+      return tr("RX");
+  }
+
+  return tr("?");
 }
 
 // ----------------------------------------------------------------------------
