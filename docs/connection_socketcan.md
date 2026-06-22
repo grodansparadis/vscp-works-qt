@@ -50,6 +50,8 @@ For SocketCAN connections there is also a dedicated frame session window availab
 
 The payload field supports both classic hex input (`11 22 33` or `112233`) and comma-separated byte values where `0x` is hexadecimal, `0o` is octal, `0b`/`ob` is binary and plain values are decimal, for example `0x11,0o10,0b11,4`.
 
+The frame log is color-coded to make traffic easier to read: TX/RX rows use different colors and the frame type/flags cell is highlighted for Remote, FD, BRS and ESI frames.
+
 ## Testing
 
 If you have can utils installed you can use the `cansend` and `candump` utilities to test your the socketcan support of VSCP Works. You can install can-utils with the following commands.

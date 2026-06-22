@@ -43,7 +43,6 @@
 #include <QMap>
 #include <QMessageBox>
 #include <QSignalBlocker>
-#include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
@@ -53,6 +52,7 @@
 CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_canDevice(nullptr)
+  , m_autoConnectAttempted(false)
   , m_statusLabel(nullptr)
   , m_comboViewMode(nullptr)
   , m_tableIdFilters(nullptr)
@@ -79,10 +79,8 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   if (m_connObject.contains("device") && m_connObject["device"].is_string()) {
     m_interfaceName = m_connObject["device"].get<std::string>().c_str();
   }
-
   setupUi();
   setConnectedState(false);
-  QTimer::singleShot(0, this, &CFrmRawCanSession::connectOrDisconnect);
 }
 
 CFrmRawCanSession::~CFrmRawCanSession()
@@ -91,6 +89,18 @@ CFrmRawCanSession::~CFrmRawCanSession()
     m_canDevice->disconnectDevice();
     delete m_canDevice;
     m_canDevice = nullptr;
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::showEvent(QShowEvent* event)
+{
+  QDialog::showEvent(event);
+  if (!m_autoConnectAttempted && (nullptr == m_canDevice)) {
+    m_autoConnectAttempted = true;
+    connectOrDisconnect();
   }
 }
 
@@ -491,6 +501,7 @@ CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, const QString& directi
 // ----------------------------------------------------------------------------
 
 void
+CFrmRawCanSession::refreshViews()
 {
   if (m_stackViews->currentWidget() == m_tableFrames) {
     refreshFrameView();
@@ -520,13 +531,33 @@ CFrmRawCanSession::refreshFrameView()
                                 : (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType()) ? tr("Remote")
                                                                                                 : tr("Other");
 
-    m_tableFrames->setItem(row, 0, new QTableWidgetItem(rec.timestamp.toString(Qt::ISODateWithMs)));
-    m_tableFrames->setItem(row, 1, new QTableWidgetItem(rec.direction));
-    m_tableFrames->setItem(row, 2, new QTableWidgetItem(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat())));
-    m_tableFrames->setItem(row, 3, new QTableWidgetItem(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD")));
-    m_tableFrames->setItem(row, 4, new QTableWidgetItem(frameType + " " + frameFlagsToString(rec.frame)));
-    m_tableFrames->setItem(row, 5, new QTableWidgetItem(QString::number(rec.frame.payload().size())));
-    m_tableFrames->setItem(row, 6, new QTableWidgetItem(formatPayload(rec.frame.payload())));
+    QTableWidgetItem* timeItem = new QTableWidgetItem(rec.timestamp.toString(Qt::ISODateWithMs));
+    QTableWidgetItem* dirItem  = new QTableWidgetItem(rec.direction);
+    QTableWidgetItem* idItem =
+      new QTableWidgetItem(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
+    QTableWidgetItem* formatItem =
+      new QTableWidgetItem(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
+    QTableWidgetItem* typeItem = new QTableWidgetItem(frameType + " " + frameFlagsToString(rec.frame));
+    QTableWidgetItem* dlcItem  = new QTableWidgetItem(QString::number(rec.frame.payload().size()));
+    QTableWidgetItem* dataItem = new QTableWidgetItem(formatPayload(rec.frame.payload()));
+
+    const QColor rowBgColor = rowBackgroundColorForDirection(rec.direction);
+    const QColor rowFgColor = rowForegroundColorForDirection(rec.direction);
+    for (QTableWidgetItem* item : { timeItem, dirItem, idItem, formatItem, typeItem, dlcItem, dataItem }) {
+      item->setBackground(rowBgColor);
+      item->setForeground(rowFgColor);
+    }
+
+    typeItem->setBackground(frameTypeBackgroundColor(rec.frame));
+    typeItem->setForeground(frameTypeForegroundColor(rec.frame));
+
+    m_tableFrames->setItem(row, 0, timeItem);
+    m_tableFrames->setItem(row, 1, dirItem);
+    m_tableFrames->setItem(row, 2, idItem);
+    m_tableFrames->setItem(row, 3, formatItem);
+    m_tableFrames->setItem(row, 4, typeItem);
+    m_tableFrames->setItem(row, 5, dlcItem);
+    m_tableFrames->setItem(row, 6, dataItem);
   }
 
   m_tableFrames->scrollToBottom();
@@ -608,6 +639,78 @@ CFrmRawCanSession::refreshSummaryView()
     m_tableSummary->setItem(row, 3, new QTableWidgetItem(avgGap));
     m_tableSummary->setItem(row, 4, new QTableWidgetItem(formatPayload(data.lastPayload)));
   }
+}
+
+// ----------------------------------------------------------------------------
+
+QColor
+CFrmRawCanSession::rowBackgroundColorForDirection(const QString& direction) const
+{
+  if (direction == tr("TX")) {
+    return QColor(235, 244, 255);
+  }
+  if (direction == tr("RX")) {
+    return QColor(236, 248, 236);
+  }
+
+  return QColor(Qt::white);
+}
+
+// ----------------------------------------------------------------------------
+
+QColor
+CFrmRawCanSession::rowForegroundColorForDirection(const QString& direction) const
+{
+  if (direction == tr("TX")) {
+    return QColor(13, 71, 161);
+  }
+  if (direction == tr("RX")) {
+    return QColor(27, 94, 32);
+  }
+
+  return QColor(Qt::black);
+}
+
+// ----------------------------------------------------------------------------
+
+QColor
+CFrmRawCanSession::frameTypeBackgroundColor(const QCanBusFrame& frame) const
+{
+  if (QCanBusFrame::RemoteRequestFrame == frame.frameType()) {
+    return QColor(243, 229, 245);
+  }
+  if (frame.hasErrorStateIndicator()) {
+    return QColor(255, 235, 238);
+  }
+  if (frame.hasBitrateSwitch()) {
+    return QColor(224, 247, 250);
+  }
+  if (frame.hasFlexibleDataRateFormat()) {
+    return QColor(227, 242, 253);
+  }
+
+  return QColor(250, 250, 250);
+}
+
+// ----------------------------------------------------------------------------
+
+QColor
+CFrmRawCanSession::frameTypeForegroundColor(const QCanBusFrame& frame) const
+{
+  if (QCanBusFrame::RemoteRequestFrame == frame.frameType()) {
+    return QColor(74, 20, 140);
+  }
+  if (frame.hasErrorStateIndicator()) {
+    return QColor(183, 28, 28);
+  }
+  if (frame.hasBitrateSwitch()) {
+    return QColor(0, 96, 100);
+  }
+  if (frame.hasFlexibleDataRateFormat()) {
+    return QColor(13, 71, 161);
+  }
+
+  return QColor(33, 33, 33);
 }
 
 // ----------------------------------------------------------------------------

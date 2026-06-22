@@ -35,12 +35,14 @@
 #include <QtSerialBus/QCanBusFrame>
 
 #include <QCheckBox>
+#include <QColor>
 #include <QComboBox>
 #include <QDateTime>
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QShowEvent>
 #include <QStackedWidget>
 #include <QTableWidget>
 #include <QVector>
@@ -68,6 +70,9 @@ private slots:
   void removeSelectedIdFilter();
   void onFilterTableChanged(QTableWidgetItem* item);
 
+protected:
+  void showEvent(QShowEvent* event) override;
+
 private:
   struct FrameRecord {
     QDateTime timestamp;
@@ -92,6 +97,10 @@ private:
   void refreshFrameView();
   void refreshSummaryView();
   void refreshFilterModelFromTable();
+  QColor rowBackgroundColorForDirection(const QString& direction) const;
+  QColor rowForegroundColorForDirection(const QString& direction) const;
+  QColor frameTypeBackgroundColor(const QCanBusFrame& frame) const;
+  QColor frameTypeForegroundColor(const QCanBusFrame& frame) const;
   QString formatId(uint32_t id, bool extended) const;
   QString formatPayload(const QByteArray& payload) const;
   QString frameFlagsToString(const QCanBusFrame& frame) const;
@@ -102,6 +111,7 @@ private:
   QCanBusDevice* m_canDevice;
   QVector<FrameRecord> m_frameHistory;
   QVector<IdFilterRange> m_idFilters;
+  bool m_autoConnectAttempted;
 
   QLabel* m_statusLabel;
   QComboBox* m_comboViewMode;
