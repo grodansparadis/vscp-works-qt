@@ -40,7 +40,10 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QMap>
 #include <QMessageBox>
+#include <QSignalBlocker>
+#include <QTimer>
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
@@ -51,6 +54,9 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_canDevice(nullptr)
   , m_statusLabel(nullptr)
+  , m_comboViewMode(nullptr)
+  , m_tableIdFilters(nullptr)
+  , m_stackViews(nullptr)
   , m_editFrameId(nullptr)
   , m_editPayload(nullptr)
   , m_chkExtended(nullptr)
@@ -61,7 +67,10 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_btnConnect(nullptr)
   , m_btnSend(nullptr)
   , m_btnClear(nullptr)
+  , m_btnAddFilter(nullptr)
+  , m_btnRemoveFilter(nullptr)
   , m_tableFrames(nullptr)
+  , m_tableSummary(nullptr)
 {
   if (nullptr != pconn) {
     m_connObject = *pconn;
@@ -73,6 +82,7 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
 
   setupUi();
   setConnectedState(false);
+  QTimer::singleShot(0, this, &CFrmRawCanSession::connectOrDisconnect);
 }
 
 CFrmRawCanSession::~CFrmRawCanSession()
@@ -99,17 +109,48 @@ CFrmRawCanSession::setupUi()
   m_btnConnect           = new QPushButton(tr("Connect"), this);
   m_btnClear             = new QPushButton(tr("Clear"), this);
   QPushButton* btnHelp   = new QPushButton(tr("Help"), this);
+  m_comboViewMode        = new QComboBox(this);
+  m_comboViewMode->addItem(tr("Frame log"));
+  m_comboViewMode->addItem(tr("ID statistics"));
   m_statusLabel          = new QLabel(this);
   m_statusLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
   topLayout->addWidget(m_btnConnect);
   topLayout->addWidget(m_btnClear);
   topLayout->addWidget(btnHelp);
+  topLayout->addSpacing(10);
+  topLayout->addWidget(new QLabel(tr("View:"), this));
+  topLayout->addWidget(m_comboViewMode);
   topLayout->addStretch(1);
   topLayout->addWidget(m_statusLabel, 1);
   mainLayout->addLayout(topLayout);
 
-  m_tableFrames = new QTableWidget(this);
+  QGroupBox* filterBox          = new QGroupBox(tr("ID filters"), this);
+  QVBoxLayout* filterMainLayout = new QVBoxLayout(filterBox);
+  m_tableIdFilters              = new QTableWidget(filterBox);
+  m_tableIdFilters->setColumnCount(3);
+  m_tableIdFilters->setHorizontalHeaderLabels(
+    QStringList() << tr("Use") << tr("From ID") << tr("To ID"));
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+  m_tableIdFilters->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_tableIdFilters->setAlternatingRowColors(true);
+  filterMainLayout->addWidget(m_tableIdFilters);
+
+  QHBoxLayout* filterBtnLayout = new QHBoxLayout;
+  m_btnAddFilter               = new QPushButton(tr("Add range"), filterBox);
+  m_btnRemoveFilter            = new QPushButton(tr("Remove selected"), filterBox);
+  filterBtnLayout->addWidget(m_btnAddFilter);
+  filterBtnLayout->addWidget(m_btnRemoveFilter);
+  filterBtnLayout->addStretch(1);
+  filterMainLayout->addLayout(filterBtnLayout);
+
+  mainLayout->addWidget(filterBox);
+
+  m_stackViews = new QStackedWidget(this);
+
+  m_tableFrames = new QTableWidget(m_stackViews);
   m_tableFrames->setColumnCount(7);
   m_tableFrames->setAlternatingRowColors(true);
   m_tableFrames->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -129,7 +170,27 @@ CFrmRawCanSession::setupUi()
   m_tableFrames->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
   m_tableFrames->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
   m_tableFrames->horizontalHeader()->setStretchLastSection(true);
-  mainLayout->addWidget(m_tableFrames, 1);
+  m_stackViews->addWidget(m_tableFrames);
+
+  m_tableSummary = new QTableWidget(m_stackViews);
+  m_tableSummary->setColumnCount(5);
+  m_tableSummary->setAlternatingRowColors(true);
+  m_tableSummary->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_tableSummary->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_tableSummary->setHorizontalHeaderLabels(
+    QStringList() << tr("ID")
+                  << tr("Received")
+                  << tr("Δt last (ms)")
+                  << tr("Δt avg (ms)")
+                  << tr("Data"));
+  m_tableSummary->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  m_tableSummary->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+  m_tableSummary->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+  m_tableSummary->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+  m_tableSummary->horizontalHeader()->setStretchLastSection(true);
+  m_stackViews->addWidget(m_tableSummary);
+
+  mainLayout->addWidget(m_stackViews, 1);
 
   QGroupBox* sendBox     = new QGroupBox(tr("Send frame"), this);
   QGridLayout* sendLayout = new QGridLayout(sendBox);
@@ -137,7 +198,8 @@ CFrmRawCanSession::setupUi()
   m_editFrameId = new QLineEdit(sendBox);
   m_editFrameId->setPlaceholderText(tr("Example: 0x123 or 291"));
   m_editPayload = new QLineEdit(sendBox);
-  m_editPayload->setPlaceholderText(tr("Hex bytes: 11 22 33 or 112233"));
+  m_editPayload->setPlaceholderText(
+    tr("Hex bytes: 11 22 33 or 112233, or CSV values: 0x11,0o10,0b11,4"));
 
   m_chkExtended            = new QCheckBox(tr("Extended ID (29-bit)"), sendBox);
   m_chkFd                  = new QCheckBox(tr("CAN FD"), sendBox);
@@ -164,6 +226,12 @@ CFrmRawCanSession::setupUi()
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmRawCanSession::sendFrame);
   connect(m_btnClear, &QPushButton::clicked, this, &CFrmRawCanSession::clearLog);
   connect(btnHelp, &QPushButton::clicked, this, &CFrmRawCanSession::showHelp);
+  connect(m_comboViewMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CFrmRawCanSession::onViewModeChanged);
+  connect(m_btnAddFilter, &QPushButton::clicked, this, &CFrmRawCanSession::addIdFilter);
+  connect(m_btnRemoveFilter, &QPushButton::clicked, this, &CFrmRawCanSession::removeSelectedIdFilter);
+  connect(m_tableIdFilters, &QTableWidget::itemChanged, this, &CFrmRawCanSession::onFilterTableChanged);
+
+  addIdFilter();
 }
 
 // ----------------------------------------------------------------------------
@@ -336,7 +404,9 @@ CFrmRawCanSession::processError(QCanBusDevice::CanBusError error)
 void
 CFrmRawCanSession::clearLog()
 {
+  m_frameHistory.clear();
   m_tableFrames->setRowCount(0);
+  m_tableSummary->setRowCount(0);
 }
 
 // ----------------------------------------------------------------------------
@@ -351,51 +421,261 @@ CFrmRawCanSession::showHelp()
 // ----------------------------------------------------------------------------
 
 void
+CFrmRawCanSession::onViewModeChanged(int index)
+{
+  m_stackViews->setCurrentIndex(index);
+  refreshViews();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::addIdFilter()
+{
+  const QSignalBlocker blocker(m_tableIdFilters);
+
+  const int row = m_tableIdFilters->rowCount();
+  m_tableIdFilters->insertRow(row);
+
+  QTableWidgetItem* useItem = new QTableWidgetItem;
+  useItem->setFlags(useItem->flags() | Qt::ItemIsUserCheckable);
+  useItem->setCheckState(Qt::Unchecked);
+  m_tableIdFilters->setItem(row, 0, useItem);
+
+  m_tableIdFilters->setItem(row, 1, new QTableWidgetItem("0x000"));
+  m_tableIdFilters->setItem(row, 2, new QTableWidgetItem("0x7FF"));
+
+  refreshFilterModelFromTable();
+  refreshViews();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::removeSelectedIdFilter()
+{
+  const int row = m_tableIdFilters->currentRow();
+  if (row < 0) {
+    return;
+  }
+
+  m_tableIdFilters->removeRow(row);
+  refreshFilterModelFromTable();
+  refreshViews();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::onFilterTableChanged(QTableWidgetItem* item)
+{
+  Q_UNUSED(item);
+  refreshFilterModelFromTable();
+  refreshViews();
+}
+
+// ----------------------------------------------------------------------------
+
+void
 CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, const QString& direction)
 {
-  const int row = m_tableFrames->rowCount();
-  m_tableFrames->insertRow(row);
+  FrameRecord rec;
+  rec.timestamp = QDateTime::currentDateTime();
+  rec.direction = direction;
+  rec.frame     = frame;
+  m_frameHistory.push_back(rec);
 
-  const QString ts = QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-  const QString frameType = (QCanBusFrame::DataFrame == frame.frameType())
-                              ? tr("Data")
-                              : (QCanBusFrame::RemoteRequestFrame == frame.frameType())
-                                  ? tr("Remote")
-                                  : tr("Other");
-  const QString id = frame.hasExtendedFrameFormat()
-                       ? QString("0x%1").arg(frame.frameId(), 8, 16, QChar('0')).toUpper()
-                       : QString("0x%1").arg(frame.frameId(), 3, 16, QChar('0')).toUpper();
+  refreshViews();
+}
 
-  m_tableFrames->setItem(row, 0, new QTableWidgetItem(ts));
-  m_tableFrames->setItem(row, 1, new QTableWidgetItem(direction));
-  m_tableFrames->setItem(row, 2, new QTableWidgetItem(id));
-  m_tableFrames->setItem(row, 3, new QTableWidgetItem(frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD")));
-  m_tableFrames->setItem(row, 4, new QTableWidgetItem(frameType + " " + frameFlagsToString(frame)));
-  m_tableFrames->setItem(row, 5, new QTableWidgetItem(QString::number(frame.payload().size())));
-  m_tableFrames->setItem(row, 6, new QTableWidgetItem(formatPayload(frame.payload())));
+// ----------------------------------------------------------------------------
+
+void
+{
+  if (m_stackViews->currentWidget() == m_tableFrames) {
+    refreshFrameView();
+  }
+  else {
+    refreshSummaryView();
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::refreshFrameView()
+{
+  m_tableFrames->setRowCount(0);
+
+  for (const FrameRecord& rec : m_frameHistory) {
+    if (!isFrameVisibleByFilter(rec.frame)) {
+      continue;
+    }
+
+    const int row = m_tableFrames->rowCount();
+    m_tableFrames->insertRow(row);
+
+    const QString frameType = (QCanBusFrame::DataFrame == rec.frame.frameType())
+                                ? tr("Data")
+                                : (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType()) ? tr("Remote")
+                                                                                                : tr("Other");
+
+    m_tableFrames->setItem(row, 0, new QTableWidgetItem(rec.timestamp.toString(Qt::ISODateWithMs)));
+    m_tableFrames->setItem(row, 1, new QTableWidgetItem(rec.direction));
+    m_tableFrames->setItem(row, 2, new QTableWidgetItem(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat())));
+    m_tableFrames->setItem(row, 3, new QTableWidgetItem(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD")));
+    m_tableFrames->setItem(row, 4, new QTableWidgetItem(frameType + " " + frameFlagsToString(rec.frame)));
+    m_tableFrames->setItem(row, 5, new QTableWidgetItem(QString::number(rec.frame.payload().size())));
+    m_tableFrames->setItem(row, 6, new QTableWidgetItem(formatPayload(rec.frame.payload())));
+  }
+
   m_tableFrames->scrollToBottom();
 }
 
 // ----------------------------------------------------------------------------
 
 void
-CFrmRawCanSession::setConnectedState(bool connected)
+CFrmRawCanSession::refreshSummaryView()
 {
-  m_btnConnect->setText(connected ? tr("Disconnect") : tr("Connect"));
-  m_btnSend->setEnabled(connected);
-  m_statusLabel->setText(connected
-                           ? tr("Connected to %1").arg(m_interfaceName)
-                           : tr("Disconnected"));
+  struct SummaryData {
+    bool extended;
+    uint32_t id;
+    int receivedCount;
+    qint64 lastGapMs;
+    qint64 sumGapMs;
+    int gapCount;
+    bool hasPrevious;
+    QDateTime previousTs;
+    QByteArray lastPayload;
+  };
+
+  m_tableSummary->setRowCount(0);
+  QMap<QString, SummaryData> summaryMap;
+
+  for (const FrameRecord& rec : m_frameHistory) {
+    if (tr("RX") != rec.direction) {
+      continue;
+    }
+    if (!isFrameVisibleByFilter(rec.frame)) {
+      continue;
+    }
+
+    const bool extended = rec.frame.hasExtendedFrameFormat();
+    const uint32_t id   = rec.frame.frameId();
+    const QString key   = QString("%1:%2").arg(extended ? "E" : "S").arg(id);
+
+    if (!summaryMap.contains(key)) {
+      SummaryData data;
+      data.extended     = extended;
+      data.id           = id;
+      data.receivedCount = 0;
+      data.lastGapMs    = -1;
+      data.sumGapMs     = 0;
+      data.gapCount     = 0;
+      data.hasPrevious  = false;
+      data.lastPayload  = rec.frame.payload();
+      summaryMap.insert(key, data);
+    }
+
+    SummaryData data = summaryMap.value(key);
+    data.receivedCount++;
+    data.lastPayload = rec.frame.payload();
+
+    if (data.hasPrevious) {
+      const qint64 gap = data.previousTs.msecsTo(rec.timestamp);
+      data.lastGapMs   = gap;
+      data.sumGapMs += gap;
+      data.gapCount++;
+    }
+
+    data.hasPrevious = true;
+    data.previousTs  = rec.timestamp;
+
+    summaryMap.insert(key, data);
+  }
+
+  for (auto it = summaryMap.constBegin(); it != summaryMap.constEnd(); ++it) {
+    const SummaryData data = it.value();
+    const int row          = m_tableSummary->rowCount();
+    m_tableSummary->insertRow(row);
+
+    const QString avgGap =
+      (data.gapCount > 0) ? QString::number(static_cast<double>(data.sumGapMs) / data.gapCount, 'f', 1) : "-";
+
+    m_tableSummary->setItem(row, 0, new QTableWidgetItem(formatId(data.id, data.extended)));
+    m_tableSummary->setItem(row, 1, new QTableWidgetItem(QString::number(data.receivedCount)));
+    m_tableSummary->setItem(row, 2, new QTableWidgetItem((data.lastGapMs >= 0) ? QString::number(data.lastGapMs) : "-"));
+    m_tableSummary->setItem(row, 3, new QTableWidgetItem(avgGap));
+    m_tableSummary->setItem(row, 4, new QTableWidgetItem(formatPayload(data.lastPayload)));
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::refreshFilterModelFromTable()
+{
+  m_idFilters.clear();
+
+  for (int row = 0; row < m_tableIdFilters->rowCount(); ++row) {
+    QTableWidgetItem* useItem  = m_tableIdFilters->item(row, 0);
+    QTableWidgetItem* fromItem = m_tableIdFilters->item(row, 1);
+    QTableWidgetItem* toItem   = m_tableIdFilters->item(row, 2);
+    if ((nullptr == useItem) || (nullptr == fromItem) || (nullptr == toItem)) {
+      continue;
+    }
+
+    uint32_t idFrom = 0;
+    uint32_t idTo   = 0;
+    if (!parseIdValue(fromItem->text(), idFrom) || !parseIdValue(toItem->text(), idTo)) {
+      continue;
+    }
+    if (idFrom > idTo) {
+      continue;
+    }
+
+    IdFilterRange r;
+    r.enabled = (Qt::Checked == useItem->checkState());
+    r.idFrom  = idFrom;
+    r.idTo    = idTo;
+    m_idFilters.push_back(r);
+  }
 }
 
 // ----------------------------------------------------------------------------
 
 bool
-CFrmRawCanSession::parseFrameId(uint32_t& id)
+CFrmRawCanSession::isFrameVisibleByFilter(const QCanBusFrame& frame) const
 {
-  QString str = m_editFrameId->text().trimmed();
+  bool hasEnabledFilter = false;
+  for (const IdFilterRange& r : m_idFilters) {
+    if (!r.enabled) {
+      continue;
+    }
+    hasEnabledFilter = true;
+    if ((frame.frameId() >= r.idFrom) && (frame.frameId() <= r.idTo)) {
+      return true;
+    }
+  }
+
+  return !hasEnabledFilter;
+}
+
+// ----------------------------------------------------------------------------
+
+QString
+CFrmRawCanSession::formatId(uint32_t id, bool extended) const
+{
+  return extended ? QString("0x%1").arg(id, 8, 16, QChar('0')).toUpper() : QString("0x%1").arg(id, 3, 16, QChar('0')).toUpper();
+}
+
+// ----------------------------------------------------------------------------
+
+bool
+CFrmRawCanSession::parseIdValue(const QString& value, uint32_t& id) const
+{
+  QString str = value.trimmed();
   if (str.isEmpty()) {
-    QMessageBox::warning(this, tr("VSCP Works"), tr("Frame ID is required."), QMessageBox::Ok);
     return false;
   }
 
@@ -415,11 +695,7 @@ CFrmRawCanSession::parseFrameId(uint32_t& id)
 
   bool ok            = false;
   const uint64_t val = str.toULongLong(&ok, base);
-  if (!ok) {
-    QMessageBox::warning(this,
-                         tr("VSCP Works"),
-                         tr("Frame ID is not a valid number."),
-                         QMessageBox::Ok);
+  if (!ok || (val > 0x1FFFFFFFU)) {
     return false;
   }
 
@@ -429,12 +705,91 @@ CFrmRawCanSession::parseFrameId(uint32_t& id)
 
 // ----------------------------------------------------------------------------
 
+void
+CFrmRawCanSession::setConnectedState(bool connected)
+{
+  m_btnConnect->setText(connected ? tr("Disconnect") : tr("Connect"));
+  m_btnSend->setEnabled(connected);
+  m_statusLabel->setText(connected
+                           ? tr("Connected to %1").arg(m_interfaceName)
+                           : tr("Disconnected"));
+}
+
+// ----------------------------------------------------------------------------
+
+bool
+CFrmRawCanSession::parseFrameId(uint32_t& id)
+{
+  const QString str = m_editFrameId->text().trimmed();
+  if (str.isEmpty()) {
+    QMessageBox::warning(this, tr("VSCP Works"), tr("Frame ID is required."), QMessageBox::Ok);
+    return false;
+  }
+
+  if (!parseIdValue(str, id)) {
+    QMessageBox::warning(this,
+                         tr("VSCP Works"),
+                         tr("Frame ID is not a valid number."),
+                         QMessageBox::Ok);
+    return false;
+  }
+  return true;
+}
+
+// ----------------------------------------------------------------------------
+
 bool
 CFrmRawCanSession::parsePayload(QByteArray& payload)
 {
+  auto parseByteToken = [](const QString& input, uint32_t& value) -> bool {
+    QString token = input.trimmed();
+    if (token.isEmpty()) {
+      return false;
+    }
+
+    int base = 10;
+    if (token.startsWith("0x", Qt::CaseInsensitive)) {
+      token = token.mid(2);
+      base  = 16;
+    }
+    else if (token.startsWith("0o", Qt::CaseInsensitive)) {
+      token = token.mid(2);
+      base  = 8;
+    }
+    else if (token.startsWith("0b", Qt::CaseInsensitive) || token.startsWith("ob", Qt::CaseInsensitive)) {
+      token = token.mid(2);
+      base  = 2;
+    }
+
+    bool ok            = false;
+    const uint64_t val = token.toULongLong(&ok, base);
+    if (!ok || (val > 0xFFU)) {
+      return false;
+    }
+
+    value = static_cast<uint32_t>(val);
+    return true;
+  };
+
   payload.clear();
   QString str = m_editPayload->text().trimmed();
   if (str.isEmpty()) {
+    return true;
+  }
+
+  if (str.contains(",")) {
+    const QStringList parts = str.split(",", Qt::SkipEmptyParts);
+    for (const QString& part : parts) {
+      uint32_t value = 0;
+      if (!parseByteToken(part, value)) {
+        QMessageBox::warning(this,
+                             tr("VSCP Works"),
+                             tr("Payload contains invalid comma-separated value: %1").arg(part.trimmed()),
+                             QMessageBox::Ok);
+        return false;
+      }
+      payload.append(static_cast<char>(value));
+    }
     return true;
   }
 

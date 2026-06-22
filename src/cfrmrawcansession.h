@@ -35,11 +35,15 @@
 #include <QtSerialBus/QCanBusFrame>
 
 #include <QCheckBox>
+#include <QComboBox>
+#include <QDateTime>
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QTableWidget>
+#include <QVector>
 
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -59,13 +63,36 @@ private slots:
   void processError(QCanBusDevice::CanBusError error);
   void clearLog();
   void showHelp();
+  void onViewModeChanged(int index);
+  void addIdFilter();
+  void removeSelectedIdFilter();
+  void onFilterTableChanged(QTableWidgetItem* item);
 
 private:
+  struct FrameRecord {
+    QDateTime timestamp;
+    QString direction;
+    QCanBusFrame frame;
+  };
+
+  struct IdFilterRange {
+    bool enabled;
+    uint32_t idFrom;
+    uint32_t idTo;
+  };
+
   void setupUi();
   void appendFrame(const QCanBusFrame& frame, const QString& direction);
   void setConnectedState(bool connected);
   bool parseFrameId(uint32_t& id);
   bool parsePayload(QByteArray& payload);
+  bool parseIdValue(const QString& str, uint32_t& id) const;
+  bool isFrameVisibleByFilter(const QCanBusFrame& frame) const;
+  void refreshViews();
+  void refreshFrameView();
+  void refreshSummaryView();
+  void refreshFilterModelFromTable();
+  QString formatId(uint32_t id, bool extended) const;
   QString formatPayload(const QByteArray& payload) const;
   QString frameFlagsToString(const QCanBusFrame& frame) const;
 
@@ -73,8 +100,13 @@ private:
   QString m_interfaceName;
 
   QCanBusDevice* m_canDevice;
+  QVector<FrameRecord> m_frameHistory;
+  QVector<IdFilterRange> m_idFilters;
 
   QLabel* m_statusLabel;
+  QComboBox* m_comboViewMode;
+  QTableWidget* m_tableIdFilters;
+  QStackedWidget* m_stackViews;
   QLineEdit* m_editFrameId;
   QLineEdit* m_editPayload;
   QCheckBox* m_chkExtended;
@@ -85,7 +117,10 @@ private:
   QPushButton* m_btnConnect;
   QPushButton* m_btnSend;
   QPushButton* m_btnClear;
+  QPushButton* m_btnAddFilter;
+  QPushButton* m_btnRemoveFilter;
   QTableWidget* m_tableFrames;
+  QTableWidget* m_tableSummary;
 };
 
 #endif // !WIN32
