@@ -47,6 +47,7 @@ SOURCES +=  src/main.cpp \
     src/cfrmrawcansession.cpp \
     src/cfrmvscplinktest.cpp \
     src/vscpworks.cpp \
+    src/cdlglogviewer.cpp \
     src/canalconfigwizard.cpp \
     vscp/src/vscp/common/vscpremotetcpif.cpp \
     vscp/src/vscp/common/vscpdatetime.cpp \
@@ -106,6 +107,7 @@ HEADERS  += src/vscpworks.h \
     src/cfrmrawcansession.h \
     src/cfrmvscplinktest.h \
     src/canalconfigwizard.h \
+    src/cdlglogviewer.h \
     vscp/src/vscp/common/version.h \
     vscp/src/vscp/common/vscp.h \
     vscp/src/vscp/common/vscpremotetcpif.h \
@@ -163,7 +165,8 @@ FORMS += src/mainwindow.ui \
     src/cdlgcanfilter.ui \
     src/cdlgsocketcanflags.ui \
     src/cdlgtls.ui \
-    src/cdlgmqttpublish.ui
+    src/cdlgmqttpublish.ui \
+    src/cdlglogviewer.ui
 
 INCLUDEPATH += ./src \
     ./build \
