@@ -651,6 +651,8 @@ CDlgConnSettingsTcpip::onSetFilter(void)
 void
 CDlgConnSettingsTcpip::onTestConnection(void)
 {
+  int rv = VSCP_ERROR_SUCCESS;
+
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
@@ -658,18 +660,22 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   getResponseTimeout();
 
   // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                          getUser().toStdString().c_str(),
-                                          getPassword().toStdString().c_str())) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
+                                                getUser().toStdString().c_str(),
+                                                getPassword().toStdString().c_str()))) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to initialize tcp/ip client. Error code: %1").arg(rv));
     return;
   }
 
   // Connect to remote host
-  if (VSCP_ERROR_SUCCESS != m_client.connect()) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.connect())) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to connect to remote tcp/ip host. Error code: %1").arg(rv));
     m_client.disconnect();
     return;
   }
@@ -697,9 +703,11 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   }
 
   // Disconnect from remote host
-  if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.disconnect())) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to disconnect from remote tcp/ip host. Error code: %1").arg(rv));
     return;
   }
 
