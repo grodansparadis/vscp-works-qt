@@ -81,10 +81,12 @@ CDlgNewConnection::addConnectionItems(void)
   ui->listWidgetConnectionTypes->addItem(itemCanal);
   itemCanal->setToolTip("VSCP over CANAL (CAN Abstraction Layer)");
 
+#if defined(__linux__)
   const QIcon iconSocketcan      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
   QListWidgetItem* itemSocketcan = new QListWidgetItem(iconSocketcan, QString::fromUtf8("Socketcan"), nullptr, static_cast<int>(CVscpClient::connType::SOCKETCAN));
   ui->listWidgetConnectionTypes->addItem(itemSocketcan);
   itemSocketcan->setToolTip("VSCP over socketcan");
+#endif
 
   const QIcon iconTcpIp      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
   QListWidgetItem* itemTcpIp = new QListWidgetItem(iconTcpIp, QString::fromUtf8("TCP/IP"), nullptr, static_cast<int>(CVscpClient::connType::TCPIP));

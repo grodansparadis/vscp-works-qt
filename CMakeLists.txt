@@ -152,6 +152,14 @@ ELSE(CURL_FOUND)
   MESSAGE(FATAL_ERROR "Could not find the CURL library.")
 ENDIF(CURL_FOUND)
 
+set(SOCKETCAN_SOURCES)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  list(APPEND SOCKETCAN_SOURCES
+    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.h
+    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.cpp
+  )
+endif()
+
 qt_add_executable(${PROJECT_NAME}
   src/vscpworks.qrc
   src/main.cpp
@@ -533,8 +541,7 @@ qt_add_executable(${PROJECT_NAME}
   ./third_party/vscp/src/vscp/common/vscp-client-mqtt.cpp
   ./third_party/vscp/src/vscp/common/vscp-client-tcp.h
   ./third_party/vscp/src/vscp/common/vscp-client-tcp.cpp
-  ./third_party/vscp/src/vscp/common/vscp-client-socketcan.h
-  ./third_party/vscp/src/vscp/common/vscp-client-socketcan.cpp
+  ${SOCKETCAN_SOURCES}
   ./third_party/vscp/src/vscp/common/vscp-client-ws1.h
   ./third_party/vscp/src/vscp/common/vscp-client-ws1.cpp 
   ./third_party/vscp/src/vscp/common/vscp-client-ws2.h

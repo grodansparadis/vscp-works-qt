@@ -47,7 +47,7 @@
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
-#ifndef WIN32
+#if defined(__linux__)
 #include <vscp-client-socketcan.h>
 #endif
 #include <vscp-client-tcp.h>
@@ -429,7 +429,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
       connectToRemoteHost(true);
       break;
 
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       // nodeid
       m_vscpClient = new vscpClientSocketCan();
@@ -1046,6 +1046,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       QApplication::restoreOverrideCursor();
       break;
 
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
@@ -1065,6 +1066,7 @@ CFrmNodeConfig::doConnectToRemoteHost(void)
       }
       QApplication::restoreOverrideCursor();
       break;
+#endif
 
     case CVscpClient::connType::WS1:
       break;
@@ -1147,6 +1149,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       QApplication::restoreOverrideCursor();
       break;
 
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
       QApplication::processEvents();
@@ -1167,6 +1170,7 @@ CFrmNodeConfig::doDisconnectFromRemoteHost(void)
       }
       QApplication::restoreOverrideCursor();
       break;
+#endif
 
     case CVscpClient::connType::WS1:
       break;
