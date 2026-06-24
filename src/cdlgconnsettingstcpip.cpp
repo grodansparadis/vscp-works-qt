@@ -255,9 +255,7 @@ CDlgConnSettingsTcpip::getResponseTimeout(void)
 void
 CDlgConnSettingsTcpip::setResponseTimeout(uint32_t timeout)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  QString str       = pworks->decimalToStringInBase(timeout, 10);
-  ui->editResponseTimeout->setText(str);
+  ui->editResponseTimeout->setText(QString::number(timeout, 10));
   m_client.setResponseTimeout(timeout);
 }
 
