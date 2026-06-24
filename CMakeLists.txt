@@ -573,14 +573,15 @@ qt_add_executable(${PROJECT_NAME}
   ${TS_FILES}   
 ) 
 
-# Auto-increment build version on every build
-add_custom_target(increment_build_version ALL
+# Auto-increment build version after each successful build (POST_BUILD)
+# Running this after linking avoids touching version.h before compilation,
+# which would otherwise force a full rebuild on every invocation.
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND}
     -DSOURCE_DIR="${CMAKE_SOURCE_DIR}"
     -P "${CMAKE_SOURCE_DIR}/cmake/update_build_version.cmake"
   COMMENT "Incrementing build version in src/version.h"
 )
-add_dependencies(${PROJECT_NAME} increment_build_version)
 
 if (MSVC)
   find_path(PTHREAD_INCLUDE_DIR pthread.h)

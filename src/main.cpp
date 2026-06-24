@@ -7,6 +7,7 @@
 #endif
 
 #include "version.h"
+#include "buildnumber.h"
 #include "vscp.h"
 #include "vscphelper.h"
 

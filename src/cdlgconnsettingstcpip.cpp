@@ -663,12 +663,12 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
                                                 getUser().toStdString().c_str(),
-                                                getPassword().toStdString().c_str()),
-                                                getPoll())) {
+                                                getPassword().toStdString().c_str(),
+                                                getPoll()))) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Failed to initialize tcp/ip client. Error code: %1").arg(rv));
+                             tr("INIT: Failed to initialize tcp/ip client. Error code: %1").arg(rv));
     return;
   }
 
@@ -677,7 +677,7 @@ CDlgConnSettingsTcpip::onTestConnection(void)
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Failed to connect to remote tcp/ip host. Error code: %1").arg(rv));
+                             tr("CONNECT: Failed to connect to remote tcp/ip host. Error code: %1").arg(rv));
     m_client.disconnect();
     return;
   }
@@ -688,10 +688,10 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   uint8_t release_ver;
   uint8_t build_ver;
   QString strVersion;
-  if (VSCP_ERROR_SUCCESS == m_client.getversion(&major_ver,
+  if (VSCP_ERROR_SUCCESS == (rv = m_client.getversion(&major_ver,
                                                 &minor_ver,
                                                 &release_ver,
-                                                &build_ver)) {
+                                                &build_ver))) {
 
     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
                                  (int)major_ver,
@@ -701,7 +701,7 @@ CDlgConnSettingsTcpip::onTestConnection(void)
                    .c_str();
   }
   else {
-    strVersion = tr("Failed to get version from server");
+    strVersion = tr("VERSION: Failed to get version from server. Error code: %1").arg(rv);
   }
 
   // Disconnect from remote host

@@ -33,10 +33,10 @@
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Orientation::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+    <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Help|QDialogButtonBox::StandardButton::Ok</set>
    </property>
    <property name="centerButtons">
     <bool>false</bool>
@@ -48,7 +48,7 @@
      <x>10</x>
      <y>10</y>
      <width>831</width>
-     <height>273</height>
+     <height>278</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -58,7 +58,7 @@
        <string>Description</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editName</cstring>
@@ -81,7 +81,7 @@
        <string>Host URL</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editHost</cstring>
@@ -104,7 +104,7 @@
        <string>Username</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editUser</cstring>
@@ -127,7 +127,7 @@
        <string>Password</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editPassword</cstring>
@@ -150,7 +150,7 @@
        <string>Interface</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>comboInterface</cstring>
@@ -160,17 +160,17 @@
     <item row="4" column="1">
      <widget class="QComboBox" name="comboInterface">
       <property name="toolTip">
-       <string>Interface to use on remote host</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Interface to use on remote host. Mostly gateway defvices have several interfaces.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </item>
     <item row="5" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>Connect timeout</string>
+       <string>Connect timeout (ms)</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editConnectTimeout</cstring>
@@ -196,10 +196,10 @@
     <item row="6" column="0">
      <widget class="QLabel" name="label_7">
       <property name="text">
-       <string>Response timeout</string>
+       <string>Response timeout (ms)</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
       <property name="buddy">
        <cstring>editResponseTimeout</cstring>
@@ -225,20 +225,20 @@
     <item row="8" column="1">
      <widget class="QCheckBox" name="chkFullLevel2">
       <property name="toolTip">
-       <string>Enable full level II communication (no Level I over Level II)</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable full level II communication (no Level I over Level II). Using GUID instead of nickname.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Full Level II</string>
+       <string>Full Level II (using full GUID)</string>
       </property>
      </widget>
     </item>
     <item row="7" column="1">
      <widget class="QCheckBox" name="chkPoll">
       <property name="toolTip">
-       <string>Polling may be needed if remote host is very rewource constraint</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Polling may be needed if remote host is very rewource constraint and allow just one connection.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>Use poll (slow)</string>
+       <string>Use poll (slow) - Needed on low end devices, use if connection timeout (32)</string>
       </property>
      </widget>
     </item>
@@ -342,7 +342,7 @@
     </rect>
    </property>
    <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+    <enum>Qt::Orientation::Horizontal</enum>
    </property>
   </widget>
  </widget>

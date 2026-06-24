@@ -75,6 +75,7 @@
 #include "cfrmvscplinktest.h"
 #include "filedownloader.h"
 #include "version.h"
+#include "buildnumber.h"
 #include "vscp-client-base.h"
 
 #include <spdlog/async.h>
