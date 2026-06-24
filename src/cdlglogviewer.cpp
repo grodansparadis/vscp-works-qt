@@ -30,6 +30,8 @@
 #include "ui_cdlglogviewer.h"
 #include "vscpworks.h"
 
+#include <utility>
+
 #include <QFile>
 #include <QTextStream>
 #include <QFileDialog>
@@ -253,7 +255,7 @@ CDlgLogViewer::applyFilter()
     ui->tableLog->setRowCount(0);
 
     int visibleCount = 0;
-    for (const LogEntry &e : qAsConst(m_entries)) {
+    for (const LogEntry &e : std::as_const(m_entries)) {
         // Severity filter
         if (filterLevel != LogLevel::ALL) {
             int sev = levelSeverity(parseLevelEnum(e.level));

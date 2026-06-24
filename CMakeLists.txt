@@ -573,6 +573,15 @@ qt_add_executable(${PROJECT_NAME}
   ${TS_FILES}   
 ) 
 
+# Auto-increment build version on every build
+add_custom_target(increment_build_version ALL
+  COMMAND ${CMAKE_COMMAND}
+    -DSOURCE_DIR="${CMAKE_SOURCE_DIR}"
+    -P "${CMAKE_SOURCE_DIR}/cmake/update_build_version.cmake"
+  COMMENT "Incrementing build version in src/version.h"
+)
+add_dependencies(${PROJECT_NAME} increment_build_version)
+
 if (MSVC)
   find_path(PTHREAD_INCLUDE_DIR pthread.h)
   find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)
