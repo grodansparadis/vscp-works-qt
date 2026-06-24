@@ -490,9 +490,10 @@ MainWindow::downloadedEventDb()
   }
 
   file.setFileName(tmpPath);
-  file.open(QIODevice::WriteOnly);
-  file.write(pworks->m_pVersionEventDbCtrl->downloadedData());
-  file.close();
+  if (file.open(QIODevice::WriteOnly)) {
+    file.write(pworks->m_pVersionEventDbCtrl->downloadedData());
+    file.close();
+  }
   qDebug() << "A new event database file has been download";
 
   QString path = pworks->m_shareFolder;

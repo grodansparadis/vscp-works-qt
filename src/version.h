@@ -39,9 +39,9 @@
 #define VSCPWORKS_MAJOR_VERSION     0
 #define VSCPWORKS_MINOR_VERSION     0
 #define VSCPWORKS_RELEASE_VERSION   2
-#define VSCPWORKS_BUILD_VERSION     1   
+#define VSCPWORKS_BUILD_VERSION     3   
 
-#define VSCPWORKS_DISPLAY_VERSION   "0.0.2-1"
+#define VSCPWORKS_DISPLAY_VERSION   "0.0.2-3"
 
 #define VSCPWORKS_COPYRIGHT                                                    \
     "Copyright (C) 2000-2026 Ake Hedman, Grodans Paradis AB, "                   \
