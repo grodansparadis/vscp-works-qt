@@ -232,9 +232,7 @@ CDlgConnSettingsTcpip::getConnectionTimeout(void)
 void
 CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  QString str       = pworks->decimalToStringInBase(timeout, 10);
-  ui->editConnectTimeout->setText(str);
+  ui->editConnectTimeout->setText(QString::number(timeout, 10));
   m_client.setConnectionTimeout(timeout);
 }
 
