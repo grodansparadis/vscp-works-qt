@@ -31,6 +31,7 @@ jobs:
           arch: win64_msvc2022_64
           modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
           cache: true
+          use-official: true
 
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
