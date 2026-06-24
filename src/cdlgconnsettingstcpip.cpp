@@ -220,7 +220,9 @@ CDlgConnSettingsTcpip::setInterface(const QString& str)
 uint32_t
 CDlgConnSettingsTcpip::getConnectionTimeout(void)
 {
-  return m_client.getConnectionTimeout();
+  uint32_t timeout = vscp_readStringValue(ui->editConnectTimeout->text().toStdString());
+  m_client.setConnectionTimeout(timeout);
+  return timeout;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -230,6 +232,7 @@ CDlgConnSettingsTcpip::getConnectionTimeout(void)
 void
 CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
 {
+  ui->editConnectTimeout->setText(QString::number(timeout, 10));
   m_client.setConnectionTimeout(timeout);
 }
 
@@ -240,7 +243,9 @@ CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
 uint32_t
 CDlgConnSettingsTcpip::getResponseTimeout(void)
 {
-  return m_client.getResponseTimeout();
+  uint32_t timeout = vscp_readStringValue(ui->editResponseTimeout->text().toStdString());
+  m_client.setResponseTimeout(timeout);
+  return timeout;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -250,6 +255,7 @@ CDlgConnSettingsTcpip::getResponseTimeout(void)
 void
 CDlgConnSettingsTcpip::setResponseTimeout(uint32_t timeout)
 {
+  ui->editResponseTimeout->setText(QString::number(timeout, 10));
   m_client.setResponseTimeout(timeout);
 }
 
@@ -648,6 +654,9 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
+  getConnectionTimeout();
+  getResponseTimeout();
+
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
                                           getUser().toStdString().c_str(),
@@ -712,6 +721,9 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
+  getConnectionTimeout();
+  getResponseTimeout();
+
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
                                           getUser().toStdString().c_str(),
@@ -720,8 +732,6 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip object"));
     return;
   }
-
-  m_client.setResponseTimeout(2000);
 
   // Connect to remote host
   if (VSCP_ERROR_SUCCESS != m_client.connect()) {
