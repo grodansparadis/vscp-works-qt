@@ -656,13 +656,15 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
-  getConnectionTimeout();
-  getResponseTimeout();
+  // Set connection and response timeout
+  m_client.setConnectionTimeout(getConnectionTimeout());
+  m_client.setResponseTimeout(getResponseTimeout());
 
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
                                                 getUser().toStdString().c_str(),
-                                                getPassword().toStdString().c_str()))) {
+                                                getPassword().toStdString().c_str()),
+                                                getPoll())) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr(APPNAME),
