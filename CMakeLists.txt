@@ -251,6 +251,10 @@ qt_add_executable(${PROJECT_NAME}
   src/canalconfigwizard.h
   src/canalconfigwizard.cpp
 
+  src/cdlglogviewer.ui
+  src/cdlglogviewer.h
+  src/cdlglogviewer.cpp
+
   src/eventlistmodel.h
   src/eventlistmodel.cpp
 

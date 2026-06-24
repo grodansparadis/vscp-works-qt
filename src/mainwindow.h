@@ -184,6 +184,11 @@ private slots:
     */
     void showHelp(void);
 
+    /*!
+        Show the application log viewer
+    */
+    void showLogViewer(void);
+
 protected:        
 
     /*

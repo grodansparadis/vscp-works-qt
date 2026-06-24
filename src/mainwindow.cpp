@@ -62,6 +62,7 @@
 #include "cdlgconnsettingsws1.h"
 #include "cdlgconnsettingsws2.h"
 #include "cdlgknownguid.h"
+#include "cdlglogviewer.h"
 #include "cdlgmainsettings.h"
 #include "cdlgnewconnection.h"
 #include "cdlgsessionfilter.h"
@@ -1666,6 +1667,12 @@ MainWindow::createActions()
 
   helpMenu->addSeparator();
 
+  QAction* logViewerAct =
+    helpMenu->addAction(tr("View &Log..."), this, &MainWindow::showLogViewer);
+  logViewerAct->setStatusTip(tr("View application log"));
+
+  helpMenu->addSeparator();
+
   QAction* aboutAct =
     helpMenu->addAction(tr("&About"), this, &MainWindow::about);
   aboutAct->setStatusTip(tr("Show the application's About box"));
@@ -3000,3 +3007,14 @@ MainWindow::showHelp(void)
 }
 
 #endif
+
+///////////////////////////////////////////////////////////////////////////////
+// showLogViewer
+//
+
+void
+MainWindow::showLogViewer(void)
+{
+  CDlgLogViewer dlg(this);
+  dlg.exec();
+}
