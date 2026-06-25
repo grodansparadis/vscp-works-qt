@@ -1,4 +1,6 @@
 {
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
     "files.associations": {
       "array": "cpp",
       "atomic": "cpp",
@@ -124,9 +126,9 @@
     "cmake.configureEnvironment": {
       "CMAKE_PREFIX_PATH": "~/Qt/6.9.1/gcc_64"
     },
-    "cmake.configureArgs": [
+    "c1make.configureArgs": [
       "-DCMAKE_PREFIX_PATH=~/Qt/6.9.1/gcc_64"
-    ]
+    ],
     "vcpkg.general.enable": true,
     "vcpkg.target.hostTriplet": "x64-windows",
     "vcpkg.target.defaultTriplet": "",

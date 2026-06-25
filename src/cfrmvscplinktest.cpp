@@ -80,9 +80,6 @@ CFrmVscpLinkTest::CFrmVscpLinkTest(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_connType(CVscpClient::connType::NONE)
   , m_vscpClient(nullptr)
-  , m_eventsSent(0)
-  , m_eventsFailed(0)
-  , m_statsBaselineEvents(0)
   , m_connectionCombo(nullptr)
   , m_refreshConnectionsButton(nullptr)
   , m_newTcpipButton(nullptr)
@@ -472,9 +469,6 @@ CFrmVscpLinkTest::applySelectedConnection(int index, QString* details)
                  : CVscpClient::connType::NONE;
   m_serverVersion.clear();
   m_serverCapabilities.clear();
-  m_eventsSent = 0;
-  m_eventsFailed = 0;
-  m_statsBaselineEvents = 0;
   resetStepResults();
   updateConnectionInfo();
 

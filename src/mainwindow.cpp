@@ -62,6 +62,7 @@
 #include "cdlgconnsettingsws1.h"
 #include "cdlgconnsettingsws2.h"
 #include "cdlgknownguid.h"
+#include "cdlglogviewer.h"
 #include "cdlgmainsettings.h"
 #include "cdlgnewconnection.h"
 #include "cdlgsessionfilter.h"
@@ -74,6 +75,7 @@
 #include "cfrmvscplinktest.h"
 #include "filedownloader.h"
 #include "version.h"
+#include "buildnumber.h"
 #include "vscp-client-base.h"
 
 #include <spdlog/async.h>
@@ -489,9 +491,10 @@ MainWindow::downloadedEventDb()
   }
 
   file.setFileName(tmpPath);
-  file.open(QIODevice::WriteOnly);
-  file.write(pworks->m_pVersionEventDbCtrl->downloadedData());
-  file.close();
+  if (file.open(QIODevice::WriteOnly)) {
+    file.write(pworks->m_pVersionEventDbCtrl->downloadedData());
+    file.close();
+  }
   qDebug() << "A new event database file has been download";
 
   QString path = pworks->m_shareFolder;
@@ -1663,6 +1666,12 @@ MainWindow::createActions()
   QAction* checkUpdateAct =
     helpMenu->addAction(tr("Check for updates..."), this, &MainWindow::chkUpdate);
   checkUpdateAct->setStatusTip(tr("Check for program updates"));
+
+  helpMenu->addSeparator();
+
+  QAction* logViewerAct =
+    helpMenu->addAction(tr("View &Log..."), this, &MainWindow::showLogViewer);
+  logViewerAct->setStatusTip(tr("View application log"));
 
   helpMenu->addSeparator();
 
@@ -3000,3 +3009,14 @@ MainWindow::showHelp(void)
 }
 
 #endif
+
+///////////////////////////////////////////////////////////////////////////////
+// showLogViewer
+//
+
+void
+MainWindow::showLogViewer(void)
+{
+  CDlgLogViewer dlg(this);
+  dlg.exec();
+}

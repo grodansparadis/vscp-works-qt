@@ -68,6 +68,7 @@
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
+#include <QTimer>
 #include <QToolButton>
 #include <QXmlStreamReader>
 #include <QtWidgets>
@@ -125,6 +126,11 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
+
+  // Poll timer – started only when the interface requires polling
+  m_pollTimer = new QTimer(this);
+  m_pollTimer->setTimerType(Qt::PreciseTimer);
+  connect(m_pollTimer, &QTimer::timeout, this, &CFrmSession::pollForEvents);
 
   spdlog::debug(std::string(tr("Session: Session module opened").toStdString()));
 
@@ -1540,6 +1546,9 @@ CFrmSession::editTxEvent(void)
   for (it = selection.begin(); it != selection.end(); it++) {
 
     CTxWidgetItem* itemEvent = (CTxWidgetItem*)m_txTable->item(it->row(), txrow_event);
+    if (nullptr == itemEvent) {
+      return;
+    }
     vscp_event_t* pev           = itemEvent->m_tx.getEvent();
 
     dlg.setEnable(itemEvent->m_tx.getEnable());
@@ -2051,6 +2060,14 @@ CFrmSession::doConnectToRemoteHost(void)
   int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
+  // Session-level poll timer is only needed for interfaces without an
+  // internal worker thread (CANAL, SOCKETCAN).
+  // TCP/IP handles polling internally via pollWorkerThread when bpoll=true,
+  // so it does not need the session timer regardless of the bpoll flag.
+  const bool bNeedsPoll =
+    (m_vscpConnType == CVscpClient::connType::CANAL ||
+     m_vscpConnType == CVscpClient::connType::SOCKETCAN);
+
   switch (m_vscpConnType) {
 
     case CVscpClient::connType::NONE:
@@ -2192,15 +2209,22 @@ CFrmSession::doConnectToRemoteHost(void)
       }
       break;
   }
+
+  // Start poll timer if this interface requires polling and we are connected
+  if (bNeedsPoll && m_vscpClient && m_vscpClient->isConnected()) {
+    startPolling();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// doDisconnectFromRemoteHost
 //
 
 void
 CFrmSession::doDisconnectFromRemoteHost(void)
 {
+  // Always stop polling before disconnecting
+  stopPolling();
+
   int rv;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -4321,6 +4345,58 @@ CFrmSession::receiveCallback(vscp_event_t& ev, void* pobj)
   // Alternative method for reference
   // CFrmSession* pSession = (CFrmSession*)pobj;
   // pSession->threadReceive(pevnew);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// startPolling
+//
+
+void
+CFrmSession::startPolling(int intervalMs)
+{
+  if (!m_pollTimer->isActive()) {
+    m_pollTimer->start(intervalMs);
+    spdlog::debug("Session: poll timer started ({} ms)", intervalMs);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// stopPolling
+//
+
+void
+CFrmSession::stopPolling()
+{
+  if (m_pollTimer->isActive()) {
+    m_pollTimer->stop();
+    spdlog::debug("Session: poll timer stopped");
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// pollForEvents
+// Drain all available events from the client and route each one through the
+// normal receiveCallback path so the rest of the receive pipeline is unchanged.
+//
+
+void
+CFrmSession::pollForEvents()
+{
+  if (!m_vscpClient || !m_vscpClient->isConnected()) {
+    return;
+  }
+
+  vscpEvent ev;
+  // Drain until no more events are available (receive returns non-success)
+  while (VSCP_ERROR_SUCCESS == m_vscpClient->receive(ev)) {
+    receiveCallback(ev, this);
+    // The callback copied the event; clear data ownership before next iteration
+    if (ev.pdata) {
+      delete[] ev.pdata;
+      ev.pdata    = nullptr;
+      ev.sizeData = 0;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

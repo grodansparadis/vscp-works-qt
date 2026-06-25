@@ -274,7 +274,19 @@ public:
     Return true if we are connected
     @return true if connected, false otherwise
   */
-  bool isConnected(void);                
+  bool isConnected(void);
+
+  /*!
+      Start polling for events using a timer.
+      Routes received events through the normal receiveCallback path.
+      @param intervalMs Polling interval in milliseconds (default 10 ms)
+  */
+  void startPolling(int intervalMs = 10);
+
+  /*!
+      Stop the poll timer.
+  */
+  void stopPolling();
 
 public slots:
 
@@ -475,6 +487,12 @@ public slots:
   /// Open dialog to let user select retain publish topics to clear
   void openClearMqttRetainPublishTopics(void);
 
+  /*!
+      Timer slot: drain all available events from the client and route
+      them through receiveCallback so the existing callback path is used.
+  */
+  void pollForEvents();
+
 signals:
 
   /// Data received from callback
@@ -547,7 +565,10 @@ private:
   QTableWidget* m_rxTable;
 
   // Protect callback from multiple threads
-  QMutex m_mutexReceiveCallBack;  
+  QMutex m_mutexReceiveCallBack;
+
+  /// Timer used for poll-mode interfaces (e.g. CANAL without worker thread)
+  QTimer* m_pollTimer;  
 
   /// Mutex that protect the rx -lists
   QMutex m_mutexRxList;
