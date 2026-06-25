@@ -47,7 +47,7 @@ jobs:
       - name: Setup vcpkg
         shell: pwsh
         run: |
-          git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/.vcpkg"
+          git clone --depth=1 --branch 2026.06.01 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/.vcpkg"
           & "${{ github.workspace }}/.vcpkg/bootstrap-vcpkg.bat"
 
       - name: Install dependencies
