@@ -26,6 +26,19 @@
 // SOFTWARE.
 //
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifdef WIN32
+#include <pch.h>
+#endif
+
+#ifdef WIN32
+#include <windows.h>
+#include <winsock2.h>
+#endif
+
 #include "cdlglogviewer.h"
 #include "ui_cdlglogviewer.h"
 #include "vscpworks.h"
