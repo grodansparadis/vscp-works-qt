@@ -47,11 +47,11 @@ jobs:
         run: cmake --build build --config ${BUILD_TYPE} --parallel
 
       - name: Install
-        run: cmake --install build --config ${BUILD_TYPE} --prefix "${{ github.workspace }}/install"
+        run: cmake --install build --config ${BUILD_TYPE} --prefix "${{ github.workspace }}/staging"
 
       - name: Pack install tree
         run: |
-          tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz" install
+          tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz" staging
 
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
