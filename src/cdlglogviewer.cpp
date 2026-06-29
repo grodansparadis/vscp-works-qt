@@ -34,11 +34,6 @@
 #include <pch.h>
 #endif
 
-#ifdef WIN32
-#include <windows.h>
-#include <winsock2.h>
-#endif
-
 #include "cdlglogviewer.h"
 #include "ui_cdlglogviewer.h"
 #include "vscpworks.h"
