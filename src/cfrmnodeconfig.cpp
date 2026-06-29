@@ -1386,7 +1386,7 @@ CFrmNodeConfig::update(void)
   if (m_bFullLevel2) {
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("Fyll level II configuration is not implemented yet."),
+                             tr("Full level II configuration is not implemented yet."),
                              QMessageBox::Ok);
   }
   else {
