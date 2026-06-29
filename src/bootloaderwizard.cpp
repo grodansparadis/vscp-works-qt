@@ -599,7 +599,7 @@ CWizardPageLoadMdf::validatePage(void)
       // QApplication::restoreOverrideCursor();
     } break;
 
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN: {
       int rv;
       CStandardRegisters stdregs;
@@ -1763,7 +1763,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
       setPage(Page_Flash, new CWizardPageFlash(this, m_vscpClient));
       break;
 
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       m_vscpClient = new vscpClientSocketCan();
       if (nullptr == m_vscpClient) {

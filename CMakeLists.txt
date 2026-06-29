@@ -33,6 +33,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
+# MSVC compiler options
+if(MSVC)
+  add_compile_options(/W3 /Zc:__cplusplus)
+endif()
+
 # Generate position-independent code (-fPIC on UNIX)
 #set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -56,7 +61,6 @@ if(MSVC)
   set_property(TARGET ${PROJECT_NAM} PROPERTY WIN32_EXECUTABLE true)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DWIN32_LEAN_AND_MEANS)
-  add_definitions(-D_POSIX_C_SOURCE)
   add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
   add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
   add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS)
@@ -77,7 +81,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(REQUIRED_QT_VERSION "6.11.1")
+set(REQUIRED_QT_VERSION "6.8.1")
 
 # set the module path
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
@@ -147,6 +151,14 @@ IF(CURL_FOUND)
 ELSE(CURL_FOUND)
   MESSAGE(FATAL_ERROR "Could not find the CURL library.")
 ENDIF(CURL_FOUND)
+
+set(SOCKETCAN_SOURCES)
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  list(APPEND SOCKETCAN_SOURCES
+    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.h
+    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.cpp
+  )
+endif()
 
 qt_add_executable(${PROJECT_NAME}
   src/vscpworks.qrc
@@ -533,8 +545,7 @@ qt_add_executable(${PROJECT_NAME}
   ./third_party/vscp/src/vscp/common/vscp-client-mqtt.cpp
   ./third_party/vscp/src/vscp/common/vscp-client-tcp.h
   ./third_party/vscp/src/vscp/common/vscp-client-tcp.cpp
-  ./third_party/vscp/src/vscp/common/vscp-client-socketcan.h
-  ./third_party/vscp/src/vscp/common/vscp-client-socketcan.cpp
+  ${SOCKETCAN_SOURCES}
   ./third_party/vscp/src/vscp/common/vscp-client-ws1.h
   ./third_party/vscp/src/vscp/common/vscp-client-ws1.cpp 
   ./third_party/vscp/src/vscp/common/vscp-client-ws2.h
@@ -593,6 +604,7 @@ if (MSVC)
     ./build
     ./ui
     ./third_party/vscp/src/vscp/common/  
+    ./third_party/vscp/src/vscp/common/win32helpers
     ./third_party/vscp/src/common
     ./third_party
     ./third_party/nlohmann/include/
@@ -604,7 +616,7 @@ if (MSVC)
     ${PThreads4W_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${MOSQUITTO_INCLUDE_DIRS}cd bui
+    ${MOSQUITTO_INCLUDE_DIR}
     ${LIBWEBSOCKETS_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}

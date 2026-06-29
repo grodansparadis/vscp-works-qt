@@ -217,7 +217,7 @@ MainWindow::MainWindow()
   m_topitem_canal->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_canal);
 
-#ifndef WIN32
+#if defined(__linux__)
   // Socketcan
   QStringList strlist_socketcan(
     QString(tr("Socketcan Connections")).split(','));
@@ -568,7 +568,7 @@ MainWindow::addLoadedConnections(void)
           m_topitem_canal->sortChildren(0, Qt::AscendingOrder);
         } break;
 
-#ifndef WIN32
+#if defined(__linux__)
         case CVscpClient::connType::SOCKETCAN: {
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_socketcan, j);
@@ -650,7 +650,7 @@ MainWindow::openConnectionSettingsDialog(CVscpClient::connType type)
       newCanalConnection();
       break;
 
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       newSocketCanConnection();
       break;
@@ -733,7 +733,7 @@ MainWindow::editConnectionItem(void)
           editCanalConnection(itemConn);
           break;
 
-#ifndef WIN32
+#if defined(__linux__)
         case static_cast<int>(CVscpClient::connType::SOCKETCAN):
           editSocketCanConnection(itemConn);
           break;
@@ -818,7 +818,7 @@ MainWindow::cloneConnectionItem(void)
           addChildItemToConnectionTree(m_topitem_canal, conn_copy);
           break;
 
-#ifndef WIN32
+#if defined(__linux__)
         case static_cast<int>(CVscpClient::connType::SOCKETCAN):
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_socketcan, conn_copy);
@@ -924,7 +924,7 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         newSession();
         break;
 
-#ifndef WIN32
+#if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
         newSession();
         break;
@@ -968,7 +968,7 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         newCanalConnection();
         break;
 
-#ifndef WIN32
+#if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
         newSocketCanConnection();
         break;
@@ -1037,7 +1037,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         SLOT(newCanalConnection()));
         break;
 
-#ifndef WIN32
+#if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
         menu->addAction(QString(tr("Add new Socketcan connection...")),
                         this,
@@ -1097,7 +1097,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         SLOT(newCanalConnection()));
         break;
 
-#ifndef WIN32
+#if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
         menu->addAction(QString(tr("Add new Socketcan connection")),
                         this,
@@ -1168,7 +1168,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                     QString(tr("Session")),
                     this,
                     SLOT(newSession()));
-#ifndef WIN32
+#if defined(__linux__)
     if (static_cast<int>(CVscpClient::connType::SOCKETCAN) == item->parent()->type()) {
       menu->addAction(newSessionIcon,
                       QString(tr("SocketCAN frame session")),
@@ -1996,7 +1996,7 @@ MainWindow::newMqttExplorer()
 void
 MainWindow::newRawCanSession()
 {
-#ifndef WIN32
+#if defined(__linux__)
   QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
 
   if (!itemList.size()) {
@@ -2304,7 +2304,7 @@ void
 MainWindow::newSocketCanConnection()
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-#ifndef WIN32
+#if defined(__linux__)
   CDlgConnSettingsSocketCan dlg(this);
   dlg.setInitialFocus();
 
@@ -2351,7 +2351,7 @@ void
 MainWindow::editSocketCanConnection(treeWidgetItemConn* itemConn)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-#ifndef WIN32
+#if defined(__linux__)
   // Get the connection object
   json* pconn = itemConn->getJson();
 

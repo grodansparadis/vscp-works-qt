@@ -30,7 +30,7 @@
 #include <pch.h>
 #endif
 
-#ifndef WIN32
+#if defined(__linux__)
 
 #include <vscphelper.h>
 #include <vscp-client-socketcan.h>
@@ -581,5 +581,4 @@ CDlgConnSettingsSocketCan::showHelp()
   QDesktopServices::openUrl(QUrl(link));
 }
 
-#endif // !WIN32
-
+#endif // __linux__

@@ -22,20 +22,21 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64
-
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.11.1
+          version: 6.8.1
           host: windows
           target: desktop
           arch: win64_msvc2022_64
           modules: qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets
           cache: true
+          use-official: true
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
 
       - name: Setup CMake and Ninja
         uses: lukka/get-cmake@latest
@@ -44,28 +45,26 @@ jobs:
           ninjaVersion: latest
 
       - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
+        shell: pwsh
+        run: |
+          git clone --depth=1 --branch 2026.06.01 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/.vcpkg"
+          & "${{ github.workspace }}/.vcpkg/bootstrap-vcpkg.bat"
 
       - name: Install dependencies
         shell: pwsh
         run: |
-          vcpkg install curl:${env:TRIPLET}
-          vcpkg install dlfcn-win32:${env:TRIPLET}
-          vcpkg install expat:${env:TRIPLET}
-          vcpkg install mosquitto:${env:TRIPLET}
-          vcpkg install libwebsockets:${env:TRIPLET}
-          vcpkg install openssl:${env:TRIPLET}
-          vcpkg install pthreads:${env:TRIPLET}
+          $vcpkg = "${{ github.workspace }}/.vcpkg/vcpkg.exe"
+          & $vcpkg install curl:${env:TRIPLET}
+          & $vcpkg install dlfcn-win32:${env:TRIPLET}
+          & $vcpkg install expat:${env:TRIPLET}
+          & $vcpkg install mosquitto:${env:TRIPLET}
+          & $vcpkg install libwebsockets:${env:TRIPLET}
+          & $vcpkg install openssl:${env:TRIPLET}
+          & $vcpkg install pthreads:${env:TRIPLET}
 
       - name: Configure
-        shell: pwsh
-        run: |
-          cmake -S . -B build `
-            -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DCMAKE_BUILD_TYPE=${env:BUILD_CONFIGURATION} `
-            -DVCPKG_TARGET_TRIPLET=${env:TRIPLET} `
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
+        shell: cmd
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ env.BUILD_CONFIGURATION }} -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}\.vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl "-DCMAKE_CXX_FLAGS=/W3 /WX-"
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_CONFIGURATION }} --parallel

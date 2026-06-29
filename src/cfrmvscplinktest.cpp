@@ -41,7 +41,7 @@
 #include <vscp-client-canal.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
-#ifndef WIN32
+#if defined(__linux__)
 #include <vscp-client-socketcan.h>
 #endif
 #include <vscp-client-tcp.h>
@@ -509,7 +509,7 @@ CFrmVscpLinkTest::connectionTypeToString(CVscpClient::connType type) const
       return tr("Multicast");
     case CVscpClient::connType::CANAL:
       return tr("CANAL");
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       return tr("SocketCAN");
 #endif
@@ -742,7 +742,7 @@ CFrmVscpLinkTest::ensureClientCreated(QString& details)
       m_vscpClient = new vscpClientCanal();
       break;
 
-#ifndef WIN32
+#if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       m_vscpClient = new vscpClientSocketCan();
       break;
