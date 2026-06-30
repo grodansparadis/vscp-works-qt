@@ -72,12 +72,12 @@ jobs:
       - name: Install
         shell: pwsh
         run: |
-          cmake --install build --config ${{ env.BUILD_CONFIGURATION }} --prefix "${{ github.workspace }}/install"
+          cmake --install build --config ${{ env.BUILD_CONFIGURATION }} --prefix "${{ github.workspace }}/staging"
 
       - name: Pack install tree
         shell: pwsh
         run: |
-          Compress-Archive -Path "${{ github.workspace }}/install/*" -DestinationPath "${{ github.workspace }}/vscp-works-qt-windows-install.zip"
+          Compress-Archive -Path "${{ github.workspace }}/staging/*" -DestinationPath "${{ github.workspace }}/vscp-works-qt-windows-install.zip"
 
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
