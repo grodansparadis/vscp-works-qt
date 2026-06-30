@@ -38,7 +38,7 @@
 // 39/40/41/42/43/44/45/46 I M P O T A N T ! ! !
 #define VSCPWORKS_MAJOR_VERSION     0
 #define VSCPWORKS_MINOR_VERSION     0
-#define VSCPWORKS_RELEASE_VERSION   2
+#define VSCPWORKS_RELEASE_VERSION   3
 
 // BUILD_VERSION and DISPLAY_VERSION are in buildnumber.h (auto-updated each
 // build). Include buildnumber.h only in the .cpp files that display the
