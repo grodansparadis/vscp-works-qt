@@ -63,6 +63,7 @@
 #include <nlohmann/json.hpp>
 
 #include <fstream>
+#include <limits>
 
 // for convenience
 using json = nlohmann::json;
@@ -529,7 +530,7 @@ vscpworks::loadSettings(void)
 
   if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number()) {
     long long val = j["mdfAutoSaveInterval"].get<long long>();
-    if (val >= 0) {
+    if ((val >= 0) && (val <= static_cast<long long>(std::numeric_limits<uint32_t>::max()))) {
       m_mdfAutoSaveInterval = static_cast<uint32_t>(val);
     }
   }
@@ -540,7 +541,7 @@ vscpworks::loadSettings(void)
 
   if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number()) {
     long long val = j["mdfMaxBackups"].get<long long>();
-    if (val >= 0) {
+    if ((val >= 0) && (val <= static_cast<long long>(std::numeric_limits<uint32_t>::max()))) {
       m_mdfMaxBackups = static_cast<uint32_t>(val);
     }
   }
