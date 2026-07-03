@@ -63,6 +63,7 @@
 #include <nlohmann/json.hpp>
 
 #include <fstream>
+#include <limits>
 
 // for convenience
 using json = nlohmann::json;
@@ -527,16 +528,40 @@ vscpworks::loadSettings(void)
     m_mdfAutoSaveEnabled = j["mdfAutoSaveEnabled"].get<bool>();
   }
 
-  if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number()) {
-    m_mdfAutoSaveInterval = j["mdfAutoSaveInterval"].get<uint32_t>();
+  if (j.contains("mdfAutoSaveInterval")) {
+    const auto& interval = j["mdfAutoSaveInterval"];
+    if (interval.is_number_unsigned()) {
+      uint64_t value = interval.get<uint64_t>();
+      if (value <= std::numeric_limits<uint32_t>::max()) {
+        m_mdfAutoSaveInterval = static_cast<uint32_t>(value);
+      }
+    }
+    else if (interval.is_number_integer()) {
+      int64_t value = interval.get<int64_t>();
+      if ((value >= 0) && (value <= static_cast<int64_t>(std::numeric_limits<uint32_t>::max()))) {
+        m_mdfAutoSaveInterval = static_cast<uint32_t>(value);
+      }
+    }
   }
 
   if (j.contains("mdfCumulativeBackups") && j["mdfCumulativeBackups"].is_boolean()) {
     m_mdfCumulativeBackups = j["mdfCumulativeBackups"].get<bool>();
   }
 
-  if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number()) {
-    m_mdfMaxBackups = j["mdfMaxBackups"].get<uint32_t>();
+  if (j.contains("mdfMaxBackups")) {
+    const auto& max_backups = j["mdfMaxBackups"];
+    if (max_backups.is_number_unsigned()) {
+      uint64_t value = max_backups.get<uint64_t>();
+      if (value <= std::numeric_limits<uint32_t>::max()) {
+        m_mdfMaxBackups = static_cast<uint32_t>(value);
+      }
+    }
+    else if (max_backups.is_number_integer()) {
+      int64_t value = max_backups.get<int64_t>();
+      if ((value >= 0) && (value <= static_cast<int64_t>(std::numeric_limits<uint32_t>::max()))) {
+        m_mdfMaxBackups = static_cast<uint32_t>(value);
+      }
+    }
   }
 
   // VSCP event database last load date/time
