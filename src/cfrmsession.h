@@ -46,6 +46,7 @@
 #include <QToolButton>
 #include <QComboBox>
 #include <QMutex>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -66,6 +67,8 @@ class QTableWidgetItem;
 class QTableWidget;
 class QToolBox;
 QT_END_NAMESPACE
+
+class CFrmMeasurementView;
 
 // class CVscpClientCallback : public QObject
 // {
@@ -487,6 +490,9 @@ public slots:
   /// Open dialog to let user select retain publish topics to clear
   void openClearMqttRetainPublishTopics(void);
 
+  /// Open realtime visualization for selected measurement
+  void openRealtimeMeasurementWindow(void);
+
   /*!
       Timer slot: drain all available events from the client and route
       them through receiveCallback so the existing callback path is used.
@@ -517,6 +523,9 @@ private:
 
   /// Enable&disable receive filter
   void menu_filter_enable();
+
+  /// Push matching measurement events to open measurement windows
+  void forwardMeasurementToRealtimeViews(const vscp_event_t* pev);
 
   enum { NumGridRows = 8,
          NumButtons  = 4 };
@@ -646,6 +655,7 @@ private:
   // Settings menu
   QAction* m_setFilterAct;
   QAction* m_settingsAct;
+  QAction* m_openRealtimeMeasurementAct;
 
   QToolBar* m_txToolBar;
 
@@ -655,6 +665,8 @@ private:
   QAction* m_connectActBar;
   //QAction* m_connectActToolBar;
   QAction* m_setFilterActToolBar;
+
+  std::vector<CFrmMeasurementView*> m_realtimeMeasurementViews;
 };
 
 #endif // CFRMSESSION_H
