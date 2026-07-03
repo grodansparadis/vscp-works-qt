@@ -337,10 +337,7 @@ CDlgMdfDM::addAction(void)
   // Save the selected row
   int idx = ui->listActions->currentRow();
 
-  CMDF_Action* paction   = new CMDF_Action; // = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
-  if (nullptr == paction) {
-    return;
-  }
+  CMDF_Action* paction = new CMDF_Action;
 
   CDlgMdfDmAction dlg(this);
   // adddlg:

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT = core gui printsupport qml serialbus serialport widgets help network
+QT = core gui printsupport qml serialbus serialport widgets help network charts
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT OPENSSL_API_1_1
 
