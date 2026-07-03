@@ -60,6 +60,7 @@
 
 #include "cdlgmainsettings.h"
 #include "cdlgtxedit.h"
+#include "cfrmmeasurementview.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -72,6 +73,9 @@
 #include <QToolButton>
 #include <QXmlStreamReader>
 #include <QtWidgets>
+
+#include <algorithm>
+#include <cstring>
 
 // ----------------------------------------------------------------------------
 
@@ -576,6 +580,10 @@ CFrmSession::createMenu()
 
   // * * * Tools menu * * *
   m_toolsMenu = new QMenu(tr("&Tools"), this);
+  m_openRealtimeMeasurementAct =
+    m_toolsMenu->addAction(tr("Open realtime measurement window..."),
+                           this,
+                           &CFrmSession::openRealtimeMeasurementWindow);
   m_menuBar->addMenu(m_toolsMenu);
 
   // Connections
@@ -2394,6 +2402,10 @@ CFrmSession::showRxContextMenu(const QPoint& pos)
                   this,
                   SLOT(setGuid()));
   menu->addSeparator();
+  menu->addAction(QString(tr("Open realtime measurement window...")),
+                  this,
+                  SLOT(openRealtimeMeasurementWindow()));
+  menu->addSeparator();
   menu->addAction(QString(tr("Add/Edit comment...")), this, SLOT(addEventNote()));
   menu->addAction(QString(tr("Remove comment")),
                   this,
@@ -2408,6 +2420,91 @@ CFrmSession::showRxContextMenu(const QPoint& pos)
                   SLOT(setVscpTypeMark()));
 
   menu->popup(m_rxTable->viewport()->mapToGlobal(pos));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// openRealtimeMeasurementWindow
+//
+
+void
+CFrmSession::openRealtimeMeasurementWindow(void)
+{
+  QModelIndexList selection = m_rxTable->selectionModel()->selectedRows();
+  if (!selection.size()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Select a measurement row in the RX table first."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  const int row = selection.first().row();
+  vscp_event_t* pev = nullptr;
+  m_mutexRxList.lock();
+  if ((row >= 0) && (row < static_cast<int>(m_rxEvents.size()))) {
+    pev = m_rxEvents[row];
+  }
+  m_mutexRxList.unlock();
+
+  if ((nullptr == pev) || !vscp_isMeasurement(pev)) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("The selected row does not contain a VSCP measurement event."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  CMeasurementSourceSpec source;
+  source.vscpClass   = pev->vscp_class;
+  source.vscpType    = pev->vscp_type;
+  source.sensorIndex = vscp_getMeasurementSensorIndex(pev);
+  source.unit        = vscp_getMeasurementUnit(pev);
+  memcpy(source.guid.data(), pev->GUID, 16);
+
+  std::string strGuid;
+  vscp_writeGuidArrayToString(strGuid, pev->GUID);
+
+  QString sourceDescription =
+    tr("Class=%1, Type=%2, Sensor=%3, Unit=%4, GUID=%5")
+      .arg(pev->vscp_class)
+      .arg(pev->vscp_type)
+      .arg(vscp_getMeasurementSensorIndex(pev))
+      .arg(vscp_getMeasurementUnit(pev))
+      .arg(strGuid.c_str());
+
+  CFrmMeasurementView* pview =
+    new CFrmMeasurementView(source, sourceDescription, this);
+  m_realtimeMeasurementViews.push_back(pview);
+
+  connect(pview, &QObject::destroyed, this, [this, pview]() {
+    m_realtimeMeasurementViews.erase(
+      std::remove(m_realtimeMeasurementViews.begin(),
+                  m_realtimeMeasurementViews.end(),
+                  pview),
+      m_realtimeMeasurementViews.end());
+  });
+
+  pview->appendMeasurement(pev);
+  pview->show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// forwardMeasurementToRealtimeViews
+//
+
+void
+CFrmSession::forwardMeasurementToRealtimeViews(const vscp_event_t* pev)
+{
+  if (!vscp_isMeasurement(pev)) {
+    return;
+  }
+
+  for (auto* pview : m_realtimeMeasurementViews) {
+    if (nullptr == pview) {
+      continue;
+    }
+    pview->appendMeasurement(pev);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4040,6 +4137,8 @@ CFrmSession::receiveRxRow(vscp_event_t* pev)
     cnt;
 
   m_mutexRxList.unlock();
+
+  forwardMeasurementToRealtimeViews(pev);
 
   // Fill unselected info
   fillReceiveEventCount();
