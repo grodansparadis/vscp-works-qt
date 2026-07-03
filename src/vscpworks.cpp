@@ -528,7 +528,10 @@ vscpworks::loadSettings(void)
   }
 
   if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number()) {
-    m_mdfAutoSaveInterval = j["mdfAutoSaveInterval"].get<uint32_t>();
+    long long val = j["mdfAutoSaveInterval"].get<long long>();
+    if (val >= 0) {
+      m_mdfAutoSaveInterval = static_cast<uint32_t>(val);
+    }
   }
 
   if (j.contains("mdfCumulativeBackups") && j["mdfCumulativeBackups"].is_boolean()) {
@@ -536,7 +539,10 @@ vscpworks::loadSettings(void)
   }
 
   if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number()) {
-    m_mdfMaxBackups = j["mdfMaxBackups"].get<uint32_t>();
+    long long val = j["mdfMaxBackups"].get<long long>();
+    if (val >= 0) {
+      m_mdfMaxBackups = static_cast<uint32_t>(val);
+    }
   }
 
   // VSCP event database last load date/time
