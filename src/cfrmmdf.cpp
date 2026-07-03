@@ -563,7 +563,7 @@ CFrmMdf::createBackupForPath(const QString& path)
     QMessageBox::warning(this,
                          APPNAME,
                          tr("Failed to create cumulative backup.\n\nWhere: %1\nWhat: Unable to copy current file.")
-                           .arg(path));
+                           .arg(backupPath));
     return false;
   }
 
