@@ -338,9 +338,6 @@ CDlgMdfDM::addAction(void)
   int idx = ui->listActions->currentRow();
 
   CMDF_Action* paction = new CMDF_Action;
-  if (nullptr == paction) {
-    return;
-  }
 
   CDlgMdfDmAction dlg(this);
   // adddlg:
