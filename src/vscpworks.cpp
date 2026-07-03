@@ -527,7 +527,7 @@ vscpworks::loadSettings(void)
     m_mdfAutoSaveEnabled = j["mdfAutoSaveEnabled"].get<bool>();
   }
 
-  if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number_unsigned()) {
+  if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number()) {
     m_mdfAutoSaveInterval = j["mdfAutoSaveInterval"].get<uint32_t>();
   }
 
@@ -535,7 +535,7 @@ vscpworks::loadSettings(void)
     m_mdfCumulativeBackups = j["mdfCumulativeBackups"].get<bool>();
   }
 
-  if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number_unsigned()) {
+  if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number()) {
     m_mdfMaxBackups = j["mdfMaxBackups"].get<uint32_t>();
   }
 
