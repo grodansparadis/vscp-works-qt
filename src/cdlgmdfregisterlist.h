@@ -35,6 +35,7 @@
 #include "cdlgmdfregister.h"
 
 #include <QDialog>
+#include <vector>
 
 namespace Ui {
 class CDlgMdfRegisterList;
@@ -108,8 +109,8 @@ private:
   // Register page
   uint16_t m_page;
 
-  // Used to get a sorted list of registers
-  std::set<uint32_t> m_registersSet;
+  // Registers currently rendered in the list
+  std::vector<CMDF_Register*> m_renderedRegisters;
 };
 
 #endif // CDLGMDFREGISTERLIST_H
