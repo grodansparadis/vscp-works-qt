@@ -189,7 +189,7 @@ CDlgMdfBitList::renderBitItems(void)
 
   std::stable_sort(m_renderedBits.begin(),
                    m_renderedBits.end(),
-                   [](const CMDF_Bit* a, const CMDF_Bit* b) { return a->getPos() < b->getPos(); });
+                   [](CMDF_Bit* a, CMDF_Bit* b) { return a->getPos() < b->getPos(); });
 
   for (CMDF_Bit* pbit : m_renderedBits) {
     if (nullptr != pbit) {

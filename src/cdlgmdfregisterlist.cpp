@@ -176,7 +176,7 @@ CDlgMdfRegisterList::renderRegisterItems(void)
 
   std::stable_sort(m_renderedRegisters.begin(),
                    m_renderedRegisters.end(),
-                   [](const CMDF_Register* a, const CMDF_Register* b) {
+                   [](CMDF_Register* a, CMDF_Register* b) {
                      return a->getOffset() < b->getOffset();
                    });
 

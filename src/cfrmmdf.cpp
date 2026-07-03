@@ -717,9 +717,7 @@ CFrmMdf::enrichSavedJsonWithDecisionMatrix(const QString& path)
     module.erase("dmatrix");
   }
 
-  if (!file.close()) {
-    return false;
-  }
+  file.close();
 
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
     QMessageBox::warning(this,
@@ -1460,7 +1458,7 @@ CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, 
   }
   std::stable_sort(orderedBits.begin(),
                    orderedBits.end(),
-                   [](const CMDF_Bit* a, const CMDF_Bit* b) { return a->getPos() < b->getPos(); });
+                   [](CMDF_Bit* a, CMDF_Bit* b) { return a->getPos() < b->getPos(); });
 
   for (CMDF_Bit* pbit : orderedBits) {
 
@@ -1720,7 +1718,7 @@ CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
 
     std::stable_sort(pageRegisters.begin(),
                      pageRegisters.end(),
-                     [](const CMDF_Register* a, const CMDF_Register* b) {
+                     [](CMDF_Register* a, CMDF_Register* b) {
                        return a->getOffset() < b->getOffset();
                      });
 
