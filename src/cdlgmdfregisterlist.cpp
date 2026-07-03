@@ -41,11 +41,13 @@
 #include "ui_cdlgmdfregisterlist.h"
 
 #include <QDebug>
-#include <QInputDialog>
 #include <QMessageBox>
-#include <QPushButton>
 #include <QDesktopServices>
+#include <QInputDialog>
+#include <QPushButton>
 #include <QShortcut>
+
+#include <algorithm>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -154,46 +156,36 @@ CDlgMdfRegisterList::renderComboPage(void)
 void
 CDlgMdfRegisterList::renderRegisterItems(void)
 {
-  std::map<uint32_t, CMDF_Register*> pages;
-
   if (nullptr == m_pmdf) {
     return;
   }
 
   ui->listRegister->clear();
-
-  // Make sorted set of registers on this page
-  std::deque<CMDF_Register*>* regset = m_pmdf->getRegisterObjList();
-  for (auto it = regset->cbegin(); it != regset->cend(); ++it) {
-    if (m_page == (*it)->getPage()) {
-      m_registersSet.insert((*it)->getOffset());
-    }
-  }
-
-  m_pmdf->getRegisterMap(m_page, pages);
+  m_renderedRegisters.clear();
 
   std::deque<CMDF_Register*>* regs = m_pmdf->getRegisterObjList();
+  if (nullptr == regs) {
+    return;
+  }
 
-  for (auto it = m_registersSet.cbegin(); it != m_registersSet.cend(); ++it) {
-    // m_registersSet.insert((*it)->getOffset());
-    CMDF_Register* preg = m_pmdf->getRegister(*it, m_page);
-    if (nullptr != preg) {
-      QString str = QString("Register  %1 -- %2").arg(preg->getOffset()).arg(preg->getName().c_str());
-      ui->listRegister->addItem(str);
-      // Set data to register index
-      ui->listRegister->item(ui->listRegister->count() - 1)->setData(Qt::UserRole, preg->getOffset());
+  for (CMDF_Register* preg : *regs) {
+    if ((nullptr != preg) && (m_page == preg->getPage())) {
+      m_renderedRegisters.push_back(preg);
     }
   }
 
-  // for (auto it = regs->cbegin(); it != regs->cend(); ++it) {
-  //   m_registersSet.insert((*it)->getOffset());
-  //   if ((*it)->getPage() == m_page) {
-  //     QString str = QString("Register  %1 -- %2").arg((*it)->getOffset()).arg((*it)->getName().c_str());
-  //     ui->listRegister->addItem(str);
-  //     // Set data to register index
-  //     ui->listRegister->item(ui->listRegister->count() - 1)->setData(Qt::UserRole, (*it)->getOffset());
-  //   }
-  // }
+  std::stable_sort(m_renderedRegisters.begin(),
+                   m_renderedRegisters.end(),
+                   [](const CMDF_Register* a, const CMDF_Register* b) {
+                     return a->getOffset() < b->getOffset();
+                   });
+
+  for (CMDF_Register* preg : m_renderedRegisters) {
+    QString str = QString("Register  %1 -- %2").arg(preg->getOffset()).arg(preg->getName().c_str());
+    ui->listRegister->addItem(str);
+    ui->listRegister->item(ui->listRegister->count() - 1)
+      ->setData(Qt::UserRole, QVariant::fromValue<quintptr>(reinterpret_cast<quintptr>(preg)));
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -245,9 +237,6 @@ addregdlg:
     }
     qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
     m_pmdf->getRegisterObjList()->push_back(pregnew);
-    if (m_page == pregnew->getPage()) {
-      m_registersSet.insert(pregnew->getOffset());
-    }
     ui->listRegister->clear();
     renderRegisterItems();
     if (-1 != idx) {
@@ -281,7 +270,10 @@ CDlgMdfRegisterList::editRegister(void)
     int idx = ui->listRegister->currentRow();
 
     QListWidgetItem* pitem = ui->listRegister->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    CMDF_Register* preg = reinterpret_cast<CMDF_Register*>(pitem->data(Qt::UserRole).value<quintptr>());
+    if (nullptr == preg) {
+      return;
+    }
 
     CDlgMdfRegister dlg(this);
     dlg.initDialogData(m_pmdf, preg);
@@ -311,7 +303,10 @@ CDlgMdfRegisterList::dupRegister(void)
     int idx = ui->listRegister->currentRow();
 
     QListWidgetItem* pitem = ui->listRegister->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    CMDF_Register* preg = reinterpret_cast<CMDF_Register*>(pitem->data(Qt::UserRole).value<quintptr>());
+    if (nullptr == preg) {
+      return;
+    }
 
     CMDF_Register* pregnew = new CMDF_Register();
     pregnew->setPage(m_page);
@@ -331,9 +326,6 @@ CDlgMdfRegisterList::dupRegister(void)
       }
       qDebug() << "Page=" << pregnew->getPage() << " Offset=" << pregnew->getOffset();
       m_pmdf->getRegisterObjList()->push_back(pregnew);
-      if (m_page == pregnew->getPage()) {
-        m_registersSet.insert(pregnew->getOffset());
-      }
       ui->listRegister->clear();
       renderRegisterItems();
       if (-1 != idx) {
@@ -402,7 +394,10 @@ CDlgMdfRegisterList::deleteRegister(void)
     int idx = ui->listRegister->currentRow();
 
     QListWidgetItem* pitem = ui->listRegister->currentItem();
-    CMDF_Register* preg    = m_pmdf->getRegister(pitem->data(Qt::UserRole).toUInt(), m_page);
+    CMDF_Register* preg = reinterpret_cast<CMDF_Register*>(pitem->data(Qt::UserRole).value<quintptr>());
+    if (nullptr == preg) {
+      return;
+    }
     m_pmdf->deleteRegister(preg);
     // delete preg;
     ui->listRegister->removeItemWidget(pitem);

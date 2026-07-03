@@ -80,6 +80,10 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_bAskBeforeDelete  = true;
   m_bEnableDarkTheme  = false;
   m_bSaveAlwaysJSON   = false;
+  m_mdfAutoSaveEnabled = false;
+  m_mdfAutoSaveInterval = 300;
+  m_mdfCumulativeBackups = false;
+  m_mdfMaxBackups = 10;
 
   m_session_timeout   = 1000;
   m_session_maxEvents = -1;
@@ -519,6 +523,22 @@ vscpworks::loadSettings(void)
     m_firmware_devicecode_required = j["firmwareDeviceCodeRequired"].get<bool>();
   }
 
+  if (j.contains("mdfAutoSaveEnabled") && j["mdfAutoSaveEnabled"].is_boolean()) {
+    m_mdfAutoSaveEnabled = j["mdfAutoSaveEnabled"].get<bool>();
+  }
+
+  if (j.contains("mdfAutoSaveInterval") && j["mdfAutoSaveInterval"].is_number_unsigned()) {
+    m_mdfAutoSaveInterval = j["mdfAutoSaveInterval"].get<uint32_t>();
+  }
+
+  if (j.contains("mdfCumulativeBackups") && j["mdfCumulativeBackups"].is_boolean()) {
+    m_mdfCumulativeBackups = j["mdfCumulativeBackups"].get<bool>();
+  }
+
+  if (j.contains("mdfMaxBackups") && j["mdfMaxBackups"].is_number_unsigned()) {
+    m_mdfMaxBackups = j["mdfMaxBackups"].get<uint32_t>();
+  }
+
   // VSCP event database last load date/time
   // ---------------------------------------
   if (j.contains("last-eventdb-download") && j["last-eventdb-download"].is_number()) {
@@ -668,6 +688,12 @@ vscpworks::writeSettings()
 
   // * * * Firmware * * *
   j["firmwareDeviceCodeRequired"] = m_firmware_devicecode_required;
+
+  // * * * MDF editor * * *
+  j["mdfAutoSaveEnabled"]  = m_mdfAutoSaveEnabled;
+  j["mdfAutoSaveInterval"] = m_mdfAutoSaveInterval;
+  j["mdfCumulativeBackups"] = m_mdfCumulativeBackups;
+  j["mdfMaxBackups"] = m_mdfMaxBackups;
 
   QMap<std::string, json>::const_iterator it = m_mapConn.constBegin();
   while (it != m_mapConn.constEnd()) {

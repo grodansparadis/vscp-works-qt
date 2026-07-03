@@ -77,6 +77,8 @@
 
 #include <QClipboard>
 #include <QDate>
+#include <QDateTime>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
@@ -84,8 +86,11 @@
 #include <QStandardPaths>
 #include <QTableView>
 #include <QTableWidgetItem>
+#include <QTimer>
 #include <QXmlStreamReader>
 #include <QtWidgets>
+
+#include <algorithm>
 
 // ----------------------------------------------------------------------------
 
@@ -284,6 +289,14 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
           this,
           &CFrmMdf::onItemDoubleClicked);
 
+  m_autoSaveTimer = new QTimer(this);
+  connect(m_autoSaveTimer, &QTimer::timeout, this, &CFrmMdf::onAutoSaveTimeout);
+
+  if (pworks->m_mdfAutoSaveEnabled) {
+    const int intervalMs = qMax(10, static_cast<int>(pworks->m_mdfAutoSaveInterval)) * 1000;
+    m_autoSaveTimer->start(intervalMs);
+  }
+
   this->setFixedSize(this->size());
 
   newMdf(); // Render defaults
@@ -464,7 +477,14 @@ void
 CFrmMdf::saveMdf()
 {
   if (m_last_path.isEmpty()) {
-    QMessageBox::warning(this, APPNAME, tr("No opened MDF file to save."));
+    QString path = QFileDialog::getSaveFileName(this,
+                                                tr("Save Module Description File (MDF)"),
+                                                "",
+                                                tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+    if (path.isEmpty()) {
+      return;
+    }
+    saveMdfToPath(path, detectMdfFormatForPath(path));
     return;
   }
 
@@ -492,6 +512,10 @@ CFrmMdf::saveMdfToPath(const QString& path, mdf_format format)
     return false;
   }
 
+  if ((MDF_FORMAT_JSON == format) && !enrichSavedJsonWithDecisionMatrix(path)) {
+    return false;
+  }
+
   m_last_path = path;
   m_labelOpenedFile->setText(tr("File: %1").arg(path));
   ui->statusbar->showMessage(tr("Saved %1").arg(path), 2000);
@@ -507,24 +531,217 @@ CFrmMdf::createBackupForPath(const QString& path)
     return true;
   }
 
-  const QString backupPath = path + ".bak";
-  if (QFile::exists(backupPath) && !QFile::remove(backupPath)) {
-    QMessageBox::warning(this,
-                         APPNAME,
-                         tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to remove existing backup.")
-                           .arg(backupPath));
-    return false;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  if (!pworks->m_mdfCumulativeBackups) {
+    const QString backupPath = path + ".bak";
+    if (QFile::exists(backupPath) && !QFile::remove(backupPath)) {
+      QMessageBox::warning(this,
+                           APPNAME,
+                           tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to remove existing backup.")
+                             .arg(backupPath));
+      return false;
+    }
+
+    if (!QFile::copy(path, backupPath)) {
+      QMessageBox::warning(this,
+                           APPNAME,
+                           tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to copy current file.")
+                             .arg(path));
+      return false;
+    }
+
+    return true;
   }
+
+  QFileInfo fi(path);
+  const QString backupPath = QString("%1/%2.bak.%3")
+                               .arg(fi.absolutePath(),
+                                    fi.fileName(),
+                                    QDateTime::currentDateTime().toString("yyyyMMdd-HHmmss-zzz"));
 
   if (!QFile::copy(path, backupPath)) {
     QMessageBox::warning(this,
                          APPNAME,
-                         tr("Failed to create backup.\n\nWhere: %1\nWhat: Unable to copy current file.")
+                         tr("Failed to create cumulative backup.\n\nWhere: %1\nWhat: Unable to copy current file.")
                            .arg(path));
     return false;
   }
 
+  if (pworks->m_mdfMaxBackups > 0) {
+    QDir dir(fi.absolutePath());
+    const QStringList entries = dir.entryList(QStringList() << QString("%1.bak.*").arg(fi.fileName()),
+                                              QDir::Files,
+                                              QDir::Name);
+    const int maxBackups = static_cast<int>(pworks->m_mdfMaxBackups);
+    const int removeCount = entries.size() - maxBackups;
+    for (int i = 0; i < removeCount; ++i) {
+      dir.remove(entries.at(i));
+    }
+  }
+
   return true;
+}
+
+bool
+CFrmMdf::enrichSavedJsonWithDecisionMatrix(const QString& path)
+{
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Unable to read saved JSON.")
+                           .arg(path));
+    return false;
+  }
+
+  json root;
+  try {
+    root = json::parse(file.readAll().toStdString());
+  }
+  catch (const std::exception &ex) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to update JSON MDF with decision matrix data.\n\nWhere: %1\nWhat: %2")
+                           .arg(path)
+                           .arg(QString::fromUtf8(ex.what())));
+    return false;
+  }
+
+  if (!root.contains("module") || !root["module"].is_object()) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to update JSON MDF with decision matrix data.\n\nWhere: %1\nWhat: Missing 'module' object.")
+                           .arg(path));
+    return false;
+  }
+
+  json &module = root["module"];
+  CMDF_DecisionMatrix* pdm = m_mdf.getDM();
+  if (nullptr != pdm) {
+    json jdm;
+    jdm["level"]        = pdm->getLevel();
+    jdm["start-page"]   = pdm->getStartPage();
+    jdm["start-offset"] = pdm->getStartOffset();
+    jdm["rowcnt"]       = pdm->getRowCount();
+    jdm["rowsize"]      = pdm->getRowSize();
+
+    json actions = json::array();
+    std::deque<CMDF_Action*>* pActionList = pdm->getActionList();
+    if (nullptr != pActionList) {
+      for (CMDF_Action* pAction : *pActionList) {
+        if (nullptr == pAction) {
+          continue;
+        }
+
+        json jaction;
+        jaction["name"] = pAction->getName();
+        jaction["code"] = pAction->getCode();
+
+        json params = json::array();
+        std::deque<CMDF_ActionParameter*>* pParams = pAction->getListActionParameter();
+        if (nullptr != pParams) {
+          for (CMDF_ActionParameter* pParam : *pParams) {
+            if (nullptr == pParam) {
+              continue;
+            }
+
+            json jparam;
+            jparam["name"]   = pParam->getName();
+            jparam["offset"] = pParam->getOffset();
+            jparam["min"]    = pParam->getMin();
+            jparam["max"]    = pParam->getMax();
+
+            json bits = json::array();
+            std::deque<CMDF_Bit*>* pBits = pParam->getListBits();
+            if (nullptr != pBits) {
+              for (CMDF_Bit* pBit : *pBits) {
+                if (nullptr == pBit) {
+                  continue;
+                }
+                json jbit;
+                jbit["name"]    = pBit->getName();
+                jbit["pos"]     = pBit->getPos();
+                jbit["width"]   = pBit->getWidth();
+                jbit["default"] = pBit->getDefault();
+                jbit["min"]     = pBit->getMin();
+                jbit["max"]     = pBit->getMax();
+
+                QString access;
+                if (2 & pBit->getAccess()) {
+                  access += "r";
+                }
+                if (1 & pBit->getAccess()) {
+                  access += "w";
+                }
+                jbit["access"] = access.toStdString();
+                bits.push_back(jbit);
+              }
+            }
+            if (!bits.empty()) {
+              jparam["bit"] = bits;
+            }
+
+            json values = json::array();
+            std::deque<CMDF_Value*>* pValues = pParam->getListValues();
+            if (nullptr != pValues) {
+              for (CMDF_Value* pValue : *pValues) {
+                if (nullptr == pValue) {
+                  continue;
+                }
+                json jvalue;
+                jvalue["name"]  = pValue->getName();
+                jvalue["value"] = pValue->getValue();
+                values.push_back(jvalue);
+              }
+            }
+            if (!values.empty()) {
+              jparam["valuelist"] = values;
+            }
+
+            params.push_back(jparam);
+          }
+        }
+
+        if (!params.empty()) {
+          jaction["param"] = params;
+        }
+
+        actions.push_back(jaction);
+      }
+    }
+
+    jdm["action"] = actions;
+    module["dmatrix"] = jdm;
+  }
+  else {
+    module.erase("dmatrix");
+  }
+
+  if (!file.close()) {
+    return false;
+  }
+
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Unable to write updated JSON.")
+                           .arg(path));
+    return false;
+  }
+  file.write(QString::fromStdString(root.dump(2)).toUtf8());
+  file.close();
+
+  return true;
+}
+
+void
+CFrmMdf::onAutoSaveTimeout()
+{
+  if (m_last_path.isEmpty()) {
+    return;
+  }
+
+  saveMdfToPath(m_last_path, detectMdfFormatForPath(m_last_path));
 }
 
 void
@@ -1234,19 +1451,18 @@ CFrmMdf::renderBits(QTreeWidgetItem* pParent, std::deque<CMDF_Bit*>& dequebits, 
     return;
   }
 
-  // Create set with sorted bit offsets and a map
-  // to help find corresponding bit pointer
-  // Add registers for page
-  std::set<uint8_t> bitset;
-  std::map<uint8_t, CMDF_Bit*> bitmap;
-  for (auto it = dequebits.cbegin(); it != dequebits.cend(); ++it) {
-    bitset.insert((*it)->getPos());
-    bitmap[(*it)->getPos()] = *it;
+  std::vector<CMDF_Bit*> orderedBits;
+  orderedBits.reserve(dequebits.size());
+  for (CMDF_Bit* pbit : dequebits) {
+    if (nullptr != pbit) {
+      orderedBits.push_back(pbit);
+    }
   }
+  std::stable_sort(orderedBits.begin(),
+                   orderedBits.end(),
+                   [](const CMDF_Bit* a, const CMDF_Bit* b) { return a->getPos() < b->getPos(); });
 
-  for (auto it2 = bitset.cbegin(); it2 != bitset.cend(); ++it2) {
-
-    CMDF_Bit* pbit = bitmap[*it2];
+  for (CMDF_Bit* pbit : orderedBits) {
 
     str = QString("Bits:{");
     for (int j = pbit->getPos(); j < qMin(8, pbit->getPos() + pbit->getWidth()); j++) {
@@ -1481,66 +1697,55 @@ CFrmMdf::renderRegisterItem(QTreeWidgetItem* pParent, CMDF_Register* preg)
 void
 CFrmMdf::renderRegisters(QTreeWidgetItem* pParent)
 {
-  uint32_t nPages;
-  std::set<uint16_t> pages;
-  QMdfTreeWidgetItem* pSubItem;
-  QMdfTreeWidgetItem* pItem = nullptr;
-
   // Check pointers
   if (nullptr == pParent) {
     return;
   }
 
-  // Fetch number of pages and pages
-  nPages                           = m_mdf.getPages(pages);
   std::deque<CMDF_Register*>* regs = m_mdf.getRegisterObjList();
+  if ((nullptr == regs) || regs->empty()) {
+    return;
+  }
 
-  // If we have pages separate registers in pages
-  if (nPages >= 1) {
-    for (auto itr : pages) {
-
-      pItem = new QMdfTreeWidgetItem(pParent, &m_mdf, mdf_type_register_page, itr);
-      if (nullptr != pItem) {
-
-        QString str = QString(tr("Register page: %1")).arg(itr);
-        pItem->setText(0, str);
-        pItem->setData(0, Qt::UserRole, itr); // Save page
-        pParent->addChild(pItem);
-
-        // Add registers for page
-        std::set<uint32_t> regset;
-        std::map<uint32_t, CMDF_Register*> regmap;
-
-        // Create set with sorted register offsets and a map
-        // to help find corresponding register pointer
-        for (auto it = regs->cbegin(); it != regs->cend(); ++it) {
-          if (itr == (*it)->getPage()) {
-            regset.insert((*it)->getOffset());
-            regmap[(*it)->getOffset()] = *it;
-          }
-        }
-
-        // Render register sorted on offset for a register page
-        for (auto it = regset.cbegin(); it != regset.cend(); ++it) {
-          CMDF_Register* preg = regmap[*it];
-          pSubItem            = new QMdfTreeWidgetItem(pItem, preg, mdf_type_register_item);
-          if (nullptr != pSubItem) {
-            str = QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str());
-            pSubItem->setText(0, str);
-            pItem->addChild(pSubItem);
-            renderRegisterItem(pSubItem, preg);
-          }
-        }
-
-        // pItem->sortChildren(0,Qt::AscendingOrder);
-      }
+  std::map<uint16_t, std::vector<CMDF_Register*>> registersByPage;
+  for (CMDF_Register* preg : *regs) {
+    if (nullptr != preg) {
+      registersByPage[preg->getPage()].push_back(preg);
     }
   }
-  // We only have one page
-  else {
-    std::map<uint32_t, CMDF_Register*> mapRegs;
-    m_mdf.getRegisterMap(0, mapRegs);
-    renderRegisterItem(pItem, mapRegs[0]);
+
+  for (auto &entry : registersByPage) {
+    const uint16_t page = entry.first;
+    std::vector<CMDF_Register*>& pageRegisters = entry.second;
+
+    std::stable_sort(pageRegisters.begin(),
+                     pageRegisters.end(),
+                     [](const CMDF_Register* a, const CMDF_Register* b) {
+                       return a->getOffset() < b->getOffset();
+                     });
+
+    QMdfTreeWidgetItem* pItem = new QMdfTreeWidgetItem(pParent, &m_mdf, mdf_type_register_page, page);
+    if (nullptr == pItem) {
+      continue;
+    }
+
+    pItem->setText(0, QString(tr("Register page: %1")).arg(page));
+    pItem->setData(0, Qt::UserRole, page); // Save page
+    pParent->addChild(pItem);
+
+    for (CMDF_Register* preg : pageRegisters) {
+      QMdfTreeWidgetItem* pSubItem = new QMdfTreeWidgetItem(pItem, preg, mdf_type_register_item);
+      if (nullptr == pSubItem) {
+        continue;
+      }
+
+      pSubItem->setText(0, QString("Register  %1 %2").arg(preg->getOffset()).arg(preg->getName().c_str()));
+      pSubItem->setData(0,
+                        Qt::UserRole,
+                        QVariant::fromValue<quintptr>(reinterpret_cast<quintptr>(preg)));
+      pItem->addChild(pSubItem);
+      renderRegisterItem(pSubItem, preg);
+    }
   }
 }
 

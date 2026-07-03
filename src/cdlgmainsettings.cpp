@@ -89,6 +89,10 @@ connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 
   // Save format
   ui->chkAlwaysJSON->setChecked(pworks->m_bSaveAlwaysJSON);
+  ui->chkMdfAutoSave->setChecked(pworks->m_mdfAutoSaveEnabled);
+  ui->spinMdfAutoSaveInterval->setValue(static_cast<int>(pworks->m_mdfAutoSaveInterval));
+  ui->chkMdfCumulativeBackups->setChecked(pworks->m_mdfCumulativeBackups);
+  ui->spinMdfMaxBackups->setValue(static_cast<int>(pworks->m_mdfMaxBackups));
 
   // * * * Session Window tab * * *
 
@@ -259,6 +263,10 @@ CDlgMainSettings::done(int rv)
     pworks->m_bEnableDarkTheme  = ui->chkDarkTheme->isChecked();
     pworks->m_bAskBeforeDelete  = ui->chkAskOnDelete->isChecked();
     pworks->m_bSaveAlwaysJSON   = ui->chkAlwaysJSON->isChecked();
+    pworks->m_mdfAutoSaveEnabled = ui->chkMdfAutoSave->isChecked();
+    pworks->m_mdfAutoSaveInterval = static_cast<uint32_t>(ui->spinMdfAutoSaveInterval->value());
+    pworks->m_mdfCumulativeBackups = ui->chkMdfCumulativeBackups->isChecked();
+    pworks->m_mdfMaxBackups = static_cast<uint32_t>(ui->spinMdfMaxBackups->value());
     pworks->m_preferredLanguage = ui->editPreferredLanguage->text().toStdString();
 
     // Session window
