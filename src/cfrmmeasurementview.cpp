@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include <pch.h>
+#endif
+
 #include "cfrmmeasurementview.h"
 
 #include <vscphelper.h>
