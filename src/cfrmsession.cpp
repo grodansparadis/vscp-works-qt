@@ -329,7 +329,7 @@ CFrmSession::createMenu()
   m_exportSessionAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
                                              tr("Export session to file..."),
                                              this,
-                                             &CFrmSession::saveSessionToFile);
+                                             &CFrmSession::saveSessionToFileAct);
 
   m_loadTxAct =
     m_fileMenu->addAction(QIcon::fromTheme("document-open"),

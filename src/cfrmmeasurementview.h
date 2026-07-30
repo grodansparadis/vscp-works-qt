@@ -43,11 +43,9 @@ class QDial;
 class QProgressBar;
 class QStackedWidget;
 class QPushButton;
-namespace QtCharts {
-class QLineSeries;
 class QChart;
+class QLineSeries;
 class QValueAxis;
-}
 
 struct CMeasurementSourceSpec {
   uint16_t vscpClass{ 0 };
@@ -108,10 +106,10 @@ private:
   QPushButton* m_saveButton{ nullptr };
   QPushButton* m_clearButton{ nullptr };
 
-  QtCharts::QChart* m_chart{ nullptr };
-  QtCharts::QLineSeries* m_lineSeries{ nullptr };
-  QtCharts::QValueAxis* m_axisX{ nullptr };
-  QtCharts::QValueAxis* m_axisY{ nullptr };
+  QChart* m_chart{ nullptr };
+  QLineSeries* m_lineSeries{ nullptr };
+  QValueAxis* m_axisX{ nullptr };
+  QValueAxis* m_axisY{ nullptr };
 
   QLabel* m_valueLabel{ nullptr };
   QDial* m_speedMeter{ nullptr };
