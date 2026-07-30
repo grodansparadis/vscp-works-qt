@@ -42,6 +42,9 @@
 #include <QDesktopServices>
 #include <QShortcut>
 
+#include <algorithm>
+#include <vector>
+
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -165,15 +168,34 @@ CDlgActionParam::addValue(int value, std::string& name)
 void
 CDlgActionParam::addBitValue(std::deque<CMDF_Bit*>* pbitlist)
 {
+  if (nullptr == pbitlist) {
+    return;
+  }
+
+  ui->tableWidgetBits->setRowCount(0);
+
+  std::vector<CMDF_Bit*> orderedBits;
+  orderedBits.reserve(pbitlist->size());
+  for (CMDF_Bit* pbit : *pbitlist) {
+    if (nullptr != pbit) {
+      orderedBits.push_back(pbit);
+    }
+  }
+
+  std::stable_sort(orderedBits.begin(),
+                   orderedBits.end(),
+                   [](CMDF_Bit* a, CMDF_Bit* b) { return a->getPos() < b->getPos(); });
+
   QTableWidgetItem* pitem;
   std::string str;
-  for (int i = 0; i < pbitlist->size(); i++) {
+  for (int i = 0; i < orderedBits.size(); i++) {
+    CMDF_Bit* pbit = orderedBits.at(i);
 
     ui->tableWidgetBits->insertRow(i);
-    str = QString::number(pbitlist->at(i)->getPos()).toStdString();
-    if (pbitlist->at(i)->getWidth() > 1) {
+    str = QString::number(pbit->getPos()).toStdString();
+    if (pbit->getWidth() > 1) {
       str += "-";
-      str += QString::number(pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth() - 1).toStdString();
+      str += QString::number(pbit->getPos() + pbit->getWidth() - 1).toStdString();
     }
 
     // -- Bits
@@ -186,14 +208,14 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit*>* pbitlist)
 
     // Construct mask
     uint8_t mask = 0;
-    for (int k = pbitlist->at(i)->getPos(); k < pbitlist->at(i)->getPos() + pbitlist->at(i)->getWidth(); k++) {
+    for (int k = pbit->getPos(); k < pbit->getPos() + pbit->getWidth(); k++) {
       mask |= (1 << k);
     }
 
-    uint8_t value = (m_actionParam & mask) >> pbitlist->at(i)->getPos();
+    uint8_t value = (m_actionParam & mask) >> pbit->getPos();
 
     QTableWidgetItemBits* pitemValue = new QTableWidgetItemBits(QString::number(value));
-    pitemValue->m_pBit               = pbitlist->at(i);
+    pitemValue->m_pBit               = pbit;
     pitemValue->m_value              = value;
     // pitemValue->m_pos = pbitlist->at(i)->getPos();
     // pitemValue->m_width = pbitlist->at(i)->getWidth();
@@ -201,19 +223,19 @@ CDlgActionParam::addBitValue(std::deque<CMDF_Bit*>* pbitlist)
     pitemValue->setTextAlignment(Qt::AlignCenter);
     pitemValue->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable);
     std::string str = tr("Value can be 0 ").toStdString();
-    if (1 == pbitlist->at(i)->getWidth()) {
+    if (1 == pbit->getWidth()) {
       str += "or 1";
     }
     else {
       str += " - ";
-      str += QString::number((1 << pbitlist->at(i)->getWidth()) - 1).toStdString();
+      str += QString::number((1 << pbit->getWidth()) - 1).toStdString();
     }
     pitemValue->setToolTip(str.c_str());
     ui->tableWidgetBits->setItem(i, 1, pitemValue);
 
     // -- Name
-    pitem = new QTableWidgetItem(pbitlist->at(i)->getName().c_str());
-    pitem->setToolTip(QString::fromStdString(pbitlist->at(i)->getDescription()));
+    pitem = new QTableWidgetItem(pbit->getName().c_str());
+    pitem->setToolTip(QString::fromStdString(pbit->getDescription()));
     pitem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->tableWidgetBits->setItem(i, 2, pitem);
   }
