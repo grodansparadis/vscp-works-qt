@@ -171,22 +171,22 @@ CFrmMeasurementView::setupUi()
   // Diagram page
   QWidget* pageDiagram    = new QWidget(this);
   QVBoxLayout* diagLayout = new QVBoxLayout(pageDiagram);
-  m_chart                 = new QChart();
+  m_chart                 = new QtCharts::QChart();
   m_chart->legend()->hide();
   m_chart->setTitle(tr("Measurement history"));
-  m_lineSeries = new QLineSeries();
+  m_lineSeries = new QtCharts::QLineSeries();
   m_chart->addSeries(m_lineSeries);
-  m_axisX = new QValueAxis();
+  m_axisX = new QtCharts::QValueAxis();
   m_axisX->setTitleText(tr("Sample"));
   m_axisX->setRange(0, MAX_SAMPLES);
   m_chart->addAxis(m_axisX, Qt::AlignBottom);
   m_lineSeries->attachAxis(m_axisX);
-  m_axisY = new QValueAxis();
+  m_axisY = new QtCharts::QValueAxis();
   m_axisY->setTitleText(tr("Value"));
   m_axisY->setRange(0, 100);
   m_chart->addAxis(m_axisY, Qt::AlignLeft);
   m_lineSeries->attachAxis(m_axisY);
-  QChartView* chartView = new QChartView(m_chart, pageDiagram);
+  QtCharts::QChartView* chartView = new QtCharts::QChartView(m_chart, pageDiagram);
   chartView->setRenderHint(QPainter::Antialiasing);
   diagLayout->addWidget(chartView);
   m_displayStack->addWidget(pageDiagram);
