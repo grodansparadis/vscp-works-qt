@@ -338,14 +338,17 @@ CFrmSession::createMenu()
                           &CFrmSession::loadTxEventsAct);
 
   m_saveTxAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
-                                      tr("Write SELECTED TX rows to file..."),
-                                      this,
-                                      &CFrmSession::saveTxEventsAct);
+                                      tr("Write SELECTED TX rows to file..."));
+  connect(m_saveTxAct, &QAction::triggered, this, [this](bool) {
+    saveTxEventsAct();
+  });
 
-  m_saveTxAllAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
-                                         tr("Write ALL TX rows to file..."),
-                                         this,
-                                         &CFrmSession::saveTxEventsAllAct);
+  m_saveTxAllAct =
+    m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
+                          tr("Write ALL TX rows to file..."));
+  connect(m_saveTxAllAct, &QAction::triggered, this, [this](bool) {
+    saveTxEventsAllAct();
+  });
 
   m_exitAct = m_fileMenu->addAction(windowCloseIcon,
                                     tr("Close window"),
@@ -1006,13 +1009,13 @@ CFrmSession::showTxContextMenu(const QPoint& pos)
 
   menu->addSeparator();
 
-  menu->addAction(QString(tr("Save SELECTED transmission rows...")),
-                  this,
-                  /*SLOT(saveTxEvents("",true))*/ &CFrmSession::saveTxEventsAllAct);
+  menu->addAction(QString(tr("Save SELECTED transmission rows...")), this, [this](bool) {
+    saveTxEventsAct();
+  });
 
-  menu->addAction(QString(tr("Save ALL transmission rows...")),
-                  this,
-                  /*SLOT(saveTxEvents("",false))*/ &CFrmSession::saveTxEventsAllAct);
+  menu->addAction(QString(tr("Save ALL transmission rows...")), this, [this](bool) {
+    saveTxEventsAllAct();
+  });
 
   menu->addAction(QString(tr("Load transmission rows...")),
                   this,
