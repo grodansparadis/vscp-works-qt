@@ -189,9 +189,11 @@ parseXmlElement(QXmlStreamReader& reader)
         return json();
       }
     }
-    else if ((QXmlStreamReader::Characters == token ||
-              QXmlStreamReader::CDATA == token) &&
-             !reader.isWhitespace()) {
+    else if ((QXmlStreamReader::Characters == token
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+              || QXmlStreamReader::CDATA == token
+#endif
+             ) && !reader.isWhitespace()) {
       text += reader.text().toString();
     }
     else if (QXmlStreamReader::EndElement == token) {
