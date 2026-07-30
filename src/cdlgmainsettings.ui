@@ -39,7 +39,7 @@
       <string>General settings</string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -53,7 +53,7 @@
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>381</width>
+         <width>751</width>
          <height>381</height>
         </rect>
        </property>
@@ -960,7 +960,7 @@
          <x>10</x>
          <y>130</y>
          <width>561</width>
-         <height>51</height>
+         <height>54</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_3">
