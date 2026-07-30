@@ -1224,223 +1224,223 @@ MainWindow::removeConnectionItem(void)
         delete item;
       }
     }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // copyConnectionDataToClipboard
-    //
-
-    void
-    MainWindow::copyConnectionDataToClipboard(void)
-    {
-    #ifndef QT_NO_CLIPBOARD
-      QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
-      if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
-        QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Select a connection to copy."),
-                                 QMessageBox::Ok);
-        return;
-      }
-
-      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
-      QApplication::clipboard()->setText(
-        QString::fromUtf8(itemConn->getJson()->dump(2).c_str()));
-      statusBar()->showMessage(tr("Session data copied to clipboard"), 2000);
-    #endif
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // saveConnectionDataToFile
-    //
-
-    void
-    MainWindow::saveConnectionDataToFile(void)
-    {
-      QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
-      if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
-        QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Select a connection to save."),
-                                 QMessageBox::Ok);
-        return;
-      }
-
-      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
-      const QString defaultName =
-        itemConn->text(0).trimmed().isEmpty() ? tr("connection") : itemConn->text(0);
-      const QString fileName = QFileDialog::getSaveFileName(
-        this,
-        tr("Save session data"),
-        defaultName + ".json",
-        tr("JSON files (*.json);;All files (*.*)"));
-      if (fileName.isEmpty()) {
-        return;
-      }
-
-      QFile file(fileName);
-      if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        QMessageBox::warning(this,
-                             tr(APPNAME),
-                             tr("Failed to save session data to file."),
-                             QMessageBox::Ok);
-        return;
-      }
-
-      const std::string exported = itemConn->getJson()->dump(2);
-      file.write(QByteArray::fromStdString(exported));
-      file.write("\n");
-      statusBar()->showMessage(tr("Session data saved"), 2000);
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // importConnectionData
-    //
-
-    bool
-    MainWindow::importConnectionData(const QString& text)
-    {
-      json conn;
-      QString err;
-      if (!parseImportedConnectionText(text, conn, err)) {
-        QMessageBox::warning(this, tr(APPNAME), err, QMessageBox::Ok);
-        return false;
-      }
-
-      switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {
-        case CVscpClient::connType::TCPIP:
-          if (executeConnectionDialog<CDlgConnSettingsTcpip>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_tcpip);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        case CVscpClient::connType::CANAL:
-          if (executeConnectionDialog<CDlgConnSettingsCanal>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_canal);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-    #if defined(__linux__)
-        case CVscpClient::connType::SOCKETCAN:
-          if (executeConnectionDialog<CDlgConnSettingsSocketCan>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_socketcan);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-    #endif
-
-        case CVscpClient::connType::WS1:
-          if (executeConnectionDialog<CDlgConnSettingsWs1>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_ws1);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        case CVscpClient::connType::WS2:
-          if (executeConnectionDialog<CDlgConnSettingsWs2>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_ws2);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        case CVscpClient::connType::MQTT:
-          if (executeConnectionDialog<CDlgConnSettingsMqtt>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_mqtt);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        case CVscpClient::connType::UDP:
-          if (executeConnectionDialog<CDlgConnSettingsUdp>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_udp);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        case CVscpClient::connType::MULTICAST:
-          if (executeConnectionDialog<CDlgConnSettingsMulticast>(this, &conn, [this](json& imported) {
-            return saveNewConnection(imported, m_topitem_multicast);
-          })) {
-            statusBar()->showMessage(tr("Session data imported"), 2000);
-            return true;
-          }
-          return false;
-
-        default:
-          QMessageBox::warning(this,
-                               tr(APPNAME),
-                               tr("Imported connection type is not supported on this platform."),
-                               QMessageBox::Ok);
-          break;
-      }
-
-      return false;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // importConnectionDataFromClipboard
-    //
-
-    void
-    MainWindow::importConnectionDataFromClipboard(void)
-    {
-    #ifndef QT_NO_CLIPBOARD
-      const QString text = QApplication::clipboard()->text().trimmed();
-      if (text.isEmpty()) {
-        QMessageBox::information(this,
-                                 tr(APPNAME),
-                                 tr("Clipboard does not contain any session data."),
-                                 QMessageBox::Ok);
-        return;
-      }
-
-      importConnectionData(text);
-    #endif
-    }
-
-    ///////////////////////////////////////////////////////////////////////////////
-    // importConnectionDataFromFile
-    //
-
-    void
-    MainWindow::importConnectionDataFromFile(void)
-    {
-      const QString fileName = QFileDialog::getOpenFileName(
-        this,
-        tr("Import session data"),
-        QString(),
-        tr("Session data (*.json *.xml);;JSON files (*.json);;XML files (*.xml);;All files (*.*)"));
-      if (fileName.isEmpty()) {
-        return;
-      }
-
-      QFile file(fileName);
-      if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QMessageBox::warning(this,
-                             tr(APPNAME),
-                             tr("Failed to read session data from file."),
-                             QMessageBox::Ok);
-        return;
-      }
-
-      importConnectionData(QString::fromUtf8(file.readAll()));
-    }
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// copyConnectionDataToClipboard
+//
+
+void
+MainWindow::copyConnectionDataToClipboard(void)
+{
+#ifndef QT_NO_CLIPBOARD
+  QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
+  if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Select a connection to copy."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
+  QApplication::clipboard()->setText(
+    QString::fromUtf8(itemConn->getJson()->dump(2).c_str()));
+  statusBar()->showMessage(tr("Session data copied to clipboard"), 2000);
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveConnectionDataToFile
+//
+
+void
+MainWindow::saveConnectionDataToFile(void)
+{
+  QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
+  if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Select a connection to save."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
+  const QString defaultName =
+    itemConn->text(0).trimmed().isEmpty() ? tr("connection") : itemConn->text(0);
+  const QString fileName = QFileDialog::getSaveFileName(
+    this,
+    tr("Save session data"),
+    defaultName + ".json",
+    tr("JSON files (*.json);;All files (*.*)"));
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to save session data to file."),
+                         QMessageBox::Ok);
+    return;
+  }
+
+  const std::string exported = itemConn->getJson()->dump(2);
+  file.write(QByteArray::fromStdString(exported));
+  file.write("\n");
+  statusBar()->showMessage(tr("Session data saved"), 2000);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importConnectionData
+//
+
+bool
+MainWindow::importConnectionData(const QString& text)
+{
+  json conn;
+  QString err;
+  if (!parseImportedConnectionText(text, conn, err)) {
+    QMessageBox::warning(this, tr(APPNAME), err, QMessageBox::Ok);
+    return false;
+  }
+
+  switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {
+    case CVscpClient::connType::TCPIP:
+      if (executeConnectionDialog<CDlgConnSettingsTcpip>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_tcpip);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::CANAL:
+      if (executeConnectionDialog<CDlgConnSettingsCanal>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_canal);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+#if defined(__linux__)
+    case CVscpClient::connType::SOCKETCAN:
+      if (executeConnectionDialog<CDlgConnSettingsSocketCan>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_socketcan);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+#endif
+
+    case CVscpClient::connType::WS1:
+      if (executeConnectionDialog<CDlgConnSettingsWs1>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_ws1);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::WS2:
+      if (executeConnectionDialog<CDlgConnSettingsWs2>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_ws2);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::MQTT:
+      if (executeConnectionDialog<CDlgConnSettingsMqtt>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_mqtt);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::UDP:
+      if (executeConnectionDialog<CDlgConnSettingsUdp>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_udp);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::MULTICAST:
+      if (executeConnectionDialog<CDlgConnSettingsMulticast>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_multicast);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    default:
+      QMessageBox::warning(this,
+                           tr(APPNAME),
+                           tr("Imported connection type is not supported on this platform."),
+                           QMessageBox::Ok);
+      break;
+  }
+
+  return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importConnectionDataFromClipboard
+//
+
+void
+MainWindow::importConnectionDataFromClipboard(void)
+{
+#ifndef QT_NO_CLIPBOARD
+  const QString text = QApplication::clipboard()->text().trimmed();
+  if (text.isEmpty()) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Clipboard does not contain any session data."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  importConnectionData(text);
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importConnectionDataFromFile
+//
+
+void
+MainWindow::importConnectionDataFromFile(void)
+{
+  const QString fileName = QFileDialog::getOpenFileName(
+    this,
+    tr("Import session data"),
+    QString(),
+    tr("Session data (*.json *.xml);;JSON files (*.json);;XML files (*.xml);;All files (*.*)"));
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("Failed to read session data from file."),
+                         QMessageBox::Ok);
+    return;
+  }
+
+  importConnectionData(QString::fromUtf8(file.readAll()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
