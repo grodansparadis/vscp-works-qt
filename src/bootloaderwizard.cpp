@@ -71,6 +71,7 @@
 #include <QUrl>
 #include <QShortcut>
 #include <QDesktopServices>
+#include <QFileInfo>
 #include <QStandardPaths>
 
 #include <spdlog/async.h>
@@ -683,30 +684,59 @@ CWizardPageLoadMdf::validatePage(void)
                                QMessageBox::Ok);
           return false;
         }
-      }
-      else {
-        spdlog::trace("Download MDF");
-        QApplication::setOverrideCursor(Qt::WaitCursor);
-
-        using namespace std::placeholders;
-        auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
-        // lambda version for reference
-        // auto cb = [this](auto a, auto b) { this->statusCallback(a, b); };
-        QString path;
-        if (VSCP_ERROR_SUCCESS != pworks->downloadMDF(stdregs, mdf, path, callback)) {
-          QApplication::restoreOverrideCursor();
-          QMessageBox::warning(this,
-                               tr(APPNAME),
-                               tr("Failed to download and parse MDF"),
-                               QMessageBox::Ok);
-          return false;
-        }
         setField("boot.firmware.mdf", path);
         QString str = mdf.getModuleName().c_str();
         str += " Model: ";
         str += mdf.getModuleModel().c_str();
         setField("boot.firmware.devicename", str);
-        QApplication::restoreOverrideCursor();
+      }
+      else {
+        QString path;
+        bool bUseCachedMdf = false;
+
+        path = field("boot.firmware.mdf").toString();
+        QFileInfo fiMdf(path);
+        if (!path.isEmpty() && fiMdf.exists() && fiMdf.isFile()) {
+         rv = VSCP_ERROR_ERROR;
+         try {
+           rv = mdf.parseMDF(path.toStdString());
+         }
+         catch (const std::exception &ex) {
+           spdlog::warn("Failed to parse cached MDF {0}: {1}", path.toStdString(), ex.what());
+         }
+         catch (...) {
+           spdlog::warn("Failed to parse cached MDF {0}: Unknown exception", path.toStdString());
+         }
+
+         if (VSCP_ERROR_SUCCESS == rv) {
+           bUseCachedMdf = true;
+         }
+        }
+
+        if (!bUseCachedMdf) {
+         spdlog::trace("Download MDF");
+         QApplication::setOverrideCursor(Qt::WaitCursor);
+
+         using namespace std::placeholders;
+         auto callback = std::bind(&CWizardPageLoadMdf::statusCallback, this, _1, _2);
+         // lambda version for reference
+         // auto cb = [this](auto a, auto b) { this->statusCallback(a, b); };
+         if (VSCP_ERROR_SUCCESS != pworks->downloadMDF(stdregs, mdf, path, callback)) {
+           QApplication::restoreOverrideCursor();
+           QMessageBox::warning(this,
+                                tr(APPNAME),
+                                tr("Failed to download and parse MDF"),
+                                QMessageBox::Ok);
+           return false;
+         }
+         QApplication::restoreOverrideCursor();
+        }
+
+        setField("boot.firmware.mdf", path);
+        QString str = mdf.getModuleName().c_str();
+        str += " Model: ";
+        str += mdf.getModuleModel().c_str();
+        setField("boot.firmware.devicename", str);
       }
     } break;
 #endif
