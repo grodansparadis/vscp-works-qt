@@ -82,6 +82,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QJSEngine>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QTableView>
@@ -143,6 +144,130 @@ formatIsoDate(const std::string& dateValue)
   }
 
   return date.isValid() ? date.toString(Qt::ISODate) : source;
+}
+
+QString
+normalizeDateString(const QString& sourceValue)
+{
+  const QString source = sourceValue.trimmed();
+  if (source.isEmpty()) {
+    return source;
+  }
+
+  QDate date = QDate::fromString(source, Qt::ISODate);
+  if (date.isValid()) {
+    return date.toString(Qt::ISODate);
+  }
+
+  const QStringList formats = { "yyyy-MM-dd",
+                                "yy-MM-dd",
+                                "dd/MM/yyyy",
+                                "d/M/yyyy",
+                                "dd/MM/yy",
+                                "d/M/yy",
+                                "MM/dd/yyyy",
+                                "M/d/yyyy",
+                                "MM/dd/yy",
+                                "M/d/yy" };
+
+  for (const auto &fmt : formats) {
+    date = QDate::fromString(source, fmt);
+    if (date.isValid()) {
+      return date.toString(Qt::ISODate);
+    }
+  }
+
+  return source;
+}
+
+void
+normalizeJsonDateFields(json& node)
+{
+  if (node.is_object()) {
+    for (auto& item : node.items()) {
+      if (item.value().is_string()) {
+        const std::string& key = item.key();
+        if (("date" == key) || ("changed" == key)) {
+          const QString normalized = normalizeDateString(QString::fromStdString(item.value().get<std::string>()));
+          item.value()             = normalized.toStdString();
+        }
+      }
+
+      normalizeJsonDateFields(item.value());
+    }
+  }
+  else if (node.is_array()) {
+    for (auto& item : node) {
+      normalizeJsonDateFields(item);
+    }
+  }
+}
+
+bool
+normalizeSavedXmlDateFields(const QString& path)
+{
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QMessageBox::warning(nullptr,
+                         APPNAME,
+                         QObject::tr("Failed to normalize MDF date fields.\n\nWhere: %1\nWhat: Unable to read saved XML.")
+                           .arg(path));
+    return false;
+  }
+
+  const QString originalContent = QString::fromUtf8(file.readAll());
+  file.close();
+
+  QString content        = originalContent;
+  QString updatedContent = content;
+  int delta              = 0;
+  const QRegularExpression attrDateRe(R"(date\s*=\s*"([^"]*)")");
+  auto attrIt = attrDateRe.globalMatch(content);
+  while (attrIt.hasNext()) {
+    const QRegularExpressionMatch match = attrIt.next();
+    const QString current               = match.captured(1);
+    const QString normalized            = normalizeDateString(current);
+    if (current == normalized) {
+      continue;
+    }
+
+    const int start = match.capturedStart(1) + delta;
+    updatedContent.replace(start, current.length(), normalized);
+    delta += normalized.length() - current.length();
+  }
+
+  content = updatedContent;
+  delta   = 0;
+  const QRegularExpression changedDateRe(R"(<changed>\s*([^<]*)\s*</changed>)");
+  auto changedIt = changedDateRe.globalMatch(content);
+  while (changedIt.hasNext()) {
+    const QRegularExpressionMatch match = changedIt.next();
+    const QString current               = match.captured(1).trimmed();
+    const QString normalized            = normalizeDateString(current);
+    if (current == normalized) {
+      continue;
+    }
+
+    const int start = match.capturedStart(1) + delta;
+    const int len   = match.capturedLength(1);
+    updatedContent.replace(start, len, normalized);
+    delta += normalized.length() - len;
+  }
+
+  if (updatedContent == originalContent) {
+    return true;
+  }
+
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+    QMessageBox::warning(nullptr,
+                         APPNAME,
+                         QObject::tr("Failed to normalize MDF date fields.\n\nWhere: %1\nWhat: Unable to write updated XML.")
+                           .arg(path));
+    return false;
+  }
+  file.write(updatedContent.toUtf8());
+  file.close();
+  return true;
 }
 
 } // anonymous namespace
@@ -515,6 +640,9 @@ CFrmMdf::saveMdfToPath(const QString& path, mdf_format format)
   if ((MDF_FORMAT_JSON == format) && !enrichSavedJsonWithDecisionMatrix(path)) {
     return false;
   }
+  if ((MDF_FORMAT_XML == format) && !normalizeSavedXmlDateFields(path)) {
+    return false;
+  }
 
   m_last_path = path;
   m_labelOpenedFile->setText(tr("File: %1").arg(path));
@@ -716,6 +844,8 @@ CFrmMdf::enrichSavedJsonWithDecisionMatrix(const QString& path)
   else {
     module.erase("dmatrix");
   }
+
+  normalizeJsonDateFields(root);
 
   file.close();
 
