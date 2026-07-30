@@ -320,7 +320,7 @@ CFrmSession::createMenu()
   m_importSessionAct = m_fileMenu->addAction(QIcon::fromTheme("document-open"),
                                              tr("Import session from file..."),
                                              this,
-                                             &CFrmSession::loadSessionFromFile);
+                                             &CFrmSession::loadSessionFromFileAct);
 
   m_exportSessionAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
                                              tr("Export session to file..."),
@@ -3077,10 +3077,10 @@ CFrmSession::saveSessionToFile(const QString& path)
 void
 CFrmSession::loadSessionFromFile(const QString& path)
 {
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
   QString fileName = path;
 
   if (!path.length()) {
-    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
     QString initialPath = pworks->m_shareFolder + "/sessions/session.json";
     fileName = QFileDialog::getOpenFileName(this,
                                             tr("File to load session data from"),
