@@ -343,6 +343,24 @@ extractImportedConnection(json& conn, QString& err)
   return true;
 }
 
+namespace {
+
+void
+applyConnectionVisualState(QTreeWidgetItem* item, const json& conn)
+{
+  if (nullptr == item) {
+    return;
+  }
+
+  if (conn.contains("ui") && conn["ui"].is_object() &&
+      conn["ui"].contains("highlight") && conn["ui"]["highlight"].is_string() &&
+      conn["ui"]["highlight"].get<std::string>() == "purple") {
+    item->setForeground(0, QBrush(QColor(128, 0, 128)));
+  }
+}
+
+} // namespace
+
 bool
 parseImportedConnectionText(const QString& text, json& conn, QString& err)
 {
@@ -433,6 +451,7 @@ treeWidgetItemConn::treeWidgetItemConn(QTreeWidgetItem* topItem,
 
   setText(0, conn["name"].get<std::string>().c_str());
   m_conn = conn;
+  applyConnectionVisualState(this, m_conn);
 
   const QIcon icon =
     QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
@@ -564,6 +583,17 @@ MainWindow::MainWindow()
   m_topitem_socketcan->setForeground(0, b);
   m_topitem_socketcan->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_socketcan);
+
+  // Raw CAN
+  QStringList strlist_rawcan(QString(tr("Raw CAN Connections")).split(','));
+  m_topitem_rawcan =
+    new QTreeWidgetItem(strlist_rawcan,
+                        static_cast<int>(CVscpClient::connType::SOCKETCAN));
+  m_topitem_rawcan->setIcon(0, iconTest);
+  m_topitem_rawcan->setToolTip(0, "Holds raw VSCP socketcan connections.");
+  m_topitem_rawcan->setForeground(0, b);
+  m_topitem_rawcan->setFont(0, font);
+  m_connTreeTable->addTopLevelItem(m_topitem_rawcan);
 #endif
 
   // tcp/ip
@@ -589,6 +619,17 @@ MainWindow::MainWindow()
   m_topitem_mqtt->setForeground(0, b);
   m_topitem_mqtt->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_mqtt);
+
+  // Raw MQTT
+  QStringList strlist_rawmqtt(QString(tr("Raw MQTT Connections")).split(','));
+  m_topitem_rawmqtt =
+    new QTreeWidgetItem(strlist_rawmqtt,
+                        static_cast<int>(CVscpClient::connType::MQTT));
+  m_topitem_rawmqtt->setIcon(0, iconTest);
+  m_topitem_rawmqtt->setToolTip(0, "Holds raw VSCP MQTT connections.");
+  m_topitem_rawmqtt->setForeground(0, b);
+  m_topitem_rawmqtt->setFont(0, font);
+  m_connTreeTable->addTopLevelItem(m_topitem_rawmqtt);
 
   // WS1
   QStringList strlist_ws1(QString(tr("WS1 Connections")).split(','));
@@ -904,9 +945,9 @@ MainWindow::addLoadedConnections(void)
 
 #if defined(__linux__)
         case CVscpClient::connType::SOCKETCAN: {
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_socketcan, j);
-          m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
+          QTreeWidgetItem* target = (j.contains("raw") && j["raw"].is_boolean() && j["raw"].get<bool>()) ? m_topitem_rawcan : m_topitem_socketcan;
+          addChildItemToConnectionTree(target, j);
+          target->sortChildren(0, Qt::AscendingOrder);
         } break;
 #endif
 
@@ -923,9 +964,9 @@ MainWindow::addLoadedConnections(void)
         } break;
 
         case CVscpClient::connType::MQTT: {
-          // Add connection to connection tree
-          addChildItemToConnectionTree(m_topitem_mqtt, j);
-          m_topitem_mqtt->sortChildren(0, Qt::AscendingOrder);
+          QTreeWidgetItem* target = (j.contains("raw") && j["raw"].is_boolean() && j["raw"].get<bool>()) ? m_topitem_rawmqtt : m_topitem_mqtt;
+          addChildItemToConnectionTree(target, j);
+          target->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         case CVscpClient::connType::UDP: {
@@ -1476,6 +1517,8 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
     // Get the connection object
     json* pconn = itemConn->getJson();
 
+    const bool isRaw = pconn->contains("raw") && (*pconn)["raw"].is_boolean() && (*pconn)["raw"].get<bool>();
+
     switch ((*pconn)["type"].get<int>()) {
 
       case static_cast<int>(CVscpClient::connType::TCPIP):
@@ -1488,7 +1531,12 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 
 #if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
-        newSession();
+        if (isRaw) {
+          newRawCanSession();
+        }
+        else {
+          newSession();
+        }
         break;
 #endif
 
@@ -1501,7 +1549,12 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         break;
 
       case static_cast<int>(CVscpClient::connType::MQTT):
-        newSession();
+        if (isRaw) {
+          newMqttExplorer();
+        }
+        else {
+          newSession();
+        }
         break;
 
       case static_cast<int>(CVscpClient::connType::UDP):
@@ -1590,6 +1643,19 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
   if (QModelIndex() == parent) {
     switch (item->type()) {
 
+      case static_cast<int>(CVscpClient::connType::MQTT):
+        if (QString::compare(item->text(0), tr("Raw MQTT Connections"), Qt::CaseInsensitive) == 0) {
+          menu->addAction(QString(tr("Add new raw MQTT connection...")),
+                          this,
+                          SLOT(newMqttExplorer()));
+        }
+        else {
+          menu->addAction(QString(tr("Add new MQTT connection...")),
+                          this,
+                          SLOT(newMqttConnection()));
+        }
+        break;
+
       case static_cast<int>(CVscpClient::connType::TCPIP):
         menu->addAction(QString(tr("Add new tcp/ip connection...")),
                         this,
@@ -1604,9 +1670,16 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
 
 #if defined(__linux__)
       case static_cast<int>(CVscpClient::connType::SOCKETCAN):
-        menu->addAction(QString(tr("Add new Socketcan connection...")),
-                        this,
-                        SLOT(newSocketCanConnection()));
+        if (QString::compare(item->text(0), tr("Raw CAN Connections"), Qt::CaseInsensitive) == 0) {
+          menu->addAction(QString(tr("Add new raw CAN connection...")),
+                          this,
+                          SLOT(newRawCanSession()));
+        }
+        else {
+          menu->addAction(QString(tr("Add new Socketcan connection...")),
+                          this,
+                          SLOT(newSocketCanConnection()));
+        }
         break;
 #endif
 
@@ -1620,12 +1693,6 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         menu->addAction(QString(tr("Add new websocket WS2 connection...")),
                         this,
                         SLOT(newWs2Connection()));
-        break;
-
-      case static_cast<int>(CVscpClient::connType::MQTT):
-        menu->addAction(QString(tr("Add new MQTT connection...")),
-                        this,
-                        SLOT(newMqttConnection()));
         break;
 
       case static_cast<int>(CVscpClient::connType::UDP):
@@ -1742,7 +1809,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
 #if defined(__linux__)
     if (static_cast<int>(CVscpClient::connType::SOCKETCAN) == item->parent()->type()) {
       menu->addAction(newSessionIcon,
-                      QString(tr("SocketCAN frame session")),
+                      QString(tr("CAN raw explorer")),
                       this,
                       SLOT(newRawCanSession()));
     }
@@ -1750,7 +1817,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
 
     if (static_cast<int>(CVscpClient::connType::MQTT) == item->parent()->type()) {
       menu->addAction(newSessionIcon,
-                      QString(tr("MQTT Explorer")),
+                      QString(tr("MQTT raw explorer")),
                       this,
                       SLOT(newMqttExplorer()));
     }
@@ -2077,26 +2144,6 @@ MainWindow::createActions()
   fileMenu->addAction(newSessionAct);
   fileToolBar->addAction(newSessionAct);
 
-  QAction* newMqttExplorerAct =
-    new QAction(newSessionIcon, tr("MQTT &Explorer window..."), this);
-  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT Explorer window"));
-  connect(newMqttExplorerAct,
-          &QAction::triggered,
-          this,
-          &MainWindow::newMqttExplorer);
-  fileMenu->addAction(newMqttExplorerAct);
-  fileToolBar->addAction(newMqttExplorerAct);
-
-#ifndef WIN32
-  const QIcon newRawCanSessionIcon = QIcon(":/page.png");
-  QAction* newRawCanSessionAct =
-    new QAction(newRawCanSessionIcon, tr("SocketCAN &frame session..."), this);
-  newRawCanSessionAct->setStatusTip(tr("Open a SocketCAN raw frame session window"));
-  connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
-  fileMenu->addAction(newRawCanSessionAct);
-  fileToolBar->addAction(newRawCanSessionAct);
-#endif
-
   // Node configuration
   const QIcon newDevConfigIcon = QIcon(":/page_process.png");
   QAction* newDevConfigAct =
@@ -2143,6 +2190,28 @@ MainWindow::createActions()
   connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::mdfEdit);
   fileMenu->addAction(newMdfEditorAct);
   fileToolBar->addAction(newMdfEditorAct);
+
+  fileMenu->addSeparator();
+
+  QAction* newMqttExplorerAct =
+    new QAction(newSessionIcon, tr("MQTT raw explorer..."), this);
+  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT raw explorer"));
+  connect(newMqttExplorerAct,
+          &QAction::triggered,
+          this,
+          &MainWindow::newMqttExplorer);
+  fileMenu->addAction(newMqttExplorerAct);
+  fileToolBar->addAction(newMqttExplorerAct);
+
+#ifndef WIN32
+  const QIcon newRawCanSessionIcon = QIcon(":/page.png");
+  QAction* newRawCanSessionAct =
+    new QAction(newRawCanSessionIcon, tr("CAN raw explorer..."), this);
+  newRawCanSessionAct->setStatusTip(tr("Open a CAN raw explorer window"));
+  connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
+  fileMenu->addAction(newRawCanSessionAct);
+  fileToolBar->addAction(newRawCanSessionAct);
+#endif
 
   fileMenu->addSeparator();
 
@@ -2560,12 +2629,24 @@ MainWindow::newMqttExplorer()
   QList<QTreeWidgetItem*> itemList;
   itemList = m_connTreeTable->selectedItems();
 
-  // If no item is selected then complain
-  if (!itemList.size()) {
-    QMessageBox::warning(this,
-                         tr("VSCP Works+"),
-                         tr("No connection selected.\n"
-                            "Please select a connection first."));
+  if (itemList.isEmpty() || (itemList.size() == 1 && nullptr != itemList.first() && nullptr == itemList.first()->parent())) {
+    executeConnectionDialog<CDlgConnSettingsMqtt>(this, nullptr, [this](json& conn) {
+      conn["ui"]["highlight"] = "purple";
+      conn["raw"] = true;
+
+      if (!saveNewConnection(conn, m_topitem_rawmqtt)) {
+        return false;
+      }
+
+      CFrmMqttExplorer* w = new CFrmMqttExplorer(this, &conn);
+      w->setAttribute(Qt::WA_DeleteOnClose, true);
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+      w->setWindowFlags(Qt::Window);
+      w->show();
+      w->raise();
+      w->activateWindow();
+      return true;
+    });
     return;
   }
 
@@ -2579,6 +2660,29 @@ MainWindow::newMqttExplorer()
     const int type               = (*pconn)["type"].get<int>();
     if (static_cast<int>(CVscpClient::connType::MQTT) != type) {
       continue;
+    }
+
+    if (!pconn->contains("raw") || !(*pconn)["raw"].is_boolean() || !(*pconn)["raw"].get<bool>()) {
+      QMessageBox::StandardButton reply = QMessageBox::question(this,
+                                                                  tr("MQTT raw explorer"),
+                                                                  tr("Copy this MQTT connection to the raw MQTT section and open it there?"),
+                                                                  QMessageBox::Yes | QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+        json copied = *pconn;
+        copied["raw"] = true;
+        copied["ui"]["highlight"] = "purple";
+        if (!saveNewConnection(copied, m_topitem_rawmqtt)) {
+          return;
+        }
+        CFrmMqttExplorer* w = new CFrmMqttExplorer(this, &copied);
+        w->setAttribute(Qt::WA_DeleteOnClose, true);
+        w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        w->setWindowFlags(Qt::Window);
+        w->show();
+        w->raise();
+        w->activateWindow();
+        return;
+      }
     }
 
     CFrmMqttExplorer* w = new CFrmMqttExplorer(this, pconn);
@@ -2601,11 +2705,24 @@ MainWindow::newRawCanSession()
 #if defined(__linux__)
   QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
 
-  if (!itemList.size()) {
-    QMessageBox::warning(this,
-                         tr("VSCP Works+"),
-                         tr("No connection selected.\n"
-                            "Please select a SocketCAN connection first."));
+  if (itemList.isEmpty() || (itemList.size() == 1 && nullptr != itemList.first() && nullptr == itemList.first()->parent())) {
+    executeConnectionDialog<CDlgConnSettingsSocketCan>(this, nullptr, [this](json& conn) {
+      conn["ui"]["highlight"] = "purple";
+      conn["raw"] = true;
+
+      if (!saveNewConnection(conn, m_topitem_rawcan)) {
+        return false;
+      }
+
+      CFrmRawCanSession* w = new CFrmRawCanSession(this, &conn);
+      w->setAttribute(Qt::WA_DeleteOnClose, true);
+      w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+      w->setWindowFlags(Qt::Window);
+      w->show();
+      w->raise();
+      w->activateWindow();
+      return true;
+    });
     return;
   }
 
@@ -2624,6 +2741,29 @@ MainWindow::newRawCanSession()
 
     if ((*pconn)["type"].get<int>() != static_cast<int>(CVscpClient::connType::SOCKETCAN)) {
       continue;
+    }
+
+    if (!pconn->contains("raw") || !(*pconn)["raw"].is_boolean() || !(*pconn)["raw"].get<bool>()) {
+      QMessageBox::StandardButton reply = QMessageBox::question(this,
+                                                                  tr("CAN raw explorer"),
+                                                                  tr("Copy this SocketCAN connection to the raw CAN section and open it there?"),
+                                                                  QMessageBox::Yes | QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+        json copied = *pconn;
+        copied["raw"] = true;
+        copied["ui"]["highlight"] = "purple";
+        if (!saveNewConnection(copied, m_topitem_rawcan)) {
+          return;
+        }
+        CFrmRawCanSession* w = new CFrmRawCanSession(this, &copied);
+        w->setAttribute(Qt::WA_DeleteOnClose, true);
+        w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+        w->setWindowFlags(Qt::Window);
+        w->show();
+        w->raise();
+        w->activateWindow();
+        return;
+      }
     }
 
     CFrmRawCanSession* w = new CFrmRawCanSession(this, pconn);

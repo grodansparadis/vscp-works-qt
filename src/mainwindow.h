@@ -244,6 +244,7 @@ private:
   QTreeWidgetItem *m_topitem_udp;
   QTreeWidgetItem *m_topitem_multicast;
   QTreeWidgetItem *m_topitem_rest;
+  QTreeWidgetItem *m_topitem_rawmqtt;
   QTreeWidgetItem *m_topitem_rawcan;
  
   
