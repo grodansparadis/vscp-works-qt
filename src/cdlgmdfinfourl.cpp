@@ -120,21 +120,36 @@ CDlgMdfInfoUrl::initDialogData(std::map<std::string, std::string>* pmap, QString
     return;
   }
 
+  if (nullptr != pselstr) {
+    m_initial_selstr = *pselstr;
+  }
+
   // Save the map pbject
   m_pMapInfo = pmap;
 
   QString lang = (nullptr == pselstr) ? "en" : *pselstr;
 
   if (nullptr != pselstr) {
-    std::string infourl = pmap->at(pselstr->toStdString());
-    ui->editLanguage->setText(pselstr->toStdString().c_str());
-    ui->editInfoUrl->setText(infourl.c_str());
+    auto it = pmap->find(pselstr->toUtf8().toStdString());
+    if (pmap->end() == it) {
+      // Fall back to local 8-bit conversion for compatibility with legacy/non-UTF language keys.
+      it = pmap->find(pselstr->toStdString());
+    }
+
+    ui->editLanguage->setText(*pselstr);
+    if (pmap->end() != it) {
+      ui->editInfoUrl->setText(QString::fromUtf8(it->second.c_str()));
+    }
+    else {
+      spdlog::warn("MDF info-url dialog - language key '{}' not found in info-url map", pselstr->toStdString());
+      ui->editInfoUrl->clear();
+    }
   }
   else {
     ui->editLanguage->setText("en");
   }
 
-  int idx = ui->comboBoxLang->findText(lang.toStdString().c_str());
+  int idx = ui->comboBoxLang->findText(lang);
   if (-1 != idx) {
     ui->comboBoxLang->setCurrentIndex(idx);
   }
@@ -166,7 +181,7 @@ CDlgMdfInfoUrl::accept()
   std::string str;
   if (nullptr != m_pMapInfo) {
 
-    str = ui->editLanguage->text().trimmed().left(2).toStdString();
+    str = ui->editLanguage->text().trimmed().left(2).toUtf8().toStdString();
 
     if (str.length() < 2) {
       QMessageBox::warning(this, tr(APPNAME), tr("Invalid description object. Language must be set to IOS639 value."), QMessageBox::Ok);
@@ -176,10 +191,10 @@ CDlgMdfInfoUrl::accept()
     // If selstr has been change in edit mode we have to take
     // special care (we remove the old key).
     if (m_initial_selstr.length() && (m_initial_selstr != str.c_str())) {
-      m_pMapInfo->erase(m_initial_selstr.toStdString());
+      m_pMapInfo->erase(m_initial_selstr.toUtf8().toStdString());
     }
 
-    (*m_pMapInfo)[str] = ui->editInfoUrl->toPlainText().toStdString();
+    (*m_pMapInfo)[str] = ui->editInfoUrl->toPlainText().toUtf8().toStdString();
   }
   else {
     spdlog::error("MDF module information - Invalid MDF Info URL object (accept)");
