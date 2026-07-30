@@ -45,6 +45,7 @@
 #include <QMenu>
 #include <QObject>
 #include <QStringList>
+#include <QTimer>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
@@ -616,9 +617,11 @@ public slots:
   void saveMdf(void);
   bool saveMdfToPath(const QString& path, mdf_format format);
   bool createBackupForPath(const QString& path);
+  bool enrichSavedJsonWithDecisionMatrix(const QString& path);
   void addRecentSavedFile(const QString& path);
   void loadRecentSavedFiles();
   void rebuildRecentSavedFilesMenu();
+  void onAutoSaveTimeout();
 
   /*!
     Find next MDF type item in tree
@@ -687,6 +690,7 @@ private:
   QString m_last_path;
   QStringList m_recentSavedFiles;
   QMenu* m_menuRecentSaved = nullptr;
+  QTimer* m_autoSaveTimer  = nullptr;
 
   /// True if a loadeed file has been edited
   bool m_bChanged;

@@ -410,6 +410,18 @@ public:
   */
   bool m_bSaveAlwaysJSON;
 
+  /// Enable periodic autosave for MDF editor windows
+  bool m_mdfAutoSaveEnabled;
+
+  /// Autosave interval for MDF editor (seconds)
+  uint32_t m_mdfAutoSaveInterval;
+
+  /// If true, MDF backups are timestamped and cumulative
+  bool m_mdfCumulativeBackups;
+
+  /// Max number of cumulative MDF backups kept per file (0 = unlimited)
+  uint32_t m_mdfMaxBackups;
+
   //**************************************************************************
   //                            LOGGER (SPDLOG)
   //**************************************************************************

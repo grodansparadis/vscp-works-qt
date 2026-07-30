@@ -250,6 +250,8 @@ qt_add_executable(${PROJECT_NAME}
 
   src/cfrmsession.h
   src/cfrmsession.cpp
+  src/cfrmmeasurementview.h
+  src/cfrmmeasurementview.cpp
   src/cfrmmqttexplorer.h
   src/cfrmmqttexplorer.cpp
   src/cfrmrawcansession.h

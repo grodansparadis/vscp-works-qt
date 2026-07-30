@@ -40,11 +40,13 @@
 #include "ui_cdlgmdfbitlist.h"
 
 #include <QDebug>
-#include <QInputDialog>
-#include <QPushButton>
-#include <QMessageBox>
 #include <QDesktopServices>
+#include <QInputDialog>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QShortcut>
+
+#include <algorithm>
 
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
@@ -160,7 +162,6 @@ void
 CDlgMdfBitList::renderBitItems(void)
 {
   std::deque<CMDF_Bit*>* pbits = nullptr;
-  std::map<uint32_t, CMDF_Register*> pages;
 
   if (nullptr == m_pobj) {
     return;
@@ -178,23 +179,24 @@ CDlgMdfBitList::renderBitItems(void)
     return;
   }
 
-  // Create set with sorted bit offsets and a map
-  // to help find corresponding bit pointer
-  // Add registers for page
-  m_bitset.clear();
-  m_bitmap.clear();
-  for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
-    m_bitset.insert((*it)->getPos());
-    m_bitmap[(*it)->getPos()] = *it;
+  m_renderedBits.clear();
+  m_renderedBits.reserve(pbits->size());
+  for (CMDF_Bit* pbit : *pbits) {
+    if (nullptr != pbit) {
+      m_renderedBits.push_back(pbit);
+    }
   }
 
-  for (auto it = m_bitset.cbegin(); it != m_bitset.cend(); ++it) {
-    CMDF_Bit* pbit = m_bitmap[*it]; //*it;
+  std::stable_sort(m_renderedBits.begin(),
+                   m_renderedBits.end(),
+                   [](CMDF_Bit* a, CMDF_Bit* b) { return a->getPos() < b->getPos(); });
+
+  for (CMDF_Bit* pbit : m_renderedBits) {
     if (nullptr != pbit) {
       QString str = QString("Bit %1(%2)-- %3").arg(pbit->getPos()).arg(pbit->getWidth()).arg(pbit->getName().c_str());
       ui->listBits->addItem(str);
-      // Set data to register index
-      ui->listBits->item(ui->listBits->count() - 1)->setData(Qt::UserRole, pbit->getPos());
+      ui->listBits->item(ui->listBits->count() - 1)
+        ->setData(Qt::UserRole, QVariant::fromValue<quintptr>(reinterpret_cast<quintptr>(pbit)));
     }
   }
 }
@@ -233,21 +235,9 @@ CDlgMdfBitList::getBitList(void)
 //
 
 CMDF_Bit*
-CDlgMdfBitList::getBitObj(uint8_t pos)
+CDlgMdfBitList::getBitObj(quintptr key)
 {
-  std::deque<CMDF_Bit*>* pbits = getBitList();
-  if (nullptr == pbits) {
-    return nullptr;
-  }
-
-  for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
-    CMDF_Bit* pbit = *it;
-    if (pbit->getPos() == pos) {
-      return pbit;
-    }
-  }
-
-  return nullptr;
+  return reinterpret_cast<CMDF_Bit*>(key);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -348,7 +338,7 @@ CDlgMdfBitList::editRegisterBit(void)
     }
 
     // Get the bit
-    pbit = getBitObj(pitem->data(Qt::UserRole).toUInt());
+    pbit = getBitObj(pitem->data(Qt::UserRole).value<quintptr>());
     if (nullptr == pbit) {
       return;
     }
@@ -399,8 +389,9 @@ CDlgMdfBitList::dupRegisterBit(void)
     }
 
     // Get the bit
-    pbit = getBitObj(pitem->data(Qt::UserRole).toUInt());
+    pbit = getBitObj(pitem->data(Qt::UserRole).value<quintptr>());
     if (nullptr == pbit) {
+      delete pbitnew;
       return;
     }
 
@@ -408,7 +399,7 @@ CDlgMdfBitList::dupRegisterBit(void)
     *pbitnew = *pbit;
 
     CDlgMdfBit dlg(this);
-    dlg.initDialogData(pbit, 0, m_type);
+    dlg.initDialogData(pbitnew, 0, m_type);
     // dupbitdlg:
     if (QDialog::Accepted == dlg.exec()) {
       // uint8_t mask;
@@ -419,6 +410,7 @@ CDlgMdfBitList::dupRegisterBit(void)
 
       // Get bitlist (for type)
       if (nullptr == (pbits = getBitList())) {
+        delete pbitnew;
         return;
       }
 
@@ -457,15 +449,20 @@ CDlgMdfBitList::deleteRegisterBit(void)
 
     QListWidgetItem* pitem = ui->listBits->currentItem();
 
-    for (auto it = pbits->cbegin(); it != pbits->cend(); ++it) {
-      CMDF_Bit* pbit = *it;
-      if (pbit->getPos() == pitem->data(Qt::UserRole).toUInt()) {
+    CMDF_Bit* pDelete = getBitObj(pitem->data(Qt::UserRole).value<quintptr>());
+    for (auto it = pbits->begin(); it != pbits->end(); ++it) {
+      if (*it == pDelete) {
         pbits->erase(it);
+        delete pDelete;
+        break;
       }
     }
 
     ui->listBits->clear();
     renderBitItems();
+    if (pbits->empty()) {
+      return;
+    }
     size_t sel = idx;
     if (0 == idx) {
       sel = 0;

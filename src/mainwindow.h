@@ -151,6 +151,10 @@ private slots:
     void editConnectionItem(void);
     void cloneConnectionItem(void);
     void removeConnectionItem(void);
+    void copyConnectionDataToClipboard(void);
+    void saveConnectionDataToFile(void);
+    void importConnectionDataFromClipboard(void);
+    void importConnectionDataFromFile(void);
 
     // New connections
     void newTcpipConnection(void);
@@ -220,6 +224,8 @@ private:
   void readSettings();
   bool maybeSave();
   bool saveFile(const QString &fileName);
+  bool saveNewConnection(json& conn, QTreeWidgetItem *topitem);
+  bool importConnectionData(const QString& text);
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 

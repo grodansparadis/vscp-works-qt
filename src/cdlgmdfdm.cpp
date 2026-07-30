@@ -135,6 +135,7 @@ CDlgMdfDM::initDialogData(CMDF* pmdf, CMDF_DecisionMatrix* pdm, int index)
           SIGNAL(clicked()),
           this,
           SLOT(deleteAction()));
+  connect(ui->listActions, &QListWidget::doubleClicked, this, &CDlgMdfDM::editAction);
 
   setLevel(pmdf->getLevel());
   ui->comboLevel->setEnabled(false);
@@ -336,11 +337,7 @@ CDlgMdfDM::addAction(void)
   // Save the selected row
   int idx = ui->listActions->currentRow();
 
-  QListWidgetItem* pitem = ui->listActions->currentItem();
-  CMDF_Action* paction   = new CMDF_Action; // = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
-  if (nullptr == paction) {
-    return;
-  }
+  CMDF_Action* paction = new CMDF_Action;
 
   CDlgMdfDmAction dlg(this);
   // adddlg:
@@ -372,6 +369,9 @@ CDlgMdfDM::dupAction(void)
   int idx = ui->listActions->currentRow();
 
   QListWidgetItem* pitem = ui->listActions->currentItem();
+  if (nullptr == pitem) {
+    return;
+  }
   CMDF_Action* paction   = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == paction) {
     return;
@@ -402,7 +402,7 @@ adddlg:
     ui->listActions->setCurrentRow(idx);
   }
   else {
-    delete paction;
+    delete pactionnew;
   }
 }
 
@@ -419,6 +419,9 @@ CDlgMdfDM::deleteAction(void)
   int idx = ui->listActions->currentRow();
 
   QListWidgetItem* pitem = ui->listActions->currentItem();
+  if (nullptr == pitem) {
+    return;
+  }
   CMDF_Action* paction   = m_pdm->getAction(pitem->data(QListWidgetItem::UserType).toUInt());
   if (nullptr == paction) {
     return;

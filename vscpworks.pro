@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT = core gui printsupport qml serialbus serialport widgets help network
+QT = core gui printsupport qml serialbus serialport widgets help network charts
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT OPENSSL_API_1_1
 
@@ -43,6 +43,7 @@ SOURCES +=  src/main.cpp \
     src/cdlgcanfilter.cpp \
     src/cdlgtls.cpp \
     src/cfrmsession.cpp \
+    src/cfrmmeasurementview.cpp \
     src/cfrmmqttexplorer.cpp \
     src/cfrmrawcansession.cpp \
     src/cfrmvscplinktest.cpp \
@@ -103,6 +104,7 @@ HEADERS  += src/vscpworks.h \
     src/cdlgcanfilter.h \
     src/cdlgtls.h \
     src/cfrmsession.h \
+    src/cfrmmeasurementview.h \
     src/cfrmmqttexplorer.h \
     src/cfrmrawcansession.h \
     src/cfrmvscplinktest.h \
