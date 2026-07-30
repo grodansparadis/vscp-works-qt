@@ -43,8 +43,8 @@ class QDial;
 class QProgressBar;
 class QStackedWidget;
 class QPushButton;
-class QLineSeries;
 class QChart;
+class QLineSeries;
 class QValueAxis;
 
 struct CMeasurementSourceSpec {
