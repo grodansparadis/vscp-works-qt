@@ -41,6 +41,10 @@
 
 #include <QJSEngine>
 #include <QMessageBox>
+#include <QClipboard>
+#include <QFile>
+#include <QFileDialog>
+#include <QXmlStreamReader>
 #include <QtWidgets>
 
 #include <QtSerialPort/QSerialPort>
@@ -84,8 +88,336 @@
 #include <spdlog/spdlog.h>
 
 #include <fstream>
+#include <vector>
 
 #include "mainwindow.h"
+
+namespace {
+
+json
+parseXmlScalarValue(const QString& value, const QString& typeHint = QString())
+{
+  const QString trimmed = value.trimmed();
+  const QString hint    = typeHint.trimmed().toLower();
+
+  if ("null" == hint) {
+    return nullptr;
+  }
+
+  if ("string" == hint) {
+    return trimmed.toStdString();
+  }
+
+  if ("bool" == hint || "boolean" == hint) {
+    return ("1" == trimmed || "true" == trimmed.toLower());
+  }
+
+  if ("int" == hint || "integer" == hint) {
+    bool ok = false;
+    qlonglong valueInt = trimmed.toLongLong(&ok);
+    if (ok) {
+      return valueInt;
+    }
+  }
+
+  if ("uint" == hint || "unsigned" == hint) {
+    bool ok = false;
+    qulonglong valueInt = trimmed.toULongLong(&ok);
+    if (ok) {
+      return valueInt;
+    }
+  }
+
+  if ("double" == hint || "float" == hint || "number" == hint) {
+    bool ok = false;
+    double valueDouble = trimmed.toDouble(&ok);
+    if (ok) {
+      return valueDouble;
+    }
+  }
+
+  if ("true" == trimmed.toLower()) {
+    return true;
+  }
+
+  if ("false" == trimmed.toLower()) {
+    return false;
+  }
+
+  bool ok = false;
+  qlonglong valueInt = trimmed.toLongLong(&ok);
+  if (ok) {
+    return valueInt;
+  }
+
+  double valueDouble = trimmed.toDouble(&ok);
+  if (ok) {
+    return valueDouble;
+  }
+
+  return trimmed.toStdString();
+}
+
+json
+parseXmlElement(QXmlStreamReader& reader)
+{
+  json attrObj        = json::object();
+  bool hasAttributes  = false;
+  QString typeHint;
+
+  for (const auto& attr : reader.attributes()) {
+    if ("value-type" == attr.name().toString()) {
+      typeHint = attr.value().toString();
+      continue;
+    }
+
+    hasAttributes = true;
+    attrObj[attr.name().toString().toStdString()] =
+      attr.value().toString().toStdString();
+  }
+
+  std::vector<std::pair<QString, json>> children;
+  QString text;
+
+  while (!reader.atEnd()) {
+    const auto token = reader.readNext();
+
+    if (QXmlStreamReader::StartElement == token) {
+      const QString childName = reader.name().toString();
+      children.emplace_back(childName, parseXmlElement(reader));
+      if (reader.hasError()) {
+        return json();
+      }
+    }
+    else if ((QXmlStreamReader::Characters == token ||
+              QXmlStreamReader::CDATA == token) &&
+             !reader.isWhitespace()) {
+      text += reader.text().toString();
+    }
+    else if (QXmlStreamReader::EndElement == token) {
+      break;
+    }
+  }
+
+  if (children.empty()) {
+    if (hasAttributes) {
+      attrObj["value"] = parseXmlScalarValue(text, typeHint);
+      return attrObj;
+    }
+
+    return parseXmlScalarValue(text, typeHint);
+  }
+
+  bool bArray = !hasAttributes;
+  for (const auto& child : children) {
+    if ("item" != child.first) {
+      bArray = false;
+      break;
+    }
+  }
+
+  if (bArray) {
+    json arr = json::array();
+    for (const auto& child : children) {
+      arr.push_back(child.second);
+    }
+    return arr;
+  }
+
+  json obj = hasAttributes ? attrObj : json::object();
+  for (const auto& child : children) {
+    const std::string key = child.first.toStdString();
+    if (obj.contains(key)) {
+      if (!obj[key].is_array()) {
+        json arr = json::array();
+        arr.push_back(obj[key]);
+        obj[key] = arr;
+      }
+      obj[key].push_back(child.second);
+    }
+    else {
+      obj[key] = child.second;
+    }
+  }
+
+  if (!text.trimmed().isEmpty()) {
+    obj["value"] = parseXmlScalarValue(text, typeHint);
+  }
+
+  return obj;
+}
+
+bool
+extractImportedConnection(json& conn, QString& err)
+{
+  if (conn.is_object()) {
+    if (conn.contains("json") && conn["json"].is_string()) {
+      try {
+        conn = json::parse(conn["json"].get<std::string>());
+      }
+      catch (const std::exception& ex) {
+        err = QObject::tr("Failed to parse embedded JSON: %1").arg(ex.what());
+        return false;
+      }
+    }
+
+    if (conn.contains("connection") && conn["connection"].is_object()) {
+      conn = conn["connection"];
+    }
+    else if (conn.contains("connections")) {
+      if (!conn["connections"].is_array() || 1 != conn["connections"].size()) {
+        err = QObject::tr("Only one connection can be imported at a time.");
+        return false;
+      }
+      conn = conn["connections"][0];
+    }
+  }
+  else if (conn.is_array()) {
+    if (1 != conn.size()) {
+      err = QObject::tr("Only one connection can be imported at a time.");
+      return false;
+    }
+    conn = conn[0];
+  }
+
+  if (!conn.is_object()) {
+    err = QObject::tr("Imported data must describe a single connection.");
+    return false;
+  }
+
+  if (!conn.contains("type")) {
+    err = QObject::tr("Imported connection data is missing a connection type.");
+    return false;
+  }
+
+  if (conn["type"].is_string()) {
+    const QString type = conn["type"].get<std::string>().c_str();
+    const QString normalized = type.trimmed().toLower();
+
+    if ("tcpip" == normalized || "tcp/ip" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::TCPIP);
+    }
+    else if ("canal" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::CANAL);
+    }
+    else if ("socketcan" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::SOCKETCAN);
+    }
+    else if ("ws1" == normalized || "websocket ws1" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::WS1);
+    }
+    else if ("ws2" == normalized || "websocket ws2" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::WS2);
+    }
+    else if ("mqtt" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::MQTT);
+    }
+    else if ("udp" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::UDP);
+    }
+    else if ("multicast" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::MULTICAST);
+    }
+    else {
+      bool ok = false;
+      const int numericType = type.toInt(&ok);
+      if (ok) {
+        conn["type"] = numericType;
+      }
+      else {
+        err = QObject::tr("Imported connection type '%1' is not supported.")
+                .arg(type);
+        return false;
+      }
+    }
+  }
+
+  if (!conn["type"].is_number_integer()) {
+    err = QObject::tr("Imported connection type is invalid.");
+    return false;
+  }
+
+  conn["uuid"] = "";
+  return true;
+}
+
+bool
+parseImportedConnectionText(const QString& text, json& conn, QString& err)
+{
+  const QByteArray utf8 = text.toUtf8();
+
+  try {
+    conn = json::parse(utf8.constData(), utf8.constData() + utf8.size());
+  }
+  catch (const std::exception&) {
+    QXmlStreamReader reader(text);
+    while (!reader.atEnd() && !reader.readNextStartElement()) {
+    }
+
+    if (reader.atEnd()) {
+      err = QObject::tr("Session data is neither valid JSON nor valid XML.");
+      return false;
+    }
+
+    const QString rootName = reader.name().toString();
+    conn = parseXmlElement(reader);
+    if (reader.hasError()) {
+      err = QObject::tr("Failed to parse XML session data: %1")
+              .arg(reader.errorString());
+      return false;
+    }
+
+    if ("json" == rootName && conn.is_string()) {
+      try {
+        conn = json::parse(conn.get<std::string>());
+      }
+      catch (const std::exception& ex) {
+        err = QObject::tr("Failed to parse embedded JSON: %1").arg(ex.what());
+        return false;
+      }
+    }
+  }
+
+  return extractImportedConnection(conn, err);
+}
+
+template <typename DialogT, typename SaveFunc>
+bool
+executeConnectionDialog(QWidget* parent,
+                        const json* pconn,
+                        SaveFunc saveFunc)
+{
+  DialogT dlg(parent);
+  if (nullptr != pconn) {
+    dlg.setJson(pconn);
+  }
+
+  dlg.setInitialFocus();
+
+restart:
+
+  if (QDialog::Accepted == dlg.exec()) {
+    QString strName = dlg.getName();
+    if (!strName.length()) {
+      QMessageBox::warning(parent,
+                           QObject::tr(APPNAME),
+                           QObject::tr("A connection needs a description"),
+                           QMessageBox::Ok);
+      goto restart;
+    }
+
+    json conn = dlg.getJson();
+    if (nullptr != pconn) {
+      conn["uuid"] = "";
+    }
+
+    return saveFunc(conn);
+  }
+
+  return false;
+}
+
+} // namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 // treeWidgetItemConn
@@ -892,6 +1224,222 @@ MainWindow::removeConnectionItem(void)
         delete item;
       }
     }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // copyConnectionDataToClipboard
+    //
+
+    void
+    MainWindow::copyConnectionDataToClipboard(void)
+    {
+    #ifndef QT_NO_CLIPBOARD
+      QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
+      if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Select a connection to copy."),
+                                 QMessageBox::Ok);
+        return;
+      }
+
+      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
+      QApplication::clipboard()->setText(
+        QString::fromUtf8(itemConn->getJson()->dump(2).c_str()));
+      statusBar()->showMessage(tr("Session data copied to clipboard"), 2000);
+    #endif
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // saveConnectionDataToFile
+    //
+
+    void
+    MainWindow::saveConnectionDataToFile(void)
+    {
+      QList<QTreeWidgetItem*> itemList = m_connTreeTable->selectedItems();
+      if (itemList.isEmpty() || nullptr == itemList.first()->parent()) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Select a connection to save."),
+                                 QMessageBox::Ok);
+        return;
+      }
+
+      treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
+      const QString defaultName =
+        itemConn->text(0).trimmed().isEmpty() ? tr("connection") : itemConn->text(0);
+      const QString fileName = QFileDialog::getSaveFileName(
+        this,
+        tr("Save session data"),
+        defaultName + ".json",
+        tr("JSON files (*.json);;All files (*.*)"));
+      if (fileName.isEmpty()) {
+        return;
+      }
+
+      QFile file(fileName);
+      if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QMessageBox::warning(this,
+                             tr(APPNAME),
+                             tr("Failed to save session data to file."),
+                             QMessageBox::Ok);
+        return;
+      }
+
+      const std::string exported = itemConn->getJson()->dump(2);
+      file.write(QByteArray::fromStdString(exported));
+      file.write("\n");
+      statusBar()->showMessage(tr("Session data saved"), 2000);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // importConnectionData
+    //
+
+    bool
+    MainWindow::importConnectionData(const QString& text)
+    {
+      json conn;
+      QString err;
+      if (!parseImportedConnectionText(text, conn, err)) {
+        QMessageBox::warning(this, tr(APPNAME), err, QMessageBox::Ok);
+        return false;
+      }
+
+      switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {
+        case CVscpClient::connType::TCPIP:
+          if (executeConnectionDialog<CDlgConnSettingsTcpip>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_tcpip);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        case CVscpClient::connType::CANAL:
+          if (executeConnectionDialog<CDlgConnSettingsCanal>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_canal);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+    #if defined(__linux__)
+        case CVscpClient::connType::SOCKETCAN:
+          if (executeConnectionDialog<CDlgConnSettingsSocketCan>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_socketcan);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+    #endif
+
+        case CVscpClient::connType::WS1:
+          if (executeConnectionDialog<CDlgConnSettingsWs1>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_ws1);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        case CVscpClient::connType::WS2:
+          if (executeConnectionDialog<CDlgConnSettingsWs2>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_ws2);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        case CVscpClient::connType::MQTT:
+          if (executeConnectionDialog<CDlgConnSettingsMqtt>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_mqtt);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        case CVscpClient::connType::UDP:
+          if (executeConnectionDialog<CDlgConnSettingsUdp>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_udp);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        case CVscpClient::connType::MULTICAST:
+          if (executeConnectionDialog<CDlgConnSettingsMulticast>(this, &conn, [this](json& imported) {
+            return saveNewConnection(imported, m_topitem_multicast);
+          })) {
+            statusBar()->showMessage(tr("Session data imported"), 2000);
+            return true;
+          }
+          return false;
+
+        default:
+          QMessageBox::warning(this,
+                               tr(APPNAME),
+                               tr("Imported connection type is not supported on this platform."),
+                               QMessageBox::Ok);
+          break;
+      }
+
+      return false;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // importConnectionDataFromClipboard
+    //
+
+    void
+    MainWindow::importConnectionDataFromClipboard(void)
+    {
+    #ifndef QT_NO_CLIPBOARD
+      const QString text = QApplication::clipboard()->text().trimmed();
+      if (text.isEmpty()) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Clipboard does not contain any session data."),
+                                 QMessageBox::Ok);
+        return;
+      }
+
+      importConnectionData(text);
+    #endif
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////
+    // importConnectionDataFromFile
+    //
+
+    void
+    MainWindow::importConnectionDataFromFile(void)
+    {
+      const QString fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Import session data"),
+        QString(),
+        tr("Session data (*.json *.xml);;JSON files (*.json);;XML files (*.xml);;All files (*.*)"));
+      if (fileName.isEmpty()) {
+        return;
+      }
+
+      QFile file(fileName);
+      if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this,
+                             tr(APPNAME),
+                             tr("Failed to read session data from file."),
+                             QMessageBox::Ok);
+        return;
+      }
+
+      importConnectionData(QString::fromUtf8(file.readAll()));
+    }
   }
 }
 
@@ -1014,6 +1562,9 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
   QTreeWidgetItem* item = m_connTreeTable->itemAt(pos);
 
   if (nullptr != item) {
+    m_connTreeTable->clearSelection();
+    m_connTreeTable->setCurrentItem(item);
+    item->setSelected(true);
     statusBar()->showMessage(item->text(0));
   }
 
@@ -1155,6 +1706,12 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
     menu->addAction(QString(tr("Clone this connection")),
                     this,
                     SLOT(cloneConnectionItem()));
+    menu->addAction(QString(tr("Copy session data to clipboard")),
+                    this,
+                    SLOT(copyConnectionDataToClipboard()));
+    menu->addAction(QString(tr("Save session data to file")),
+                    this,
+                    SLOT(saveConnectionDataToFile()));
     menu->addAction(QString(tr("Add new connection")),
                     this,
                     SLOT(newConnection()));
@@ -1620,6 +2177,15 @@ MainWindow::createActions()
   menuBar()->addSeparator();
   editMenu->addSeparator();
 
+  QMenu* importSessionDataMenu = editMenu->addMenu(tr("Import session data"));
+  importSessionDataMenu->addAction(tr("From &clipboard..."),
+                                   this,
+                                   &MainWindow::importConnectionDataFromClipboard);
+  importSessionDataMenu->addAction(tr("From &file..."),
+                                   this,
+                                   &MainWindow::importConnectionDataFromFile);
+  editMenu->addSeparator();
+
   const QIcon preferenceIcon =
     QIcon::fromTheme("edit-paste", QIcon(":/images/paste.png"));
   QAction* preferenceAct = editMenu->addAction(tr("&Settings..."), this, &MainWindow::showMainsettings);
@@ -1856,6 +2422,28 @@ MainWindow::saveFile(const QString& fileName)
   setCurrentFile(fileName);
   statusBar()->showMessage(tr("File saved"), 2000);
   */
+  return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveNewConnection
+//
+
+bool
+MainWindow::saveNewConnection(json& conn, QTreeWidgetItem* topitem)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  if (!pworks->addConnection(conn, true)) {
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to add new connection."),
+                             QMessageBox::Ok);
+    return false;
+  }
+  addChildItemToConnectionTree(topitem, conn);
+  topitem->sortChildren(0, Qt::AscendingOrder);
+  topitem->sortChildren(0, Qt::AscendingOrder);
   return true;
 }
 
@@ -2118,44 +2706,9 @@ MainWindow::sessionFilter(void)
 void
 MainWindow::newCanalConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsCanal dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientCanal *pClient = new vscpClientCanal();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->init(dlg.getPath().toStdString(),
-    // dlg.getConfig().toStdString(), dlg.getFlags() );
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_canal, conn);
-    m_topitem_canal->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsCanal>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_canal);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2210,43 +2763,9 @@ restart:
 void
 MainWindow::newTcpipConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsTcpip dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientTcp *pClient = new vscpClientTcp();
-    // pClient->setName(strName.toStdString());
-
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_tcpip, conn);
-    m_topitem_tcpip->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsTcpip>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_tcpip);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2303,43 +2822,10 @@ restart:
 void
 MainWindow::newSocketCanConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 #if defined(__linux__)
-  CDlgConnSettingsSocketCan dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientSocketCan *pClient = new vscpClientSocketCan();
-    // pClient->setName(strName.toStdString());
-
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_socketcan, conn);
-    m_topitem_socketcan->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsSocketCan>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_socketcan);
+ });
 #endif
 }
 
@@ -2399,35 +2885,9 @@ restart:
 void
 MainWindow::newMqttConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsMqtt dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_mqtt, conn);
-    m_topitem_mqtt->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsMqtt>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_mqtt);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2483,43 +2943,9 @@ restart:
 void
 MainWindow::newWs1Connection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsWs1 dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientWs1 *pClient = new vscpClientWs1();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_ws1, conn);
-    m_topitem_ws1->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsWs1>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_ws1);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2575,43 +3001,9 @@ restart:
 void
 MainWindow::newWs2Connection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsWs2 dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientWs2 *pClient = new vscpClientWs2();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_ws2, conn);
-    m_topitem_ws2->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsWs2>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_ws2);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2667,44 +3059,9 @@ restart:
 void
 MainWindow::newUdpConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsUdp dlg(this);
-
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientUdp *pClient = new vscpClientUdp();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_udp, conn);
-    m_topitem_udp->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsUdp>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_udp);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2760,43 +3117,9 @@ restart:
 void
 MainWindow::newMulticastConnection()
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-
-  CDlgConnSettingsMulticast dlg(this);
-  dlg.setInitialFocus();
-
-restart:
-
-  if (QDialog::Accepted == dlg.exec()) {
-    QString strName = dlg.getName();
-    if (!strName.length()) {
-      QMessageBox::warning(this,
-                           tr(APPNAME),
-                           tr("A connection needs a description"),
-                           QMessageBox::Ok);
-      goto restart;
-    }
-
-    json conn = dlg.getJson();
-    if (!pworks->addConnection(conn, true)) {
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("Failed to add new connection."),
-                               QMessageBox::Ok);
-    }
-
-    // Create a new local communication object
-    // vscpClientMulticast *pClient = new vscpClientMulticast();
-
-    // pClient->setName(strName.toStdString());
-    // pClient->initFromJson(QJsonDocument(dlg.getJson()).getConfigAsJson(QJsonDocument::Compact).toStdString());
-    // pClient->setPath(dlg.getPath());
-    // m_mapConn.push_back(pClient);
-
-    // Add connection to connection tree
-    addChildItemToConnectionTree(m_topitem_multicast, conn);
-    m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
-  }
+ executeConnectionDialog<CDlgConnSettingsMulticast>(this, nullptr, [this](json& conn) {
+   return saveNewConnection(conn, m_topitem_multicast);
+ });
 }
 
 ///////////////////////////////////////////////////////////////////////////////
