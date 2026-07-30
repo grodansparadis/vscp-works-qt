@@ -422,6 +422,14 @@ public slots:
   /// Load RX data from file
   void loadRxFromFile(void);
 
+  /// Import a full session state from file
+  void loadSessionFromFile(const QString& path = "");
+  void loadSessionFromFileAct(void) { loadSessionFromFile(); };
+
+  /// Export the current session state to file
+  void saveSessionToFile(const QString& path = "");
+  void saveSessionToFileAct(void) { saveSessionToFile(); };
+
   /// Copy RX event to clipboard
   void copyRxToClipboard(void);
 
@@ -507,6 +515,8 @@ private:
   void createRxGroupBox();
   void createTxGridGroup();
   void createFormGroupBox();
+  void initializeClient(bool autoConnect = true);
+  void updateSessionWindowTitle(void);
 
   // Toolbar
 
@@ -608,6 +618,8 @@ private:
   // File menu
   QAction* m_loadEventsAct;
   QAction* m_saveEventsAct;
+  QAction* m_importSessionAct;
+  QAction* m_exportSessionAct;
   QAction* m_loadTxAct;
   QAction* m_saveTxAct;
   QAction* m_saveTxAllAct;

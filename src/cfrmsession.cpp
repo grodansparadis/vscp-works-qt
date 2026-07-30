@@ -63,6 +63,7 @@
 
 #include <QClipboard>
 #include <QFile>
+#include <QFileInfo>
 #include <QJSEngine>
 #include <QKeySequence>
 #include <QStandardPaths>
@@ -160,16 +161,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
 
   m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
 
-  QString str;
-  str += pworks->getConnectionName(m_vscpConnType);
-  str += tr(" - ");
-  if (m_connObject.contains("name") && m_connObject["name"].is_string()) {
-    str += m_connObject["name"].get<std::string>();
-  }
-  else {
-    str += tr("Unknown");
-  }
-  setWindowTitle(str);
+  updateSessionWindowTitle();
 
   // Initial default size of window
   int nWidth  = 1200;
@@ -238,112 +230,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   // lambda version for reference
   // auto event_cb = [this](auto a, auto b) { this->receiveCallback(a, b); };
 
-  switch (m_vscpConnType) {
-
-    case CVscpClient::connType::NONE:
-      break;
-
-    case CVscpClient::connType::TCPIP:
-      m_vscpClient = new vscpClientTcp();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::CANAL:
-      m_vscpClient = new vscpClientCanal();
-      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
-        // Failed to initialize
-        QMessageBox::warning(this, tr("VSCP Works +"), tr("Failed to initialize CANAL driver. See log for more details."));
-        return;
-      }
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-#if defined(__linux__)
-    case CVscpClient::connType::SOCKETCAN:
-      m_vscpClient = new vscpClientSocketCan();
-      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
-        // Failed to initialize
-        QMessageBox::warning(this, tr("VSCP Works +"), tr("Failed to initialize SOCKETCAN driver. See log for more details."));
-        return;
-      }
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-#endif
-
-    case CVscpClient::connType::WS1:
-      m_vscpClient = new vscpClientWs1();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::WS2:
-      m_vscpClient = new vscpClientWs2();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::MQTT:
-      m_vscpClient = new vscpClientMqtt();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::UDP:
-      m_vscpClient = new vscpClientUdp();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    case CVscpClient::connType::MULTICAST:
-      m_vscpClient = new vscpClientMulticast();
-      m_vscpClient->initFromJson(m_connObject.dump());
-      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
-      // m_connectActBar->setChecked(true);
-      //  Connect if autoconnect is enabled
-      if (pworks->m_session_bAutoConnect) {
-        connectToRemoteHost(true);
-      }
-      break;
-
-    default:
-      break;
-  }
+  initializeClient(pworks->m_session_bAutoConnect);
 
   // TX Table signals
 
@@ -429,6 +316,16 @@ CFrmSession::createMenu()
                                           tr("Write RX rows to file..."),
                                           this,
                                           &CFrmSession::saveRxToFile);
+
+  m_importSessionAct = m_fileMenu->addAction(QIcon::fromTheme("document-open"),
+                                             tr("Import session from file..."),
+                                             this,
+                                             &CFrmSession::loadSessionFromFile);
+
+  m_exportSessionAct = m_fileMenu->addAction(QIcon::fromTheme("document-save-as"),
+                                             tr("Export session to file..."),
+                                             this,
+                                             &CFrmSession::saveSessionToFile);
 
   m_loadTxAct =
     m_fileMenu->addAction(QIcon::fromTheme("document-open"),
@@ -2013,6 +1910,133 @@ CFrmSession::saveTxOnExit(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// updateSessionWindowTitle
+//
+
+void
+CFrmSession::updateSessionWindowTitle(void)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  QString str;
+  str += pworks->getConnectionName(m_vscpConnType);
+  str += tr(" - ");
+  if (m_connObject.contains("name") && m_connObject["name"].is_string()) {
+    str += m_connObject["name"].get<std::string>().c_str();
+  }
+  else {
+    str += tr("Unknown");
+  }
+  setWindowTitle(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// initializeClient
+//
+
+void
+CFrmSession::initializeClient(bool autoConnect)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  using namespace std::placeholders;
+  auto event_cb = std::bind(&CFrmSession::receiveCallback, this, _1, _2);
+
+  switch (m_vscpConnType) {
+
+    case CVscpClient::connType::NONE:
+      break;
+
+    case CVscpClient::connType::TCPIP:
+      m_vscpClient = new vscpClientTcp();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    case CVscpClient::connType::CANAL:
+      m_vscpClient = new vscpClientCanal();
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                              tr("VSCP Works +"),
+                              tr("Failed to initialize CANAL driver. See log for more details."));
+        return;
+      }
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+#if defined(__linux__)
+    case CVscpClient::connType::SOCKETCAN:
+      m_vscpClient = new vscpClientSocketCan();
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                              tr("VSCP Works +"),
+                              tr("Failed to initialize SOCKETCAN driver. See log for more details."));
+        return;
+      }
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+#endif
+
+    case CVscpClient::connType::WS1:
+      m_vscpClient = new vscpClientWs1();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    case CVscpClient::connType::WS2:
+      m_vscpClient = new vscpClientWs2();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    case CVscpClient::connType::MQTT:
+      m_vscpClient = new vscpClientMqtt();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    case CVscpClient::connType::UDP:
+      m_vscpClient = new vscpClientUdp();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    case CVscpClient::connType::MULTICAST:
+      m_vscpClient = new vscpClientMulticast();
+      m_vscpClient->initFromJson(m_connObject.dump());
+      m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
+      if (autoConnect) {
+        connectToRemoteHost(true);
+      }
+      break;
+
+    default:
+      break;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // createFormGroupBox
 //
 
@@ -2930,6 +2954,340 @@ CFrmSession::saveRxToFile(void)
   }
   else {
     // Failed to open file
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// saveSessionToFile
+//
+
+void
+CFrmSession::saveSessionToFile(const QString& path)
+{
+  QString fileName = path;
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  if (!path.length()) {
+    QString initialPath = pworks->m_shareFolder + "/sessions/session.json";
+    fileName            = QFileDialog::getSaveFileName(this,
+                                            tr("File to save session data to"),
+                                            initialPath,
+                                            tr("Session files (*.json)"));
+  }
+
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  QFileInfo fileInfo(fileName);
+  if (!fileInfo.dir().exists()) {
+    fileInfo.dir().mkpath(fileInfo.dir().path());
+  }
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    spdlog::error("Cannot write session file - {}", file.errorString().toStdString());
+    return;
+  }
+
+  json session = json::object();
+  session["format"] = "vscpworks-session";
+  session["version"] = 1;
+  session["connection"] = m_connObject;
+
+  json rxRows = json::array();
+  for (int i = 0; i < m_rxTable->rowCount(); i++) {
+    json rxRow = json::object();
+    QTableWidgetItem* itemDir = m_rxTable->item(i, rxrow_dir);
+    if (nullptr != itemDir) {
+      rxRow["flags"] = itemDir->data(rxrow_role_flags).toULongLong();
+      QColor bc = itemDir->background().color();
+      int r, g, b, a;
+      bc.getRgb(&r, &g, &b, &a);
+      rxRow["rgba"] = (((uint32_t)r) << 24) + (((uint32_t)g) << 16) + (((uint32_t)b) << 8) + a;
+      rxRow["mark-row"] = (QBrush(Qt::cyan) == itemDir->background()) ? true : false;
+    }
+    else {
+      rxRow["flags"] = 0;
+      rxRow["rgba"] = 0;
+      rxRow["mark-row"] = false;
+    }
+
+    QTableWidgetItem* itemClass = m_rxTable->item(i, rxrow_class);
+    if (nullptr != itemClass) {
+      rxRow["mark-class"] = itemClass->icon().cacheKey() ? true : false;
+    }
+    else {
+      rxRow["mark-class"] = false;
+    }
+
+    QTableWidgetItem* itemType = m_rxTable->item(i, rxrow_type);
+    if (nullptr != itemType) {
+      rxRow["mark-type"] = itemType->icon().cacheKey() ? true : false;
+    }
+    else {
+      rxRow["mark-type"] = false;
+    }
+
+    rxRow["comment"] = m_mapRxEventComment[i].toStdString();
+
+    std::string str;
+    vscp_event_t* pev = m_rxEvents.at(i);
+    if (nullptr != pev) {
+      vscp_convertEventToString(str, pev);
+      rxRow["event"] = str;
+    }
+    else {
+      rxRow["event"] = "";
+    }
+
+    rxRows.push_back(rxRow);
+  }
+  session["rxrows"] = rxRows;
+
+  json txRows = json::array();
+  for (int i = 0; i < m_txTable->rowCount(); i++) {
+    CTxWidgetItem* itemSourceEvent = (CTxWidgetItem*)m_txTable->item(i, txrow_event);
+    if (nullptr == itemSourceEvent) {
+      continue;
+    }
+
+    json txRow = json::object();
+    txRow["enable"] = itemSourceEvent->m_tx.getEnable();
+    txRow["name"] = itemSourceEvent->m_tx.getName().toStdString();
+    txRow["count"] = itemSourceEvent->m_tx.getCount();
+    txRow["period"] = itemSourceEvent->m_tx.getPeriod();
+
+    std::string str;
+    vscp_convertEventToString(str, itemSourceEvent->m_tx.getEvent());
+    txRow["event"] = str;
+    txRows.push_back(txRow);
+  }
+  session["txrows"] = txRows;
+
+  QByteArray data = QString::fromStdString(session.dump(2)).toUtf8();
+  file.write(data);
+  file.close();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// loadSessionFromFile
+//
+
+void
+CFrmSession::loadSessionFromFile(const QString& path)
+{
+  QString fileName = path;
+
+  if (!path.length()) {
+    vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+    QString initialPath = pworks->m_shareFolder + "/sessions/session.json";
+    fileName = QFileDialog::getOpenFileName(this,
+                                            tr("File to load session data from"),
+                                            initialPath,
+                                            tr("Session files (*.json)"));
+  }
+
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  QFile file(fileName);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    spdlog::error("Cannot read session file - {}", file.errorString().toStdString());
+    return;
+  }
+
+  QByteArray data = file.readAll();
+  file.close();
+
+  try {
+    json session = json::parse(data.toStdString());
+    if (!session.contains("connection") || !session["connection"].is_object()) {
+      QMessageBox::warning(this,
+                           tr(APPNAME),
+                           tr("The selected file does not contain a valid session definition."),
+                           QMessageBox::Ok);
+      return;
+    }
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    QApplication::processEvents();
+
+    doDisconnectFromRemoteHost();
+    if (nullptr != m_vscpClient) {
+      delete m_vscpClient;
+      m_vscpClient = nullptr;
+    }
+
+    // Clear RX and TX rows
+    while (m_rxTable->rowCount()) {
+      m_rxTable->removeRow(0);
+    }
+    m_txTable->setRowCount(0);
+
+    m_mapRxEventToCount.clear();
+    m_mapTxEventToCount.clear();
+    m_mapRxEventComment.clear();
+    m_mapRxEventFlags.clear();
+
+    m_connObject = session["connection"];
+    if (m_connObject.contains("type") && m_connObject["type"].is_number()) {
+      m_vscpConnType = static_cast<CVscpClient::connType>(m_connObject["type"].get<int>());
+    }
+    else {
+      m_vscpConnType = CVscpClient::connType::NONE;
+    }
+    updateSessionWindowTitle();
+
+    if (session.contains("rxrows") && session["rxrows"].is_array()) {
+      const json& rxRows = session["rxrows"];
+      for (const auto& rxRow : rxRows) {
+        if (!rxRow.is_object()) {
+          continue;
+        }
+
+        uint32_t flags = 0;
+        if (rxRow.contains("flags") && rxRow["flags"].is_number()) {
+          flags = rxRow["flags"].get<uint32_t>();
+        }
+
+        uint32_t rgba = 0;
+        if (rxRow.contains("rgba") && rxRow["rgba"].is_number()) {
+          rgba = rxRow["rgba"].get<uint32_t>();
+        }
+
+        bool bMarkRow = false;
+        if (rxRow.contains("mark-row") && rxRow["mark-row"].is_boolean()) {
+          bMarkRow = rxRow["mark-row"].get<bool>();
+        }
+
+        bool bMarkClass = false;
+        if (rxRow.contains("mark-class") && rxRow["mark-class"].is_boolean()) {
+          bMarkClass = rxRow["mark-class"].get<bool>();
+        }
+
+        bool bMarkType = false;
+        if (rxRow.contains("mark-type") && rxRow["mark-type"].is_boolean()) {
+          bMarkType = rxRow["mark-type"].get<bool>();
+        }
+
+        QString comment;
+        if (rxRow.contains("comment") && rxRow["comment"].is_string()) {
+          comment = rxRow["comment"].get<std::string>().c_str();
+        }
+
+        QString event;
+        if (rxRow.contains("event") && rxRow["event"].is_string()) {
+          event = rxRow["event"].get<std::string>().c_str();
+        }
+
+        vscp_event_t* pev;
+        vscp_newEvent(&pev);
+        if (event.length()) {
+          vscp_convertStringToEvent(pev, event.toStdString());
+        }
+
+        m_mutexRxList.lock();
+
+        int row = m_rxTable->rowCount();
+        m_rxTable->insertRow(row);
+        m_rxEvents.push_back(pev);
+
+        QColor bc((rgba >> 24) & 0xff,
+                  (rgba >> 16) & 0xff,
+                  (rgba >> 8) & 0xff,
+                  rgba & 0xff);
+
+        QTableWidgetItem* itemDir = new QTableWidgetItem((flags & RX_ROW_FLAG_TX) ? "◀" : "ᐅ");
+        itemDir->setTextAlignment(Qt::AlignCenter);
+        itemDir->setData(rxrow_role_flags, flags);
+        itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
+        itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+        if (bMarkRow) {
+          itemDir->setBackground(QBrush(Qt::cyan));
+        }
+        m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
+
+        if (!m_rxTable->selectedItems().size()) {
+          m_rxTable->scrollToItem(itemDir);
+        }
+
+        QTableWidgetItem* itemClass = new QTableWidgetItem();
+        setClassInfoForRow(itemClass, pev);
+        if (bMarkClass) {
+          itemClass->setBackground(QBrush(Qt::cyan));
+        }
+        m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+
+        QTableWidgetItem* itemType = new QTableWidgetItem();
+        setTypeInfoForRow(itemType, pev);
+        if (bMarkType) {
+          itemType->setBackground(QBrush(Qt::cyan));
+        }
+        m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+
+        QTableWidgetItem* itemNodeId = new QTableWidgetItem();
+        setNodeIdInfoForRow(itemNodeId, pev);
+        m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+
+        QTableWidgetItem* itemGuid = new QTableWidgetItem();
+        setGuidInfoForRow(itemGuid, pev);
+        m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
+
+        m_mapRxEventComment[row] = comment;
+        m_mapRxEventFlags[row] = flags;
+
+        m_mutexRxList.unlock();
+      }
+    }
+
+    if (session.contains("txrows") && session["txrows"].is_array()) {
+      const json& txRows = session["txrows"];
+      for (const auto& txRow : txRows) {
+        if (!txRow.is_object()) {
+          continue;
+        }
+
+        bool bEnable = false;
+        if (txRow.contains("enable") && txRow["enable"].is_boolean()) {
+          bEnable = txRow["enable"].get<bool>();
+        }
+
+        QString name = tr("no name");
+        if (txRow.contains("name") && txRow["name"].is_string()) {
+          name = txRow["name"].get<std::string>().c_str();
+        }
+
+        uint16_t count = 1;
+        if (txRow.contains("count") && txRow["count"].is_number()) {
+          count = static_cast<uint16_t>(txRow["count"].get<int>());
+        }
+
+        uint32_t period = 0;
+        if (txRow.contains("period") && txRow["period"].is_number()) {
+          period = txRow["period"].get<uint32_t>();
+        }
+
+        QString event;
+        if (txRow.contains("event") && txRow["event"].is_string()) {
+          event = txRow["event"].get<std::string>().c_str();
+        }
+
+        addTxRow(bEnable, name, count, period, event);
+      }
+    }
+
+    initializeClient(pworks->m_session_bAutoConnect);
+    QApplication::restoreOverrideCursor();
+  }
+  catch (const std::exception& e) {
+    QApplication::restoreOverrideCursor();
+    spdlog::error("Failed to parse session file - {}", e.what());
+    QMessageBox::warning(this,
+                         tr(APPNAME),
+                         tr("The selected file does not contain valid session data."),
+                         QMessageBox::Ok);
   }
 }
 

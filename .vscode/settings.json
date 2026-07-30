@@ -123,6 +123,11 @@
       "socketcan"
     ],
     "cmake.clearOutputBeforeBuild": true,
+    "cmake.parallelJobs": 4,
+    "cmake.buildArgs": [
+      "--parallel",
+      "4"
+    ],
     "cmake.configureEnvironment": {
       "CMAKE_PREFIX_PATH": "~/Qt/6.9.1/gcc_64"
     },
