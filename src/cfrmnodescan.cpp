@@ -1198,6 +1198,10 @@ CFrmNodeScan::goFirmwareUpdate(void)
   CWizardPageNickname* pageNickname = (CWizardPageNickname*)wiz.page(CBootLoadWizard::Page_Nickname);
   pageNickname->setNickname(pitem->m_nodeid);
 
+  if (pitem->m_bMdf && !pitem->m_tempMdfFile.empty()) {
+    wiz.setField("boot.firmware.mdf", QString::fromStdString(pitem->m_tempMdfFile));
+  }
+
   wiz.exec();
 }
 
