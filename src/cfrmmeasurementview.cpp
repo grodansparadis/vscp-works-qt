@@ -29,7 +29,6 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
-
 #ifdef WIN32
 #include <pch.h>
 #endif
