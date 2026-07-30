@@ -108,6 +108,7 @@ public:
     ~MainWindow();
 
     void loadConfiguration(const QString &fileName);
+    bool importConnectionDataFromText(const QString& text);
 
 protected:
 

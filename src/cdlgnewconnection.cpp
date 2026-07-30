@@ -31,8 +31,13 @@
 #endif
 
 #include "cdlgnewconnection.h"
+#include "mainwindow.h"
 #include "ui_cdlgnewconnection.h"
 
+#include <QApplication>
+#include <QClipboard>
+#include <QFile>
+#include <QFileDialog>
 #include <QMessageBox>
 
 #include <spdlog/async.h>
@@ -47,11 +52,16 @@
 CDlgNewConnection::CDlgNewConnection(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgNewConnection)
+  , m_selected_type(CVscpClient::connType::NONE)
+  , m_import_requested(false)
 {
   ui->setupUi(this);
 
   // Hook to row clicked
   connect(ui->listWidgetConnectionTypes, &QListWidget::itemClicked, this, &CDlgNewConnection::onClicked);
+
+  connect(ui->pushButtonImportClipboard, &QPushButton::clicked, this, &CDlgNewConnection::importFromClipboard);
+  connect(ui->pushButtonImportFile, &QPushButton::clicked, this, &CDlgNewConnection::importFromFile);
 
   // Hook to row double clicked
   connect(ui->listWidgetConnectionTypes, &QListWidget::itemDoubleClicked, this, &CDlgNewConnection::onDoubleClicked);
@@ -148,4 +158,87 @@ CVscpClient::connType
 CDlgNewConnection::getSelectedType(void)
 {
   return m_selected_type;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importRequested
+//
+
+bool
+CDlgNewConnection::importRequested(void) const
+{
+  return m_import_requested;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importFromClipboard
+//
+
+void
+CDlgNewConnection::importFromClipboard(void)
+{
+#ifndef QT_NO_CLIPBOARD
+  MainWindow* mainWindow = qobject_cast<MainWindow*>(parent());
+  if (nullptr == mainWindow) {
+    QMessageBox::warning(this,
+                         tr("Connections"),
+                         tr("Unable to import connection data from the parent window."),
+                         QMessageBox::Ok);
+    return;
+  }
+
+  const QString text = QApplication::clipboard()->text().trimmed();
+  if (text.isEmpty()) {
+    QMessageBox::information(this,
+                             tr("Connections"),
+                             tr("Clipboard does not contain any connection data."),
+                             QMessageBox::Ok);
+    return;
+  }
+
+  if (mainWindow->importConnectionDataFromText(text)) {
+    m_import_requested = true;
+    accept();
+  }
+#endif
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importFromFile
+//
+
+void
+CDlgNewConnection::importFromFile(void)
+{
+  MainWindow* mainWindow = qobject_cast<MainWindow*>(parent());
+  if (nullptr == mainWindow) {
+    QMessageBox::warning(this,
+                         tr("Connections"),
+                         tr("Unable to import connection data from the parent window."),
+                         QMessageBox::Ok);
+    return;
+  }
+
+  const QString fileName = QFileDialog::getOpenFileName(
+    this,
+    tr("Import connection data"),
+    QString(),
+    tr("Connection data (*.json *.xml);;JSON files (*.json);;XML files (*.xml);;All files (*.*)"));
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  QFile file(fileName);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QMessageBox::warning(this,
+                         tr("Connections"),
+                         tr("Failed to read connection data from file."),
+                         QMessageBox::Ok);
+    return;
+  }
+
+  if (mainWindow->importConnectionDataFromText(QString::fromUtf8(file.readAll()))) {
+    m_import_requested = true;
+    accept();
+  }
 }

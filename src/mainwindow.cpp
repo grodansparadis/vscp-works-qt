@@ -1030,7 +1030,9 @@ MainWindow::newConnection()
   CDlgNewConnection dlg(this);
 
   if (QDialog::Accepted == dlg.exec()) {
-    openConnectionSettingsDialog(dlg.getSelectedType());
+    if (!dlg.importRequested()) {
+      openConnectionSettingsDialog(dlg.getSelectedType());
+    }
   }
 }
 
@@ -1294,6 +1296,16 @@ MainWindow::saveConnectionDataToFile(void)
   file.write(QByteArray::fromStdString(exported));
   file.write("\n");
   statusBar()->showMessage(tr("Session data saved"), 2000);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// importConnectionDataFromText
+//
+
+bool
+MainWindow::importConnectionDataFromText(const QString& text)
+{
+  return importConnectionData(text);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

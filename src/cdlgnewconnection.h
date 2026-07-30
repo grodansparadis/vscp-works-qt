@@ -70,6 +70,13 @@ public:
     */
     CVscpClient::connType getSelectedType(void);
 
+private slots:
+    void importFromClipboard();
+    void importFromFile();
+
+public:
+    bool importRequested(void) const;
+
 private:
 
     Ui::CDlgNewConnection *ui;
@@ -84,6 +91,7 @@ private:
         the used select
     */
     CVscpClient::connType m_selected_type;
+    bool m_import_requested;
 };
 
 
