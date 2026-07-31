@@ -221,7 +221,7 @@ normalizeSavedXmlDateFields(const QString& path)
   QString content        = originalContent;
   QString updatedContent = content;
   int delta              = 0;
-  const QRegularExpression attrDateRe(R"(date\s*=\s*"([^"]*)")");
+  const QRegularExpression attrDateRe(R"re(date\s*=\s*"([^"]*)")re");
   auto attrIt = attrDateRe.globalMatch(content);
   while (attrIt.hasNext()) {
     const QRegularExpressionMatch match = attrIt.next();
