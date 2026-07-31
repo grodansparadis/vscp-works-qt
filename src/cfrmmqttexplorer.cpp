@@ -348,20 +348,20 @@ CFrmMqttExplorer::configureFromConnection()
           QString::fromStdString(entry["topic"].get<std::string>()));
       }
     }
+  }
 
-    if (m_conn.contains("publish") && m_conn["publish"].is_array()) {
-      for (const auto& entry : m_conn["publish"]) {
-        if (entry.contains("topic") && entry["topic"].is_string()) {
-          addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
-        }
+  if (m_conn.contains("publish") && m_conn["publish"].is_array()) {
+    for (const auto& entry : m_conn["publish"]) {
+      if (entry.contains("topic") && entry["topic"].is_string()) {
+        addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
       }
     }
+  }
 
-    if (m_conn.contains("publishing") && m_conn["publishing"].is_array()) {
-      for (const auto& entry : m_conn["publishing"]) {
-        if (entry.contains("topic") && entry["topic"].is_string()) {
-          addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
-        }
+  if (m_conn.contains("publishing") && m_conn["publishing"].is_array()) {
+    for (const auto& entry : m_conn["publishing"]) {
+      if (entry.contains("topic") && entry["topic"].is_string()) {
+        addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
       }
     }
   }
@@ -559,8 +559,9 @@ CFrmMqttExplorer::onSubscribeClicked()
     return;
   }
 
-  subscribeTopic(m_editSubscribeTopic->text(), m_comboSubscribeQos->currentText().toInt());
-  addSubscriptionIfMissing(m_editSubscribeTopic->text());
+  if (subscribeTopic(m_editSubscribeTopic->text(), m_comboSubscribeQos->currentText().toInt())) {
+    addSubscriptionIfMissing(m_editSubscribeTopic->text());
+  }
 }
 
 void
@@ -728,8 +729,22 @@ CFrmMqttExplorer::onLoadPublishTopics()
 }
 
 void
-CFrmMqttExplorer::onToggleAutoscroll(bool)
+CFrmMqttExplorer::onToggleAutoscroll(bool checked)
 {
+  if (!checked) {
+    return;
+  }
+
+  for (int i = m_tree->topLevelItemCount() - 1; i >= 0; --i) {
+    auto* topItem = m_tree->topLevelItem(i);
+    if (!topItem->isHidden()) {
+      QTreeWidgetItem* last = topItem->childCount() > 0
+                                ? topItem->child(topItem->childCount() - 1)
+                                : topItem;
+      m_tree->scrollToItem(last);
+      break;
+    }
+  }
 }
 
 void
@@ -980,23 +995,23 @@ CFrmMqttExplorer::buildDetailsText(QTreeWidgetItem* item) const
 
   QString text;
   QTextStream stream(&text);
-  stream << "Topic: " << item->data(0, RoleTopic).toString() << "\n";
+  stream << tr("Topic") << ": " << item->data(0, RoleTopic).toString() << "\n";
   if (!item->data(0, RoleTimestamp).toString().isEmpty()) {
-    stream << "Timestamp: " << item->data(0, RoleTimestamp).toString() << "\n";
+    stream << tr("Timestamp") << ": " << item->data(0, RoleTimestamp).toString() << "\n";
   }
   if (!item->data(0, RolePayloadFormat).toString().isEmpty()) {
-    stream << "Format: " << item->data(0, RolePayloadFormat).toString() << "\n";
+    stream << tr("Format") << ": " << item->data(0, RolePayloadFormat).toString() << "\n";
   }
   if (item->data(0, RoleQos).isValid()) {
-    stream << "QoS: " << item->data(0, RoleQos).toInt() << "\n";
+    stream << tr("QoS") << ": " << item->data(0, RoleQos).toInt() << "\n";
   }
-  stream << "Retained: " << (item->data(0, RoleRetained).toBool() ? "yes" : "no") << "\n";
-  stream << "Bytes: " << item->data(0, RolePayloadSize).toInt() << "\n";
+  stream << tr("Retained") << ": " << (item->data(0, RoleRetained).toBool() ? tr("yes") : tr("no")) << "\n";
+  stream << tr("Bytes") << ": " << item->data(0, RolePayloadSize).toInt() << "\n";
   if (item->data(0, RoleMid).toInt() > 0) {
-    stream << "Message id: " << item->data(0, RoleMid).toInt() << "\n";
+    stream << tr("Message id") << ": " << item->data(0, RoleMid).toInt() << "\n";
   }
-  stream << "\nDecoded payload:\n" << item->data(0, RolePayloadFormatted).toString()
-         << "\n\nRaw payload:\n" << item->data(0, RolePayloadRaw).toString() << "\n";
+  stream << "\n" << tr("Decoded payload") << ":\n" << item->data(0, RolePayloadFormatted).toString()
+         << "\n\n" << tr("Raw payload") << ":\n" << item->data(0, RolePayloadRaw).toString() << "\n";
 
   return text.trimmed();
 }
@@ -1132,7 +1147,22 @@ CFrmMqttExplorer::onTreeSelectionChanged()
   }
 
   auto* item            = selected.first();
+  const int kind        = item->data(0, RoleKind).toInt();
   const QString topic   = item->data(0, RoleTopic).toString();
+
+  if (kind == KindTopicNode) {
+    m_detailsTree->clear();
+    auto* root = new QTreeWidgetItem(m_detailsTree, { tr("Topic node"), "" });
+    new QTreeWidgetItem(root, { tr("Topic"), topic });
+    const QString lastPayload = item->data(0, RolePayloadRaw).toString();
+    if (!lastPayload.isEmpty()) {
+      new QTreeWidgetItem(root, { tr("Last payload"), lastPayload.left(120) });
+      new QTreeWidgetItem(root, { tr("Bytes"), QString::number(item->data(0, RolePayloadSize).toInt()) });
+    }
+    m_detailsTree->expandToDepth(1);
+    return;
+  }
+
   const QString raw     = item->data(0, RolePayloadRaw).toString();
   const QString decoded = item->data(0, RolePayloadFormatted).toString();
   const QString format  = item->data(0, RolePayloadFormat).toString();
