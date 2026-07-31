@@ -848,9 +848,10 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   msgItem->setData(0, RolePayloadSize, payload.size());
   msgItem->setData(0, RoleQos, qos);
   msgItem->setData(0, RoleMid, mid);
+  const QString metaText = format + "\nqos:" + QString::number(qos) + "\n" + (retained ? "retained yes" : "retained no");
   msgItem->setData(0,
                    RoleSearchText,
-                   buildSearchText(topic, payload, formattedPayload).toLower());
+                   (buildSearchText(topic, payload, formattedPayload) + "\n" + metaText).toLower());
   topicNode->addChild(msgItem);
   topicNode->setExpanded(true);
 
