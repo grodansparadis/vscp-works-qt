@@ -2141,26 +2141,6 @@ MainWindow::createActions()
   fileMenu->addAction(newSessionAct);
   fileToolBar->addAction(newSessionAct);
 
-  QAction* newMqttExplorerAct =
-    new QAction(newSessionIcon, tr("MQTT &raw explorer window..."), this);
-  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT raw explorer window"));
-  connect(newMqttExplorerAct,
-          &QAction::triggered,
-          this,
-          &MainWindow::newMqttExplorer);
-  fileMenu->addAction(newMqttExplorerAct);
-  fileToolBar->addAction(newMqttExplorerAct);
-
-#ifndef WIN32
-  const QIcon newRawCanSessionIcon = QIcon(":/page.png");
-  QAction* newRawCanSessionAct =
-    new QAction(newRawCanSessionIcon, tr("SocketCAN &frame session..."), this);
-  newRawCanSessionAct->setStatusTip(tr("Open a SocketCAN raw frame session window"));
-  connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
-  fileMenu->addAction(newRawCanSessionAct);
-  fileToolBar->addAction(newRawCanSessionAct);
-#endif
-
   // Node configuration
   const QIcon newDevConfigIcon = QIcon(":/page_process.png");
   QAction* newDevConfigAct =
@@ -2207,6 +2187,28 @@ MainWindow::createActions()
   connect(newMdfEditorAct, &QAction::triggered, this, &MainWindow::mdfEdit);
   fileMenu->addAction(newMdfEditorAct);
   fileToolBar->addAction(newMdfEditorAct);
+
+  fileMenu->addSeparator();
+
+  QAction* newMqttExplorerAct =
+    new QAction(newSessionIcon, tr("MQTT &raw explorer window..."), this);
+  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT raw explorer window"));
+  connect(newMqttExplorerAct,
+          &QAction::triggered,
+          this,
+          &MainWindow::newMqttExplorer);
+  fileMenu->addAction(newMqttExplorerAct);
+  fileToolBar->addAction(newMqttExplorerAct);
+
+#ifndef WIN32
+  const QIcon newRawCanSessionIcon = QIcon(":/page.png");
+  QAction* newRawCanSessionAct =
+    new QAction(newRawCanSessionIcon, tr("SocketCAN &frame session..."), this);
+  newRawCanSessionAct->setStatusTip(tr("Open a SocketCAN raw frame session window"));
+  connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
+  fileMenu->addAction(newRawCanSessionAct);
+  fileToolBar->addAction(newRawCanSessionAct);
+#endif
 
   fileMenu->addSeparator();
 
