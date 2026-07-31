@@ -48,6 +48,35 @@
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
 
+namespace {
+
+QString
+resolveCanBusBackendName()
+{
+  const QStringList availablePlugins = QCanBus::instance()->plugins();
+  const QStringList preferredBackends = []() {
+#if defined(Q_OS_LINUX)
+    return QStringList{QStringLiteral("socketcan")};
+#elif defined(Q_OS_WIN)
+    return QStringList{QStringLiteral("peakcan"), QStringLiteral("virtualcan"), QStringLiteral("socketcan")};
+#elif defined(Q_OS_MACOS)
+    return QStringList{QStringLiteral("virtualcan"), QStringLiteral("socketcan")};
+#else
+    return QStringList{QStringLiteral("socketcan")};
+#endif
+  }();
+
+  for (const QString& backend : preferredBackends) {
+    if (availablePlugins.contains(backend)) {
+      return backend;
+    }
+  }
+
+  return preferredBackends.isEmpty() ? QString() : preferredBackends.first();
+}
+
+} // namespace
+
 // ----------------------------------------------------------------------------
 
 CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
@@ -110,7 +139,7 @@ CFrmRawCanSession::showEvent(QShowEvent* event)
 void
 CFrmRawCanSession::setupUi()
 {
-  setWindowTitle(tr("SocketCAN frame session - %1")
+  setWindowTitle(tr("CAN frame session - %1")
                    .arg(m_interfaceName.isEmpty() ? tr("Unknown device") : m_interfaceName));
   resize(1150, 720);
 
@@ -261,19 +290,31 @@ CFrmRawCanSession::connectOrDisconnect()
   if (m_interfaceName.isEmpty()) {
     QMessageBox::warning(this,
                          tr("VSCP Works"),
-                         tr("No SocketCAN interface is configured for this connection."),
+                         tr("No CAN interface is configured for this connection."),
                          QMessageBox::Ok);
     return;
   }
 
+  const QString backendName = resolveCanBusBackendName();
+  if (backendName.isEmpty()) {
+    QMessageBox::warning(this,
+                         tr("VSCP Works"),
+                         tr("No Qt CAN bus backend is available on this platform."),
+                         QMessageBox::Ok);
+    setConnectedState(false);
+    return;
+  }
+
   QString errorString;
-  m_canDevice = QCanBus::instance()->createDevice(QStringLiteral("socketcan"),
+  m_canDevice = QCanBus::instance()->createDevice(backendName,
                                                   m_interfaceName,
                                                   &errorString);
   if (nullptr == m_canDevice) {
     QMessageBox::warning(this,
                          tr("VSCP Works"),
-                         tr("Failed to create SocketCAN device: %1").arg(errorString),
+                         tr("Failed to create %1 CAN device: %2")
+                           .arg(backendName)
+                           .arg(errorString.isEmpty() ? tr("no backend available") : errorString),
                          QMessageBox::Ok);
     setConnectedState(false);
     return;
@@ -309,7 +350,7 @@ CFrmRawCanSession::sendFrame()
   if (nullptr == m_canDevice) {
     QMessageBox::warning(this,
                          tr("VSCP Works"),
-                         tr("Not connected to a SocketCAN interface."),
+                         tr("Not connected to a CAN interface."),
                          QMessageBox::Ok);
     return;
   }

@@ -570,15 +570,13 @@ MainWindow::MainWindow()
   m_topitem_canal->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_canal);
 
-#if defined(__linux__)
-  // Socketcan
-  QStringList strlist_socketcan(
-    QString(tr("Socketcan Connections")).split(','));
+  // CAN
+  QStringList strlist_socketcan(QString(tr("CAN Connections")).split(','));
   m_topitem_socketcan =
     new QTreeWidgetItem(strlist_socketcan,
                         static_cast<int>(CVscpClient::connType::SOCKETCAN));
   m_topitem_socketcan->setIcon(0, iconTest);
-  m_topitem_socketcan->setToolTip(0, "Holds VSCP socketcan connections.");
+  m_topitem_socketcan->setToolTip(0, "Holds VSCP CAN connections.");
   // Set font
   m_topitem_socketcan->setForeground(0, b);
   m_topitem_socketcan->setFont(0, font);
@@ -590,11 +588,10 @@ MainWindow::MainWindow()
     new QTreeWidgetItem(strlist_rawcan,
                         static_cast<int>(CVscpClient::connType::SOCKETCAN));
   m_topitem_rawcan->setIcon(0, iconTest);
-  m_topitem_rawcan->setToolTip(0, "Holds raw VSCP socketcan connections.");
+  m_topitem_rawcan->setToolTip(0, "Holds raw VSCP CAN connections.");
   m_topitem_rawcan->setForeground(0, b);
   m_topitem_rawcan->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_rawcan);
-#endif
 
   // tcp/ip
   QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
