@@ -12,18 +12,26 @@
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
+#include <QHeaderView>
+#include <QInputDialog>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QJsonParseError>
 #include <QLabel>
 #include <QLineEdit>
+#include <QListWidget>
+#include <QMenu>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSplitter>
+#include <QTextStream>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QUuid>
@@ -69,10 +77,19 @@ void
 CFrmMqttExplorer::setupUi()
 {
   setAttribute(Qt::WA_DeleteOnClose, true);
-  setWindowTitle(tr("MQTT Explorer"));
+  setWindowTitle(tr("MQTT raw explorer"));
   resize(1200, 760);
 
   auto* mainLayout = new QVBoxLayout(this);
+
+  m_menuBar       = new QMenuBar(this);
+  m_subscribeMenu = m_menuBar->addMenu(tr("&Subscribe"));
+  m_actSubscribe  = m_subscribeMenu->addAction(tr("Subscribe current topic"));
+  m_actUnsubscribe = m_subscribeMenu->addAction(tr("Unsubscribe current topic"));
+  m_subscribeMenu->addSeparator();
+  m_actSubscribeConfigured = m_subscribeMenu->addAction(tr("Subscribe configured topics"));
+  m_actClearSubscriptions  = m_subscribeMenu->addAction(tr("Clear subscriptions"));
+  mainLayout->setMenuBar(m_menuBar);
 
   auto* connBox    = new QGroupBox(tr("Connection"), this);
   auto* connLayout = new QHBoxLayout(connBox);
@@ -82,7 +99,7 @@ CFrmMqttExplorer::setupUi()
   connLayout->addWidget(m_btnConnect);
   mainLayout->addWidget(connBox);
 
-  auto* subscribeBox    = new QGroupBox(tr("Subscribe"), this);
+  auto* subscribeBox    = new QGroupBox(tr("Subscribe to topics"), this);
   auto* subscribeLayout = new QGridLayout(subscribeBox);
   m_editSubscribeTopic  = new QLineEdit(subscribeBox);
   m_editSubscribeTopic->setPlaceholderText(tr("Topic (supports + and # wildcards)"));
@@ -97,6 +114,45 @@ CFrmMqttExplorer::setupUi()
   subscribeLayout->addWidget(m_btnSubscribe, 0, 4);
   subscribeLayout->addWidget(m_btnUnsubscribe, 0, 5);
   mainLayout->addWidget(subscribeBox);
+
+  auto* filterLayout = new QHBoxLayout();
+  filterLayout->addWidget(new QLabel(tr("Filter:"), this));
+  m_editFilter = new QLineEdit(this);
+  m_editFilter->setPlaceholderText(tr("Filter by topic, payload, format, qos, retain"));
+  filterLayout->addWidget(m_editFilter, 1);
+  m_chkAutoscroll = new QCheckBox(tr("Auto-scroll"), this);
+  m_chkAutoscroll->setChecked(true);
+  m_btnCopy = new QPushButton(tr("Copy selected"), this);
+  m_btnSave = new QPushButton(tr("Save selected"), this);
+  filterLayout->addWidget(m_chkAutoscroll);
+  filterLayout->addWidget(m_btnCopy);
+  filterLayout->addWidget(m_btnSave);
+  mainLayout->addLayout(filterLayout);
+
+  auto* splitter = new QSplitter(Qt::Horizontal, this);
+  m_tree          = new QTreeWidget(splitter);
+  m_tree->setHeaderLabels(
+    { tr("Topic/Message"), tr("Value"), tr("Format"), tr("QoS"), tr("Retain"), tr("Bytes") });
+  m_tree->setSelectionMode(QAbstractItemView::SingleSelection);
+  m_tree->setAlternatingRowColors(true);
+  m_tree->setUniformRowHeights(true);
+  m_tree->setExpandsOnDoubleClick(true);
+  m_tree->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+  m_tree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
+  m_tree->header()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+  m_tree->header()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+  m_tree->header()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
+  m_tree->header()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
+
+  m_detailsTree = new QTreeWidget(splitter);
+  m_detailsTree->setHeaderLabels({ tr("Field"), tr("Value") });
+  m_detailsTree->setAlternatingRowColors(true);
+  m_detailsTree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  m_detailsTree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
+
+  splitter->setStretchFactor(0, 3);
+  splitter->setStretchFactor(1, 2);
+  mainLayout->addWidget(splitter, 1);
 
   auto* publishBox    = new QGroupBox(tr("Publish"), this);
   auto* publishLayout = new QGridLayout(publishBox);
@@ -116,32 +172,34 @@ CFrmMqttExplorer::setupUi()
   publishLayout->addWidget(new QLabel(tr("Payload:"), publishBox), 1, 0);
   publishLayout->addWidget(m_editPublishPayload, 1, 1, 1, 6);
   publishLayout->addWidget(m_btnPublish, 2, 6);
+  m_listPublishTopics = new QListWidget(publishBox);
+  m_listPublishTopics->setAlternatingRowColors(true);
+  m_listPublishTopics->setSelectionMode(QAbstractItemView::SingleSelection);
+  m_btnAddPublishTopic = new QPushButton(tr("Add topic"), publishBox);
+  m_btnUsePublishTopic = new QPushButton(tr("Use selected"), publishBox);
+  m_btnClearPublishTopics = new QPushButton(tr("Clear"), publishBox);
+  m_btnSavePublishTopics = new QPushButton(tr("Save"), publishBox);
+  m_btnLoadPublishTopics = new QPushButton(tr("Load"), publishBox);
+  publishLayout->addWidget(new QLabel(tr("Publish topic list:"), publishBox), 2, 0);
+  publishLayout->addWidget(m_listPublishTopics, 2, 1, 2, 3);
+  publishLayout->addWidget(m_btnAddPublishTopic, 2, 4);
+  publishLayout->addWidget(m_btnUsePublishTopic, 2, 5);
+  publishLayout->addWidget(m_btnClearPublishTopics, 2, 6);
+  publishLayout->addWidget(m_btnSavePublishTopics, 3, 4);
+  publishLayout->addWidget(m_btnLoadPublishTopics, 3, 5);
   mainLayout->addWidget(publishBox);
 
-  auto* filterLayout = new QHBoxLayout();
-  filterLayout->addWidget(new QLabel(tr("Filter:"), this));
-  m_editFilter = new QLineEdit(this);
-  m_editFilter->setPlaceholderText(tr("Filter by topic or payload"));
-  filterLayout->addWidget(m_editFilter, 1);
-  m_btnCopy = new QPushButton(tr("Copy selected"), this);
-  m_btnSave = new QPushButton(tr("Save selected"), this);
-  filterLayout->addWidget(m_btnCopy);
-  filterLayout->addWidget(m_btnSave);
-  mainLayout->addLayout(filterLayout);
-
-  auto* splitter = new QSplitter(Qt::Horizontal, this);
-  m_tree          = new QTreeWidget(splitter);
-  m_tree->setHeaderLabels({ tr("Topic/Message"), tr("Value") });
-  m_tree->setSelectionMode(QAbstractItemView::SingleSelection);
-  m_tree->setAlternatingRowColors(true);
-  m_tree->setUniformRowHeights(true);
-  m_tree->setExpandsOnDoubleClick(true);
-
-  m_details = new QPlainTextEdit(splitter);
-  m_details->setReadOnly(true);
-  splitter->setStretchFactor(0, 3);
-  splitter->setStretchFactor(1, 2);
-  mainLayout->addWidget(splitter, 1);
+  setStyleSheet(
+    "QGroupBox { border: 1px solid #d4dbe5; border-radius: 8px; margin-top: 8px; "
+    "padding-top: 8px; font-weight: 600; }"
+    "QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; }"
+    "QTreeWidget, QListWidget, QPlainTextEdit, QLineEdit, QComboBox { "
+    "border: 1px solid #c8d0dc; border-radius: 6px; padding: 3px; }"
+    "QPushButton { background-color: #2f6feb; color: white; border-radius: 6px; "
+    "padding: 4px 10px; }"
+    "QPushButton:hover { background-color: #1f5fd3; }"
+    "QPushButton:disabled { background-color: #95a0b4; }"
+    "QHeaderView::section { background-color: #eef3fa; padding: 4px; border: 0; border-right: 1px solid #d4dbe5; }");
 
   connect(m_btnConnect,
           &QPushButton::clicked,
@@ -167,15 +225,47 @@ CFrmMqttExplorer::setupUi()
           &QTreeWidget::itemSelectionChanged,
           this,
           &CFrmMqttExplorer::onTreeSelectionChanged);
+  connect(m_chkAutoscroll, &QCheckBox::toggled, this, &CFrmMqttExplorer::onToggleAutoscroll);
+  connect(m_btnAddPublishTopic, &QPushButton::clicked, this, &CFrmMqttExplorer::onAddPublishTopic);
+  connect(m_btnUsePublishTopic,
+          &QPushButton::clicked,
+          this,
+          &CFrmMqttExplorer::onUseSelectedPublishTopic);
+  connect(m_btnClearPublishTopics,
+          &QPushButton::clicked,
+          this,
+          &CFrmMqttExplorer::onClearPublishTopics);
+  connect(m_btnSavePublishTopics,
+          &QPushButton::clicked,
+          this,
+          &CFrmMqttExplorer::onSavePublishTopics);
+  connect(m_btnLoadPublishTopics,
+          &QPushButton::clicked,
+          this,
+          &CFrmMqttExplorer::onLoadPublishTopics);
+  connect(m_listPublishTopics,
+          &QListWidget::itemDoubleClicked,
+          this,
+          &CFrmMqttExplorer::onUseSelectedPublishTopic);
   connect(m_btnCopy, &QPushButton::clicked, this, &CFrmMqttExplorer::onCopySelected);
   connect(m_btnSave, &QPushButton::clicked, this, &CFrmMqttExplorer::onSaveSelected);
+  connect(m_actSubscribe, &QAction::triggered, this, &CFrmMqttExplorer::onMenuSubscribe);
+  connect(m_actUnsubscribe, &QAction::triggered, this, &CFrmMqttExplorer::onMenuUnsubscribe);
+  connect(m_actSubscribeConfigured,
+          &QAction::triggered,
+          this,
+          &CFrmMqttExplorer::onMenuSubscribeConfigured);
+  connect(m_actClearSubscriptions,
+          &QAction::triggered,
+          this,
+          &CFrmMqttExplorer::onMenuClearSubscriptions);
 }
 
 void
 CFrmMqttExplorer::configureFromConnection()
 {
   if (m_conn.contains("name") && m_conn["name"].is_string()) {
-    setWindowTitle(tr("MQTT Explorer - %1")
+    setWindowTitle(tr("MQTT raw explorer - %1")
                      .arg(QString::fromStdString(m_conn["name"].get<std::string>())));
   }
 
@@ -256,6 +346,22 @@ CFrmMqttExplorer::configureFromConnection()
       if (entry.contains("topic") && entry["topic"].is_string()) {
         m_initialSubscriptions.insert(
           QString::fromStdString(entry["topic"].get<std::string>()));
+      }
+    }
+  }
+
+  if (m_conn.contains("publish") && m_conn["publish"].is_array()) {
+    for (const auto& entry : m_conn["publish"]) {
+      if (entry.contains("topic") && entry["topic"].is_string()) {
+        addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
+      }
+    }
+  }
+
+  if (m_conn.contains("publishing") && m_conn["publishing"].is_array()) {
+    for (const auto& entry : m_conn["publishing"]) {
+      if (entry.contains("topic") && entry["topic"].is_string()) {
+        addPublishTopicIfMissing(QString::fromStdString(entry["topic"].get<std::string>()));
       }
     }
   }
@@ -441,6 +547,8 @@ CFrmMqttExplorer::onPublishClicked()
                       m_chkPublishRetain->isChecked())) {
     return;
   }
+
+  addPublishTopicIfMissing(m_editPublishTopic->text());
 }
 
 void
@@ -451,7 +559,9 @@ CFrmMqttExplorer::onSubscribeClicked()
     return;
   }
 
-  subscribeTopic(m_editSubscribeTopic->text(), m_comboSubscribeQos->currentText().toInt());
+  if (subscribeTopic(m_editSubscribeTopic->text(), m_comboSubscribeQos->currentText().toInt())) {
+    addSubscriptionIfMissing(m_editSubscribeTopic->text());
+  }
 }
 
 void
@@ -476,6 +586,190 @@ CFrmMqttExplorer::onUnsubscribeClicked()
   }
 
   unsubscribeTopic(topic);
+}
+
+void
+CFrmMqttExplorer::addPublishTopicIfMissing(const QString& topic)
+{
+  const QString t = trimmedTopic(topic);
+  if (t.isEmpty() || m_publishTopics.contains(t)) {
+    return;
+  }
+
+  m_publishTopics.insert(t);
+  m_listPublishTopics->addItem(t);
+  m_listPublishTopics->sortItems();
+}
+
+void
+CFrmMqttExplorer::addSubscriptionIfMissing(const QString& topic)
+{
+  const QString t = trimmedTopic(topic);
+  if (t.isEmpty()) {
+    return;
+  }
+
+  m_initialSubscriptions.insert(t);
+}
+
+void
+CFrmMqttExplorer::onAddPublishTopic()
+{
+  bool ok = false;
+  const QString topic =
+    QInputDialog::getText(this, tr("Add publish topic"), tr("Topic:"), QLineEdit::Normal, "", &ok);
+  if (!ok) {
+    return;
+  }
+
+  addPublishTopicIfMissing(topic);
+}
+
+void
+CFrmMqttExplorer::onUseSelectedPublishTopic()
+{
+  const auto* item = m_listPublishTopics->currentItem();
+  if (nullptr == item) {
+    return;
+  }
+
+  m_editPublishTopic->setText(item->text());
+}
+
+void
+CFrmMqttExplorer::onClearPublishTopics()
+{
+  m_publishTopics.clear();
+  m_listPublishTopics->clear();
+}
+
+void
+CFrmMqttExplorer::onSavePublishTopics()
+{
+  const QString path =
+    QFileDialog::getSaveFileName(this,
+                                 tr("Save publish topics"),
+                                 QDir::homePath() + "/mqtt-publish-topics.json",
+                                 tr("JSON files (*.json);;Text files (*.txt);;All files (*)"));
+  if (path.isEmpty()) {
+    return;
+  }
+
+  QFile file(path);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    setStatus(tr("Unable to save publish topics"), true);
+    return;
+  }
+
+  if (path.endsWith(".txt", Qt::CaseInsensitive)) {
+    QStringList topics(m_publishTopics.values());
+    topics.sort(Qt::CaseInsensitive);
+    for (const auto& topic : topics) {
+      file.write(topic.toUtf8());
+      file.write("\n");
+    }
+  }
+  else {
+    QJsonArray arr;
+    QStringList topics(m_publishTopics.values());
+    topics.sort(Qt::CaseInsensitive);
+    for (const auto& topic : topics) {
+      arr.append(topic);
+    }
+    QJsonObject root;
+    root["topics"] = arr;
+    file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+  }
+
+  setStatus(tr("Saved publish topics to %1").arg(path));
+}
+
+void
+CFrmMqttExplorer::onLoadPublishTopics()
+{
+  const QString path =
+    QFileDialog::getOpenFileName(this,
+                                 tr("Load publish topics"),
+                                 QDir::homePath(),
+                                 tr("JSON files (*.json);;Text files (*.txt);;All files (*)"));
+  if (path.isEmpty()) {
+    return;
+  }
+
+  QFile file(path);
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    setStatus(tr("Unable to load publish topics"), true);
+    return;
+  }
+
+  m_publishTopics.clear();
+  m_listPublishTopics->clear();
+
+  const QByteArray data = file.readAll();
+  QJsonParseError jsonErr;
+  const auto doc = QJsonDocument::fromJson(data, &jsonErr);
+  if (QJsonParseError::NoError == jsonErr.error && doc.isObject()) {
+    const auto root = doc.object();
+    if (root.contains("topics") && root["topics"].isArray()) {
+      for (const auto& value : root["topics"].toArray()) {
+        if (value.isString()) {
+          addPublishTopicIfMissing(value.toString());
+        }
+      }
+    }
+  }
+  else {
+    const QStringList lines = QString::fromUtf8(data).split('\n');
+    for (const auto& line : lines) {
+      addPublishTopicIfMissing(line);
+    }
+  }
+
+  setStatus(tr("Loaded publish topics from %1").arg(path));
+}
+
+void
+CFrmMqttExplorer::onToggleAutoscroll(bool checked)
+{
+  if (!checked) {
+    return;
+  }
+
+  for (int i = m_tree->topLevelItemCount() - 1; i >= 0; --i) {
+    auto* topItem = m_tree->topLevelItem(i);
+    if (!topItem->isHidden()) {
+      QTreeWidgetItem* last = topItem->childCount() > 0
+                                ? topItem->child(topItem->childCount() - 1)
+                                : topItem;
+      m_tree->scrollToItem(last);
+      break;
+    }
+  }
+}
+
+void
+CFrmMqttExplorer::onMenuSubscribe()
+{
+  onSubscribeClicked();
+}
+
+void
+CFrmMqttExplorer::onMenuUnsubscribe()
+{
+  onUnsubscribeClicked();
+}
+
+void
+CFrmMqttExplorer::onMenuSubscribeConfigured()
+{
+  subscribeConfiguredTopics();
+}
+
+void
+CFrmMqttExplorer::onMenuClearSubscriptions()
+{
+  m_subscriptions.clear();
+  setStatus(tr("Subscription tracking cleared"));
 }
 
 QTreeWidgetItem*
@@ -530,8 +824,11 @@ CFrmMqttExplorer::updateTopicNodeWithMessage(QTreeWidgetItem* topicNode,
 
   const QString payloadText = QString::fromUtf8(payload);
   topicNode->setText(1, payloadText.left(120).replace('\n', " "));
+  topicNode->setText(2, tr("topic"));
+  topicNode->setText(5, QString::number(payload.size()));
   topicNode->setData(0, RolePayloadRaw, payloadText);
   topicNode->setData(0, RolePayloadFormatted, formattedPayload);
+  topicNode->setData(0, RolePayloadSize, payload.size());
   topicNode->setData(0,
                      RoleSearchText,
                      buildSearchText(topic, payload, formattedPayload).toLower());
@@ -542,7 +839,10 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
                                     const QString& topic,
                                     const QByteArray& payload,
                                     const QString& formattedPayload,
-                                    bool retained)
+                                    const QString& format,
+                                    bool retained,
+                                    int qos,
+                                    int mid)
 {
   if (nullptr == topicNode) {
     return;
@@ -551,20 +851,33 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   const QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
   const QString preview =
     QString::fromUtf8(payload).left(120).replace('\n', " ").replace('\r', " ");
-  auto* msgItem = new QTreeWidgetItem({ timestamp + (retained ? " [R]" : ""), preview });
+  auto* msgItem = new QTreeWidgetItem(
+    { timestamp, preview, format, QString::number(qos), retained ? "yes" : "no", QString::number(payload.size()) });
   msgItem->setData(0, RoleKind, KindMessage);
   msgItem->setData(0, RoleTopic, topic);
   msgItem->setData(0, RolePayloadRaw, QString::fromUtf8(payload));
   msgItem->setData(0, RolePayloadFormatted, formattedPayload);
+  msgItem->setData(0, RoleTimestamp, timestamp);
+  msgItem->setData(0, RolePayloadFormat, format);
+  msgItem->setData(0, RoleRetained, retained);
+  msgItem->setData(0, RolePayloadSize, payload.size());
+  msgItem->setData(0, RoleQos, qos);
+  msgItem->setData(0, RoleMid, mid);
+  const QString metaText = format + "\nqos:" + QString::number(qos) + "\n" + (retained ? "retained yes" : "retained no");
   msgItem->setData(0,
                    RoleSearchText,
-                   buildSearchText(topic, payload, formattedPayload).toLower());
+                   (buildSearchText(topic, payload, formattedPayload) + "\n" + metaText).toLower());
   topicNode->addChild(msgItem);
   topicNode->setExpanded(true);
 
   constexpr int kMaxMessagesPerTopic = 500;
   while (topicNode->childCount() > kMaxMessagesPerTopic) {
     delete topicNode->takeChild(0);
+  }
+
+  if (m_chkAutoscroll->isChecked()) {
+    m_tree->setCurrentItem(msgItem);
+    m_tree->scrollToItem(msgItem);
   }
 }
 
@@ -673,47 +986,203 @@ CFrmMqttExplorer::onFilterChanged(const QString& filter)
   }
 }
 
+QString
+CFrmMqttExplorer::buildDetailsText(QTreeWidgetItem* item) const
+{
+  if (nullptr == item) {
+    return QString();
+  }
+
+  QString text;
+  QTextStream stream(&text);
+  stream << tr("Topic") << ": " << item->data(0, RoleTopic).toString() << "\n";
+  if (!item->data(0, RoleTimestamp).toString().isEmpty()) {
+    stream << tr("Timestamp") << ": " << item->data(0, RoleTimestamp).toString() << "\n";
+  }
+  if (!item->data(0, RolePayloadFormat).toString().isEmpty()) {
+    stream << tr("Format") << ": " << item->data(0, RolePayloadFormat).toString() << "\n";
+  }
+  if (item->data(0, RoleQos).isValid()) {
+    stream << tr("QoS") << ": " << item->data(0, RoleQos).toInt() << "\n";
+  }
+  stream << tr("Retained") << ": " << (item->data(0, RoleRetained).toBool() ? tr("yes") : tr("no")) << "\n";
+  stream << tr("Bytes") << ": " << item->data(0, RolePayloadSize).toInt() << "\n";
+  if (item->data(0, RoleMid).toInt() > 0) {
+    stream << tr("Message id") << ": " << item->data(0, RoleMid).toInt() << "\n";
+  }
+  stream << "\n" << tr("Decoded payload") << ":\n" << item->data(0, RolePayloadFormatted).toString()
+         << "\n\n" << tr("Raw payload") << ":\n" << item->data(0, RolePayloadRaw).toString() << "\n";
+
+  return text.trimmed();
+}
+
+void
+CFrmMqttExplorer::addJsonNode(const QString& key,
+                              const QJsonValue& value,
+                              QTreeWidgetItem* parent)
+{
+  QString shownKey = key.isEmpty() ? "<item>" : key;
+  if (value.isObject()) {
+    auto* node = new QTreeWidgetItem(parent, { shownKey, tr("object") });
+    const auto obj = value.toObject();
+    for (auto it = obj.begin(); it != obj.end(); ++it) {
+      addJsonNode(it.key(), it.value(), node);
+    }
+  }
+  else if (value.isArray()) {
+    auto* node = new QTreeWidgetItem(parent, { shownKey, tr("array") });
+    const auto arr = value.toArray();
+    for (int i = 0; i < arr.size(); ++i) {
+      addJsonNode(QString("[%1]").arg(i), arr.at(i), node);
+    }
+  }
+  else if (value.isBool()) {
+    new QTreeWidgetItem(parent, { shownKey, value.toBool() ? "true" : "false" });
+  }
+  else if (value.isDouble()) {
+    new QTreeWidgetItem(parent, { shownKey, QString::number(value.toDouble()) });
+  }
+  else if (value.isNull()) {
+    new QTreeWidgetItem(parent, { shownKey, "null" });
+  }
+  else {
+    new QTreeWidgetItem(parent, { shownKey, value.toString() });
+  }
+}
+
+void
+CFrmMqttExplorer::addXmlNode(const QString& xml,
+                             QTreeWidgetItem* parent)
+{
+  QXmlStreamReader reader(xml);
+  QList<QTreeWidgetItem*> stack;
+  stack.push_back(parent);
+
+  while (!reader.atEnd()) {
+    reader.readNext();
+    if (reader.isStartElement()) {
+      auto* node = new QTreeWidgetItem(stack.back(), { reader.name().toString(), "" });
+      const auto attrs = reader.attributes();
+      for (const auto& attr : attrs) {
+        new QTreeWidgetItem(node, { "@" + attr.name().toString(), attr.value().toString() });
+      }
+      stack.push_back(node);
+    }
+    else if (reader.isEndElement()) {
+      if (stack.size() > 1) {
+        stack.pop_back();
+      }
+    }
+    else if (reader.isCharacters() && !reader.isWhitespace()) {
+      new QTreeWidgetItem(stack.back(), { "#text", reader.text().toString() });
+    }
+  }
+}
+
+void
+CFrmMqttExplorer::renderMessageTree(const QString& topic,
+                                    const QString& format,
+                                    const QString& formattedPayload,
+                                    const QString& rawPayload,
+                                    bool retained,
+                                    int payloadSize,
+                                    int qos,
+                                    int mid,
+                                    const QString& timestamp)
+{
+  m_detailsTree->clear();
+  auto* root = new QTreeWidgetItem(m_detailsTree, { tr("Message"), "" });
+  new QTreeWidgetItem(root, { tr("Topic"), topic });
+  new QTreeWidgetItem(root, { tr("Timestamp"), timestamp });
+  new QTreeWidgetItem(root, { tr("Format"), format });
+  new QTreeWidgetItem(root, { tr("QoS"), QString::number(qos) });
+  new QTreeWidgetItem(root, { tr("Retained"), retained ? "yes" : "no" });
+  new QTreeWidgetItem(root, { tr("Bytes"), QString::number(payloadSize) });
+  if (mid > 0) {
+    new QTreeWidgetItem(root, { tr("Message id"), QString::number(mid) });
+  }
+
+  auto* payloadNode = new QTreeWidgetItem(root, { tr("Payload"), format });
+  if ("JSON" == format) {
+    QJsonParseError jsonErr;
+    const auto doc = QJsonDocument::fromJson(rawPayload.toUtf8(), &jsonErr);
+    if (QJsonParseError::NoError == jsonErr.error) {
+      if (doc.isObject()) {
+        const auto obj = doc.object();
+        for (auto it = obj.begin(); it != obj.end(); ++it) {
+          addJsonNode(it.key(), it.value(), payloadNode);
+        }
+      }
+      else if (doc.isArray()) {
+        const auto arr = doc.array();
+        for (int i = 0; i < arr.size(); ++i) {
+          addJsonNode(QString("[%1]").arg(i), arr.at(i), payloadNode);
+        }
+      }
+    }
+    else {
+      new QTreeWidgetItem(payloadNode, { tr("Decoded"), formattedPayload });
+    }
+  }
+  else if ("XML" == format) {
+    addXmlNode(rawPayload, payloadNode);
+  }
+  else {
+    new QTreeWidgetItem(payloadNode, { tr("Decoded"), formattedPayload });
+  }
+
+  auto* rawNode = new QTreeWidgetItem(root, { tr("Raw payload"), "" });
+  new QTreeWidgetItem(rawNode, { tr("Text"), rawPayload });
+
+  m_detailsTree->expandToDepth(2);
+}
+
 void
 CFrmMqttExplorer::onTreeSelectionChanged()
 {
   const auto selected = m_tree->selectedItems();
   if (selected.isEmpty()) {
-    m_details->clear();
+    m_detailsTree->clear();
     return;
   }
 
-  auto* item = selected.first();
-  const QString topic = item->data(0, RoleTopic).toString();
-  const QString raw = item->data(0, RolePayloadRaw).toString();
-  const QString formatted = item->data(0, RolePayloadFormatted).toString();
-  const int kind = item->data(0, RoleKind).toInt();
+  auto* item            = selected.first();
+  const int kind        = item->data(0, RoleKind).toInt();
+  const QString topic   = item->data(0, RoleTopic).toString();
 
-  QString text;
-  text += tr("Topic: %1\n").arg(topic);
-  if (KindMessage == kind) {
-    text += tr("Type: Message\n");
-  }
-  else {
-    text += tr("Type: Topic node\n");
-  }
-  text += "\n";
-  if (!formatted.isEmpty()) {
-    text += tr("Decoded payload:\n");
-    text += formatted;
-    text += "\n\n";
-  }
-  if (!raw.isEmpty()) {
-    text += tr("Raw payload:\n");
-    text += raw;
+  if (kind == KindTopicNode) {
+    m_detailsTree->clear();
+    auto* root = new QTreeWidgetItem(m_detailsTree, { tr("Topic node"), "" });
+    new QTreeWidgetItem(root, { tr("Topic"), topic });
+    const QString lastPayload = item->data(0, RolePayloadRaw).toString();
+    if (!lastPayload.isEmpty()) {
+      new QTreeWidgetItem(root, { tr("Last payload"), lastPayload.left(120) });
+      new QTreeWidgetItem(root, { tr("Bytes"), QString::number(item->data(0, RolePayloadSize).toInt()) });
+    }
+    m_detailsTree->expandToDepth(1);
+    return;
   }
 
-  m_details->setPlainText(text.trimmed());
+  const QString raw     = item->data(0, RolePayloadRaw).toString();
+  const QString decoded = item->data(0, RolePayloadFormatted).toString();
+  const QString format  = item->data(0, RolePayloadFormat).toString();
+  const bool retained   = item->data(0, RoleRetained).toBool();
+  const int payloadSize = item->data(0, RolePayloadSize).toInt();
+  const int qos         = item->data(0, RoleQos).toInt();
+  const int mid         = item->data(0, RoleMid).toInt();
+  const QString stamp   = item->data(0, RoleTimestamp).toString();
+
+  renderMessageTree(topic, format, decoded, raw, retained, payloadSize, qos, mid, stamp);
 }
 
 void
 CFrmMqttExplorer::onCopySelected()
 {
-  const QString text = m_details->toPlainText();
+  const auto selected = m_tree->selectedItems();
+  if (selected.isEmpty()) {
+    return;
+  }
+  const QString text = buildDetailsText(selected.first());
   if (text.isEmpty()) {
     return;
   }
@@ -723,7 +1192,11 @@ CFrmMqttExplorer::onCopySelected()
 void
 CFrmMqttExplorer::onSaveSelected()
 {
-  const QString text = m_details->toPlainText();
+  const auto selected = m_tree->selectedItems();
+  if (selected.isEmpty()) {
+    return;
+  }
+  const QString text = buildDetailsText(selected.first());
   if (text.isEmpty()) {
     return;
   }
@@ -739,7 +1212,7 @@ CFrmMqttExplorer::onSaveSelected()
   QFile file(path);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::warning(this,
-                         tr("MQTT Explorer"),
+                         tr("MQTT raw explorer"),
                          tr("Failed to save selected data to '%1'.").arg(path));
     return;
   }
@@ -826,14 +1299,16 @@ CFrmMqttExplorer::handleDisconnected(int rc)
 void
 CFrmMqttExplorer::handleIncomingMessage(const QString& topic,
                                         const QByteArray& payload,
-                                        bool retained)
+                                        bool retained,
+                                        int qos,
+                                        int mid)
 {
   QString format;
   const QString formatted = formatPayloadForDisplay(payload, &format);
 
   QTreeWidgetItem* topicNode = ensureTopicPath(topic);
   updateTopicNodeWithMessage(topicNode, topic, payload, formatted);
-  appendMessageNode(topicNode, topic, payload, formatted, retained);
+  appendMessageNode(topicNode, topic, payload, formatted, format, retained, qos, mid);
   onFilterChanged(m_editFilter->text());
 
   if (m_tree->selectedItems().isEmpty()) {
@@ -883,9 +1358,11 @@ CFrmMqttExplorer::onMosquittoMessageStatic(struct mosquitto*,
     payload = QByteArray(static_cast<const char*>(message->payload), message->payloadlen);
   }
   const bool retained = message->retain;
+  const int qos       = message->qos;
+  const int mid       = message->mid;
 
   QMetaObject::invokeMethod(
     self,
-    [self, topic, payload, retained]() { self->handleIncomingMessage(topic, payload, retained); },
+    [self, topic, payload, retained, qos, mid]() { self->handleIncomingMessage(topic, payload, retained, qos, mid); },
     Qt::QueuedConnection);
 }
