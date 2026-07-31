@@ -118,11 +118,11 @@ CDlgMdfModule::initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index
 
   m_pmdf = (CMDF*)pmdfobj;
 
-  ui->editName->setText(m_pmdf->getModuleName().c_str());
-  ui->editModel->setText(m_pmdf->getModuleModel().c_str());
+  ui->editName->setText(QString::fromUtf8(m_pmdf->getModuleName().c_str()));
+  ui->editModel->setText(QString::fromUtf8(m_pmdf->getModuleModel().c_str()));
   ui->comboModuleLevel->setCurrentIndex(m_pmdf->getModuleLevel());
-  ui->editVersion->setText(m_pmdf->getModuleVersion().c_str());
-  str = m_pmdf->getModuleChangeDate().c_str();
+  ui->editVersion->setText(QString::fromUtf8(m_pmdf->getModuleVersion().c_str()));
+  str = QString::fromUtf8(m_pmdf->getModuleChangeDate().c_str());
   QDate date = QDate::fromString(str, Qt::ISODate);
   if (!date.isValid()) {
     date = QDate::fromString(str, "yy-MM-dd");
@@ -132,7 +132,7 @@ CDlgMdfModule::initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index
   }
   ui->editBufferSize->setValue(m_pmdf->getModuleBufferSize());
   updateBufferSizeLockForLevel();
-  ui->editCopyright->setText(m_pmdf->getModuleCopyright().c_str());
+  ui->editCopyright->setText(QString::fromUtf8(m_pmdf->getModuleCopyright().c_str()));
 
   switch (index) {
     case index_module_model:
@@ -206,7 +206,7 @@ CDlgMdfModule::fillDescription()
   while (itDesc != pmapDescription->end()) {
     std::string lang        = itDesc->first; // key
     std::string description = itDesc->second;
-    str                     = lang.c_str() + tr(" - ") + description.c_str();
+    str                     = QString::fromUtf8(lang.c_str()) + tr(" - ") + QString::fromUtf8(description.c_str());
     ui->listDescription->addItem(str);
     itDesc++;
   }
@@ -227,7 +227,7 @@ CDlgMdfModule::fillInfoUrl()
   while (itInfo != pmapHelpUrl->end()) {
     std::string lang = itInfo->first; // key
     std::string info = itInfo->second;
-    str              = lang.c_str() + tr(" - ") + info.c_str();
+    str              = QString::fromUtf8(lang.c_str()) + tr(" - ") + QString::fromUtf8(info.c_str());
     ui->listInfo->addItem(str);
     itInfo++;
   }
@@ -288,15 +288,15 @@ CDlgMdfModule::accept()
   std::string str;
   if (nullptr != m_pmdf) {
 
-    str = ui->editName->text().toStdString();
+    str = ui->editName->text().toUtf8().toStdString();
     m_pmdf->setModuleName(str);
 
-    str = ui->editModel->text().toStdString();
+    str = ui->editModel->text().toUtf8().toStdString();
     m_pmdf->setModuleModel(str);
 
     m_pmdf->setModuleLevel(ui->comboModuleLevel->currentIndex());
 
-    str = ui->editVersion->text().toStdString();
+    str = ui->editVersion->text().toUtf8().toStdString();
     m_pmdf->setModuleVersion(str);
 
     str = ui->editDate->date().toString(Qt::ISODate).toStdString();
@@ -305,7 +305,7 @@ CDlgMdfModule::accept()
     updateBufferSizeLockForLevel();
     m_pmdf->setModuleBufferSize(ui->editBufferSize->value());
 
-    str = ui->editCopyright->text().toStdString();
+    str = ui->editCopyright->text().toUtf8().toStdString();
     m_pmdf->setModuleCopyright(str);
   }
   else {
@@ -413,7 +413,7 @@ CDlgMdfModule::deleteDesc(void)
     QListWidgetItem* pitem = ui->listDescription->currentItem();
     QString selstr         = pitem->text().split('_').first().left(2);
 
-    m_pmdf->getMapDescription()->erase(selstr.toStdString());
+    m_pmdf->getMapDescription()->erase(selstr.toUtf8().toStdString());
     ui->listDescription->clear();
     fillDescription();
   }
@@ -499,7 +499,7 @@ CDlgMdfModule::deleteInfo(void)
     QListWidgetItem* pitem = ui->listInfo->currentItem();
     QString selstr         = pitem->text().split('_').first().left(2);
 
-    m_pmdf->getHelpUrlMap()->erase(selstr.toStdString());
+    m_pmdf->getHelpUrlMap()->erase(selstr.toUtf8().toStdString());
     ui->listInfo->clear();
     fillInfoUrl();
   }

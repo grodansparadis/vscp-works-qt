@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT = core gui printsupport qml serialbus serialport widgets help network
+QT = core gui printsupport qml serialbus serialport widgets help network charts
 
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT OPENSSL_API_1_1
 
@@ -43,10 +43,12 @@ SOURCES +=  src/main.cpp \
     src/cdlgcanfilter.cpp \
     src/cdlgtls.cpp \
     src/cfrmsession.cpp \
+    src/cfrmmeasurementview.cpp \
     src/cfrmmqttexplorer.cpp \
     src/cfrmrawcansession.cpp \
     src/cfrmvscplinktest.cpp \
     src/vscpworks.cpp \
+    src/cdlglogviewer.cpp \
     src/canalconfigwizard.cpp \
     vscp/src/vscp/common/vscpremotetcpif.cpp \
     vscp/src/vscp/common/vscpdatetime.cpp \
@@ -102,10 +104,12 @@ HEADERS  += src/vscpworks.h \
     src/cdlgcanfilter.h \
     src/cdlgtls.h \
     src/cfrmsession.h \
+    src/cfrmmeasurementview.h \
     src/cfrmmqttexplorer.h \
     src/cfrmrawcansession.h \
     src/cfrmvscplinktest.h \
     src/canalconfigwizard.h \
+    src/cdlglogviewer.h \
     vscp/src/vscp/common/version.h \
     vscp/src/vscp/common/vscp.h \
     vscp/src/vscp/common/vscpremotetcpif.h \
@@ -163,7 +167,8 @@ FORMS += src/mainwindow.ui \
     src/cdlgcanfilter.ui \
     src/cdlgsocketcanflags.ui \
     src/cdlgtls.ui \
-    src/cdlgmqttpublish.ui
+    src/cdlgmqttpublish.ui \
+    src/cdlglogviewer.ui
 
 INCLUDEPATH += ./src \
     ./build \

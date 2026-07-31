@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSRAWCAN_H
 #define CDLGCONNSETTINGSRAWCAN_H
 
-#ifndef WIN32
+#if defined(__linux__)
 
 #include "vscp-client-socketcan.h"
 

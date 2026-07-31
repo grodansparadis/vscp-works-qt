@@ -1,4 +1,4 @@
-// cdlgnewconnection.h
+// cdlglogviewer.h
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -26,73 +26,54 @@
 // SOFTWARE.
 //
 
-#ifndef CDLGNEWCONNECTION_H
-#define CDLGNEWCONNECTION_H
-
-#include "vscp-client-base.h"
+#ifndef CDLGLOGVIEWER_H
+#define CDLGLOGVIEWER_H
 
 #include <QDialog>
-#include <QListWidgetItem>
+#include <QTimer>
+#include <QColor>
 
 namespace Ui {
-class CDlgNewConnection;
+class CDlgLogViewer;
 }
 
-
-class CDlgNewConnection : public QDialog
+class CDlgLogViewer : public QDialog
 {
     Q_OBJECT
 
 public:
-    
+    explicit CDlgLogViewer(QWidget *parent = nullptr);
+    ~CDlgLogViewer();
 
-public:
-    explicit CDlgNewConnection(QWidget *parent = nullptr);
-    ~CDlgNewConnection();
-
-    /*!
-        Add connection items
-    */
-    void addConnectionItems(void);
-
-    /*!
-        Called when the connection list is clicked
-    */
-    void onClicked(QListWidgetItem* item);
-
-    /*!
-        Called when the connection list is double clicked
-    */
-    void onDoubleClicked(QListWidgetItem* item);
-
-    /*!
-        Return the selected communication type
-    */
-    CVscpClient::connType getSelectedType(void);
+    enum class LogLevel { ALL, TRACE, DEBUG, INFO, WARNING, ERR, CRITICAL };
 
 private slots:
-    void importFromClipboard();
-    void importFromFile();
-
-public:
-    bool importRequested(void) const;
+    void onRefresh();
+    void onClearDisplay();
+    void onSave();
+    void onAutoRefreshToggled(bool checked);
+    void onFilterChanged();
+    void onSearchChanged(const QString &text);
+    void onAutoRefreshTick();
 
 private:
+    void loadLogFile();
+    void applyFilter();
+    void addLogRow(const QString &levelStr, const QString &message, int rawRow);
 
-    Ui::CDlgNewConnection *ui;
+    QColor levelColor(const QString &level) const;
+    QColor levelBackgroundColor(const QString &level) const;
+    LogLevel parseLevelEnum(const QString &level) const;
 
-    void createMenu();
-    void createHorizontalGroupBox();
-    void createGridGroupBox();
-    void createFormGroupBox();
+    Ui::CDlgLogViewer *ui;
+    QTimer *m_autoRefreshTimer;
 
-    /*! 
-        This variable holds the connection type that 
-        the used select
-    */
-    CVscpClient::connType m_selected_type;
-    bool m_import_requested;
+    // Raw parsed log entries
+    struct LogEntry {
+        QString level;
+        QString message;
+    };
+    QList<LogEntry> m_entries;
 };
 
-
-#endif // CDLGNEWCONNECTION_H
+#endif // CDLGLOGVIEWER_H

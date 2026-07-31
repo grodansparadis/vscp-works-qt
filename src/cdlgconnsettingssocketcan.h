@@ -29,7 +29,7 @@
 #ifndef CDLGCONNSETTINGSSOCKETCAN_H
 #define CDLGCONNSETTINGSSOCKETCAN_H
 
-#ifndef WIN32
+#if defined(__linux__)
 
 #include "vscp-client-socketcan.h"
 
@@ -173,6 +173,6 @@ public:
     vscpClientSocketCan m_clientSocketcan;
 };
 
-#endif  // !WIN32
+#endif  // __linux__
 
 #endif // CDLGCONNSETTINGSSOCKETCAN_H

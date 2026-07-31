@@ -220,7 +220,9 @@ CDlgConnSettingsTcpip::setInterface(const QString& str)
 uint32_t
 CDlgConnSettingsTcpip::getConnectionTimeout(void)
 {
-  return m_client.getConnectionTimeout();
+  uint32_t timeout = vscp_readStringValue(ui->editConnectTimeout->text().toStdString());
+  m_client.setConnectionTimeout(timeout);
+  return timeout;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -230,6 +232,7 @@ CDlgConnSettingsTcpip::getConnectionTimeout(void)
 void
 CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
 {
+  ui->editConnectTimeout->setText(QString::number(timeout, 10));
   m_client.setConnectionTimeout(timeout);
 }
 
@@ -240,7 +243,9 @@ CDlgConnSettingsTcpip::setConnectionTimeout(uint32_t timeout)
 uint32_t
 CDlgConnSettingsTcpip::getResponseTimeout(void)
 {
-  return m_client.getResponseTimeout();
+  uint32_t timeout = vscp_readStringValue(ui->editResponseTimeout->text().toStdString());
+  m_client.setResponseTimeout(timeout);
+  return timeout;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -250,6 +255,7 @@ CDlgConnSettingsTcpip::getResponseTimeout(void)
 void
 CDlgConnSettingsTcpip::setResponseTimeout(uint32_t timeout)
 {
+  ui->editResponseTimeout->setText(QString::number(timeout, 10));
   m_client.setResponseTimeout(timeout);
 }
 
@@ -645,22 +651,33 @@ CDlgConnSettingsTcpip::onSetFilter(void)
 void
 CDlgConnSettingsTcpip::onTestConnection(void)
 {
+  int rv = VSCP_ERROR_SUCCESS;
+
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
+  // Set connection and response timeout
+  m_client.setConnectionTimeout(getConnectionTimeout());
+  m_client.setResponseTimeout(getResponseTimeout());
+
   // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                          getUser().toStdString().c_str(),
-                                          getPassword().toStdString().c_str())) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
+                                                getUser().toStdString().c_str(),
+                                                getPassword().toStdString().c_str(),
+                                                getPoll()))) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("INIT: Failed to initialize tcp/ip client. Error code: %1").arg(rv));
     return;
   }
 
   // Connect to remote host
-  if (VSCP_ERROR_SUCCESS != m_client.connect()) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.connect())) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("CONNECT: Failed to connect to remote tcp/ip host. Error code: %1").arg(rv));
     m_client.disconnect();
     return;
   }
@@ -671,10 +688,10 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   uint8_t release_ver;
   uint8_t build_ver;
   QString strVersion;
-  if (VSCP_ERROR_SUCCESS == m_client.getversion(&major_ver,
+  if (VSCP_ERROR_SUCCESS == (rv = m_client.getversion(&major_ver,
                                                 &minor_ver,
                                                 &release_ver,
-                                                &build_ver)) {
+                                                &build_ver))) {
 
     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
                                  (int)major_ver,
@@ -684,13 +701,15 @@ CDlgConnSettingsTcpip::onTestConnection(void)
                    .c_str();
   }
   else {
-    strVersion = tr("Failed to get version from server");
+    strVersion = tr("VERSION: Failed to get version from server. Error code: %1").arg(rv);
   }
 
   // Disconnect from remote host
-  if (VSCP_ERROR_SUCCESS != m_client.disconnect()) {
+  if (VSCP_ERROR_SUCCESS != (rv = m_client.disconnect())) {
     QApplication::restoreOverrideCursor();
-    QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Failed to disconnect from remote tcp/ip host. Error code: %1").arg(rv));
     return;
   }
 
@@ -712,6 +731,9 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
+  getConnectionTimeout();
+  getResponseTimeout();
+
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
                                           getUser().toStdString().c_str(),
@@ -720,8 +742,6 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip object"));
     return;
   }
-
-  m_client.setResponseTimeout(2000);
 
   // Connect to remote host
   if (VSCP_ERROR_SUCCESS != m_client.connect()) {

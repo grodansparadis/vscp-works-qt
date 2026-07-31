@@ -63,6 +63,7 @@
 #include <nlohmann/json.hpp>
 
 #include <fstream>
+#include <limits>
 
 // for convenience
 using json = nlohmann::json;
@@ -80,6 +81,10 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_bAskBeforeDelete  = true;
   m_bEnableDarkTheme  = false;
   m_bSaveAlwaysJSON   = false;
+  m_mdfAutoSaveEnabled = false;
+  m_mdfAutoSaveInterval = 300;
+  m_mdfCumulativeBackups = false;
+  m_mdfMaxBackups = 10;
 
   m_session_timeout   = 1000;
   m_session_maxEvents = -1;
@@ -519,6 +524,46 @@ vscpworks::loadSettings(void)
     m_firmware_devicecode_required = j["firmwareDeviceCodeRequired"].get<bool>();
   }
 
+  if (j.contains("mdfAutoSaveEnabled") && j["mdfAutoSaveEnabled"].is_boolean()) {
+    m_mdfAutoSaveEnabled = j["mdfAutoSaveEnabled"].get<bool>();
+  }
+
+  if (j.contains("mdfAutoSaveInterval")) {
+    const auto& interval = j["mdfAutoSaveInterval"];
+    if (interval.is_number_unsigned()) {
+      uint64_t value = interval.get<uint64_t>();
+      if (value <= std::numeric_limits<uint32_t>::max()) {
+        m_mdfAutoSaveInterval = static_cast<uint32_t>(value);
+      }
+    }
+    else if (interval.is_number_integer()) {
+      int64_t value = interval.get<int64_t>();
+      if ((value >= 0) && (value <= static_cast<int64_t>(std::numeric_limits<uint32_t>::max()))) {
+        m_mdfAutoSaveInterval = static_cast<uint32_t>(value);
+      }
+    }
+  }
+
+  if (j.contains("mdfCumulativeBackups") && j["mdfCumulativeBackups"].is_boolean()) {
+    m_mdfCumulativeBackups = j["mdfCumulativeBackups"].get<bool>();
+  }
+
+  if (j.contains("mdfMaxBackups")) {
+    const auto& max_backups = j["mdfMaxBackups"];
+    if (max_backups.is_number_unsigned()) {
+      uint64_t value = max_backups.get<uint64_t>();
+      if (value <= std::numeric_limits<uint32_t>::max()) {
+        m_mdfMaxBackups = static_cast<uint32_t>(value);
+      }
+    }
+    else if (max_backups.is_number_integer()) {
+      int64_t value = max_backups.get<int64_t>();
+      if ((value >= 0) && (value <= static_cast<int64_t>(std::numeric_limits<uint32_t>::max()))) {
+        m_mdfMaxBackups = static_cast<uint32_t>(value);
+      }
+    }
+  }
+
   // VSCP event database last load date/time
   // ---------------------------------------
   if (j.contains("last-eventdb-download") && j["last-eventdb-download"].is_number()) {
@@ -668,6 +713,12 @@ vscpworks::writeSettings()
 
   // * * * Firmware * * *
   j["firmwareDeviceCodeRequired"] = m_firmware_devicecode_required;
+
+  // * * * MDF editor * * *
+  j["mdfAutoSaveEnabled"]  = m_mdfAutoSaveEnabled;
+  j["mdfAutoSaveInterval"] = m_mdfAutoSaveInterval;
+  j["mdfCumulativeBackups"] = m_mdfCumulativeBackups;
+  j["mdfMaxBackups"] = m_mdfMaxBackups;
 
   QMap<std::string, json>::const_iterator it = m_mapConn.constBegin();
   while (it != m_mapConn.constEnd()) {

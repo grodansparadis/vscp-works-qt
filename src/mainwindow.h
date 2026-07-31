@@ -108,6 +108,7 @@ public:
     ~MainWindow();
 
     void loadConfiguration(const QString &fileName);
+    bool importConnectionDataFromText(const QString& text);
 
 protected:
 
@@ -151,6 +152,10 @@ private slots:
     void editConnectionItem(void);
     void cloneConnectionItem(void);
     void removeConnectionItem(void);
+    void copyConnectionDataToClipboard(void);
+    void saveConnectionDataToFile(void);
+    void importConnectionDataFromClipboard(void);
+    void importConnectionDataFromFile(void);
 
     // New connections
     void newTcpipConnection(void);
@@ -184,6 +189,11 @@ private slots:
     */
     void showHelp(void);
 
+    /*!
+        Show the application log viewer
+    */
+    void showLogViewer(void);
+
 protected:        
 
     /*
@@ -215,6 +225,8 @@ private:
   void readSettings();
   bool maybeSave();
   bool saveFile(const QString &fileName);
+  bool saveNewConnection(json& conn, QTreeWidgetItem *topitem);
+  bool importConnectionData(const QString& text);
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
@@ -232,6 +244,7 @@ private:
   QTreeWidgetItem *m_topitem_udp;
   QTreeWidgetItem *m_topitem_multicast;
   QTreeWidgetItem *m_topitem_rest;
+  QTreeWidgetItem *m_topitem_rawmqtt;
   QTreeWidgetItem *m_topitem_rawcan;
  
   

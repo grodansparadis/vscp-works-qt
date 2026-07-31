@@ -38,7 +38,7 @@
      <x>10</x>
      <y>30</y>
      <width>681</width>
-     <height>221</height>
+     <height>180</height>
     </rect>
    </property>
   </widget>
@@ -52,7 +52,33 @@
     </rect>
    </property>
    <property name="text">
-    <string>Select connection type</string>
+    <string>Select connection type or import a saved connection</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonImportClipboard">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>220</y>
+     <width>171</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Import from clipboard</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButtonImportFile">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>220</y>
+     <width>171</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Import from file</string>
    </property>
   </widget>
  </widget>

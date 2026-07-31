@@ -39,7 +39,7 @@
       <string>General settings</string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -53,7 +53,7 @@
         <rect>
          <x>0</x>
          <y>10</y>
-         <width>381</width>
+         <width>751</width>
          <height>381</height>
         </rect>
        </property>
@@ -115,6 +115,57 @@
          </widget>
         </item>
         <item row="5" column="1">
+         <widget class="QCheckBox" name="chkMdfAutoSave">
+          <property name="toolTip">
+           <string>Automatically save opened MDF files at a fixed interval.</string>
+          </property>
+          <property name="text">
+           <string>Enable MDF autosave</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="labelMdfAutoSaveInterval">
+          <property name="text">
+           <string>MDF autosave interval (s):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QSpinBox" name="spinMdfAutoSaveInterval">
+          <property name="minimum">
+           <number>10</number>
+          </property>
+          <property name="maximum">
+           <number>86400</number>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1">
+         <widget class="QCheckBox" name="chkMdfCumulativeBackups">
+          <property name="toolTip">
+           <string>Keep timestamped cumulative MDF backups instead of replacing a single .bak file.</string>
+          </property>
+          <property name="text">
+           <string>Use cumulative MDF backups</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="labelMdfMaxBackups">
+          <property name="text">
+           <string>Max cumulative backups per file (0=unlimited):</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QSpinBox" name="spinMdfMaxBackups">
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
          <spacer name="verticalSpacer_2">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -909,7 +960,7 @@
          <x>10</x>
          <y>130</y>
          <width>561</width>
-         <height>51</height>
+         <height>54</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_3">

@@ -46,6 +46,7 @@
 #include <QToolButton>
 #include <QComboBox>
 #include <QMutex>
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -66,6 +67,8 @@ class QTableWidgetItem;
 class QTableWidget;
 class QToolBox;
 QT_END_NAMESPACE
+
+class CFrmMeasurementView;
 
 // class CVscpClientCallback : public QObject
 // {
@@ -274,7 +277,19 @@ public:
     Return true if we are connected
     @return true if connected, false otherwise
   */
-  bool isConnected(void);                
+  bool isConnected(void);
+
+  /*!
+      Start polling for events using a timer.
+      Routes received events through the normal receiveCallback path.
+      @param intervalMs Polling interval in milliseconds (default 10 ms)
+  */
+  void startPolling(int intervalMs = 10);
+
+  /*!
+      Stop the poll timer.
+  */
+  void stopPolling();
 
 public slots:
 
@@ -410,6 +425,14 @@ public slots:
   /// Load RX data from file
   void loadRxFromFile(void);
 
+  /// Import a full session state from file
+  void loadSessionFromFile(const QString& path = "");
+  void loadSessionFromFileAct(void) { loadSessionFromFile(); };
+
+  /// Export the current session state to file
+  void saveSessionToFile(const QString& path = "");
+  void saveSessionToFileAct(void) { saveSessionToFile(); };
+
   /// Copy RX event to clipboard
   void copyRxToClipboard(void);
 
@@ -475,6 +498,15 @@ public slots:
   /// Open dialog to let user select retain publish topics to clear
   void openClearMqttRetainPublishTopics(void);
 
+  /// Open realtime visualization for selected measurement
+  void openRealtimeMeasurementWindow(void);
+
+  /*!
+      Timer slot: drain all available events from the client and route
+      them through receiveCallback so the existing callback path is used.
+  */
+  void pollForEvents();
+
 signals:
 
   /// Data received from callback
@@ -489,6 +521,8 @@ private:
   void createRxGroupBox();
   void createTxGridGroup();
   void createFormGroupBox();
+  void initializeClient(bool autoConnect = true);
+  void updateSessionWindowTitle(void);
 
   // Toolbar
 
@@ -499,6 +533,9 @@ private:
 
   /// Enable&disable receive filter
   void menu_filter_enable();
+
+  /// Push matching measurement events to open measurement windows
+  void forwardMeasurementToRealtimeViews(const vscp_event_t* pev);
 
   enum { NumGridRows = 8,
          NumButtons  = 4 };
@@ -547,7 +584,10 @@ private:
   QTableWidget* m_rxTable;
 
   // Protect callback from multiple threads
-  QMutex m_mutexReceiveCallBack;  
+  QMutex m_mutexReceiveCallBack;
+
+  /// Timer used for poll-mode interfaces (e.g. CANAL without worker thread)
+  QTimer* m_pollTimer;  
 
   /// Mutex that protect the rx -lists
   QMutex m_mutexRxList;
@@ -587,6 +627,8 @@ private:
   // File menu
   QAction* m_loadEventsAct;
   QAction* m_saveEventsAct;
+  QAction* m_importSessionAct;
+  QAction* m_exportSessionAct;
   QAction* m_loadTxAct;
   QAction* m_saveTxAct;
   QAction* m_saveTxAllAct;
@@ -625,6 +667,7 @@ private:
   // Settings menu
   QAction* m_setFilterAct;
   QAction* m_settingsAct;
+  QAction* m_openRealtimeMeasurementAct;
 
   QToolBar* m_txToolBar;
 
@@ -634,6 +677,8 @@ private:
   QAction* m_connectActBar;
   //QAction* m_connectActToolBar;
   QAction* m_setFilterActToolBar;
+
+  std::vector<CFrmMeasurementView*> m_realtimeMeasurementViews;
 };
 
 #endif // CFRMSESSION_H

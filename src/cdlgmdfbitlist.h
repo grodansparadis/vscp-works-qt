@@ -35,6 +35,7 @@
 #include "cdlgmdfregister.h"
 
 #include <QDialog>
+#include <vector>
 
 namespace Ui {
 class CDlgMdfBitList;
@@ -81,7 +82,7 @@ public:
     @param pos The bits start position
     @return Pointer to bit object or null pointer if pos is invalid
   */
-  CMDF_Bit* getBitObj(uint8_t pos);
+  CMDF_Bit* getBitObj(quintptr key);
 
   /*!
     Check if bits overlap
@@ -123,8 +124,7 @@ private:
   mdf_record_type m_type;
 
   // Render data
-  std::set<uint8_t> m_bitset;
-  std::map<uint8_t, CMDF_Bit*> m_bitmap;
+  std::vector<CMDF_Bit*> m_renderedBits;
 };
 
 #endif // CDLGMDFREGISTERBITLIST_H
