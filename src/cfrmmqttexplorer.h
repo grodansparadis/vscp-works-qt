@@ -15,8 +15,13 @@ class QCheckBox;
 class QComboBox;
 class QLabel;
 class QLineEdit;
+class QListWidget;
 class QPlainTextEdit;
 class QPushButton;
+class QJsonValue;
+class QAction;
+class QMenu;
+class QMenuBar;
 class QTreeWidget;
 class QTreeWidgetItem;
 
@@ -32,6 +37,16 @@ private slots:
   void onPublishClicked();
   void onSubscribeClicked();
   void onUnsubscribeClicked();
+  void onAddPublishTopic();
+  void onUseSelectedPublishTopic();
+  void onClearPublishTopics();
+  void onSavePublishTopics();
+  void onLoadPublishTopics();
+  void onToggleAutoscroll(bool checked);
+  void onMenuSubscribe();
+  void onMenuUnsubscribe();
+  void onMenuSubscribeConfigured();
+  void onMenuClearSubscriptions();
   void onFilterChanged(const QString& filter);
   void onTreeSelectionChanged();
   void onCopySelected();
@@ -40,7 +55,9 @@ private slots:
   void handleDisconnected(int rc);
   void handleIncomingMessage(const QString& topic,
                              const QByteArray& payload,
-                             bool retained);
+                             bool retained,
+                             int qos,
+                             int mid);
 
 private:
   enum ItemRole {
@@ -48,7 +65,13 @@ private:
     RoleTopic,
     RolePayloadRaw,
     RolePayloadFormatted,
-    RoleSearchText
+    RoleSearchText,
+    RoleTimestamp,
+    RolePayloadFormat,
+    RoleRetained,
+    RolePayloadSize,
+    RoleQos,
+    RoleMid
   };
 
   enum ItemKind { KindTopicNode = 1, KindMessage = 2 };
@@ -74,7 +97,10 @@ private:
                          const QString& topic,
                          const QByteArray& payload,
                          const QString& formattedPayload,
-                         bool retained);
+                         const QString& format,
+                         bool retained,
+                         int qos,
+                         int mid);
   QString formatPayloadForDisplay(const QByteArray& payload,
                                   QString* outFormat = nullptr) const;
   QString buildXmlDisplay(const QString& xml) const;
@@ -82,6 +108,23 @@ private:
                           const QByteArray& payload,
                           const QString& formatted) const;
   bool applyFilterRecursive(QTreeWidgetItem* item, const QString& filterLower);
+  QString buildDetailsText(QTreeWidgetItem* item) const;
+  void renderMessageTree(const QString& topic,
+                         const QString& format,
+                         const QString& formattedPayload,
+                         const QString& rawPayload,
+                         bool retained,
+                         int payloadSize,
+                         int qos,
+                         int mid,
+                         const QString& timestamp);
+  void addJsonNode(const QString& key,
+                   const QJsonValue& value,
+                   QTreeWidgetItem* parent);
+  void addXmlNode(const QString& xml,
+                  QTreeWidgetItem* parent);
+  void addPublishTopicIfMissing(const QString& topic);
+  void addSubscriptionIfMissing(const QString& topic);
   void setStatus(const QString& status, bool error = false);
   void applyTlsSettings();
   void subscribeConfiguredTopics();
@@ -114,6 +157,7 @@ private:
   QString m_pwkeyfile;
   QSet<QString> m_subscriptions;
   QSet<QString> m_initialSubscriptions;
+  QSet<QString> m_publishTopics;
   QHash<QString, QTreeWidgetItem*> m_topicNodeByPath;
 
   QPushButton* m_btnConnect;
@@ -122,15 +166,28 @@ private:
   QPushButton* m_btnPublish;
   QPushButton* m_btnCopy;
   QPushButton* m_btnSave;
+  QPushButton* m_btnAddPublishTopic;
+  QPushButton* m_btnUsePublishTopic;
+  QPushButton* m_btnClearPublishTopics;
+  QPushButton* m_btnSavePublishTopics;
+  QPushButton* m_btnLoadPublishTopics;
   QLineEdit* m_editSubscribeTopic;
   QComboBox* m_comboSubscribeQos;
   QLineEdit* m_editPublishTopic;
   QComboBox* m_comboPublishQos;
   QCheckBox* m_chkPublishRetain;
+  QCheckBox* m_chkAutoscroll;
   QPlainTextEdit* m_editPublishPayload;
   QLineEdit* m_editFilter;
+  QListWidget* m_listPublishTopics;
   QTreeWidget* m_tree;
-  QPlainTextEdit* m_details;
+  QTreeWidget* m_detailsTree;
+  QMenuBar* m_menuBar;
+  QMenu* m_subscribeMenu;
+  QAction* m_actSubscribe;
+  QAction* m_actUnsubscribe;
+  QAction* m_actSubscribeConfigured;
+  QAction* m_actClearSubscriptions;
   QLabel* m_lblStatus;
 };
 

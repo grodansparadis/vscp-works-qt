@@ -1176,7 +1176,7 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
 
     if (static_cast<int>(CVscpClient::connType::MQTT) == item->parent()->type()) {
       menu->addAction(newSessionIcon,
-                      QString(tr("MQTT Explorer")),
+                      QString(tr("MQTT raw explorer")),
                       this,
                       SLOT(newMqttExplorer()));
     }
@@ -1504,8 +1504,8 @@ MainWindow::createActions()
   fileToolBar->addAction(newSessionAct);
 
   QAction* newMqttExplorerAct =
-    new QAction(newSessionIcon, tr("MQTT &Explorer window..."), this);
-  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT Explorer window"));
+    new QAction(newSessionIcon, tr("MQTT &raw explorer window..."), this);
+  newMqttExplorerAct->setStatusTip(tr("Open a new MQTT raw explorer window"));
   connect(newMqttExplorerAct,
           &QAction::triggered,
           this,
