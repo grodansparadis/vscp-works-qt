@@ -34,6 +34,7 @@
 #include <QtSerialBus/QCanBusDevice>
 #include <QtSerialBus/QCanBusFrame>
 
+#include <QAction>
 #include <QCheckBox>
 #include <QColor>
 #include <QComboBox>
@@ -41,10 +42,14 @@
 #include <QDialog>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMenuBar>
 #include <QPushButton>
+#include <QSettings>
 #include <QShowEvent>
 #include <QStackedWidget>
 #include <QTableWidget>
+#include <QToolBar>
+#include <QTreeWidget>
 #include <QVector>
 
 #include <nlohmann/json.hpp>
@@ -69,6 +74,14 @@ private slots:
   void addIdFilter();
   void removeSelectedIdFilter();
   void onFilterTableChanged(QTableWidgetItem* item);
+  void saveCurrentFrameAsTemplate();
+  void deleteSelectedTemplate();
+  void clearTemplates();
+  void sendSelectedTemplate();
+  void loadTemplatesFromDisk();
+  void saveTemplatesToDisk();
+  void refreshTemplatesView();
+  void onTemplateSelectionChanged();
 
 protected:
   void showEvent(QShowEvent* event) override;
@@ -92,8 +105,20 @@ private:
     uint32_t idTo;
   };
 
+  struct SavedFrameTemplate {
+    QString name;
+    QString frameId;
+    QString payload;
+    bool extended;
+    bool fd;
+    bool bitrateSwitch;
+    bool errorStateIndicator;
+    bool remoteRequest;
+  };
+
   void setupUi();
   void appendFrame(const QCanBusFrame& frame, FrameDirection direction);
+  void applyTemplateToInputs(const SavedFrameTemplate& templateItem);
   void setConnectedState(bool connected);
   bool parseFrameId(uint32_t& id);
   bool parsePayload(QByteArray& payload);
@@ -118,6 +143,7 @@ private:
   QCanBusDevice* m_canDevice;
   QVector<FrameRecord> m_frameHistory;
   QVector<IdFilterRange> m_idFilters;
+  QVector<SavedFrameTemplate> m_savedTemplates;
   bool m_autoConnectAttempted;
 
   QLabel* m_statusLabel;
@@ -136,8 +162,17 @@ private:
   QPushButton* m_btnClear;
   QPushButton* m_btnAddFilter;
   QPushButton* m_btnRemoveFilter;
-  QTableWidget* m_tableFrames;
+  QTreeWidget* m_treeFrames;
   QTableWidget* m_tableSummary;
+  QTreeWidget* m_treeTemplates;
+  QMenuBar* m_menuBar;
+  QToolBar* m_toolBar;
+  QAction* m_actSaveCurrentFrame;
+  QAction* m_actSendSelectedFrame;
+  QAction* m_actDeleteSelectedFrame;
+  QAction* m_actClearFrames;
+  QAction* m_actLoadFromDisk;
+  QAction* m_actSaveToDisk;
 };
 
 #endif // !WIN32

@@ -34,18 +34,21 @@
 #include <QDateTime>
 #include <QWidget>
 
+class QCheckBox;
+class QDoubleSpinBox;
+
 #include <array>
 #include <vector>
 
 class QComboBox;
 class QLabel;
-class QDial;
 class QProgressBar;
 class QStackedWidget;
 class QPushButton;
 class QChart;
 class QLineSeries;
 class QValueAxis;
+class CarGaugeWidget;
 
 struct CMeasurementSourceSpec {
   uint16_t vscpClass{ 0 };
@@ -85,9 +88,12 @@ private:
   void setDisplayMode(int index);
   void refreshDisplay(double latestValue);
   void refreshDiagram();
+  void refreshUnitDisplay();
+  void refreshStatsDisplay(double value);
   void refreshValueDisplay(double value);
   void refreshSpeedMeterDisplay(double value);
   void refreshPercentDisplay(double value);
+  void evaluateAlarm(double value);
   void saveSamples();
   void clearSamples();
 
@@ -97,11 +103,26 @@ private:
   QString m_sourceDescription;
   std::vector<measurementSample> m_samples;
   displayMode m_mode{ displayMode::diagram };
+  bool m_paused{ false };
+  bool m_alarmEnabled{ false };
+  bool m_alarmActive{ false };
+  int m_diagramAxisMode{ 0 };
+  int m_alarmMode{ 0 };
+  double m_alarmThreshold{ 0 };
   double m_minSeen{ 0 };
   double m_maxSeen{ 0 };
 
   QComboBox* m_modeCombo{ nullptr };
+  QComboBox* m_gaugeStyleCombo{ nullptr };
+  QComboBox* m_diagramAxisModeCombo{ nullptr };
+  QLabel* m_gaugeStyleLabel{ nullptr };
+  QLabel* m_diagramAxisLabel{ nullptr };
+  QComboBox* m_alarmModeCombo{ nullptr };
+  QDoubleSpinBox* m_alarmValueSpinBox{ nullptr };
+  QCheckBox* m_alarmEnabledCheckBox{ nullptr };
+  QPushButton* m_pauseButton{ nullptr };
   QLabel* m_sourceLabel{ nullptr };
+  QLabel* m_unitLabel{ nullptr };
   QStackedWidget* m_displayStack{ nullptr };
   QPushButton* m_saveButton{ nullptr };
   QPushButton* m_clearButton{ nullptr };
@@ -112,7 +133,9 @@ private:
   QValueAxis* m_axisY{ nullptr };
 
   QLabel* m_valueLabel{ nullptr };
-  QDial* m_speedMeter{ nullptr };
+  QLabel* m_valueStatsLabel{ nullptr };
+  QLabel* m_statsLabel{ nullptr };
+  CarGaugeWidget* m_speedMeter{ nullptr };
   QLabel* m_speedValueLabel{ nullptr };
   QProgressBar* m_percentBar{ nullptr };
   QLabel* m_percentValueLabel{ nullptr };

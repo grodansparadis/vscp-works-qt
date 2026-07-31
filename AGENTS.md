@@ -16,6 +16,7 @@ This repository contains VSCP Works, a Qt/C++ desktop application built with CMa
 
 ## Conventions to follow
 - Keep changes aligned with the existing Qt/C++ style used in [src](src) and [third_party/vscp/src](third_party/vscp/src).
+- Do not modify files under [third_party](third_party) unless the task explicitly requires changes there.
 - When changing a dialog or widget, update the corresponding `.ui` file and related source files together.
 - Avoid introducing new dependencies unless they are already used by the project or clearly required.
 - Prefer existing documentation in [README.md](README.md), [docs/setting_up_the_system.md](docs/setting_up_the_system.md), and [install/README.md](install/README.md) over duplicating guidance.

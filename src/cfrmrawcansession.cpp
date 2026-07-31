@@ -40,7 +40,9 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QInputDialog>
 #include <QMap>
+#include <QMenu>
 #include <QMessageBox>
 #include <QSignalBlocker>
 #include <QTimer>
@@ -99,8 +101,17 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_btnClear(nullptr)
   , m_btnAddFilter(nullptr)
   , m_btnRemoveFilter(nullptr)
-  , m_tableFrames(nullptr)
+  , m_treeFrames(nullptr)
   , m_tableSummary(nullptr)
+  , m_treeTemplates(nullptr)
+  , m_menuBar(nullptr)
+  , m_toolBar(nullptr)
+  , m_actSaveCurrentFrame(nullptr)
+  , m_actSendSelectedFrame(nullptr)
+  , m_actDeleteSelectedFrame(nullptr)
+  , m_actClearFrames(nullptr)
+  , m_actLoadFromDisk(nullptr)
+  , m_actSaveToDisk(nullptr)
 {
   if (nullptr != pconn) {
     m_connObject = *pconn;
@@ -110,11 +121,14 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
     m_interfaceName = m_connObject["device"].get<std::string>().c_str();
   }
   setupUi();
+  loadTemplatesFromDisk();
+  refreshTemplatesView();
   setConnectedState(false);
 }
 
 CFrmRawCanSession::~CFrmRawCanSession()
 {
+  saveTemplatesToDisk();
   if (nullptr != m_canDevice) {
     m_canDevice->disconnectDevice();
     delete m_canDevice;
@@ -144,6 +158,28 @@ CFrmRawCanSession::setupUi()
   resize(1150, 720);
 
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
+
+  m_menuBar = new QMenuBar(this);
+  m_toolBar = new QToolBar(tr("Raw CAN"), this);
+  m_toolBar->setMovable(false);
+  mainLayout->addWidget(m_menuBar);
+  mainLayout->addWidget(m_toolBar);
+
+  QMenu* fileMenu = m_menuBar->addMenu(tr("&Frame"));
+  m_actSaveCurrentFrame = fileMenu->addAction(tr("Save current frame"));
+  m_actSendSelectedFrame = fileMenu->addAction(tr("Send selected frame"));
+  m_actDeleteSelectedFrame = fileMenu->addAction(tr("Delete selected frame"));
+  fileMenu->addSeparator();
+  m_actClearFrames = fileMenu->addAction(tr("Clear receive log"));
+  fileMenu->addSeparator();
+  m_actLoadFromDisk = fileMenu->addAction(tr("Reload saved frames"));
+  m_actSaveToDisk = fileMenu->addAction(tr("Save frames to disk"));
+
+  m_toolBar->addAction(m_actSaveCurrentFrame);
+  m_toolBar->addAction(m_actSendSelectedFrame);
+  m_toolBar->addAction(m_actDeleteSelectedFrame);
+  m_toolBar->addSeparator();
+  m_toolBar->addAction(m_actClearFrames);
 
   QHBoxLayout* topLayout = new QHBoxLayout;
   m_btnConnect           = new QPushButton(tr("Connect"), this);
@@ -190,27 +226,13 @@ CFrmRawCanSession::setupUi()
 
   m_stackViews = new QStackedWidget(this);
 
-  m_tableFrames = new QTableWidget(m_stackViews);
-  m_tableFrames->setColumnCount(7);
-  m_tableFrames->setAlternatingRowColors(true);
-  m_tableFrames->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_tableFrames->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  m_tableFrames->setHorizontalHeaderLabels(
-    QStringList() << tr("Time")
-                  << tr("Dir")
-                  << tr("ID")
-                  << tr("Format")
-                  << tr("Type")
-                  << tr("DLC")
-                  << tr("Data"));
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
-  m_tableFrames->horizontalHeader()->setStretchLastSection(true);
-  m_stackViews->addWidget(m_tableFrames);
+  m_treeFrames = new QTreeWidget(m_stackViews);
+  m_treeFrames->setAlternatingRowColors(true);
+  m_treeFrames->setColumnCount(2);
+  m_treeFrames->setHeaderLabels(QStringList() << tr("Item") << tr("Value"));
+  m_treeFrames->setUniformRowHeights(true);
+  m_treeFrames->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_stackViews->addWidget(m_treeFrames);
 
   m_tableSummary = new QTableWidget(m_stackViews);
   m_tableSummary->setColumnCount(5);
@@ -260,6 +282,26 @@ CFrmRawCanSession::setupUi()
   sendLayout->addWidget(m_chkRemoteRequest, 3, 0, 1, 2);
   sendLayout->addWidget(m_btnSend, 3, 3);
 
+  QGroupBox* templatesBox     = new QGroupBox(tr("Saved frames"), this);
+  QVBoxLayout* templatesLayout = new QVBoxLayout(templatesBox);
+  m_treeTemplates = new QTreeWidget(templatesBox);
+  m_treeTemplates->setColumnCount(2);
+  m_treeTemplates->setHeaderLabels(QStringList() << tr("Name") << tr("Frame"));
+  m_treeTemplates->setAlternatingRowColors(true);
+  m_treeTemplates->setUniformRowHeights(true);
+  m_treeTemplates->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_treeTemplates->setSelectionMode(QAbstractItemView::SingleSelection);
+  templatesLayout->addWidget(m_treeTemplates);
+  QHBoxLayout* templateButtons = new QHBoxLayout;
+  QPushButton* btnSaveTemplate = new QPushButton(tr("Save current"), templatesBox);
+  QPushButton* btnLoadTemplate = new QPushButton(tr("Load selected"), templatesBox);
+  QPushButton* btnDeleteTemplate = new QPushButton(tr("Delete"), templatesBox);
+  templateButtons->addWidget(btnSaveTemplate);
+  templateButtons->addWidget(btnLoadTemplate);
+  templateButtons->addWidget(btnDeleteTemplate);
+  templatesLayout->addLayout(templateButtons);
+  mainLayout->addWidget(templatesBox);
+
   mainLayout->addWidget(sendBox);
 
   connect(m_btnConnect, &QPushButton::clicked, this, &CFrmRawCanSession::connectOrDisconnect);
@@ -270,6 +312,16 @@ CFrmRawCanSession::setupUi()
   connect(m_btnAddFilter, &QPushButton::clicked, this, &CFrmRawCanSession::addIdFilter);
   connect(m_btnRemoveFilter, &QPushButton::clicked, this, &CFrmRawCanSession::removeSelectedIdFilter);
   connect(m_tableIdFilters, &QTableWidget::itemChanged, this, &CFrmRawCanSession::onFilterTableChanged);
+  connect(m_actSaveCurrentFrame, &QAction::triggered, this, &CFrmRawCanSession::saveCurrentFrameAsTemplate);
+  connect(m_actSendSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::sendSelectedTemplate);
+  connect(m_actDeleteSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::deleteSelectedTemplate);
+  connect(m_actClearFrames, &QAction::triggered, this, &CFrmRawCanSession::clearLog);
+  connect(m_actLoadFromDisk, &QAction::triggered, this, &CFrmRawCanSession::loadTemplatesFromDisk);
+  connect(m_actSaveToDisk, &QAction::triggered, this, &CFrmRawCanSession::saveTemplatesToDisk);
+  connect(btnSaveTemplate, &QPushButton::clicked, this, &CFrmRawCanSession::saveCurrentFrameAsTemplate);
+  connect(btnLoadTemplate, &QPushButton::clicked, this, &CFrmRawCanSession::sendSelectedTemplate);
+  connect(btnDeleteTemplate, &QPushButton::clicked, this, &CFrmRawCanSession::deleteSelectedTemplate);
+  connect(m_treeTemplates, &QTreeWidget::itemSelectionChanged, this, &CFrmRawCanSession::onTemplateSelectionChanged);
 
   addIdFilter();
 }
@@ -457,7 +509,7 @@ void
 CFrmRawCanSession::clearLog()
 {
   m_frameHistory.clear();
-  m_tableFrames->setRowCount(0);
+  m_treeFrames->clear();
   m_tableSummary->setRowCount(0);
 }
 
@@ -540,12 +592,168 @@ CFrmRawCanSession::appendFrame(const QCanBusFrame& frame, FrameDirection directi
   refreshViews();
 }
 
+void
+CFrmRawCanSession::saveCurrentFrameAsTemplate()
+{
+  bool ok = false;
+  QString name = QInputDialog::getText(this,
+                                        tr("Save frame"),
+                                        tr("Template name"),
+                                        QLineEdit::Normal,
+                                        QString(),
+                                        &ok);
+  if (!ok || name.trimmed().isEmpty()) {
+    return;
+  }
+
+  SavedFrameTemplate templateItem;
+  templateItem.name = name.trimmed();
+  templateItem.frameId = m_editFrameId->text().trimmed();
+  templateItem.payload = m_editPayload->text().trimmed();
+  templateItem.extended = m_chkExtended->isChecked();
+  templateItem.fd = m_chkFd->isChecked();
+  templateItem.bitrateSwitch = m_chkBitrateSwitch->isChecked();
+  templateItem.errorStateIndicator = m_chkErrorStateIndicator->isChecked();
+  templateItem.remoteRequest = m_chkRemoteRequest->isChecked();
+
+  m_savedTemplates.push_back(templateItem);
+  refreshTemplatesView();
+  saveTemplatesToDisk();
+}
+
+void
+CFrmRawCanSession::deleteSelectedTemplate()
+{
+  const auto selectedItems = m_treeTemplates->selectedItems();
+  if (selectedItems.isEmpty()) {
+    return;
+  }
+
+  const int selectedIndex = m_treeTemplates->indexOfTopLevelItem(selectedItems.first());
+  if (selectedIndex < 0) {
+    return;
+  }
+
+  m_savedTemplates.removeAt(selectedIndex);
+  refreshTemplatesView();
+  saveTemplatesToDisk();
+}
+
+void
+CFrmRawCanSession::clearTemplates()
+{
+  m_savedTemplates.clear();
+  refreshTemplatesView();
+  saveTemplatesToDisk();
+}
+
+void
+CFrmRawCanSession::sendSelectedTemplate()
+{
+  const auto selectedItems = m_treeTemplates->selectedItems();
+  if (selectedItems.isEmpty()) {
+    return;
+  }
+
+  const int index = m_treeTemplates->indexOfTopLevelItem(selectedItems.first());
+  if (index < 0 || index >= m_savedTemplates.size()) {
+    return;
+  }
+
+  applyTemplateToInputs(m_savedTemplates.at(index));
+  sendFrame();
+}
+
+void
+CFrmRawCanSession::loadTemplatesFromDisk()
+{
+  const QString settingsKey = QStringLiteral("rawcan/templates/%1").arg(m_interfaceName.isEmpty() ? QStringLiteral("default") : m_interfaceName);
+  QSettings settings;
+  const int count = settings.value(settingsKey + "/count", 0).toInt();
+  m_savedTemplates.clear();
+  for (int i = 0; i < count; ++i) {
+    SavedFrameTemplate item;
+    item.name = settings.value(QStringLiteral("%1/%2/name").arg(settingsKey).arg(i), QString()).toString();
+    item.frameId = settings.value(QStringLiteral("%1/%2/frameId").arg(settingsKey).arg(i), QString()).toString();
+    item.payload = settings.value(QStringLiteral("%1/%2/payload").arg(settingsKey).arg(i), QString()).toString();
+    item.extended = settings.value(QStringLiteral("%1/%2/extended").arg(settingsKey).arg(i), false).toBool();
+    item.fd = settings.value(QStringLiteral("%1/%2/fd").arg(settingsKey).arg(i), false).toBool();
+    item.bitrateSwitch = settings.value(QStringLiteral("%1/%2/bitrateSwitch").arg(settingsKey).arg(i), false).toBool();
+    item.errorStateIndicator = settings.value(QStringLiteral("%1/%2/errorStateIndicator").arg(settingsKey).arg(i), false).toBool();
+    item.remoteRequest = settings.value(QStringLiteral("%1/%2/remoteRequest").arg(settingsKey).arg(i), false).toBool();
+    if (!item.name.isEmpty()) {
+      m_savedTemplates.push_back(item);
+    }
+  }
+  refreshTemplatesView();
+}
+
+void
+CFrmRawCanSession::saveTemplatesToDisk()
+{
+  const QString settingsKey = QStringLiteral("rawcan/templates/%1").arg(m_interfaceName.isEmpty() ? QStringLiteral("default") : m_interfaceName);
+  QSettings settings;
+  settings.remove(settingsKey);
+  settings.setValue(settingsKey + "/count", m_savedTemplates.size());
+  for (int i = 0; i < m_savedTemplates.size(); ++i) {
+    const SavedFrameTemplate& item = m_savedTemplates.at(i);
+    settings.setValue(QStringLiteral("%1/%2/name").arg(settingsKey).arg(i), item.name);
+    settings.setValue(QStringLiteral("%1/%2/frameId").arg(settingsKey).arg(i), item.frameId);
+    settings.setValue(QStringLiteral("%1/%2/payload").arg(settingsKey).arg(i), item.payload);
+    settings.setValue(QStringLiteral("%1/%2/extended").arg(settingsKey).arg(i), item.extended);
+    settings.setValue(QStringLiteral("%1/%2/fd").arg(settingsKey).arg(i), item.fd);
+    settings.setValue(QStringLiteral("%1/%2/bitrateSwitch").arg(settingsKey).arg(i), item.bitrateSwitch);
+    settings.setValue(QStringLiteral("%1/%2/errorStateIndicator").arg(settingsKey).arg(i), item.errorStateIndicator);
+    settings.setValue(QStringLiteral("%1/%2/remoteRequest").arg(settingsKey).arg(i), item.remoteRequest);
+  }
+}
+
+void
+CFrmRawCanSession::refreshTemplatesView()
+{
+  m_treeTemplates->clear();
+  for (const SavedFrameTemplate& item : m_savedTemplates) {
+    QTreeWidgetItem* treeItem = new QTreeWidgetItem(m_treeTemplates);
+    treeItem->setText(0, item.name);
+    treeItem->setText(1, QStringLiteral("%1 %2").arg(item.frameId).arg(item.payload));
+    treeItem->setToolTip(0, tr("ID: %1\nPayload: %2").arg(item.frameId).arg(item.payload));
+  }
+}
+
+void
+CFrmRawCanSession::applyTemplateToInputs(const SavedFrameTemplate& templateItem)
+{
+  m_editFrameId->setText(templateItem.frameId);
+  m_editPayload->setText(templateItem.payload);
+  m_chkExtended->setChecked(templateItem.extended);
+  m_chkFd->setChecked(templateItem.fd);
+  m_chkBitrateSwitch->setChecked(templateItem.bitrateSwitch);
+  m_chkErrorStateIndicator->setChecked(templateItem.errorStateIndicator);
+  m_chkRemoteRequest->setChecked(templateItem.remoteRequest);
+}
+
+void
+CFrmRawCanSession::onTemplateSelectionChanged()
+{
+  const auto selectedItems = m_treeTemplates->selectedItems();
+  if (selectedItems.isEmpty()) {
+    return;
+  }
+
+  const int index = m_treeTemplates->indexOfTopLevelItem(selectedItems.first());
+  if (index < 0 || index >= m_savedTemplates.size()) {
+    return;
+  }
+
+  applyTemplateToInputs(m_savedTemplates.at(index));
+}
+
 // ----------------------------------------------------------------------------
 
 void
 CFrmRawCanSession::refreshViews()
 {
-  if (m_stackViews->currentWidget() == m_tableFrames) {
+  if (m_stackViews->currentWidget() == m_treeFrames) {
     refreshFrameView();
   }
   else {
@@ -558,51 +766,50 @@ CFrmRawCanSession::refreshViews()
 void
 CFrmRawCanSession::refreshFrameView()
 {
-  m_tableFrames->setRowCount(0);
+  m_treeFrames->clear();
 
   for (const FrameRecord& rec : m_frameHistory) {
     if (!isFrameVisibleByFilter(rec.frame)) {
       continue;
     }
 
-    const int row = m_tableFrames->rowCount();
-    m_tableFrames->insertRow(row);
+    QTreeWidgetItem* frameItem = new QTreeWidgetItem(m_treeFrames);
+    frameItem->setText(0, tr("%1 %2").arg(directionText(rec.direction)).arg(rec.timestamp.toString(Qt::ISODateWithMs)));
+    frameItem->setText(1, formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
+    frameItem->setToolTip(0, tr("Frame ID: %1\nPayload: %2").arg(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat())).arg(formatPayload(rec.frame.payload())));
 
-    const QString frameType = (QCanBusFrame::DataFrame == rec.frame.frameType())
-                                ? tr("Data")
-                                : (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType()) ? tr("Remote")
-                                                                                                : tr("Other");
+    QTreeWidgetItem* detailItem = new QTreeWidgetItem(frameItem);
+    detailItem->setText(0, tr("Payload"));
+    detailItem->setText(1, formatPayload(rec.frame.payload()));
 
-    QTableWidgetItem* timeItem = new QTableWidgetItem(rec.timestamp.toString(Qt::ISODateWithMs));
-    QTableWidgetItem* dirItem  = new QTableWidgetItem(directionText(rec.direction));
-    QTableWidgetItem* idItem =
-      new QTableWidgetItem(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
-    QTableWidgetItem* formatItem =
-      new QTableWidgetItem(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
-    QTableWidgetItem* typeItem = new QTableWidgetItem(frameType + " " + frameFlagsToString(rec.frame));
-    QTableWidgetItem* dlcItem  = new QTableWidgetItem(QString::number(rec.frame.payload().size()));
-    QTableWidgetItem* dataItem = new QTableWidgetItem(formatPayload(rec.frame.payload()));
+    detailItem = new QTreeWidgetItem(frameItem);
+    detailItem->setText(0, tr("Type"));
+    detailItem->setText(1, (QCanBusFrame::DataFrame == rec.frame.frameType())
+                              ? tr("Data")
+                              : (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType()) ? tr("Remote")
+                                                                                              : tr("Other"));
+
+    detailItem = new QTreeWidgetItem(frameItem);
+    detailItem->setText(0, tr("Format"));
+    detailItem->setText(1, rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
+
+    detailItem = new QTreeWidgetItem(frameItem);
+    detailItem->setText(0, tr("Flags"));
+    detailItem->setText(1, frameFlagsToString(rec.frame));
+
+    detailItem = new QTreeWidgetItem(frameItem);
+    detailItem->setText(0, tr("DLC"));
+    detailItem->setText(1, QString::number(rec.frame.payload().size()));
 
     const QColor rowBgColor = rowBackgroundColorForDirection(rec.direction);
     const QColor rowFgColor = rowForegroundColorForDirection(rec.direction);
-    for (QTableWidgetItem* item : { timeItem, dirItem, idItem, formatItem, typeItem, dlcItem, dataItem }) {
-      item->setBackground(rowBgColor);
-      item->setForeground(rowFgColor);
-    }
-
-    typeItem->setBackground(frameTypeBackgroundColor(rec.frame));
-    typeItem->setForeground(frameTypeForegroundColor(rec.frame));
-
-    m_tableFrames->setItem(row, 0, timeItem);
-    m_tableFrames->setItem(row, 1, dirItem);
-    m_tableFrames->setItem(row, 2, idItem);
-    m_tableFrames->setItem(row, 3, formatItem);
-    m_tableFrames->setItem(row, 4, typeItem);
-    m_tableFrames->setItem(row, 5, dlcItem);
-    m_tableFrames->setItem(row, 6, dataItem);
+    frameItem->setBackground(0, rowBgColor);
+    frameItem->setBackground(1, rowBgColor);
+    frameItem->setForeground(0, rowFgColor);
+    frameItem->setForeground(1, rowFgColor);
   }
 
-  m_tableFrames->scrollToBottom();
+  m_treeFrames->expandAll();
 }
 
 // ----------------------------------------------------------------------------

@@ -603,6 +603,10 @@ CFrmNodeScan::threadReceive(vscp_event_t* pev)
 void
 CFrmNodeScan::receiveCallback(vscp_event_t& ev, void* pobj)
 {
+  if (0 == ev.timestamp_ns) {
+    ev.timestamp_ns = vscp_makeTimeStampNs();
+  }
+
   vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
   pevnew->pdata     = nullptr;

@@ -528,8 +528,9 @@ CFrmMqttExplorer::updateTopicNodeWithMessage(QTreeWidgetItem* topicNode,
     return;
   }
 
-  const QString payloadText = QString::fromUtf8(payload);
-  topicNode->setText(1, payloadText.left(120).replace('\n', " "));
+  QString payloadText = QString::fromUtf8(payload);
+  const QString displayText = payloadText.replace('\n', " ").replace('\r', " ");
+  topicNode->setText(1, displayText);
   topicNode->setData(0, RolePayloadRaw, payloadText);
   topicNode->setData(0, RolePayloadFormatted, formattedPayload);
   topicNode->setData(0,
@@ -549,8 +550,8 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   }
 
   const QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
-  const QString preview =
-    QString::fromUtf8(payload).left(120).replace('\n', " ").replace('\r', " ");
+  QString payloadText = QString::fromUtf8(payload);
+  const QString preview = payloadText.replace('\n', " ").replace('\r', " ");
   auto* msgItem = new QTreeWidgetItem({ timestamp + (retained ? " [R]" : ""), preview });
   msgItem->setData(0, RoleKind, KindMessage);
   msgItem->setData(0, RoleTopic, topic);

@@ -11,6 +11,7 @@
 - Rebuild after meaningful changes and check for regressions; this project does not appear to have a root-level automated test suite wired into CMake.
 
 ## Editing guidance
+- Do not edit files under [third_party](third_party) unless the task explicitly requires changes there.
 - When changing a Qt dialog or widget, update the matching `.ui`, `.cpp`, and `.h` files together.
 - Avoid introducing new dependencies unless they are already used by the project or clearly required.
 - Do not edit generated build artifacts under [build](build).

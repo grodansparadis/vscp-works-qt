@@ -2481,6 +2481,8 @@ CFrmSession::openRealtimeMeasurementWindow(void)
     return;
   }
 
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
   CMeasurementSourceSpec source;
   source.vscpClass   = pev->vscp_class;
   source.vscpType    = pev->vscp_type;
@@ -2491,12 +2493,30 @@ CFrmSession::openRealtimeMeasurementWindow(void)
   std::string strGuid;
   vscp_writeGuidArrayToString(strGuid, pev->GUID);
 
+  CVscpUnit unitInfo = pworks->getUnitInfo(pev->vscp_class,
+                                           pev->vscp_type,
+                                           vscp_getMeasurementUnit(pev));
+
+  QString unitDisplay;
+  if (!unitInfo.m_name.empty()) {
+    unitDisplay = unitInfo.m_name.c_str();
+    if (!unitInfo.m_symbol_ascii.empty()) {
+      unitDisplay += QString(" (%1)").arg(unitInfo.m_symbol_ascii.c_str());
+    }
+    else if (!unitInfo.m_symbol_utf8.empty()) {
+      unitDisplay += QString(" (%1)").arg(unitInfo.m_symbol_utf8.c_str());
+    }
+  }
+  else {
+    unitDisplay = tr("unit %1").arg(vscp_getMeasurementUnit(pev));
+  }
+
   QString sourceDescription =
     tr("Class=%1, Type=%2, Sensor=%3, Unit=%4, GUID=%5")
       .arg(pev->vscp_class)
       .arg(pev->vscp_type)
       .arg(vscp_getMeasurementSensorIndex(pev))
-      .arg(vscp_getMeasurementUnit(pev))
+      .arg(unitDisplay)
       .arg(strGuid.c_str());
 
   CFrmMeasurementView* pview =
@@ -4335,8 +4355,11 @@ void
 CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 {
   std::string strGuid;
+  std::string strGuidCompact;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
-  vscp_writeGuidArrayToString(strGuid, pev->GUID);
+  cguid guid(pev->GUID);
+  guid.toString(strGuid);
+  guid.toStringCompact(strGuidCompact);
 
   pworks->m_mutexGuidMap.lock();
   QString guidSymbolicName = pworks->m_mapGuidToSymbolicName[strGuid.c_str()];
@@ -4374,7 +4397,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
       strGuidDisplay = guidSymbolicName;
       if (strGuidDisplay.length())
         strGuidDisplay += " - ";
-      strGuidDisplay += strGuid.c_str();
+      strGuidDisplay += strGuidCompact.c_str();
       break;
 
     case guidDisplayFormat::guid_symbolic:
@@ -4382,7 +4405,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
         guidSymbolicName += " - ";
         guidSymbolicName += strSensorIndexSymbolic;
       }
-      strGuidDisplay = strGuid.c_str();
+      strGuidDisplay = strGuidCompact.c_str();
       if (strGuidDisplay.length())
         strGuidDisplay += " - ";
       strGuidDisplay += guidSymbolicName;
@@ -4390,7 +4413,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 
     case guidDisplayFormat::guid:
     default:
-      strGuidDisplay = strGuid.c_str();
+      strGuidDisplay = strGuidCompact.c_str();
       break;
   }
 
@@ -4794,6 +4817,10 @@ CFrmSession::fillReceiveEventDiff()
 void
 CFrmSession::receiveCallback(vscp_event_t& ev, void* pobj)
 {
+  if (0 == ev.timestamp_ns) {
+    ev.timestamp_ns = vscp_makeTimeStampNs();
+  }
+
   m_mutexReceiveCallBack.lock();
   vscp_event_t* pevnew = new vscp_event_t;
   pevnew->sizeData  = 0;
