@@ -26,6 +26,8 @@
 cmake_minimum_required(VERSION 3.31)
 project(vscp-works-qt LANGUAGES CXX C)
 
+include(CTest)
+
 option(USE_SSL "Use SSL" TRUE)
 
 ## --- C++14 build flags ---
@@ -585,6 +587,15 @@ qt_add_executable(${PROJECT_NAME}
   install/${PROJECT_NAME}.desktop
   ${TS_FILES}   
 ) 
+
+if(BUILD_TESTING)
+  find_package(Python3 COMPONENTS Interpreter REQUIRED)
+  add_test(
+    NAME source_syntax_smoke
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/source_syntax_smoke.py ${CMAKE_BINARY_DIR}/compile_commands.json
+  )
+  set_tests_properties(source_syntax_smoke PROPERTIES LABELS "smoke;compile" TIMEOUT 60)
+endif()
 
 # Auto-increment build version after each successful build (POST_BUILD)
 # Running this after linking avoids touching version.h before compilation,

@@ -87,6 +87,8 @@ protected:
   void showEvent(QShowEvent* event) override;
 
 private:
+  struct SavedFrameTemplate;
+
   enum class FrameDirection
   {
     Tx,
