@@ -47,6 +47,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QShowEvent>
+#include <QSplitter>
 #include <QStackedWidget>
 #include <QTableWidget>
 #include <QToolBar>
@@ -84,8 +85,10 @@ private slots:
   void saveTemplatesToDisk();
   void refreshTemplatesView();
   void onTemplateSelectionChanged();
+  void onFrameSelectionChanged();
   void setSendFrameVisible(bool visible);
   void setSavedFramesVisible(bool visible);
+  void setPaused(bool paused);
 
 protected:
   void showEvent(QShowEvent* event) override;
@@ -133,6 +136,7 @@ private:
   void refreshViews();
   void refreshFrameView();
   void refreshSummaryView();
+  void updateStatusLabel();
   void refreshFilterModelFromTable();
   void populateFilterTableFromModel();
   QString directionText(FrameDirection direction) const;
@@ -152,6 +156,7 @@ private:
   QVector<IdFilterRange> m_idFilters;
   QVector<SavedFrameTemplate> m_savedTemplates;
   bool m_autoConnectAttempted;
+  bool m_paused;
 
   QLabel* m_statusLabel;
   QComboBox* m_comboViewMode;
@@ -186,6 +191,10 @@ private:
   QAction* m_actShowIdFilters;
   QAction* m_actToggleSendFrame;
   QAction* m_actToggleSavedFrames;
+  QAction* m_actPause;
+  QAction* m_actConnect;
+  QAction* m_actClearLog;
+  QAction* m_actHelp;
 };
 
 #endif // !WIN32

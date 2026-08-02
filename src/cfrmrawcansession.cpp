@@ -47,6 +47,7 @@
 #include <QSignalBlocker>
 #include <QTimer>
 #include <QUrl>
+#include <QSize>
 #include <QVBoxLayout>
 #include <QtSerialBus/QCanBus>
 
@@ -85,6 +86,7 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   : QDialog(parent)
   , m_canDevice(nullptr)
   , m_autoConnectAttempted(false)
+  , m_paused(false)
   , m_statusLabel(nullptr)
   , m_comboViewMode(nullptr)
   , m_tableIdFilters(nullptr)
@@ -118,6 +120,10 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_actShowIdFilters(nullptr)
   , m_actToggleSendFrame(nullptr)
   , m_actToggleSavedFrames(nullptr)
+  , m_actPause(nullptr)
+  , m_actConnect(nullptr)
+  , m_actClearLog(nullptr)
+  , m_actHelp(nullptr)
 {
   if (nullptr != pconn) {
     m_connObject = *pconn;
@@ -161,13 +167,76 @@ CFrmRawCanSession::setupUi()
 {
   setWindowTitle(tr("CAN frame session - %1")
                    .arg(m_interfaceName.isEmpty() ? tr("Unknown device") : m_interfaceName));
-  resize(1150, 720);
+  resize(1250, 780);
+  setMinimumSize(980, 620);
+  setStyleSheet(R"(
+    QDialog {
+      background: #f7f9fc;
+      color: #1f2937;
+    }
+    QToolBar, QMenuBar {
+      background: #ffffff;
+      border: 1px solid #dbe3ee;
+      padding: 4px;
+    }
+    QToolBar QToolButton, QPushButton, QComboBox, QLineEdit, QTreeWidget, QTableWidget, QGroupBox {
+      border-radius: 6px;
+    }
+    QPushButton {
+      background: #eef4ff;
+      border: 1px solid #c9d8f2;
+      padding: 6px 10px;
+    }
+    QPushButton:hover {
+      background: #e2ecff;
+    }
+    QPushButton:pressed {
+      background: #d7e6ff;
+    }
+    QComboBox, QLineEdit {
+      border: 1px solid #c9d8f2;
+      padding: 5px 7px;
+      background: #ffffff;
+    }
+    QGroupBox {
+      border: 1px solid #dbe3ee;
+      margin-top: 10px;
+      padding-top: 8px;
+      background: #ffffff;
+    }
+    QGroupBox::title {
+      subcontrol-origin: margin;
+      left: 10px;
+      padding: 0 6px 0 6px;
+      color: #4b5563;
+      font-weight: 600;
+    }
+    QTreeWidget, QTableWidget {
+      border: 1px solid #dbe3ee;
+      background: #ffffff;
+      alternate-background-color: #f8fbff;
+    }
+    QHeaderView::section {
+      background: #eef4ff;
+      color: #374151;
+      padding: 6px;
+      border: 1px solid #dbe3ee;
+    }
+    QLabel {
+      color: #374151;
+    }
+  )");
 
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
+  mainLayout->setContentsMargins(14, 14, 14, 14);
+  mainLayout->setSpacing(10);
 
   m_menuBar = new QMenuBar(this);
   m_toolBar = new QToolBar(tr("Raw CAN"), this);
   m_toolBar->setMovable(false);
+  m_toolBar->setFloatable(false);
+  m_toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+  m_toolBar->setIconSize(QSize(16, 16));
   mainLayout->addWidget(m_menuBar);
   mainLayout->addWidget(m_toolBar);
 
@@ -191,6 +260,12 @@ CFrmRawCanSession::setupUi()
   m_actToggleSavedFrames->setCheckable(true);
   m_actToggleSavedFrames->setChecked(true);
 
+  m_actConnect = m_toolBar->addAction(tr("Connect"));
+  m_actClearLog = m_toolBar->addAction(tr("Clear"));
+  m_actPause = m_toolBar->addAction(tr("Pause"));
+  m_actPause->setCheckable(true);
+  m_actHelp = m_toolBar->addAction(tr("Help"));
+  m_toolBar->addSeparator();
   m_toolBar->addAction(m_actSaveCurrentFrame);
   m_toolBar->addAction(m_actSendSelectedFrame);
   m_toolBar->addAction(m_actDeleteSelectedFrame);
@@ -198,6 +273,8 @@ CFrmRawCanSession::setupUi()
   m_toolBar->addAction(m_actClearFrames);
 
   QHBoxLayout* topLayout = new QHBoxLayout;
+  topLayout->setContentsMargins(0, 0, 0, 0);
+  topLayout->setSpacing(8);
   m_btnConnect           = new QPushButton(tr("Connect"), this);
   m_btnClear             = new QPushButton(tr("Clear"), this);
   QPushButton* btnHelp   = new QPushButton(tr("Help"), this);
@@ -221,10 +298,20 @@ CFrmRawCanSession::setupUi()
 
   m_treeFrames = new QTreeWidget(m_stackViews);
   m_treeFrames->setAlternatingRowColors(true);
-  m_treeFrames->setColumnCount(2);
-  m_treeFrames->setHeaderLabels(QStringList() << tr("Item") << tr("Value"));
+  m_treeFrames->setColumnCount(5);
+  m_treeFrames->setSelectionMode(QAbstractItemView::ExtendedSelection);
+  m_treeFrames->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_treeFrames->setHeaderLabels(QStringList() << tr("Time") << tr("ID") << tr("Type") << tr("Format") << tr("Data"));
   m_treeFrames->setUniformRowHeights(true);
   m_treeFrames->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_treeFrames->setRootIsDecorated(false);
+  m_treeFrames->setAllColumnsShowFocus(true);
+  m_treeFrames->setIndentation(0);
+  m_treeFrames->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  m_treeFrames->header()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+  m_treeFrames->header()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
+  m_treeFrames->header()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+  m_treeFrames->header()->setSectionResizeMode(4, QHeaderView::Stretch);
   m_stackViews->addWidget(m_treeFrames);
 
   m_tableSummary = new QTableWidget(m_stackViews);
@@ -248,6 +335,7 @@ CFrmRawCanSession::setupUi()
   mainLayout->addWidget(m_stackViews, 1);
 
   QVBoxLayout* bottomLayout = new QVBoxLayout;
+  bottomLayout->setSpacing(10);
   m_sendFrameBox = new QGroupBox(tr("Send frame"), this);
   QGridLayout* sendLayout = new QGridLayout(m_sendFrameBox);
 
@@ -264,6 +352,7 @@ CFrmRawCanSession::setupUi()
   m_chkRemoteRequest       = new QCheckBox(tr("Remote request"), m_sendFrameBox);
 
   m_btnSend = new QPushButton(tr("Send"), m_sendFrameBox);
+  m_btnSend->setMinimumHeight(34);
 
   sendLayout->addWidget(new QLabel(tr("Frame ID"), m_sendFrameBox), 0, 0);
   sendLayout->addWidget(m_editFrameId, 0, 1, 1, 3);
@@ -295,18 +384,29 @@ CFrmRawCanSession::setupUi()
   templateButtons->addWidget(btnDeleteTemplate);
   templatesLayout->addLayout(templateButtons);
 
-  bottomLayout->addWidget(m_sendFrameBox);
-  bottomLayout->addWidget(m_templatesBox);
+  QSplitter* bottomSplitter = new QSplitter(Qt::Horizontal, this);
+  bottomSplitter->setChildrenCollapsible(false);
+  bottomSplitter->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  bottomSplitter->addWidget(m_sendFrameBox);
+  bottomSplitter->addWidget(m_templatesBox);
+  bottomSplitter->setStretchFactor(0, 1);
+  bottomSplitter->setStretchFactor(1, 1);
+  bottomLayout->addWidget(bottomSplitter);
   mainLayout->addLayout(bottomLayout);
 
   connect(m_btnConnect, &QPushButton::clicked, this, &CFrmRawCanSession::connectOrDisconnect);
+  connect(m_actConnect, &QAction::triggered, this, &CFrmRawCanSession::connectOrDisconnect);
+  connect(m_treeFrames, &QTreeWidget::itemSelectionChanged, this, &CFrmRawCanSession::onFrameSelectionChanged);
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmRawCanSession::sendFrame);
   connect(m_btnClear, &QPushButton::clicked, this, &CFrmRawCanSession::clearLog);
+  connect(m_actClearLog, &QAction::triggered, this, &CFrmRawCanSession::clearLog);
   connect(btnHelp, &QPushButton::clicked, this, &CFrmRawCanSession::showHelp);
+  connect(m_actHelp, &QAction::triggered, this, &CFrmRawCanSession::showHelp);
   connect(m_comboViewMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CFrmRawCanSession::onViewModeChanged);
   connect(m_actShowIdFilters, &QAction::triggered, this, &CFrmRawCanSession::showIdFiltersDialog);
   connect(m_actToggleSendFrame, &QAction::toggled, this, &CFrmRawCanSession::setSendFrameVisible);
   connect(m_actToggleSavedFrames, &QAction::toggled, this, &CFrmRawCanSession::setSavedFramesVisible);
+  connect(m_actPause, &QAction::toggled, this, &CFrmRawCanSession::setPaused);
   connect(m_actSaveCurrentFrame, &QAction::triggered, this, &CFrmRawCanSession::saveCurrentFrameAsTemplate);
   connect(m_actSendSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::sendSelectedTemplate);
   connect(m_actDeleteSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::deleteSelectedTemplate);
@@ -481,6 +581,10 @@ CFrmRawCanSession::sendFrame()
 void
 CFrmRawCanSession::processReceivedFrames()
 {
+  if (m_paused) {
+    return;
+  }
+
   while ((nullptr != m_canDevice) && m_canDevice->framesAvailable()) {
     appendFrame(m_canDevice->readFrame(), FrameDirection::Rx);
   }
@@ -849,40 +953,39 @@ CFrmRawCanSession::refreshViews()
 void
 CFrmRawCanSession::refreshFrameView()
 {
+  const int previousTopIndex = m_treeFrames->topLevelItemCount();
   m_treeFrames->clear();
 
+  int visibleIndex = 0;
   for (const FrameRecord& rec : m_frameHistory) {
     if (!isFrameVisibleByFilter(rec.frame)) {
       continue;
     }
 
+    const QString frameTypeText = (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType())
+                                    ? tr("Remote")
+                                    : tr("Data");
+    const QString payloadPreview = formatPayload(rec.frame.payload());
+    const QString compactPayload = (payloadPreview.size() > 64) ? payloadPreview.left(64) + QStringLiteral("…") : payloadPreview;
+    const QString mainRowText = tr("%1 %2 | %3 | %4 | DLC %5 | %6")
+                                  .arg(directionText(rec.direction))
+                                  .arg(rec.timestamp.toString(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz")))
+                                  .arg(frameTypeText)
+                                  .arg(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"))
+                                  .arg(rec.frame.payload().size())
+                                  .arg(compactPayload.isEmpty() ? tr("<empty>") : compactPayload);
+
     QTreeWidgetItem* frameItem = new QTreeWidgetItem(m_treeFrames);
-    frameItem->setText(0, tr("%1 %2").arg(directionText(rec.direction)).arg(rec.timestamp.toString(Qt::ISODateWithMs)));
+    frameItem->setData(0, Qt::UserRole, visibleIndex);
+    frameItem->setText(0, rec.timestamp.toString(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz")));
     frameItem->setText(1, formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
-    frameItem->setToolTip(0, tr("Frame ID: %1\nPayload: %2").arg(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat())).arg(formatPayload(rec.frame.payload())));
-
-    QTreeWidgetItem* detailItem = new QTreeWidgetItem(frameItem);
-    detailItem->setText(0, tr("Payload"));
-    detailItem->setText(1, formatPayload(rec.frame.payload()));
-
-    detailItem = new QTreeWidgetItem(frameItem);
-    detailItem->setText(0, tr("Type"));
-    detailItem->setText(1, (QCanBusFrame::DataFrame == rec.frame.frameType())
-                              ? tr("Data")
-                              : (QCanBusFrame::RemoteRequestFrame == rec.frame.frameType()) ? tr("Remote")
-                                                                                              : tr("Other"));
-
-    detailItem = new QTreeWidgetItem(frameItem);
-    detailItem->setText(0, tr("Format"));
-    detailItem->setText(1, rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
-
-    detailItem = new QTreeWidgetItem(frameItem);
-    detailItem->setText(0, tr("Flags"));
-    detailItem->setText(1, frameFlagsToString(rec.frame));
-
-    detailItem = new QTreeWidgetItem(frameItem);
-    detailItem->setText(0, tr("DLC"));
-    detailItem->setText(1, QString::number(rec.frame.payload().size()));
+    frameItem->setText(2, frameTypeText);
+    frameItem->setText(3, rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
+    frameItem->setText(4, compactPayload.isEmpty() ? tr("<empty>") : compactPayload);
+    frameItem->setToolTip(0, tr("Frame ID: %1\nPayload: %2\nFlags: %3")
+                                 .arg(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()))
+                                 .arg(formatPayload(rec.frame.payload()))
+                                 .arg(frameFlagsToString(rec.frame)));
 
     const QColor rowBgColor = rowBackgroundColorForDirection(rec.direction);
     const QColor rowFgColor = rowForegroundColorForDirection(rec.direction);
@@ -890,9 +993,16 @@ CFrmRawCanSession::refreshFrameView()
     frameItem->setBackground(1, rowBgColor);
     frameItem->setForeground(0, rowFgColor);
     frameItem->setForeground(1, rowFgColor);
+
+    ++visibleIndex;
   }
 
-  m_treeFrames->expandAll();
+  if (m_treeFrames->topLevelItemCount() > 0) {
+    const int lastRow = m_treeFrames->topLevelItemCount() - 1;
+    m_treeFrames->scrollToItem(m_treeFrames->topLevelItem(lastRow), QAbstractItemView::PositionAtBottom);
+  }
+
+  updateStatusLabel();
 }
 
 // ----------------------------------------------------------------------------
@@ -1186,13 +1296,69 @@ CFrmRawCanSession::parseIdValue(const QString& value, uint32_t& id) const
 // ----------------------------------------------------------------------------
 
 void
+CFrmRawCanSession::updateStatusLabel()
+{
+  QString text;
+  if (nullptr != m_canDevice) {
+    text = m_paused ? tr("Paused - connected to %1").arg(m_interfaceName) : tr("Connected to %1").arg(m_interfaceName);
+  }
+  else {
+    text = tr("Disconnected");
+  }
+
+  if ((nullptr != m_treeFrames) && (m_treeFrames->selectedItems().size() == 2)) {
+    QList<QTreeWidgetItem*> selectedItems = m_treeFrames->selectedItems();
+    QVector<qint64> selectedIndices;
+    selectedIndices.reserve(selectedItems.size());
+    for (QTreeWidgetItem* item : selectedItems) {
+      const QVariant indexData = item->data(0, Qt::UserRole);
+      const int index = indexData.isValid() ? indexData.toInt() : -1;
+      if (index >= 0 && index < m_frameHistory.size()) {
+        selectedIndices.push_back(index);
+      }
+    }
+
+    if (selectedIndices.size() == 2) {
+      const qint64 firstIndex = selectedIndices.at(0);
+      const qint64 secondIndex = selectedIndices.at(1);
+      const qint64 deltaUs = qAbs(m_frameHistory.at(firstIndex).timestamp.msecsTo(m_frameHistory.at(secondIndex).timestamp)) * 1000;
+      text = tr("%1 | Δt %2 µs").arg(text).arg(deltaUs);
+    }
+  }
+
+  m_statusLabel->setText(text);
+}
+
+// ----------------------------------------------------------------------------
+
+void
 CFrmRawCanSession::setConnectedState(bool connected)
 {
-  m_btnConnect->setText(connected ? tr("Disconnect") : tr("Connect"));
-  m_btnSend->setEnabled(connected);
-  m_statusLabel->setText(connected
-                           ? tr("Connected to %1").arg(m_interfaceName)
-                           : tr("Disconnected"));
+  Q_UNUSED(connected);
+  m_btnConnect->setText(nullptr != m_canDevice ? tr("Disconnect") : tr("Connect"));
+  m_btnSend->setEnabled(nullptr != m_canDevice);
+  m_actConnect->setText(nullptr != m_canDevice ? tr("Disconnect") : tr("Connect"));
+  updateStatusLabel();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::setPaused(bool paused)
+{
+  m_paused = paused;
+  if (nullptr != m_actPause) {
+    m_actPause->setText(paused ? tr("Resume") : tr("Pause"));
+  }
+  setConnectedState(nullptr != m_canDevice);
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::onFrameSelectionChanged()
+{
+  updateStatusLabel();
 }
 
 // ----------------------------------------------------------------------------
