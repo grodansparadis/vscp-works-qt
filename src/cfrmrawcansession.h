@@ -40,6 +40,7 @@
 #include <QComboBox>
 #include <QDateTime>
 #include <QDialog>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenuBar>
@@ -71,6 +72,7 @@ private slots:
   void clearLog();
   void showHelp();
   void onViewModeChanged(int index);
+  void showIdFiltersDialog();
   void addIdFilter();
   void removeSelectedIdFilter();
   void onFilterTableChanged(QTableWidgetItem* item);
@@ -82,6 +84,8 @@ private slots:
   void saveTemplatesToDisk();
   void refreshTemplatesView();
   void onTemplateSelectionChanged();
+  void setSendFrameVisible(bool visible);
+  void setSavedFramesVisible(bool visible);
 
 protected:
   void showEvent(QShowEvent* event) override;
@@ -130,6 +134,7 @@ private:
   void refreshFrameView();
   void refreshSummaryView();
   void refreshFilterModelFromTable();
+  void populateFilterTableFromModel();
   QString directionText(FrameDirection direction) const;
   QColor rowBackgroundColorForDirection(FrameDirection direction) const;
   QColor rowForegroundColorForDirection(FrameDirection direction) const;
@@ -152,6 +157,9 @@ private:
   QComboBox* m_comboViewMode;
   QTableWidget* m_tableIdFilters;
   QStackedWidget* m_stackViews;
+  QDialog* m_idFilterDialog;
+  QGroupBox* m_sendFrameBox;
+  QGroupBox* m_templatesBox;
   QLineEdit* m_editFrameId;
   QLineEdit* m_editPayload;
   QCheckBox* m_chkExtended;
@@ -175,6 +183,9 @@ private:
   QAction* m_actClearFrames;
   QAction* m_actLoadFromDisk;
   QAction* m_actSaveToDisk;
+  QAction* m_actShowIdFilters;
+  QAction* m_actToggleSendFrame;
+  QAction* m_actToggleSavedFrames;
 };
 
 #endif // !WIN32

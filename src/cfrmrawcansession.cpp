@@ -89,6 +89,9 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_comboViewMode(nullptr)
   , m_tableIdFilters(nullptr)
   , m_stackViews(nullptr)
+  , m_idFilterDialog(nullptr)
+  , m_sendFrameBox(nullptr)
+  , m_templatesBox(nullptr)
   , m_editFrameId(nullptr)
   , m_editPayload(nullptr)
   , m_chkExtended(nullptr)
@@ -112,6 +115,9 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_actClearFrames(nullptr)
   , m_actLoadFromDisk(nullptr)
   , m_actSaveToDisk(nullptr)
+  , m_actShowIdFilters(nullptr)
+  , m_actToggleSendFrame(nullptr)
+  , m_actToggleSavedFrames(nullptr)
 {
   if (nullptr != pconn) {
     m_connObject = *pconn;
@@ -175,6 +181,16 @@ CFrmRawCanSession::setupUi()
   m_actLoadFromDisk = fileMenu->addAction(tr("Reload saved frames"));
   m_actSaveToDisk = fileMenu->addAction(tr("Save frames to disk"));
 
+  m_actShowIdFilters = fileMenu->addAction(tr("ID filters..."));
+  m_actShowIdFilters->setToolTip(tr("Open the ID filter dialog"));
+  fileMenu->addSeparator();
+  m_actToggleSendFrame = fileMenu->addAction(tr("Show send frame"));
+  m_actToggleSendFrame->setCheckable(true);
+  m_actToggleSendFrame->setChecked(true);
+  m_actToggleSavedFrames = fileMenu->addAction(tr("Show saved frames"));
+  m_actToggleSavedFrames->setCheckable(true);
+  m_actToggleSavedFrames->setChecked(true);
+
   m_toolBar->addAction(m_actSaveCurrentFrame);
   m_toolBar->addAction(m_actSendSelectedFrame);
   m_toolBar->addAction(m_actDeleteSelectedFrame);
@@ -200,29 +216,6 @@ CFrmRawCanSession::setupUi()
   topLayout->addStretch(1);
   topLayout->addWidget(m_statusLabel, 1);
   mainLayout->addLayout(topLayout);
-
-  QGroupBox* filterBox          = new QGroupBox(tr("ID filters"), this);
-  QVBoxLayout* filterMainLayout = new QVBoxLayout(filterBox);
-  m_tableIdFilters              = new QTableWidget(filterBox);
-  m_tableIdFilters->setColumnCount(3);
-  m_tableIdFilters->setHorizontalHeaderLabels(
-    QStringList() << tr("Use") << tr("From ID") << tr("To ID"));
-  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
-  m_tableIdFilters->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_tableIdFilters->setAlternatingRowColors(true);
-  filterMainLayout->addWidget(m_tableIdFilters);
-
-  QHBoxLayout* filterBtnLayout = new QHBoxLayout;
-  m_btnAddFilter               = new QPushButton(tr("Add range"), filterBox);
-  m_btnRemoveFilter            = new QPushButton(tr("Remove selected"), filterBox);
-  filterBtnLayout->addWidget(m_btnAddFilter);
-  filterBtnLayout->addWidget(m_btnRemoveFilter);
-  filterBtnLayout->addStretch(1);
-  filterMainLayout->addLayout(filterBtnLayout);
-
-  mainLayout->addWidget(filterBox);
 
   m_stackViews = new QStackedWidget(this);
 
@@ -254,26 +247,27 @@ CFrmRawCanSession::setupUi()
 
   mainLayout->addWidget(m_stackViews, 1);
 
-  QGroupBox* sendBox     = new QGroupBox(tr("Send frame"), this);
-  QGridLayout* sendLayout = new QGridLayout(sendBox);
+  QVBoxLayout* bottomLayout = new QVBoxLayout;
+  m_sendFrameBox = new QGroupBox(tr("Send frame"), this);
+  QGridLayout* sendLayout = new QGridLayout(m_sendFrameBox);
 
-  m_editFrameId = new QLineEdit(sendBox);
+  m_editFrameId = new QLineEdit(m_sendFrameBox);
   m_editFrameId->setPlaceholderText(tr("Example: 0x123 or 291"));
-  m_editPayload = new QLineEdit(sendBox);
+  m_editPayload = new QLineEdit(m_sendFrameBox);
   m_editPayload->setPlaceholderText(
     tr("Hex bytes: 11 22 33 or 112233, or CSV values: 0x11,0o10,0b11,4"));
 
-  m_chkExtended            = new QCheckBox(tr("Extended ID (29-bit)"), sendBox);
-  m_chkFd                  = new QCheckBox(tr("CAN FD"), sendBox);
-  m_chkBitrateSwitch       = new QCheckBox(tr("Bitrate switch (BRS)"), sendBox);
-  m_chkErrorStateIndicator = new QCheckBox(tr("Error state indicator (ESI)"), sendBox);
-  m_chkRemoteRequest       = new QCheckBox(tr("Remote request"), sendBox);
+  m_chkExtended            = new QCheckBox(tr("Extended ID (29-bit)"), m_sendFrameBox);
+  m_chkFd                  = new QCheckBox(tr("CAN FD"), m_sendFrameBox);
+  m_chkBitrateSwitch       = new QCheckBox(tr("Bitrate switch (BRS)"), m_sendFrameBox);
+  m_chkErrorStateIndicator = new QCheckBox(tr("Error state indicator (ESI)"), m_sendFrameBox);
+  m_chkRemoteRequest       = new QCheckBox(tr("Remote request"), m_sendFrameBox);
 
-  m_btnSend = new QPushButton(tr("Send"), sendBox);
+  m_btnSend = new QPushButton(tr("Send"), m_sendFrameBox);
 
-  sendLayout->addWidget(new QLabel(tr("Frame ID"), sendBox), 0, 0);
+  sendLayout->addWidget(new QLabel(tr("Frame ID"), m_sendFrameBox), 0, 0);
   sendLayout->addWidget(m_editFrameId, 0, 1, 1, 3);
-  sendLayout->addWidget(new QLabel(tr("Payload"), sendBox), 1, 0);
+  sendLayout->addWidget(new QLabel(tr("Payload"), m_sendFrameBox), 1, 0);
   sendLayout->addWidget(m_editPayload, 1, 1, 1, 3);
   sendLayout->addWidget(m_chkExtended, 2, 0);
   sendLayout->addWidget(m_chkFd, 2, 1);
@@ -282,9 +276,9 @@ CFrmRawCanSession::setupUi()
   sendLayout->addWidget(m_chkRemoteRequest, 3, 0, 1, 2);
   sendLayout->addWidget(m_btnSend, 3, 3);
 
-  QGroupBox* templatesBox     = new QGroupBox(tr("Saved frames"), this);
-  QVBoxLayout* templatesLayout = new QVBoxLayout(templatesBox);
-  m_treeTemplates = new QTreeWidget(templatesBox);
+  m_templatesBox = new QGroupBox(tr("Saved frames"), this);
+  QVBoxLayout* templatesLayout = new QVBoxLayout(m_templatesBox);
+  m_treeTemplates = new QTreeWidget(m_templatesBox);
   m_treeTemplates->setColumnCount(2);
   m_treeTemplates->setHeaderLabels(QStringList() << tr("Name") << tr("Frame"));
   m_treeTemplates->setAlternatingRowColors(true);
@@ -293,25 +287,26 @@ CFrmRawCanSession::setupUi()
   m_treeTemplates->setSelectionMode(QAbstractItemView::SingleSelection);
   templatesLayout->addWidget(m_treeTemplates);
   QHBoxLayout* templateButtons = new QHBoxLayout;
-  QPushButton* btnSaveTemplate = new QPushButton(tr("Save current"), templatesBox);
-  QPushButton* btnLoadTemplate = new QPushButton(tr("Load selected"), templatesBox);
-  QPushButton* btnDeleteTemplate = new QPushButton(tr("Delete"), templatesBox);
+  QPushButton* btnSaveTemplate = new QPushButton(tr("Save current"), m_templatesBox);
+  QPushButton* btnLoadTemplate = new QPushButton(tr("Load selected"), m_templatesBox);
+  QPushButton* btnDeleteTemplate = new QPushButton(tr("Delete"), m_templatesBox);
   templateButtons->addWidget(btnSaveTemplate);
   templateButtons->addWidget(btnLoadTemplate);
   templateButtons->addWidget(btnDeleteTemplate);
   templatesLayout->addLayout(templateButtons);
-  mainLayout->addWidget(templatesBox);
 
-  mainLayout->addWidget(sendBox);
+  bottomLayout->addWidget(m_sendFrameBox);
+  bottomLayout->addWidget(m_templatesBox);
+  mainLayout->addLayout(bottomLayout);
 
   connect(m_btnConnect, &QPushButton::clicked, this, &CFrmRawCanSession::connectOrDisconnect);
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmRawCanSession::sendFrame);
   connect(m_btnClear, &QPushButton::clicked, this, &CFrmRawCanSession::clearLog);
   connect(btnHelp, &QPushButton::clicked, this, &CFrmRawCanSession::showHelp);
   connect(m_comboViewMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CFrmRawCanSession::onViewModeChanged);
-  connect(m_btnAddFilter, &QPushButton::clicked, this, &CFrmRawCanSession::addIdFilter);
-  connect(m_btnRemoveFilter, &QPushButton::clicked, this, &CFrmRawCanSession::removeSelectedIdFilter);
-  connect(m_tableIdFilters, &QTableWidget::itemChanged, this, &CFrmRawCanSession::onFilterTableChanged);
+  connect(m_actShowIdFilters, &QAction::triggered, this, &CFrmRawCanSession::showIdFiltersDialog);
+  connect(m_actToggleSendFrame, &QAction::toggled, this, &CFrmRawCanSession::setSendFrameVisible);
+  connect(m_actToggleSavedFrames, &QAction::toggled, this, &CFrmRawCanSession::setSavedFramesVisible);
   connect(m_actSaveCurrentFrame, &QAction::triggered, this, &CFrmRawCanSession::saveCurrentFrameAsTemplate);
   connect(m_actSendSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::sendSelectedTemplate);
   connect(m_actDeleteSelectedFrame, &QAction::triggered, this, &CFrmRawCanSession::deleteSelectedTemplate);
@@ -536,6 +531,10 @@ CFrmRawCanSession::onViewModeChanged(int index)
 void
 CFrmRawCanSession::addIdFilter()
 {
+  if (nullptr == m_tableIdFilters) {
+    return;
+  }
+
   const QSignalBlocker blocker(m_tableIdFilters);
 
   const int row = m_tableIdFilters->rowCount();
@@ -558,6 +557,10 @@ CFrmRawCanSession::addIdFilter()
 void
 CFrmRawCanSession::removeSelectedIdFilter()
 {
+  if (nullptr == m_tableIdFilters) {
+    return;
+  }
+
   const int row = m_tableIdFilters->currentRow();
   if (row < 0) {
     return;
@@ -576,6 +579,86 @@ CFrmRawCanSession::onFilterTableChanged(QTableWidgetItem* item)
   Q_UNUSED(item);
   refreshFilterModelFromTable();
   refreshViews();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::showIdFiltersDialog()
+{
+  if (nullptr != m_idFilterDialog) {
+    m_idFilterDialog->raise();
+    m_idFilterDialog->activateWindow();
+    return;
+  }
+
+  QDialog* dialog = new QDialog(this);
+  dialog->setAttribute(Qt::WA_DeleteOnClose);
+  dialog->setWindowTitle(tr("CAN ID filters"));
+  dialog->resize(420, 260);
+  m_idFilterDialog = dialog;
+
+  QVBoxLayout* layout = new QVBoxLayout(dialog);
+  m_tableIdFilters = new QTableWidget(dialog);
+  m_tableIdFilters->setColumnCount(3);
+  m_tableIdFilters->setHorizontalHeaderLabels(QStringList() << tr("Use") << tr("From ID") << tr("To ID"));
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+  m_tableIdFilters->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+  m_tableIdFilters->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_tableIdFilters->setAlternatingRowColors(true);
+  layout->addWidget(m_tableIdFilters);
+
+  QHBoxLayout* buttonsLayout = new QHBoxLayout;
+  m_btnAddFilter = new QPushButton(tr("Add range"), dialog);
+  m_btnRemoveFilter = new QPushButton(tr("Remove selected"), dialog);
+  QPushButton* btnClose = new QPushButton(tr("Close"), dialog);
+  buttonsLayout->addWidget(m_btnAddFilter);
+  buttonsLayout->addWidget(m_btnRemoveFilter);
+  buttonsLayout->addStretch(1);
+  buttonsLayout->addWidget(btnClose);
+  layout->addLayout(buttonsLayout);
+
+  connect(m_btnAddFilter, &QPushButton::clicked, this, &CFrmRawCanSession::addIdFilter);
+  connect(m_btnRemoveFilter, &QPushButton::clicked, this, &CFrmRawCanSession::removeSelectedIdFilter);
+  connect(m_tableIdFilters, &QTableWidget::itemChanged, this, &CFrmRawCanSession::onFilterTableChanged);
+  connect(btnClose, &QPushButton::clicked, dialog, &QDialog::accept);
+  connect(dialog, &QDialog::finished, this, [this, dialog](int) {
+    if (m_idFilterDialog == dialog) {
+      refreshFilterModelFromTable();
+      refreshViews();
+      m_idFilterDialog = nullptr;
+      m_tableIdFilters = nullptr;
+      m_btnAddFilter = nullptr;
+      m_btnRemoveFilter = nullptr;
+    }
+  });
+
+  populateFilterTableFromModel();
+  if (m_tableIdFilters->rowCount() == 0) {
+    addIdFilter();
+  }
+  dialog->show();
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::setSendFrameVisible(bool visible)
+{
+  if (nullptr != m_sendFrameBox) {
+    m_sendFrameBox->setVisible(visible);
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::setSavedFramesVisible(bool visible)
+{
+  if (nullptr != m_templatesBox) {
+    m_templatesBox->setVisible(visible);
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -982,6 +1065,10 @@ CFrmRawCanSession::frameTypeForegroundColor(const QCanBusFrame& frame) const
 void
 CFrmRawCanSession::refreshFilterModelFromTable()
 {
+  if (nullptr == m_tableIdFilters) {
+    return;
+  }
+
   m_idFilters.clear();
 
   for (int row = 0; row < m_tableIdFilters->rowCount(); ++row) {
@@ -1006,6 +1093,32 @@ CFrmRawCanSession::refreshFilterModelFromTable()
     r.idFrom  = idFrom;
     r.idTo    = idTo;
     m_idFilters.push_back(r);
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::populateFilterTableFromModel()
+{
+  if (nullptr == m_tableIdFilters) {
+    return;
+  }
+
+  const QSignalBlocker blocker(m_tableIdFilters);
+  m_tableIdFilters->setRowCount(0);
+
+  for (const IdFilterRange& filter : m_idFilters) {
+    const int row = m_tableIdFilters->rowCount();
+    m_tableIdFilters->insertRow(row);
+
+    QTableWidgetItem* useItem = new QTableWidgetItem;
+    useItem->setFlags(useItem->flags() | Qt::ItemIsUserCheckable);
+    useItem->setCheckState(filter.enabled ? Qt::Checked : Qt::Unchecked);
+    m_tableIdFilters->setItem(row, 0, useItem);
+
+    m_tableIdFilters->setItem(row, 1, new QTableWidgetItem(QString("0x%1").arg(filter.idFrom, 3, 16, QChar('0')).toUpper()));
+    m_tableIdFilters->setItem(row, 2, new QTableWidgetItem(QString("0x%1").arg(filter.idTo, 3, 16, QChar('0')).toUpper()));
   }
 }
 
