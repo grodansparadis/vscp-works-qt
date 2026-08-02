@@ -11,8 +11,13 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-24.04, ubuntu-latest]
+        include:
+          - os: ubuntu-24.04
+            qt_arch: linux_gcc_64
+          - os: ubuntu-24.04-arm
+            qt_arch: linux_gcc_arm64
 
     steps:
 
@@ -23,7 +28,7 @@ jobs:
         version: 6.11.1
         host: 'linux'
         target: 'desktop'
-        arch: 'linux_gcc_64'
+        arch: ${{ matrix.qt_arch }}
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
 
       # https://github.com/actions/checkout
