@@ -15,8 +15,10 @@ jobs:
       matrix:
         include:
           - os: ubuntu-24.04
+            qt_host: linux
             qt_arch: linux_gcc_64
           - os: ubuntu-24.04-arm
+            qt_host: linux_arm64
             qt_arch: linux_gcc_arm64
 
     steps:
@@ -26,7 +28,7 @@ jobs:
       uses: jurplel/install-qt-action@v4
       with:
         version: 6.8.1
-        host: 'linux'
+        host: ${{ matrix.qt_host }}
         target: 'desktop'
         arch: ${{ matrix.qt_arch }}
         modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
