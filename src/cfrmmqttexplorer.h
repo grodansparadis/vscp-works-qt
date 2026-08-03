@@ -51,7 +51,6 @@ private slots:
   void onFilterChanged(const QString& filter);
   void onTopicFilterChanged(const QString& filter);
   void onTreeSelectionChanged();
-  void onCopySelected();
   void onSaveSelected();
   void onPauseReceiveClicked();
   void onReceiveModeChanged(int index);
@@ -200,7 +199,6 @@ private:
   QPushButton* m_btnSubscribe;
   QPushButton* m_btnUnsubscribe;
   QPushButton* m_btnPublish;
-  QPushButton* m_btnCopy;
   QPushButton* m_btnSave;
   QPushButton* m_btnAddPublishTopic;
   QPushButton* m_btnUsePublishTopic;

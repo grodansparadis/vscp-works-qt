@@ -193,8 +193,14 @@ QString formatRichTextBlock(const QString& text)
 }
 
 constexpr int kItemRoleKind = Qt::UserRole + 1;
+constexpr int kItemRoleTopic = Qt::UserRole + 2;
+constexpr int kItemRolePayloadRaw = Qt::UserRole + 3;
+constexpr int kItemRolePayloadFormatted = Qt::UserRole + 4;
+constexpr int kItemRoleTimestamp = Qt::UserRole + 6;
+constexpr int kItemRolePayloadFormat = Qt::UserRole + 7;
 constexpr int kItemRoleRetained = Qt::UserRole + 8;
 constexpr int kItemRoleQos = Qt::UserRole + 10;
+constexpr int kItemRoleMid = Qt::UserRole + 11;
 constexpr int kItemKindTopicNode = 1;
 constexpr int kItemKindMessage = 2;
 
@@ -484,9 +490,7 @@ CFrmMqttExplorer::setupUi()
   m_editFilter = new QLineEdit(this);
   m_editFilter->setPlaceholderText(tr("Filter by text, qos=n, retain=true/false, topic=..."));
   filterLayout->addWidget(m_editFilter, 1);
-  m_btnCopy = new QPushButton(tr("Copy selected"), this);
   m_btnSave = new QPushButton(tr("Save selected"), this);
-  filterLayout->addWidget(m_btnCopy);
   filterLayout->addWidget(m_btnSave);
   mainLayout->addLayout(filterLayout);
 
@@ -608,48 +612,6 @@ CFrmMqttExplorer::setupUi()
           &CFrmMqttExplorer::onTreeSelectionChanged);
   m_tree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(m_tree,
-          &QTreeWidget::customContextMenuRequested,
-          this,
-          [this](const QPoint& pos) {
-            QTreeWidgetItem* item = m_tree->itemAt(pos);
-            if (nullptr == item) {
-              return;
-            }
-            m_tree->setCurrentItem(item);
-            QMenu menu(m_tree);
-            QAction* copyTopic = nullptr;
-            QAction* copyData = nullptr;
-            const bool hasPayload = !item->data(0, RolePayloadRaw).toString().isEmpty() ||
-                                    !item->data(0, RolePayloadFormatted).toString().isEmpty() ||
-                                    !item->text(1).isEmpty();
-            if (hasPayload) {
-              copyData = menu.addAction(tr("Copy data"));
-            }
-            copyTopic = menu.addAction(item->data(0, RoleKind).toInt() == KindTopicNode ? tr("copy topic") : tr("Copy full topic"));
-            const QAction* selected = menu.exec(m_tree->viewport()->mapToGlobal(pos));
-            if (selected == copyTopic) {
-              const QString topic = item->data(0, RoleTopic).toString();
-              if (!topic.isEmpty()) {
-                QApplication::clipboard()->setText(topic);
-              }
-            }
-            else if (selected == copyData) {
-              QString data = item->data(0, RolePayloadRaw).toString();
-              if (data.isEmpty()) {
-                data = item->data(0, RolePayloadFormatted).toString();
-              }
-              if (data.isEmpty()) {
-                data = item->text(1);
-              }
-              if (data.isEmpty() && item->data(0, RoleKind).toInt() == KindTopicNode) {
-                data = item->text(0);
-              }
-              if (!data.isEmpty()) {
-                QApplication::clipboard()->setText(data);
-              }
-            }
-          });
-  connect(m_tree,
           &QTreeWidget::itemEntered,
           this,
           [&](QTreeWidgetItem* item, int column) {
@@ -681,9 +643,7 @@ CFrmMqttExplorer::setupUi()
           &QListWidget::itemDoubleClicked,
           this,
           &CFrmMqttExplorer::onUseSelectedPublishTopic);
-  connect(m_btnCopy, &QPushButton::clicked, this, &CFrmMqttExplorer::onCopySelected);
   connect(m_btnSave, &QPushButton::clicked, this, &CFrmMqttExplorer::onSaveSelected);
-  connect(m_btnCopy, &QPushButton::clicked, this, &CFrmMqttExplorer::onCopySelected);
   connect(m_btnSave, &QPushButton::clicked, this, &CFrmMqttExplorer::onSaveSelectedEvent);
   m_messageFlushTimer = new QTimer(this);
   m_messageFlushTimer->setInterval(200);
@@ -1979,8 +1939,21 @@ QJsonArray collectMessageJson(QTreeWidgetItem* rootItem,
       return;
     }
 
-    const bool matches = itemMatchesFilter(item, filterText, topicFilterText);
-    if (matches && item->data(0, kItemRoleKind).toInt() == kItemKindMessage) {
+    bool isVisibleInTree = !item->isHidden();
+    for (QTreeWidgetItem* ancestor = item->parent(); nullptr != ancestor; ancestor = ancestor->parent()) {
+      if (ancestor->isHidden()) {
+        isVisibleInTree = false;
+        break;
+      }
+    }
+
+    const int kind = item->data(0, kItemRoleKind).toInt();
+    const bool shouldExport = isVisibleInTree &&
+                              ((kind == kItemKindMessage) ||
+                               (kind == kItemKindTopicNode && item->childCount() == 0 &&
+                                !item->data(0, Qt::UserRole + 3).toString().isEmpty()));
+
+    if (shouldExport) {
       QJsonObject entry;
       const QString topic = item->data(0, Qt::UserRole + 2).toString();
       const QString payload = item->data(0, Qt::UserRole + 3).toString();
@@ -2007,36 +1980,55 @@ QJsonArray collectMessageJson(QTreeWidgetItem* rootItem,
   return items;
 }
 
-QString buildVisibleMessageJsonText(QTreeWidget* tree,
-                                     const QString& filterText,
-                                     const QString& topicFilterText)
+QString buildVisibleMessageText(QTreeWidget* tree,
+                                 const QString& filterText,
+                                 const QString& topicFilterText)
 {
+  Q_UNUSED(filterText);
+  Q_UNUSED(topicFilterText);
+
   if (nullptr == tree) {
     return QString();
   }
 
-  QJsonArray allItems;
-  for (int i = 0; i < tree->topLevelItemCount(); ++i) {
-    const QJsonArray visibleItems = collectMessageJson(tree->topLevelItem(i), filterText, topicFilterText);
-    for (const QJsonValue& value : visibleItems) {
-      allItems.append(value);
+  QStringList blocks;
+  const auto collectVisible = [&](QTreeWidgetItem* item, auto&& self) -> void {
+    if (nullptr == item) {
+      return;
     }
+
+    bool isVisibleInTree = !item->isHidden();
+    for (QTreeWidgetItem* ancestor = item->parent(); nullptr != ancestor; ancestor = ancestor->parent()) {
+      if (ancestor->isHidden()) {
+        isVisibleInTree = false;
+        break;
+      }
+    }
+
+    if (!isVisibleInTree) {
+      for (int i = 0; i < item->childCount(); ++i) {
+        self(item->child(i), self);
+      }
+      return;
+    }
+
+    const QString topic = item->text(0).trimmed();
+    const QString payload = item->text(1).trimmed();
+    if (!topic.isEmpty() && (!payload.isEmpty() || item->childCount() == 0)) {
+      blocks << QString("Topic: %1\nPayload: %2")
+                    .arg(topic, payload.isEmpty() ? QStringLiteral("<empty>") : payload);
+    }
+
+    for (int i = 0; i < item->childCount(); ++i) {
+      self(item->child(i), self);
+    }
+  };
+
+  for (int i = 0; i < tree->topLevelItemCount(); ++i) {
+    collectVisible(tree->topLevelItem(i), collectVisible);
   }
 
-  QJsonDocument doc(allItems);
-  return QString::fromUtf8(doc.toJson(QJsonDocument::Indented));
-}
-
-void
-CFrmMqttExplorer::onCopySelected()
-{
-  const QString filterText = m_editFilter ? m_editFilter->text() : QString();
-  const QString topicFilterText = m_editTopicFilter ? m_editTopicFilter->text() : QString();
-  const QString text = buildVisibleMessageJsonText(m_tree, filterText, topicFilterText);
-  if (text.isEmpty()) {
-    return;
-  }
-  QApplication::clipboard()->setText(text);
+  return blocks.join("\n\n---\n\n");
 }
 
 void
@@ -2044,15 +2036,15 @@ CFrmMqttExplorer::onSaveSelected()
 {
   const QString filterText = m_editFilter ? m_editFilter->text() : QString();
   const QString topicFilterText = m_editTopicFilter ? m_editTopicFilter->text() : QString();
-  const QString text = buildVisibleMessageJsonText(m_tree, filterText, topicFilterText);
+  const QString text = buildVisibleMessageText(m_tree, filterText, topicFilterText);
   if (text.isEmpty()) {
     return;
   }
 
   const QString path = QFileDialog::getSaveFileName(this,
                                                     tr("Save selected MQTT data"),
-                                                    QDir::homePath() + "/mqtt-data.json",
-                                                    tr("JSON files (*.json);;All files (*)"));
+                                                    QDir::homePath() + "/mqtt-data.txt",
+                                                    tr("Text files (*.txt);;All files (*)"));
   if (path.isEmpty()) {
     return;
   }
