@@ -6,7 +6,9 @@
 #include <QByteArray>
 #include <QDialog>
 #include <QHash>
+#include <QList>
 #include <QSet>
+#include <QTimer>
 
 struct mosquitto;
 struct mosquitto_message;
@@ -42,15 +44,19 @@ private slots:
   void onClearPublishTopics();
   void onSavePublishTopics();
   void onLoadPublishTopics();
-  void onToggleAutoscroll(bool checked);
   void onMenuSubscribe();
   void onMenuUnsubscribe();
   void onMenuSubscribeConfigured();
   void onMenuClearSubscriptions();
   void onFilterChanged(const QString& filter);
+  void onTopicFilterChanged(const QString& filter);
   void onTreeSelectionChanged();
   void onCopySelected();
   void onSaveSelected();
+  void onPauseReceiveClicked();
+  void onReceiveModeChanged(int index);
+  void onSaveSelectedEvent();
+  void flushPendingMessages();
   void handleConnected(int rc);
   void handleDisconnected(int rc);
   void handleIncomingMessage(const QString& topic,
@@ -71,16 +77,28 @@ private:
     RoleRetained,
     RolePayloadSize,
     RoleQos,
-    RoleMid
+    RoleMid,
+    RoleMessageCount
   };
 
   enum ItemKind { KindTopicNode = 1, KindMessage = 2 };
+  enum ReceiveMode { ReceiveAppend = 0, ReceiveReplace = 1 };
+
+  struct PendingMessage {
+    QString topic;
+    QByteArray payload;
+    bool retained;
+    int qos;
+    int mid;
+  };
 
   void setupUi();
   void configureFromConnection();
   bool connectToBroker();
   void disconnectFromBroker();
   bool isConnected() const;
+  void updateConnectionUiState();
+  void updateReceiveUiState();
   bool subscribeTopic(const QString& topic, int qos);
   bool unsubscribeTopic(const QString& topic);
   bool publishMessage(const QString& topic,
@@ -89,10 +107,16 @@ private:
                       bool retain);
 
   QTreeWidgetItem* ensureTopicPath(const QString& topic);
+  void pruneTopicNode(QTreeWidgetItem* item);
+  void pruneTopicNodeIndexIfNeeded();
   void updateTopicNodeWithMessage(QTreeWidgetItem* topicNode,
                                   const QString& topic,
                                   const QByteArray& payload,
-                                  const QString& formattedPayload);
+                                  const QString& formattedPayload,
+                                  const QString& format,
+                                  bool retained,
+                                  int qos,
+                                  int mid);
   void appendMessageNode(QTreeWidgetItem* topicNode,
                          const QString& topic,
                          const QByteArray& payload,
@@ -107,8 +131,13 @@ private:
   QString buildSearchText(const QString& topic,
                           const QByteArray& payload,
                           const QString& formatted) const;
-  bool applyFilterRecursive(QTreeWidgetItem* item, const QString& filterLower);
+  void flashItemHighlight(QTreeWidgetItem* item);
+  bool applyFilterRecursive(QTreeWidgetItem* item,
+                            const QString& filterLower,
+                            const QString& topicFilterLower);
   QString buildDetailsText(QTreeWidgetItem* item) const;
+  QString buildSelectedTopicSummary(QTreeWidgetItem* item) const;
+  void refreshSelectedDetails();
   void renderMessageTree(const QString& topic,
                          const QString& format,
                          const QString& formattedPayload,
@@ -142,7 +171,9 @@ private:
   json m_conn;
   struct mosquitto* m_mosq;
   bool m_connected;
+  bool m_connecting;
   bool m_tlsEnabled;
+  bool m_receivePaused;
   bool m_verifyPeer;
   QString m_host;
   int m_port;
@@ -159,8 +190,13 @@ private:
   QSet<QString> m_initialSubscriptions;
   QSet<QString> m_publishTopics;
   QHash<QString, QTreeWidgetItem*> m_topicNodeByPath;
+  QList<PendingMessage> m_pendingMessages;
+  QTimer* m_messageFlushTimer;
+  int m_messageRenderCount;
+  int m_lastRenderedMessageCount;
 
   QPushButton* m_btnConnect;
+  QPushButton* m_btnPauseReceive;
   QPushButton* m_btnSubscribe;
   QPushButton* m_btnUnsubscribe;
   QPushButton* m_btnPublish;
@@ -173,17 +209,20 @@ private:
   QPushButton* m_btnLoadPublishTopics;
   QLineEdit* m_editSubscribeTopic;
   QComboBox* m_comboSubscribeQos;
+  QComboBox* m_comboReceiveMode;
   QLineEdit* m_editPublishTopic;
   QComboBox* m_comboPublishQos;
   QCheckBox* m_chkPublishRetain;
-  QCheckBox* m_chkAutoscroll;
   QPlainTextEdit* m_editPublishPayload;
   QLineEdit* m_editFilter;
+  QLineEdit* m_editTopicFilter;
   QListWidget* m_listPublishTopics;
   QTreeWidget* m_tree;
   QTreeWidget* m_detailsTree;
   QMenuBar* m_menuBar;
   QMenu* m_subscribeMenu;
+  QAction* m_actConnect;
+  QAction* m_actPauseReceive;
   QAction* m_actSubscribe;
   QAction* m_actUnsubscribe;
   QAction* m_actSubscribeConfigured;
