@@ -3,7 +3,9 @@
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Linux Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/cmake.yml/badge.svg) 
+[![AppImage](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/appimage.yml/badge.svg)](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/appimage.yml)
 ![Windows Build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/msbuild.yml/badge.svg)
+[![Mac build](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/cmake-mac.yml/badge.svg)](https://github.com/grodansparadis/vscp-works-qt/actions/workflows/cmake-mac.yml)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 
