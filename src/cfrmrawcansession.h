@@ -86,6 +86,7 @@ private slots:
   void refreshTemplatesView();
   void onTemplateSelectionChanged();
   void onFrameSelectionChanged();
+  void onFrameItemClicked(QTreeWidgetItem* item, int column);
   void setSendFrameVisible(bool visible);
   void setSavedFramesVisible(bool visible);
   void setPaused(bool paused);
@@ -179,6 +180,7 @@ private:
   QPushButton* m_btnRemoveFilter;
   QTreeWidget* m_treeFrames;
   QTableWidget* m_tableSummary;
+  QTreeWidgetItem* m_lastClickedFrameItem;
   QTreeWidget* m_treeTemplates;
   QMenuBar* m_menuBar;
   QToolBar* m_toolBar;

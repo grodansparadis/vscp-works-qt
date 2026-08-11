@@ -109,6 +109,7 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_treeFrames(nullptr)
   , m_tableSummary(nullptr)
   , m_treeTemplates(nullptr)
+  , m_lastClickedFrameItem(nullptr)
   , m_menuBar(nullptr)
   , m_toolBar(nullptr)
   , m_actSaveCurrentFrame(nullptr)
@@ -397,6 +398,7 @@ CFrmRawCanSession::setupUi()
   connect(m_btnConnect, &QPushButton::clicked, this, &CFrmRawCanSession::connectOrDisconnect);
   connect(m_actConnect, &QAction::triggered, this, &CFrmRawCanSession::connectOrDisconnect);
   connect(m_treeFrames, &QTreeWidget::itemSelectionChanged, this, &CFrmRawCanSession::onFrameSelectionChanged);
+  connect(m_treeFrames, &QTreeWidget::itemClicked, this, &CFrmRawCanSession::onFrameItemClicked);
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmRawCanSession::sendFrame);
   connect(m_btnClear, &QPushButton::clicked, this, &CFrmRawCanSession::clearLog);
   connect(m_actClearLog, &QAction::triggered, this, &CFrmRawCanSession::clearLog);
@@ -997,7 +999,7 @@ CFrmRawCanSession::refreshFrameView()
     ++visibleIndex;
   }
 
-  if (m_treeFrames->topLevelItemCount() > 0) {
+  if (m_treeFrames->selectedItems().isEmpty() && (m_treeFrames->topLevelItemCount() > 0)) {
     const int lastRow = m_treeFrames->topLevelItemCount() - 1;
     m_treeFrames->scrollToItem(m_treeFrames->topLevelItem(lastRow), QAbstractItemView::PositionAtBottom);
   }
@@ -1306,7 +1308,7 @@ CFrmRawCanSession::updateStatusLabel()
     text = tr("Disconnected");
   }
 
-  if ((nullptr != m_treeFrames) && (m_treeFrames->selectedItems().size() == 2)) {
+  if ((nullptr != m_treeFrames) && (m_treeFrames->selectedItems().size() >= 2)) {
     QList<QTreeWidgetItem*> selectedItems = m_treeFrames->selectedItems();
     QVector<qint64> selectedIndices;
     selectedIndices.reserve(selectedItems.size());
@@ -1318,10 +1320,11 @@ CFrmRawCanSession::updateStatusLabel()
       }
     }
 
-    if (selectedIndices.size() == 2) {
-      const qint64 firstIndex = selectedIndices.at(0);
-      const qint64 secondIndex = selectedIndices.at(1);
-      const qint64 deltaUs = qAbs(m_frameHistory.at(firstIndex).timestamp.msecsTo(m_frameHistory.at(secondIndex).timestamp)) * 1000;
+    if (selectedIndices.size() >= 2) {
+      std::sort(selectedIndices.begin(), selectedIndices.end());
+      const qint64 firstIndex = selectedIndices.first();
+      const qint64 lastIndex = selectedIndices.last();
+      const qint64 deltaUs = qAbs(m_frameHistory.at(firstIndex).timestamp.msecsTo(m_frameHistory.at(lastIndex).timestamp)) * 1000;
       text = tr("%1 | Δt %2 µs").arg(text).arg(deltaUs);
     }
   }
@@ -1349,6 +1352,7 @@ CFrmRawCanSession::setPaused(bool paused)
   m_paused = paused;
   if (nullptr != m_actPause) {
     m_actPause->setText(paused ? tr("Resume") : tr("Pause"));
+    m_actPause->setChecked(paused);
   }
   setConnectedState(nullptr != m_canDevice);
 }
@@ -1358,7 +1362,35 @@ CFrmRawCanSession::setPaused(bool paused)
 void
 CFrmRawCanSession::onFrameSelectionChanged()
 {
-  updateStatusLabel();
+  const bool hasSelection = !m_treeFrames->selectedItems().isEmpty();
+  const bool shouldPause = hasSelection;
+  if (m_paused != shouldPause) {
+    setPaused(shouldPause);
+  }
+  else {
+    updateStatusLabel();
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::onFrameItemClicked(QTreeWidgetItem* item, int column)
+{
+  Q_UNUSED(column);
+  if (nullptr == item) {
+    m_lastClickedFrameItem = nullptr;
+    return;
+  }
+
+  const QList<QTreeWidgetItem*> selectedItems = m_treeFrames->selectedItems();
+  const bool sameItemClickedAgain = (m_lastClickedFrameItem == item);
+  const bool isAlreadySelected = selectedItems.contains(item) && (selectedItems.size() == 1);
+  m_lastClickedFrameItem = item;
+
+  if (sameItemClickedAgain && isAlreadySelected) {
+    m_treeFrames->clearSelection();
+  }
 }
 
 // ----------------------------------------------------------------------------

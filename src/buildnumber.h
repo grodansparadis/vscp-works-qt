@@ -7,8 +7,8 @@
 #ifndef _____VSCP_BUILDNUMBER_h_____
 #define _____VSCP_BUILDNUMBER_h_____
 
-#define VSCPWORKS_BUILD_VERSION     239   
+#define VSCPWORKS_BUILD_VERSION     248   
 
-#define VSCPWORKS_DISPLAY_VERSION   "0.0.3-239"
+#define VSCPWORKS_DISPLAY_VERSION   "0.0.3-248"
 
 #endif
