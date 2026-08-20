@@ -1981,7 +1981,7 @@ MainWindow::chkUpdate()
 
   if ((major > VSCPWORKS_MAJOR_VERSION) ||
       ((major == VSCPWORKS_MAJOR_VERSION) && (minor > VSCPWORKS_MINOR_VERSION)) ||
-      (((major == VSCPWORKS_MAJOR_VERSION) && (minor == VSCPWORKS_MINOR_VERSION) && (release > VSCPWORKS_RELEASE_VERSION)))) {
+      (((major == VSCPWORKS_MAJOR_VERSION) && (minor == VSCPWORKS_MINOR_VERSION) && (release > VSCPWORKS_PATCH_VERSION)))) {
     QMessageBox::information(this,
                              tr(APPNAME),
                              tr("A new version of VSCP Works+ is available."),

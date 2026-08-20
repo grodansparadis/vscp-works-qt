@@ -29,16 +29,15 @@
 #ifndef _____VSCP_VERSION_h_____
 #define _____VSCP_VERSION_h_____
 /*
-    MAJOR version with incompatible API changes,
-    MINOR version with add functionality in a backwards-compatible manner, and
-    RELEASE version with backwards-compatible bug fixes.
-    BUILD Just a new build.
+    CalVer uses MAJOR = two-digit calendar year, MINOR = release within the
+    year, and PATCH = auto-incrementing counter for each merge/build.
+    The leading field is informational rather than a SemVer major.
 */
 // I M P O T A N T ! ! ! Lines below must be located at line
 // 39/40/41/42/43/44/45/46 I M P O T A N T ! ! !
-#define VSCPWORKS_MAJOR_VERSION     0
-#define VSCPWORKS_MINOR_VERSION     0
-#define VSCPWORKS_RELEASE_VERSION   3
+#define VSCPWORKS_MAJOR_VERSION     26
+#define VSCPWORKS_MINOR_VERSION     1
+#define VSCPWORKS_PATCH_VERSION     248
 
 // BUILD_VERSION and DISPLAY_VERSION are in buildnumber.h (auto-updated each
 // build). Include buildnumber.h only in the .cpp files that display the
@@ -54,8 +53,8 @@
     "href=\"https://www.grodansparadis.com\">https://"                         \
     "www.grodansparadis.com</a>"
 
-#define VSCPWORKS_VERSION(major, minor, release)                               \
-    (((major) << 16) | ((minor) << 8) | (release))
+#define VSCPWORKS_VERSION(major, minor, patch)                                 \
+    (((major) << 16) | ((minor) << 8) | (patch))
 
 #endif
 
