@@ -20,6 +20,9 @@ DEFINES += USE_WEBSOCKET
 TARGET = vscpworks
 TEMPLATE = app
 
+win32:RC_FILE = src/vscpworks.rc
+macx:ICON = icons/vscpworks.icns
+
 SOURCES +=  src/main.cpp \
     src/mainwindow.cpp \
     src/filedownloader.cpp \

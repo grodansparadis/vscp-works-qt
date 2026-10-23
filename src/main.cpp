@@ -12,6 +12,7 @@
 #include "vscphelper.h"
 
 #include <QFile>
+#include <QIcon>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 
@@ -31,6 +32,8 @@ main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("vscp.org");
   QCoreApplication::setApplicationName("vscpworks+");
   QCoreApplication::setApplicationVersion(VSCPWORKS_DISPLAY_VERSION);
+  QGuiApplication::setDesktopFileName("vscp-works-qt");
+  QApplication::setWindowIcon(QIcon(":/vscpworks.png"));
 
   // vscpworks --config "config folder"
   QCommandLineParser parser;

@@ -2,7 +2,7 @@
 #
 # Build instructions for VSCP Works.
 #
-# Copyright (c) 2000-2025 Åke Hedman, Grodans Paradis AB
+# Copyright (c) 2000-2026 Åke Hedman, Grodans Paradis AB
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -43,11 +43,6 @@ endif()
 # Generate position-independent code (-fPIC on UNIX)
 #set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set_target_properties(${PROJECT_NAM} PROPERTIES
-  WIN32_EXECUTABLE ON
-  MACOSX_BUNDLE ON
-)
-
 # --- System Libraries ---
 include(GNUInstallDirs) 
 
@@ -60,7 +55,6 @@ list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".dll.a" ".a")
 #endif()
 
 if(MSVC)
-  set_property(TARGET ${PROJECT_NAM} PROPERTY WIN32_EXECUTABLE true)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   add_definitions(-DWIN32_LEAN_AND_MEANS)
   add_definitions(-DVCPKG_TARGET_TRIPLET=x64-windows)
@@ -588,6 +582,25 @@ qt_add_executable(${PROJECT_NAME}
   ${TS_FILES}   
 ) 
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  WIN32_EXECUTABLE ON
+  MACOSX_BUNDLE ON
+)
+
+if(WIN32)
+  enable_language(RC)
+  target_sources(${PROJECT_NAME} PRIVATE src/vscpworks.rc)
+elseif(APPLE)
+  set(VSCP_MACOS_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/vscpworks.icns")
+  target_sources(${PROJECT_NAME} PRIVATE "${VSCP_MACOS_ICON}")
+  set_source_files_properties("${VSCP_MACOS_ICON}" PROPERTIES
+    MACOSX_PACKAGE_LOCATION Resources
+  )
+  set_target_properties(${PROJECT_NAME} PROPERTIES
+    MACOSX_BUNDLE_ICON_FILE vscpworks.icns
+  )
+endif()
+
 if(BUILD_TESTING)
   find_package(Python3 COMPONENTS Interpreter REQUIRED)
   add_test(
@@ -727,69 +740,135 @@ endif()
 if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 include(InstallRequiredSystemLibraries)
-set(CPACK_GENERATOR "IFW")
-if(WIN32)
-set(CPACK_IFW_ROOT "G:/Qt/QtIFW-4.8.1")
-else(WIN32)
-set(CPACK_IFW_ROOT "~/Qt/QtIFW-4.8.1")
-endif(WIN32)
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
-include(CPack)
-if(WIN32)
-include(CPackIFW)
-endif(WIN32)
 
-set (CPACK_IFW_PACKAGE_NAME "vscp-works-qt")
-set (CPACK_IFW_PACKAGE_TITLE "VSCP Works Installer")
-set (CPACK_IFW_PACKAGE_PUBLISHER "Grodans Paradis AB")
-set (CPACK_IFW_PACKAGE_WIZARD_STYLE "Aero")
-set (CPACK_IFW_PACKAGE_WIZARD_SHOW_PAGE_LIST OFF)
-
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/install/licence.txt)
-
-if(WIN32)
-
-# Adds license info to package.xml file
-# Also copies licence.txt to 'meta' directory to display the license text in the installer.
-cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "ICS License" ${CPACK_RESOURCE_FILE_LICENSE})
-
-# Customizing the UI with a script
-cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/installscript.qs)
-# ... and an associated .ui file
-cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} USER_INTERFACES ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/page.ui)
-
-find_program(WINDEPLOYQT windeployqt HINTS "${_qt_bin_dir}")
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake" @ONLY)
-
-# Adds basic repository entries to config.xml file
-# Runs repogen command on the packages directory
-cpack_ifw_add_repository("vscpworks" URL "https://vscp.org/downloads/vscpworks" )
-
-else(WIN32)
-
-find_program(LINUXDEPLOYQT linuxdeployqt HINTS "${_qt_bin_dir}")
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake" @ONLY)
-
-if(CPACK_GENERATOR MATCHES "IFW")
-    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
-elseif(CPACK_GENERATOR MATCHES "TGZ")
-    set(CPACK_PACKAGING_INSTALL_PREFIX "")
+file(READ "${CMAKE_SOURCE_DIR}/src/buildnumber.h" VSCP_BUILDNUMBER_HEADER)
+string(REGEX MATCH "#define VSCPWORKS_DISPLAY_VERSION[ 	]+\"([0-9]+)-([0-9]+)-([0-9]+)\"" _ "${VSCP_BUILDNUMBER_HEADER}")
+if(CMAKE_MATCH_1)
+  set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
+  set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}")
+  set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}")
+  set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}-${CPACK_PACKAGE_VERSION_MINOR}-${CPACK_PACKAGE_VERSION_PATCH}")
+else()
+  file(READ "${CMAKE_SOURCE_DIR}/src/version.h" VSCP_VERSION_HEADER)
+  string(REGEX MATCH "#define VSCPWORKS_MAJOR_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
+  set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
+  string(REGEX MATCH "#define VSCPWORKS_MINOR_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
+  set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_1}")
+  string(REGEX MATCH "#define VSCPWORKS_PATCH_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
+  set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_1}")
+  set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}-${CPACK_PACKAGE_VERSION_MINOR}-${CPACK_PACKAGE_VERSION_PATCH}")
 endif()
 
-endif(WIN32)
+set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)")
+if(WIN32)
+  set(CPACK_IFW_ROOT "G:/Qt/QtIFW-4.8.1" CACHE PATH "Qt Installer Framework root")
+else()
+  set(CPACK_IFW_ROOT "$ENV{HOME}/Qt/QtIFW-4.8.1" CACHE PATH "Qt Installer Framework root")
+endif()
+
+if(UNIX AND NOT APPLE)
+  find_program(LINUXDEPLOYQT_EXECUTABLE NAMES linuxdeployqt linuxdeployqt-continuous-x86_64.AppImage HINTS
+    "$ENV{HOME}/.local/bin"
+    "/usr/local/bin"
+    "/usr/bin"
+  )
+  if(LINUXDEPLOYQT_EXECUTABLE)
+    if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+      set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
+    else()
+      set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
+    endif()
+  endif()
+endif()
+
+find_program(BINARYCREATOR_EXECUTABLE NAMES binarycreator binarycreator.exe HINTS
+  "${CPACK_IFW_ROOT}/bin"
+  "$ENV{QTIFW_ROOT}/bin"
+  "$ENV{QTDIR}/Tools/QtInstallerFramework/bin"
+  "$ENV{QTDIR}/bin"
+)
+
+set(CPACK_USE_IFW OFF)
+if(BINARYCREATOR_EXECUTABLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+  set(CPACK_USE_IFW ON)
+endif()
+
+if(CPACK_USE_IFW)
+  set(CPACK_GENERATOR "IFW" CACHE STRING "CPack generator(s)" FORCE)
+elseif(UNIX AND NOT APPLE AND LINUXDEPLOYQT_EXECUTABLE)
+  if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+    set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
+  else()
+    set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
+  endif()
+else()
+  set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
+endif()
+
+include(CPack)
+
+if(UNIX AND NOT APPLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+  add_custom_target(package-appimage
+    COMMAND "${CMAKE_COMMAND}" -DPROJECT_NAME=${PROJECT_NAME} -DCMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -DCMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -DCPACK_PACKAGE_VERSION=${CPACK_PACKAGE_VERSION} -P "${CMAKE_SOURCE_DIR}/cmake/package_appimage.cmake"
+    COMMENT "Creating AppImage package"
+    VERBATIM
+  )
+endif()
+
+if(CPACK_GENERATOR MATCHES "IFW")
+  include(CPackIFW)
+
+  set(CPACK_IFW_PACKAGE_NAME "vscp-works-qt")
+  set(CPACK_IFW_PACKAGE_TITLE "VSCP Works Installer")
+  set(CPACK_IFW_PACKAGE_PUBLISHER "Grodans Paradis AB")
+  set(CPACK_IFW_PACKAGE_WIZARD_STYLE "Aero")
+  set(CPACK_IFW_PACKAGE_WIZARD_SHOW_PAGE_LIST OFF)
+
+  set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/install/licence.txt)
+
+  if(WIN32)
+    # Adds license info to package.xml file
+    # Also copies licence.txt to 'meta' directory to display the license text in the installer.
+    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} LICENSES "ICS License" ${CPACK_RESOURCE_FILE_LICENSE})
+
+    # Customizing the UI with a script
+    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} SCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/installscript.qs)
+    # ... and an associated .ui file
+    cpack_ifw_configure_component(${COMPONENT_NAME_MAIN} USER_INTERFACES ${CMAKE_CURRENT_SOURCE_DIR}/../AwesomeWorld-Installer/page.ui)
+
+    find_program(WINDEPLOYQT windeployqt HINTS "${_qt_bin_dir}")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-windows.cmake" @ONLY)
+
+    # Adds basic repository entries to config.xml file
+    # Runs repogen command on the packages directory
+    cpack_ifw_add_repository("vscpworks" URL "https://vscp.org/downloads/vscpworks" )
+  else()
+    find_program(LINUXDEPLOYQT linuxdeployqt HINTS "${_qt_bin_dir}")
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake.in" "${CMAKE_CURRENT_SOURCE_DIR}/deploy-qt-linux.cmake" @ONLY)
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
+  endif()
+else()
+  message(STATUS "Qt Installer Framework not found; using CPack generator '${CPACK_GENERATOR}'")
+  set(CPACK_PACKAGING_INSTALL_PREFIX "")
+endif()
 
 endif() # "${CMAKE_ROOT}/Modules/CPack.cmake"
 
 install(TARGETS ${PROJECT_NAME}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  BUNDLE DESTINATION .)
 
-install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+if(UNIX AND NOT APPLE)
+  install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
-# icons
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons)
+  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/vscpworks.png
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/128x128/apps)
+endif()
+
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+  PATTERN "*.ico" EXCLUDE
+  PATTERN "*.icns" EXCLUDE)
 
 # Event database etc
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/install/share/ DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME})

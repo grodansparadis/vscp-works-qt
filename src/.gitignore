@@ -32,6 +32,7 @@ qrc_*.cpp
 Thumbs.db
 *.res
 *.rc
+!vscpworks.rc
 /.qmake.cache
 /.qmake.stash
 build
@@ -71,5 +72,4 @@ build
 # --------
 *.dll
 *.exe
-
 

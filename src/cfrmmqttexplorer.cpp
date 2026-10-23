@@ -1475,6 +1475,16 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   msgItem->setData(0,
                    RoleSearchText,
                    (buildSearchText(topic, payload, formattedPayload) + "\n" + metaText).toLower());
+  const bool replaceMode = m_comboReceiveMode->currentData().toInt() == ReceiveReplace;
+  if (replaceMode) {
+    while (topicNode->childCount() > 0) {
+      delete topicNode->takeChild(0);
+    }
+    for (QTreeWidgetItem* current = topicNode; nullptr != current; current = current->parent()) {
+      current->setData(0, RoleMessageCount, 0);
+    }
+  }
+
   topicNode->addChild(msgItem);
 
   for (QTreeWidgetItem* current = topicNode; nullptr != current; current = current->parent()) {
@@ -1482,12 +1492,7 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
     current->setData(0, RoleMessageCount, count + 1);
   }
 
-  if (m_comboReceiveMode->currentData().toInt() == ReceiveReplace) {
-    flashItemHighlight(topicNode);
-  }
-  else {
-    flashItemHighlight(topicNode);
-  }
+  flashItemHighlight(topicNode);
 
   const auto selected = m_tree->selectedItems();
   if (!selected.isEmpty()) {
@@ -1501,12 +1506,7 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   }
 
   constexpr int kMaxMessagesPerTopic = 250;
-  if (m_comboReceiveMode->currentData().toInt() == ReceiveReplace) {
-    while (topicNode->childCount() > 0) {
-      delete topicNode->takeChild(0);
-    }
-  }
-  else {
+  if (!replaceMode) {
     while (topicNode->childCount() > kMaxMessagesPerTopic) {
       delete topicNode->takeChild(0);
     }
