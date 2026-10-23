@@ -36,7 +36,7 @@
 // I M P O T A N T ! ! ! Lines below must be located at line
 // 39/40/41/42/43/44/45/46 I M P O T A N T ! ! !
 #define VSCPWORKS_MAJOR_VERSION     26
-#define VSCPWORKS_MINOR_VERSION     08
+#define VSCPWORKS_MINOR_VERSION     8
 #define VSCPWORKS_PATCH_VERSION     19
 
 // BUILD_VERSION and DISPLAY_VERSION are in buildnumber.h (auto-updated each
