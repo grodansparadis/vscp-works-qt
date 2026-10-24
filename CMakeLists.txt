@@ -587,7 +587,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   MACOSX_BUNDLE ON
 )
 
-if(WIN32)
+if(WIN32 AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/vscpworks.rc")
   enable_language(RC)
   target_sources(${PROJECT_NAME} PRIVATE src/vscpworks.rc)
 elseif(APPLE)
