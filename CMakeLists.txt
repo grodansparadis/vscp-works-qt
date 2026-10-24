@@ -592,13 +592,15 @@ if(WIN32)
   target_sources(${PROJECT_NAME} PRIVATE src/vscpworks.rc)
 elseif(APPLE)
   set(VSCP_MACOS_ICON "${CMAKE_CURRENT_SOURCE_DIR}/icons/vscpworks.icns")
-  target_sources(${PROJECT_NAME} PRIVATE "${VSCP_MACOS_ICON}")
-  set_source_files_properties("${VSCP_MACOS_ICON}" PROPERTIES
-    MACOSX_PACKAGE_LOCATION Resources
-  )
-  set_target_properties(${PROJECT_NAME} PROPERTIES
-    MACOSX_BUNDLE_ICON_FILE vscpworks.icns
-  )
+  if(EXISTS "${VSCP_MACOS_ICON}")
+    target_sources(${PROJECT_NAME} PRIVATE "${VSCP_MACOS_ICON}")
+    set_source_files_properties("${VSCP_MACOS_ICON}" PROPERTIES
+      MACOSX_PACKAGE_LOCATION Resources
+    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+      MACOSX_BUNDLE_ICON_FILE vscpworks.icns
+    )
+  endif()
 endif()
 
 if(BUILD_TESTING)
