@@ -654,6 +654,11 @@ if(BUILD_TESTING)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/update_build_version.py
   )
   set_tests_properties(update_build_version PROPERTIES LABELS "version" TIMEOUT 60)
+  add_test(
+    NAME find_mosquitto
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/find_mosquitto.py
+  )
+  set_tests_properties(find_mosquitto PROPERTIES LABELS "cmake" TIMEOUT 60)
 endif()
 
 # Auto-increment build version after each successful build (POST_BUILD)
