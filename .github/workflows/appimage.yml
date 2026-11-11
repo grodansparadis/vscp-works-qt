@@ -19,23 +19,19 @@ jobs:
     # https://github.com/actions/checkout  
     - uses: actions/checkout@v4
 
-    - name: Update before installing packages
-      run: sudo apt-get update
-
-    - name: Install libmosquitto-dev manually
-      run: sudo apt-get install libmosquitto-dev
-
-    - name: Install libexpat-dev manually
-      run: sudo apt-get install libexpat-dev
-
-    - name: Install libssl-dev manually
-      run: sudo apt-get install libssl-dev
-
-    - name: Install curl manually
-      run: sudo apt-get install libcurl4-openssl-dev
-
-    - name: Install FUSE manually
-      run: sudo apt install libfuse2  
+    - name: Install system dependencies
+      run: |
+        for attempt in 1 2 3; do
+          if sudo apt-get update && sudo apt-get install -y \
+            libmosquitto-dev libexpat-dev libssl-dev libcurl4-openssl-dev libfuse2; then
+            exit 0
+          fi
+          if [ "$attempt" -lt 3 ]; then
+            echo "Package installation failed (attempt $attempt/3); retrying in 20 seconds."
+            sleep 20
+          fi
+        done
+        exit 1
 
     # https://github.com/marketplace/actions/install-qt 
     - name: Install Qt
