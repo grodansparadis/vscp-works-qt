@@ -5,7 +5,6 @@ on: [push]
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  VSCP_ROOT: ${{github.workspace}}/third_party/vscp
 
 jobs:
   build:
@@ -35,13 +34,6 @@ jobs:
 
       # https://github.com/actions/checkout
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    - name: Create environment variable for VSCP_ROOT and Qt6_DIR
-      run: |
-        export VSCP_ROOT=${{github.workspace}}/third_party/vscp
-        echo ${{env.VSCP_ROOT}}
 
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
@@ -64,9 +56,6 @@ jobs:
     - name: Install libcurl4-openssl-dev manually
       run: sudo apt install libcurl4-openssl-dev
 
-    - name: Install libwebsockets-dev 
-      run: sudo apt install libwebsockets-dev
-
     - name: Install FUSE manually
       run: sudo apt install libfuse2
 
@@ -82,7 +71,7 @@ jobs:
     - name: Create Build Environment
       run: |
         mkdir build && cd build
-        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -DVSCP_ROOT=${{github.workspace}}/third_party/vscp/ -DVSCP_PATH=${{github.workspace}}/third_party/vscp/ ..
+        cmake  -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr ..
 
     - name: Build vscp-works-qt
       working-directory: ${{github.workspace}}/build

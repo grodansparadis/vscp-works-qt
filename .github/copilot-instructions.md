@@ -2,7 +2,7 @@
 
 ## Repository overview
 - This repository builds a Qt/C++ desktop application named VSCP Works with CMake and Qt 6.8.1.
-- The main UI lives in [src](src); the vendored protocol/client implementation lives in [third_party/vscp/src](third_party/vscp/src).
+- The main UI lives in [src](src); the VSCP protocol/client implementation is fetched at configure time with CMake FetchContent from a pinned [grodansparadis/vscp](https://github.com/grodansparadis/vscp) release (see [CMakeLists.txt](CMakeLists.txt)).
 - Prefer small, compatibility-focused changes in the vendored VSCP code and keep application changes aligned with the existing Qt style.
 
 ## Build and validation
@@ -11,7 +11,7 @@
 - Rebuild after meaningful changes and check for regressions; this project does not appear to have a root-level automated test suite wired into CMake.
 
 ## Editing guidance
-- Do not edit files under [third_party](third_party) unless the task explicitly requires changes there.
+- Do not edit fetched dependency sources under `build/_deps`; to change the VSCP sources, update the pinned FetchContent URL/hash in [CMakeLists.txt](CMakeLists.txt) instead.
 - When changing a Qt dialog or widget, update the matching `.ui`, `.cpp`, and `.h` files together.
 - Avoid introducing new dependencies unless they are already used by the project or clearly required.
 - Do not edit generated build artifacts under [build](build).

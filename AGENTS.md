@@ -4,7 +4,7 @@ This repository contains VSCP Works, a Qt/C++ desktop application built with CMa
 
 ## Project shape
 - The main application code lives in [src](src), with Qt UI dialogs typically split across matching `.ui`, `.cpp`, and `.h` files.
-- The vendored VSCP protocol/client implementation lives under [third_party/vscp/src](third_party/vscp/src); prefer small, compatibility-focused changes there.
+- The VSCP protocol/client implementation is fetched at configure time with CMake FetchContent from a pinned [grodansparadis/vscp](https://github.com/grodansparadis/vscp) release (see the FetchContent section in [CMakeLists.txt](CMakeLists.txt)); the sources end up under `build/_deps/vscp-src`.
 - Build artifacts and generated files belong in [build](build) and should not be edited directly.
 
 ## Build and validation
@@ -15,8 +15,8 @@ This repository contains VSCP Works, a Qt/C++ desktop application built with CMa
 - This project does not appear to have a top-level automated test suite wired into the root CMake setup, so rebuilding and checking for regressions is the main validation step.
 
 ## Conventions to follow
-- Keep changes aligned with the existing Qt/C++ style used in [src](src) and [third_party/vscp/src](third_party/vscp/src).
-- Do not modify files under [third_party](third_party) unless the task explicitly requires changes there.
+- Keep changes aligned with the existing Qt/C++ style used in [src](src).
+- Do not modify fetched dependency sources under `build/_deps`; to change the VSCP sources, update the pinned FetchContent URL/hash in [CMakeLists.txt](CMakeLists.txt) instead.
 - When changing a dialog or widget, update the corresponding `.ui` file and related source files together.
 - Avoid introducing new dependencies unless they are already used by the project or clearly required.
 - Prefer existing documentation in [README.md](README.md), [docs/setting_up_the_system.md](docs/setting_up_the_system.md), and [install/README.md](install/README.md) over duplicating guidance.

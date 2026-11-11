@@ -55,16 +55,6 @@
       },
       {
         "type": "shell",
-        "label": "Update submodules",
-        "command": "git submodule update --recursive --remote",
-        "group": {
-          "kind": "build",
-          "isDefault": false
-        },
-        "detail": "Update submodules"
-      }
-      {
-        "type": "shell",
         "label": "g++ build active file",
         "command": "/usr/bin/g++",
         "args": [

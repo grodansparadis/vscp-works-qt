@@ -29,18 +29,15 @@
                 "/usr/local/include",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
-                "${VSCP_ROOT}/src/**",
                 "${workspaceFolder}/",
                 "${workspaceFolder}/src/",
-                "${workspaceFolder}/common/",
-                "${workspaceFolder}/common/third_party/",
-                "${workspaceFolder}/common/third_party/nlohmann/",
-                "${workspaceFolder}/common/third_party/spdlog-1.9.2/include",
-                "${workspaceFolder}/common/third_party/sqlite3-3.35.4/",
-                "${workspaceFolder}/common/third_party/duktape-2.6.0/",
-                "${workspaceFolder}/common/third_party/fastpbkdf2-1.0.0/",
-                "${workspaceFolder}/../vscp/src/common",
-                "${workspaceFolder}/../vscp/src/vscp/common",
+                "${workspaceFolder}/build/_deps/vscp-src/src/common",
+                "${workspaceFolder}/build/_deps/vscp-src/src/vscp/common",
+                "${workspaceFolder}/build/_deps/vscp_nlohmann_json-src/include",
+                "${workspaceFolder}/build/_deps/vscp_spdlog-src/include",
+                "${workspaceFolder}/build/_deps/vscp_mustache-src",
+                "${workspaceFolder}/build/_deps/vscp_maddy-src/include",
+                "${workspaceFolder}/build/_deps/sqlite3-src",
                 "/home/akhe/Qt/6.8.0/gcc_64/include"
             ],
             "defines": [],
@@ -48,8 +45,7 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}/src/**",
-                    "${workspaceFolder}/third_party/vscp/src/**",
-                    "${workspaceFolder}/third_party/**"
+                    "${workspaceFolder}/build/_deps/vscp-src/src/**"
                 ],
                 "limitSymbolsToIncludedHeaders": false
             },

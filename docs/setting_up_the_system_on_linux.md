@@ -42,8 +42,12 @@ You need expat, mosquitto, libwebsockets, OpenSSL and libcurl to build the proje
 ```
 ### Clone the vscp-works-qt repository
 ```bash
-  git clone  --recurse-submodules -j4 https://github.com/grodansparadis/vscp-works-qt.git
+  git clone https://github.com/grodansparadis/vscp-works-qt.git
 ```  
+
+All third party dependencies that are built from source (the VSCP main
+repository among them) are downloaded automatically by CMake (FetchContent)
+during the configure step, so no git submodules are needed.
 
 ### Build the project
 ```bash

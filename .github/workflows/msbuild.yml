@@ -19,8 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -58,7 +56,6 @@ jobs:
           & $vcpkg install dlfcn-win32:${env:TRIPLET}
           & $vcpkg install expat:${env:TRIPLET}
           & $vcpkg install mosquitto:${env:TRIPLET}
-          & $vcpkg install libwebsockets:${env:TRIPLET}
           & $vcpkg install openssl:${env:TRIPLET}
           & $vcpkg install pthreads:${env:TRIPLET}
 

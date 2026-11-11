@@ -9,7 +9,6 @@ on:
 
 env:
   BUILD_TYPE: Release
-  VSCP_ROOT: ${{ github.workspace }}/third_party/vscp
 
 jobs:
   build:
@@ -18,8 +17,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -33,14 +30,12 @@ jobs:
       - name: Install system dependencies
         run: |
           brew update
-          brew install expat libwebsockets mosquitto openssl@3 ninja
+          brew install expat mosquitto openssl@3 ninja
 
       - name: Configure
         run: |
           cmake -S . -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-            -DVSCP_ROOT=${VSCP_ROOT} \
-            -DVSCP_PATH=${VSCP_ROOT} \
             -DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3)
 
       - name: Build

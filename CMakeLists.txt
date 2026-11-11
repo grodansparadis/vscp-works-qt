@@ -93,10 +93,6 @@ find_package(Threads REQUIRED)
 # openssl
 find_package(OpenSSL REQUIRED)
 
-# libwebsockets
-#find_package(libwebsockets CONFIG REQUIRED)
-include(FindLibWebSockets)
-
 #set(TS_FILES vscp-works-qt_en_150.ts)
 
 # Windows Libs
@@ -148,11 +144,48 @@ ELSE(CURL_FOUND)
   MESSAGE(FATAL_ERROR "Could not find the CURL library.")
 ENDIF(CURL_FOUND)
 
+# ---- Third party sources via FetchContent (no git submodules) ----
+include(FetchContent)
+
+set(VSCP_FETCH_CONTENT_OPTIONS
+  # Populate the sources without adding their CMake projects to this build.
+  SOURCE_SUBDIR "__sources_only__"
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+
+FetchContent_Declare(
+  vscp
+  # Pinned to the latest VSCP release (v26.11.0.3948). Only a handful of VSCP
+  # source files are compiled directly into vscp-works-qt, so a pinned source
+  # tarball is used to avoid cloning the full repository history and its
+  # submodules.
+  # Get URL_HASH with:
+  # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/898fcc1ce6a89b5f4b2b8a3a233cad663dcd278f
+  URL_HASH SHA256=5485966dab085bab3ce4fb815de0a4bc8056cf11afc35b1531cc9cb8bcec6b16
+  ${VSCP_FETCH_CONTENT_OPTIONS}
+)
+FetchContent_MakeAvailable(vscp)
+
+# nlohmann-json, spdlog, mustache and maddy are fetched with the exact pins
+# used by the VSCP project itself so the versions always match the VSCP
+# sources. Defines VSCP_NLOHMANN_INCLUDE_DIR, VSCP_SPDLOG_INCLUDE_DIR,
+# VSCP_MUSTACHE_INCLUDE_DIR and VSCP_MADDY_INCLUDE_DIR.
+include("${vscp_SOURCE_DIR}/cmake/VSCPDependencies.cmake")
+
+FetchContent_Declare(
+  sqlite3
+  URL https://www.sqlite.org/2025/sqlite-amalgamation-3480000.zip
+  URL_HASH SHA256=d9a15a42db7c78f88fe3d3c5945acce2f4bfe9e4da9f685cd19f6ea1d40aa884
+  ${VSCP_FETCH_CONTENT_OPTIONS}
+)
+FetchContent_MakeAvailable(sqlite3)
+
 set(SOCKETCAN_SOURCES)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   list(APPEND SOCKETCAN_SOURCES
-    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.h
-    ./third_party/vscp/src/vscp/common/vscp-client-socketcan.cpp
+    ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-socketcan.h
+    ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-socketcan.cpp
   )
 endif()
 
@@ -515,69 +548,70 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgselectinterface.h
   src/cdlgselectinterface.ui
 
-  ./third_party/vscp/src/vscp/common/version.h
-  ./third_party/vscp/src/vscp/common/vscp.h
-  ./third_party/vscp/src/vscp/common/vscpremotetcpif.h
-  ./third_party/vscp/src/vscp/common/vscpremotetcpif.cpp
-  ./third_party/vscp/src/vscp/common/vscpdatetime.h
-  ./third_party/vscp/src/vscp/common/vscpdatetime.cpp
-  ./third_party/vscp/src/vscp/common/guid.h
-  ./third_party/vscp/src/vscp/common/guid.cpp
-  ./third_party/vscp/src/vscp/common/mdf.h
-  ./third_party/vscp/src/vscp/common/mdf.cpp
-  ./third_party/vscp/src/vscp/common/vscphelper.h
-  ./third_party/vscp/src/vscp/common/vscphelper.cpp
-  ./third_party/vscp/src/vscp/common/canal.h
-  ./third_party/vscp/src/vscp/common/canaldlldef.h
-  ./third_party/vscp/src/vscp/common/vscpcanaldeviceif.h
-  ./third_party/vscp/src/vscp/common/vscpcanaldeviceif.cpp
-  ./third_party/vscp/src/vscp/common/canal-xmlconfig.h
-  ./third_party/vscp/src/vscp/common/canal-xmlconfig.cpp
-  ./third_party/vscp/src/vscp/common/register.h
-  ./third_party/vscp/src/vscp/common/register.cpp
-  ./third_party/vscp/src/vscp/common/vscp-client-base.h
-  ./third_party/vscp/src/vscp/common/vscp-client-base.cpp
-  ./third_party/vscp/src/vscp/common/vscp-client-canal.h
-  ./third_party/vscp/src/vscp/common/vscp-client-canal.cpp    
-  ./third_party/vscp/src/vscp/common/vscp-client-mqtt.h
-  ./third_party/vscp/src/vscp/common/vscp-client-mqtt.cpp
-  ./third_party/vscp/src/vscp/common/vscp-client-tcp.h
-  ./third_party/vscp/src/vscp/common/vscp-client-tcp.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/version.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpremotetcpif.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpremotetcpif.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpdatetime.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpdatetime.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/guid.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/guid.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-guid-parser.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-guid-parser.c
+  ${vscp_SOURCE_DIR}/src/vscp/common/mdf.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/mdf.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscphelper.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscphelper.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscphelperlogging.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscphelperlogging.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscphelperlogging-forward.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/canal.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/canaldlldef.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpcanaldeviceif.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpcanaldeviceif.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/canal-xmlconfig.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/canal-xmlconfig.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/register.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/register.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-base.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-base.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-canal.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-canal.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-mqtt.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-mqtt.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-tcp.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-tcp.cpp
   ${SOCKETCAN_SOURCES}
-  ./third_party/vscp/src/vscp/common/vscp-client-ws1.h
-  ./third_party/vscp/src/vscp/common/vscp-client-ws1.cpp 
-  ./third_party/vscp/src/vscp/common/vscp-client-ws2.h
-  ./third_party/vscp/src/vscp/common/vscp-client-ws2.cpp 
-  ./third_party/vscp/src/vscp/common/vscp-client-udp.h
-  ./third_party/vscp/src/vscp/common/vscp-client-udp.cpp 
-  ./third_party/vscp/src/vscp/common/vscp-client-multicast.h
-  ./third_party/vscp/src/vscp/common/vscp-client-multicast.cpp 
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice.h
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice.cpp
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice-pic1.h
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice-pic1.cpp
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice-vscp.h
-  ./third_party/vscp/src/vscp/common/vscp-bootdevice-vscp.cpp
-  ./third_party/vscp/src/vscp/common/vscpunit.h
-  ./third_party/vscp/src/vscp/common/vscpunit.cpp     
-  ./third_party/vscp/src/common/sockettcp.h
-  ./third_party/vscp/src/common/sockettcp.c
-  ./third_party/vscp/src/common/vscpbase64.h
-  ./third_party/vscp/src/common/vscpbase64.c
-  ./third_party/vscp/src/common/vscp-aes.h
-  ./third_party/vscp/src/common/vscp-aes.c
-  ./third_party/vscp/src/common/crc.h
-  ./third_party/vscp/src/common/crc.c
-  ./third_party/vscp/src/common/crc8.h
-  ./third_party/vscp/src/common/crc8.c
-  ./third_party/vscp/src/common/vscpmd5.h
-  ./third_party/vscp/src/common/vscpmd5.c
-  ./third_party/mustache/mustache.hpp
-  ./third_party/sqlite3/sqlite3.h
-  ./third_party/sqlite3/sqlite3.c
-  ./third_party/spdlog/include/
-  ./third_party/crypto-algorithms/sha256.h
-  ./third_party/crypto-algorithms/sha256.c    
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws1.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws1.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws2.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws2.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-pic1.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-pic1.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-vscp.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-vscp.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpunit.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscpunit.cpp
+  ${vscp_SOURCE_DIR}/src/common/vscphelper-common.cpp
+  ${vscp_SOURCE_DIR}/src/common/vscpbase64.h
+  ${vscp_SOURCE_DIR}/src/common/vscpbase64.c
+  ${vscp_SOURCE_DIR}/src/common/vscp-aes.h
+  ${vscp_SOURCE_DIR}/src/common/vscp-aes.c
+  ${vscp_SOURCE_DIR}/src/common/crc.h
+  ${vscp_SOURCE_DIR}/src/common/crc.c
+  ${vscp_SOURCE_DIR}/src/common/crc8.h
+  ${vscp_SOURCE_DIR}/src/common/crc8.c
+  ${vscp_SOURCE_DIR}/src/common/vscpmd5.h
+  ${vscp_SOURCE_DIR}/src/common/vscpmd5.c
+  ${VSCP_MUSTACHE_INCLUDE_DIR}/mustache.hpp
+  ${sqlite3_SOURCE_DIR}/sqlite3.h
+  ${sqlite3_SOURCE_DIR}/sqlite3.c
   install/${PROJECT_NAME}.desktop
   ${TS_FILES}   
 ) 
@@ -585,6 +619,13 @@ qt_add_executable(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME} PROPERTIES
   WIN32_EXECUTABLE ON
   MACOSX_BUNDLE ON
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+  VSCP_HAVE_MADDY
+  VSCP_ENABLE_HELPER_LOGGING
+  VSCP_HELPER_LOGGING_EXPORTS
+  VSCP_HELPER_LOGGING_BACKEND_EXPORTS
 )
 
 if(WIN32)
@@ -634,21 +675,19 @@ if (MSVC)
     ./src 
     ./build
     ./ui
-    ./third_party/vscp/src/vscp/common/  
-    ./third_party/vscp/src/vscp/common/win32helpers
-    ./third_party/vscp/src/common
-    ./third_party
-    ./third_party/nlohmann/include/
-    ./third_party/spdlog/include/
-    ./third_party/Mustache/
-    ./third_party/sqlite3/
-    ./third_party/maddy/include/
-    ./third_party/crypto-algorithms/
+    ${vscp_SOURCE_DIR}/src/vscp/common/
+    ${vscp_SOURCE_DIR}/src/vscp/common/win32helpers
+    ${vscp_SOURCE_DIR}/src/common
+    ${vscp_SOURCE_DIR}/src/common/windows
+    ${VSCP_NLOHMANN_INCLUDE_DIR}
+    ${VSCP_SPDLOG_INCLUDE_DIR}
+    ${VSCP_MUSTACHE_INCLUDE_DIR}
+    ${VSCP_MADDY_INCLUDE_DIR}
+    ${sqlite3_SOURCE_DIR}
     ${PThreads4W_INCLUDE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIR}
-    ${LIBWEBSOCKETS_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
@@ -660,21 +699,16 @@ else()
     ./src 
     ./build
     ./ui
-    ./third_party/mqtt
-    ./third_party/mqtt/clib
-    ./third_party/vscp/src/vscp/common/
-    ./third_party/vscp/src/common
-    ./third_party
-    ./third_party/nlohmann/include/
-    ./third_party/spdlog/include/
-    ./third_party/mustache/
-    ./third_party/sqlite3/
-    ./third_party/maddy/include/
-    ./third_party/crypto-algorithms/s
+    ${vscp_SOURCE_DIR}/src/vscp/common/
+    ${vscp_SOURCE_DIR}/src/common
+    ${VSCP_NLOHMANN_INCLUDE_DIR}
+    ${VSCP_SPDLOG_INCLUDE_DIR}
+    ${VSCP_MUSTACHE_INCLUDE_DIR}
+    ${VSCP_MADDY_INCLUDE_DIR}
+    ${sqlite3_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
     ${MOSQUITTO_INCLUDE_DIRS}
-    ${LIBWEBSOCKETS_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
@@ -687,9 +721,6 @@ if (MSVC)
   find_path(MOSQUITTO_LIB_DIR mosquitto.lib HINTS "${VCPKG_ROOT}/installed/x64-windows/lib")
   message(STATUS "Mosquitto lib: ${MOSQUITTO_LIB_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/mosquitto.lib")
   link_directories(${MOSQUITTO_LIB_DIR})
-
-  message(STATUS "lib websockets lib: ${LIBWEBSOCKETS_LIBRARY_DIR}  --- ${VCPKG_ROOT}/installed/x64-windows/lib/${LIBWEBSOCKETS_LIBRARIES}")
-  link_directories(${LIBWEBSOCKETS_LIBRARY_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
   Qt6::Widgets
@@ -704,7 +735,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   OpenSSL::SSL 
   OpenSSL::Crypto
   ${MOSQUITTO_LIBRARIES}
-  ${LIBWEBSOCKETS_LIBRARIES}
   expat::expat
   CURL::libcurl
   dlfcn-win32::dl
@@ -724,7 +754,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   OpenSSL::Crypto
   ${OPENSSL_LIBRARIES}
   ${MOSQUITTO_LIBRARIES}
-  ${LIBWEBSOCKETS_LIBRARIES}
   ${EXPAT_LIBRARIES}
   ${CURL_LIBRARIES}
   ${DLFCN_LIBS}

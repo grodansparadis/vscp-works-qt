@@ -13,7 +13,7 @@ Follow these steps:
 - Prefer the smallest change that addresses the root cause.
 
 2. Inspect the relevant code
-- Check the existing implementation in the relevant source files under src/ and third_party/vscp/src/.
+- Check the existing implementation in the relevant source files under src/ (the VSCP protocol sources are fetched by CMake into build/_deps/vscp-src/).
 - Follow the repository conventions in AGENTS.md and .github/copilot-instructions.md.
 - When changing a Qt dialog or widget, update the matching .ui, .cpp, and .h files together.
 

@@ -12,20 +12,17 @@ Install cmake-tools, c++ extension
 ext install cmake-tools
 ```
 
-### VSCP main and VSCP works repositories
-You need to checkout the VSCP main repository code as well (but not in the vcpkg folder). You do this with
+### VSCP works repository
+
+Checkout the vscp-works-qt code
 
 ```bash
-  git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp.git
-  cd vscp
-  git checkout development
-``` 
-
-and the vscp-works-qt code
-
-```bash
-git clone --recurse-submodules -j8 https://github.com/grodansparadis/vscp-works-qt.git
+git clone https://github.com/grodansparadis/vscp-works-qt.git
 ```
+
+All third party dependencies that are built from source (the VSCP main
+repository among them) are downloaded automatically by CMake (FetchContent)
+during the configure step, so no git submodules are needed.
 
 ### Optionally install Qt for uae of Qt tools
 
