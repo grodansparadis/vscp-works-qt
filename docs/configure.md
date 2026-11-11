@@ -1,6 +1,6 @@
 # Configuration
 
-The config file for VSCP works is JSON based and is located in the user home directory. It is named vscp-works-qt.json
+The configuration file for VSCP Works is a JSON file named `vscp-works-qt.json`, located in the user's home directory:
 
 | System | Path |
 | ------ | ---- |
@@ -8,9 +8,9 @@ The config file for VSCP works is JSON based and is located in the user home dir
 | Windows | %APPDATA%\VSCP\vscp-works-qt.json |
 | MacOS | ~/Library/Application Support/VSCP/vscp-works-qt.json |
 
- Care should be taken when editing this file. It is recommended to use the VSCP Works+ application to edit the file.
+Take care if you edit this file by hand. We recommend changing settings from within VSCP Works+ instead.
  
- The configuration file have the following format
+ The configuration file has the following format:
 
 ```json
 {
@@ -63,7 +63,7 @@ The config file for VSCP works is JSON based and is located in the user home dir
 ## General settings
 
 ### PreferredLanguage 
-The prefered language for the application. One of the following
+The preferred language for the application. One of the following:
 
 | Language | Code |
 | -------- | ---- |
@@ -89,29 +89,29 @@ The prefered language for the application. One of the following
 | Vietnamese | vi |
 
 ### bAskBeforeDelete
-If true the application will ask before deleting an object.
+If true, the application asks for confirmation before deleting an object.
 
 ### bDarkTheme
-Enable a dark theme for the application.
+Enables a dark theme for the application.
 
 ### bSaveAlwaysJson
-If true the application will always save configuration as JSON.
+If true, the application always saves register configurations as JSON.
 
 ### configDisableColors
-If true colors are disabled.
+If true, register colors defined in the MDF are not used in the configuration window.
 
 ### configNumericBase
-The numeric base for the application. One of the following
+The numerical base used in the configuration window. One of the following:
 
 | Base | Description |
 | ---- | ----------- |
-| 0 | Decimal |
-| 1 | Hexadecimal |
+| 0 | Hexadecimal |
+| 1 | Decimal |
 | 2 | Octal |
 | 3 | Binary |
 
 ### configTimeout
-The timeout for the application.
+The response timeout, in milliseconds, used by the configuration window and node scan.
 
 ### vscpHomeFolder
 The VSCP home folder.
@@ -119,14 +119,14 @@ The VSCP home folder.
 ## Dimensions settings
 
 ### mainwindow-dimensions
-The dimensions for the main window. 
+The size and position of the main window.
 
 ## Logging settings
 
-**spdlog** is used and it is a fast and lightweight logging library for C++. It provides flexible formatting options using the `{fmt}` library. The format of log messages can be customized using **format patterns**.  
+Logging uses **spdlog**, a fast and lightweight logging library for C++. The format of log messages can be customized with **format patterns**.  
 
 ### **Basic Format Syntax**  
-A format pattern consists of **placeholders** enclosed in `{}`. Each placeholder represents a specific log attribute.  
+A format pattern is text mixed with **flags** that start with `%`. Each flag is replaced by a specific log attribute.  
 
 #### **Common Format Flags**  
 | Placeholder  | Description |
@@ -162,7 +162,7 @@ R"({"timestamp":"%Y-%m-%d %H:%M:%S.%e", "level":"%l", "message":"%v"})"
 
 
 ### consoleLogLevel
-The log level for the console. One of the following
+The log level for the console. One of the following:
 
 | Level | Description |
 | ----- | ----------- |
@@ -175,10 +175,10 @@ The log level for the console. One of the following
 | 6 | Trace |
 
 ### consoleLogPattern
-The log pattern for the console.
+The log pattern used for the console.
 
 ### fileLogLevel
-The log level for the file. One of the following
+The log level for the log file. One of the following:
 
 | Level | Description |
 | ----- | ----------- |
@@ -191,76 +191,79 @@ The log level for the file. One of the following
 | 6 | Trace |
 
 ### fileLogMaxFiles
-The maximum number of log files.
+The maximum number of rotated log files to keep.
 
 ### fileLogMaxSize
-The maximum size of a log file.
+The maximum size of a log file, in bytes, before it is rotated.
 
 ### fileLogPath
-The path for the log file.
+The path to the log file.
 
 ### fileLogPattern
-The log pattern for the file.
+The log pattern used for the log file.
 
 ### firmwareDeviceCodeRequired
-If true the device code is required for firmware updates.
+If true, the device firmware code must match before firmware is loaded.
 
 ### last-eventdb-download
-The timestamp for the last event database download.
+The time of the last download of the event database.
 
 ## Session settings
 
 ### maxSessionEvents
-The maximum number of session events.
+The maximum number of events kept in a session window. -1 means no limit.
 
 ### numericBase
-The numeric base for the application. One of the following
+The default numerical base for the application. One of the following:
 
 | Base | Description |
 | ---- | ----------- |
-| 0 | Decimal |
-| 1 | Hexadecimal |
+| 0 | Hexadecimal |
+| 1 | Decimal |
 | 2 | Octal |
 | 3 | Binary |
 
 ### sessionAutoConnect
-If true the application will auto connect.
+If true, a session window connects automatically when it is opened.
 
 ### sessionAutoSaveTxRows
-If true the application will auto save transmit rows.
+If true, transmit rows are saved when a session window closes and loaded when it opens.
 
 ### sessionClassDisplayFormat
-The class display format for the session. One of the following
+How the VSCP class is displayed in session windows. One of the following:
 
 | Format | Description |
 | ------ | ----------- |
-| 0 | Decimal |
-| 1 | Hexadecimal |
-| 2 | Symbolic |
+| 0 | Symbolic |
+| 1 | Numerical in the selected numerical base |
+| 2 | Numerical, hex/decimal |
+| 3 | Symbolic + hex/decimal |
 
 ### sessionGuidDisplayFormat
-The GUID display format for the session. One of the following
+How the GUID is displayed in session windows. One of the following:
 
 | Format | Description |
 | ------ | ----------- |
-| 0 | Decimal |
-| 1 | Hexadecimal |
-| 2 | Symbolic |
+| 0 | GUID |
+| 1 | Symbolic if possible |
+| 2 | Symbolic + GUID |
+| 3 | GUID + Symbolic |
 
 ### sessionShowFullTypeToken
-If true the application will show the full type token.
+If true, the full type token is shown (the `VSCP_TYPE_` prefix is kept).
 
 ### sessionTimeout
-The timeout for the session.
+The response timeout, in milliseconds, used by session windows.
 
 ### sessionTypeDisplayFormat
-The type display format for the session. One of the following
+How the VSCP type is displayed in session windows. One of the following:
 
 | Format | Description |
 | ------ | ----------- |
-| 0 | Decimal |
-| 1 | Hexadecimal |
-| 2 | Symbolic |
+| 0 | Symbolic |
+| 1 | Numerical in the selected numerical base |
+| 2 | Numerical, hex/decimal |
+| 3 | Symbolic + hex/decimal |
 
 
 ## Connection settings
@@ -268,7 +271,7 @@ The type display format for the session. One of the following
 ### Common settings
 
 #### type
-The type for the connection. One of the following
+The connection type. One of the following:
 
 | Type | Description |
 | ---- | ----------- |
@@ -277,34 +280,34 @@ The type for the connection. One of the following
 | 2 | CANAL connection |
 | 3 | Socketcan connection (Only on Linux) |
 | 4 | ws1 connection  |
-| 5 | ws3 connection  |
+| 5 | ws2 connection  |
 | 6 | MQTT connection |
 | 7 | udp connection  |
-| 6 | multicast connection |
+| 8 | multicast connection |
 
 #### uuid
-The UUID for the connection. It has the form {eb0bafcb-8bad-4fcb-b282-09835e3b88eb}
+The UUID of the connection, in the form {eb0bafcb-8bad-4fcb-b282-09835e3b88eb}
 
 #### name
-The name for the connection.
+The name of the connection.
 
 
 
 ### tcp/ip connection
 
-VSCP over tcp/ip is a connection that is used to connect to a VSCP daemon or an other device that has tcp/ip interface. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_tcp_ip)
+A tcp/ip connection is used to connect to a VSCP daemon or another device with a tcp/ip interface. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_tcp_ip)
 
 #### bfull-l2
-If true the connection is full Level II that us using the full GUID to identify devices.
+If true, the connection is full Level II, which uses the full GUID to identify devices.
 
 #### bpoll
-If true the connection should use polling.
+If true, the connection uses polling.
 
 #### btls
-If true the connection should use TLS.
+If true, the connection uses TLS.
 
 #### bverifypeer
-If true the connection should verify the peer.
+If true, the peer certificate is verified.
 
 #### cafile
 The CA file for the connection.
@@ -323,10 +326,10 @@ The password for the key file.
 
 
 #### host 
-The host for the connection on the form "tcp://192.168.1.6:9598"
+The host for the connection, in the form "tcp://192.168.1.6:9598"
 
 #### user
-The password for the connection.
+The username for the connection.
 
 #### password
 The password for the connection.
@@ -364,19 +367,19 @@ Type filter for the connection.
 Type mask for the connection.
 
 ##### guid-filter
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID filter for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 ##### guid-mask
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID mask for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 ### Interfaces
 
 #### selected-interface
-The selected interface for the connection. Should be on the form the tcp/ip host interface present it e.g. "FF:FF:FF:FF:FF:FF:FF:F5:02:88:88:00:00:02:00:00 type=5 (UDP client) obid=2"
+The selected interface for the connection, in the form the tcp/ip host presents it, for example "FF:FF:FF:FF:FF:FF:FF:F5:02:88:88:00:00:02:00:00 type=5 (UDP client) obid=2"
 
 #### interfaces
 
-This is an array with the available interfaces presented by the VSCP tcp/ip host. The form is
+An array of the interfaces presented by the VSCP tcp/ip host, in the form
 
 ```json
 "interfaces": [
@@ -392,12 +395,12 @@ This is an array with the available interfaces presented by the VSCP tcp/ip host
 
 ### CANAL connection
 
-The CANAL connection is used to connect to a VSCP devove or a bus over CANAL (**CAN** **A**bstraction **L**ayer). The API is defined [here](https://docs.vscp.org/#canal). VSCP level I drivers use the CANAL API, and you can find a list of available drivers [here](https://docs.vscp.org/#level1drv). 
+A CANAL connection is used to connect to a VSCP device or a bus through CANAL (**CAN** **A**bstraction **L**ayer). The API is defined [here](https://docs.vscp.org/#canal). VSCP Level I drivers use the CANAL API. A list of available drivers is [here](https://docs.vscp.org/#level1drv). 
 
-The CAN frame format used is described [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
+The CAN frame format is described [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
 
 #### config
-The semicolon separated string the connection (the CANAL configuration string).
+The semicolon-separated configuration string for the driver (the CANAL configuration string).
 
 #### datarate
 The data rate for the connection.
@@ -410,10 +413,10 @@ The response timeout for the connection.
 
 ### Socketcan connection
 
-The Socketcan connection can be used on Linux systems to connect to a CAN bus over the socketcan interface. Just as for the CANAL connection a CAN packet format is used as described [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
+A SocketCAN connection is used on Linux to connect to a CAN bus through the socketcan interface. As for CANAL connections, the CAN frame format described [here] is used(https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
 
 #### device
-The device for the connection.
+The CAN device, for example `can0`.
 
 #### response-timeout
 The response timeout for the connection.
@@ -430,13 +433,13 @@ The filters for the connection.
 ### MQTT connection
 
 #### bfull-l2
-If true the connection is full Level II that us using the full GUID to identify devices.
+If true, the connection is full Level II, which uses the full GUID to identify devices.
 
 #### btls
-If true the connection should use TLS.
+If true, the connection uses TLS.
 
 #### bverifypeer
-If true the connection should verify the peer.
+If true, the peer certificate is verified.
 
 #### cafile
 The CA file for the connection.
@@ -454,25 +457,25 @@ The key file for the connection.
 The password for the key file.
 
 #### host
-The host for the connection. Should be on the form "tcp://192.168.1.7:1883"
+The host for the connection, in the form "tcp://192.168.1.7:1883"
 
 #### user
-The password for the connection.
+The username for the connection.
 
 #### password
 The password for the connection.
 
 #### keepalive
-The keep alive for the connection.
+The keep-alive interval for the connection.
 
 #### cleansession
-If true the session should be started cleaned.
+If true, a clean session is used.
 
 #### clientid
-The client id for the connection. If not set a random client id will be generated.
+The client id for the connection. If it is not set, a random client id is generated.
 
 #### extended-security
-If true the connection should use extended security.
+If true, the connection uses extended security.
 
 #### connection-timeout
 The connection timeout for the connection.
@@ -481,7 +484,7 @@ The connection timeout for the connection.
 The response timeout for the connection.
 
 #### publish 
-The publish topic settings for the connection. This is one of more topics that can be set on the form
+The publish topic settings for the connection. One or more topics in the form
 
 ```json 
 "publish": {
@@ -497,7 +500,7 @@ The MQTT topic for the event.
 
 ##### format
 
-The format for the event when it is published on the MQTT topic.
+The format of the event when it is published on the topic.
 
 | Format | Description |
 | ------ | ----------- |
@@ -507,16 +510,16 @@ The format for the event when it is published on the MQTT topic.
 | 3 | VSCP binary format  |
 
 ##### qos
-The quality of service for the event.
+The quality of service (QoS) for the event.
 
 ##### bretain
-If true the event should be retained.
+If true, the event is published as retained.
 
 
 
 
 #### subscribe
-The subscribe topic settings for the connection. This is one of more topics that can be set on the form 
+The subscribe topic settings for the connection. One or more topics in the form 
 
 ```json 
 "subscribe": {
@@ -525,7 +528,7 @@ The subscribe topic settings for the connection. This is one of more topics that
 }
 ``` 
 
-where format is one of the following
+where format is one of the following:
 
 | Format | Description |
 | ------ | ----------- |
@@ -537,16 +540,16 @@ where format is one of the following
 
 ### ws1 connection
 
-The VSCP websocket connection is used to connect to a VSCP daemon over a websocket connection. ws1 is a string based protocol. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws1-description)
+A ws1 connection is used to connect to a VSCP daemon over websocket. ws1 is a string-based protocol. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws1-description)
 
 #### user
-The password for the connection.
+The username for the connection.
 
 #### password
 The password for the connection.
 
 #### url
-The URL for the connection on the form "ws://localhost:9598/ws1" or "wss://localhost:9598/ws1"
+The URL for the connection, in the form "ws://localhost:9598/ws1" or "wss://localhost:9598/ws1"
 
 #### Filter
 
@@ -569,24 +572,24 @@ Type filter for the connection.
 Type mask for the connection.
 
 ##### guid-filter
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID filter for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 ##### guid-mask
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID mask for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 
 ### ws2 connection
 
-The VSCP websocket connection is used to connect to a VSCP daemon over a websocket connection. ws2 is a JSON based protocol. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description)
+A ws2 connection is used to connect to a VSCP daemon over websocket. ws2 is a JSON-based protocol. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description)
 
 #### user
-The password for the connection.
+The username for the connection.
 
 #### password
 The password for the connection.
 
 #### url
-The URL for the connection on the form "ws://localhost:9598/ws1" or "wss://localhost:9598/ws1"
+The URL for the connection, in the form "ws://localhost:9598/ws1" or "wss://localhost:9598/ws1"
 
 #### Filter
 
@@ -609,24 +612,24 @@ Type filter for the connection.
 Type mask for the connection.
 
 ##### guid-filter
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID filter for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 ##### guid-mask
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID mask for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 
 ### udp connection
 
-The UDP connection is used to listen for UDP packets on a specific port. The connection is used to receive events from remote devices. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp)
+A UDP connection listens for UDP packets on a specific port and is used to receive events from remote devices. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp)
 
 #### ip
-The ip-address to listen on for UDP-packets.
+The IP address to listen on for UDP packets.
 
 #### key
 The encryption key for the connection.  
 
 #### encryption
-The encryption for the connection. One of the following
+The encryption used by the connection. One of the following:
 
 | Encryption | Description |
 | ---------- | ----------- |
@@ -634,7 +637,7 @@ The encryption for the connection. One of the following
 | 1 | AES128 |
 | 2 | AES192 |
 | 3 | AES256 |
-| 4 | Selected from byte 0 |
+| 4 | Selected by byte 0 |
 
 #### Filter
 
@@ -657,24 +660,24 @@ Type filter for the connection.
 Type mask for the connection.
 
 ##### guid-filter
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID filter for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 ##### guid-mask
-GUID filter for the connection. Should be on the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+GUID mask for the connection. in the form "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
 
 
 ### multicast connection
 
-VSCP multicast connection is used to listen for multicast packets on a specific multicast address (24.0.23.158). The connection is used to receive events from remote devices. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast)
+A multicast connection listens for multicast packets on a specific multicast address (normally 224.0.23.158) and is used to receive events from remote devices. The protocol is defined [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast)
 
 #### ip
-The multicast IP for the connection. Normally the VSCP multicast reserved ip address (224.0.23.158) is used
+The multicast IP address for the connection. Normally the address reserved for VSCP multicast (224.0.23.158) is used.
 
 #### key
 The encryption key for the connection.
 
 #### encryption
-The encryption for the connection. One of the following
+The encryption used by the connection. One of the following:
 
 | Encryption | Description |
 | ---------- | ----------- |
@@ -682,4 +685,4 @@ The encryption for the connection. One of the following
 | 1 | AES128 |
 | 2 | AES192 |
 | 3 | AES256 |
-| 4 | Selected from byte 0 |
+| 4 | Selected by byte 0 |

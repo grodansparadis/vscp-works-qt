@@ -4,7 +4,7 @@
 
 # VSCP Works+
 
-This documentation is for the latest version of VSCP Works+ (vscp-works-qt) and the content (may) change frequently.
+This documentation covers the latest version of VSCP Works+ (vscp-works-qt). The content may change frequently.
 
 ---
 

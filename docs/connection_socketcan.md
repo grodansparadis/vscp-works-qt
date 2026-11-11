@@ -1,60 +1,62 @@
 # Socketcan
 
-You can read more about [VSCP over Socketcan](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp) in the VSCP specification. The Linux kernel supports the CAN bus via the `socketcan` interface. This is also a VSCP level I communication that is based on a CAN frame. Needless to say only available on Linux systems. 
+You can read more about [VSCP over SocketCAN](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp) in the VSCP specification. The Linux kernel supports the CAN bus through the `socketcan` interface. Like CANAL, this is a VSCP Level I communication method based on CAN frames.
 
-Socketcan is only available on Linux systems.
+SocketCAN is only available on Linux.
 
 ## Add a connection
 
-Select the connection type you want to add in the treeview and right click. Select `Add connection` in the context menu. A dialog will open where you can enter the parameters for the connection.
+Right-click the `Socketcan` item in the tree view and select `Add new Socketcan connection...`. A dialog opens where you enter the connection settings.
 
 ![](./images/add_connection_socketcan.png)
 
- - `Description`: Set a descriptive name. This value will be used to identify the connection in the treeview.
- - `Device`: Set the device name for the CAN interface. This is usually something like `can0` or `can1`. The exact name is system dependent. You can find the names in the `/sys/class/net/` folder.
- - `Flags`: Socketcan flags. The flags are used to set some special options for the CAN interface.  Press the `...` button to open a dialog where you can set the flags.
- - `Response timeout`: The time in milliseconds to wait for a response from the device. If no response is received the operation will be aborted.
-  - `Filters`: You can set any number of filters for the CAN interface. The filter is a 32-bit value that is used to filter out messages that are not of interest. If the mask is zero all messages are passed. If the mask is not zero only messages that match the filter are passed. The filter is a bitwise AND operation between the mask and the message id. If the result is equal to the filter the message is passed.
+ - `Description`: A descriptive name. It is used to identify the connection in the tree view.
+ - `Device`: The name of the CAN interface, usually something like `can0` or `can1`. The exact name depends on the system. You can find the available names in the `/sys/class/net/` folder.
+ - `Flags`: SocketCAN flags used to set special options for the CAN interface. Press the `...` button to open a dialog where you can set them.
+ - `Response timeout`: The time in milliseconds to wait for a response from a device. If no response is received in time, the operation is aborted.
+ - `Filters`: Any number of filters for the CAN interface. Each filter is a 32-bit filter/mask pair used to filter out messages you are not interested in. If the mask is zero, all messages pass. Otherwise, the mask is ANDed bitwise with the message id, and the message passes only if the result equals the filter.
 
 ### Test button
-Press the `Test connection` button to check if your socketcan settings works.
+Press the `Test connection` button to check that your SocketCAN settings work.
 
 ### Filters
-You can use the `Add filter` button to add a filter, `Edit filter` button to edit a selected a filter, `Clone filter` button to clone a selected filter and `Delete filter` button to remove a selected filter.
+Use the `Add filter` button to add a filter, `Edit filter` to edit the selected filter, `Clone filter` to clone the selected filter and `Delete filter` to remove the selected filter.
 
-- Click on a filter item to select it.
-- Double click on a filter item to edit it.
-- Right click on a filter item to get a context menu where you can edit, clone or delete the filter.
+- Click a filter item to select it.
+- Double-click a filter item to edit it.
+- Right-click a filter item to get a menu where you can edit, clone or delete the filter.
 
-See [CANAL filters](connections.md) for more information about filters.
+See [CANAL filters](connection_canal.md?id=filter) for more information about filters.
 
 ## Remove a connection
 
-Select the connection you want to remove in the treeview and right click. Select `Remove connection` in the context menu. The connection will be removed.
+Right-click the connection in the tree view and select `Remove this connection`. The connection is removed.
 
 ## Edit a connection
 
-Select the connection you want to edit in the treeview and right click. Select `Edit connection` in the context menu. A dialog will open where you can edit the parameters for the connection.
+Right-click the connection in the tree view and select `Edit this connection`. A dialog opens where you can change the connection settings.
 
 ## Clone a connection
 
-Select the connection you want to clone in the treeview and right click. Select `Clone connection` in the context menu. A dialog will open where you can edit the parameters for the connection. You must set a new name for the connection.
+Right-click the connection in the tree view and select `Clone this connection`. A copy of the connection is added, with ` (copy)` appended to its name. Use `Edit this connection` to change the name and settings of the copy.
 
 ## Connect to a remote node
 
-Select the connection you want to connect to in the treeview and right click. Select the service your want (session/configure/scan/firmware load) in the context menu. The connection will be established.
+Right-click the connection in the tree view and select the window you want to open (session, configuration, node scan or bootloader wizard). The connection is established from that window.
 
-## Open a raw SocketCAN frame session
+## Open a raw CAN frame session
 
-For SocketCAN connections there is also a dedicated frame session window available from the connection context menu as **SocketCAN frame session**. This window can send and receive both standard CAN and CAN FD frames and connects to the interface automatically when opened.
+For SocketCAN connections there is also a dedicated frame window, available from the connection's right-click menu as **CAN raw explorer**. It can send and receive both standard CAN and CAN FD frames. Press `Connect` in the window to open the interface.
 
-The payload field supports both classic hex input (`11 22 33` or `112233`) and comma-separated byte values where `0x` is hexadecimal, `0o` is octal, `0b`/`ob` is binary and plain values are decimal, for example `0x11,0o10,0b11,4`.
+The payload field accepts hex bytes (`11 22 33` or `112233`) or comma-separated byte values, where `0x` means hexadecimal, `0o` octal, `0b` binary and values without a prefix are decimal, for example `0x11,0o10,0b11,4`.
 
-The frame log is color-coded to make traffic easier to read: TX/RX rows use different colors and the frame type/flags cell is highlighted for Remote, FD, BRS and ESI frames.
+The frame log is color-coded to make traffic easier to read: TX and RX rows use different colors, and the frame type/flags cell is highlighted for Remote, FD, BRS and ESI frames.
+
+See [CAN raw explorer](rawcan_window.md) for details.
 
 ## Testing
 
-If you have can utils installed you can use the `cansend` and `candump` utilities to test your the socketcan support of VSCP Works. You can install can-utils with the following commands.
+If you have can-utils installed, you can use the `cansend` and `candump` utilities to test the SocketCAN support in VSCP Works. Install can-utils with the following commands
 
 ```bash
 sudo apt update
@@ -62,63 +64,63 @@ sudo apt upgrade
 sudo apt install can-utils
 ```
 
-on a Debian type system like Ubuntu etc. If yuou have another type of system you can use the package manager for that system to install can-utils or install and build from it from source.
+on a Debian-based system such as Ubuntu. On other systems, use the system's package manager to install can-utils, or build it from source.
 
-Now you need to setup a virtual can interface you can use the following commands.
+Next, set up a virtual CAN interface with the following commands.
 
 ```bash
 # Virtual i/f 0
 sudo ip link add dev vcan0 type vcan
 sudo ip link set up vcan0 mtu 72
 ```
-This will create a virtual can interface `vcan0` that you can use to test the socketcan support of VSCP Works. The lastline set the interface to can fd mode and is not needed.
+This creates a virtual CAN interface, `vcan0`, that you can use to test the SocketCAN support in VSCP Works. Setting the MTU to 72 in the last line puts the interface in CAN FD mode; this is optional.
 
-You can construct as many virtual can interfaces as you like.
+You can create as many virtual CAN interfaces as you like.
 
-Now bring up the interface with
+Bring up the interface with
 
 ```bash
-sudo ip link set can0 up
+sudo ip link set vcan0 up
 ```
 
-Later, when you are done with the interface you can remove it with
+When you are done with the interface, you can take it down with
 
 ```bash
-sudo ip link set can0 down
+sudo ip link set vcan0 down
 ``` 
 
-bit leave it open now.
+but leave it up for now.
 
 ### Listen to events sent from VSCP Works
 
-Open a terminal and write
+Open a terminal and type
 
 ```bash
 candump vcan0
 ``` 
 
-This will listen to all events sent on the `vcan0` interface.
+This shows all frames sent on the `vcan0` interface.
 
-Now add a new socketcan connection in VSCP Works+ looking like this
+Now add a new SocketCAN connection in VSCP Works+ like this
 
 ![](./images/socketcan_test_vcan0.png)
 
-and open a session window by doubleclicking on the item and define transmission events like this one
+Open a session window for it and define a transmit event like this one
 
 ![](./images/socketcan_test_vcan0_send_turnon.png)
 
-this will look something like this
+It will look something like this
 
 ![](./images/socketcan_test_vcan0_tx_turnon.png)
 
-The usual positive response to a [CLASS1.CONTROL, VSCP_TYPE_TURN_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.control?id=type5) events is a [CLASS1.INFORMATION, VSCP_TYPE_INFORMATION_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.information?id=type3) event. To send it you can use cansend (possibly in a new terminal window) like this
+The usual positive response to a [CLASS1.CONTROL, VSCP_TYPE_TURN_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.control?id=type5) event is a [CLASS1.INFORMATION, VSCP_TYPE_INFORMATION_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.information?id=type3) event. You can send one with cansend (for example in a new terminal window) like this
 
 ```bash
 cansend vcan0 10140300#001122
 ```
 
-This will send a [CLASS1.INFORMATION, VSCP_TYPE_INFORMATION_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.information?id=type3) event to the `vcan0` interface. And you should see the event in the terminal window where you run `candump vcan0` and also in the VSCP Works+ session window.
+This will send a [CLASS1.INFORMATION, VSCP_TYPE_INFORMATION_ON](https://grodansparadis.github.io/vscp-doc-spec/#/./class1.information?id=type3) event on the `vcan0` interface. You should see the event both in the terminal where `candump vcan0` is running and in the VSCP Works+ session window.
 
 ![](./images/socketcan_test_vcan0_response.png)
 
-The socketcan representation may be awkward at first but this is just the way VSCP packs VSCP events into CAN frames. You can read more about this [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp).
+The SocketCAN representation may look strange at first, but it is simply how VSCP packs events into CAN frames. You can read more about this [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp).

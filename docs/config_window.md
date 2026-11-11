@@ -8,15 +8,15 @@
 | --- | --- | 
 | **ESC**  |  Unselect all  | 
 | **F3**  |  Connect/disconnect  | 
-| **ctrl + D** |  defaults |
+| **ctrl + D** |  Defaults |
 | **ctrl + E** |  Edit |
 | **ctrl + F** |  Search |
 | **ctrl + G** |  Go to register |
 | **ctrl + H** / F1 |  Help  |
 | **ctrl + I** |  Show MDF info |
 | **ctrl + L** |  Load |
-| **ctrl + P** |  Goto page |
-| **ctrl + S** |  Save
+| **ctrl + P** |  Go to page |
+| **ctrl + S** |  Save |
 | **ctrl + U**  / F5 |  Update  |
 | **ctrl + X** | Exit |
 | **ctrl + Y** | Redo |
@@ -26,11 +26,11 @@
 
 ## Register tree
 
-The register tree show register content on registers separated to pages and standard registers.
+The register tree shows the content of the registers, grouped by page, followed by the standard registers.
 
 ## Info area
 
-The info area show information about the selected register/remote variable/dm/file or MDF info for the remote device if no register is selected or shortcut key ctrl+I is pressed (tools/Show NDF Info).
+The info area shows information about the selected register, remote variable, decision matrix row or file. If nothing is selected, or if you press ctrl+I (`Tools/Show MDF Info`), it shows the MDF information for the remote device.
 
 ## Decision Matrix
 

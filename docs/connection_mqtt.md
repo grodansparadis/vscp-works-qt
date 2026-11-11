@@ -7,103 +7,102 @@ You can read more about [VSCP over MQTT](https://grodansparadis.github.io/vscp-d
 ![](./images/add_connection_mqtt.png)
 
 ### Description
-Set a name for the connection. This is the name shown in the connection list.
+A name for the connection. This is the name shown in the connection tree.
 
 ### Broker URL
-This is the URL to the MQTT broker. It can be a hostname or an IP address. It can also include a port number. If no port number is given the default MQTT port 1883 is used. Normally precede with `mqtt://`. If the URL starts with `mqtts://` the connection is encrypted using TLS/SSL.  You can also use `tcp://` and `stcp://`.
+The URL of the MQTT broker. It can be a host name or an IP address, optionally with a port number. If no port is given, the default MQTT port 1883 is used. The URL normally starts with `mqtt://`. If it starts with `mqtts://`, the connection is encrypted with TLS/SSL. You can also use `tcp://` and `stcp://`.
 
 ### Client id
-Client id used when connecting to the MQTT broker. If not set a random client id is generated.
+The client id used when connecting to the MQTT broker. If it is not set, a random client id is generated.
 
 ### Username
-Username used when connecting to the MQTT broker that requires authentication.
+The username used when the MQTT broker requires authentication.
 
 ### Password
-Password used when connecting to the MQTT broker that requires authentication.
+The password used when the MQTT broker requires authentication.
 
 ### Keep alive
-Number of seconds between keep alive messages. If no keep alive message is received within 1.5 times this period the connection is considered lost.
+The number of seconds between keep-alive messages. If no keep-alive message is received within 1.5 times this period, the connection is considered lost.
 
 ### Connection timeout
-Number of milliseconds to wait for a connection before giving up. Default is 5000, i.e. 5 seconds.
+The number of milliseconds to wait for a connection before giving up. The default is 5000 (5 seconds).
 
 ### Full Level II
-If this is checked the connection will use the full VSCP Level II protocol and full GUID to identify remote nodes.
+When checked, the connection uses the full VSCP Level II protocol and the full GUID to identify remote nodes.
 
 ### Clean session
-If this is checked the connection will be a clean session. This means that the broker will not store any messages for the client when it is offline.
+When checked, the connection uses a clean session. This means the broker does not store messages for the client while it is offline.
 
 ### Extended security
-If this is checked the connection will use extended security. This means that the connection will be encrypted and authenticated.
+When checked, the connection uses extended security, which means it is encrypted and authenticated.
 
 ### Enable topic escapes
-By checking tyhis box you enable the use of mustache escapes in the topic strings. This is a powerful feature that allows you to use the VSCP daemon mustache escapes in the topic strings. More info is [here](https://grodansparadis.github.io/vscp/#/publishing_server?id=publishing-server-topic-escapes). This also enables `user escapes` as of below.
+Check this box to enable mustache escapes in topic strings. This powerful feature lets you use the same mustache escapes in topics as the VSCP daemon does. More information is [here](https://grodansparadis.github.io/vscp/#/publishing_server?id=publishing-server-topic-escapes). This also enables the `user escapes` described below.
 
 ### Use VSCP Topic For Event Defaults
-If this checkbox is checked the connection will use the VSCP topic for event defaults. This means that the connection will get GUID, class and type from the topic if all or some of them are set to zero. This require the topic to use the _standard_ VSCP MQTT topic format on the form
+When checked, the connection takes default event values from the VSCP topic. This means the GUID, class and type are taken from the topic if some or all of them are zero in the event. The topic must use the _standard_ VSCP MQTT topic format
 
 ```bash
 vscp/<guid>/<class>/<type>
 ```
-This makes it possible to send very low overhead events over MQTT. More info is [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_mqtt?id=minimize-transfer-load)
+This makes it possible to send events over MQTT with very little overhead. More information is [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_mqtt?id=minimize-transfer-load)
 
 ### User escapes
 
 ![](./images/add_connection_mqtt_add_user_escape.png)
 
-You can add `user escapes` by clicking the add button next to the user escapes list. User escapes are value pairs consisting of a name string and a value string. The name can be used in publish topic strings as mustache items, i.e `{{name}}`, and the item will be replaced by the set value at runtime.
+Add `user escapes` by clicking the add button next to the user escapes list. A user escape is a pair of a name and a value. The name can be used in publish topics as a mustache item, for example `{{name}}`, and is replaced by the value at runtime.
 
 ![](./images/add_connection_mqtt_add_user_escape_context.png)
 
-Right click items in the list to add/edit/clone or delete user escape items.
+Right-click the list to add, edit, clone or delete user escapes.
 
 ### Subscriptions
 
 ![](./images/add_connection_mqtt_add_subscription.png)
 
-Set the topics you want to subscribe to here. You can set as many as you like. The format for the topic for a channel from a VSCP node is typically
+Enter the topics you want to subscribe to here. You can add as many as you like. The topic format for a channel from a VSCP node is typically
 
 ```bash
 vscp/<guid>/<class>/<type>/<nickname>/<sensor-index>/<zone>/<subzone>
 ```
-Where nickname is the least significant bytes of the GUID and sensor-index, zone and subzone are optional. If you want to subscribe to all events from a node you can use
+where nickname is the least significant bytes of the GUID, and sensor-index, zone and subzone are optional. To subscribe to all events from a node, use
 
 ```bash
 vscp/<guid>/#
 ```
 
-If you want to subscribe to all events from all nodes you can use
+To subscribe to all events from all nodes, use
 
 ```bash
 vscp/#
 ```
 
-You can also use wildcards in the topic. For example
+You can also use wildcards in the topic, for example
 
 ```bash
 vscp/<guid>/<class>/<type>/+/<sensor-index>/#
 ```
 
-which will subscribe to all events from a specific sensor-index from any node but only events of a specific class/type.
+which subscribes to events of a specific class/type from a specific sensor index on any node.
 
 
 ![](./images/add_connection_mqtt_add_subscription_context.png)
 
-Right click items in the list to add/edit/clone or delete subscribe topic items.
+Right-click the list to add, edit, clone or delete subscribe topics.
 
 ### Publishing
 
 ![](./images/add_connection_mqtt_add_publish.png)
 
-Just as for subscriptions you can set as many publishing topics as you like. The format for the topic for a channel from a VSCP node is typically
+Just as for subscriptions, you can add as many publish topics as you like. The topic format for a channel from a VSCP node is typically
 
 ```text 
 vscp/<guid>/<class>/<type>/<nickname>/<sensor-index>/<zone>/<subzone>
 ```
-Where nickname is the two least significant bytes of the GUID and sensor-index, zone and subzone are optional. 
+where nickname is the two least significant bytes of the GUID, and sensor-index, zone and subzone are optional.
 
-All topics can have the same [mustache escapes](https://en.wikipedia.org/wiki/Mustache_(template_system)) as the VSCP daemon have which are described  
-[here](https://grodansparadis.github.io/vscp/#/publishing_server?id=publishing-server-topic-escapes). For instance you can insert the GUID of the current event with the mustache escape `{{guid}}` in the topic. Setting a topic on the standard VSCP form can thus be setup as
+Topics can use the same [mustache escapes](https://en.wikipedia.org/wiki/Mustache_(template_system)) as the VSCP daemon, which are described [here](https://grodansparadis.github.io/vscp/#/publishing_server?id=publishing-server-topic-escapes). For example, you can insert the GUID of the current event with the escape `{{guid}}`. A topic in the standard VSCP form can therefore be written as
 
 ```mustache
 vscp/{{guid}}/{{class}}/{{type}}/{{nickname}}
@@ -113,7 +112,7 @@ vscp/{{guid}}/{{class}}/{{type}}/{{nickname}}
 
 ![](./images/add_connection_mqtt_add_publish_context.png)
 
-Right click items in the list to add/edit/clone or delete publish topic items.
+Right-click the list to add, edit, clone or delete publish topics.
 
 ### Test connection
 ![](./images/add_connection_mqtt_connection_test.png)
@@ -122,20 +121,20 @@ Right click items in the list to add/edit/clone or delete publish topic items.
 
 ![](./images/add_connection_mqtt_tls.png)
 
-Set security parameters for the connection. If you want to use TLS/SSL you must set the parameters here.
+Security settings for the connection. To use TLS/SSL, you must set the parameters here.
 
 ## Remove a connection
 
-Select the connection you want to remove in the treeview and right click. Select `Remove connection` in the context menu. The connection will be removed.
+Right-click the connection in the tree view and select `Remove this connection`. The connection is removed.
 
 ## Edit a connection
 
-Select the connection you want to edit in the treeview and right click. Select `Edit connection` in the context menu. A dialog will open where you can edit the parameters for the connection.
+Right-click the connection in the tree view and select `Edit this connection`. A dialog opens where you can change the connection settings.
 
 ## Clone a connection
 
-Select the connection you want to clone in the treeview and right click. Select `Clone connection` in the context menu. A dialog will open where you can edit the parameters for the connection. You must set a new name for the connection.
+Right-click the connection in the tree view and select `Clone this connection`. A copy of the connection is added, with ` (copy)` appended to its name. Use `Edit this connection` to change the name and settings of the copy.
 
 ## Connect to a remote node
 
-Select the connection you want to connect to in the treeview and right click. Select the service your want (session/configure/scan/firmware load) in the context menu. The connection will be established.
+Right-click the connection in the tree view and select the window you want to open (session, configuration, node scan or bootloader wizard). The connection is established from that window.

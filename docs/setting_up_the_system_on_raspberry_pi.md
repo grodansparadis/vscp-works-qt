@@ -1,6 +1,6 @@
 # Setting up on Raspberry Pi
 
-This document describes how to set up the VSCP Works application on a Raspberry Pi Linux system. You can either build the executable from source yourself or more convenient download a binary version. Instructions on how t5o get the binary is [here](./setting_up_the_system.md).
+This page describes how to set up VSCP Works on a Raspberry Pi running Linux. You can build the program from source yourself or, more conveniently, download a binary version. Instructions for getting the binary are [here](./setting_up_the_system.md).
 
 ## Build from source
-Follow the installation instructions for [build on Linux](./setting_up_the_system_on_linux.md).
+Follow the instructions for [building on Linux](./setting_up_the_system_on_linux.md).

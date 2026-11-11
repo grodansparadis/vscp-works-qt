@@ -1,22 +1,22 @@
 # CANAL
 
-[**CANAL**](https://grodansparadis.github.io/vscp-doc-canal/#/)  The VSCP **CAN** **A**bstraction **L**ayer. This is a VSCP level I communication that is based on a CAN frame. A `CANAL driver`is the same as a `VSCP Level I driver` and this driver is responsible for abstraction from the VSCP world of events to low end frames or simulations. The frame format and other details is described [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
+[**CANAL**](https://grodansparadis.github.io/vscp-doc-canal/#/) is the VSCP **CAN** **A**bstraction **L**ayer. It is a VSCP Level I communication method based on CAN frames. A `CANAL driver` is the same as a `VSCP Level I driver`. The driver translates between VSCP events and low-level frames (or a simulation). The frame format and other details are described [here](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_can_can4vscp)
 
 ## Add a connection
 
 ![](./images/add_connection_canal.png)
 
- - `Description`: Set a descriptive name. This value will be used to identify the connection in the treeview.
- - `Path to driver`: Set the path to the CANAL driver to use. Click `set` to browse for the file. CANAL drivers are the same as `VSCP level I drivers`and on most Linux systems you can find them by default in the _/var/lib/vscp/drivers/level1/_ folder. Windows system usually have them in the folder _appdir/VSCP/drivers/level1. The exact location depends on the installation for the driver.
- - `Device configuration string`: CANAL drivers are configured using a semicolon separated string. This string is deriver dependent. The exact format is described in the driver documentation. Some modern drivers have a `wizard` that can help you to construct this configuration string. Press `wizard` button to open this dialog.
-- `Device flags`: This is a bit mask that can be used to set some flags for the driver. The exact meaning of the bits is driver dependent. The driver documentation will tell you what the bits mean.
-- `Datarate`: This is a device specific value for the communication rate. It is usually in bits per second but the exact meaning is driver dependent. The driver documentation will tell you what the value should be. In most cases you can leave this value to the default value zero.
+ - `Description`: A descriptive name. It is used to identify the connection in the tree view.
+ - `Path to driver`: The path to the CANAL driver to use. Click `set` to browse for the file. CANAL drivers are the same as `VSCP Level I drivers`. On most Linux systems they are installed in the _/var/lib/vscp/drivers/level1/_ folder by default. On Windows they are usually in the _appdir/VSCP/drivers/level1_ folder. The exact location depends on how the driver was installed.
+ - `Device configuration string`: CANAL drivers are configured with a semicolon-separated string. The string is driver-specific and its format is described in the driver documentation. Some modern drivers provide a `wizard` that helps you build the configuration string. Press the `wizard` button to open it.
+- `Device flags`: A bit mask used to set driver options. The meaning of the bits is driver-specific and is described in the driver documentation.
+- `Datarate`: A device-specific value for the communication rate. It is usually given in bits per second, but the exact meaning is driver-specific; see the driver documentation. In most cases you can leave it at the default value, zero.
 
 ### Filter
 
-The filter for a CANAL driver is two 32-bit values that are used to filter out messages that are not of interest. The first value is the mask and the second value is the filter. If the mask is zero all messages are passed. If the mask is not zero only messages that match the filter are passed. The filter is a bitwise AND operation between the mask and the message id. If the result is equal to the filter the message is passed. 
+The filter for a CANAL driver consists of two 32-bit values used to filter out messages you are not interested in: a mask and a filter. If the mask is zero, all messages pass. Otherwise, the mask is ANDed bitwise with the message id, and the message passes only if the result equals the filter.
 
-Truth table for filter/mask
+Truth table for filter/mask:
 
 | Mask bit n | Filter bit n | Incoming event class/type bit n | Accept or reject bit n |
 |:------------:|:--------------:|:---------------------------:|:------------------------:|
@@ -26,41 +26,41 @@ Truth table for filter/mask
 | 1 | 1 | 0 | Reject |
 | 1 | 1 | 1 | Accept |
 
-Think of the mask as having ones at positions that are of interest and the filter telling what the value should be for those bit positions that are of interest.
+Think of the mask as having ones in the bit positions you care about, and the filter as giving the required value of those bits.
 
-  - So to only accept one class set all mask bits to one and enter the class in filter.
-  - To accept all classes set the mask to 0. In this case filter don't care.
+  - To accept only one class, set all class mask bits to one and enter the class in the filter.
+  - To accept all classes, set the mask to 0. The filter value then does not matter.
 
-![](canal_filter_wizard.png)  
+![](./images/canal_filter_wizard.png)  
 
-The `Filter wizard`  makes it easy to construct filters for your specific need. Just press the `wizard` button and the dialog will open. Enter the class and type you want to filter on and the wizard will construct the filter and mask for you.
+The `Filter wizard` makes it easy to build filters for your needs. Press the `wizard` button to open it, enter the class and type you want to filter on, and the wizard builds the filter and mask for you.
 
 
-![](id_mask.png)
+![](./images/id_mask.png)
 
-Press the ID/Mask` button to open the dialog where you can enter the filter and mask manually as a 32-bit value.
+Press the `ID/Mask` button to open a dialog where you can enter the filter and mask manually as 32-bit values.
 
-![](filter_wizard)
+![](./images/filter_wizard.png)
 
-The `wizard button` can give you a view of what events are filtered out an not. Select what you are interested in the right part and transfer  as filter value using `<<` button or vice versa using the `>>` button.
+The `wizard` button gives you a view of which events are filtered out and which are not. Select what you are interested in on the right side and move it to the filter value with the `<<` button, or the other way with the `>>` button.
 
-In all above cases the numerical base dialog can be used to set the display numerical base for all values. The default is hexadecimal but you can also use decimal, octal or binary. Numbers can be entered using any base. Just proceed hexadecimals with `0x`, octals with `0o` and binary with `0b`. No prefix will be read as decimal values.
+In all of these dialogs you can select the numerical base used to display values. The default is hexadecimal, but you can also use decimal, octal or binary. Numbers can be entered in any base: prefix hexadecimal numbers with `0x`, octal numbers with `0o` and binary numbers with `0b`. Numbers without a prefix are read as decimal.
 
-### Configure Wizard
-Some modern drivers have a `wizard` that can help you to construct the configuration string. Press `wizard...` button to open this dialog. It opens if there is help available in the driver. If you are interested in the details of how a CANAL driver supply information for this wizard you can read more [here](https://grodansparadis.github.io/vscp-doc-canal/#/canalgetdriverinfo).
+### Configuration wizard
+Some modern drivers provide a `wizard` that helps you build the configuration string. Press the `wizard...` button to open it. It only opens if the driver provides this information. If you are interested in how a CANAL driver supplies information to the wizard, you can read more [here](https://grodansparadis.github.io/vscp-doc-canal/#/canalgetdriverinfo).
 
 ## Remove a connection
 
-Select the connection you want to remove in the treeview and right click. Select `Remove connection` in the context menu. The connection will be removed.
+Right-click the connection in the tree view and select `Remove this connection`. The connection is removed.
 
 ## Edit a connection
 
-Select the connection you want to edit in the treeview and right click. Select `Edit connection` in the context menu. A dialog will open where you can edit the parameters for the connection.
+Right-click the connection in the tree view and select `Edit this connection`. A dialog opens where you can change the connection settings.
 
 ## Clone a connection
 
-Select the connection you want to clone in the treeview and right click. Select `Clone connection` in the context menu. A dialog will open where you can edit the parameters for the connection. You must set a new name for the connection.
+Right-click the connection in the tree view and select `Clone this connection`. A copy of the connection is added, with ` (copy)` appended to its name. Use `Edit this connection` to change the name and settings of the copy.
 
 ## Connect to a remote node
 
-Select the connection you want to connect to in the treeview and right click. Select the service your want (session/configure/scan/firmware load) in the context menu. The connection will be established.
+Right-click the connection in the tree view and select the window you want to open (session, configuration, node scan or bootloader wizard). The connection is established from that window.

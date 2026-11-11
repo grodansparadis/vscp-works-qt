@@ -5,6 +5,7 @@ src/CMakeCache.txt
 src/CMakeFiles/
 src/cmake_install.cmake
 vscp-works-qt_en_150.ts
+_CPack_Packages/
 
 # Buildfiles on windows
 ALL_BUILD.vcxproj
@@ -23,3 +24,4 @@ DistributionKit/
 deploy-qt-.cmake
 deploy-qt-linux.cmake
 deploy-qt-windows.cmake
+*.tar.gz

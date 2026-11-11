@@ -2,12 +2,57 @@
 
 ## Main window
 
-## Session window
+| Key | Function |
+| --- | -------- |
+| F1 | Open help for connections |
+| Ctrl + Q | Exit (Linux/macOS) |
 
-### Ctrl key bindings
+## Session window
 
 | Key | Function |
 | --- | -------- |
+| F1 | Open help |
+| Ctrl + O | Connect/disconnect |
+| Ctrl + N | Clear RX list |
+| Ctrl + X | Close window |
+| Alt + 2 | Clear TX list |
+| Alt + C | Toggle RX class mark |
+| Alt + M | Toggle RX row mark |
+| Alt + T | Toggle RX type mark |
+| Alt + U | Un-select all RX rows |
+
+See [session window](session_window.md) for all functions.
+
+## Node scan window
+
+| Key | Function |
+| --- | -------- |
+| F1 | Open help |
+| Ctrl + C | Connect |
+| Ctrl + F | Scan |
+| Ctrl + L | Load MDF for selected node |
+| Ctrl + A | Load MDF for all nodes |
+| Ctrl + 1 | Open session window |
+| Ctrl + 2 | Open configuration window |
+| Ctrl + X | Quit |
+
+## Configuration window
+
+See [configuration window](config_window.md).
+
+## MDF editor
+
+| Key | Function |
+| --- | -------- |
+| F1 | Open help |
+| Ctrl + N | New MDF |
+| Ctrl + O | Open MDF |
+| Ctrl + S | Save MDF |
+| Ctrl + E | Edit item |
+| Ctrl + D | Delete item |
+| Ctrl + X | Quit |
+
+--- | -------- |
 | Ctrl + A | Send TX event(s) |
 | Ctrl + C | Copy RX row to clipboard |
 | Ctrl + M | Clear TX list |
@@ -39,4 +84,4 @@ Delete RX event
 ---
 
 ${/var/creation-time}  
-This document is licensed under [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/) and can be freely copied, redistributed, remixed, transformed, built upon as long as you give credits to the author.
+This document is licensed under [Creative Commons BY 4.0](https://creativecommons.org/licenses/by/4.0/) and can be freely copied, redistributed, remixed, transformed and built upon, as long as you give credit to the author.

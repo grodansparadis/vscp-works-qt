@@ -15,6 +15,9 @@
   * [Files and directory structure](files_and_directory_structure.md)
   * [Settings](settings.md)
 
+* **Main window**
+  * [General](main_window.md)
+
 * **Connections**
   * [General](connections.md)
     * [CANAL](connection_canal.md)
@@ -28,6 +31,11 @@
 
 * **Session window**
   * [General](session_window.md)
+  * [Realtime measurement](measurement_window.md)
+
+* **Raw explorers**
+  * [CAN raw explorer](rawcan_window.md)
+  * [MQTT raw explorer](mqtt_explorer_window.md)
 
 * **Node scan window**
   * [General](scan_window.md)
@@ -44,6 +52,7 @@
 * **Logging, diagnostic and debugging**
   * [Solving problems and troubleshooting](solving_problems.md)
   * [logging](logging.md)
+  * [VSCP Link protocol test tool](linktest_window.md)
 
 * **Server/Service Discovery**
   * [General](server_disovery.md)
@@ -51,6 +60,7 @@
   * [Heartbeats](server_disovery_heartbeats.md)	
 
 * **Appendix**
+  * [Shortcut keys](shortcuts.md)
   * VSCP Works + initial release walkthrough video - https://youtu.be/re_sKEjg66s
 
 * **Other documentation**

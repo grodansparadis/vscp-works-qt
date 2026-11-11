@@ -1,32 +1,32 @@
 ## CANBUS
-Control Area Network. A very robust network protocol that among other things is commonly used in cars and heavy machinery.
+Controller Area Network. A very robust network protocol that is commonly used in cars and heavy machinery, among other things.
 
 ## CAN4VSCP
-VSCP level I over CAN. Also specifies bus-speed and power.
+VSCP Level I over CAN. Also specifies bus speed and power.
 
 ## CANAL
-CAN Abstraction Layer - VSCP interface used for VSCP level I drivers. Originally this was a CAN pure interface.
+CAN Abstraction Layer - the VSCP interface used by VSCP Level I drivers. It was originally a pure CAN interface.
 
 ## VSCP
-Stands for *Very Simple Control Protocol* and is the name for the protocol and the framework used for the VSCP system.
+Stands for *Very Simple Control Protocol*. It is the name of both the protocol and the framework of the VSCP system.
 
 ## VSCP & Friends
-This is the name for the VSCP software package. A collection of VSCP software tools packed together including the VSCP daemon (vscpd), VSCP Works (vscpworks) and the VSCP helper library.
+The name of the VSCP software package: a collection of VSCP tools, including the VSCP daemon (vscpd), VSCP Works (vscpworks) and the VSCP helper library.
 
 ## vscpd
-The executable name for the VSCP server/daemon.
+The executable name of the VSCP server/daemon.
 
 ## vscpworks
-The executable name for VSCP Works.
+The executable name of VSCP Works.
 
 ## IoT
-Internet of Things, a term for connected **things**. 
+Internet of Things, a term for connected **things**.
 
 ## SECO 
-This abbrevation stands for **SE**nsor & **CO**ntrol. Some use **attenuator** for the same thing.
+This abbreviation stands for **SE**nsor & **CO**ntrol. Some use **actuator** for the same thing.
 
 ## TCP/IP
-The Transmission Control Protocol and Internet Protocol
+Transmission Control Protocol/Internet Protocol
 
 ## UDP
 User Datagram Protocol
