@@ -608,6 +608,11 @@ if(BUILD_TESTING)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/source_syntax_smoke.py ${CMAKE_BINARY_DIR}/compile_commands.json
   )
   set_tests_properties(source_syntax_smoke PROPERTIES LABELS "smoke;compile" TIMEOUT 60)
+  add_test(
+    NAME update_build_version
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/update_build_version.py
+  )
+  set_tests_properties(update_build_version PROPERTIES LABELS "version" TIMEOUT 60)
 endif()
 
 # Auto-increment build version after each successful build (POST_BUILD)
