@@ -728,6 +728,8 @@ if (MSVC)
   link_directories(${MOSQUITTO_LIB_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
+  ws2_32
+  iphlpapi
   Qt6::Widgets
   Qt6::Qml
   Qt6::Charts
