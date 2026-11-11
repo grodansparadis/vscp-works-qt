@@ -744,6 +744,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   CURL::libcurl
   dlfcn-win32::dl
 )
+# Load PThreads4W before VSCP's Windows semaphore header defines fallback macros.
+target_compile_options(${PROJECT_NAME} PRIVATE
+  "$<$<COMPILE_LANGUAGE:CXX>:/FI${PThreads4W_INCLUDE_DIR}/pthread.h>"
+)
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
   Qt6::Widgets
