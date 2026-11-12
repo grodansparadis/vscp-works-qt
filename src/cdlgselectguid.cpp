@@ -249,34 +249,34 @@ CDlgSelectGuid::getGuidConstraint(uint8_t pos)
             return static_cast<CSessionFilter::constraint>(ui->comboCompare5->currentIndex());
 
         case 6:
-            return static_cast<CSessionFilter::constraint>(ui->comboCompare5->currentIndex());
-
-        case 7:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare6->currentIndex());
 
-        case 8:
+        case 7:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare7->currentIndex());
 
-        case 9:
+        case 8:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare8->currentIndex());
 
-        case 10:
+        case 9:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare9->currentIndex());
 
-        case 11:
+        case 10:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare10->currentIndex());
 
-        case 12:
+        case 11:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare11->currentIndex());
 
-        case 13:
+        case 12:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare12->currentIndex());
 
-        case 14:
+        case 13:
             return static_cast<CSessionFilter::constraint>(ui->comboCompare13->currentIndex());
 
+        case 14:
+            return static_cast<CSessionFilter::constraint>(ui->comboCompare14->currentIndex());
+
         case 15:
-            return static_cast<CSessionFilter::constraint>(ui->comboCompare14->currentIndex());                                                            
+            return static_cast<CSessionFilter::constraint>(ui->comboCompare15->currentIndex());                                                            
     }
 }
 

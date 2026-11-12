@@ -65,6 +65,22 @@ public:
   */
   CSessionFilter* getSessionFilter(void) { return &m_sessionFilter; };
 
+  /*!
+      Set the filter to edit (name, description, allow/deny and constraints)
+      @param filter Filter to edit
+  */
+  void setFilter(const CSessionFilter& filter);
+
+  /*!
+      Get the edited filter, with name, description and allow/deny from
+      the dialog
+      @return The filter
+  */
+  CSessionFilter getFilter(void);
+
+  /// Rebuild the list of constraints from the filter
+  void refreshConstraintList(void);
+
   // add/edit constraint for Receive
   void addConstraintReceive(void);
   void editConstraintReceive(void);
@@ -153,6 +169,9 @@ private slots:
 
   /// Help
   void showHelp(void);
+
+  /// Check the name before closing
+  void accept(void) override;
 
 private:
   Ui::CDlgEditSessionFilter* ui;

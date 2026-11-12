@@ -225,6 +225,10 @@ CDlgConnSettingsCanal::getJson(void)
   m_jsonConfig["config"]   = getConfig().toStdString();
   m_jsonConfig["flags"]    = (int)getFlags();
   m_jsonConfig["datarate"] = (int)getDataRate();
+
+  // CAN id filter and mask (a mask of zero receives everything)
+  m_jsonConfig["filter"] = (uint32_t)vscp_readStringValue(ui->editFilter->text().trimmed().toStdString());
+  m_jsonConfig["mask"]   = (uint32_t)vscp_readStringValue(ui->editMask->text().trimmed().toStdString());
   return m_jsonConfig;
 }
 
@@ -255,6 +259,18 @@ CDlgConnSettingsCanal::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("datarate") && m_jsonConfig["datarate"].is_number()) {
     setDataRate(m_jsonConfig["datarate"].get<uint32_t>());
+  }
+
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  for (const char* key : { "filter", "mask" }) {
+    uint32_t value = 0;
+    if (m_jsonConfig.contains(key) && m_jsonConfig[key].is_number()) {
+      value = m_jsonConfig[key].get<uint32_t>();
+    }
+    else if (m_jsonConfig.contains(key) && m_jsonConfig[key].is_string()) {
+      value = vscp_readStringValue(m_jsonConfig[key].get<std::string>());
+    }
+    ('f' == key[0] ? ui->editFilter : ui->editMask)->setText(pworks->decimalToStringInBase(value));
   }
 }
 

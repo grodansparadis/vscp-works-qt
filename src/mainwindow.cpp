@@ -2929,13 +2929,10 @@ MainWindow::knownGuids(void)
 void
 MainWindow::sessionFilter(void)
 {
-  CDlgSessionFilter dlg;
-  if (QDialog::Accepted == dlg.exec()) {
-    QMessageBox::information(this,
-                             tr(APPNAME),
-                             tr("filter set"),
-                             QMessageBox::Ok);
-  }
+  // Filters are saved when the dialog is closed with OK. Open session
+  // windows pick them up when they are activated.
+  CDlgSessionFilter dlg(this);
+  dlg.exec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

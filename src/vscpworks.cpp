@@ -133,9 +133,10 @@ vscpworks::vscpworks(int& argc, char** argv)
 #else
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-    QString path = ".config/VSCP/";
+    // Absolute, so the file does not depend on the current directory
+    QString path = QDir::homePath() + "/.config/VSCP/";
 
-    QDir dir(".");
+    QDir dir(path);
     dir.mkpath(path); // Create in case it does not exist
 
     path += QCoreApplication::applicationName();
@@ -164,7 +165,7 @@ vscpworks::vscpworks(int& argc, char** argv)
 #else
   {
     // QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QString path = "./.local/share/VSCP/logs/";
+    QString path = QDir::homePath() + "/.local/share/VSCP/logs/";
     path += QCoreApplication::applicationName();
     QDir dir(path);
     dir.mkpath(path); // Create in case it does not exist
@@ -182,7 +183,8 @@ vscpworks::vscpworks(int& argc, char** argv)
 #if WIN32
     QString path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);    
 #else
-    QString path = ".local/share/VSCP/";
+    // Absolute, so the folder does not depend on the current directory
+    QString path = QDir::homePath() + "/.local/share/VSCP/";
     path += QCoreApplication::applicationName();
 #endif
     path += "/";

@@ -37,6 +37,7 @@
 #include <vscp-client-base.h>
 
 #include "ctxevent.h"
+#include "sessionfilter.h"
 
 #include <QDialog>
 #include <QLCDNumber>
@@ -45,6 +46,7 @@
 #include <QTableWidgetItem>
 #include <QToolButton>
 #include <QComboBox>
+#include <QDateTime>
 #include <QMutex>
 #include <vector>
 
@@ -534,6 +536,24 @@ private:
   /// Enable&disable receive filter
   void menu_filter_enable();
 
+  /// Another filter selected in the toolbar combo
+  void filterSelectionChanged(int index);
+
+  /// Reload the session filters and fill the toolbar combo
+  void reloadSessionFilters(void);
+
+  /// Reloads changed session filters when the window is activated
+  void changeEvent(QEvent* event) override;
+
+  /// Show/hide all rows of the receive list according to the active filter
+  void applyFilter(void);
+
+  /// Show/hide one row of the receive list according to the active filter
+  void applyFilterToRow(int row);
+
+  /// The active filter, nullptr if filtering is off
+  const CSessionFilter* activeFilter(void) const;
+
   /// Push matching measurement events to open measurement windows
   void forwardMeasurementToRealtimeViews(const vscp_event_t* pev);
 
@@ -565,8 +585,20 @@ private:
   QPushButton* m_buttons[NumButtons];
   QDialogButtonBox* m_buttonBox;
 
-  /// Toolbar combo for actiive filter
+  /// Toolbar combo for active filter
   QComboBox* m_filterComboBox;
+
+  /// Toolbar button that enables/disables the filter
+  QAction* m_filterEnableAct;
+
+  /// Session filters (shared by all session windows)
+  std::vector<CSessionFilter> m_sessionFilters;
+
+  /// True if the selected filter is applied to the receive list
+  bool m_bFilterEnabled;
+
+  /// Modification time of the filter file when it was read
+  QDateTime m_filterFileModified;
 
   /// Toolbar combo for numerical base
   QComboBox* m_baseComboBox;

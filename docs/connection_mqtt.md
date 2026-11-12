@@ -117,6 +117,9 @@ Right-click the list to add, edit, clone or delete publish topics.
 ### Test connection
 ![](./images/add_connection_mqtt_connection_test.png)
 
+### Filter
+`Filter...` sets a filter for incoming events on priority, class, type and GUID, in the same way as for a [tcp/ip connection](connection_tcpip.md?id=filters). Events that do not pass it are dropped by the connection.
+
 ### TLS/SSL
 
 ![](./images/add_connection_mqtt_tls.png)

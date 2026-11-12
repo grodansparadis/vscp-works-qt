@@ -306,9 +306,9 @@ CDlgConnSettingsSocketCan::setJson(const json* pobj)
     for (auto v : filterArray) {
 
       QString strName;
-      uint32_t filter;
-      uint32_t mask;
-      bool bInvert;
+      uint32_t filter = 0;
+      uint32_t mask   = 0;
+      bool bInvert    = false;
 
       json item = v;
       if (item.contains("name") && item["name"].is_string()) {

@@ -340,6 +340,9 @@ private slots:
   /// TLS settings button clicked
   void onTLSSettings(void);
 
+  /// Set filter button clicked
+  void onSetFilter(void);
+
   /// Get help with settings
   void onGetHelp(void);
 
@@ -354,6 +357,9 @@ private slots:
 
 private:
   Ui::CDlgConnSettingsMqtt* ui;
+
+  /// Incoming event filter
+  vscp_event_filter_t m_filter;
 
   /// TLS flag (secure transport if enabled)
   bool m_bTLS;

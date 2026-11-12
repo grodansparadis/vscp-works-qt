@@ -14,7 +14,7 @@ Right-click the `Socketcan` item in the tree view and select `Add new Socketcan 
  - `Device`: The name of the CAN interface, usually something like `can0` or `can1`. The exact name depends on the system. You can find the available names in the `/sys/class/net/` folder.
  - `Flags`: SocketCAN flags used to set special options for the CAN interface. Press the `...` button to open a dialog where you can set them.
  - `Response timeout`: The time in milliseconds to wait for a response from a device. If no response is received in time, the operation is aborted.
- - `Filters`: Any number of filters for the CAN interface. Each filter is a 32-bit filter/mask pair used to filter out messages you are not interested in. If the mask is zero, all messages pass. Otherwise, the mask is ANDed bitwise with the message id, and the message passes only if the result equals the filter.
+ - `Filters`: Any number of filters for the CAN interface. Each filter is a 32-bit filter/mask pair used to filter out messages you are not interested in. A message passes a filter if its id ANDed with the mask equals the filter ANDed with the mask, so a mask of zero passes everything. With `Invert` set, a filter passes the messages that do not match. A message is received if it passes any of the filters; with no filters all messages are received. The filters are set on the CAN socket, so the kernel drops the other messages.
 
 ### Test button
 Press the `Test connection` button to check that your SocketCAN settings work.

@@ -160,30 +160,44 @@ This menu is only shown for MQTT connections.
 
 ## Filters
 
-Session filters are defined with `Tools/Session filters...` in the main window. A filter is a named list of constraints. Each filter has a name, a description and an `Allow` setting (when unchecked the constraints define what is denied).
+A session filter decides which events are shown in the receive list of a session window. It only hides rows: all events are still received and kept, so you can switch filters or turn filtering off at any time and see everything again. Saving the receive list also saves the hidden events.
 
-Use `New filter...`, `Edit filter...`, `Clone filter...` and `Delete filter...` (also available in the right-click menu) to manage filters, and `Load filters...`/`Save filters...` to load/save them.
+### Using a filter
 
-In the filter editor, add constraints with `Add constraint...`. The following constraints are available:
+Select a filter in the filter box of the toolbar and press the filter button next to it to turn filtering on. Press it again to show all events. A new selection in the filter box is applied at once. `Filters...` in the toolbar, or `Setting/Set/define filter...`, opens the filter list described below.
+
+### Defining filters
+
+Session filters are defined with `Tools/Session filters...` in the main window or `Filters...` in a session window. The filters are shared by all session windows and stored in `sessionfilters.json` in the VSCP Works share folder (VSCP Works prints it as `Share folder:` when it starts; `~/.local/share/VSCP/vscp-works-qt` on Linux). Session windows pick up changes when you return to them.
+
+Use `New filter...`, `Edit filter...`, `Clone filter...` and `Delete filter...` (also in the right-click menu) to manage the filters. `Export filters...` writes all filters to a file and `Import filters...` reads filters from such a file; an imported filter replaces a filter with the same name. Changes are saved when you close the dialog with `OK`.
+
+A filter has a name, a description and an `Allow` setting:
+
+- **Allow** (checked): only events that meet all constraints of the filter are shown.
+- **Deny** (unchecked): events that meet all constraints are hidden.
+
+In the filter editor, add constraints with `Add constraint...`, change the selected one with `Edit constraint...` (or a double-click) and remove it with `Delete constraint`. An event meets the filter when it meets all its constraints. The following constraints are available:
 
 | Constraint | Description |
 | ---------- | ----------- |
-| No constraint | Matches everything. |
-| Must be received event / Must be transmitted event | Event direction. |
-| Must be Level I event / Must be Level II event | Event level. |
+| Must be received event / Must be transmitted event | Event direction. Only one of them can be set. |
+| Must be Level I event / Must be Level II event | Level I events have a class below 1024. Only one of them can be set. |
 | Must be measurement | Only measurement events. |
-| Specific Class / Specific Type | VSCP class/type. |
-| GUID | Origin GUID. |
+| Specific Class / Specific Type | One of the selected classes. If types are selected for a class, the event must also have one of them; a class without selected types accepts all its types. |
+| Priority | Event priority (0-7). |
+| GUID | Compare any of the 16 GUID bytes. |
 | OBID | Interface id. |
-| Priority | Event priority. |
-| Timestamp / Date/Time | Event time. |
-| Data size / Data value(s) | Size and content of the data part. |
-| Sensor Index / Measurement Unit / Measurement Value / Measurement data coding | Measurement content. |
-| Script | Script based constraint. |
+| Timestamp | Event timestamp (microseconds). |
+| Date/Time | Year, month, day, hour, minute and second of the event. |
+| Data size | Number of data bytes. |
+| Data value(s) | Data bytes at given positions. An event that has no data at a position does not meet the constraint. |
+| Sensor Index / Measurement Unit / Measurement data coding / Measurement Value | Measurement content. These also require a measurement event. |
+| Script | Not supported yet. |
 
-Numerical constraints can be compared with `=`, `!=`, `<`, `<=`, `>` or `>=`.
+Values are compared as *event value* `=`, `!=`, `<`, `<=`, `>` or `>=` *filter value*. For example `Data size`, `Greater than`, `2` shows events with more than two data bytes.
 
-?> The filter toolbar items in the session window are placeholders. Applying session filters to a session window is not yet implemented.
+Session filters work for all connection types. The filter of a connection (in its connection settings) is different: it is applied by the connection, and events it filters out never reach the session window.
 
 ## Known GUIDs
 

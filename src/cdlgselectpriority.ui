@@ -58,22 +58,22 @@
       </item>
       <item>
        <property name="text">
-        <string>Greater than</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Greater than or equal to</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
         <string>Less than</string>
        </property>
       </item>
       <item>
        <property name="text">
         <string>Less than or equal to</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater than</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Greater than or equal to</string>
        </property>
       </item>
      </widget>

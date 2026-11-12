@@ -158,10 +158,10 @@
     </rect>
    </property>
    <property name="toolTip">
-    <string>Save filters to storage</string>
+    <string>Export all filters to a file</string>
    </property>
    <property name="text">
-    <string>Save filters...</string>
+    <string>Export filters...</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnLoadFilter">
@@ -174,10 +174,10 @@
     </rect>
    </property>
    <property name="toolTip">
-    <string>Load filters from storage</string>
+    <string>Import filters from a file</string>
    </property>
    <property name="text">
-    <string>Load filters...</string>
+    <string>Import filters...</string>
    </property>
   </widget>
  </widget>

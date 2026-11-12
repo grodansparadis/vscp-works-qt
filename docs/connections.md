@@ -93,7 +93,16 @@ The connection type may be given as a number or as a name (for example `tcpip`).
 
 # Filter
 
-Filters for incoming events can be set for most connection types in the connection settings dialog. Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).
+Filters for incoming events can be set in the connection settings dialog. Events filtered out by the connection never reach the session window.
+
+| Connection | Filter |
+| ---------- | ------ |
+| tcp/ip, UDP, Multicast, MQTT, Level II driver | VSCP filter/mask on priority, class, type and GUID (`Filter...`). |
+| CANAL | CAN id filter/mask. It is handed to the driver and also checked by VSCP Works, as many drivers ignore it. |
+| SocketCAN | A list of CAN id filter/mask pairs set on the CAN socket. An event passes if it matches any of them; `Invert` passes the ids that do not match. |
+| WebSocket ws1/ws2 | Not available yet. |
+
+Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).
 
 # Passwords and keys
 

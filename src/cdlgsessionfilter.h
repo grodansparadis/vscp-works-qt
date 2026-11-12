@@ -29,8 +29,12 @@
 #ifndef CDLGSESSIONFILTER_H
 #define CDLGSESSIONFILTER_H
 
+#include "sessionfilter.h"
+
 #include <QDialog>
 #include <QListWidgetItem>
+
+#include <vector>
 
 namespace Ui {
 class CDlgSessionFilter;
@@ -44,7 +48,28 @@ public:
   ~CDlgSessionFilter();
 
 public:
+  /// File with the session filters of the user
+  static QString defaultFilterPath(void);
+
+  /// Read the session filters of the user (empty list if there are none)
+  static std::vector<CSessionFilter> loadDefaultFilters(void);
+
+  /// Save the session filters of the user
+  static bool saveDefaultFilters(const std::vector<CSessionFilter>& filters);
+
+  /// Filters as edited in the dialog
+  const std::vector<CSessionFilter>& getFilters(void) const { return m_filters; };
+
+  /// Select a filter by name
+  void selectFilter(const QString& name);
+
+  /// Saves the filters when OK is pressed
+  void accept(void) override;
+
 private slots:
+
+  /// Show the description of the selected filter
+  void filterSelected(int row);
 
   /// Context menu
   void showTxContextMenu(const QPoint& pos);
@@ -71,7 +96,16 @@ private slots:
   void showHelp(void);
 
 private:
+  /// Fill the list with the filter names
+  void fillList(int selectRow);
+
+  /// True if a filter (other than skip) has this name
+  bool nameExists(const std::string& name, int skip = -1) const;
+
   Ui::CDlgSessionFilter* ui;
+
+  /// The filters
+  std::vector<CSessionFilter> m_filters;
 };
 
 #endif // CDLGSESSIONFILTER_H

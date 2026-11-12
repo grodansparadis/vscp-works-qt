@@ -129,7 +129,7 @@ void CDlgSelectData::addValue(uint16_t pos, uint8_t value, uint8_t op)
     newitem->setText(str.arg(pos).arg(value));
     newitem->setData(Qt::UserRole, 
                         (((uint32_t)pos) << 16) +                                           // pos
-                        (((uint32_t)ui->comboCompareConstraint->currentIndex()) << 8) +     // op
+                        (((uint32_t)op) << 8) +                                             // op
                         value);                                                             // value
     ui->listValues->addItem(newitem); 
 }
@@ -144,7 +144,7 @@ void CDlgSelectData::onAddValue(void)
     // Check if there is a value for the position already
     for (int i=0; i < ui->listValues->count(); i++) {
         QListWidgetItem * item = ui->listValues->item(i);
-        if ((item->data(Qt::UserRole).toUInt() & 0xff) == ui->spinPos->value()) {
+        if (((item->data(Qt::UserRole).toUInt() >> 16) & 0x1ff) == (uint32_t)ui->spinPos->value()) {
             QMessageBox::information(this, 
                         tr(APPNAME),
                         tr("Data for this data item is already set. Delete item first to set a new value."),

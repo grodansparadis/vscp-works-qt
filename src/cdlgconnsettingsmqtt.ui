@@ -117,6 +117,16 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="btnSetFilter">
+        <property name="toolTip">
+         <string>Define incoming filter</string>
+        </property>
+        <property name="text">
+         <string>Filter...</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="2" column="0">

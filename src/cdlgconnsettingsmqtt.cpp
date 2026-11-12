@@ -34,6 +34,7 @@
 #include <vscphelper.h>
 
 #include "cdlgconnsettingsmqtt.h"
+#include "cdlglevel2filter.h"
 #include "ui_cdlgconnsettingsmqtt.h"
 
 #include "cdlgmqttpublish.h"
@@ -200,7 +201,9 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   setUser("vscp");
   setPassword("secret");
   // Clear filter
-  // memset(&m_filter, 0, sizeof(vscp_event_filter_t));
+  vscp_clearVSCPFilter(&m_filter);
+
+  connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsMqtt::onSetFilter);
 
   connect(ui->btnTLS,
           &QPushButton::clicked,
@@ -695,6 +698,22 @@ CDlgConnSettingsMqtt::setPwKeyFile(const QString& str)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// onSetFilter
+//
+
+void
+CDlgConnSettingsMqtt::onSetFilter(void)
+{
+  CDlgLevel2Filter dlg;
+
+  dlg.setFilter(&m_filter);
+
+  if (QDialog::Accepted == dlg.exec()) {
+    dlg.getFilter(&m_filter);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // getJson
 //
 
@@ -764,6 +783,20 @@ CDlgConnSettingsMqtt::getJson(void)
   }
   m_jsonConfig["publish"] = publishingArray;
 
+  // Incoming filter
+  std::string str;
+  m_jsonConfig.erase("filter"); // Old form, replaced by the keys below
+  m_jsonConfig["priority-filter"] = m_filter.filter_priority;
+  m_jsonConfig["priority-mask"]   = m_filter.mask_priority;
+  m_jsonConfig["class-filter"]    = m_filter.filter_class;
+  m_jsonConfig["class-mask"]      = m_filter.mask_class;
+  m_jsonConfig["type-filter"]     = m_filter.filter_type;
+  m_jsonConfig["type-mask"]       = m_filter.mask_type;
+  vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
+  m_jsonConfig["guid-filter"] = str;
+  vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
+  m_jsonConfig["guid-mask"] = str;
+
   return m_jsonConfig;
 }
 
@@ -775,6 +808,39 @@ void
 CDlgConnSettingsMqtt::setJson(const json* pobj)
 {
   m_jsonConfig = *pobj;
+
+  // Incoming filter, top level or (older configurations) a "filter" object
+  {
+    vscp_clearVSCPFilter(&m_filter);
+    json jf = m_jsonConfig;
+    if (m_jsonConfig.contains("filter") && m_jsonConfig["filter"].is_object()) {
+      jf = m_jsonConfig["filter"];
+    }
+    if (jf.contains("priority-filter") && jf["priority-filter"].is_number()) {
+      m_filter.filter_priority = jf["priority-filter"].get<uint8_t>();
+    }
+    if (jf.contains("priority-mask") && jf["priority-mask"].is_number()) {
+      m_filter.mask_priority = jf["priority-mask"].get<uint8_t>();
+    }
+    if (jf.contains("class-filter") && jf["class-filter"].is_number()) {
+      m_filter.filter_class = jf["class-filter"].get<uint16_t>();
+    }
+    if (jf.contains("class-mask") && jf["class-mask"].is_number()) {
+      m_filter.mask_class = jf["class-mask"].get<uint16_t>();
+    }
+    if (jf.contains("type-filter") && jf["type-filter"].is_number()) {
+      m_filter.filter_type = jf["type-filter"].get<uint16_t>();
+    }
+    if (jf.contains("type-mask") && jf["type-mask"].is_number()) {
+      m_filter.mask_type = jf["type-mask"].get<uint16_t>();
+    }
+    if (jf.contains("guid-filter") && jf["guid-filter"].is_string()) {
+      vscp_getGuidFromStringToArray(m_filter.filter_GUID, jf["guid-filter"].get<std::string>());
+    }
+    if (jf.contains("guid-mask") && jf["guid-mask"].is_string()) {
+      vscp_getGuidFromStringToArray(m_filter.mask_GUID, jf["guid-mask"].get<std::string>());
+    }
+  }
 
   if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
     setName(m_jsonConfig["name"].get<std::string>().c_str());

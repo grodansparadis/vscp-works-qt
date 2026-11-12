@@ -181,6 +181,12 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
     resize(nWidth, nHeight);
   }
 
+  // Set by createToolbar()/createRxGroupBox(); the filter code checks them
+  m_rxTable         = nullptr;
+  m_filterComboBox  = nullptr;
+  m_filterEnableAct = nullptr;
+  m_bFilterEnabled  = false;
+
   createMenu();
   createToolbar();
   createHorizontalGroupBox();
@@ -456,6 +462,7 @@ CFrmSession::createMenu()
   // * * * Settings menu * * *
   m_settingsMenu = new QMenu(tr("&Setting"), this);
   m_setFilterAct = m_settingsMenu->addAction(tr("Set/define filter..."));
+  connect(m_setFilterAct, &QAction::triggered, this, &CFrmSession::menu_filter_config);
   m_settingsAct  = m_settingsMenu->addAction(tr("Settings..."));
   m_menuBar->addMenu(m_settingsMenu);
   connect(m_settingsAct,
@@ -557,19 +564,24 @@ CFrmSession::createToolbar()
 
   // Filter
   // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-  m_setFilterActToolBar = m_toolBar->addAction(QIcon(":/filter.png"),
-                                               tr("Enable filter"),
-                                               this,
-                                               &CFrmSession::menu_filter_enable);
-  m_setFilterActToolBar->setStatusTip(tr("Enable/disable filter"));
-  m_setFilterActToolBar->setCheckable(true);
+  m_bFilterEnabled = false;
+  m_filterEnableAct = m_toolBar->addAction(QIcon(":/filter.png"),
+                                           tr("Enable filter"),
+                                           this,
+                                           &CFrmSession::menu_filter_enable);
+  m_filterEnableAct->setStatusTip(tr("Show only the events the selected filter lets through"));
+  m_filterEnableAct->setCheckable(true);
 
   m_filterComboBox = new QComboBox;
-  m_filterComboBox->addItem("Filter 1");
-  m_filterComboBox->addItem("Filter 2");
-  m_filterComboBox->addItem("Filter 3");
-  m_filterComboBox->addItem("Filter 4");
+  m_filterComboBox->setMinimumContentsLength(12);
+  m_filterComboBox->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+  m_filterComboBox->setToolTip(tr("Session filter"));
   m_toolBar->addWidget(m_filterComboBox);
+  connect(m_filterComboBox,
+          QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this,
+          &CFrmSession::filterSelectionChanged);
+  reloadSessionFilters();
 
   // Filter handling preferences-other
   m_setFilterActToolBar = m_toolBar->addAction(QIcon(":/process_accept.png"),
@@ -859,13 +871,10 @@ CFrmSession::menu_connect()
 void
 CFrmSession::menu_filter_config()
 {
-  CDlgSessionFilter dlg;
+  CDlgSessionFilter dlg(this);
+  dlg.selectFilter(m_filterComboBox->currentData().toString());
   if (QDialog::Accepted == dlg.exec()) {
-    QMessageBox::information(
-      this,
-      tr(APPNAME),
-      tr("filter set"),
-      QMessageBox::Ok);
+    reloadSessionFilters();
   }
 }
 
@@ -876,11 +885,148 @@ CFrmSession::menu_filter_config()
 void
 CFrmSession::menu_filter_enable()
 {
-  QMessageBox::information(
-    this,
-    tr(APPNAME),
-    tr("filter enable"),
-    QMessageBox::Ok);
+  if (m_filterEnableAct->isChecked() && (nullptr == activeFilter())) {
+    m_filterEnableAct->setChecked(false);
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("There is no session filter to enable. Define one with \"Filters...\"."),
+                             QMessageBox::Ok);
+  }
+  m_bFilterEnabled = m_filterEnableAct->isChecked();
+  applyFilter();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// filterSelectionChanged
+//
+
+void
+CFrmSession::filterSelectionChanged(int /*index*/)
+{
+  if (m_bFilterEnabled) {
+    applyFilter();
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// changeEvent
+//
+
+void
+CFrmSession::changeEvent(QEvent* event)
+{
+  QDialog::changeEvent(event);
+
+  // Pick up filters changed in another window
+  if ((QEvent::ActivationChange == event->type()) && isActiveWindow()) {
+    QFileInfo info(CDlgSessionFilter::defaultFilterPath());
+    QDateTime modified = info.exists() ? info.lastModified() : QDateTime();
+    if (modified != m_filterFileModified) {
+      reloadSessionFilters();
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// reloadSessionFilters
+//
+
+void
+CFrmSession::reloadSessionFilters(void)
+{
+  QString current = m_filterComboBox->currentData().toString();
+
+  QFileInfo info(CDlgSessionFilter::defaultFilterPath());
+  m_filterFileModified = info.exists() ? info.lastModified() : QDateTime();
+
+  m_sessionFilters = CDlgSessionFilter::loadDefaultFilters();
+
+  m_filterComboBox->blockSignals(true);
+  m_filterComboBox->clear();
+  for (auto const& filter : m_sessionFilters) {
+    QString name = QString::fromStdString(filter.getName());
+    m_filterComboBox->addItem(name, name);
+  }
+  int idx = m_filterComboBox->findData(current);
+  m_filterComboBox->setCurrentIndex((idx >= 0) ? idx : 0);
+  m_filterComboBox->setEnabled(!m_sessionFilters.empty());
+  m_filterComboBox->blockSignals(false);
+
+  if (m_sessionFilters.empty() && m_bFilterEnabled) {
+    m_bFilterEnabled = false;
+    if (nullptr != m_filterEnableAct) {
+      m_filterEnableAct->setChecked(false);
+    }
+  }
+
+  applyFilter();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// activeFilter
+//
+
+const CSessionFilter*
+CFrmSession::activeFilter(void) const
+{
+  int idx = m_filterComboBox ? m_filterComboBox->currentIndex() : -1;
+  if ((idx < 0) || (idx >= (int)m_sessionFilters.size())) {
+    return nullptr;
+  }
+  return &m_sessionFilters[idx];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// applyFilterToRow
+//
+
+void
+CFrmSession::applyFilterToRow(int row)
+{
+  if ((row < 0) || (row >= m_rxTable->rowCount()) || (row >= (int)m_rxEvents.size())) {
+    return;
+  }
+
+  const CSessionFilter* pfilter = m_bFilterEnabled ? activeFilter() : nullptr;
+  if (nullptr == pfilter) {
+    m_rxTable->setRowHidden(row, false);
+    return;
+  }
+
+  bool bReceived          = true;
+  QTableWidgetItem* itemDir = m_rxTable->item(row, 0);
+  if (nullptr != itemDir) {
+    bReceived = !(itemDir->data(rxrow_role_flags).toUInt() & RX_ROW_FLAG_TX);
+  }
+
+  m_rxTable->setRowHidden(row, !pfilter->check(m_rxEvents[row], bReceived));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// applyFilter
+//
+
+void
+CFrmSession::applyFilter(void)
+{
+  if (nullptr == m_rxTable) {
+    return;
+  }
+
+  m_mutexRxList.lock();
+  m_rxTable->setUpdatesEnabled(false);
+  for (int row = 0; row < m_rxTable->rowCount(); row++) {
+    applyFilterToRow(row);
+  }
+  m_rxTable->setUpdatesEnabled(true);
+  m_mutexRxList.unlock();
+
+  if (nullptr == m_filterEnableAct) {
+    return;
+  }
+  m_filterEnableAct->setToolTip(m_bFilterEnabled && activeFilter()
+                                  ? tr("Filter '%1' is active").arg(m_filterComboBox->currentText())
+                                  : tr("Enable filter"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3464,6 +3610,8 @@ CFrmSession::loadSessionFromFile(const QString& path)
       }
     }
 
+    applyFilter();
+
     initializeClient(pworks->m_session_bAutoConnect);
     QApplication::restoreOverrideCursor();
   }
@@ -3662,6 +3810,8 @@ CFrmSession::loadRxFromFile(void)
   }
 
   file.close();
+
+  applyFilter();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4570,6 +4720,8 @@ CFrmSession::receiveRxRow(vscp_event_t* pev)
   setGuidInfoForRow(itemGuid, pev);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
 
+  applyFilterToRow(m_rxTable->rowCount() - 1);
+
   m_rxTable->setUpdatesEnabled(false);
   for (int i = 0; i < m_rxTable->rowCount(); i++) {
     m_rxTable->setRowHeight(i, 10);
@@ -4712,6 +4864,8 @@ CFrmSession::receiveTxRow(vscp_event_t* pev)
   }
   setGuidInfoForRow(itemGuid, pevnew);
   m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
+
+  applyFilterToRow(m_rxTable->rowCount() - 1);
 
   m_rxTable->setUpdatesEnabled(false);
   for (int i = 0; i < m_rxTable->rowCount(); i++) {
@@ -4939,7 +5093,7 @@ CFrmSession::pollForEvents()
     return;
   }
 
-  vscpEvent ev;
+  vscpEvent ev = {};
   // Drain until no more events are available (receive returns non-success)
   while (VSCP_ERROR_SUCCESS == m_vscpClient->receive(ev)) {
     receiveCallback(ev, this);
