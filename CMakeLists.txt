@@ -155,14 +155,16 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to the latest VSCP release (v26.11.0.3948). Only a handful of VSCP
+  # Pinned to VSCP master v26.11.1.3984 + Level II driver client (binary mode
+  # authenticated encryption, UDP/multicast require-encryption, security
+  # fixes, vscp-client-level2). Only a handful of VSCP
   # source files are compiled directly into vscp-works-qt, so a pinned source
   # tarball is used to avoid cloning the full repository history and its
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/898fcc1ce6a89b5f4b2b8a3a233cad663dcd278f
-  URL_HASH SHA256=5485966dab085bab3ce4fb815de0a4bc8056cf11afc35b1531cc9cb8bcec6b16
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/1ab1314702bc093ec77b5ac75691ec867a582cbc
+  URL_HASH SHA256=0924859b4dbdeb46b6cbbd5d3c950f9b69728c5e96d44dc04bc2390dc5b5fdba
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)
@@ -180,6 +182,42 @@ FetchContent_Declare(
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(sqlite3)
+
+# QtKeychain keeps connection passwords and keys in the OS keyring
+# (Secret Service / GNOME Keyring or KWallet on Linux, Credential Manager on
+# Windows, Keychain on macOS). Built as a static library. BSD-3-Clause.
+FetchContent_Declare(
+  qtkeychain
+  URL https://codeload.github.com/frankosterfeld/qtkeychain/tar.gz/refs/tags/v0.14.0
+  URL_HASH SHA256=ad78f2d9e0a5ee80f40cbaace4f55d11c2557bc6e930cf4a9479e39a7d78bb60
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  EXCLUDE_FROM_ALL
+)
+set(BUILD_WITH_QT6 ON CACHE BOOL "QtKeychain: build with Qt 6" FORCE)
+set(BUILD_TRANSLATIONS OFF CACHE BOOL "QtKeychain: no translations" FORCE)
+set(BUILD_TEST_APPLICATION OFF CACHE BOOL "QtKeychain: no test application" FORCE)
+if(UNIX AND NOT APPLE)
+  # GNOME Keyring (and other Secret Service keyrings) need libsecret.
+  # Without it only KWallet works and other desktops fall back to an
+  # owner only file.
+  find_package(PkgConfig QUIET)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(VSCPWORKS_LIBSECRET QUIET libsecret-1)
+  endif()
+  if(VSCPWORKS_LIBSECRET_FOUND)
+    set(LIBSECRET_SUPPORT ON CACHE BOOL "QtKeychain: libsecret support" FORCE)
+  else()
+    set(LIBSECRET_SUPPORT OFF CACHE BOOL "QtKeychain: libsecret support" FORCE)
+    message(WARNING "libsecret-1 development files not found (Debian/Ubuntu: libsecret-1-dev). "
+                    "Passwords and keys can then only be stored in KWallet, otherwise in an owner only file.")
+  endif()
+endif()
+set(_vscpworks_build_shared_libs ${BUILD_SHARED_LIBS})
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_MakeAvailable(qtkeychain)
+set(BUILD_SHARED_LIBS ${_vscpworks_build_shared_libs})
+# Static library: the export macro must not be dllimport on Windows
+target_compile_definitions(qt6keychain PUBLIC QT6KEYCHAIN_STATIC_DEFINE)
 
 set(SOCKETCAN_SOURCES)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -252,6 +290,12 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgconnsettingsmulticast.ui
   src/cdlgconnsettingsmulticast.h
   src/cdlgconnsettingsmulticast.cpp
+  src/cdlgconnsettingslevel2.ui
+  src/cdlgconnsettingslevel2.h
+  src/cdlgconnsettingslevel2.cpp
+  src/keyvalidation.h
+  src/secretstore.h
+  src/secretstore.cpp
 
   src/cdlgknownguid.ui
   src/cdlgknownguid.h
@@ -590,6 +634,8 @@ qt_add_executable(${PROJECT_NAME}
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-level2.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-level2.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-pic1.h
@@ -713,7 +759,7 @@ else()
     ${sqlite3_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${MOSQUITTO_INCLUDE_DIRS}
+    ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
@@ -771,6 +817,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 endif()
 
+# OS keyring for passwords and keys (QtKeychain)
+target_link_libraries(${PROJECT_NAME} PRIVATE qt6keychain)
+target_include_directories(${PROJECT_NAME} PRIVATE ${qtkeychain_SOURCE_DIR} ${qtkeychain_BINARY_DIR})
+if(LIBSECRET_SUPPORT)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE VSCPWORKS_HAVE_LIBSECRET)
+endif()
+
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -786,23 +839,12 @@ if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 
 include(InstallRequiredSystemLibraries)
 
-file(READ "${CMAKE_SOURCE_DIR}/src/buildnumber.h" VSCP_BUILDNUMBER_HEADER)
-string(REGEX MATCH "#define VSCPWORKS_DISPLAY_VERSION[ 	]+\"([0-9]+)-([0-9]+)-([0-9]+)\"" _ "${VSCP_BUILDNUMBER_HEADER}")
-if(CMAKE_MATCH_1)
-  set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
-  set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}")
-  set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}")
-  set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}-${CPACK_PACKAGE_VERSION_MINOR}-${CPACK_PACKAGE_VERSION_PATCH}")
-else()
-  file(READ "${CMAKE_SOURCE_DIR}/src/version.h" VSCP_VERSION_HEADER)
-  string(REGEX MATCH "#define VSCPWORKS_MAJOR_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
-  set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
-  string(REGEX MATCH "#define VSCPWORKS_MINOR_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
-  set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_1}")
-  string(REGEX MATCH "#define VSCPWORKS_PATCH_VERSION[ 	]+([0-9]+)" _ "${VSCP_VERSION_HEADER}")
-  set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_1}")
-  set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}-${CPACK_PACKAGE_VERSION_MINOR}-${CPACK_PACKAGE_VERSION_PATCH}")
-endif()
+file(READ "${CMAKE_SOURCE_DIR}/src/version.h" VSCP_VERSION_HEADER)
+string(REGEX MATCH "#define VSCPWORKS_DISPLAY_VERSION[ 	]+\"([0-9]+)-([0-9]+)-([0-9]+)\"" _ "${VSCP_VERSION_HEADER}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
+set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}")
+set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}")
+set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}-${CPACK_PACKAGE_VERSION_MINOR}-${CPACK_PACKAGE_VERSION_PATCH}")
 
 set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)")
 if(WIN32)
@@ -818,7 +860,7 @@ if(UNIX AND NOT APPLE)
     "/usr/bin"
   )
   if(LINUXDEPLOYQT_EXECUTABLE)
-    if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2) # CPack AppImage generator
       set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
     else()
       set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
@@ -834,14 +876,14 @@ find_program(BINARYCREATOR_EXECUTABLE NAMES binarycreator binarycreator.exe HINT
 )
 
 set(CPACK_USE_IFW OFF)
-if(BINARYCREATOR_EXECUTABLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+if(BINARYCREATOR_EXECUTABLE)
   set(CPACK_USE_IFW ON)
 endif()
 
 if(CPACK_USE_IFW)
   set(CPACK_GENERATOR "IFW" CACHE STRING "CPack generator(s)" FORCE)
 elseif(UNIX AND NOT APPLE AND LINUXDEPLOYQT_EXECUTABLE)
-  if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2) # CPack AppImage generator
     set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
   else()
     set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
@@ -852,7 +894,7 @@ endif()
 
 include(CPack)
 
-if(UNIX AND NOT APPLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+if(UNIX AND NOT APPLE)
   add_custom_target(package-appimage
     COMMAND "${CMAKE_COMMAND}" -DPROJECT_NAME=${PROJECT_NAME} -DCMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -DCMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -DCPACK_PACKAGE_VERSION=${CPACK_PACKAGE_VERSION} -P "${CMAKE_SOURCE_DIR}/cmake/package_appimage.cmake"
     COMMENT "Creating AppImage package"
@@ -903,15 +945,65 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   BUNDLE DESTINATION .)
 
+# Install the Qt runtime (libraries, plugins) with the program so the
+# install tree and the archives made from it run without Qt installed.
+# Uses windeployqt on Windows and macdeployqt on macOS. On by default on
+# Windows and macOS. On Linux a system install uses the distribution's Qt,
+# so it is off; turn it on for a TGZ that runs on its own (the AppImage
+# bundles Qt itself with linuxdeploy).
+if(WIN32 OR APPLE)
+  set(_vscpworks_deploy_runtime_default ON)
+else()
+  set(_vscpworks_deploy_runtime_default OFF)
+endif()
+option(VSCPWORKS_DEPLOY_RUNTIME "Install the Qt runtime libraries and plugins with the program"
+       ${_vscpworks_deploy_runtime_default})
+if(VSCPWORKS_DEPLOY_RUNTIME)
+  qt_generate_deploy_app_script(
+    TARGET ${PROJECT_NAME}
+    OUTPUT_SCRIPT _vscpworks_deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+  )
+  install(SCRIPT ${_vscpworks_deploy_script})
+endif()
+
 if(UNIX AND NOT APPLE)
+  # Desktop entry and the application icon in the hicolor theme, in all
+  # sizes, so desktops like GNOME and KDE show it in menus, docks and the
+  # window switcher
   install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/vscpworks.png
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/128x128/apps)
+  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/icons/hicolor
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+    FILES_MATCHING PATTERN "*.png")
+
+  # Refresh the icon and desktop caches when installing directly. Packages
+  # (DESTDIR set) leave this to the package manager.
+  install(CODE "
+    if(NOT \"\$ENV{DESTDIR}\" STREQUAL \"\")
+      return()
+    endif()
+    set(_datadir \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}\")
+    find_program(_gtk_update_icon_cache gtk-update-icon-cache)
+    # Refresh an existing cache, which would otherwise hide the new icons.
+    # Don't create one where there is none: a cache that later goes stale
+    # hides the icons of programs installed after us.
+    if(_gtk_update_icon_cache AND (EXISTS \"\${_datadir}/icons/hicolor/icon-theme.cache\" OR
+                                   EXISTS \"\${_datadir}/icons/hicolor/index.theme\"))
+      execute_process(COMMAND \${_gtk_update_icon_cache} -f -t \"\${_datadir}/icons/hicolor\"
+                      OUTPUT_QUIET ERROR_QUIET)
+    endif()
+    find_program(_update_desktop_database update-desktop-database)
+    if(_update_desktop_database)
+      execute_process(COMMAND \${_update_desktop_database} \"\${_datadir}/applications\"
+                      OUTPUT_QUIET ERROR_QUIET)
+    endif()
+  ")
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+  PATTERN "hicolor" EXCLUDE
   PATTERN "*.ico" EXCLUDE
   PATTERN "*.icns" EXCLUDE)
 

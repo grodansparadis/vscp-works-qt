@@ -41,6 +41,7 @@
 
 #include "cdlglevel2filter.h"
 #include "cdlgtls.h"
+#include "keyvalidation.h"
 
 #include <QDebug>
 #include <QDesktopServices>
@@ -61,8 +62,10 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
 {
   ui->setupUi(this);
 
-  // Set defaults
-  m_bTLS = false;
+  // Set defaults. The server certificate is verified unless the user
+  // turns it off.
+  m_bTLS        = false;
+  m_bVerifyPeer = true;
   setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
   setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setHost("tcp://localhost:9598");
@@ -71,6 +74,15 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
 
   // Clear filter
   memset(&m_filter, 0, sizeof(vscp_event_filter_t));
+
+  // Binary mode
+  ui->comboBinaryEncryption->setCurrentIndex(VSCP_ENCRYPTION_NONE);
+  connect(ui->chkBinaryMode, &QCheckBox::toggled, this, &CDlgConnSettingsTcpip::updateBinaryControls);
+  connect(ui->comboBinaryEncryption,
+          QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this,
+          &CDlgConnSettingsTcpip::updateBinaryControls);
+  updateBinaryControls();
 
   connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings);
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter);
@@ -300,6 +312,129 @@ CDlgConnSettingsTcpip::setPoll(bool bpoll)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getBinaryMode
+//
+
+bool
+CDlgConnSettingsTcpip::getBinaryMode(void)
+{
+  return ui->chkBinaryMode->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryMode
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryMode(bool bBinary)
+{
+  ui->chkBinaryMode->setChecked(bBinary);
+  updateBinaryControls();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryEncryption
+//
+
+int
+CDlgConnSettingsTcpip::getBinaryEncryption(void)
+{
+  int encryption = ui->comboBinaryEncryption->currentIndex();
+  if ((encryption < VSCP_ENCRYPTION_NONE) || (encryption > VSCP_ENCRYPTION_AES256)) {
+    encryption = VSCP_ENCRYPTION_NONE;
+  }
+  return encryption;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryEncryption
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryEncryption(int encryption)
+{
+  if ((encryption < VSCP_ENCRYPTION_NONE) || (encryption > VSCP_ENCRYPTION_AES256)) {
+    encryption = VSCP_ENCRYPTION_NONE;
+  }
+  ui->comboBinaryEncryption->setCurrentIndex(encryption);
+  updateBinaryControls();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryKey
+//
+
+QString
+CDlgConnSettingsTcpip::getBinaryKey(void)
+{
+  return ui->editBinaryKey->text().trimmed();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryKey
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryKey(const QString& str)
+{
+  ui->editBinaryKey->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryHmacKey
+//
+
+QString
+CDlgConnSettingsTcpip::getBinaryHmacKey(void)
+{
+  return ui->editBinaryHmacKey->text().trimmed();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryHmacKey
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryHmacKey(const QString& str)
+{
+  ui->editBinaryHmacKey->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateBinaryControls
+//
+
+void
+CDlgConnSettingsTcpip::updateBinaryControls(void)
+{
+  const bool bBinary  = getBinaryMode();
+  const bool bEncrypt = bBinary && (VSCP_ENCRYPTION_NONE != getBinaryEncryption());
+
+  ui->comboBinaryEncryption->setEnabled(bBinary);
+  ui->editBinaryKey->setEnabled(bEncrypt);
+  ui->editBinaryHmacKey->setEnabled(bEncrypt);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// accept
+//
+
+void
+CDlgConnSettingsTcpip::accept(void)
+{
+  QString err = keyvalidation::validateTcpBinary(getBinaryMode(),
+                                                 getBinaryMode() ? getBinaryEncryption() : VSCP_ENCRYPTION_NONE,
+                                                 getBinaryKey(),
+                                                 getBinaryHmacKey());
+  if (!err.isEmpty()) {
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
+
+  QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // isTLSEnabled
 //
 
@@ -326,7 +461,7 @@ CDlgConnSettingsTcpip::enableTLS(bool btls)
 bool
 CDlgConnSettingsTcpip::isVerifyPeerEnabled(void)
 {
-  return m_bTLS;
+  return m_bVerifyPeer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -459,8 +594,24 @@ CDlgConnSettingsTcpip::getJson(void)
   m_jsonConfig["bfull-l2"]           = getFullL2();
   m_jsonConfig["selected-interface"] = getInterface().toStdString();
 
+  // Binary mode. Encryption is only possible in binary mode and is always
+  // authenticated (AES + HMAC-SHA-256).
+  m_jsonConfig["binary-mode"] = getBinaryMode();
+  if (getBinaryMode() && (VSCP_ENCRYPTION_NONE != getBinaryEncryption())) {
+    m_jsonConfig["binary-encryption"] = getBinaryEncryption();
+    m_jsonConfig["binary-key"]        = getBinaryKey().toStdString();
+    m_jsonConfig["binary-hmac-key"]   = getBinaryHmacKey().toStdString();
+  }
+  else {
+    m_jsonConfig["binary-encryption"] = VSCP_ENCRYPTION_NONE;
+    m_jsonConfig["binary-key"]        = "";
+    m_jsonConfig["binary-hmac-key"]   = "";
+  }
+
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+  // Before version 2 "bverifypeer" was saved with the value of "btls"
+  m_jsonConfig["tls-settings-version"] = 2;
   m_jsonConfig["cafile"]      = getCaFile().toStdString();
   m_jsonConfig["capath"]      = getCaPath().toStdString();
   m_jsonConfig["certfile"]    = getCertFile().toStdString();
@@ -533,12 +684,34 @@ CDlgConnSettingsTcpip::setJson(const json* pobj)
     setFullL2((short)m_jsonConfig["bfull-l2"].get<bool>());
   }
 
+  if (m_jsonConfig.contains("binary-mode") && m_jsonConfig["binary-mode"].is_boolean()) {
+    setBinaryMode(m_jsonConfig["binary-mode"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("binary-encryption") && m_jsonConfig["binary-encryption"].is_number_integer()) {
+    setBinaryEncryption(m_jsonConfig["binary-encryption"].get<int>());
+  }
+
+  if (m_jsonConfig.contains("binary-key") && m_jsonConfig["binary-key"].is_string()) {
+    setBinaryKey(m_jsonConfig["binary-key"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("binary-hmac-key") && m_jsonConfig["binary-hmac-key"].is_string()) {
+    setBinaryHmacKey(m_jsonConfig["binary-hmac-key"].get<std::string>().c_str());
+  }
+
   if (m_jsonConfig.contains("btls") && m_jsonConfig["btls"].is_boolean()) {
     enableTLS((short)m_jsonConfig["btls"].get<bool>());
   }
 
-  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+  // Connections saved before tls-settings-version 2 stored the TLS enable
+  // flag as "bverifypeer", not the user's choice. Verify those.
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean() &&
+      (m_jsonConfig.value("tls-settings-version", 1) >= 2)) {
     enableVerifyPeer((short)m_jsonConfig["bverifypeer"].get<bool>());
+  }
+  else {
+    enableVerifyPeer(true);
   }
 
   if (m_jsonConfig.contains("cafile") && m_jsonConfig["cafile"].is_string()) {
@@ -660,15 +833,24 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   m_client.setConnectionTimeout(getConnectionTimeout());
   m_client.setResponseTimeout(getResponseTimeout());
 
-  // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
-                                                getUser().toStdString().c_str(),
-                                                getPassword().toStdString().c_str(),
-                                                getPoll()))) {
+  QString err = keyvalidation::validateTcpBinary(getBinaryMode(),
+                                                 getBinaryMode() ? getBinaryEncryption() : VSCP_ENCRYPTION_NONE,
+                                                 getBinaryKey(),
+                                                 getBinaryHmacKey());
+  if (!err.isEmpty()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
+
+  // Initialize the client from the complete settings, so TLS, binary mode
+  // and its encryption are tested as a session will use them
+  json jConfig = getJson();
+  if (!m_client.initFromJson(jConfig.dump())) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("INIT: Failed to initialize tcp/ip client. Error code: %1").arg(rv));
+                             tr("INIT: Invalid tcp/ip connection settings (see log for more info)."));
     return;
   }
 
@@ -734,10 +916,14 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
   getConnectionTimeout();
   getResponseTimeout();
 
-  // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                          getUser().toStdString().c_str(),
-                                          getPassword().toStdString().c_str())) {
+  // Initialize from the settings incl. TLS. The interface list is a text
+  // mode command, so binary mode is not used here.
+  json jConfig           = getJson();
+  jConfig["binary-mode"] = false;
+  jConfig.erase("binary-encryption");
+  jConfig.erase("binary-key");
+  jConfig.erase("binary-hmac-key");
+  if (!m_client.initFromJson(jConfig.dump())) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip object"));
     return;

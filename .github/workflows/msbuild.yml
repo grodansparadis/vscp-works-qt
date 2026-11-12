@@ -71,6 +71,15 @@ jobs:
         run: |
           cmake --install build --config ${{ env.BUILD_CONFIGURATION }} --prefix "${{ github.workspace }}/staging"
 
+      # The install runs windeployqt (VSCPWORKS_DEPLOY_RUNTIME); add the
+      # DLLs of the vcpkg libraries (mosquitto, curl, OpenSSL, expat,
+      # pthreads, dlfcn) so the program runs without them installed
+      - name: Add vcpkg runtime DLLs
+        shell: pwsh
+        run: |
+          Copy-Item "${{ github.workspace }}/.vcpkg/installed/${{ env.TRIPLET }}/bin/*.dll" "${{ github.workspace }}/staging/bin/"
+          Get-ChildItem "${{ github.workspace }}/staging/bin" -Filter *.dll | Select-Object -ExpandProperty Name
+
       - name: Pack install tree
         shell: pwsh
         run: |

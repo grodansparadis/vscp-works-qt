@@ -166,6 +166,7 @@ private slots:
     void newMqttConnection(void);
     void newUdpConnection(void);
     void newMulticastConnection(void);
+    void newLevel2Connection(void);
 
     // Edit connections
     void editTcpipConnection(treeWidgetItemConn *itemConn);
@@ -176,6 +177,7 @@ private slots:
     void editMqttConnection(treeWidgetItemConn *itemConn);
     void editUdpConnection(treeWidgetItemConn *itemConn);
     void editMulticastConnection(treeWidgetItemConn *itemConn);
+    void editLevel2Connection(treeWidgetItemConn *itemConn);
 
     void openConnectionSettingsDialog(CVscpClient::connType type);
 
@@ -243,6 +245,7 @@ private:
   QTreeWidgetItem *m_topitem_ws2;
   QTreeWidgetItem *m_topitem_udp;
   QTreeWidgetItem *m_topitem_multicast;
+  QTreeWidgetItem *m_topitem_level2;
   QTreeWidgetItem *m_topitem_rest;
   QTreeWidgetItem *m_topitem_rawmqtt;
   QTreeWidgetItem *m_topitem_rawcan;

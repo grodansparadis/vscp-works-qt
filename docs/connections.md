@@ -16,6 +16,7 @@ VSCP Works can communicate with many different hardware devices using a range of
   * [WS2](./connection_ws2)
   * [UDP](./connection_udp)
   * [Multicast](./connection_multicast)
+  * [Level II driver](./connection_level2)
 
 In addition, there are two groups of *raw* connections that are not limited to VSCP traffic:
 
@@ -34,6 +35,7 @@ The table below gives a short description of each protocol. Click a protocol nam
 | [ws2](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_websocket?id=ws2-description) | A JSON-based VSCP websocket protocol. |
 | [UDP](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp) | The connectionless VSCP UDP protocol. |
 | [Multicast](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast?id=vscp-multicast) | VSCP multicast.  |
+| [Level II driver](./connection_level2) | Loads a VSCP Level II driver (`vscpl2drv-*`) directly, with its configuration in a file or embedded in the connection. |
 
 
 
@@ -93,3 +95,6 @@ The connection type may be given as a number or as a name (for example `tcpip`).
 
 Filters for incoming events can be set for most connection types in the connection settings dialog. Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).
 
+# Passwords and keys
+
+Passwords, encryption and HMAC keys, TLS key file passwords and embedded Level II driver configurations are not stored in the VSCP Works configuration file but in the keyring of the operating system (GNOME Keyring, KWallet, Windows Credential Manager or the macOS Keychain). Exported connections never contain them. See [Passwords and keys](./passwords_and_keys) for how to handle them on each platform.

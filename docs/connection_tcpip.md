@@ -10,6 +10,20 @@ You can read more about the [VSCP tcp/ip link protocol](https://grodansparadis.g
 
 ![](./images/add_connection_tcpip_tls.png)
 
+### Binary mode and encryption
+
+Check **Binary mode** to use the binary protocol after login instead of the text protocol. The remote host must support binary mode.
+
+In binary mode you can also select **Binary encryption**. All binary frames are then encrypted and authenticated (AES + HMAC-SHA-256). Encryption over tcp/ip is only available in binary mode, and it is always authenticated, so both keys are needed:
+
+| Field | Value |
+| ----- | ----- |
+| Binary encryption | `AES128`, `AES192` or `AES256` (each with HMAC-SHA-256) |
+| Encryption key (hex) | Exactly 32, 48 or 64 hex characters for AES128, AES192 or AES256 |
+| HMAC key (hex) | Exactly 64 hex characters (32 bytes), different from the encryption key |
+
+The remote host must use the same algorithm and keys. A frame that fails authentication closes the connection; there is no fallback to unencrypted frames. `Test connection` tests the binary mode and encryption settings as a session uses them.
+
 ### Filters
 ![](./images/add_connection_tcpip_filter.png)
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>848</width>
-    <height>386</height>
+    <height>514</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -27,7 +27,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>350</y>
+     <y>478</y>
      <width>831</width>
      <height>32</height>
     </rect>
@@ -48,7 +48,7 @@
      <x>10</x>
      <y>10</y>
      <width>831</width>
-     <height>278</height>
+     <height>406</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -242,13 +242,106 @@
       </property>
      </widget>
     </item>
+    <item row="9" column="1">
+     <widget class="QCheckBox" name="chkBinaryMode">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the binary protocol after login instead of the text protocol. The remote host must support binary mode. Needed for authenticated encryption.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Binary mode</string>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="labelBinaryEncryption">
+      <property name="text">
+       <string>Binary encryption</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="1">
+     <widget class="QComboBox" name="comboBinaryEncryption">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Authenticated encryption (AES + HMAC-SHA-256) of all binary frames. Frames that fail authentication close the connection. The remote host must use the same algorithm and keys.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>No encryption</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES128 + HMAC-SHA-256</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES192 + HMAC-SHA-256</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>AES256 + HMAC-SHA-256</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <widget class="QLabel" name="labelBinaryKey">
+      <property name="text">
+       <string>Encryption key (hex)</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="1">
+     <widget class="QLineEdit" name="editBinaryKey">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;AES key as exactly 32, 48 or 64 hex characters for AES128, AES192 or AES256.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="labelBinaryHmacKey">
+      <property name="text">
+       <string>HMAC key (hex)</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="1">
+     <widget class="QLineEdit" name="editBinaryHmacKey">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HMAC-SHA-256 key as exactly 64 hex characters (32 bytes). Must be different from the encryption key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QPushButton" name="btnSetFilter">
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>300</y>
+     <y>428</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -276,7 +369,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>300</y>
+     <y>428</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -292,7 +385,7 @@
    <property name="geometry">
     <rect>
      <x>430</x>
-     <y>300</y>
+     <y>428</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -308,7 +401,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>300</y>
+     <y>428</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -336,7 +429,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>330</y>
+     <y>458</y>
      <width>831</width>
      <height>16</height>
     </rect>

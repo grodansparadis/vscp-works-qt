@@ -38,6 +38,7 @@
 #include <register.h>
 
 #include "cfrmsession.h"
+#include "secretstore.h"
 
 #include <QApplication>
 #include <QByteArray>
@@ -372,6 +373,9 @@ public:
   /// Folder used for configuration
   /// Linux: ~/.configure/VSCP/(vscpworks+.json)
   QString m_configFile;
+
+  /// Storage of connection secrets (OS keyring or owner only file)
+  SecretStore* m_secrets;
 
   /// Folder for writeable data
   /// Linux: ~/.local/share/vscp/vscpworks+

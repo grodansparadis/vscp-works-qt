@@ -127,6 +127,11 @@ CDlgNewConnection::addConnectionItems(void)
   QListWidgetItem* itemMulticast = new QListWidgetItem(iconMulticast, QString::fromUtf8("Multicast"), nullptr, static_cast<int>(CVscpClient::connType::MULTICAST));
   ui->listWidgetConnectionTypes->addItem(itemMulticast);
   itemMulticast->setToolTip("VSCP over Multicast");
+
+  const QIcon iconLevel2      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
+  QListWidgetItem* itemLevel2 = new QListWidgetItem(iconLevel2, QString::fromUtf8("Level II driver"), nullptr, static_cast<int>(CVscpClient::connType::LEVEL2));
+  ui->listWidgetConnectionTypes->addItem(itemLevel2);
+  itemLevel2->setToolTip("Load and use a VSCP Level II driver (vscpl2drv-*)");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

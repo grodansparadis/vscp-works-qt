@@ -41,6 +41,9 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
+    - name: Install libsecret-1-dev manually (passwords/keys in the keyring)
+      run: sudo apt-get install libsecret-1-dev
+
     - name: Install libcurl4-openssl-dev manually 
       run: sudo apt install libcurl4-openssl-dev  
 
@@ -160,11 +163,14 @@ jobs:
       working-directory: ${{github.workspace}}/build
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
+      env:
+        LDAI_OUTPUT: vscpworks-x86_64.AppImage
+        OUTPUT: vscpworks-x86_64.AppImage
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
-        name: vscp-works-qt
+        name: vscp-works-qt-${{ matrix.os }}
         path: ${{github.workspace}}/build/*.AppImage
 
     # https://github.com/marketplace/actions/build-appimage  

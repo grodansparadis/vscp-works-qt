@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>608</width>
-    <height>355</height>
+    <height>415</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -23,7 +23,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>320</y>
+     <y>380</y>
      <width>591</width>
      <height>32</height>
     </rect>
@@ -44,7 +44,7 @@
      <x>10</x>
      <y>10</y>
      <width>591</width>
-     <height>271</height>
+     <height>331</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -145,7 +145,34 @@
     <item row="6" column="1">
      <widget class="QLineEdit" name="editKey">
       <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Security key on the form of a hex key (&lt;span style=&quot; font-style:italic;&quot;&gt;AF0144F3&lt;/span&gt;...). Number of hex chars should be more or equal to key length.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Security key on the form of a hex key (&lt;span style=&quot; font-style:italic;&quot;&gt;AF0144F3&lt;/span&gt;...). Exactly 32, 48 or 64 hex characters for AES128, AES192 or AES256. Leave blank to use the built in default key (not secure).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="labelHmacKey">
+      <property name="text">
+       <string>HMAC key (hex)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="editHmacKey">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HMAC-SHA-256 key as 64 hex characters (32 bytes). When set, frames are authenticated encrypted (AES + HMAC-SHA-256) and frames that fail authentication are dropped. Needs an AES algorithm and an explicitly set encryption key that is different from this key. Leave blank to disable.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="1">
+     <widget class="QCheckBox" name="chkRequireEncryption">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Drop received frames that are not encrypted with the selected algorithm. Needs an AES algorithm and an explicitly set encryption key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Require encryption (drop unencrypted frames)</string>
       </property>
      </widget>
     </item>
@@ -179,7 +206,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>290</y>
+     <y>350</y>
      <width>89</width>
      <height>25</height>
     </rect>
@@ -195,7 +222,7 @@
    <property name="geometry">
     <rect>
      <x>110</x>
-     <y>290</y>
+     <y>350</y>
      <width>491</width>
      <height>25</height>
     </rect>

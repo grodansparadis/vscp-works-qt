@@ -46,6 +46,7 @@
 #include <mustache.hpp>
 
 #include <vscp-client-canal.h>
+#include <vscp-client-level2.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
 #if defined(__linux__)
@@ -226,6 +227,20 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, json* pconn)
           this,
           tr(APPNAME),
           tr("Failed to initialize CANAL driver. See log for more details."));
+        return;
+      }
+      // m_connObject["selected-interface"] = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
+      connectToRemoteHost(true);
+      break;
+
+    case CVscpClient::connType::LEVEL2:
+      m_vscpClient = new vscpClientLevel2();
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        // Failed to initialize
+        QMessageBox::warning(
+          this,
+          tr(APPNAME),
+          tr("Failed to initialize Level II driver. See log for more details."));
         return;
       }
       // m_connObject["selected-interface"] = "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00";
@@ -435,6 +450,24 @@ CFrmNodeScan::doConnectToRemoteHost(void)
       QApplication::restoreOverrideCursor();
       break;
 
+    case CVscpClient::connType::LEVEL2:
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
+      if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->connect())) {
+        QString str = tr("Node Scan: Unable to connect to the Level II driver. rv={}").arg(rv);
+        spdlog::error(str.toStdString());
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Failed to open a connection to the Level II "
+                                    "driver (see log for more info)."),
+                                 QMessageBox::Ok);
+      }
+      else {
+        spdlog::info(std::string(tr("Node Scan: Successful connected to the Level II driver.").toStdString()));
+      }
+      QApplication::restoreOverrideCursor();
+      break;
+
 #if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -526,6 +559,25 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
       }
       else {
         spdlog::info(std::string(tr("Node Scan: Successful disconnect from CANAL driver").toStdString()));
+      }
+      QApplication::restoreOverrideCursor();
+      break;
+
+    case CVscpClient::connType::LEVEL2:
+
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
+
+      if (VSCP_ERROR_SUCCESS != (rv = m_vscpClient->disconnect())) {
+        QString str = tr("Node Scan: Unable to disconnect from the Level II driver. rv={}").arg(rv);
+        spdlog::error(str.toStdString());
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect the connection to the Level II driver"),
+                                 QMessageBox::Ok);
+      }
+      else {
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from Level II driver").toStdString()));
       }
       QApplication::restoreOverrideCursor();
       break;

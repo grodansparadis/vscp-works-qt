@@ -58,6 +58,7 @@
 
 #include "bootloaderwizard.h"
 #include "cdlgconnsettingscanal.h"
+#include "cdlgconnsettingslevel2.h"
 #include "cdlgconnsettingsmqtt.h"
 #include "cdlgconnsettingsmulticast.h"
 #include "cdlgconnsettingssocketcan.h"
@@ -79,7 +80,6 @@
 #include "cfrmvscplinktest.h"
 #include "filedownloader.h"
 #include "version.h"
-#include "buildnumber.h"
 #include "vscp-client-base.h"
 
 #include <spdlog/async.h>
@@ -319,6 +319,10 @@ extractImportedConnection(json& conn, QString& err)
     }
     else if ("multicast" == normalized) {
       conn["type"] = static_cast<int>(CVscpClient::connType::MULTICAST);
+    }
+    else if ("level2" == normalized || "level ii" == normalized || "level2 driver" == normalized ||
+             "level ii driver" == normalized) {
+      conn["type"] = static_cast<int>(CVscpClient::connType::LEVEL2);
     }
     else {
       bool ok = false;
@@ -677,6 +681,18 @@ MainWindow::MainWindow()
   m_topitem_multicast->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_multicast);
 
+  // Level II drivers
+  QStringList strlist_level2(QString(tr("Level II Driver Connections")).split(','));
+  m_topitem_level2 =
+    new QTreeWidgetItem(strlist_level2,
+                        static_cast<int>(CVscpClient::connType::LEVEL2));
+  m_topitem_level2->setIcon(0, iconTest);
+  m_topitem_level2->setToolTip(0, "Holds VSCP Level II driver connections.");
+  // Set font
+  m_topitem_level2->setForeground(0, b);
+  m_topitem_level2->setFont(0, font);
+  m_connTreeTable->addTopLevelItem(m_topitem_level2);
+
   // TEST
   // QStringList strlist_test(QString(tr("Fluorine")).split(','));
   // // QTreeWidgetItem *item_test = new QTreeWidgetItem(m_topitem_tcpip,
@@ -921,7 +937,7 @@ MainWindow::addLoadedConnections(void)
 
     json j = it.value();
 
-    spdlog::trace(j.dump(4).c_str());
+    spdlog::trace("{}", SecretStore::withoutSecrets(j).dump(4));
 
     if (j.contains("type") && j["type"].is_number()) {
 
@@ -976,6 +992,12 @@ MainWindow::addLoadedConnections(void)
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_multicast, j);
           m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
+        } break;
+
+        case CVscpClient::connType::LEVEL2: {
+          // Add connection to connection tree
+          addChildItemToConnectionTree(m_topitem_level2, j);
+          m_topitem_level2->sortChildren(0, Qt::AscendingOrder);
         } break;
 
         default:
@@ -1046,6 +1068,10 @@ MainWindow::openConnectionSettingsDialog(CVscpClient::connType type)
 
     case CVscpClient::connType::MULTICAST:
       newMulticastConnection();
+      break;
+
+    case CVscpClient::connType::LEVEL2:
+      newLevel2Connection();
       break;
 
     default:
@@ -1131,6 +1157,10 @@ MainWindow::editConnectionItem(void)
 
         case static_cast<int>(CVscpClient::connType::MULTICAST):
           editMulticastConnection(itemConn);
+          break;
+
+        case static_cast<int>(CVscpClient::connType::LEVEL2):
+          editLevel2Connection(itemConn);
           break;
 
         default:
@@ -1224,6 +1254,11 @@ MainWindow::cloneConnectionItem(void)
           addChildItemToConnectionTree(m_topitem_multicast, conn_copy);
           break;
 
+        case static_cast<int>(CVscpClient::connType::LEVEL2):
+          // Add connection to connection tree
+          addChildItemToConnectionTree(m_topitem_level2, conn_copy);
+          break;
+
         default:
           break;
       }
@@ -1286,9 +1321,10 @@ MainWindow::copyConnectionDataToClipboard(void)
     return;
   }
 
+  // Passwords and keys are never exported; they are entered on import
   treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
   QApplication::clipboard()->setText(
-    QString::fromUtf8(itemConn->getJson()->dump(2).c_str()));
+    QString::fromUtf8(SecretStore::withoutSecrets(*itemConn->getJson()).dump(2).c_str()));
   statusBar()->showMessage(tr("Session data copied to clipboard"), 2000);
 #endif
 }
@@ -1330,7 +1366,8 @@ MainWindow::saveConnectionDataToFile(void)
     return;
   }
 
-  const std::string exported = itemConn->getJson()->dump(2);
+  // Passwords and keys are never exported; they are entered on import
+  const std::string exported = SecretStore::withoutSecrets(*itemConn->getJson()).dump(2);
   file.write(QByteArray::fromStdString(exported));
   file.write("\n");
   statusBar()->showMessage(tr("Session data saved"), 2000);
@@ -1358,6 +1395,28 @@ MainWindow::importConnectionData(const QString& text)
   if (!parseImportedConnectionText(text, conn, err)) {
     QMessageBox::warning(this, tr(APPNAME), err, QMessageBox::Ok);
     return false;
+  }
+
+  // A stored-secrets marker from a configuration file means nothing here
+  conn.erase(SecretStore::MARKER);
+
+  // Exported connections carry no passwords or keys. Clear the fields so
+  // the dialog does not show its defaults, and ask for them.
+  const int connType = conn["type"].get<int>();
+  const bool bUsesSecrets =
+    (connType != static_cast<int>(CVscpClient::connType::CANAL)) &&
+    (connType != static_cast<int>(CVscpClient::connType::SOCKETCAN));
+  if (bUsesSecrets && !SecretStore::hasSecrets(conn)) {
+    for (const char* field : { "password", "pwkeyfile" }) {
+      if (!conn.contains(field)) {
+        conn[field] = "";
+      }
+    }
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Passwords and keys are not included in exported connections.\n\n"
+                                "Enter them in the connection dialog that opens now."),
+                             QMessageBox::Ok);
   }
 
   switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {
@@ -1429,6 +1488,15 @@ MainWindow::importConnectionData(const QString& text)
     case CVscpClient::connType::MULTICAST:
       if (executeConnectionDialog<CDlgConnSettingsMulticast>(this, &conn, [this](json& imported) {
         return saveNewConnection(imported, m_topitem_multicast);
+      })) {
+        statusBar()->showMessage(tr("Session data imported"), 2000);
+        return true;
+      }
+      return false;
+
+    case CVscpClient::connType::LEVEL2:
+      if (executeConnectionDialog<CDlgConnSettingsLevel2>(this, &conn, [this](json& imported) {
+        return saveNewConnection(imported, m_topitem_level2);
       })) {
         statusBar()->showMessage(tr("Session data imported"), 2000);
         return true;
@@ -1562,6 +1630,10 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         newSession();
         break;
 
+      case static_cast<int>(CVscpClient::connType::LEVEL2):
+        newSession();
+        break;
+
       default:
         break;
     }
@@ -1604,6 +1676,10 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 
       case static_cast<int>(CVscpClient::connType::MULTICAST):
         newMulticastConnection();
+        break;
+
+      case static_cast<int>(CVscpClient::connType::LEVEL2):
+        newLevel2Connection();
         break;
 
       default:
@@ -1704,6 +1780,12 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         SLOT(newMulticastConnection()));
         break;
 
+      case static_cast<int>(CVscpClient::connType::LEVEL2):
+        menu->addAction(QString(tr("Add new Level II driver connection...")),
+                        this,
+                        SLOT(newLevel2Connection()));
+        break;
+
       default:
         menu->addAction(QString(tr("Add new connection...")),
                         this,
@@ -1762,6 +1844,12 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
         menu->addAction(QString(tr("Add new multicast connection")),
                         this,
                         SLOT(newMulticastConnection()));
+        break;
+
+      case static_cast<int>(CVscpClient::connType::LEVEL2):
+        menu->addAction(QString(tr("Add new Level II driver connection")),
+                        this,
+                        SLOT(newLevel2Connection()));
         break;
 
       default:
@@ -3315,6 +3403,61 @@ restart:
     itemConn->setText(0, conn["name"].get<std::string>().c_str());
 
     m_topitem_multicast->sortChildren(0, Qt::AscendingOrder);
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newLevel2Connection
+//
+
+void
+MainWindow::newLevel2Connection()
+{
+  executeConnectionDialog<CDlgConnSettingsLevel2>(this, nullptr, [this](json& conn) {
+    return saveNewConnection(conn, m_topitem_level2);
+  });
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editLevel2Connection
+//
+
+void
+MainWindow::editLevel2Connection(treeWidgetItemConn* itemConn)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // Get the connection object
+  json* pconn = itemConn->getJson();
+
+  CDlgConnSettingsLevel2 dlg(this);
+  dlg.setJson(pconn);
+  dlg.setInitialFocus();
+
+  while (QDialog::Accepted == dlg.exec()) {
+    if (!dlg.getName().length()) {
+      QMessageBox::warning(this,
+                           tr(APPNAME),
+                           tr("A connection needs a description"),
+                           QMessageBox::Ok);
+      continue;
+    }
+
+    // Set the new connection
+    json conn = dlg.getJson();
+
+    // Update listTree data
+    itemConn->setJson(conn);
+
+    // Update main table data
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
+
+    // Replace any possible new name
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
+
+    m_topitem_level2->sortChildren(0, Qt::AscendingOrder);
+    break;
   }
 }
 

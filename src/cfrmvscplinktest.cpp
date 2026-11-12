@@ -39,6 +39,7 @@
 #include "vscpworks.h"
 
 #include <vscp-client-canal.h>
+#include <vscp-client-level2.h>
 #include <vscp-client-mqtt.h>
 #include <vscp-client-multicast.h>
 #if defined(__linux__)
@@ -509,6 +510,8 @@ CFrmVscpLinkTest::connectionTypeToString(CVscpClient::connType type) const
       return tr("Multicast");
     case CVscpClient::connType::CANAL:
       return tr("CANAL");
+    case CVscpClient::connType::LEVEL2:
+      return tr("Level II driver");
 #if defined(__linux__)
     case CVscpClient::connType::SOCKETCAN:
       return tr("SocketCAN");
@@ -740,6 +743,10 @@ CFrmVscpLinkTest::ensureClientCreated(QString& details)
 
     case CVscpClient::connType::CANAL:
       m_vscpClient = new vscpClientCanal();
+      break;
+
+    case CVscpClient::connType::LEVEL2:
+      m_vscpClient = new vscpClientLevel2();
       break;
 
 #if defined(__linux__)

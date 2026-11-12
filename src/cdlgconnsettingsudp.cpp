@@ -46,6 +46,8 @@
 #include <QDesktopServices>
 #include <QShortcut>
 
+#include "keyvalidation.h"
+
 #include <spdlog/async.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -205,6 +207,65 @@ CDlgConnSettingsUdp::setEncryption(int encryption)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getHmacKey
+//
+
+QString
+CDlgConnSettingsUdp::getHmacKey(void)
+{
+  return ui->editHmacKey->text().trimmed();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setHmacKey
+//
+
+void
+CDlgConnSettingsUdp::setHmacKey(const QString& str)
+{
+  ui->editHmacKey->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getRequireEncryption
+//
+
+bool
+CDlgConnSettingsUdp::getRequireEncryption(void)
+{
+  return ui->chkRequireEncryption->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setRequireEncryption
+//
+
+void
+CDlgConnSettingsUdp::setRequireEncryption(bool bRequire)
+{
+  ui->chkRequireEncryption->setChecked(bRequire);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// accept
+//
+
+void
+CDlgConnSettingsUdp::accept(void)
+{
+  QString err = keyvalidation::validateDatagram(getEncryption(),
+                                                getKey().trimmed(),
+                                                getHmacKey(),
+                                                getRequireEncryption());
+  if (!err.isEmpty()) {
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
+
+  QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // getConnectionTimeout
 //
 
@@ -258,7 +319,15 @@ CDlgConnSettingsUdp::getJson(void)
   m_jsonConfig["interface"] = getInterface().toStdString().c_str();
   m_jsonConfig["ip"]         = getIp().toStdString();  // addr:port
   m_jsonConfig["encryption"] = getEncryption();
-  m_jsonConfig["key"]        = getKey().toStdString();
+  // An empty key means the built in default key is used
+  if (getKey().trimmed().isEmpty()) {
+    m_jsonConfig.erase("key");
+  }
+  else {
+    m_jsonConfig["key"] = getKey().trimmed().toStdString();
+  }
+  m_jsonConfig["hmac-key"]           = getHmacKey().toStdString();
+  m_jsonConfig["require-encryption"] = getRequireEncryption();
 
   // Filter
   m_jsonConfig["priority-filter"] = m_filter.filter_priority;
@@ -305,6 +374,14 @@ CDlgConnSettingsUdp::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("key") && m_jsonConfig["key"].is_string()) {
     setKey(m_jsonConfig["key"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("hmac-key") && m_jsonConfig["hmac-key"].is_string()) {
+    setHmacKey(m_jsonConfig["hmac-key"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("require-encryption") && m_jsonConfig["require-encryption"].is_boolean()) {
+    setRequireEncryption(m_jsonConfig["require-encryption"].get<bool>());
   }
 
   if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
@@ -379,6 +456,16 @@ CDlgConnSettingsUdp::onTestConnection(void)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
+
+  QString err = keyvalidation::validateDatagram(getEncryption(),
+                                                getKey().trimmed(),
+                                                getHmacKey(),
+                                                getRequireEncryption());
+  if (!err.isEmpty()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
 
   // Initialize host connection
   json jConfig = getJson();

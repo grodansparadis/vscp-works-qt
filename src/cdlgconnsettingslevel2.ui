@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDlgConnSettingsLevel2</class>
+ <widget class="QDialog" name="CDlgConnSettingsLevel2">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>720</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Level II Driver Connection</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelName">
+       <property name="text">
+        <string>Description</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="editName">
+       <property name="toolTip">
+        <string>Description for connection used in connection table</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelDriverPath">
+       <property name="text">
+        <string>Driver</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <layout class="QHBoxLayout" name="layoutDriverPath">
+       <item>
+        <widget class="QLineEdit" name="editDriverPath">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the VSCP Level II driver (vscpl2drv-*), for example /var/lib/vscp/drivers/level2/libvscpl2drv-tcpipsrv.so&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="btnSetDriverPath">
+         <property name="toolTip">
+          <string>Select driver</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelGuid">
+       <property name="text">
+        <string>GUID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="editGuid">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;GUID given to the driver when it is opened. Usually the two lowest bytes are zero to leave room for node ids. Leave empty for all zeros.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="placeholderText">
+        <string>FF:FF:FF:FF:FF:FF:FF:F5:00:00:00:00:00:00:00:00</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelResponseTimeout">
+       <property name="text">
+        <string>Response timeout</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QSpinBox" name="spinResponseTimeout">
+       <property name="toolTip">
+        <string>Timeout for writing an event to the driver</string>
+       </property>
+       <property name="suffix">
+        <string> ms</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>600000</number>
+       </property>
+       <property name="value">
+        <number>1000</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupConfig">
+     <property name="title">
+      <string>Driver configuration</string>
+     </property>
+     <layout class="QVBoxLayout" name="layoutConfig">
+      <item>
+       <layout class="QHBoxLayout" name="layoutConfigFile">
+        <item>
+         <widget class="QRadioButton" name="radioConfigFile">
+          <property name="toolTip">
+           <string>The driver reads its configuration from this file</string>
+          </property>
+          <property name="text">
+           <string>File</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="editConfigPath">
+          <property name="toolTip">
+           <string>Path to the driver configuration file</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="btnSetConfigPath">
+          <property name="toolTip">
+           <string>Select configuration file</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="layoutConfigEmbedded">
+        <item>
+         <widget class="QRadioButton" name="radioConfigEmbedded">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The configuration is stored with the connection. When the connection is opened it is written to a temporary file that only you can read, and the file is removed when the connection is closed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Embedded</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="spacerEmbedded">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnLoadConfig">
+          <property name="toolTip">
+           <string>Load the embedded configuration from a file</string>
+          </property>
+          <property name="text">
+           <string>Load from file...</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnSaveConfig">
+          <property name="toolTip">
+           <string>Save the embedded configuration to a file</string>
+          </property>
+          <property name="text">
+           <string>Save to file...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPlainTextEdit" name="editConfig">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Embedded driver configuration, usually JSON. It is given to the driver exactly as written here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="lineWrapMode">
+         <enum>QPlainTextEdit::NoWrap</enum>
+        </property>
+        <property name="placeholderText">
+         <string>{
+  "...": "driver configuration"
+}</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="layoutButtons">
+     <item>
+      <widget class="QPushButton" name="btnSetFilter">
+       <property name="toolTip">
+        <string>Set or edit receive filter</string>
+       </property>
+       <property name="text">
+        <string>Filter</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnTestConnection">
+       <property name="toolTip">
+        <string>Load and open the driver with the configuration, then close it again</string>
+       </property>
+       <property name="text">
+        <string>Test connection</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>editName</tabstop>
+  <tabstop>editDriverPath</tabstop>
+  <tabstop>btnSetDriverPath</tabstop>
+  <tabstop>editGuid</tabstop>
+  <tabstop>spinResponseTimeout</tabstop>
+  <tabstop>radioConfigFile</tabstop>
+  <tabstop>editConfigPath</tabstop>
+  <tabstop>btnSetConfigPath</tabstop>
+  <tabstop>radioConfigEmbedded</tabstop>
+  <tabstop>btnLoadConfig</tabstop>
+  <tabstop>btnSaveConfig</tabstop>
+  <tabstop>editConfig</tabstop>
+  <tabstop>btnSetFilter</tabstop>
+  <tabstop>btnTestConnection</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CDlgConnSettingsLevel2</receiver>
+   <slot>accept()</slot>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CDlgConnSettingsLevel2</receiver>
+   <slot>reject()</slot>
+  </connection>
+ </connections>
+</ui>
