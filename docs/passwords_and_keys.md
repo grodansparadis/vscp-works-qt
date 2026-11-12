@@ -47,7 +47,7 @@ This needs VSCP Works to be built with libsecret (`libsecret-1-dev` on Debian an
   secret-tool search --all server "VSCP Works"
   ```
 
-  Note that this prints the secrets.
+  Note that this prints the secrets. The secret of an entry is shown base64 encoded; decode it with `base64 -d` to see the passwords and keys of the connection (as JSON).
 * **Remove an entry:**
 
   ```bash
