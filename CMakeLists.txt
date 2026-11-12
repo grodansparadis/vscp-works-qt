@@ -155,15 +155,16 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to VSCP master v26.11.1.3984 (binary mode authenticated encryption,
-  # UDP/multicast require-encryption, security fixes). Only a handful of VSCP
+  # Pinned to VSCP master v26.11.1.3984 + Level II driver client (binary mode
+  # authenticated encryption, UDP/multicast require-encryption, security
+  # fixes, vscp-client-level2). Only a handful of VSCP
   # source files are compiled directly into vscp-works-qt, so a pinned source
   # tarball is used to avoid cloning the full repository history and its
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/7c9af2c7aca8c5e013ac75b44cd18ca85ef27bd3
-  URL_HASH SHA256=1cb833d7c1d691ec58ccb1693e4392061361d96f7f4f6655e7da7a28fc14ec6d
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/1ab1314702bc093ec77b5ac75691ec867a582cbc
+  URL_HASH SHA256=0924859b4dbdeb46b6cbbd5d3c950f9b69728c5e96d44dc04bc2390dc5b5fdba
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)
