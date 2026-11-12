@@ -41,6 +41,9 @@ jobs:
     - name: Install libssl-dev manually
       run: sudo apt-get install libssl-dev
 
+    - name: Install libsecret-1-dev manually (passwords/keys in the keyring)
+      run: sudo apt-get install libsecret-1-dev
+
     - name: Install libcurl4-openssl-dev manually 
       run: sudo apt install libcurl4-openssl-dev  
 

@@ -95,3 +95,17 @@ The connection type may be given as a number or as a name (for example `tcpip`).
 
 Filters for incoming events can be set for most connection types in the connection settings dialog. Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).
 
+# Passwords and keys
+
+Passwords, encryption keys, HMAC keys, TLS key file passwords and the embedded configuration of Level II drivers are not stored in the VSCP Works configuration file. They are kept in the keyring of the operating system:
+
+| Platform | Keyring |
+|----------|---------|
+| Linux | GNOME Keyring or another Secret Service keyring (KeePassXC, ...), or KWallet |
+| Windows | Windows Credential Manager |
+| macOS | Keychain |
+
+If no keyring is available they are stored in `vscpworks-secrets.json` next to the configuration file, readable by your user only. The configuration file and its backup are also only readable by your user. Configuration files from earlier versions, which have passwords in plain text, are converted the first time VSCP Works starts.
+
+Exported connections (copy to clipboard or save to file) never contain passwords or keys. When you import a connection you are asked to enter them.
+

@@ -24,11 +24,12 @@ Qt must be installed. If it is not, follow the instructions [here](https://www.q
 
 ### Install other required libraries
 
-You need expat, mosquitto, libwebsockets, OpenSSL and libcurl to build the project:
+You need expat, mosquitto, libwebsockets, OpenSSL, libcurl and libsecret to build the project (libsecret lets VSCP Works keep passwords and keys in GNOME Keyring and other Secret Service keyrings):
 
 ```bash
   sudo apt install libexpat-dev
   sudo apt install libssl-dev
+  sudo apt install libsecret-1-dev
   sudo apt install libmosquitto-dev
   sudo apt install libwebsockets-dev
   sudo apt-get install libcurl4-openssl-dev

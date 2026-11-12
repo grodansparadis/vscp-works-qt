@@ -937,7 +937,7 @@ MainWindow::addLoadedConnections(void)
 
     json j = it.value();
 
-    spdlog::trace(j.dump(4).c_str());
+    spdlog::trace("{}", SecretStore::withoutSecrets(j).dump(4));
 
     if (j.contains("type") && j["type"].is_number()) {
 
@@ -1321,9 +1321,10 @@ MainWindow::copyConnectionDataToClipboard(void)
     return;
   }
 
+  // Passwords and keys are never exported; they are entered on import
   treeWidgetItemConn* itemConn = (treeWidgetItemConn*)itemList.first();
   QApplication::clipboard()->setText(
-    QString::fromUtf8(itemConn->getJson()->dump(2).c_str()));
+    QString::fromUtf8(SecretStore::withoutSecrets(*itemConn->getJson()).dump(2).c_str()));
   statusBar()->showMessage(tr("Session data copied to clipboard"), 2000);
 #endif
 }
@@ -1365,7 +1366,8 @@ MainWindow::saveConnectionDataToFile(void)
     return;
   }
 
-  const std::string exported = itemConn->getJson()->dump(2);
+  // Passwords and keys are never exported; they are entered on import
+  const std::string exported = SecretStore::withoutSecrets(*itemConn->getJson()).dump(2);
   file.write(QByteArray::fromStdString(exported));
   file.write("\n");
   statusBar()->showMessage(tr("Session data saved"), 2000);
@@ -1393,6 +1395,28 @@ MainWindow::importConnectionData(const QString& text)
   if (!parseImportedConnectionText(text, conn, err)) {
     QMessageBox::warning(this, tr(APPNAME), err, QMessageBox::Ok);
     return false;
+  }
+
+  // A stored-secrets marker from a configuration file means nothing here
+  conn.erase(SecretStore::MARKER);
+
+  // Exported connections carry no passwords or keys. Clear the fields so
+  // the dialog does not show its defaults, and ask for them.
+  const int connType = conn["type"].get<int>();
+  const bool bUsesSecrets =
+    (connType != static_cast<int>(CVscpClient::connType::CANAL)) &&
+    (connType != static_cast<int>(CVscpClient::connType::SOCKETCAN));
+  if (bUsesSecrets && !SecretStore::hasSecrets(conn)) {
+    for (const char* field : { "password", "pwkeyfile" }) {
+      if (!conn.contains(field)) {
+        conn[field] = "";
+      }
+    }
+    QMessageBox::information(this,
+                             tr(APPNAME),
+                             tr("Passwords and keys are not included in exported connections.\n\n"
+                                "Enter them in the connection dialog that opens now."),
+                             QMessageBox::Ok);
   }
 
   switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {

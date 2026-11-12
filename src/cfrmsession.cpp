@@ -127,7 +127,6 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
-  std::cout << pconn->dump(4) << std::endl;
 
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;

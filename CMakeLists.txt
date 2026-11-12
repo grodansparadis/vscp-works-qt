@@ -183,6 +183,42 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(sqlite3)
 
+# QtKeychain keeps connection passwords and keys in the OS keyring
+# (Secret Service / GNOME Keyring or KWallet on Linux, Credential Manager on
+# Windows, Keychain on macOS). Built as a static library. BSD-3-Clause.
+FetchContent_Declare(
+  qtkeychain
+  URL https://codeload.github.com/frankosterfeld/qtkeychain/tar.gz/refs/tags/v0.14.0
+  URL_HASH SHA256=ad78f2d9e0a5ee80f40cbaace4f55d11c2557bc6e930cf4a9479e39a7d78bb60
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+  EXCLUDE_FROM_ALL
+)
+set(BUILD_WITH_QT6 ON CACHE BOOL "QtKeychain: build with Qt 6" FORCE)
+set(BUILD_TRANSLATIONS OFF CACHE BOOL "QtKeychain: no translations" FORCE)
+set(BUILD_TEST_APPLICATION OFF CACHE BOOL "QtKeychain: no test application" FORCE)
+if(UNIX AND NOT APPLE)
+  # GNOME Keyring (and other Secret Service keyrings) need libsecret.
+  # Without it only KWallet works and other desktops fall back to an
+  # owner only file.
+  find_package(PkgConfig QUIET)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(VSCPWORKS_LIBSECRET QUIET libsecret-1)
+  endif()
+  if(VSCPWORKS_LIBSECRET_FOUND)
+    set(LIBSECRET_SUPPORT ON CACHE BOOL "QtKeychain: libsecret support" FORCE)
+  else()
+    set(LIBSECRET_SUPPORT OFF CACHE BOOL "QtKeychain: libsecret support" FORCE)
+    message(WARNING "libsecret-1 development files not found (Debian/Ubuntu: libsecret-1-dev). "
+                    "Passwords and keys can then only be stored in KWallet, otherwise in an owner only file.")
+  endif()
+endif()
+set(_vscpworks_build_shared_libs ${BUILD_SHARED_LIBS})
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_MakeAvailable(qtkeychain)
+set(BUILD_SHARED_LIBS ${_vscpworks_build_shared_libs})
+# Static library: the export macro must not be dllimport on Windows
+target_compile_definitions(qt6keychain PUBLIC QT6KEYCHAIN_STATIC_DEFINE)
+
 set(SOCKETCAN_SOURCES)
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   list(APPEND SOCKETCAN_SOURCES
@@ -258,6 +294,8 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgconnsettingslevel2.h
   src/cdlgconnsettingslevel2.cpp
   src/keyvalidation.h
+  src/secretstore.h
+  src/secretstore.cpp
 
   src/cdlgknownguid.ui
   src/cdlgknownguid.h
@@ -766,6 +804,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   ${CURL_LIBRARIES}
   ${DLFCN_LIBS}
 )
+endif()
+
+# OS keyring for passwords and keys (QtKeychain)
+target_link_libraries(${PROJECT_NAME} PRIVATE qt6keychain)
+target_include_directories(${PROJECT_NAME} PRIVATE ${qtkeychain_SOURCE_DIR} ${qtkeychain_BINARY_DIR})
+if(LIBSECRET_SUPPORT)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE VSCPWORKS_HAVE_LIBSECRET)
 endif()
 
 

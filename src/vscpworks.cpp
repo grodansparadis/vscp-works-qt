@@ -46,6 +46,8 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
+#include <QSaveFile>
 #include <QFile>
 #include <QJSEngine>
 #include <QMainWindow>
@@ -63,6 +65,8 @@
 #include <nlohmann/json.hpp>
 
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 #include <limits>
 
 // for convenience
@@ -140,6 +144,9 @@ vscpworks::vscpworks(int& argc, char** argv)
     fprintf(stderr, "Config file: %s\n", m_configFile.toStdString().c_str());
   }
 #endif
+
+  // Secrets of connections are kept out of the configuration file
+  m_secrets = new SecretStore(QFileInfo(m_configFile).absolutePath());
 
   
 
@@ -577,9 +584,20 @@ vscpworks::loadSettings(void)
   // * * *  Read in defined connections  * * *
   // Note!!! Se notes in save
 
+  // Secrets are stored outside the configuration file (OS keyring or an
+  // owner only file). Older configuration files have them in plain text;
+  // they are moved out by writing the configuration again.
+  bool bPlainTextSecrets = false;
   if (j.contains("connections") && j["connections"].is_array()) {
     json conn_array = j["connections"];
     for (json::iterator it = conn_array.begin(); it != conn_array.end(); ++it) {
+      if (!it->contains(SecretStore::MARKER) && SecretStore::hasSecrets(*it)) {
+        bPlainTextSecrets = true;
+      }
+      if (!m_secrets->loadSecrets(*it)) {
+        spdlog::warn("The stored passwords/keys of connection '{}' could not be read. Enter them again.",
+                     it->value("name", std::string("?")));
+      }
       addConnection(*it, false);
     }
   }
@@ -613,6 +631,21 @@ vscpworks::loadSettings(void)
                                dim[1].get<int>(),
                                dim[2].get<int>(),
                                dim[3].get<int>());
+    }
+  }
+
+  // Configuration files from older versions are readable by everyone
+  SecretStore::restrictToOwner(m_configFile);
+  SecretStore::restrictToOwner(m_configFile + ".bak");
+
+  // Move plain text secrets out of the configuration file
+  if (bPlainTextSecrets) {
+    spdlog::info("Moving connection passwords/keys out of the configuration file");
+    writeSettings();
+    // The backup was made from the old file; replace it with the new one
+    QFile::remove(m_configFile + ".bak");
+    if (QFile::copy(m_configFile, m_configFile + ".bak")) {
+      SecretStore::restrictToOwner(m_configFile + ".bak");
     }
   }
 
@@ -724,10 +757,11 @@ vscpworks::writeSettings()
   j["mdfCumulativeBackups"] = m_mdfCumulativeBackups;
   j["mdfMaxBackups"] = m_mdfMaxBackups;
 
+  // Connections without their secrets, which go to the OS keyring (or an
+  // owner only file)
   QMap<std::string, json>::const_iterator it = m_mapConn.constBegin();
   while (it != m_mapConn.constEnd()) {
-    // jj = json::parse((*it).toStdString());
-    conn_array.push_back(it.value());
+    conn_array.push_back(m_secrets->saveSecrets(it.value()));
     it++;
   }
 
@@ -743,13 +777,29 @@ vscpworks::writeSettings()
     j["mainwindow-dimensions"] = dim;
   }
 
-  spdlog::trace("{0}", j.dump(4).c_str());
+  spdlog::trace("Writing configuration to {} ({} connections)", m_configFile.toStdString(), conn_array.size());
 
-  // Save a copy of the old configuration file
-  QFile::copy(m_configFile, m_configFile + ".bak");
+  // Save a copy of the old configuration file (owner only, as the file)
+  QFile::remove(m_configFile + ".bak");
+  if (QFile::copy(m_configFile, m_configFile + ".bak")) {
+    SecretStore::restrictToOwner(m_configFile + ".bak");
+  }
 
-  std::ofstream of(m_configFile.toStdString());
-  of << std::setw(4) << j << std::endl;
+  // Write the new file in one step, readable by the owner only
+  QSaveFile file(m_configFile);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    spdlog::error("Unable to write the configuration file {}", m_configFile.toStdString());
+    return;
+  }
+  file.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+  std::ostringstream os;
+  os << std::setw(4) << j << std::endl;
+  const std::string data = os.str();
+  if ((file.write(data.data(), (qint64)data.size()) != (qint64)data.size()) || !file.commit()) {
+    spdlog::error("Unable to write the configuration file {}", m_configFile.toStdString());
+    return;
+  }
+  SecretStore::restrictToOwner(m_configFile);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -759,7 +809,7 @@ vscpworks::writeSettings()
 bool
 vscpworks::addConnection(json& conn, bool bSave)
 {
-  spdlog::trace(conn.dump(4).c_str());
+  spdlog::trace("Add connection: {}", SecretStore::withoutSecrets(conn).dump());
 
   // If no UUID is set, create one
   QString struuid;
@@ -797,6 +847,9 @@ vscpworks::removeConnection(const QString& uuid, bool bSave)
 {
   QMap<std::string, json>::iterator it;
   int n = m_mapConn.remove(uuid.toStdString());
+
+  // Its passwords/keys too
+  m_secrets->removeSecrets(uuid.toStdString());
 
   // Save settings if requested to do so
   if (bSave)
