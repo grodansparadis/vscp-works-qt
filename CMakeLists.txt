@@ -890,14 +890,42 @@ install(TARGETS ${PROJECT_NAME}
   BUNDLE DESTINATION .)
 
 if(UNIX AND NOT APPLE)
+  # Desktop entry and the application icon in the hicolor theme, in all
+  # sizes, so desktops like GNOME and KDE show it in menus, docks and the
+  # window switcher
   install(FILES ${CMAKE_SOURCE_DIR}/install/${PROJECT_NAME}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
-  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/icons/vscpworks.png
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/128x128/apps)
+  install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/icons/hicolor
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+    FILES_MATCHING PATTERN "*.png")
+
+  # Refresh the icon and desktop caches when installing directly. Packages
+  # (DESTDIR set) leave this to the package manager.
+  install(CODE "
+    if(NOT \"\$ENV{DESTDIR}\" STREQUAL \"\")
+      return()
+    endif()
+    set(_datadir \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}\")
+    find_program(_gtk_update_icon_cache gtk-update-icon-cache)
+    # Refresh an existing cache, which would otherwise hide the new icons.
+    # Don't create one where there is none: a cache that later goes stale
+    # hides the icons of programs installed after us.
+    if(_gtk_update_icon_cache AND (EXISTS \"\${_datadir}/icons/hicolor/icon-theme.cache\" OR
+                                   EXISTS \"\${_datadir}/icons/hicolor/index.theme\"))
+      execute_process(COMMAND \${_gtk_update_icon_cache} -f -t \"\${_datadir}/icons/hicolor\"
+                      OUTPUT_QUIET ERROR_QUIET)
+    endif()
+    find_program(_update_desktop_database update-desktop-database)
+    if(_update_desktop_database)
+      execute_process(COMMAND \${_update_desktop_database} \"\${_datadir}/applications\"
+                      OUTPUT_QUIET ERROR_QUIET)
+    endif()
+  ")
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/icons/ DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+  PATTERN "hicolor" EXCLUDE
   PATTERN "*.ico" EXCLUDE
   PATTERN "*.icns" EXCLUDE)
 

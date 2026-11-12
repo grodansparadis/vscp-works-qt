@@ -1,13 +1,13 @@
 [Desktop Entry]
 Type=Application
-Name=vscpworks
+Name=VSCP Works
 GenericName=VSCP framework multi protocol tool
 Comment=A tools for VSCP (the Very Simple Control Protocol)
 Exec=vscp-works-qt
 Icon=vscpworks
 Terminal=false
 StartupNotify=true
+StartupWMClass=vscp-works-qt
 NoDisplay=false
 Categories=Development;Electronics;IDE;
-MimeType=text/x-application;
 Keywords=embedded mqtt iot m2m vscp socketcan electronics;electronics;canbus;reverse engineering;
