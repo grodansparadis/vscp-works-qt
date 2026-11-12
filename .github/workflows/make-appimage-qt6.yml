@@ -168,9 +168,9 @@ jobs:
         OUTPUT: vscpworks-x86_64.AppImage
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
-        name: vscp-works-qt
+        name: vscp-works-qt-${{ matrix.os }}
         path: ${{github.workspace}}/build/*.AppImage
 
     # https://github.com/marketplace/actions/build-appimage  

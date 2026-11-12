@@ -12,7 +12,10 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    # Build on the oldest supported distribution: an AppImage only runs on
+    # systems with the same or a newer glibc than the build system
+    # (ubuntu-latest made it need glibc 2.43, which even Debian 13 lacks)
+    runs-on: ubuntu-22.04
     #continue-on-error: true
 
     steps:

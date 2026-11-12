@@ -754,7 +754,7 @@ else()
     ${sqlite3_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
     ${OPENSSL_INCLUDE_DIR}
-    ${MOSQUITTO_INCLUDE_DIRS}
+    ${MOSQUITTO_INCLUDE_DIR}
     ${EXPAT_INCLUDE_DIRS}
     ${DLFCN_INCLUDES}
     ${LOCAL_WIN_INCLUDE}
@@ -849,7 +849,7 @@ if(UNIX AND NOT APPLE)
     "/usr/bin"
   )
   if(LINUXDEPLOYQT_EXECUTABLE)
-    if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2) # CPack AppImage generator
       set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
     else()
       set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
@@ -865,14 +865,14 @@ find_program(BINARYCREATOR_EXECUTABLE NAMES binarycreator binarycreator.exe HINT
 )
 
 set(CPACK_USE_IFW OFF)
-if(BINARYCREATOR_EXECUTABLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+if(BINARYCREATOR_EXECUTABLE)
   set(CPACK_USE_IFW ON)
 endif()
 
 if(CPACK_USE_IFW)
   set(CPACK_GENERATOR "IFW" CACHE STRING "CPack generator(s)" FORCE)
 elseif(UNIX AND NOT APPLE AND LINUXDEPLOYQT_EXECUTABLE)
-  if(CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.2) # CPack AppImage generator
     set(CPACK_GENERATOR "TGZ;AppImage" CACHE STRING "CPack generator(s)" FORCE)
   else()
     set(CPACK_GENERATOR "TGZ" CACHE STRING "CPack generator(s)" FORCE)
@@ -883,7 +883,7 @@ endif()
 
 include(CPack)
 
-if(UNIX AND NOT APPLE AND CPACK_PACKAGE_VERSION_MAJOR GREATER_EQUAL 4 AND CPACK_PACKAGE_VERSION_MINOR GREATER_EQUAL 2)
+if(UNIX AND NOT APPLE)
   add_custom_target(package-appimage
     COMMAND "${CMAKE_COMMAND}" -DPROJECT_NAME=${PROJECT_NAME} -DCMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR} -DCMAKE_BINARY_DIR=${CMAKE_BINARY_DIR} -DCPACK_PACKAGE_VERSION=${CPACK_PACKAGE_VERSION} -P "${CMAKE_SOURCE_DIR}/cmake/package_appimage.cmake"
     COMMENT "Creating AppImage package"
@@ -933,6 +933,28 @@ endif() # "${CMAKE_ROOT}/Modules/CPack.cmake"
 install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   BUNDLE DESTINATION .)
+
+# Install the Qt runtime (libraries, plugins) with the program so the
+# install tree and the archives made from it run without Qt installed.
+# Uses windeployqt on Windows and macdeployqt on macOS. On by default on
+# Windows and macOS. On Linux a system install uses the distribution's Qt,
+# so it is off; turn it on for a TGZ that runs on its own (the AppImage
+# bundles Qt itself with linuxdeploy).
+if(WIN32 OR APPLE)
+  set(_vscpworks_deploy_runtime_default ON)
+else()
+  set(_vscpworks_deploy_runtime_default OFF)
+endif()
+option(VSCPWORKS_DEPLOY_RUNTIME "Install the Qt runtime libraries and plugins with the program"
+       ${_vscpworks_deploy_runtime_default})
+if(VSCPWORKS_DEPLOY_RUNTIME)
+  qt_generate_deploy_app_script(
+    TARGET ${PROJECT_NAME}
+    OUTPUT_SCRIPT _vscpworks_deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+  )
+  install(SCRIPT ${_vscpworks_deploy_script})
+endif()
 
 if(UNIX AND NOT APPLE)
   # Desktop entry and the application icon in the hicolor theme, in all

@@ -70,6 +70,18 @@ Use
 
 if you want to build a version for debugging.
 
+### Make a package
+
+```bash
+  cmake -DCMAKE_BUILD_TYPE=Release -DVSCPWORKS_DEPLOY_RUNTIME=ON ..
+  make
+  cpack
+```
+
+builds a `.tar.gz` archive that contains the Qt libraries and plugins, so it runs on systems without Qt (or with another Qt version). The system must still provide the basic libraries (glibc, X11/xcb including `libxcb-cursor0`, OpenGL, fontconfig) and mosquitto, expat, OpenSSL and libcurl. Without `VSCPWORKS_DEPLOY_RUNTIME` the archive and `make install` use the Qt installed on the system.
+
+The AppImage built by the project's GitHub workflow bundles everything except the basic system libraries and runs on distributions with glibc 2.35 or newer (Ubuntu 22.04, Debian 12 and later).
+
 ### Run the application
 ```bash
   vscp-works-qt

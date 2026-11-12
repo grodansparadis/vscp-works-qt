@@ -41,8 +41,12 @@ jobs:
       - name: Build
         run: cmake --build build --config ${BUILD_TYPE} --parallel
 
+      # The install runs macdeployqt (VSCPWORKS_DEPLOY_RUNTIME), which puts
+      # the Qt frameworks and the Homebrew libraries into the app bundle
       - name: Install
-        run: cmake --install build --config ${BUILD_TYPE} --prefix "${{ github.workspace }}/staging"
+        run: |
+          cmake --install build --config ${BUILD_TYPE} --prefix "${{ github.workspace }}/staging"
+          ls "${{ github.workspace }}/staging/vscp-works-qt.app/Contents/Frameworks" | head -40
 
       - name: Pack install tree
         run: |
