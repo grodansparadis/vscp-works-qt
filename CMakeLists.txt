@@ -155,7 +155,8 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to VSCP master with the ws1/ws2 websocket clients (on top of the
+  # Pinned to VSCP master with the register read/write fix and the ws1/ws2
+  # websocket clients (on top of the
   # receive filters for the CANAL, SocketCAN and MQTT clients, the Windows
   # pthread.h fix, the Level II driver client, binary mode authenticated
   # encryption and UDP/multicast require-encryption). Only a handful of VSCP
@@ -164,8 +165,8 @@ FetchContent_Declare(
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/642a491b5f80b1f1554284f937717ddf9068da8e
-  URL_HASH SHA256=17a51b2da9c4e3299e9e3f4357843c4b81e8b0eeebc03c6bb2764d0e0f9fcc89
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/e050031d01ffdf59a8fbeb12a27950a8003bee21
+  URL_HASH SHA256=2cd53fb6b43a270d7c4714cedd04e33dae54d46ff7d1c894f11ac6264a4d6bba
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)
