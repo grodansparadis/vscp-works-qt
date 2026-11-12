@@ -329,6 +329,10 @@ vscpworks::getConnectionName(CVscpClient::connType type)
     case CVscpClient::connType::MULTICAST:
       str = tr("VSCP multicast connection");
       break;
+
+    case CVscpClient::connType::LEVEL2:
+      str = tr("VSCP Level II driver connection");
+      break;
   }
 
   return str;

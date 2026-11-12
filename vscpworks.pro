@@ -39,6 +39,7 @@ SOURCES +=  src/main.cpp \
     src/cdlgconnsettingsws2.cpp \
     src/cdlgconnsettingsudp.cpp \
     src/cdlgconnsettingsmulticast.cpp \
+    src/cdlgconnsettingslevel2.cpp \
     src/cdlgconnsettingsrest.cpp \
     src/cdlglevel1filter.cpp \
     src/cdlglevel1filterwizard.cpp \
@@ -70,6 +71,7 @@ SOURCES +=  src/main.cpp \
     vscp/src/vscp/common/vscp-client-ws2.cpp \
     vscp/src/vscp/common/vscp-client-udp.cpp \
     vscp/src/vscp/common/vscp-client-multicast.cpp \
+    vscp/src/vscp/common/vscp-client-level2.cpp \
     vscp/src/vscp/common/vscp-client-rest.cpp \
     vscp/src/vscp/common/vscp-client-rawcan.cpp \
     vscp/src/vscp/common/vscp-client-rawmqtt.cpp \
@@ -99,6 +101,8 @@ HEADERS  += src/vscpworks.h \
     src/cdlgconnsettingsws2.h \
     src/cdlgconnsettingsudp.h \
     src/cdlgconnsettingsmulticast.h \
+    src/cdlgconnsettingslevel2.h \
+    src/keyvalidation.h \
     src/cdlgconnsettingsrawcan.h \
     src/cdlgconnsettingsrest.h \
     src/cdlglevel1filter.h \
@@ -134,6 +138,7 @@ HEADERS  += src/vscpworks.h \
     vscp/src/vscp/common/vscp-client-ws2.h \
     vscp/src/vscp/common/vscp-client-udp.h \
     vscp/src/vscp/common/vscp-client-multicast.h \
+    vscp/src/vscp/common/vscp-client-level2.h \
     vscp/src/vscp/common/vscp-client-rest.h \
     vscp/src/vscp/common/vscp-client-rawcan.h \
     vscp/src/vscp/common/vscp-client-rawmqtt.h \
@@ -159,6 +164,7 @@ FORMS += src/mainwindow.ui \
     src/cdlgconnsettingsws2.ui \
     src/cdlgconnsettingsudp.ui \
     src/cdlgconnsettingsmulticast.ui \
+    src/cdlgconnsettingslevel2.ui \
     src/cdlgconnsettingsrest.ui \
     src/cdlgconnsettingsrawcan.ui \
     src/cdlgconnsettingsrawmqtt.ui \

@@ -253,6 +253,10 @@ qt_add_executable(${PROJECT_NAME}
   src/cdlgconnsettingsmulticast.ui
   src/cdlgconnsettingsmulticast.h
   src/cdlgconnsettingsmulticast.cpp
+  src/cdlgconnsettingslevel2.ui
+  src/cdlgconnsettingslevel2.h
+  src/cdlgconnsettingslevel2.cpp
+  src/keyvalidation.h
 
   src/cdlgknownguid.ui
   src/cdlgknownguid.h
@@ -591,6 +595,8 @@ qt_add_executable(${PROJECT_NAME}
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-level2.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-level2.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-bootdevice-pic1.h
