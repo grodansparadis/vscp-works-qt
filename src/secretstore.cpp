@@ -48,9 +48,10 @@
 
 namespace {
 
-// Keyring service name and key prefix
+// Keyring service name and key prefix. Windows Credential Manager uses the
+// key alone as the credential name, so the key is made unique by itself.
 const char* const KEYRING_SERVICE = "VSCP Works";
-const char* const KEYRING_PREFIX  = "connection/";
+const char* const KEYRING_PREFIX  = "vscpworks/connection/";
 
 // Fields that hold secrets in all connection types
 const char* const SECRET_FIELDS[] = { "password", "key", "hmac-key", "binary-key", "binary-hmac-key", "pwkeyfile" };
@@ -227,7 +228,12 @@ SecretStore::keyringWrite(const std::string& key, const std::string& value)
     spdlog::warn("Secrets: keyring write failed, using {} instead: {}",
                  m_fallbackFile.toStdString(),
                  job.errorString().toStdString());
-    m_keyringState = 0; // Don't wait for a failing keyring again
+    // A keyring that has worked may still refuse one entry (Windows limits
+    // a credential to 2560 bytes); then only that connection uses the file.
+    // Otherwise don't wait for a failing keyring again.
+    if (1 != m_keyringState) {
+      m_keyringState = 0;
+    }
     return false;
   }
   m_keyringState = 1;
@@ -247,7 +253,9 @@ SecretStore::keyringRead(const std::string& key, std::string& value, bool& bFoun
   }
   if (QKeychain::NoError != job.error()) {
     spdlog::warn("Secrets: keyring read failed: {}", job.errorString().toStdString());
-    m_keyringState = 0; // Don't wait for a failing keyring again
+    if (1 != m_keyringState) {
+      m_keyringState = 0; // Don't wait for a failing keyring again
+    }
     return false;
   }
   m_keyringState = 1;
@@ -408,8 +416,12 @@ SecretStore::loadSecrets(json& conn)
     conn[it.key()] = it.value();
   }
 
-  m_stored[uuid]      = secrets.dump();
-  m_storedWhere[uuid] = ("keyring" == where) ? "keyring" : "file";
+  // Secrets in the fallback file move to the keyring on the next save once
+  // a keyring is available (for example after installing one)
+  if (("keyring" == where) || !isKeyringAvailable()) {
+    m_stored[uuid]      = secrets.dump();
+    m_storedWhere[uuid] = ("keyring" == where) ? "keyring" : "file";
+  }
   return true;
 }
 
