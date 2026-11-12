@@ -14,8 +14,6 @@ env:
 jobs:
   build:
     name: Windows x64
-    # windows-latest moved to the Visual Studio 2026 image, which does not
-    # build the pthreads based code yet
     runs-on: windows-2022
 
     steps:

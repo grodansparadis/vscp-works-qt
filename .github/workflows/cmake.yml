@@ -22,16 +22,6 @@ jobs:
 
     steps:
 
-      # https://github.com/marketplace/actions/install-qt
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-        version: 6.8.1
-        host: ${{ matrix.qt_host }}
-        target: 'desktop'
-        arch: ${{ matrix.qt_arch }}
-        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
-
       # https://github.com/actions/checkout
     - uses: actions/checkout@v4
 
@@ -41,29 +31,35 @@ jobs:
         repository: eclipse/paho.mqtt.c
         path: paho
 
-    - name: Update before installing packages
-      run: sudo apt-get update
+    - name: Install Linux system dependencies
+      run: |
+        for attempt in 1 2 3; do
+          if sudo apt-get -o Acquire::Retries=3 update && sudo apt-get -o Acquire::Retries=3 install -y \
+            build-essential libgl1-mesa-dev libgstreamer-gl1.0-0 libpulse-dev \
+            libxcb-glx0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+            libxcb-render-util0 libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 \
+            libxcb-util1 libxcb-xfixes0 libxcb-xinerama0 libxcb1 libxkbcommon-dev \
+            libxkbcommon-x11-0 libxcb-xkb-dev libxcb-cursor0 \
+            libmosquitto-dev libexpat-dev libssl-dev libcurl4-openssl-dev libfuse2 libsqlite3-dev; then
+            exit 0
+          fi
+          if [ "$attempt" -lt 3 ]; then
+            echo "Package installation failed (attempt $attempt/3); retrying in 20 seconds."
+            sleep 20
+          fi
+        done
+        exit 1
 
-    - name: Install libmosquitto-dev manually
-      run: sudo apt-get install libmosquitto-dev
-    
-    - name: Install libexpat-dev manually
-      run: sudo apt-get install libexpat-dev
-
-    - name: Install libssl-dev manually
-      run: sudo apt-get install libssl-dev
-
-    - name: Install libsecret-1-dev manually (passwords/keys in the keyring)
-      run: sudo apt-get install libsecret-1-dev
-
-    - name: Install libcurl4-openssl-dev manually
-      run: sudo apt install libcurl4-openssl-dev
-
-    - name: Install FUSE manually
-      run: sudo apt install libfuse2
-
-    - name: Install sqlite3
-      run: sudo apt install libsqlite3-dev
+      # https://github.com/marketplace/actions/install-qt
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: 6.8.1
+        host: ${{ matrix.qt_host }}
+        target: 'desktop'
+        arch: ${{ matrix.qt_arch }}
+        modules: 'qtcharts qtconnectivity qtserialbus qtserialport qtwebsockets'
+        install-deps: false
 
 #    - name: Install paho manually
 #      run: cd paho && mkdir build && cd build && sudo cmake -DPAHO_WITH_SSL=true .. && sudo make install

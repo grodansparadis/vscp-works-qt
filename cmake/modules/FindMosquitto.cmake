@@ -2,6 +2,7 @@
 # Find the native libmosquitto includes and libraries
 #
 #  MOSQUITTO_INCLUDE_DIR - where to find mosquitto.h, etc.
+#  MOSQUITTO_INCLUDE_DIRS - Include directories when using libmosquitto.
 #  MOSQUITTO_LIBRARIES   - List of libraries when using libmosquitto.
 #  MOSQUITTO_FOUND       - True if libmosquitto found.
 
@@ -23,6 +24,7 @@ find_package_handle_standard_args(
 
 message(STATUS "libmosquitto include dir: ${MOSQUITTO_INCLUDE_DIR}")
 message(STATUS "libmosquitto: ${MOSQUITTO_LIBRARY}")
+set(MOSQUITTO_INCLUDE_DIRS ${MOSQUITTO_INCLUDE_DIR})
 set(MOSQUITTO_LIBRARIES ${MOSQUITTO_LIBRARY})
 
 mark_as_advanced(MOSQUITTO_INCLUDE_DIR MOSQUITTO_LIBRARY)

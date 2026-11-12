@@ -700,6 +700,11 @@ if(BUILD_TESTING)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/update_build_version.py
   )
   set_tests_properties(update_build_version PROPERTIES LABELS "version" TIMEOUT 60)
+  add_test(
+    NAME find_mosquitto
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/find_mosquitto.py
+  )
+  set_tests_properties(find_mosquitto PROPERTIES LABELS "cmake" TIMEOUT 60)
 endif()
 
 # Auto-increment build version after each successful build (POST_BUILD)
@@ -769,6 +774,8 @@ if (MSVC)
   link_directories(${MOSQUITTO_LIB_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
+  ws2_32
+  iphlpapi
   Qt6::Widgets
   Qt6::Qml
   Qt6::Charts
@@ -784,6 +791,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   expat::expat
   CURL::libcurl
   dlfcn-win32::dl
+)
+# Load PThreads4W before VSCP's Windows semaphore header defines fallback macros.
+target_compile_options(${PROJECT_NAME} PRIVATE
+  "$<$<COMPILE_LANGUAGE:CXX>:/FI${PThreads4W_INCLUDE_DIR}/pthread.h>"
 )
 else()
 target_link_libraries(${PROJECT_NAME} PRIVATE     
