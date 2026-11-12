@@ -41,6 +41,7 @@
 
 #include "cdlglevel2filter.h"
 #include "cdlgtls.h"
+#include "keyvalidation.h"
 
 #include <QDebug>
 #include <QDesktopServices>
@@ -71,6 +72,15 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
 
   // Clear filter
   memset(&m_filter, 0, sizeof(vscp_event_filter_t));
+
+  // Binary mode
+  ui->comboBinaryEncryption->setCurrentIndex(VSCP_ENCRYPTION_NONE);
+  connect(ui->chkBinaryMode, &QCheckBox::toggled, this, &CDlgConnSettingsTcpip::updateBinaryControls);
+  connect(ui->comboBinaryEncryption,
+          QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this,
+          &CDlgConnSettingsTcpip::updateBinaryControls);
+  updateBinaryControls();
 
   connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTLSSettings);
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onSetFilter);
@@ -300,6 +310,129 @@ CDlgConnSettingsTcpip::setPoll(bool bpoll)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// getBinaryMode
+//
+
+bool
+CDlgConnSettingsTcpip::getBinaryMode(void)
+{
+  return ui->chkBinaryMode->isChecked();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryMode
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryMode(bool bBinary)
+{
+  ui->chkBinaryMode->setChecked(bBinary);
+  updateBinaryControls();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryEncryption
+//
+
+int
+CDlgConnSettingsTcpip::getBinaryEncryption(void)
+{
+  int encryption = ui->comboBinaryEncryption->currentIndex();
+  if ((encryption < VSCP_ENCRYPTION_NONE) || (encryption > VSCP_ENCRYPTION_AES256)) {
+    encryption = VSCP_ENCRYPTION_NONE;
+  }
+  return encryption;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryEncryption
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryEncryption(int encryption)
+{
+  if ((encryption < VSCP_ENCRYPTION_NONE) || (encryption > VSCP_ENCRYPTION_AES256)) {
+    encryption = VSCP_ENCRYPTION_NONE;
+  }
+  ui->comboBinaryEncryption->setCurrentIndex(encryption);
+  updateBinaryControls();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryKey
+//
+
+QString
+CDlgConnSettingsTcpip::getBinaryKey(void)
+{
+  return ui->editBinaryKey->text().trimmed();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryKey
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryKey(const QString& str)
+{
+  ui->editBinaryKey->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// getBinaryHmacKey
+//
+
+QString
+CDlgConnSettingsTcpip::getBinaryHmacKey(void)
+{
+  return ui->editBinaryHmacKey->text().trimmed();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// setBinaryHmacKey
+//
+
+void
+CDlgConnSettingsTcpip::setBinaryHmacKey(const QString& str)
+{
+  ui->editBinaryHmacKey->setText(str);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// updateBinaryControls
+//
+
+void
+CDlgConnSettingsTcpip::updateBinaryControls(void)
+{
+  const bool bBinary  = getBinaryMode();
+  const bool bEncrypt = bBinary && (VSCP_ENCRYPTION_NONE != getBinaryEncryption());
+
+  ui->comboBinaryEncryption->setEnabled(bBinary);
+  ui->editBinaryKey->setEnabled(bEncrypt);
+  ui->editBinaryHmacKey->setEnabled(bEncrypt);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// accept
+//
+
+void
+CDlgConnSettingsTcpip::accept(void)
+{
+  QString err = keyvalidation::validateTcpBinary(getBinaryMode(),
+                                                 getBinaryMode() ? getBinaryEncryption() : VSCP_ENCRYPTION_NONE,
+                                                 getBinaryKey(),
+                                                 getBinaryHmacKey());
+  if (!err.isEmpty()) {
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
+
+  QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // isTLSEnabled
 //
 
@@ -459,6 +592,20 @@ CDlgConnSettingsTcpip::getJson(void)
   m_jsonConfig["bfull-l2"]           = getFullL2();
   m_jsonConfig["selected-interface"] = getInterface().toStdString();
 
+  // Binary mode. Encryption is only possible in binary mode and is always
+  // authenticated (AES + HMAC-SHA-256).
+  m_jsonConfig["binary-mode"] = getBinaryMode();
+  if (getBinaryMode() && (VSCP_ENCRYPTION_NONE != getBinaryEncryption())) {
+    m_jsonConfig["binary-encryption"] = getBinaryEncryption();
+    m_jsonConfig["binary-key"]        = getBinaryKey().toStdString();
+    m_jsonConfig["binary-hmac-key"]   = getBinaryHmacKey().toStdString();
+  }
+  else {
+    m_jsonConfig["binary-encryption"] = VSCP_ENCRYPTION_NONE;
+    m_jsonConfig["binary-key"]        = "";
+    m_jsonConfig["binary-hmac-key"]   = "";
+  }
+
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
   m_jsonConfig["cafile"]      = getCaFile().toStdString();
@@ -531,6 +678,22 @@ CDlgConnSettingsTcpip::setJson(const json* pobj)
 
   if (m_jsonConfig.contains("bfull-l2") && m_jsonConfig["bfull-l2"].is_boolean()) {
     setFullL2((short)m_jsonConfig["bfull-l2"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("binary-mode") && m_jsonConfig["binary-mode"].is_boolean()) {
+    setBinaryMode(m_jsonConfig["binary-mode"].get<bool>());
+  }
+
+  if (m_jsonConfig.contains("binary-encryption") && m_jsonConfig["binary-encryption"].is_number_integer()) {
+    setBinaryEncryption(m_jsonConfig["binary-encryption"].get<int>());
+  }
+
+  if (m_jsonConfig.contains("binary-key") && m_jsonConfig["binary-key"].is_string()) {
+    setBinaryKey(m_jsonConfig["binary-key"].get<std::string>().c_str());
+  }
+
+  if (m_jsonConfig.contains("binary-hmac-key") && m_jsonConfig["binary-hmac-key"].is_string()) {
+    setBinaryHmacKey(m_jsonConfig["binary-hmac-key"].get<std::string>().c_str());
   }
 
   if (m_jsonConfig.contains("btls") && m_jsonConfig["btls"].is_boolean()) {
@@ -660,6 +823,16 @@ CDlgConnSettingsTcpip::onTestConnection(void)
   m_client.setConnectionTimeout(getConnectionTimeout());
   m_client.setResponseTimeout(getResponseTimeout());
 
+  QString err = keyvalidation::validateTcpBinary(getBinaryMode(),
+                                                 getBinaryMode() ? getBinaryEncryption() : VSCP_ENCRYPTION_NONE,
+                                                 getBinaryKey(),
+                                                 getBinaryHmacKey());
+  if (!err.isEmpty()) {
+    QApplication::restoreOverrideCursor();
+    QMessageBox::warning(this, tr(APPNAME), err);
+    return;
+  }
+
   // Initialize host connection
   if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
                                                 getUser().toStdString().c_str(),
@@ -670,6 +843,28 @@ CDlgConnSettingsTcpip::onTestConnection(void)
                              tr(APPNAME),
                              tr("INIT: Failed to initialize tcp/ip client. Error code: %1").arg(rv));
     return;
+  }
+
+  // Binary mode and its authenticated encryption are tested as a session
+  // will use them
+  {
+    json jBinary;
+    jBinary["binary-mode"] = getBinaryMode();
+    if (getBinaryMode() && (VSCP_ENCRYPTION_NONE != getBinaryEncryption())) {
+      jBinary["binary-encryption"] = getBinaryEncryption();
+      jBinary["binary-key"]        = getBinaryKey().toStdString();
+      jBinary["binary-hmac-key"]   = getBinaryHmacKey().toStdString();
+    }
+    else {
+      jBinary["binary-encryption"] = VSCP_ENCRYPTION_NONE;
+    }
+    if (!m_client.initFromJson(jBinary.dump())) {
+      QApplication::restoreOverrideCursor();
+      QMessageBox::information(this,
+                               tr(APPNAME),
+                               tr("INIT: Invalid binary mode settings for the tcp/ip client."));
+      return;
+    }
   }
 
   // Connect to remote host

@@ -129,6 +129,32 @@ public:
     void setPoll(bool bPoll);
 
     /*!
+        Setters/getters for binary mode
+    */
+    bool getBinaryMode(void);
+    void setBinaryMode(bool bBinary);
+
+    /*!
+        Setters/getters for binary mode encryption (VSCP_ENCRYPTION_xxx).
+        Encryption over tcp/ip is always authenticated (AES + HMAC-SHA-256)
+        and is only available in binary mode.
+    */
+    int getBinaryEncryption(void);
+    void setBinaryEncryption(int encryption);
+
+    /*!
+        Setters/getters for binary mode AES key (hex)
+    */
+    QString getBinaryKey(void);
+    void setBinaryKey(const QString& str);
+
+    /*!
+        Setters/getters for binary mode HMAC-SHA-256 key (hex)
+    */
+    QString getBinaryHmacKey(void);
+    void setBinaryHmacKey(const QString& str);
+
+    /*!
         Setters/getters for TLS enable
     */
     bool isTLSEnabled(void);
@@ -176,7 +202,15 @@ public:
     json getJson(void);
     void setJson(const json *pobj);
 
+ public slots:
+
+    /// Validate binary mode security settings before closing with OK
+    void accept(void) override;
+
  private slots:
+
+    /// Enable/disable binary encryption controls
+    void updateBinaryControls(void);
 
     /// Set filter button clicked
     void onSetFilter(void);

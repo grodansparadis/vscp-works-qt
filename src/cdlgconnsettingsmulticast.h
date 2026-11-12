@@ -94,6 +94,20 @@ public:
   void setKey(const QString& str);
 
   /*!
+      Setters/getters for HMAC-SHA-256 key (hex). Empty disables
+      authenticated frames.
+  */
+  QString getHmacKey(void);
+  void setHmacKey(const QString& str);
+
+  /*!
+      Setters/getters for require encryption. When set, received frames
+      that are not encrypted with the configured algorithm are dropped.
+  */
+  bool getRequireEncryption(void);
+  void setRequireEncryption(bool bRequire);
+
+  /*!
       Setters/getters for connection timeout
   */
   uint32_t getConnectionTimeout(void);
@@ -110,6 +124,11 @@ public:
   */
   json getJson(void);
   void setJson(const json* pobj);
+
+public slots:
+
+  /// Validate security settings before the dialog is closed with OK
+  void accept(void) override;
 
 private slots:
 
