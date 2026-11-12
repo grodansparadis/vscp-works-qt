@@ -62,8 +62,10 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
 {
   ui->setupUi(this);
 
-  // Set defaults
-  m_bTLS = false;
+  // Set defaults. The server certificate is verified unless the user
+  // turns it off.
+  m_bTLS        = false;
+  m_bVerifyPeer = true;
   setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
   setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setHost("tcp://localhost:9598");
@@ -459,7 +461,7 @@ CDlgConnSettingsTcpip::enableTLS(bool btls)
 bool
 CDlgConnSettingsTcpip::isVerifyPeerEnabled(void)
 {
-  return m_bTLS;
+  return m_bVerifyPeer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -608,6 +610,8 @@ CDlgConnSettingsTcpip::getJson(void)
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+  // Before version 2 "bverifypeer" was saved with the value of "btls"
+  m_jsonConfig["tls-settings-version"] = 2;
   m_jsonConfig["cafile"]      = getCaFile().toStdString();
   m_jsonConfig["capath"]      = getCaPath().toStdString();
   m_jsonConfig["certfile"]    = getCertFile().toStdString();
@@ -700,8 +704,14 @@ CDlgConnSettingsTcpip::setJson(const json* pobj)
     enableTLS((short)m_jsonConfig["btls"].get<bool>());
   }
 
-  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+  // Connections saved before tls-settings-version 2 stored the TLS enable
+  // flag as "bverifypeer", not the user's choice. Verify those.
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean() &&
+      (m_jsonConfig.value("tls-settings-version", 1) >= 2)) {
     enableVerifyPeer((short)m_jsonConfig["bverifypeer"].get<bool>());
+  }
+  else {
+    enableVerifyPeer(true);
   }
 
   if (m_jsonConfig.contains("cafile") && m_jsonConfig["cafile"].is_string()) {
@@ -833,38 +843,15 @@ CDlgConnSettingsTcpip::onTestConnection(void)
     return;
   }
 
-  // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != (rv = m_client.init(getHost().toStdString().c_str(),
-                                                getUser().toStdString().c_str(),
-                                                getPassword().toStdString().c_str(),
-                                                getPoll()))) {
+  // Initialize the client from the complete settings, so TLS, binary mode
+  // and its encryption are tested as a session will use them
+  json jConfig = getJson();
+  if (!m_client.initFromJson(jConfig.dump())) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this,
                              tr(APPNAME),
-                             tr("INIT: Failed to initialize tcp/ip client. Error code: %1").arg(rv));
+                             tr("INIT: Invalid tcp/ip connection settings (see log for more info)."));
     return;
-  }
-
-  // Binary mode and its authenticated encryption are tested as a session
-  // will use them
-  {
-    json jBinary;
-    jBinary["binary-mode"] = getBinaryMode();
-    if (getBinaryMode() && (VSCP_ENCRYPTION_NONE != getBinaryEncryption())) {
-      jBinary["binary-encryption"] = getBinaryEncryption();
-      jBinary["binary-key"]        = getBinaryKey().toStdString();
-      jBinary["binary-hmac-key"]   = getBinaryHmacKey().toStdString();
-    }
-    else {
-      jBinary["binary-encryption"] = VSCP_ENCRYPTION_NONE;
-    }
-    if (!m_client.initFromJson(jBinary.dump())) {
-      QApplication::restoreOverrideCursor();
-      QMessageBox::information(this,
-                               tr(APPNAME),
-                               tr("INIT: Invalid binary mode settings for the tcp/ip client."));
-      return;
-    }
   }
 
   // Connect to remote host
@@ -929,10 +916,14 @@ CDlgConnSettingsTcpip::onGetInterfaces(void)
   getConnectionTimeout();
   getResponseTimeout();
 
-  // Initialize host connection
-  if (VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-                                          getUser().toStdString().c_str(),
-                                          getPassword().toStdString().c_str())) {
+  // Initialize from the settings incl. TLS. The interface list is a text
+  // mode command, so binary mode is not used here.
+  json jConfig           = getJson();
+  jConfig["binary-mode"] = false;
+  jConfig.erase("binary-encryption");
+  jConfig.erase("binary-key");
+  jConfig.erase("binary-hmac-key");
+  if (!m_client.initFromJson(jConfig.dump())) {
     QApplication::restoreOverrideCursor();
     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip object"));
     return;
