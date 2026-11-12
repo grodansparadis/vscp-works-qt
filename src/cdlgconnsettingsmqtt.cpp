@@ -191,7 +191,8 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
   clientid = "vscpworks-" + clientid;
 
   // Set defaults
-  m_bTLS = false;
+  m_bTLS        = false;
+  m_bVerifyPeer = true; // Verify the server certificate unless turned off
   // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
   // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setBroker("mqtt://localhost:1883");
@@ -580,7 +581,7 @@ CDlgConnSettingsMqtt::enableTLS(bool btls)
 bool
 CDlgConnSettingsMqtt::isVerifyPeerEnabled(void)
 {
-  return m_bTLS;
+  return m_bVerifyPeer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -716,6 +717,8 @@ CDlgConnSettingsMqtt::getJson(void)
 
   m_jsonConfig["btls"]        = isTLSEnabled();
   m_jsonConfig["bverifypeer"] = isVerifyPeerEnabled();
+  // Before version 2 "bverifypeer" was saved with the value of "btls"
+  m_jsonConfig["tls-settings-version"] = 2;
   m_jsonConfig["cafile"]      = getCaFile().toStdString();
   m_jsonConfig["capath"]      = getCaPath().toStdString();
   m_jsonConfig["certfile"]    = getCertFile().toStdString();
@@ -829,8 +832,14 @@ CDlgConnSettingsMqtt::setJson(const json* pobj)
     enableTLS((short)m_jsonConfig["btls"].get<bool>());
   }
 
-  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+  // Connections saved before tls-settings-version 2 stored the TLS enable
+  // flag as "bverifypeer", not the user's choice. Verify those.
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean() &&
+      (m_jsonConfig.value("tls-settings-version", 1) >= 2)) {
     enableVerifyPeer(m_jsonConfig["bverifypeer"].get<bool>());
+  }
+  else {
+    enableVerifyPeer(true);
   }
 
   if (m_jsonConfig.contains("cafile") && m_jsonConfig["cafile"].is_string()) {

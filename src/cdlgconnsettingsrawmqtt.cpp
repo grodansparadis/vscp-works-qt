@@ -70,7 +70,8 @@ CDlgConnSettingsRawMqtt::CDlgConnSettingsRawMqtt(QWidget* parent)
   clientid = "vscpworks-" + clientid;
 
   // Set defaults
-  m_bTLS = false;
+  m_bTLS        = false;
+  m_bVerifyPeer = true; // Verify the server certificate unless turned off
   // setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
   // setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setBroker("tcp://localhost:1883");
