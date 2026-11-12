@@ -1,0 +1,29 @@
+name: Update build version
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+jobs:
+  update-version:
+    if: ${{ !contains(github.event.head_commit.message, '[version-bump]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Increment version and sync documentation
+        run: cmake -DSOURCE_DIR="$GITHUB_WORKSPACE" -P "$GITHUB_WORKSPACE/cmake/update_build_version.cmake"
+
+      - name: Commit version update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/version.h docs/variables.xml
+          git commit -m "chore: update build version [version-bump]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

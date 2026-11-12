@@ -2,7 +2,7 @@
 #
 # Derives the public CalVer version from the current calendar month and
 # increments the build counter. The patch version is the resulting build number.
-# Invoked automatically as a POST_BUILD step via CMakeLists.txt.
+# Invoked automatically by the version-update workflow on pushes to master.
 
 set(VERSION_FILE   "${SOURCE_DIR}/src/version.h")
 set(DOC_VARS_FILE  "${SOURCE_DIR}/docs/variables.xml")

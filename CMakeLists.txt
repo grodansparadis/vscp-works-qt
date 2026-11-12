@@ -708,16 +708,6 @@ if(BUILD_TESTING)
   set_tests_properties(find_mosquitto PROPERTIES LABELS "cmake" TIMEOUT 60)
 endif()
 
-# Auto-increment build version after each successful build (POST_BUILD)
-# Running this after linking avoids touching version.h before compilation,
-# which would otherwise force a full rebuild on every invocation.
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND}
-    -DSOURCE_DIR="${CMAKE_SOURCE_DIR}"
-    -P "${CMAKE_SOURCE_DIR}/cmake/update_build_version.cmake"
-  COMMENT "Incrementing build version in src/version.h"
-)
-
 if (MSVC)
   find_path(PTHREAD_INCLUDE_DIR pthread.h)
   find_path(MOSQUITTO_INCLUDE_DIR mosquitto.h)

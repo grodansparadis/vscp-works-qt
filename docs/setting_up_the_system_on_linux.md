@@ -39,6 +39,8 @@ You need expat, mosquitto, libwebsockets, OpenSSL, libcurl and libsecret to buil
   # For Qt database support
   sudo apt install libodbc1 or libodbc2
   sudo apt install libpq-dev
+  # Secure key handling
+  sudo apt install libsecret-1-dev
 
 ```
 ### Clone the vscp-works-qt repository

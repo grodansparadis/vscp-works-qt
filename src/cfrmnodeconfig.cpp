@@ -3188,7 +3188,11 @@ CFrmNodeConfig::loadXMLRegs(const std::string& path)
     if (bytes_read > 0) {
       if (!XML_ParseBuffer(xmlParser, bytes_read, bytes_read == 0)) {
         spdlog::error("Parse-RegisterXML: Failed parse register XML file at line {0} [{1}].",
+#if XML_MAJOR_VERSION > 2 || (XML_MAJOR_VERSION == 2 && XML_MINOR_VERSION >= 9)
+                      XML_GetCurrentLineNumber64(xmlParser),
+#else
                       XML_GetCurrentLineNumber(xmlParser),
+#endif
                       XML_ErrorString(XML_GetErrorCode(xmlParser)));
         ui->statusBar->showMessage(tr("Loaded registers failed due to parser error."));
         rv = VSCP_ERROR_PARSING;
