@@ -32,8 +32,7 @@
 #include "vscp-client-ws2.h"
 
 #include <QDialog>
-#include <QListWidgetItem>
-#include <QList>
+#include <QString>
 
 namespace Ui {
 class CDlgConnSettingsWs2;
@@ -42,7 +41,6 @@ class CDlgConnSettingsWs2;
 class CDlgConnSettingsWs2 : public QDialog {
   Q_OBJECT
 
-public:
 public:
   explicit CDlgConnSettingsWs2(QWidget* parent = nullptr);
   ~CDlgConnSettingsWs2();
@@ -59,22 +57,29 @@ public:
   void setName(const QString& str);
 
   /*!
-      Setters/getters for path
+      Setters/getters for the server URL
   */
   QString getUrl(void);
   void setUrl(const QString& str);
 
   /*!
-      Setters/getters for encryption
+      Setters/getters for the user name
   */
   QString getUser(void);
   void setUser(const QString& str);
 
   /*!
-      Setters/getters for key
+      Setters/getters for the password
   */
   QString getPassword(void);
   void setPassword(const QString& str);
+
+  /*!
+      Setters/getters for the AES key shared with the server
+      (32 hex characters, empty for the default key)
+  */
+  QString getKey(void);
+  void setKey(const QString& str);
 
   /*!
       Setters/getters for connection timeout
@@ -94,10 +99,17 @@ public:
   json getJson(void);
   void setJson(const json* pobj);
 
+public slots:
+  /// Check the settings before the dialog is closed with OK
+  void accept(void) override;
+
 private slots:
 
   /// Set filter button clicked
   void onSetFilter(void);
+
+  /// TLS button clicked
+  void onTLSSettings(void);
 
   /// Test connection button clicked
   void onTestConnection(void);
@@ -106,16 +118,28 @@ private slots:
   void showHelp(void);
 
 private:
+  /*!
+    Check URL and key
+    @param strError Receives a description of the problem.
+    @return true if the settings are usable.
+  */
+  bool validate(QString& strError);
+
   Ui::CDlgConnSettingsWs2* ui;
 
   // JSON configuration object
   json m_jsonConfig;
 
-  /// VSCP tcp/ip client
-  vscpClientWs2 m_client;
-
-  /// VSCP tcp/ip main filter
+  /// Receive filter
   vscp_event_filter_t m_filter;
+
+  // TLS settings (used for wss://)
+  bool m_bVerifyPeer;
+  QString m_cafile;
+  QString m_capath;
+  QString m_certfile;
+  QString m_keyfile;
+  QString m_pwkeyfile;
 };
 
 #endif // CDLGCONNSETTINGSWS2_H

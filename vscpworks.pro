@@ -69,6 +69,7 @@ SOURCES +=  src/main.cpp \
     vscp/src/vscp/common/vscp-client-socketcan.cpp \
     vscp/src/vscp/common/vscp-client-ws1.cpp \
     vscp/src/vscp/common/vscp-client-ws2.cpp \
+    vscp/src/vscp/common/vscp-websocket.cpp \
     vscp/src/vscp/common/vscp-client-udp.cpp \
     vscp/src/vscp/common/vscp-client-multicast.cpp \
     vscp/src/vscp/common/vscp-client-level2.cpp \
@@ -136,6 +137,7 @@ HEADERS  += src/vscpworks.h \
     vscp/src/vscp/common/vscp-client-socketcan.h \
     vscp/src/vscp/common/vscp-client-ws1.h \
     vscp/src/vscp/common/vscp-client-ws2.h \
+    vscp/src/vscp/common/vscp-websocket.h \
     vscp/src/vscp/common/vscp-client-udp.h \
     vscp/src/vscp/common/vscp-client-multicast.h \
     vscp/src/vscp/common/vscp-client-level2.h \

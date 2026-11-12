@@ -2159,7 +2159,12 @@ CFrmSession::initializeClient(bool autoConnect)
 
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
-      m_vscpClient->initFromJson(m_connObject.dump());
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                             tr("VSCP Works +"),
+                             tr("Invalid websocket connection settings. See log for more details."));
+        return;
+      }
       m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
       if (autoConnect) {
         connectToRemoteHost(true);
@@ -2168,7 +2173,12 @@ CFrmSession::initializeClient(bool autoConnect)
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
-      m_vscpClient->initFromJson(m_connObject.dump());
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                             tr("VSCP Works +"),
+                             tr("Invalid websocket connection settings. See log for more details."));
+        return;
+      }
       m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
       if (autoConnect) {
         connectToRemoteHost(true);
@@ -2232,10 +2242,12 @@ CFrmSession::connectToRemoteHost(bool checked)
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
   if (checked) {
-    doConnectToRemoteHost();
+    // doConnectToRemoteHost() shows the button as disconnected again if the
+    // connection fails, so set the connected state first
     QIcon connectIcon(":/connect.png");
     m_connect->setIcon(connectIcon);
     m_connect->setChecked(true);
+    doConnectToRemoteHost();
   }
   else {
     doDisconnectFromRemoteHost();
@@ -2363,10 +2375,34 @@ CFrmSession::doConnectToRemoteHost(void)
 #endif
 
     case CVscpClient::connType::WS1:
-      break;
-
-    case CVscpClient::connType::WS2:
-      break;
+    case CVscpClient::connType::WS2: {
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
+      rv = m_vscpClient->connect();
+      QApplication::restoreOverrideCursor();
+      if (VSCP_ERROR_SUCCESS != rv) {
+        QIcon disconnectIcon(":/disconnect.png");
+        m_connect->setIcon(disconnectIcon);
+        m_connect->setChecked(false);
+        std::string err = (CVscpClient::connType::WS1 == m_vscpConnType)
+                            ? static_cast<vscpClientWs1*>(m_vscpClient)->getLastError()
+                            : static_cast<vscpClientWs2*>(m_vscpClient)->getLastError();
+        spdlog::error("Session: Unable to connect to websocket server. rv={} {}", rv, err);
+        QString msg = (VSCP_ERROR_USER == rv)
+                        ? tr("The server did not accept the user name, password or key.")
+                        : tr("Failed to open a connection to the remote host.");
+        if (!err.empty()) {
+          msg += "\n\n" + QString::fromStdString(err);
+        }
+        QMessageBox::information(this, tr(APPNAME), msg, QMessageBox::Ok);
+      }
+      else {
+        QIcon connectIcon(":/connect.png");
+        m_connect->setIcon(connectIcon);
+        m_connect->setChecked(true);
+        spdlog::info(std::string(tr("Session: Successful connect to websocket server.").toStdString()));
+      }
+    } break;
 
     case CVscpClient::connType::MQTT:
       if (VSCP_ERROR_SUCCESS != m_vscpClient->connect()) {
@@ -2562,9 +2598,23 @@ CFrmSession::doDisconnectFromRemoteHost(void)
 #endif
 
     case CVscpClient::connType::WS1:
-      break;
-
     case CVscpClient::connType::WS2:
+      if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
+        QIcon connectIcon(":/connect.png");
+        m_connect->setIcon(connectIcon);
+        m_connect->setChecked(true);
+        spdlog::error(std::string(tr("Session: Unable to disconnect from websocket server").toStdString()));
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("Failed to disconnect from the websocket server"),
+                                 QMessageBox::Ok);
+      }
+      else {
+        QIcon disconnectIcon(":/disconnect.png");
+        m_connect->setIcon(disconnectIcon);
+        m_connect->setChecked(false);
+        spdlog::info(std::string(tr("Session: Successful disconnect from websocket server").toStdString()));
+      }
       break;
 
     case CVscpClient::connType::MQTT:

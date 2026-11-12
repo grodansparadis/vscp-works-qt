@@ -155,17 +155,17 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to VSCP master v26.11.1.3988 + receive filters for the CANAL,
-  # SocketCAN and MQTT clients and the Windows pthread.h fix (on top of the
-  # Level II driver client, binary mode authenticated encryption and
-  # UDP/multicast require-encryption). Only a handful of VSCP
+  # Pinned to VSCP master with the ws1/ws2 websocket clients (on top of the
+  # receive filters for the CANAL, SocketCAN and MQTT clients, the Windows
+  # pthread.h fix, the Level II driver client, binary mode authenticated
+  # encryption and UDP/multicast require-encryption). Only a handful of VSCP
   # source files are compiled directly into vscp-works-qt, so a pinned source
   # tarball is used to avoid cloning the full repository history and its
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/b5b8027b4a5786619fb9bddec1b2c894daa33133
-  URL_HASH SHA256=059d86442d02553529a8db4b7144864f6990bd2853d7bec72cee331a5e101c51
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/642a491b5f80b1f1554284f937717ddf9068da8e
+  URL_HASH SHA256=17a51b2da9c4e3299e9e3f4357843c4b81e8b0eeebc03c6bb2764d0e0f9fcc89
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)
@@ -631,6 +631,8 @@ qt_add_executable(${PROJECT_NAME}
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws1.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws2.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-ws2.cpp
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-websocket.h
+  ${vscp_SOURCE_DIR}/src/vscp/common/vscp-websocket.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.h
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-udp.cpp
   ${vscp_SOURCE_DIR}/src/vscp/common/vscp-client-multicast.h

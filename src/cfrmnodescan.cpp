@@ -264,14 +264,24 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, json* pconn)
 
     case CVscpClient::connType::WS1:
       m_vscpClient = new vscpClientWs1();
-      m_vscpClient->initFromJson(m_connObject.dump());
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                             tr(APPNAME),
+                             tr("Invalid websocket connection settings. See log for more details."));
+        return;
+      }
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
 
     case CVscpClient::connType::WS2:
       m_vscpClient = new vscpClientWs2();
-      m_vscpClient->initFromJson(m_connObject.dump());
+      if (!m_vscpClient->initFromJson(m_connObject.dump())) {
+        QMessageBox::warning(this,
+                             tr(APPNAME),
+                             tr("Invalid websocket connection settings. See log for more details."));
+        return;
+      }
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;
@@ -489,9 +499,27 @@ CFrmNodeScan::doConnectToRemoteHost(void)
 #endif
 
     case CVscpClient::connType::WS1:
-      break;
-
     case CVscpClient::connType::WS2:
+      QApplication::setOverrideCursor(Qt::WaitCursor);
+      QApplication::processEvents();
+      rv = m_vscpClient->connect();
+      QApplication::restoreOverrideCursor();
+      if (VSCP_ERROR_SUCCESS != rv) {
+        std::string err = (CVscpClient::connType::WS1 == m_vscpClient->getType())
+                            ? static_cast<vscpClientWs1*>(m_vscpClient)->getLastError()
+                            : static_cast<vscpClientWs2*>(m_vscpClient)->getLastError();
+        spdlog::error("Node Scan: Unable to connect to websocket server. rv={} {}", rv, err);
+        QString msg = (VSCP_ERROR_USER == rv)
+                        ? tr("The server did not accept the user name, password or key.")
+                        : tr("Failed to open a connection to the remote host.");
+        if (!err.empty()) {
+          msg += "\n\n" + QString::fromStdString(err);
+        }
+        QMessageBox::information(this, tr(APPNAME), msg, QMessageBox::Ok);
+      }
+      else {
+        spdlog::info(std::string(tr("Node Scan: Successful connect to websocket server").toStdString()));
+      }
       break;
 
     case CVscpClient::connType::MQTT:
@@ -606,9 +634,13 @@ CFrmNodeScan::doDisconnectFromRemoteHost(void)
 #endif
 
     case CVscpClient::connType::WS1:
-      break;
-
     case CVscpClient::connType::WS2:
+      if (VSCP_ERROR_SUCCESS != m_vscpClient->disconnect()) {
+        spdlog::error(std::string(tr("Node Scan: Unable to disconnect from websocket server").toStdString()));
+      }
+      else {
+        spdlog::info(std::string(tr("Node Scan: Successful disconnect from websocket server").toStdString()));
+      }
       break;
 
     case CVscpClient::connType::MQTT:

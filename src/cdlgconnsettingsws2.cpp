@@ -32,6 +32,7 @@
 
 #include <vscp.h>
 #include <vscphelper.h>
+#include <vscp-websocket.h>
 
 #include "vscpworks.h"
 
@@ -39,15 +40,16 @@
 #include "ui_cdlgconnsettingsws2.h"
 
 #include "cdlglevel2filter.h"
+#include "cdlgtls.h"
 
-#include <QMessageBox>
-#include <QDebug>
+#include <QApplication>
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QRegularExpression>
 #include <QShortcut>
+#include <QUrl>
 
-#include <spdlog/async.h>
-#include <spdlog/sinks/rotating_file_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,23 +59,28 @@
 CDlgConnSettingsWs2::CDlgConnSettingsWs2(QWidget* parent)
   : QDialog(parent)
   , ui(new Ui::CDlgConnSettingsWs2)
+  , m_bVerifyPeer(true)
 {
   ui->setupUi(this);
 
   // Clear filter
   memset(&m_filter, 0, sizeof(vscp_event_filter_t));
 
+  setConnectionTimeout(WS2_CONNECTION_TIMEOUT);
+  setResponseTimeout(WS2_RESPONSE_TIMEOUT);
+
   setInitialFocus();
 
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &CDlgConnSettingsWs2::accept);
   connect(ui->btnSetFilter, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onSetFilter);
+  connect(ui->btnTLS, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onTLSSettings);
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsWs2::onTestConnection);
 
   // Help
-QShortcut * shortcut = new QShortcut(QKeySequence(Qt::Key_F1),this,SLOT(showHelp()));
-shortcut->setAutoRepeat(false);
-
-QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
-connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
+  QShortcut* shortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  shortcut->setAutoRepeat(false);
+  QPushButton* helpButton = ui->buttonBox->button(QDialogButtonBox::Help);
+  connect(helpButton, SIGNAL(clicked()), this, SLOT(showHelp()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,19 +106,11 @@ CDlgConnSettingsWs2::setInitialFocus(void)
 // Getters / Setters
 // ----------------------------------------------------------------------------
 
-///////////////////////////////////////////////////////////////////////////////
-// getName
-//
-
 QString
 CDlgConnSettingsWs2::getName(void)
 {
   return (ui->editDescription->text());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setName
-//
 
 void
 CDlgConnSettingsWs2::setName(const QString& str)
@@ -119,19 +118,11 @@ CDlgConnSettingsWs2::setName(const QString& str)
   ui->editDescription->setText(str);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getUrl
-//
-
 QString
 CDlgConnSettingsWs2::getUrl(void)
 {
-  return (ui->editUrl->text());
+  return (ui->editUrl->text().trimmed());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setUrl
-//
 
 void
 CDlgConnSettingsWs2::setUrl(const QString& str)
@@ -139,19 +130,11 @@ CDlgConnSettingsWs2::setUrl(const QString& str)
   ui->editUrl->setText(str);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getUser
-//
-
 QString
 CDlgConnSettingsWs2::getUser(void)
 {
   return (ui->editUsername->text());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setUser
-//
 
 void
 CDlgConnSettingsWs2::setUser(const QString& str)
@@ -159,64 +142,58 @@ CDlgConnSettingsWs2::setUser(const QString& str)
   ui->editUsername->setText(str);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getPassword
-//
-
 QString
 CDlgConnSettingsWs2::getPassword(void)
 {
-  return (ui->editUsername->text());
+  return (ui->editPassword->text());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setPassword
-//
 
 void
 CDlgConnSettingsWs2::setPassword(const QString& str)
 {
-  ui->editUsername->setText(str);
+  ui->editPassword->setText(str);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// getConnectionTimeout
-//
+QString
+CDlgConnSettingsWs2::getKey(void)
+{
+  return (ui->editKey->text().trimmed());
+}
+
+void
+CDlgConnSettingsWs2::setKey(const QString& str)
+{
+  // The default key is shown as an empty field
+  if (0 == str.compare(VSCP_WS_DEFAULT_KEY, Qt::CaseInsensitive)) {
+    ui->editKey->clear();
+  }
+  else {
+    ui->editKey->setText(str);
+  }
+}
 
 uint32_t
 CDlgConnSettingsWs2::getConnectionTimeout(void)
 {
-  return m_client.getConnectionTimeout();
+  return (uint32_t) vscp_readStringValue(ui->editConnectTimeout->text().toStdString());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setConnectionTimeout
-//
 
 void
 CDlgConnSettingsWs2::setConnectionTimeout(uint32_t timeout)
 {
-  m_client.setConnectionTimeout(timeout);
+  ui->editConnectTimeout->setText(QString::number(timeout));
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// getResponseTimeout
-//
 
 uint32_t
 CDlgConnSettingsWs2::getResponseTimeout(void)
 {
-  return m_client.getResponseTimeout();
+  return (uint32_t) vscp_readStringValue(ui->editResponseTimeout->text().toStdString());
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// setResponseTimeout
-//
 
 void
 CDlgConnSettingsWs2::setResponseTimeout(uint32_t timeout)
 {
-  m_client.setResponseTimeout(timeout);
+  ui->editResponseTimeout->setText(QString::number(timeout));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,11 +205,22 @@ CDlgConnSettingsWs2::getJson(void)
 {
   std::string str;
 
-  m_jsonConfig["type"]     = static_cast<int>(CVscpClient::connType::WS2);
-  m_jsonConfig["name"]     = getName().toStdString();
-  m_jsonConfig["url"]      = getUrl().toStdString();
-  m_jsonConfig["user"]     = getUser().toStdString();
-  m_jsonConfig["password"] = getPassword().toStdString();
+  m_jsonConfig["type"]               = static_cast<int>(CVscpClient::connType::WS2);
+  m_jsonConfig["name"]               = getName().toStdString();
+  m_jsonConfig["url"]                = getUrl().toStdString();
+  m_jsonConfig["user"]               = getUser().toStdString();
+  m_jsonConfig["password"]           = getPassword().toStdString();
+  m_jsonConfig["key"]                = getKey().toStdString();
+  m_jsonConfig["connection-timeout"] = getConnectionTimeout();
+  m_jsonConfig["response-timeout"]   = getResponseTimeout();
+
+  // TLS
+  m_jsonConfig["bverifypeer"] = m_bVerifyPeer;
+  m_jsonConfig["cafile"]      = m_cafile.toStdString();
+  m_jsonConfig["capath"]      = m_capath.toStdString();
+  m_jsonConfig["certfile"]    = m_certfile.toStdString();
+  m_jsonConfig["keyfile"]     = m_keyfile.toStdString();
+  m_jsonConfig["pwkeyfile"]   = m_pwkeyfile.toStdString();
 
   // Filter
   m_jsonConfig["priority-filter"] = m_filter.filter_priority;
@@ -242,9 +230,9 @@ CDlgConnSettingsWs2::getJson(void)
   m_jsonConfig["type-filter"]     = m_filter.filter_type;
   m_jsonConfig["type-mask"]       = m_filter.mask_type;
   vscp_writeGuidArrayToString(str, m_filter.filter_GUID);
-  m_jsonConfig["guid-filter"] = str.c_str();
+  m_jsonConfig["guid-filter"] = str;
   vscp_writeGuidArrayToString(str, m_filter.mask_GUID);
-  m_jsonConfig["guid-mask"] = str.c_str();
+  m_jsonConfig["guid-mask"] = str;
 
   return m_jsonConfig;
 }
@@ -256,13 +244,26 @@ CDlgConnSettingsWs2::getJson(void)
 void
 CDlgConnSettingsWs2::setJson(const json* pobj)
 {
+  if (nullptr == pobj) {
+    return;
+  }
+
   m_jsonConfig = *pobj;
+
+  auto getString = [this](const char* name, QString& value) {
+    if (m_jsonConfig.contains(name) && m_jsonConfig[name].is_string()) {
+      value = QString::fromStdString(m_jsonConfig[name].get<std::string>());
+    }
+  };
+
+  QString str;
 
   if (m_jsonConfig.contains("name") && m_jsonConfig["name"].is_string()) {
     setName(m_jsonConfig["name"].get<std::string>().c_str());
   }
 
-  if (m_jsonConfig.contains("url") && m_jsonConfig["url"].is_string()) {
+  if (m_jsonConfig.contains("url") && m_jsonConfig["url"].is_string() &&
+      !m_jsonConfig["url"].get<std::string>().empty()) {
     setUrl(m_jsonConfig["url"].get<std::string>().c_str());
   }
 
@@ -274,6 +275,10 @@ CDlgConnSettingsWs2::setJson(const json* pobj)
     setPassword(m_jsonConfig["password"].get<std::string>().c_str());
   }
 
+  if (m_jsonConfig.contains("key") && m_jsonConfig["key"].is_string()) {
+    setKey(m_jsonConfig["key"].get<std::string>().c_str());
+  }
+
   if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
     setConnectionTimeout(m_jsonConfig["connection-timeout"].get<uint32_t>());
   }
@@ -282,7 +287,17 @@ CDlgConnSettingsWs2::setJson(const json* pobj)
     setResponseTimeout(m_jsonConfig["response-timeout"].get<uint32_t>());
   }
 
-  // Get main filter
+  // TLS
+  if (m_jsonConfig.contains("bverifypeer") && m_jsonConfig["bverifypeer"].is_boolean()) {
+    m_bVerifyPeer = m_jsonConfig["bverifypeer"].get<bool>();
+  }
+  getString("cafile", m_cafile);
+  getString("capath", m_capath);
+  getString("certfile", m_certfile);
+  getString("keyfile", m_keyfile);
+  getString("pwkeyfile", m_pwkeyfile);
+
+  // Filter
   memset(&m_filter, 0, sizeof(vscp_event_filter_t));
   if (m_jsonConfig.contains("priority-filter") && m_jsonConfig["priority-filter"].is_number()) {
     m_filter.filter_priority = m_jsonConfig["priority-filter"].get<uint8_t>();
@@ -309,17 +324,57 @@ CDlgConnSettingsWs2::setJson(const json* pobj)
   }
 
   if (m_jsonConfig.contains("guid-filter") && m_jsonConfig["guid-filter"].is_string()) {
-    vscp_getGuidFromStringToArray(m_filter.filter_GUID,
-                                  m_jsonConfig["guid-filter"].get<std::string>().c_str());
+    vscp_getGuidFromStringToArray(m_filter.filter_GUID, m_jsonConfig["guid-filter"].get<std::string>());
   }
 
-  if (!m_jsonConfig.contains("guid-mask") && m_jsonConfig["guid-mask"].is_string()) {
-    vscp_getGuidFromStringToArray(m_filter.mask_GUID,
-                                  m_jsonConfig["guid-mask"].get<std::string>().c_str());
+  if (m_jsonConfig.contains("guid-mask") && m_jsonConfig["guid-mask"].is_string()) {
+    vscp_getGuidFromStringToArray(m_filter.mask_GUID, m_jsonConfig["guid-mask"].get<std::string>());
   }
 }
 
 // ----------------------------------------------------------------------------
+
+///////////////////////////////////////////////////////////////////////////////
+// validate
+//
+
+bool
+CDlgConnSettingsWs2::validate(QString& strError)
+{
+  vscpWsUrl url;
+  if (!CVscpWebSocket::parseUrl(getUrl().toStdString(), "/ws2", url)) {
+    strError = tr("The host URL is not valid. Use ws://host:port/ws2, or wss://host:port/ws2 for TLS.");
+    ui->editUrl->setFocus();
+    return false;
+  }
+
+  QString key = getKey();
+  if (!key.isEmpty()) {
+    static const QRegularExpression hex("^[0-9a-fA-F]{32}$");
+    if (!hex.match(key).hasMatch()) {
+      strError = tr("The key must be 32 hexadecimal characters, or empty for the default key.");
+      ui->editKey->setFocus();
+      return false;
+    }
+  }
+
+  return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// accept
+//
+
+void
+CDlgConnSettingsWs2::accept(void)
+{
+  QString strError;
+  if (!validate(strError)) {
+    QMessageBox::warning(this, tr(APPNAME), strError);
+    return;
+  }
+  QDialog::accept();
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // onSetFilter
@@ -338,66 +393,92 @@ CDlgConnSettingsWs2::onSetFilter(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// onTLSSettings
+//
+
+void
+CDlgConnSettingsWs2::onTLSSettings(void)
+{
+  CDlgTLS dlg;
+
+  QString strUrl = getUrl();
+  bool bTLS      = strUrl.startsWith("wss://", Qt::CaseInsensitive) || strUrl.startsWith("https://", Qt::CaseInsensitive);
+
+  dlg.enableTLS(bTLS);
+  dlg.enableVerifyPeer(m_bVerifyPeer);
+  dlg.setCaFile(m_cafile);
+  dlg.setCaPath(m_capath);
+  dlg.setCertFile(m_certfile);
+  dlg.setKeyFile(m_keyfile);
+  dlg.setPwKeyFile(m_pwkeyfile);
+
+  if (QDialog::Accepted == dlg.exec()) {
+    m_bVerifyPeer = dlg.isVerifyPeerEnabled();
+    m_cafile      = dlg.getCaFile();
+    m_capath      = dlg.getCaPath();
+    m_certfile    = dlg.getCertFile();
+    m_keyfile     = dlg.getKeyFile();
+    m_pwkeyfile   = dlg.getPwKeyFile();
+
+    // TLS is selected by the URL scheme, keep it in step
+    if (dlg.isTLSEnabled() != bTLS) {
+      int pos = strUrl.indexOf("://");
+      QString rest = (pos >= 0) ? strUrl.mid(pos + 3) : strUrl;
+      setUrl((dlg.isTLSEnabled() ? "wss://" : "ws://") + rest);
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // onTestConnection
 //
 
 void
 CDlgConnSettingsWs2::onTestConnection(void)
 {
+  QString strError;
+  if (!validate(strError)) {
+    QMessageBox::warning(this, tr(APPNAME), strError);
+    return;
+  }
+
+  vscpClientWs2 client;
+  if (!client.initFromJson(getJson().dump())) {
+    QMessageBox::warning(this, tr(APPNAME), tr("Invalid connection settings."));
+    return;
+  }
+
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
 
-  // // Initialize host connection
-  // if ( VSCP_ERROR_SUCCESS != m_client.init(getHost().toStdString().c_str(),
-  //                                             getPort(),
-  //                                             getUser().toStdString().c_str(),
-  //                                             getPassword().toStdString().c_str() ) ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to initialize tcp/ip client"));
-  //     return;
-  // }
+  int rv = client.connect();
+  if (VSCP_ERROR_SUCCESS != rv) {
+    QApplication::restoreOverrideCursor();
+    QString msg = tr("Failed to connect to the remote host.");
+    if (VSCP_ERROR_USER == rv) {
+      msg = tr("The server did not accept the user name, password or key.");
+    }
+    QString err = QString::fromStdString(client.getLastError());
+    if (!err.isEmpty()) {
+      msg += "\n\n" + err;
+    }
+    QMessageBox::warning(this, tr(APPNAME), msg);
+    return;
+  }
 
-  // // Connect to remote host
-  // if ( VSCP_ERROR_SUCCESS != m_client.connect() ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to connect to remote tcp/ip host"));
-  //     m_client.disconnect();
-  //     return;
-  // }
+  QString strVersion;
+  uint8_t major, minor, release, build;
+  if (VSCP_ERROR_SUCCESS == client.getversion(&major, &minor, &release, &build)) {
+    strVersion = tr("Server ws2 protocol version: %1.%2.%3.%4").arg(major).arg(minor).arg(release).arg(build);
+  }
 
-  // // Get server version
-  // uint8_t major_ver;
-  // uint8_t minor_ver;
-  // uint8_t release_ver;
-  // uint8_t build_ver;
-  // QString strVersion;
-  // if ( VSCP_ERROR_SUCCESS == m_client.getversion( &major_ver,
-  //                                                 &minor_ver,
-  //                                                 &release_ver,
-  //                                                 &build_ver ) ) {
-
-  //     strVersion = vscp_str_format("Remote server version: %d.%d.%d.%d",
-  //                                     (int)major_ver,
-  //                                     (int)minor_ver,
-  //                                     (int)release_ver,
-  //                                     (int)build_ver ).c_str();
-  // }
-  // else {
-  //     strVersion = tr("Failed to get version from server");
-  // }
-
-  // // Disconnect from remote host
-  // if ( VSCP_ERROR_SUCCESS != m_client.disconnect() ) {
-  //     QApplication::restoreOverrideCursor();
-  //     QMessageBox::information(this, tr(APPNAME), tr("Failed to disconnect from remote tcp/ip host"));
-  //     return;
-  // }
-
+  client.disconnect();
   QApplication::restoreOverrideCursor();
 
   QString msg = tr("Connection test was successful");
-  msg += "\n";
-  msg += "NOT IMPLEMENTED YET!";
+  if (!strVersion.isEmpty()) {
+    msg += "\n\n" + strVersion;
+  }
   QMessageBox::information(this, tr(APPNAME), msg);
 }
 
@@ -408,6 +489,6 @@ CDlgConnSettingsWs2::onTestConnection(void)
 void
 CDlgConnSettingsWs2::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=ws1";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_ws2";
   QDesktopServices::openUrl(QUrl(link));
 }
