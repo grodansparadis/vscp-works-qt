@@ -199,8 +199,6 @@ private:
   int m_messageRenderCount;
   int m_lastRenderedMessageCount;
 
-  QPushButton* m_btnConnect;
-  QPushButton* m_btnPauseReceive;
   QPushButton* m_btnSubscribe;
   QPushButton* m_btnUnsubscribe;
   QPushButton* m_btnPublish;
@@ -231,6 +229,9 @@ private:
   QAction* m_actSubscribeConfigured;
   QAction* m_actClearSubscriptions;
   QLabel* m_lblStatus;
+
+  /// Connection state badge in the toolbar
+  QLabel* m_lblConnection = nullptr;
 };
 
 #endif // CFRMMQTTEXPLORER_H

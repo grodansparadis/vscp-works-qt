@@ -33,6 +33,7 @@
 #ifndef WIN32
 
 #include "cfrmrawcansession.h"
+#include "explorerstyle.h"
 
 #include <QDateTime>
 #include <QDesktopServices>
@@ -101,9 +102,7 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_chkBitrateSwitch(nullptr)
   , m_chkErrorStateIndicator(nullptr)
   , m_chkRemoteRequest(nullptr)
-  , m_btnConnect(nullptr)
   , m_btnSend(nullptr)
-  , m_btnClear(nullptr)
   , m_btnAddFilter(nullptr)
   , m_btnRemoveFilter(nullptr)
   , m_treeFrames(nullptr)
@@ -170,76 +169,14 @@ CFrmRawCanSession::setupUi()
                    .arg(m_interfaceName.isEmpty() ? tr("Unknown device") : m_interfaceName));
   resize(1250, 780);
   setMinimumSize(980, 620);
-  setStyleSheet(R"(
-    QDialog {
-      background: #f7f9fc;
-      color: #1f2937;
-    }
-    QToolBar, QMenuBar {
-      background: #ffffff;
-      border: 1px solid #dbe3ee;
-      padding: 4px;
-    }
-    QToolBar QToolButton, QPushButton, QComboBox, QLineEdit, QTreeWidget, QTableWidget, QGroupBox {
-      border-radius: 6px;
-    }
-    QPushButton {
-      background: #eef4ff;
-      border: 1px solid #c9d8f2;
-      padding: 6px 10px;
-    }
-    QPushButton:hover {
-      background: #e2ecff;
-    }
-    QPushButton:pressed {
-      background: #d7e6ff;
-    }
-    QComboBox, QLineEdit {
-      border: 1px solid #c9d8f2;
-      padding: 5px 7px;
-      background: #ffffff;
-    }
-    QGroupBox {
-      border: 1px solid #dbe3ee;
-      margin-top: 10px;
-      padding-top: 8px;
-      background: #ffffff;
-    }
-    QGroupBox::title {
-      subcontrol-origin: margin;
-      left: 10px;
-      padding: 0 6px 0 6px;
-      color: #4b5563;
-      font-weight: 600;
-    }
-    QTreeWidget, QTableWidget {
-      border: 1px solid #dbe3ee;
-      background: #ffffff;
-      alternate-background-color: #f8fbff;
-    }
-    QHeaderView::section {
-      background: #eef4ff;
-      color: #374151;
-      padding: 6px;
-      border: 1px solid #dbe3ee;
-    }
-    QLabel {
-      color: #374151;
-    }
-  )");
+  setStyleSheet(explorerstyle::styleSheet());
 
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
-  mainLayout->setContentsMargins(14, 14, 14, 14);
+  mainLayout->setContentsMargins(14, 8, 14, 14);
   mainLayout->setSpacing(10);
 
   m_menuBar = new QMenuBar(this);
-  m_toolBar = new QToolBar(tr("Raw CAN"), this);
-  m_toolBar->setMovable(false);
-  m_toolBar->setFloatable(false);
-  m_toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-  m_toolBar->setIconSize(QSize(16, 16));
-  mainLayout->addWidget(m_menuBar);
-  mainLayout->addWidget(m_toolBar);
+  mainLayout->setMenuBar(m_menuBar);
 
   QMenu* fileMenu = m_menuBar->addMenu(tr("&Frame"));
   m_actSaveCurrentFrame = fileMenu->addAction(tr("Save current frame"));
@@ -261,39 +198,41 @@ CFrmRawCanSession::setupUi()
   m_actToggleSavedFrames->setCheckable(true);
   m_actToggleSavedFrames->setChecked(true);
 
+  // One toolbar: connection, receive log, view, status and help
+  m_toolBar = new QToolBar(tr("Raw CAN"), this);
+  m_toolBar->setMovable(false);
+  m_toolBar->setFloatable(false);
+  m_toolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+
   m_actConnect = m_toolBar->addAction(tr("Connect"));
-  m_actClearLog = m_toolBar->addAction(tr("Clear"));
+  m_actConnect->setToolTip(tr("Connect to or disconnect from the CAN interface"));
   m_actPause = m_toolBar->addAction(tr("Pause"));
   m_actPause->setCheckable(true);
-  m_actHelp = m_toolBar->addAction(tr("Help"));
+  m_actPause->setToolTip(tr("Pause or resume the receive log"));
+  m_actClearLog = m_toolBar->addAction(tr("Clear"));
+  m_actClearLog->setToolTip(tr("Clear the receive log"));
   m_toolBar->addSeparator();
-  m_toolBar->addAction(m_actSaveCurrentFrame);
-  m_toolBar->addAction(m_actSendSelectedFrame);
-  m_toolBar->addAction(m_actDeleteSelectedFrame);
-  m_toolBar->addSeparator();
-  m_toolBar->addAction(m_actClearFrames);
 
-  QHBoxLayout* topLayout = new QHBoxLayout;
-  topLayout->setContentsMargins(0, 0, 0, 0);
-  topLayout->setSpacing(8);
-  m_btnConnect           = new QPushButton(tr("Connect"), this);
-  m_btnClear             = new QPushButton(tr("Clear"), this);
-  QPushButton* btnHelp   = new QPushButton(tr("Help"), this);
-  m_comboViewMode        = new QComboBox(this);
+  m_comboViewMode = new QComboBox(this);
   m_comboViewMode->addItem(tr("Frame log"));
   m_comboViewMode->addItem(tr("ID statistics"));
-  m_statusLabel          = new QLabel(this);
-  m_statusLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_toolBar->addWidget(new QLabel(tr("View "), this));
+  m_toolBar->addWidget(m_comboViewMode);
 
-  topLayout->addWidget(m_btnConnect);
-  topLayout->addWidget(m_btnClear);
-  topLayout->addWidget(btnHelp);
-  topLayout->addSpacing(10);
-  topLayout->addWidget(new QLabel(tr("View:"), this));
-  topLayout->addWidget(m_comboViewMode);
-  topLayout->addStretch(1);
-  topLayout->addWidget(m_statusLabel, 1);
-  mainLayout->addLayout(topLayout);
+  QWidget* spacer = new QWidget(this);
+  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  m_toolBar->addWidget(spacer);
+
+  m_statusLabel = new QLabel(this);
+  m_statusLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  explorerstyle::makeBadge(m_statusLabel);
+  m_toolBar->addWidget(m_statusLabel);
+  m_toolBar->addSeparator();
+
+  m_actHelp = m_toolBar->addAction(tr("Help"));
+  m_actHelp->setToolTip(tr("Open the manual (F1)"));
+  explorerstyle::setPrimary(m_toolBar, m_actConnect);
+  mainLayout->addWidget(m_toolBar);
 
   m_stackViews = new QStackedWidget(this);
 
@@ -341,7 +280,7 @@ CFrmRawCanSession::setupUi()
   QGridLayout* sendLayout = new QGridLayout(m_sendFrameBox);
 
   m_editFrameId = new QLineEdit(m_sendFrameBox);
-  m_editFrameId->setPlaceholderText(tr("Example: 0x123 or 291"));
+  m_editFrameId->setPlaceholderText(tr("0x123 or 291"));
   m_editPayload = new QLineEdit(m_sendFrameBox);
   m_editPayload->setPlaceholderText(
     tr("Hex bytes: 11 22 33 or 112233, or CSV values: 0x11,0o10,0b11,4"));
@@ -353,18 +292,35 @@ CFrmRawCanSession::setupUi()
   m_chkRemoteRequest       = new QCheckBox(tr("Remote request"), m_sendFrameBox);
 
   m_btnSend = new QPushButton(tr("Send"), m_sendFrameBox);
-  m_btnSend->setMinimumHeight(34);
+  explorerstyle::setPrimary(m_btnSend);
 
+  m_editFrameId->setFont(explorerstyle::monospaceFont());
+  m_editFrameId->setMaximumWidth(200);
+  m_editPayload->setFont(explorerstyle::monospaceFont());
+
+  sendLayout->setHorizontalSpacing(10);
+  sendLayout->setVerticalSpacing(10);
   sendLayout->addWidget(new QLabel(tr("Frame ID"), m_sendFrameBox), 0, 0);
-  sendLayout->addWidget(m_editFrameId, 0, 1, 1, 3);
-  sendLayout->addWidget(new QLabel(tr("Payload"), m_sendFrameBox), 1, 0);
-  sendLayout->addWidget(m_editPayload, 1, 1, 1, 3);
-  sendLayout->addWidget(m_chkExtended, 2, 0);
-  sendLayout->addWidget(m_chkFd, 2, 1);
-  sendLayout->addWidget(m_chkBitrateSwitch, 2, 2);
-  sendLayout->addWidget(m_chkErrorStateIndicator, 2, 3);
-  sendLayout->addWidget(m_chkRemoteRequest, 3, 0, 1, 2);
-  sendLayout->addWidget(m_btnSend, 3, 3);
+  sendLayout->addWidget(m_editFrameId, 0, 1);
+  sendLayout->addWidget(new QLabel(tr("Payload"), m_sendFrameBox), 0, 2);
+  sendLayout->addWidget(m_editPayload, 0, 3);
+  sendLayout->setColumnStretch(3, 1);
+
+  QHBoxLayout* flagsLayout = new QHBoxLayout;
+  flagsLayout->setSpacing(16);
+  flagsLayout->addWidget(m_chkExtended);
+  flagsLayout->addWidget(m_chkRemoteRequest);
+  flagsLayout->addWidget(m_chkFd);
+  flagsLayout->addWidget(m_chkBitrateSwitch);
+  flagsLayout->addWidget(m_chkErrorStateIndicator);
+  flagsLayout->addStretch(1);
+  sendLayout->addLayout(flagsLayout, 1, 0, 1, 4);
+
+  QHBoxLayout* sendButtonLayout = new QHBoxLayout;
+  sendButtonLayout->addStretch(1);
+  sendButtonLayout->addWidget(m_btnSend);
+  sendLayout->addLayout(sendButtonLayout, 2, 0, 1, 4);
+  sendLayout->setRowStretch(3, 1);
 
   m_templatesBox = new QGroupBox(tr("Saved frames"), this);
   QVBoxLayout* templatesLayout = new QVBoxLayout(m_templatesBox);
@@ -395,14 +351,11 @@ CFrmRawCanSession::setupUi()
   bottomLayout->addWidget(bottomSplitter);
   mainLayout->addLayout(bottomLayout);
 
-  connect(m_btnConnect, &QPushButton::clicked, this, &CFrmRawCanSession::connectOrDisconnect);
   connect(m_actConnect, &QAction::triggered, this, &CFrmRawCanSession::connectOrDisconnect);
   connect(m_treeFrames, &QTreeWidget::itemSelectionChanged, this, &CFrmRawCanSession::onFrameSelectionChanged);
   connect(m_treeFrames, &QTreeWidget::itemClicked, this, &CFrmRawCanSession::onFrameItemClicked);
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmRawCanSession::sendFrame);
-  connect(m_btnClear, &QPushButton::clicked, this, &CFrmRawCanSession::clearLog);
   connect(m_actClearLog, &QAction::triggered, this, &CFrmRawCanSession::clearLog);
-  connect(btnHelp, &QPushButton::clicked, this, &CFrmRawCanSession::showHelp);
   connect(m_actHelp, &QAction::triggered, this, &CFrmRawCanSession::showHelp);
   connect(m_comboViewMode, qOverload<int>(&QComboBox::currentIndexChanged), this, &CFrmRawCanSession::onViewModeChanged);
   connect(m_actShowIdFilters, &QAction::triggered, this, &CFrmRawCanSession::showIdFiltersDialog);
@@ -601,7 +554,9 @@ CFrmRawCanSession::processError(QCanBusDevice::CanBusError error)
     return;
   }
 
-  m_statusLabel->setText(tr("Error: %1").arg(m_canDevice->errorString()));
+  explorerstyle::setBadge(m_statusLabel,
+                          explorerstyle::State::Error,
+                          tr("Error: %1").arg(m_canDevice->errorString()));
 }
 
 // ----------------------------------------------------------------------------
@@ -958,6 +913,7 @@ CFrmRawCanSession::refreshFrameView()
   const int previousTopIndex = m_treeFrames->topLevelItemCount();
   m_treeFrames->clear();
 
+  const QFont monoFont = explorerstyle::monospaceFont();
   int visibleIndex = 0;
   for (const FrameRecord& rec : m_frameHistory) {
     if (!isFrameVisibleByFilter(rec.frame)) {
@@ -984,6 +940,8 @@ CFrmRawCanSession::refreshFrameView()
     frameItem->setText(2, frameTypeText);
     frameItem->setText(3, rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
     frameItem->setText(4, compactPayload.isEmpty() ? tr("<empty>") : compactPayload);
+    frameItem->setFont(1, monoFont);
+    frameItem->setFont(4, monoFont);
     frameItem->setToolTip(0, tr("Frame ID: %1\nPayload: %2\nFlags: %3")
                                  .arg(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()))
                                  .arg(formatPayload(rec.frame.payload()))
@@ -1082,6 +1040,8 @@ CFrmRawCanSession::refreshSummaryView()
     m_tableSummary->setItem(row, 2, new QTableWidgetItem((data.lastGapMs >= 0) ? QString::number(data.lastGapMs) : "-"));
     m_tableSummary->setItem(row, 3, new QTableWidgetItem(avgGap));
     m_tableSummary->setItem(row, 4, new QTableWidgetItem(formatPayload(data.lastPayload)));
+    m_tableSummary->item(row, 0)->setFont(explorerstyle::monospaceFont());
+    m_tableSummary->item(row, 4)->setFont(explorerstyle::monospaceFont());
   }
 }
 
@@ -1301,8 +1261,10 @@ void
 CFrmRawCanSession::updateStatusLabel()
 {
   QString text;
+  explorerstyle::State state = explorerstyle::State::Disconnected;
   if (nullptr != m_canDevice) {
-    text = m_paused ? tr("Paused - connected to %1").arg(m_interfaceName) : tr("Connected to %1").arg(m_interfaceName);
+    text  = m_paused ? tr("Paused - %1").arg(m_interfaceName) : tr("Connected - %1").arg(m_interfaceName);
+    state = m_paused ? explorerstyle::State::Paused : explorerstyle::State::Connected;
   }
   else {
     text = tr("Disconnected");
@@ -1329,7 +1291,7 @@ CFrmRawCanSession::updateStatusLabel()
     }
   }
 
-  m_statusLabel->setText(text);
+  explorerstyle::setBadge(m_statusLabel, state, text);
 }
 
 // ----------------------------------------------------------------------------
@@ -1338,7 +1300,6 @@ void
 CFrmRawCanSession::setConnectedState(bool connected)
 {
   Q_UNUSED(connected);
-  m_btnConnect->setText(nullptr != m_canDevice ? tr("Disconnect") : tr("Connect"));
   m_btnSend->setEnabled(nullptr != m_canDevice);
   m_actConnect->setText(nullptr != m_canDevice ? tr("Disconnect") : tr("Connect"));
   updateStatusLabel();

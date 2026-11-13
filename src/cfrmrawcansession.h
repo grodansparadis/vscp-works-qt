@@ -173,9 +173,7 @@ private:
   QCheckBox* m_chkBitrateSwitch;
   QCheckBox* m_chkErrorStateIndicator;
   QCheckBox* m_chkRemoteRequest;
-  QPushButton* m_btnConnect;
   QPushButton* m_btnSend;
-  QPushButton* m_btnClear;
   QPushButton* m_btnAddFilter;
   QPushButton* m_btnRemoveFilter;
   QTreeWidget* m_treeFrames;

@@ -10,10 +10,10 @@ The MQTT raw explorer is a general MQTT tool. It shows any MQTT traffic on a bro
 
 ## Connecting
 
-Press `Connect` in the `Connection` group (or on the toolbar). The button shows `Connecting...` while the connection is set up and `Disconnect` when connected. The status label shows the result, for example `Connected to host:port` or the reason a connection failed.
+Press `Connect` on the toolbar. The button shows `Connecting...` while the connection is set up and `Disconnect` when connected. The badge at the right of the toolbar shows the connection state: green when connected, amber while connecting or when receiving is paused, and grey when disconnected. The line at the bottom of the window shows the result of the last action, for example the reason a connection failed.
 
 - **Pause/Resume** - Temporarily stop adding incoming messages to the display. The connection is kept open.
-- **Receive mode**
+- **Messages** (receive mode, on the toolbar)
   - `Append all` - Every message is added under its topic (the last 250 messages per topic are kept).
   - `Replace per topic` - Only the latest message is kept for each topic. This gives a "current state" view of the broker.
 
@@ -63,7 +63,7 @@ Payloads larger than 256 KiB are not decoded (shown as `Payload skipped for perf
 
 ## Saving data
 
-Press `Save selected` to write data to text files. Two save dialogs are shown in turn:
+Press `Save selected...` to write data to text files. Two save dialogs are shown in turn:
 
 1. The first saves all messages that are currently visible in the tree (that is, after topic search and filter are applied).
 2. The second saves the details of the selected message or topic node. For a message the file contains topic, timestamp, format, QoS, retain flag, size, message id, decoded payload and raw payload.
@@ -81,11 +81,11 @@ Use the `Publish` group to send a message:
 
 Press `Publish` to send the message.
 
-### Publish topic list
+### Saved topics
 
-Topics you publish to often can be kept in the publish topic list.
+Topics you publish to often can be kept in the saved topics list to the right in the `Publish` group.
 
-- `Add topic` - Add a new topic to the list.
-- `Use selected` - Copy the selected list entry to the topic field. Double-clicking an entry does the same.
+- `Add` - Add the topic in the topic field to the list.
+- `Use` - Copy the selected list entry to the topic field. Double-clicking an entry does the same.
 - `Clear` - Clear the list.
-- `Save` / `Load` - Save the list to, or load it from, a JSON or text file.
+- `Save...` / `Load...` - Save the list to, or load it from, a JSON or text file.

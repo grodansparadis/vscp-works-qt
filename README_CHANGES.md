@@ -7,6 +7,7 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Modern look for the raw CAN and MQTT raw explorer windows: one toolbar with a status badge, card-style panels, a highlighted main action, fixed-width font for ids and data, no duplicated buttons, and colors that follow the desktop theme
 - Connection filters can filter on specific events or groups of events: the filter dialog and the CANAL filter wizard now calculate the type filter/mask from the selected events, select their classes, and warn when the filter does not match the selection exactly
 - Every dialog has help: a Help button and F1 open the matching manual section; fixed 24 help links that pointed at missing pages, missing sections or localhost
 - Fix the CI checksum step: readable SHA256SUMS files, bash 3.2 on macOS, and jobs that run in a subfolder

@@ -331,6 +331,8 @@ qt_add_executable(${PROJECT_NAME}
   src/cfrmmqttexplorer.cpp
   src/cfrmrawcansession.h
   src/cfrmrawcansession.cpp
+  src/explorerstyle.h
+  src/explorerstyle.cpp
   src/cfrmvscplinktest.h
   src/cfrmvscplinktest.cpp
 

@@ -1,4 +1,5 @@
 #include "cfrmmqttexplorer.h"
+#include "explorerstyle.h"
 
 #include <mosquitto.h>
 
@@ -414,94 +415,93 @@ CFrmMqttExplorer::setupUi()
   setWindowTitle(tr("MQTT raw explorer"));
   resize(1200, 760);
 
-  auto* mainLayout = new QVBoxLayout(this);
+  setStyleSheet(explorerstyle::styleSheet());
 
-  m_menuBar       = new QMenuBar(this);
-  auto* toolBar   = new QToolBar(tr("MQTT tools"), this);
-  toolBar->setMovable(false);
-  toolBar->setIconSize(QSize(16, 16));
-  toolBar->setStyleSheet("QToolBar { spacing: 6px; padding: 4px; background: #f8fafc; border: 0; }"
-                         "QToolButton { background-color: #e2e8f0; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 8px; }"
-                         "QToolButton:hover { background-color: #cbd5e1; }");
-  toolBar->addWidget(new QLabel(tr("MQTT"), this));
-  toolBar->addSeparator();
-  m_actConnect = toolBar->addAction(tr("Connect"));
-  connect(m_actConnect, &QAction::triggered, this, &CFrmMqttExplorer::onConnectClicked);
-  m_actPauseReceive = toolBar->addAction(tr("Pause"));
-  connect(m_actPauseReceive, &QAction::triggered, this, &CFrmMqttExplorer::onPauseReceiveClicked);
-  auto* subscribeAction = toolBar->addAction(tr("Subscribe"));
-  connect(subscribeAction, &QAction::triggered, this, &CFrmMqttExplorer::onMenuSubscribe);
-  toolBar->addSeparator();
-  auto* helpAction = toolBar->addAction(tr("Help"));
-  helpAction->setToolTip(tr("Open the manual (F1)"));
-  helpAction->setShortcut(QKeySequence(Qt::Key_F1));
-  helpAction->setShortcutContext(Qt::WindowShortcut);
-  connect(helpAction, &QAction::triggered, this, &CFrmMqttExplorer::showHelp);
+  auto* mainLayout = new QVBoxLayout(this);
+  mainLayout->setContentsMargins(14, 8, 14, 10);
+  mainLayout->setSpacing(10);
+
+  m_menuBar = new QMenuBar(this);
   mainLayout->setMenuBar(m_menuBar);
-  mainLayout->addWidget(toolBar);
   m_subscribeMenu = m_menuBar->addMenu(tr("&Subscribe"));
   m_actSubscribe  = m_subscribeMenu->addAction(tr("Subscribe current topic"));
   m_actUnsubscribe = m_subscribeMenu->addAction(tr("Unsubscribe current topic"));
   m_subscribeMenu->addSeparator();
   m_actSubscribeConfigured = m_subscribeMenu->addAction(tr("Subscribe configured topics"));
   m_actClearSubscriptions  = m_subscribeMenu->addAction(tr("Clear subscriptions"));
-  mainLayout->setMenuBar(m_menuBar);
 
-  auto* connBox    = new QGroupBox(tr("Connection"), this);
-  connBox->setStyleSheet("QGroupBox { background-color: #fefce8; }");
-  auto* connLayout = new QHBoxLayout(connBox);
-  m_lblStatus      = new QLabel(tr("Disconnected"), connBox);
-  m_btnConnect     = new QPushButton(tr("Connect"), connBox);
-  m_btnPauseReceive = new QPushButton(tr("Pause"), connBox);
-  m_btnPauseReceive->setCheckable(true);
-  m_btnPauseReceive->setToolTip(tr("Pause or resume incoming MQTT traffic"));
-  m_comboReceiveMode = new QComboBox(connBox);
+  // One toolbar: connection, receiving, status and help
+  auto* toolBar = new QToolBar(tr("MQTT tools"), this);
+  toolBar->setMovable(false);
+  toolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+  m_actConnect = toolBar->addAction(tr("Connect"));
+  m_actConnect->setToolTip(tr("Connect to or disconnect from the MQTT broker"));
+  connect(m_actConnect, &QAction::triggered, this, &CFrmMqttExplorer::onConnectClicked);
+  m_actPauseReceive = toolBar->addAction(tr("Pause"));
+  m_actPauseReceive->setCheckable(true);
+  m_actPauseReceive->setToolTip(tr("Pause or resume incoming MQTT traffic"));
+  connect(m_actPauseReceive, &QAction::triggered, this, &CFrmMqttExplorer::onPauseReceiveClicked);
+  toolBar->addSeparator();
+  m_comboReceiveMode = new QComboBox(this);
   m_comboReceiveMode->addItem(tr("Append all"), ReceiveAppend);
   m_comboReceiveMode->addItem(tr("Replace per topic"), ReceiveReplace);
   m_comboReceiveMode->setCurrentIndex(0);
   m_comboReceiveMode->setToolTip(tr("Choose whether new messages append or replace the latest message for the same topic"));
-  connLayout->addWidget(m_lblStatus, 1);
-  connLayout->addWidget(m_comboReceiveMode);
-  connLayout->addWidget(m_btnPauseReceive);
-  connLayout->addWidget(m_btnConnect);
-  mainLayout->addWidget(connBox);
+  toolBar->addWidget(new QLabel(tr("Messages "), this));
+  toolBar->addWidget(m_comboReceiveMode);
+  auto* spacer = new QWidget(this);
+  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  toolBar->addWidget(spacer);
+  m_lblConnection = new QLabel(this);
+  explorerstyle::makeBadge(m_lblConnection);
+  toolBar->addWidget(m_lblConnection);
+  toolBar->addSeparator();
+  auto* helpAction = toolBar->addAction(tr("Help"));
+  helpAction->setToolTip(tr("Open the manual (F1)"));
+  helpAction->setShortcut(QKeySequence(Qt::Key_F1));
+  helpAction->setShortcutContext(Qt::WindowShortcut);
+  connect(helpAction, &QAction::triggered, this, &CFrmMqttExplorer::showHelp);
+  explorerstyle::setPrimary(toolBar, m_actConnect);
+  mainLayout->addWidget(toolBar);
 
-  auto* subscribeBox    = new QGroupBox(tr("Subscribe to topics"), this);
-  subscribeBox->setStyleSheet("QGroupBox { background-color: #fefce8; }");
-  auto* subscribeLayout = new QGridLayout(subscribeBox);
+  // Subscribe
+  auto* subscribeBox    = new QGroupBox(tr("Subscribe"), this);
+  auto* subscribeLayout = new QHBoxLayout(subscribeBox);
+  subscribeLayout->setSpacing(8);
   m_editSubscribeTopic  = new QLineEdit(subscribeBox);
   m_editSubscribeTopic->setPlaceholderText(tr("Topic (supports + and # wildcards)"));
+  m_editSubscribeTopic->setFont(explorerstyle::monospaceFont());
   m_comboSubscribeQos = new QComboBox(subscribeBox);
   m_comboSubscribeQos->addItems({ "0", "1", "2" });
+  m_comboSubscribeQos->setToolTip(tr("Quality of service"));
   m_btnSubscribe   = new QPushButton(tr("Subscribe"), subscribeBox);
   m_btnUnsubscribe = new QPushButton(tr("Unsubscribe"), subscribeBox);
-  subscribeLayout->addWidget(new QLabel(tr("Topic:"), subscribeBox), 0, 0);
-  subscribeLayout->addWidget(m_editSubscribeTopic, 0, 1);
-  subscribeLayout->addWidget(new QLabel(tr("QoS:"), subscribeBox), 0, 2);
-  subscribeLayout->addWidget(m_comboSubscribeQos, 0, 3);
-  subscribeLayout->addWidget(m_btnSubscribe, 0, 4);
-  subscribeLayout->addWidget(m_btnUnsubscribe, 0, 5);
+  explorerstyle::setPrimary(m_btnSubscribe);
+  subscribeLayout->addWidget(m_editSubscribeTopic, 1);
+  subscribeLayout->addWidget(new QLabel(tr("QoS"), subscribeBox));
+  subscribeLayout->addWidget(m_comboSubscribeQos);
+  subscribeLayout->addWidget(m_btnSubscribe);
+  subscribeLayout->addWidget(m_btnUnsubscribe);
   mainLayout->addWidget(subscribeBox);
 
-  auto* topicFilterLayout = new QHBoxLayout();
-  topicFilterLayout->setContentsMargins(0, 4, 0, 4);
-  topicFilterLayout->addWidget(new QLabel(tr("Topic search:"), this));
-  m_editTopicFilter = new QLineEdit(this);
-  m_editTopicFilter->setPlaceholderText(tr("Search by topic path (use * as wildcard)"));
-  topicFilterLayout->addWidget(m_editTopicFilter, 1);
-  mainLayout->addLayout(topicFilterLayout);
-
+  // Search and filter
   auto* filterLayout = new QHBoxLayout();
-  filterLayout->setContentsMargins(0, 4, 0, 4);
-  filterLayout->addWidget(new QLabel(tr("Filter:"), this));
+  filterLayout->setSpacing(8);
+  m_editTopicFilter = new QLineEdit(this);
+  m_editTopicFilter->setPlaceholderText(tr("Search topics (use * as wildcard)"));
+  m_editTopicFilter->setClearButtonEnabled(true);
   m_editFilter = new QLineEdit(this);
-  m_editFilter->setPlaceholderText(tr("Filter by text, qos=n, retain=true/false, topic=..."));
+  m_editFilter->setPlaceholderText(tr("Filter messages: text, qos=n, retain=true/false, topic=..."));
+  m_editFilter->setClearButtonEnabled(true);
+  m_btnSave = new QPushButton(tr("Save selected..."), this);
+  filterLayout->addWidget(m_editTopicFilter, 1);
   filterLayout->addWidget(m_editFilter, 1);
-  m_btnSave = new QPushButton(tr("Save selected"), this);
   filterLayout->addWidget(m_btnSave);
   mainLayout->addLayout(filterLayout);
 
+  // Topic tree and message details
   auto* splitter = new QSplitter(Qt::Horizontal, this);
+  splitter->setHandleWidth(8);
   m_tree          = new QTreeWidget(splitter);
   m_tree->setColumnCount(2);
   m_tree->setHeaderLabels({ tr("Topic/Message"), tr("Message data") });
@@ -522,6 +522,7 @@ CFrmMqttExplorer::setupUi()
   m_detailsTree = new QTreeWidget(splitter);
   m_detailsTree->setHeaderLabels({ tr("Field"), tr("Value") });
   m_detailsTree->setAlternatingRowColors(true);
+  m_detailsTree->setRootIsDecorated(false);
   m_detailsTree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
   m_detailsTree->header()->setSectionResizeMode(1, QHeaderView::Stretch);
 
@@ -529,66 +530,75 @@ CFrmMqttExplorer::setupUi()
   splitter->setStretchFactor(1, 2);
   mainLayout->addWidget(splitter, 1);
 
+  // Publish: message on the left, saved topics on the right
   auto* publishBox    = new QGroupBox(tr("Publish"), this);
-  publishBox->setStyleSheet("QGroupBox { background-color: #fefce8; }");
-  auto* publishLayout = new QGridLayout(publishBox);
+  auto* publishLayout = new QHBoxLayout(publishBox);
+  publishLayout->setSpacing(14);
+
+  auto* messageLayout = new QGridLayout();
+  messageLayout->setHorizontalSpacing(8);
+  messageLayout->setVerticalSpacing(8);
   m_editPublishTopic  = new QLineEdit(publishBox);
   m_editPublishTopic->setPlaceholderText(tr("Topic"));
+  m_editPublishTopic->setFont(explorerstyle::monospaceFont());
   m_comboPublishQos = new QComboBox(publishBox);
   m_comboPublishQos->addItems({ "0", "1", "2" });
+  m_comboPublishQos->setToolTip(tr("Quality of service"));
   m_chkPublishRetain = new QCheckBox(tr("Retain"), publishBox);
   m_editPublishPayload = new QPlainTextEdit(publishBox);
   m_editPublishPayload->setPlaceholderText(tr("Payload"));
+  m_editPublishPayload->setFont(explorerstyle::monospaceFont());
   m_btnPublish = new QPushButton(tr("Publish"), publishBox);
-  publishLayout->addWidget(new QLabel(tr("Topic:"), publishBox), 0, 0);
-  publishLayout->addWidget(m_editPublishTopic, 0, 1, 1, 3);
-  publishLayout->addWidget(new QLabel(tr("QoS:"), publishBox), 0, 4);
-  publishLayout->addWidget(m_comboPublishQos, 0, 5);
-  publishLayout->addWidget(m_chkPublishRetain, 0, 6);
-  publishLayout->addWidget(new QLabel(tr("Payload:"), publishBox), 1, 0);
-  publishLayout->addWidget(m_editPublishPayload, 1, 1, 1, 6);
-  publishLayout->addWidget(m_btnPublish, 2, 6);
-  publishBox->setMaximumHeight(240);
-  publishBox->setMinimumHeight(180);
+  explorerstyle::setPrimary(m_btnPublish);
+  messageLayout->addWidget(m_editPublishTopic, 0, 0);
+  messageLayout->addWidget(new QLabel(tr("QoS"), publishBox), 0, 1);
+  messageLayout->addWidget(m_comboPublishQos, 0, 2);
+  messageLayout->addWidget(m_chkPublishRetain, 0, 3);
+  messageLayout->addWidget(m_editPublishPayload, 1, 0, 1, 4);
+  auto* publishButtonLayout = new QHBoxLayout();
+  publishButtonLayout->addStretch(1);
+  publishButtonLayout->addWidget(m_btnPublish);
+  messageLayout->addLayout(publishButtonLayout, 2, 0, 1, 4);
+  messageLayout->setColumnStretch(0, 1);
+  publishLayout->addLayout(messageLayout, 3);
+
+  auto* topicsLayout = new QVBoxLayout();
+  topicsLayout->setSpacing(6);
+  topicsLayout->addWidget(new QLabel(tr("Saved topics"), publishBox));
   m_listPublishTopics = new QListWidget(publishBox);
   m_listPublishTopics->setAlternatingRowColors(true);
   m_listPublishTopics->setSelectionMode(QAbstractItemView::SingleSelection);
-  m_btnAddPublishTopic = new QPushButton(tr("Add topic"), publishBox);
-  m_btnUsePublishTopic = new QPushButton(tr("Use selected"), publishBox);
+  m_listPublishTopics->setFont(explorerstyle::monospaceFont());
+  m_listPublishTopics->setToolTip(tr("Double-click a topic to use it"));
+  topicsLayout->addWidget(m_listPublishTopics, 1);
+  m_btnAddPublishTopic = new QPushButton(tr("Add"), publishBox);
+  m_btnUsePublishTopic = new QPushButton(tr("Use"), publishBox);
   m_btnClearPublishTopics = new QPushButton(tr("Clear"), publishBox);
-  m_btnSavePublishTopics = new QPushButton(tr("Save"), publishBox);
-  m_btnLoadPublishTopics = new QPushButton(tr("Load"), publishBox);
-  publishLayout->addWidget(new QLabel(tr("Publish topic list:"), publishBox), 2, 0);
-  publishLayout->addWidget(m_listPublishTopics, 2, 1, 2, 3);
-  publishLayout->addWidget(m_btnAddPublishTopic, 2, 4);
-  publishLayout->addWidget(m_btnUsePublishTopic, 2, 5);
-  publishLayout->addWidget(m_btnClearPublishTopics, 2, 6);
-  publishLayout->addWidget(m_btnSavePublishTopics, 3, 4);
-  publishLayout->addWidget(m_btnLoadPublishTopics, 3, 5);
+  m_btnSavePublishTopics = new QPushButton(tr("Save..."), publishBox);
+  m_btnLoadPublishTopics = new QPushButton(tr("Load..."), publishBox);
+  m_btnAddPublishTopic->setToolTip(tr("Add the publish topic to the list"));
+  m_btnUsePublishTopic->setToolTip(tr("Use the selected topic for publishing"));
+  auto* topicButtons = new QHBoxLayout();
+  topicButtons->setSpacing(6);
+  topicButtons->addWidget(m_btnAddPublishTopic);
+  topicButtons->addWidget(m_btnUsePublishTopic);
+  topicButtons->addWidget(m_btnClearPublishTopics);
+  topicButtons->addStretch(1);
+  topicButtons->addWidget(m_btnSavePublishTopics);
+  topicButtons->addWidget(m_btnLoadPublishTopics);
+  topicsLayout->addLayout(topicButtons);
+  publishLayout->addLayout(topicsLayout, 2);
+
+  publishBox->setMaximumHeight(260);
+  publishBox->setMinimumHeight(200);
   mainLayout->addWidget(publishBox);
 
-  setStyleSheet(
-    "QWidget { font-family: 'Segoe UI', 'Liberation Sans', sans-serif; color: #0f172a; }"
-    "QGroupBox { background-color: #f8fafc; border: 1px solid #d4dbe5; border-radius: 10px; margin-top: 8px; "
-    "padding-top: 8px; font-weight: 600; color: #0f172a; }"
-    "QGroupBox::title { subcontrol-origin: margin; left: 8px; padding: 0 4px; }"
-    "QTreeWidget, QListWidget, QPlainTextEdit, QLineEdit, QComboBox { "
-    "background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 4px; }"
-    "QPushButton { background-color: #2563eb; color: white; border: 1px solid #1d4ed8; border-radius: 8px; "
-    "padding: 5px 12px; font-weight: 600; }"
-    "QPushButton:hover { background-color: #1d4ed8; }"
-    "QPushButton:checked, QPushButton:pressed { background-color: #0f766e; border-color: #0f766e; }"
-    "QPushButton:disabled { background-color: #94a3b8; border-color: #94a3b8; }"
-    "QHeaderView::section { background-color: #eef2ff; padding: 5px; border: 0; border-right: 1px solid #dbeafe; }");
+  // Last action / error
+  m_lblStatus = new QLabel(this);
+  m_lblStatus->setProperty("explorerRole", "hint");
+  m_lblStatus->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  mainLayout->addWidget(m_lblStatus);
 
-  connect(m_btnConnect,
-          &QPushButton::clicked,
-          this,
-          &CFrmMqttExplorer::onConnectClicked);
-  connect(m_btnPauseReceive,
-          &QPushButton::clicked,
-          this,
-          &CFrmMqttExplorer::onPauseReceiveClicked);
   connect(m_comboReceiveMode,
           QOverload<int>::of(&QComboBox::currentIndexChanged),
           this,
@@ -671,44 +681,33 @@ CFrmMqttExplorer::setupUi()
 void
 CFrmMqttExplorer::updateConnectionUiState()
 {
-  if (nullptr == m_btnConnect) {
-    return;
+  if (nullptr != m_actConnect) {
+    m_actConnect->setText(m_connected ? tr("Disconnect") : (m_connecting ? tr("Connecting...") : tr("Connect")));
   }
 
   if (m_connected) {
-    m_btnConnect->setText(tr("Disconnect"));
-    m_btnConnect->setToolTip(tr("Disconnect from the MQTT broker"));
+    explorerstyle::setBadge(m_lblConnection,
+                            m_receivePaused ? explorerstyle::State::Paused : explorerstyle::State::Connected,
+                            (m_receivePaused ? tr("Paused - %1:%2") : tr("Connected - %1:%2")).arg(m_host).arg(m_port));
   }
   else if (m_connecting) {
-    m_btnConnect->setText(tr("Connecting..."));
-    m_btnConnect->setToolTip(tr("Connecting to the MQTT broker"));
+    explorerstyle::setBadge(m_lblConnection,
+                            explorerstyle::State::Connecting,
+                            tr("Connecting - %1:%2").arg(m_host).arg(m_port));
   }
   else {
-    m_btnConnect->setText(tr("Connect"));
-    m_btnConnect->setToolTip(tr("Connect to the MQTT broker"));
-  }
-
-  if (nullptr != m_actConnect) {
-    m_actConnect->setText(m_connected ? tr("Disconnect") : (m_connecting ? tr("Connecting...") : tr("Connect")));
+    explorerstyle::setBadge(m_lblConnection, explorerstyle::State::Disconnected, tr("Disconnected"));
   }
 }
 
 void
 CFrmMqttExplorer::updateReceiveUiState()
 {
-  if (nullptr == m_btnPauseReceive) {
-    return;
-  }
-
-  m_btnPauseReceive->setCheckable(true);
-  m_btnPauseReceive->setChecked(m_receivePaused);
-  m_btnPauseReceive->setText(m_receivePaused ? tr("Resume") : tr("Pause"));
-  m_btnPauseReceive->setToolTip(m_receivePaused ? tr("Resume incoming MQTT traffic")
-                                               : tr("Pause incoming MQTT traffic"));
-
   if (nullptr != m_actPauseReceive) {
+    m_actPauseReceive->setChecked(m_receivePaused);
     m_actPauseReceive->setText(m_receivePaused ? tr("Resume") : tr("Pause"));
   }
+  updateConnectionUiState();
 }
 
 void
@@ -2073,8 +2072,7 @@ void
 CFrmMqttExplorer::setStatus(const QString& status, bool error)
 {
   m_lblStatus->setText(status);
-  m_lblStatus->setStyleSheet(error ? "QLabel { color: #c62828; }"
-                                   : "QLabel { color: palette(window-text); }");
+  m_lblStatus->setStyleSheet(error ? "QLabel { color: #c62828; }" : QString());
 }
 
 void

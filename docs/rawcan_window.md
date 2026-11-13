@@ -14,7 +14,7 @@ The window title shows the CAN interface that is used, for example `CAN frame se
 
 ## Connecting
 
-Press `Connect` (button or toolbar) to open the CAN interface. The same button changes to `Disconnect` when the interface is open. The status line at the bottom of the window shows the connection state.
+Press `Connect` on the toolbar to open the CAN interface. The same button changes to `Disconnect` when the interface is open. The badge at the right of the toolbar shows the connection state: green when connected, amber when paused, grey when disconnected and red after an error.
 
 `Pause` stops new frames from being added to the display without closing the interface. Press `Resume` to continue. `Clear` (or `Frame/Clear receive log`) empties the receive log.
 
@@ -36,7 +36,7 @@ Every received or transmitted frame is listed with these columns:
 
 Frames are also marked with their direction (`RX`/`TX`) and flags (`FD`, `BRS`, `ESI`). Hold the mouse over a row to see a tooltip with frame id, payload and flags.
 
-**Time difference between frames** - Select two or more frames in the log. The status line then shows the time difference (`Δt`, in µs) between the first and the last of the selected frames.
+**Time difference between frames** - Select two or more frames in the log. The status badge then shows the time difference (`Δt`, in µs) between the first and the last of the selected frames.
 
 ### ID statistics
 
