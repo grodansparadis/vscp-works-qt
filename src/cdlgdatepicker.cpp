@@ -37,6 +37,9 @@
 
 #include "cdlgdatepicker.h"
 #include "ui_cdlgdatepicker.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QMessageBox>
 #include <QDebug>
@@ -56,6 +59,11 @@ CDlgDatePicker::CDlgDatePicker(QWidget *parent) :
     ui(new Ui::CDlgDatePicker)
 {
     ui->setupUi(this);
+
+    // Help button and F1 open the manual
+    QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+    helpShortcut->setAutoRepeat(false);
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgDatePicker::showHelp);
 
     vscpworks *pworks = (vscpworks *)QCoreApplication::instance();        
 
@@ -104,6 +112,15 @@ void CDlgDatePicker::setDate(const QDate& date)
     ui->calendar->setSelectedDate(date);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
 
-
-
+void
+CDlgDatePicker::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=defining-filters";
+  QDesktopServices::openUrl(QUrl(link));
+}

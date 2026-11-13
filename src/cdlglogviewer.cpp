@@ -36,6 +36,9 @@
 
 #include "cdlglogviewer.h"
 #include "ui_cdlglogviewer.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 #include "vscpworks.h"
 
 #include <utility>
@@ -60,6 +63,11 @@ CDlgLogViewer::CDlgLogViewer(QWidget *parent)
     , m_autoRefreshTimer(new QTimer(this))
 {
     ui->setupUi(this);
+
+    // Help button and F1 open the manual
+    QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+    helpShortcut->setAutoRepeat(false);
+    connect(ui->btnHelp, &QPushButton::clicked, this, &CDlgLogViewer::showHelp);
 
     setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
 
@@ -410,4 +418,17 @@ void
 CDlgLogViewer::onSearchChanged(const QString &)
 {
     applyFilter();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
+
+void
+CDlgLogViewer::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/logging?id=log-viewer";
+  QDesktopServices::openUrl(QUrl(link));
 }

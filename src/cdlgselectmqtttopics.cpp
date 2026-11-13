@@ -246,6 +246,6 @@ CDlgSelectMqttTopics::accepted(void)
 void
 CDlgSelectMqttTopics::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=mqtt";
   QDesktopServices::openUrl(QUrl(link));
 }

@@ -400,6 +400,7 @@ void
 CDlgConnSettingsWs1::onTLSSettings(void)
 {
   CDlgTLS dlg;
+  dlg.setHelpLink("https://grodansparadis.github.io/vscp-works-qt/#/connection_ws1");
 
   QString strUrl = getUrl();
   bool bTLS      = strUrl.startsWith("wss://", Qt::CaseInsensitive) || strUrl.startsWith("https://", Qt::CaseInsensitive);

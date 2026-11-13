@@ -13,13 +13,26 @@
   <property name="windowTitle">
    <string>Select filter constraint</string>
   </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>362</y>
+     <width>256</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Help</set>
+   </property>
+  </widget>
   <widget class="QListWidget" name="listConstraints">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>30</y>
      <width>256</width>
-     <height>361</height>
+     <height>325</height>
     </rect>
    </property>
    <property name="toolTip">

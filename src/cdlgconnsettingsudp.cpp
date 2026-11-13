@@ -544,6 +544,6 @@ CDlgConnSettingsUdp::onSelectInterface(void)
 void
 CDlgConnSettingsUdp::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=udp";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_udp";
   QDesktopServices::openUrl(QUrl(link));
 }

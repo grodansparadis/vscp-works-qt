@@ -32,6 +32,9 @@
 
 #include "cdlgselectconstraint.h"
 #include "ui_cdlgselectconstraint.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -50,6 +53,11 @@ CDlgSelectConstraint::CDlgSelectConstraint(QWidget *parent) :
     ui(new Ui::CDlgSelectConstraint)
 {
     ui->setupUi(this);
+
+    // Help button and F1 open the manual
+    QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+    helpShortcut->setAutoRepeat(false);
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgSelectConstraint::showHelp);
 
     connect(ui->listConstraints, &QListWidget::itemClicked, this, &CDlgSelectConstraint::constraintSelected ); 
     connect(ui->listConstraints, &QListWidget::itemDoubleClicked, this, &CDlgSelectConstraint::constraintSelected );
@@ -88,5 +96,15 @@ CDlgSelectConstraint::constraintSelected(QListWidgetItem *item)
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
 
-
+void
+CDlgSelectConstraint::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=defining-filters";
+  QDesktopServices::openUrl(QUrl(link));
+}

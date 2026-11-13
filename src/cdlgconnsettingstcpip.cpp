@@ -45,6 +45,7 @@
 
 #include <QDebug>
 #include <QDesktopServices>
+#include <QShortcut>
 #include <QMessageBox>
 
 #include <spdlog/async.h>
@@ -89,6 +90,10 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
   connect(ui->btnTestConnection, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onTestConnection);
   connect(ui->btnGetInterfaces, &QPushButton::clicked, this, &CDlgConnSettingsTcpip::onGetInterfaces);
 
+  // F1 opens the manual, like the Help button
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(onGetHelp()));
+  helpShortcut->setAutoRepeat(false);
+
   // Help button
   connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgConnSettingsTcpip::onGetHelp);
 }
@@ -119,7 +124,7 @@ CDlgConnSettingsTcpip::setInitialFocus(void)
 void
 CDlgConnSettingsTcpip::onGetHelp()
 {
-  QUrl helpUrl("https://grodansparadis.github.io/vscp-works-qt/#/connections_tcpip");
+  QUrl helpUrl("https://grodansparadis.github.io/vscp-works-qt/#/connection_tcpip");
   QDesktopServices::openUrl(helpUrl);
 }
 

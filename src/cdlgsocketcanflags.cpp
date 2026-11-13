@@ -118,6 +118,6 @@ CDlgSocketCanFlags::getFd(void)
 void
 CDlgSocketCanFlags::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=socketcan";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_socketcan?id=add-a-connection";
   QDesktopServices::openUrl(QUrl(link));
 }

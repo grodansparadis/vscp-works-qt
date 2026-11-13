@@ -134,6 +134,6 @@ void CDlgSelectTimeStamp::setTimeStampConstraint(CSessionFilter::constraint op)
 void
 CDlgSelectTimeStamp::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=defining-filters";
   QDesktopServices::openUrl(QUrl(link));
 }

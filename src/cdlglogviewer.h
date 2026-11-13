@@ -48,6 +48,11 @@ public:
     enum class LogLevel { ALL, TRACE, DEBUG, INFO, WARNING, ERR, CRITICAL };
 
 private slots:
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
     void onRefresh();
     void onClearDisplay();
     void onSave();

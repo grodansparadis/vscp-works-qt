@@ -63,6 +63,11 @@ public:
 private slots:
     
 
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
 private:
 
     Ui::CDlgSelectPriority *ui;

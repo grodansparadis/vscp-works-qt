@@ -773,6 +773,6 @@ CDlgSensorIndex::btnSave(void)
 void
 CDlgSensorIndex::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=known-guids";
   QDesktopServices::openUrl(QUrl(link));
 }

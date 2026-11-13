@@ -152,7 +152,7 @@ enumMqttMsgFormat CDlgMqttPublish::getFormat(void)
 void
 CDlgMqttPublish::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt?id=publishing";
   QDesktopServices::openUrl(QUrl(link));
 }
 

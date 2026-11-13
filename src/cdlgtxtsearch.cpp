@@ -32,6 +32,9 @@
 
 #include "cdlgtxtsearch.h"
 #include "ui_cdlgtxtsearch.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QMessageBox>
 
@@ -49,6 +52,11 @@ CDlgTxtSearch::CDlgTxtSearch(QWidget* parent)
   , ui(new Ui::CDlgTxtSearch)
 {
   ui->setupUi(this);
+
+  // Help button and F1 open the manual
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  helpShortcut->setAutoRepeat(false);
+  connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgTxtSearch::showHelp);
 
   // Fill combo
   ui->comboSearchType->clear();
@@ -159,4 +167,17 @@ void
 CDlgTxtSearch::setMarkSearchResults(bool bon)
 {
   ui->checkMarkSearchResults->setCheckState((bon ? Qt::CheckState(2) :  Qt::CheckState(0)));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
+
+void
+CDlgTxtSearch::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/config_window?id=key-shortcuts";
+  QDesktopServices::openUrl(QUrl(link));
 }

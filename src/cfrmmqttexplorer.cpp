@@ -31,6 +31,7 @@
 #include <QMetaObject>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QDesktopServices>
 #include <QSplitter>
 #include <QTextStream>
 #include <QTreeWidget>
@@ -430,6 +431,12 @@ CFrmMqttExplorer::setupUi()
   connect(m_actPauseReceive, &QAction::triggered, this, &CFrmMqttExplorer::onPauseReceiveClicked);
   auto* subscribeAction = toolBar->addAction(tr("Subscribe"));
   connect(subscribeAction, &QAction::triggered, this, &CFrmMqttExplorer::onMenuSubscribe);
+  toolBar->addSeparator();
+  auto* helpAction = toolBar->addAction(tr("Help"));
+  helpAction->setToolTip(tr("Open the manual (F1)"));
+  helpAction->setShortcut(QKeySequence(Qt::Key_F1));
+  helpAction->setShortcutContext(Qt::WindowShortcut);
+  connect(helpAction, &QAction::triggered, this, &CFrmMqttExplorer::showHelp);
   mainLayout->setMenuBar(m_menuBar);
   mainLayout->addWidget(toolBar);
   m_subscribeMenu = m_menuBar->addMenu(tr("&Subscribe"));
@@ -2275,4 +2282,17 @@ CFrmMqttExplorer::onMosquittoMessageStatic(struct mosquitto*,
     self,
     [self, topic, payload, retained, qos, mid]() { self->handleIncomingMessage(topic, payload, retained, qos, mid); },
     Qt::QueuedConnection);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this window
+//
+
+void
+CFrmMqttExplorer::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mqtt_explorer_window";
+  QDesktopServices::openUrl(QUrl(link));
 }

@@ -202,6 +202,6 @@ CDlgSelectInterface::onListItemDoubleClicked(QListWidgetItem* item)
 void
 CDlgSelectInterface::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_udp?id=add-a-connection";
   QDesktopServices::openUrl(QUrl(link));
 }

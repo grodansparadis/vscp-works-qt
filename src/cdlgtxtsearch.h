@@ -83,6 +83,13 @@ public:
 
 private:
   Ui::CDlgTxtSearch* ui;
+
+private slots:
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
 };
 
 #endif // CDLGTXTSEARCH_H

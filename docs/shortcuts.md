@@ -81,6 +81,14 @@ Edit TX event
 Clone TX event
 Delete RX event
 
+## Dialogs
+
+| Key | Function |
+| --- | -------- |
+| F1 | Open the manual section for the dialog (same as its `Help` button) |
+
+This also applies to the MQTT raw explorer and the VSCP Link protocol test tool.
+
 ---
 
 ${/var/creation-time}  

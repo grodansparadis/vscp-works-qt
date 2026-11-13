@@ -110,7 +110,7 @@ CanalConfigWizard::fitContents(int id)
 void
 CanalConfigWizard::showHelp(void)
 {
-  QString link = "http://localhost:3000/#/connection_canal?id=configure-wizard";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_canal?id=configuration-wizard";
   QDesktopServices::openUrl(QUrl(link));
 }
 

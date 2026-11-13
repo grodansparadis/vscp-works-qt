@@ -54,6 +54,11 @@ public:
     int getSelectedConstraint(void);
 
 private slots:
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
 
     /// Handled for list element click
     void constraintSelected(QListWidgetItem *item);

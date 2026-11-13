@@ -571,6 +571,6 @@ void CDlgSelectGuid::fetchKnownGuid(void)
 void
 CDlgSelectGuid::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=defining-filters";
   QDesktopServices::openUrl(QUrl(link));
 }

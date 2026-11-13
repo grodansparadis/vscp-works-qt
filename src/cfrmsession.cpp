@@ -5163,6 +5163,6 @@ CFrmSession::pollForEvents()
 void
 CFrmSession::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window.md";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window";
   QDesktopServices::openUrl(QUrl(link));
 }

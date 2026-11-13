@@ -71,6 +71,11 @@ public:
     CVscpClient::connType getSelectedType(void);
 
 private slots:
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
     void importFromClipboard();
     void importFromFile();
 

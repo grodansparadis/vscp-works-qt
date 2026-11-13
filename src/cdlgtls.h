@@ -89,7 +89,23 @@ public:
     QString getPwKeyFile(void);
     void setPwKeyFile(const QString& str);
 
+public:
+  /*!
+    Set the manual page the Help button opens. The default is the TLS
+    section of the tcp/ip connection page.
+  */
+  void setHelpLink(const QString& link) { m_helpLink = link; }
+
+private:
+  /// Manual page opened by the Help button
+  QString m_helpLink;
+
 private slots:
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
     void onSetCaFile(void);
     void onSetCaPath(void);
     void onSetCertFile(void);

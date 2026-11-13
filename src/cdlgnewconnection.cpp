@@ -33,6 +33,9 @@
 #include "cdlgnewconnection.h"
 #include "mainwindow.h"
 #include "ui_cdlgnewconnection.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QApplication>
 #include <QClipboard>
@@ -56,6 +59,11 @@ CDlgNewConnection::CDlgNewConnection(QWidget* parent)
   , m_import_requested(false)
 {
   ui->setupUi(this);
+
+  // Help button and F1 open the manual
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  helpShortcut->setAutoRepeat(false);
+  connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgNewConnection::showHelp);
 
   // Hook to row clicked
   connect(ui->listWidgetConnectionTypes, &QListWidget::itemClicked, this, &CDlgNewConnection::onClicked);
@@ -246,4 +254,17 @@ CDlgNewConnection::importFromFile(void)
     m_import_requested = true;
     accept();
   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
+
+void
+CDlgNewConnection::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections";
+  QDesktopServices::openUrl(QUrl(link));
 }

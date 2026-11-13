@@ -32,6 +32,9 @@
 
 #include "cdlgtls.h"
 #include "ui_cdlgtls.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -50,6 +53,13 @@ CDlgTLS::CDlgTLS(QWidget *parent) :
     ui(new Ui::CDlgTLS)
 {
     ui->setupUi(this);
+
+    m_helpLink = "https://grodansparadis.github.io/vscp-works-qt/#/connection_tcpip?id=ssltls";
+
+    // Help button and F1 open the manual
+    QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+    helpShortcut->setAutoRepeat(false);
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgTLS::showHelp);
 
     connect(ui->btnSetCaFile, &QPushButton::clicked, this, &CDlgTLS::onSetCaFile );
     connect(ui->btnSetCaPath, &QPushButton::clicked, this, &CDlgTLS::onSetCaPath ); 
@@ -293,4 +303,16 @@ CDlgTLS::onSetPwKeyFile(void)
     if (str.length()) {
         setPwKeyFile(str);
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
+
+void
+CDlgTLS::showHelp(void)
+{
+  QDesktopServices::openUrl(QUrl(m_helpLink));
 }

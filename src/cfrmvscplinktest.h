@@ -56,6 +56,11 @@ public:
   ~CFrmVscpLinkTest();
 
 private slots:
+  /*!
+    Open the manual page for this window
+  */
+  void showHelp(void);
+
   void onConnectionSelectionChanged(int index);
   void refreshConnections();
   void createTcpipConnection();

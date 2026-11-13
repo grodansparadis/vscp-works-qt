@@ -39,6 +39,9 @@
 
 #include "cdlgselectpriority.h"
 #include "ui_cdlgselectpriority.h"
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -57,6 +60,11 @@ CDlgSelectPriority::CDlgSelectPriority(QWidget *parent) :
     ui(new Ui::CDlgSelectPriority)
 {
     ui->setupUi(this);
+
+    // Help button and F1 open the manual
+    QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+    helpShortcut->setAutoRepeat(false);
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgSelectPriority::showHelp);
   
 }
 
@@ -109,6 +117,15 @@ void CDlgSelectPriority::setPriorityConstraint(CSessionFilter::constraint op)
 
 // ----------------------------------------------------------------------------
 
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
 
-
-
+void
+CDlgSelectPriority::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=defining-filters";
+  QDesktopServices::openUrl(QUrl(link));
+}

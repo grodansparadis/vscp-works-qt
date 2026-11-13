@@ -81,6 +81,11 @@ public:
 public slots:
 
   /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
+  /*!
     Accept dialog data and write to register
   */
   void accept(void);

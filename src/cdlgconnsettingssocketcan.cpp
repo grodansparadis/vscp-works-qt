@@ -577,7 +577,7 @@ CDlgConnSettingsSocketCan::onTestConnection(void)
 void
 CDlgConnSettingsSocketCan::showHelp()
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections_socketcan";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_socketcan";
   QDesktopServices::openUrl(QUrl(link));
 }
 

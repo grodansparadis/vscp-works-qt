@@ -44,6 +44,7 @@
 
 #include <QDebug>
 #include <QDesktopServices>
+#include <QShortcut>
 #include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
@@ -229,6 +230,10 @@ CDlgConnSettingsMqtt::CDlgConnSettingsMqtt(QWidget* parent)
           &QPushButton::clicked,
           this,
           &CDlgConnSettingsMqtt::onTestConnection);
+
+  // F1 opens the manual, like the Help button
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(onGetHelp()));
+  helpShortcut->setAutoRepeat(false);
 
   // Help button
   connect(ui->buttonBox,
@@ -1079,6 +1084,7 @@ void
 CDlgConnSettingsMqtt::onTLSSettings(void)
 {
   CDlgTLS dlg;
+  dlg.setHelpLink("https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt?id=tlsssl");
 
   dlg.enableTLS(m_bTLS);
   dlg.enableVerifyPeer(m_bVerifyPeer);

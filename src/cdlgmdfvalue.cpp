@@ -37,6 +37,8 @@
 
 #include "cdlgmdfvalue.h"
 #include "ui_cdlgmdfvalue.h"
+#include <QDesktopServices>
+#include <QUrl>
 
 #include <QColorDialog>
 #include <QDate>
@@ -60,6 +62,11 @@ CDlgMdfValue::CDlgMdfValue(QWidget* parent)
   , ui(new Ui::CDlgMdfValue)
 {
   ui->setupUi(this);
+
+  // Help button and F1 open the manual
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  helpShortcut->setAutoRepeat(false);
+  connect(ui->buttonBox, &QDialogButtonBox::helpRequested, this, &CDlgMdfValue::showHelp);
 
   // m_type = mdf_type_unknown;
   m_pvalue = nullptr;
@@ -172,4 +179,17 @@ CDlgMdfValue::accept()
   }
 
   QDialog::accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this dialog
+//
+
+void
+CDlgMdfValue::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mdf?id=editing";
+  QDesktopServices::openUrl(QUrl(link));
 }

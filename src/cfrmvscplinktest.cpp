@@ -67,6 +67,9 @@
 #include <QPlainTextEdit>
 #include <QProgressDialog>
 #include <QPushButton>
+#include <QDesktopServices>
+#include <QShortcut>
+#include <QUrl>
 #include <QSignalBlocker>
 #include <QSpinBox>
 #include <QTableWidget>
@@ -234,6 +237,14 @@ CFrmVscpLinkTest::setupUi()
   buttonLayout->addWidget(m_validateTimeoutCheck);
   buttonLayout->addStretch(1);
   buttonLayout->addWidget(m_clearLogButton);
+
+  // Help button and F1 open the manual
+  QPushButton* helpButton = new QPushButton(tr("Help"), this);
+  helpButton->setToolTip(tr("Open the manual (F1)"));
+  buttonLayout->addWidget(helpButton);
+  connect(helpButton, &QPushButton::clicked, this, &CFrmVscpLinkTest::showHelp);
+  QShortcut* helpShortcut = new QShortcut(QKeySequence(Qt::Key_F1), this, SLOT(showHelp()));
+  helpShortcut->setAutoRepeat(false);
   mainLayout->addLayout(buttonLayout);
 
   m_reliabilityStatsLabel = new QLabel(tr("Reliability stats: not run"), this);
@@ -1288,4 +1299,17 @@ void
 CFrmVscpLinkTest::clearLog()
 {
   m_logEdit->clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// showHelp
+//
+// Open the manual page for this window
+//
+
+void
+CFrmVscpLinkTest::showHelp(void)
+{
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/linktest_window";
+  QDesktopServices::openUrl(QUrl(link));
 }

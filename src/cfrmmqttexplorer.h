@@ -35,6 +35,11 @@ public:
   ~CFrmMqttExplorer();
 
 private slots:
+  /*!
+    Open the manual page for this window
+  */
+  void showHelp(void);
+
   void onConnectClicked();
   void onPublishClicked();
   void onSubscribeClicked();

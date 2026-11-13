@@ -61,6 +61,11 @@ public:
 
 public slots:
 
+  /*!
+    Open the manual page for this dialog
+  */
+  void showHelp(void);
+
 private:
   Ui::CDlgDatePicker* ui;
 };

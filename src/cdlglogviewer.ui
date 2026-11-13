@@ -203,6 +203,16 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="btnHelp">
+       <property name="toolTip">
+        <string>Open the manual (F1)</string>
+       </property>
+       <property name="text">
+        <string>Help</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="btnClose">
        <property name="text">
         <string>Close</string>

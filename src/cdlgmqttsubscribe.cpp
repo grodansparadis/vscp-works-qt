@@ -138,6 +138,6 @@ CDlgMqttSubscribe::getQos(void)
 void
 CDlgMqttSubscribe::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=mqtt";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt?id=subscriptions";
   QDesktopServices::openUrl(QUrl(link));
 }

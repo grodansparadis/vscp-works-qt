@@ -723,6 +723,7 @@ void
 CDlgConnSettingsRawMqtt::onTLSSettings(void)
 {
   CDlgTLS dlg;
+  dlg.setHelpLink("https://grodansparadis.github.io/vscp-works-qt/#/connection_mqtt?id=tlsssl");
 
   dlg.enableTLS(m_bTLS);
   dlg.enableVerifyPeer(m_bVerifyPeer);
@@ -997,6 +998,6 @@ CDlgConnSettingsRawMqtt::onPublishContextMenu(const QPoint& pos)
 void
 CDlgConnSettingsRawMqtt::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=canal";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/mqtt_explorer_window?id=connecting";
   QDesktopServices::openUrl(QUrl(link));
 }
