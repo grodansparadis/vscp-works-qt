@@ -23,23 +23,23 @@ The first step gives some information about the bootload process. Click `Next` t
 
 ![set nickname](./images/bootload2.png)
 
-In the next step you set the `nickname/nodeid or GUID` of the device you want to update. If you started the wizard from the node scan window, it is already filled in.
+In the next step you set the nickname (node id) of the device you want to update. If you started the wizard from the node scan window, it is already filled in. For connections that address nodes with a full GUID (for example tcp/ip), the wizard instead asks for the interface on the remote server (`Set interface`) and the GUID of the device (`Set GUID`).
 
-A new VSCP device straight from production is already in bootloader mode. If this is the case, check the `Remote device is already in boot loader mode` box. The nickname/node id 0xFE is reserved for such new devices.
+A new VSCP device straight from production is already in bootloader mode. The nickname/node id 0xFE is reserved for such new devices. If this is the case, check `Remote device is already in bootmode`. When you press `Next`, you then select the bootloader algorithm of the device and a local firmware file, and the wizard goes directly to the last step (`Ready to update firmware`), as there is no MDF to read from a device in bootloader mode.
 
-If the device is not in bootloader mode, check the `Set remote device in boot loader mode` box. VSCP Works then sends a command to the device that puts it in bootloader mode.
+If the box is not checked, the wizard reads the information it needs from the device and puts the device in bootloader mode when the update starts.
 
 Click `Next` to continue.
 
 ![fetch boot information](./images/bootload3.png)
 
-Next, choose whether to use a local MDF file or to download the MDF that the device points to. For a VSCP node, the normal choice is to use the information from the device. In some cases, such as when developing a new node, a local MDF is the better choice. The MDF provides information about the device and about the firmware that is available for it. The MDF is parsed when you continue.
+Next, choose whether to use a local MDF file (`Use local MDF`) or to download the MDF that the device points to. For a VSCP node, the normal choice is to use the information from the device. In some cases, such as when developing a new node, a local MDF is the better choice. The MDF provides information about the device and about the firmware that is available for it. The MDF is parsed when you continue.
 
 Click `Next` to continue.
 
 ![select firmware](./images/bootload4.png)
 
-Now select the firmware to load on the device. You can select a local file (`Select local firmware file`) or download the firmware that the MDF points to. The firmware file contains the binary data that will be written to the device. It is parsed when you continue.
+Now select the firmware to load on the device. Check `Use local firmware file` to use a file on your computer, or leave it unchecked to download the firmware that the MDF points to. The firmware file contains the binary data that will be written to the device. It is parsed when you continue.
 
 The `Device firmware code` is **VERY IMPORTANT**. It is stored in a standard register on a VSCP device and changes whenever the hardware changes in a way that makes older firmware incompatible. The code in the firmware file must be the same as the code in the device register. If it is not, the device may not work properly after the update. **If the codes do not match, do not load the firmware on the device.**
 

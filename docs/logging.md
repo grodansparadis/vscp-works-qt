@@ -32,6 +32,7 @@ Select `Help/View Log...` in the main window to open the application log viewer.
 | Auto-refresh (5s) | Reload the log file every five seconds. Useful to follow the log while you work in other windows. |
 | Clear Display | Clear the displayed entries. The log file itself is **not** deleted. |
 | Save... | Save the visible (filtered) entries to a text file. |
+| Help | Open this page (also `F1`). |
 
 The number of visible entries is shown at the bottom of the window (`Entries: n`).
 

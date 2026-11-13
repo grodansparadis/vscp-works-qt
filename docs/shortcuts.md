@@ -5,7 +5,13 @@
 | Key | Function |
 | --- | -------- |
 | F1 | Open help for connections |
-| Ctrl + Q | Exit (Linux/macOS) |
+| Ctrl + N | New connection |
+| Alt + S | Open a session window for the selected connection |
+| Alt + C | Open a configuration window for the selected connection |
+| Alt + F | Scan for nodes on the selected connection |
+| Alt + B | Start the bootloader wizard for the selected connection |
+| Ctrl + M | Open the MDF editor |
+| Ctrl + Q | Exit (the standard quit key of the platform) |
 
 ## Session window
 
@@ -38,7 +44,25 @@ See [session window](session_window.md) for all functions.
 
 ## Configuration window
 
-See [configuration window](config_window.md).
+| Key | Function |
+| --- | -------- |
+| F1 | Open help |
+| Ctrl + I | Show MDF info |
+| Ctrl + X | Close window |
+| Ctrl + E | Edit the selected decision matrix row |
+| Ctrl + T | Enable/disable the selected decision matrix row(s) |
+| Ctrl + 0 ... Ctrl + 9 | Go to register page 0-9 |
+| Alt + P | Go to register page... |
+| Alt + R | Go to page:register |
+| Alt + S | Go to the standard registers |
+| Alt + D | Go to the decision matrix registers |
+| Alt + . | Go to related register |
+| F5 / F6 | Search register / go to next search result |
+| F7 / F8 | Search remote variable / go to next search result |
+| Alt + - | Collapse registers |
+| Alt + / | Collapse files |
+
+See [configuration window](config_window.md) for all functions.
 
 ## MDF editor
 
@@ -52,34 +76,11 @@ See [configuration window](config_window.md).
 | Ctrl + D | Delete item |
 | Ctrl + X | Quit |
 
---- | -------- |
-| Ctrl + A | Send TX event(s) |
-| Ctrl + C | Copy RX row to clipboard |
-| Ctrl + M | Clear TX list |
-| Ctrl + N | Clear RX list |
-| Ctrl + T | Copy TX row to clipboard |
-
-### ALT key bindings
+## CAN raw explorer and MQTT raw explorer
 
 | Key | Function |
 | --- | -------- |
-| Alt + C | Mark RX class |
-| Alt + E | Open up the edit menu |
-| Alt + F | Open up the file menu |
-| Alt + H | Open up the host menu |
-| Alt + M | Toggle selected RX row(s) |
-| Alt + P | Open up the VSCP menu |
-| Alt + S | Open up the settings menu |
-| Alt + T | Open up the tools menu |
-| Alt + Y | Mark RX Type |
-| Alt + U | Un-select all RX rows |
-| Alt + V | Open up the View menu |
-
-Send TX event
-Add TX event
-Edit TX event
-Clone TX event
-Delete RX event
+| F1 | Open help |
 
 ## Dialogs
 
@@ -87,7 +88,7 @@ Delete RX event
 | --- | -------- |
 | F1 | Open the manual section for the dialog (same as its `Help` button) |
 
-This also applies to the MQTT raw explorer and the VSCP Link protocol test tool.
+This also applies to the VSCP Link protocol test tool.
 
 ---
 

@@ -56,11 +56,6 @@
   * [logging](logging.md)
   * [VSCP Link protocol test tool](linktest_window.md)
 
-* **Server/Service Discovery**
-  * [General](server_disovery.md)
-  * [High end server probe](server_disovery_probe.md)
-  * [Heartbeats](server_disovery_heartbeats.md)	
-
 * **Appendix**
   * [Shortcut keys](shortcuts.md)
   * VSCP Works + initial release walkthrough video - https://youtu.be/re_sKEjg66s

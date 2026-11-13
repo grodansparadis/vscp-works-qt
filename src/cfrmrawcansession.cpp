@@ -231,6 +231,8 @@ CFrmRawCanSession::setupUi()
 
   m_actHelp = m_toolBar->addAction(tr("Help"));
   m_actHelp->setToolTip(tr("Open the manual (F1)"));
+  m_actHelp->setShortcut(QKeySequence(Qt::Key_F1));
+  m_actHelp->setShortcutContext(Qt::WindowShortcut);
   explorerstyle::setPrimary(m_toolBar, m_actConnect);
   mainLayout->addWidget(m_toolBar);
 

@@ -21,7 +21,7 @@ Press `Connect` on the toolbar. The button shows `Connecting...` while the conne
 
 When the connection is established, all subscribe topics defined in the connection settings are subscribed to automatically (QoS 0).
 
-Enter a topic in the `Subscribe to topics` group, select QoS and press `Subscribe`. MQTT wildcards `+` (one level) and `#` (all remaining levels) can be used. `Unsubscribe` removes the subscription for the entered topic.
+Enter a topic in the `Subscribe` group, select QoS and press `Subscribe`. MQTT wildcards `+` (one level) and `#` (all remaining levels) can be used. `Unsubscribe` removes the subscription for the entered topic.
 
 The **Subscribe** menu has the same functions, plus:
 
@@ -52,8 +52,10 @@ Payloads larger than 256 KiB are not decoded (shown as `Payload skipped for perf
 
 ## Searching and filtering
 
-- **Topic search** - Show only topics matching a pattern. `*` can be used as wildcard, for example `vscp/*/temperature`.
-- **Filter** - A comma separated list of conditions that all must match
+The two fields above the topic tree search and filter what is shown.
+
+- **Search topics** (left field) - Show only topics matching a pattern. `*` can be used as wildcard, for example `vscp/*/temperature`.
+- **Filter messages** (right field) - A comma separated list of conditions that all must match
   - Plain text - Matches messages containing the text (topic, payload, format etc).
   - `qos=n` - Matches messages with QoS `n`.
   - `retain=true` / `retain=false` - Matches retained/not retained messages.

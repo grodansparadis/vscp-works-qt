@@ -43,7 +43,7 @@ Changes to the log settings take effect the next time VSCP Works + starts. See [
 | Max number of events | Maximum number of events kept in the receive list of a session window. `-1` means no limit. |
 | Class display format | How the VSCP class is shown in the receive list: `Symbolic`, `Numerical in selected numerical base`, `Numerical hex/decimal` or `Symbolic + hex/decimal`. |
 | Type display format | Same choices as for the class, used for the VSCP type. |
-| GUID display format | How the GUID is shown: `GUID`, `Symbolic if possible`, `Symbolic + GUID` or `GUID + Symbolic`. Symbolic names come from [known GUIDs](#guid). |
+| GUID display format | How the GUID is shown: `GUID`, `Symbolic if possible`, `Symbolic + GUID` or `GUID + Symbolic`. Symbolic names come from [known GUIDs](settings.md?id=guid). |
 | Connect automatically | Connect to the remote host as soon as a session window is opened. |
 | Show full type token | Show the full type token (the `VSCP_TYPE_` prefix is not removed). |
 | Autosave/autoload tx rows | Transmission rows are saved when a session window is closed and loaded again the next time a session window for the same connection is opened. |
@@ -101,7 +101,7 @@ Open the known GUID dialog with `Tools/Known GUID's` in the main window or by ri
 | Edit... | Edit the selected GUID. Double-clicking a row does the same. |
 | Clone | Make a copy of the selected GUID. |
 | Delete... | Delete the selected GUID. |
-| Sensors... | Edit [sensor indexes](#sensor-index) for the selected GUID. |
+| Sensors... | Edit [sensor indexes](settings.md?id=sensor-index) for the selected GUID. |
 | Search | Search for the text in the search field. Select `GUID equal to`, `GUID starts with`, `GUID contains`, `Name equal to`, `Name starts with` or `Name contains`. Pressing `Search` again finds the next match after the selected row. |
 | Show only interfaces | Only list interface GUIDs (GUIDs where the two least significant bytes are zero). |
 

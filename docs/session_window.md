@@ -126,9 +126,16 @@ Export a session to save the state of a debugging session, to continue later or 
 | Add/Edit RX comment | | Add a comment to selected receive rows. |
 | Remove RX comment | | Remove comments from selected receive rows. |
 
+### VSCP
+
+The entries of this menu (`Read register...`, `Write register...`, `Read (all) registers...`, `Read GUID`, `Read MDF...` and `Download MDF...`) are not implemented yet and do nothing. Use the [configuration window](config_window.md) to read and write registers.
+
 ### Setting
 
-`Settings...` opens the program [settings](settings.md).
+| Item | Description |
+| ---- | ----------- |
+| Set/define filter... | Define [session filters](session_window.md?id=filters), the same as the `Filters...` button. |
+| Settings... | Open the program [settings](settings.md). |
 
 ### MQTT
 

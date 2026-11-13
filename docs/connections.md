@@ -112,6 +112,8 @@ The filter dialog for VSCP connections, and the filter wizard of the CANAL filte
 
 The other button shows the current filter and mask as selections in the lists.
 
+`Clear filter` in the filter dialog for VSCP connections sets all filter and mask values to zero, which lets all events through. In the CANAL filter dialog, `Only Hardcoded` only lets through events from nodes with a hardcoded nickname (the hardcoded bit of the CAN id).
+
 A filter has one filter/mask pair for the class and one for the type. A group of events can only be matched exactly when their class and type numbers differ in a few bits, for example two neighbouring types of the same class. When the calculated filter lets other events through as well, or blocks some of the selected events, VSCP Works says so and lists examples. Select fewer events, or use [session filters](session_window.md?id=filters) to show an exact set of events in a session window.
 
 Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).

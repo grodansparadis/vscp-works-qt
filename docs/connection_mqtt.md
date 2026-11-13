@@ -91,6 +91,16 @@ which subscribes to events of a specific class/type from a specific sensor index
 
 Right-click the list to add, edit, clone or delete subscribe topics.
 
+For each subscription you set the topic, the QoS and the payload format (`Auto` detects it). For MQTT v5 brokers these subscription options can also be set:
+
+| Option | Description |
+| ------ | ----------- |
+| No Local | The broker does not send back messages that this client publishes to a topic it is subscribed to. |
+| Retain as published | Messages keep the retain flag that the publishing client set. Without it, the retain flag tells whether a message is fresh or stale. |
+| Send Retain Always | Retained messages are sent when the subscription is made, even if the subscription already exists. This is the default. |
+| Send Retain New | Retained messages are sent only when the subscription does not already exist. |
+| Send Retain Never | Retained messages are never sent for this subscription. |
+
 ### Publishing
 
 ![](./images/add_connection_mqtt_add_publish.png)
@@ -124,7 +134,7 @@ Right-click the list to add, edit, clone or delete publish topics.
 
 ![](./images/add_connection_mqtt_tls.png)
 
-Security settings for the connection. To use TLS/SSL, you must set the parameters here.
+Security settings for the connection. To use TLS/SSL, you must set the parameters here. The fields are described in [tcp/ip SSL/TLS](connection_tcpip.md?id=ssltls).
 
 ## Remove a connection
 

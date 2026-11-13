@@ -12,7 +12,9 @@ Right-click the `Socketcan` item in the tree view and select `Add new Socketcan 
 
  - `Description`: A descriptive name. It is used to identify the connection in the tree view.
  - `Device`: The name of the CAN interface, usually something like `can0` or `can1`. The exact name depends on the system. You can find the available names in the `/sys/class/net/` folder.
- - `Flags`: SocketCAN flags used to set special options for the CAN interface. Press the `...` button to open a dialog where you can set them.
+ - `Flags`: SocketCAN flags used to set special options for the CAN interface. Press the `...` button to open a dialog where you can set them:
+   - `Enable FD (Flexible data-rate)` - Use CAN FD frames. Events with more than eight data bytes need CAN FD, and the CAN interface must support it.
+   - `Enable debug` - Saved with the connection, but it currently has no effect.
  - `Response timeout`: The time in milliseconds to wait for a response from a device. If no response is received in time, the operation is aborted.
  - `Filters`: Any number of filters for the CAN interface. Each filter is a 32-bit filter/mask pair used to filter out messages you are not interested in. A message passes a filter if its id ANDed with the mask equals the filter ANDed with the mask, so a mask of zero passes everything. With `Invert` set, a filter passes the messages that do not match. A message is received if it passes any of the filters; with no filters all messages are received. The filters are set on the CAN socket, so the kernel drops the other messages.
 
