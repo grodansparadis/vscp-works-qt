@@ -7,6 +7,8 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Add scripts/download-artifacts.sh to download and verify the newest CI build artifacts
+- CI writes a SHA256SUMS-<artifact> checksum file into every uploaded build artifact
 - Use vscp e050031: fixes register reads that timed out (6923c0a)
 - chore: update build version [version-bump] (c8a372e)
 - Make the WS1 and WS2 connections work (9210eb9)

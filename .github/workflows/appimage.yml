@@ -107,7 +107,18 @@ jobs:
         OUTPUT: vscpworks-x86_64.AppImage
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage  
 
+    - name: Write SHA256SUMS
+      id: sha256sums_110
+      continue-on-error: true
+      shell: bash
+      run: |
+        bash .github/scripts/write-sha256sums.sh "SHA256SUMS-vscp-works-qt" <<'SHA256SUMS_PATTERNS'
+        ${{github.workspace}}/build/vscpworks*.AppImage
+        SHA256SUMS_PATTERNS
+
     - uses: actions/upload-artifact@v4
       with:
         name: vscp-works-qt
-        path: ${{github.workspace}}/build/vscpworks*.AppImage
+        path: |
+          ${{github.workspace}}/build/vscpworks*.AppImage
+          ${{ steps.sha256sums_110.outputs.file }}

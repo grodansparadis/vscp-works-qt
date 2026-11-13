@@ -85,8 +85,19 @@ jobs:
         run: |
           Compress-Archive -Path "${{ github.workspace }}/staging/*" -DestinationPath "${{ github.workspace }}/vscp-works-qt-windows-install.zip"
 
+      - name: Write SHA256SUMS
+        id: sha256sums_89
+        continue-on-error: true
+        shell: bash
+        run: |
+          bash .github/scripts/write-sha256sums.sh "SHA256SUMS-vscp-works-qt-windows-install" <<'SHA256SUMS_PATTERNS'
+          ${{ github.workspace }}/vscp-works-qt-windows-install.zip
+          SHA256SUMS_PATTERNS
+
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
         with:
           name: vscp-works-qt-windows-install
-          path: ${{ github.workspace }}/vscp-works-qt-windows-install.zip
+          path: |
+            ${{ github.workspace }}/vscp-works-qt-windows-install.zip
+            ${{ steps.sha256sums_89.outputs.file }}

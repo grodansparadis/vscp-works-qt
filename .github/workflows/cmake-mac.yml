@@ -52,8 +52,19 @@ jobs:
         run: |
           tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz" staging
 
+      - name: Write SHA256SUMS
+        id: sha256sums_56
+        continue-on-error: true
+        shell: bash
+        run: |
+          bash .github/scripts/write-sha256sums.sh "SHA256SUMS-vscp-works-qt-macos-install" <<'SHA256SUMS_PATTERNS'
+          ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
+          SHA256SUMS_PATTERNS
+
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
         with:
           name: vscp-works-qt-macos-install
-          path: ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
+          path: |
+            ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
+            ${{ steps.sha256sums_56.outputs.file }}
