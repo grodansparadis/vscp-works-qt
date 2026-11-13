@@ -144,6 +144,17 @@ public slots:
     void calculateVscpTypeValues(void);
 
     /*!
+        Select the VSCP classes of the selected events (types)
+    */
+    void addClassesOfSelectedTypes(void);
+
+    /*!
+        Tell the user when the calculated filter does not match the
+        selected events exactly
+    */
+    void checkFilterCoverage(void);
+
+    /*!
         Calculate and set node-id filter and
         mask values from listbox selection
     */

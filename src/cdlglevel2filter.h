@@ -134,6 +134,17 @@ public slots:
   void calculateVscpTypeValues(void);
 
   /*!
+      Select the VSCP classes of the selected events (types)
+  */
+  void addClassesOfSelectedTypes(void);
+
+  /*!
+      Tell the user when the calculated filter does not match the
+      selected events exactly
+  */
+  void checkFilterCoverage(void);
+
+  /*!
     Clear all filter fields
   */
   void clearFilter(void);

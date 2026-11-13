@@ -37,6 +37,8 @@
 #include "ui_cdlglevel2filter.h"
 
 #include <QMessageBox>
+
+#include <set>
 #include <QMenu>
 #include <QDesktopServices>
 #include <QShortcut>
@@ -344,7 +346,7 @@ CDlgLevel2Filter::fillVscpTypes(void)
        ++it) {
 
     uint16_t classId  = (it->first >> 16) & 0xffff;
-    uint16_t typeId   = it->first & 0xfff;
+    uint16_t typeId   = it->first & 0xffff;
     QString typeToken = it->second;
 
     QString listItem =
@@ -358,8 +360,8 @@ CDlgLevel2Filter::fillVscpTypes(void)
       vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
         .c_str();
     QListWidgetItem* item = new QListWidgetItem(listItem, ui->listType);
-    // QVariant val(it->first);
-    item->setData(Qt::UserRole, typeId);
+    // Class in the upper 16 bits, type in the lower
+    item->setData(Qt::UserRole, it->first);
     ui->listType->addItem(item);
     // m_classToIndexVector.push_back(classId);
     // qDebug() << i << " " << classId << " " << typeId;
@@ -532,10 +534,12 @@ CDlgLevel2Filter::transferFromVisual(void)
 {
   QApplication::setOverrideCursor(Qt::WaitCursor);
   QApplication::processEvents();
+  addClassesOfSelectedTypes();
   calculatePriorityValues();
   calculateVscpClassValues();
   calculateVscpTypeValues();
   QApplication::restoreOverrideCursor();
+  checkFilterCoverage();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -897,6 +901,34 @@ CDlgLevel2Filter::calculateVscpClassValues(void)
 void
 CDlgLevel2Filter::calculateVscpTypeValues(void)
 {
+  uint16_t filter = 0;
+  uint16_t mask   = 0;
+
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  // Type numbers of the selected events
+  std::vector<uint16_t> m1;
+  for (int i = 0; i < ui->listType->count(); ++i) {
+    QListWidgetItem* item = ui->listType->item(i);
+    if (item->isSelected()) {
+      m1.push_back(item->data(Qt::UserRole).toUInt() & 0xffff);
+    }
+  }
+
+  // No selected types: filter and mask are zero, all types pass
+  if (m1.size()) {
+    // Mask bits are the bits that are equal in all selected types
+    uint16_t mask1 = ~m1[0];
+    filter         = m1[0];
+    for (size_t i = 1; i < m1.size(); i++) {
+      mask1  = mask1 & ~m1[i];
+      filter = filter & m1[i];
+    }
+    mask = mask1 | filter;
+  }
+
+  ui->editVscpTypeFilter->setText(pworks->decimalToStringInBase(filter & 0xffff, ui->comboNumberBase->currentIndex()));
+  ui->editVscpTypeMask->setText(pworks->decimalToStringInBase(mask & 0xffff, ui->comboNumberBase->currentIndex()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1026,6 +1058,117 @@ CDlgLevel2Filter::getFilter(vscp_event_filter_t* pfilter)
 void
 CDlgLevel2Filter::showHelp(void)
 {
-  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/session_window?id=filters";
+  QString link = "https://grodansparadis.github.io/vscp-works-qt/#/connections?id=filter-on-specific-events-or-groups-of-events";
   QDesktopServices::openUrl(QUrl(link));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// addClassesOfSelectedTypes
+//
+// A selected event (VSCP type) also selects its VSCP class, so a specific
+// event can be picked in the type list alone.
+//
+
+void
+CDlgLevel2Filter::addClassesOfSelectedTypes(void)
+{
+  for (int i = 0; i < ui->listType->count(); ++i) {
+    QListWidgetItem* item = ui->listType->item(i);
+    if (!item->isSelected()) {
+      continue;
+    }
+    uint16_t eventClass = (item->data(Qt::UserRole).toUInt() >> 16) & 0xffff;
+    auto it             = m_classToIndexMap.find(eventClass);
+    if (it != m_classToIndexMap.end()) {
+      ui->listClass->item(it->second)->setSelected(true);
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// checkFilterCoverage
+//
+// One filter/mask pair per field can only describe one bit pattern, so the
+// calculated filter can let more events through than were selected, or block
+// some of them. Compare the known events the filter passes with the selection
+// and tell the user when they differ. A selected class without selected types
+// stands for all its types.
+//
+
+void
+CDlgLevel2Filter::checkFilterCoverage(void)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+
+  std::set<uint16_t> classes;
+  for (int i = 0; i < ui->listClass->count(); ++i) {
+    if (ui->listClass->item(i)->isSelected()) {
+      classes.insert(ui->listClass->item(i)->data(Qt::UserRole).toUInt() & 0xffff);
+    }
+  }
+  std::map<uint16_t, std::set<uint16_t>> types; // class -> selected types
+  for (int i = 0; i < ui->listType->count(); ++i) {
+    if (ui->listType->item(i)->isSelected()) {
+      uint32_t key = ui->listType->item(i)->data(Qt::UserRole).toUInt();
+      types[(key >> 16) & 0xffff].insert(key & 0xffff);
+    }
+  }
+  if (classes.empty() && types.empty()) {
+    return; // Nothing selected: the filter passes everything
+  }
+
+  uint16_t classFilter = vscp_readStringValue(ui->editVscpClassFilter->text().toStdString()) & 0xffff;
+  uint16_t classMask   = vscp_readStringValue(ui->editVscpClassMask->text().toStdString()) & 0xffff;
+  uint16_t typeFilter  = vscp_readStringValue(ui->editVscpTypeFilter->text().toStdString()) & 0xffff;
+  uint16_t typeMask    = vscp_readStringValue(ui->editVscpTypeMask->text().toStdString()) & 0xffff;
+
+  QStringList extra;   // Passed but not selected
+  QStringList blocked; // Selected but not passed
+  for (auto it = pworks->m_mapVscpTypeToToken.begin(); it != pworks->m_mapVscpTypeToToken.end(); ++it) {
+    uint16_t eventClass = (it->first >> 16) & 0xffff;
+    uint16_t eventType  = it->first & 0xffff;
+    bool wanted = false;
+    if (classes.count(eventClass)) {
+      auto t = types.find(eventClass);
+      wanted = (t == types.end()) || t->second.count(eventType);
+    }
+    bool passed = ((eventClass & classMask) == (classFilter & classMask)) &&
+                  ((eventType & typeMask) == (typeFilter & typeMask));
+    if (passed && !wanted) {
+      extra.append(it->second);
+    }
+    else if (!passed && wanted) {
+      blocked.append(it->second);
+    }
+  }
+
+  if (extra.isEmpty() && blocked.isEmpty()) {
+    return; // The filter matches the selection exactly
+  }
+
+  auto examples = [](const QStringList& list) {
+    QString str;
+    for (int i = 0; i < list.size() && i < 5; i++) {
+      str += "\n    " + list[i];
+    }
+    if (list.size() > 5) {
+      str += "\n    ...";
+    }
+    return str;
+  };
+
+  QString msg = tr("A filter/mask pair can only describe one bit pattern for the class "
+                   "and one for the type, so the calculated filter does not match "
+                   "exactly the events you selected.");
+  if (!extra.isEmpty()) {
+    msg += "\n\n" + tr("It also lets through %1 events you did not select, for example:").arg(extra.size()) +
+           examples(extra);
+  }
+  if (!blocked.isEmpty()) {
+    msg += "\n\n" + tr("It blocks %1 of the events you selected, for example:").arg(blocked.size()) +
+           examples(blocked);
+  }
+  msg += "\n\n" + tr("Select events that differ in fewer bits, or use several "
+                      "connections or session filters for an exact set.");
+  QMessageBox::information(this, tr(APPNAME), msg, QMessageBox::Ok);
 }

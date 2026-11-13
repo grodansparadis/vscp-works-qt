@@ -102,6 +102,18 @@ Filters for incoming events can be set in the connection settings dialog. Events
 | SocketCAN | A list of CAN id filter/mask pairs set on the CAN socket. An event passes if it matches any of them; `Invert` passes the ids that do not match. |
 | WebSocket ws1/ws2 | VSCP filter/mask on priority, class, type and GUID (`Filter...`). It is set on the server and also checked by VSCP Works. |
 
+## Filter on specific events or groups of events
+
+The filter dialog for VSCP connections, and the filter wizard of the CANAL filter dialog, have lists of priorities, VSCP classes and VSCP types (events). Select entries in the lists and press the button that moves the selection to the filter and mask fields:
+
+- Select one or more **classes** to let all events of these classes through.
+- Select one or more **events** in the type list to let only these events through. The class of a selected event is selected automatically, so you can pick an event in the type list alone.
+- Classes and events can be combined. A selected class without any selected events stands for all its events.
+
+The other button shows the current filter and mask as selections in the lists.
+
+A filter has one filter/mask pair for the class and one for the type. A group of events can only be matched exactly when their class and type numbers differ in a few bits, for example two neighbouring types of the same class. When the calculated filter lets other events through as well, or blocks some of the selected events, VSCP Works says so and lists examples. Select fewer events, or use [session filters](session_window.md?id=filters) to show an exact set of events in a session window.
+
 Session filters, that work on the events shown in a session window, are described [here](session_window.md?id=filters).
 
 # Passwords and keys
