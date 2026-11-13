@@ -7,6 +7,8 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- tcp/ip connections: the saved connect and response timeouts are now used by the session, node scan, configuration, bootloader and link test windows; a new connection starts with a 15000 ms connect timeout (it was 15 ms), and old saved values below 1000 are read as seconds
+- Session window: Alt+T only toggles the RX type mark; it was also assigned to "Remove RX comment"
 - Manual brought up to date with the software: configuration window, shortcut keys, setup on Linux, macOS and Raspberry Pi, troubleshooting, bootloader wizard, tcp/ip, TLS, MQTT and SocketCAN settings; removed links to pages that did not exist
 - F1 opens the help in the CAN raw explorer
 - Modern look for the raw CAN and MQTT raw explorer windows: one toolbar with a status badge, card-style panels, a highlighted main action, fixed-width font for ids and data, no duplicated buttons, and colors that follow the desktop theme

@@ -1711,6 +1711,7 @@ CBootLoadWizard::initBootLoaderWizard(void)
 
       // Initialize communication parameters
       m_vscpClient->initFromJson(m_connObject.dump());
+      vscpworks_applyTcpipTimeouts(m_vscpClient, m_connObject);
       // m_vscpClient->setCallback(eventReceived, this);
 
       QApplication::setOverrideCursor(Qt::WaitCursor);

@@ -186,10 +186,10 @@
        </sizepolicy>
       </property>
       <property name="toolTip">
-       <string>Connection timeout in seconds</string>
+       <string>Connection timeout in milliseconds</string>
       </property>
       <property name="text">
-       <string>15</string>
+       <string>15000</string>
       </property>
      </widget>
     </item>

@@ -403,6 +403,7 @@ CFrmNodeConfig::CFrmNodeConfig(QWidget* parent, json* pconn)
 
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(m_connObject.dump());
+      vscpworks_applyTcpipTimeouts(m_vscpClient, m_connObject);
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       ui->actionConnect->setChecked(true);
       connectToRemoteHost(true);

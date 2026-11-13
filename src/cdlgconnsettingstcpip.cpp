@@ -67,7 +67,7 @@ CDlgConnSettingsTcpip::CDlgConnSettingsTcpip(QWidget* parent)
   // turns it off.
   m_bTLS        = false;
   m_bVerifyPeer = true;
-  setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS);
+  setConnectionTimeout(TCPIP_DEFAULT_CONNECT_TIMEOUT_SECONDS * 1000); // Field is in milliseconds
   setResponseTimeout(TCPIP_DEFAULT_RESPONSE_TIMEOUT);
   setHost("tcp://localhost:9598");
   setUser("admin");
@@ -674,7 +674,7 @@ CDlgConnSettingsTcpip::setJson(const json* pobj)
   }
 
   if (m_jsonConfig.contains("connection-timeout") && m_jsonConfig["connection-timeout"].is_number()) {
-    setConnectionTimeout(m_jsonConfig["connection-timeout"].get<uint32_t>());
+    setConnectionTimeout(vscpworks_tcpipConnectTimeoutMs(m_jsonConfig["connection-timeout"].get<uint32_t>()));
   }
 
   if (m_jsonConfig.contains("response-timeout") && m_jsonConfig["response-timeout"].is_number()) {

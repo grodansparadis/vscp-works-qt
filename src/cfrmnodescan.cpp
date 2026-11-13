@@ -215,6 +215,7 @@ CFrmNodeScan::CFrmNodeScan(QWidget* parent, json* pconn)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(m_connObject.dump());
+      vscpworks_applyTcpipTimeouts(m_vscpClient, m_connObject);
       m_vscpClient->setCallbackEv(/*eventReceived*/ cb, this);
       connectToRemoteHost(true);
       break;

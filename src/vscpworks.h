@@ -574,4 +574,44 @@ public:
   QRect m_mainWindowRect;
 };
 
+/*!
+  Connect timeout of a tcp/ip connection in milliseconds. Connections saved
+  by earlier versions can hold the old default, 15, which was meant as
+  seconds; values below 1000 are therefore taken as seconds.
+  @param value Saved "connection-timeout" value
+  @return Timeout in milliseconds (0 = not set)
+*/
+inline uint32_t
+vscpworks_tcpipConnectTimeoutMs(uint32_t value)
+{
+  return ((value > 0) && (value < 1000)) ? value * 1000 : value;
+}
+
+/*!
+  Apply the connect and response timeouts saved with a tcp/ip connection
+  ("connection-timeout" and "response-timeout", in milliseconds) to a
+  client. The client's initFromJson() does not read them.
+  @param pClient Client to configure
+  @param conn Connection definition
+*/
+inline void
+vscpworks_applyTcpipTimeouts(CVscpClient* pClient, const json& conn)
+{
+  if (nullptr == pClient) {
+    return;
+  }
+  if (conn.contains("connection-timeout") && conn["connection-timeout"].is_number()) {
+    uint32_t timeout = vscpworks_tcpipConnectTimeoutMs(conn["connection-timeout"].get<uint32_t>());
+    if (timeout > 0) {
+      pClient->setConnectionTimeout(timeout);
+    }
+  }
+  if (conn.contains("response-timeout") && conn["response-timeout"].is_number()) {
+    uint32_t timeout = conn["response-timeout"].get<uint32_t>();
+    if (timeout > 0) {
+      pClient->setResponseTimeout(timeout);
+    }
+  }
+}
+
 #endif

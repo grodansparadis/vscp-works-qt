@@ -14,7 +14,7 @@ Right-click **tcp/ip connections** in the connection tree and select `Add new tc
 | Host URL | Address of the remote host, `tcp://host:port`. The VSCP daemon listens on port 9598 by default. Use `stcp://` for an SSL/TLS connection. |
 | Username / Password | Credentials for the remote host. The password is stored in the keyring of the operating system, see [passwords and keys](passwords_and_keys.md). |
 | Interface | Interface to use on the remote host. Gateways often have several interfaces. `Get interfaces` fills the list from the remote host. |
-| Connect timeout (ms) | Milliseconds to wait for the connection to be set up. |
+| Connect timeout (ms) | Milliseconds to wait for the connection to be set up (default 15000). Connections saved by earlier versions with a value below 1000 are read as seconds. |
 | Response timeout (ms) | Milliseconds to wait for a response to a command. |
 | Full Level II (using full GUID) | Address nodes with their full GUID instead of a nickname (no Level I over Level II). |
 | Use poll (slow) | Poll the remote host for events instead of using a separate receive connection. Needed for low end devices that allow only one connection; try it if the connection times out. |

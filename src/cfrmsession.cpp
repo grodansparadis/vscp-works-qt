@@ -422,13 +422,11 @@ CFrmSession::createMenu()
   m_addExCommentAct = m_editMenu->addAction(tr("Add/Edit RX comment"),
                                             this,
                                             &CFrmSession::addEventNote);
-  m_toggleRxTypeMarkAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
-  m_toggleRxTypeMarkAct->setStatusTip(tr("Add a comment to selected RX row(s)"));
+  m_addExCommentAct->setStatusTip(tr("Add a comment to selected RX row(s)"));
 
   m_deleteRxCommentAct = m_editMenu->addAction(tr("Remove RX comment"),
                                                this,
                                                &CFrmSession::removeEventNote);
-  m_deleteRxCommentAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
   m_deleteRxCommentAct->setStatusTip(tr("Remove a comment from selected RX row(s)"));
 
   m_menuBar->addMenu(m_editMenu);
@@ -2107,6 +2105,7 @@ CFrmSession::initializeClient(bool autoConnect)
     case CVscpClient::connType::TCPIP:
       m_vscpClient = new vscpClientTcp();
       m_vscpClient->initFromJson(m_connObject.dump());
+      vscpworks_applyTcpipTimeouts(m_vscpClient, m_connObject);
       m_vscpClient->setCallbackEv(/*eventReceived*/ event_cb, this);
       if (autoConnect) {
         connectToRemoteHost(true);

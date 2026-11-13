@@ -801,6 +801,9 @@ CFrmVscpLinkTest::ensureClientCreated(QString& details)
     details = tr("Failed to initialize client from connection settings.");
     return false;
   }
+  if (CVscpClient::connType::TCPIP == m_connType) {
+    vscpworks_applyTcpipTimeouts(m_vscpClient, m_connObject);
+  }
 
   details = tr("Client initialized from selected connection.");
   updateConnectionInfo();
