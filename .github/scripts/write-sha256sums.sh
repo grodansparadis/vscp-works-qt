@@ -14,28 +14,27 @@
 # artifacts don't clash when a release job collects them all. Check a
 # downloaded artifact with "sha256sum -c SHA256SUMS-<artifact name>".
 #
-
-# Needs bash 4 or later. macOS ships bash 3.2, so use Homebrew's bash there.
-if [ "${BASH_VERSINFO[0]:-0}" -lt 4 ]; then
-  for b in /opt/homebrew/bin/bash /usr/local/bin/bash; do
-    if [ -x "$b" ] && [ "$("$b" -c 'echo ${BASH_VERSINFO[0]}')" -ge 4 ]; then
-      exec "$b" "$0" "$@"
-    fi
-  done
-  echo "$(basename "$0") needs bash 4 or later (on macOS: brew install bash)" >&2
-  exit 1
-fi
+# Written for bash 3.2 too (the bash on macOS runners): no associative
+# arrays, globstar, mapfile or ${var,,}.
+#
 
 set -euo pipefail
-shopt -s globstar nullglob dotglob
+shopt -s nullglob dotglob
 
 name="${1:-SHA256SUMS}"
-name="${name//[^A-Za-z0-9._-]/-}"
+name=$(printf '%s' "$name" | tr -c 'A-Za-z0-9._-' '-')
 out="${GITHUB_OUTPUT:-/dev/stdout}"
 cd "${GITHUB_WORKSPACE:-.}"
 ws="${GITHUB_WORKSPACE:-$(pwd)}"
 ws="${ws//\\//}"
 ws="${ws%/}"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+lc() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]'
+}
 
 trim() {
   local s="$1"
@@ -47,9 +46,10 @@ trim() {
 # Make a pattern relative to the workspace when it points inside it. The
 # comparison ignores case so Windows drive letters (D:/ vs d:/) match.
 relative() {
-  local p="${1//\\//}"
+  local p="${1//\\//}" lp lws
   p="${p#./}"
-  local lp="${p,,}" lws="${ws,,}"
+  lp=$(lc "$p")
+  lws=$(lc "$ws")
   if [ "$lp" = "$lws" ]; then
     p="."
   elif [ "${lp:0:${#lws}+1}" = "$lws/" ]; then
@@ -64,8 +64,12 @@ relative() {
 # Literal part of a pattern up to the first path segment with a wildcard
 search_root() {
   local p="$1" root="" seg
-  IFS='/' read -r -a segs <<<"$p"
-  for seg in "${segs[@]}"; do
+  local IFS='/'
+  set -f
+  # shellcheck disable=SC2086
+  set -- $p
+  set +f
+  for seg in "$@"; do
     case "$seg" in
       *[\*\?\[]*) break ;;
     esac
@@ -80,16 +84,30 @@ search_root() {
   printf '%s' "${root:-.}"
 }
 
-# Expand a pattern to files (directories expand to all files below them)
+# Expand a pattern to files, one per line (directories expand to all files
+# below them). '**' is handled with find, since bash 3.2 has no globstar.
 expand() {
-  local p="$1" m
+  local p="$1" m root fp
+  case "$p" in
+    *'**'*)
+      root=$(search_root "$p")
+      [ -d "$root" ] || return 0
+      # find -path lets '*' match '/', so '**/' and '/**' become '*'
+      fp="${p//\*\*\//*}"
+      fp="${fp//\/\*\*/\/*}"
+      fp="${fp//\*\*/*}"
+      find "$root" -type f -path "$fp"
+      return 0
+      ;;
+  esac
   local IFS=$'\n'
+  local matches
   # shellcheck disable=SC2206
-  local matches=($p)
+  matches=($p)
   if [ ${#matches[@]} -eq 0 ] && [ -e "$p" ]; then
     matches=("$p")
   fi
-  for m in "${matches[@]}"; do
+  for m in "${matches[@]+"${matches[@]}"}"; do
     if [ -d "$m" ]; then
       find "$m" -type f
     elif [ -f "$m" ]; then
@@ -111,31 +129,25 @@ while IFS= read -r line || [ -n "$line" ]; do
   fi
 done
 
-declare -A excluded=()
+: >"$work/excluded"
 for p in "${excludes[@]+"${excludes[@]}"}"; do
-  while IFS= read -r f; do
-    [ -n "$f" ] && excluded["${f#./}"]=1
-  done < <(expand "$p")
+  expand "$p" | sed 's#^\./##' >>"$work/excluded"
 done
 
-declare -A seen=()
-files=()
+: >"$work/files"
 for p in "${includes[@]+"${includes[@]}"}"; do
-  while IFS= read -r f; do
-    [ -z "$f" ] && continue
-    f="${f#./}"
-    case "$(basename "$f")" in SHA256SUMS*) continue ;; esac
-    [ -n "${excluded[$f]+x}" ] && continue
-    skip=0
-    for e in "${!excluded[@]}"; do
-      case "$f" in "$e"/*) skip=1; break ;; esac
-    done
-    [ "$skip" = 1 ] && continue
-    [ -n "${seen[$f]+x}" ] && continue
-    seen["$f"]=1
-    files+=("$f")
-  done < <(expand "$p")
+  expand "$p" | sed 's#^\./##' >>"$work/files"
 done
+
+files=()
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  case "$(basename "$f")" in SHA256SUMS*) continue ;; esac
+  if grep -qxF -- "$f" "$work/excluded"; then
+    continue
+  fi
+  files+=("$f")
+done < <(awk '!seen[$0]++' "$work/files")
 
 if [ ${#files[@]} -eq 0 ]; then
   echo "write-sha256sums: no files matched, nothing to do"
@@ -146,20 +158,20 @@ fi
 # Artifact root as upload-artifact computes it: the search paths of the
 # patterns, without paths below another one; a single file uses its directory,
 # several search paths use their common ancestor.
-roots=()
 for p in "${includes[@]}"; do
-  roots+=("$(search_root "$p")")
-done
-mapfile -t roots < <(printf '%s\n' "${roots[@]}" | sort -u)
+  search_root "$p"
+  echo
+done | sort -u >"$work/roots"
 kept=()
-for r in "${roots[@]}"; do
+while IFS= read -r r; do
+  [ -z "$r" ] && continue
   inside=0
-  for o in "${roots[@]}"; do
-    [ "$o" = "$r" ] && continue
+  while IFS= read -r o; do
+    if [ -z "$o" ] || [ "$o" = "$r" ]; then continue; fi
     if [ "$o" = "." ] || [ "${r#"$o"/}" != "$r" ]; then inside=1; break; fi
-  done
+  done <"$work/roots"
   [ "$inside" = 0 ] && kept+=("$r")
-done
+done <"$work/roots"
 
 if [ ${#kept[@]} -eq 1 ]; then
   root="${kept[0]}"
@@ -184,19 +196,21 @@ for f in "${files[@]}"; do
   fi
 done
 
-tmp=$(mktemp)
+tmp="$work/sums"
 if command -v sha256sum >/dev/null; then
   (cd "$root" && sha256sum -b "${rel[@]}") >"$tmp"
 else
   (cd "$root" && shasum -a 256 -b "${rel[@]}") >"$tmp"
 fi
-# Build output written from inside a Docker container can be owned by root
+# Readable by everyone: upload-artifact must be able to read it even when the
+# file ends up owned by root (build output written from a Docker container)
+chmod 0644 "$tmp"
 if [ -w "$root" ]; then
   cp "$tmp" "$root/$name"
 else
   sudo cp "$tmp" "$root/$name"
+  sudo chmod 0644 "$root/$name"
 fi
-rm -f "$tmp"
 cat "$root/$name"
 
 if [ "$root" = "." ]; then
