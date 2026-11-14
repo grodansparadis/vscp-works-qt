@@ -40,7 +40,7 @@ jobs:
             libxcb-render-util0 libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 \
             libxcb-util1 libxcb-xfixes0 libxcb-xinerama0 libxcb1 libxkbcommon-dev \
             libxkbcommon-x11-0 libxcb-xkb-dev libxcb-cursor0 \
-            libmosquitto-dev libexpat-dev libssl-dev libcurl4-openssl-dev libfuse2 libsqlite3-dev; then
+            libmosquitto-dev libexpat-dev libssl-dev libcurl4-openssl-dev libfuse2 libsqlite3-dev pandoc; then
             exit 0
           fi
           if [ "$attempt" -lt 3 ]; then

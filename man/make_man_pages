@@ -1,6 +1,0 @@
-#!/bin/bash
-
-pandoc -s -t man vscpworks.1.md -o vscpworks.1
-sudo cp vscpworks. /usr/share/man/man1/
-
-mandb
