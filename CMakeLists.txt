@@ -165,8 +165,8 @@ FetchContent_Declare(
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/e050031d01ffdf59a8fbeb12a27950a8003bee21
-  URL_HASH SHA256=2cd53fb6b43a270d7c4714cedd04e33dae54d46ff7d1c894f11ac6264a4d6bba
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/d75d4f5c6c097a1dca841b63727c79c522b701ce
+  URL_HASH SHA256=709763c16c995b65787e72947f9c3f45a03a404c708286c7cad00b53dcaedbb5
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)

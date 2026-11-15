@@ -7,6 +7,7 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Build against the latest vscp master (d75d4f5c6)
 - Man page vscp-works-qt(1), converted from man/vscp-works-qt.1.md with pandoc and installed in share/man/man1. The old vscpworks man page and scripts are removed
 - tcp/ip connections: the saved connect and response timeouts are now used by the session, node scan, configuration, bootloader and link test windows; a new connection starts with a 15000 ms connect timeout (it was 15 ms), and old saved values below 1000 are read as seconds
 - Session window: Alt+T only toggles the RX type mark; it was also assigned to "Remove RX comment"
