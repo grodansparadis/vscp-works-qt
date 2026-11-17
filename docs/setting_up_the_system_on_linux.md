@@ -55,7 +55,7 @@ sudo cmake --install build
 If Qt comes from the online installer, tell CMake where it is, for example:
 
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/Qt/6.11.1/gcc_64
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/Qt/6.12.0/gcc_64
 ```
 
 Use `-DCMAKE_BUILD_TYPE=Debug` to build a version for debugging.
