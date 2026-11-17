@@ -44,6 +44,7 @@
 #include <QUuid>
 #include <QUrl>
 #include <QTimer>
+#include <QSignalBlocker>
 #include <QVBoxLayout>
 #include <QXmlStreamReader>
 
@@ -203,6 +204,7 @@ QString formatRichTextBlock(const QString& text)
 
 // Minimal line plot of numeric values for a topic
 class CMqttPlotWidget : public QWidget {
+  friend class ExplorerRegressionTest;
 public:
   explicit CMqttPlotWidget(QWidget* parent = nullptr)
     : QWidget(parent)
@@ -274,6 +276,10 @@ QString diffToHtml(const QString& before, const QString& after)
     return QCoreApplication::translate("CFrmMqttExplorer", "Diff is too large to display.");
   }
   const int n = a.size(), m = b.size();
+  constexpr qint64 kMaxDiffCells = 1000000;
+  if ((qint64(n) + 1) * (qint64(m) + 1) > kMaxDiffCells) {
+    return CFrmMqttExplorer::tr("Messages are too large to compare. Select a smaller message.");
+  }
   QVector<QVector<int>> lcs(n + 1, QVector<int>(m + 1, 0));
   for (int i = n - 1; i >= 0; --i) {
     for (int j = m - 1; j >= 0; --j) {
@@ -1453,9 +1459,8 @@ CFrmMqttExplorer::pruneTopicNode(QTreeWidgetItem* item)
     return;
   }
 
-  const QString searchKey = item->data(0, RoleSearchText).toString();
-  if (!searchKey.isEmpty()) {
-    m_topicNodeByPath.remove(searchKey);
+  if (item->data(0, RoleKind).toInt() == KindTopicNode) {
+    m_topicNodeByPath.remove(item->data(0, RoleTopic).toString());
   }
 
   for (int i = 0; i < item->childCount(); ++i) {
@@ -1495,7 +1500,7 @@ CFrmMqttExplorer::ensureTopicPath(const QString& topic)
 
   for (int i = 0; i < parts.size(); ++i) {
     const QString segment = parts.at(i).isEmpty() ? "/" : parts.at(i);
-    currentPath = currentPath.isEmpty() ? segment : currentPath + "/" + segment;
+    currentPath = parts.mid(0, i + 1).join('/');
 
     if (!m_topicNodeByPath.contains(currentPath)) {
       auto* item = new QTreeWidgetItem({ segment, "", "" });
@@ -1505,7 +1510,7 @@ CFrmMqttExplorer::ensureTopicPath(const QString& topic)
         parent->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
       }
       item->setData(0, RoleKind, KindTopicNode);
-      item->setData(0, RoleTopic, normalized);
+      item->setData(0, RoleTopic, currentPath);
       item->setData(0, RoleSearchText, currentPath.toLower());
       item->setData(0, RoleMessageCount, 0);
       const auto insertionIndex = [&](int count, const auto& childAt) {
@@ -1655,18 +1660,17 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
   msgItem->setData(0, RolePayloadSize, payload.size());
   msgItem->setData(0, RoleQos, qos);
   msgItem->setData(0, RoleMid, mid);
+  msgItem->setData(0, RoleHistoryId, QUuid::createUuid());
   const QString metaText = format + "\nqos:" + QString::number(qos) + "\n" + (retained ? "retained yes" : "retained no");
   msgItem->setData(0,
                    RoleSearchText,
                    (buildSearchText(topic, payload, formattedPayload) + "\n" + metaText).toLower());
   const bool replaceMode = m_comboReceiveMode->currentData().toInt() == ReceiveReplace;
   if (replaceMode) {
-    while (topicNode->childCount() > 0) {
-      delete topicNode->takeChild(0);
-    }
-    for (QTreeWidgetItem* current = topicNode; nullptr != current; current = current->parent()) {
-      current->setData(0, RoleMessageCount, 0);
-      refreshCountText(current);
+    for (int i = topicNode->childCount() - 1; i >= 0; --i) {
+      if (topicNode->child(i)->data(0, RoleKind).toInt() == KindMessage) {
+        delete topicNode->takeChild(i);
+      }
     }
   }
 
@@ -1694,8 +1698,12 @@ CFrmMqttExplorer::appendMessageNode(QTreeWidgetItem* topicNode,
 
   constexpr int kMaxMessagesPerTopic = 250;
   if (!replaceMode) {
-    while (topicNode->childCount() > kMaxMessagesPerTopic) {
-      delete topicNode->takeChild(0);
+    int messages = 0;
+    for (int i = topicNode->childCount() - 1; i >= 0; --i) {
+      if (topicNode->child(i)->data(0, RoleKind).toInt() == KindMessage &&
+          ++messages > kMaxMessagesPerTopic) {
+        delete topicNode->takeChild(i);
+      }
     }
   }
 
@@ -2023,6 +2031,9 @@ CFrmMqttExplorer::renderMessageTree(const QString& topic,
 void
 CFrmMqttExplorer::populateHistory(QTreeWidgetItem* topicNode)
 {
+  const QSignalBlocker blocker(m_historyTree);
+  const auto selected = m_historyTree->selectedItems();
+  const QVariant selectedId = selected.isEmpty() ? QVariant() : selected.first()->data(0, RoleHistoryId);
   m_historyTree->clear();
   if (nullptr == topicNode || topicNode->data(0, RoleKind).toInt() != KindTopicNode) {
     return;
@@ -2041,12 +2052,19 @@ CFrmMqttExplorer::populateHistory(QTreeWidgetItem* topicNode)
                                       msg->text(1) });
     row->setToolTip(3, msg->data(0, RolePayloadFormatted).toString());
     row->setData(0, Qt::UserRole, msg->data(0, RolePayloadFormatted).toString());
+    row->setData(0, RoleHistoryId, msg->data(0, RoleHistoryId));
+    if (selectedId.isValid() && row->data(0, RoleHistoryId) == selectedId) {
+      m_historyTree->setCurrentItem(row);
+    }
     ++rows;
   }
   m_historyTree->resizeColumnToContents(0);
 
   QVector<double> values;
   for (int i = 0; i < topicNode->childCount(); ++i) {
+    if (topicNode->child(i)->data(0, RoleKind).toInt() != KindMessage) {
+      continue;
+    }
     bool ok = false;
     const double v = topicNode->child(i)->data(0, RolePayloadRaw).toString().trimmed().toDouble(&ok);
     if (ok) {
@@ -2066,7 +2084,7 @@ CFrmMqttExplorer::updateDiff()
     m_diffView->clear();
     return;
   }
-  auto* older = m_historyTree->itemBelow(row);
+  auto* older = m_historyTree->topLevelItem(m_historyTree->indexOfTopLevelItem(row) + 1);
   if (nullptr == older) {
     m_diffView->setPlainText(tr("No earlier message to compare with"));
     return;
@@ -2199,29 +2217,19 @@ QJsonArray collectMessageJson(QTreeWidgetItem* rootItem,
       return;
     }
 
-    bool isVisibleInTree = !item->isHidden();
-    for (QTreeWidgetItem* ancestor = item->parent(); nullptr != ancestor; ancestor = ancestor->parent()) {
-      if (ancestor->isHidden()) {
-        isVisibleInTree = false;
-        break;
-      }
-    }
-
     const int kind = item->data(0, kItemRoleKind).toInt();
-    const bool shouldExport = isVisibleInTree &&
-                              ((kind == kItemKindMessage) ||
-                               (kind == kItemKindTopicNode && item->childCount() == 0 &&
-                                !item->data(0, Qt::UserRole + 3).toString().isEmpty()));
+    const bool shouldExport = kind == kItemKindMessage &&
+                              itemMatchesFilter(item, filterText, topicFilterText);
 
     if (shouldExport) {
       QJsonObject entry;
       const QString topic = item->data(0, Qt::UserRole + 2).toString();
       const QString payload = item->data(0, Qt::UserRole + 3).toString();
       const QString formatted = item->data(0, Qt::UserRole + 4).toString();
-      const QString format = item->data(0, Qt::UserRole + 6).toString();
-      const QString timestamp = item->data(0, Qt::UserRole + 5).toString();
-      entry["topic"] = topic.isEmpty() ? item->text(0) : topic;
-      entry["payload"] = payload.isEmpty() ? item->text(1) : payload;
+      const QString format = item->data(0, kItemRolePayloadFormat).toString();
+      const QString timestamp = item->data(0, kItemRoleTimestamp).toString();
+      entry["topic"] = topic;
+      entry["payload"] = payload;
       entry["formatted"] = formatted;
       entry["format"] = format;
       entry["retained"] = item->data(0, kItemRoleRetained).toBool();
@@ -2244,9 +2252,6 @@ QString buildVisibleMessageText(QTreeWidget* tree,
                                  const QString& filterText,
                                  const QString& topicFilterText)
 {
-  Q_UNUSED(filterText);
-  Q_UNUSED(topicFilterText);
-
   if (nullptr == tree) {
     return QString();
   }
@@ -2257,26 +2262,12 @@ QString buildVisibleMessageText(QTreeWidget* tree,
       return;
     }
 
-    bool isVisibleInTree = !item->isHidden();
-    for (QTreeWidgetItem* ancestor = item->parent(); nullptr != ancestor; ancestor = ancestor->parent()) {
-      if (ancestor->isHidden()) {
-        isVisibleInTree = false;
-        break;
-      }
-    }
-
-    if (!isVisibleInTree) {
-      for (int i = 0; i < item->childCount(); ++i) {
-        self(item->child(i), self);
-      }
-      return;
-    }
-
-    const QString topic = item->text(0).trimmed();
-    const QString payload = item->text(1).trimmed();
-    if (!topic.isEmpty() && (!payload.isEmpty() || item->childCount() == 0)) {
+    if (item->data(0, kItemRoleKind).toInt() == kItemKindMessage &&
+        itemMatchesFilter(item, filterText, topicFilterText)) {
+      const QString topic = item->data(0, kItemRoleTopic).toString();
+      const QString payload = item->data(0, kItemRolePayloadRaw).toString();
       blocks << QString("Topic: %1\nPayload: %2")
-                    .arg(topic, payload.isEmpty() ? QStringLiteral("<empty>") : payload);
+                    .arg(topic, payload);
     }
 
     for (int i = 0; i < item->childCount(); ++i) {
@@ -2414,7 +2405,8 @@ CFrmMqttExplorer::flushPendingMessages()
   }
 
   constexpr int kBatchSize = 20;
-  const bool shouldFilter = !m_editFilter->text().trimmed().isEmpty();
+  const bool shouldFilter = !m_editFilter->text().trimmed().isEmpty() ||
+                            !m_editTopicFilter->text().trimmed().isEmpty();
 
   m_tree->setUpdatesEnabled(false);
   m_detailsTree->setUpdatesEnabled(false);

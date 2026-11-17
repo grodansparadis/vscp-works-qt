@@ -31,6 +31,7 @@ class CMqttPlotWidget;
 class QTreeWidgetItem;
 
 class CFrmMqttExplorer : public QDialog {
+  friend class ExplorerRegressionTest;
   Q_OBJECT
 
 public:
@@ -90,7 +91,8 @@ private:
     RoleMid,
     RoleMessageCount,
     RoleTopicCount,
-    RoleHasValue
+    RoleHasValue,
+    RoleHistoryId
   };
 
   enum ItemKind { KindTopicNode = 1, KindMessage = 2 };

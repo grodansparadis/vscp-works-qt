@@ -211,10 +211,21 @@ CFrmRawCanSession::applyTheme()
 void
 CFrmRawCanSession::toggleTheme()
 {
+  const QSignalBlocker blocker(m_treeFrames);
+  QList<int> selectedRows;
+  for (auto* item : m_treeFrames->selectedItems()) {
+    selectedRows.append(m_treeFrames->indexOfTopLevelItem(item));
+  }
   m_darkTheme = !m_darkTheme;
   QSettings().setValue(QStringLiteral("rawcan/darkTheme"), m_darkTheme);
   applyTheme();
   refreshViews();
+  for (int row : selectedRows) {
+    if (auto* item = m_treeFrames->topLevelItem(row)) {
+      item->setSelected(true);
+    }
+  }
+  updateStatusLabel();
 }
 
 // ----------------------------------------------------------------------------
@@ -641,6 +652,7 @@ CFrmRawCanSession::clearLog()
   m_frameHistory.clear();
   m_treeFrames->clear();
   m_tableSummary->setRowCount(0);
+  updateFrameCounters();
 }
 
 // ----------------------------------------------------------------------------
@@ -971,6 +983,7 @@ CFrmRawCanSession::onTemplateSelectionChanged()
 void
 CFrmRawCanSession::refreshViews()
 {
+  updateFrameCounters();
   if (m_stackViews->currentWidget() == m_treeFrames) {
     refreshFrameView();
   }
@@ -989,7 +1002,6 @@ CFrmRawCanSession::refreshFrameView()
 
   const QFont monoFont = explorerstyle::monospaceFont();
   int visibleIndex = 0;
-  int stdCount = 0, extCount = 0, txCount = 0, errCount = 0;
   for (const FrameRecord& rec : m_frameHistory) {
     if (!isFrameVisibleByFilter(rec.frame)) {
       continue;
@@ -1028,6 +1040,25 @@ CFrmRawCanSession::refreshFrameView()
                                  .arg(formatPayload(rec.frame.payload()))
                                  .arg(frameFlagsToString(rec.frame)));
 
+    ++visibleIndex;
+  }
+
+  if (m_treeFrames->selectedItems().isEmpty() && (m_treeFrames->topLevelItemCount() > 0)) {
+    const int lastRow = m_treeFrames->topLevelItemCount() - 1;
+    m_treeFrames->scrollToItem(m_treeFrames->topLevelItem(lastRow), QAbstractItemView::PositionAtBottom);
+  }
+
+  updateStatusLabel();
+}
+
+void
+CFrmRawCanSession::updateFrameCounters()
+{
+  int stdCount = 0, extCount = 0, txCount = 0, errCount = 0;
+  for (const FrameRecord& rec : m_frameHistory) {
+    if (!isFrameVisibleByFilter(rec.frame)) {
+      continue;
+    }
     if (rec.direction == FrameDirection::Tx) {
       ++txCount;
     }
@@ -1040,8 +1071,6 @@ CFrmRawCanSession::refreshFrameView()
     else {
       ++stdCount;
     }
-
-    ++visibleIndex;
   }
 
   m_countersLabel->setText(
@@ -1052,13 +1081,6 @@ CFrmRawCanSession::refreshFrameView()
       .arg(stdCount).arg(extCount).arg(txCount).arg(errCount)
       .arg(m_darkTheme ? "#86efac" : "#15803d", m_darkTheme ? "#fbbf24" : "#b45309",
            m_darkTheme ? "#67e8f9" : "#0e7490", m_darkTheme ? "#fca5a5" : "#b91c1c"));
-
-  if (m_treeFrames->selectedItems().isEmpty() && (m_treeFrames->topLevelItemCount() > 0)) {
-    const int lastRow = m_treeFrames->topLevelItemCount() - 1;
-    m_treeFrames->scrollToItem(m_treeFrames->topLevelItem(lastRow), QAbstractItemView::PositionAtBottom);
-  }
-
-  updateStatusLabel();
 }
 
 // ----------------------------------------------------------------------------

@@ -59,6 +59,7 @@ using json = nlohmann::json;
 
 class CFrmRawCanSession : public QDialog
 {
+  friend class ExplorerRegressionTest;
   Q_OBJECT
 
 public:
@@ -135,6 +136,7 @@ private:
   bool parseIdValue(const QString& str, uint32_t& id) const;
   bool isFrameVisibleByFilter(const QCanBusFrame& frame) const;
   void refreshViews();
+  void updateFrameCounters();
   void applyTheme();
   void toggleTheme();
   void refreshFrameView();
