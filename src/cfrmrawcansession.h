@@ -135,6 +135,8 @@ private:
   bool parseIdValue(const QString& str, uint32_t& id) const;
   bool isFrameVisibleByFilter(const QCanBusFrame& frame) const;
   void refreshViews();
+  void applyTheme();
+  void toggleTheme();
   void refreshFrameView();
   void refreshSummaryView();
   void updateStatusLabel();
@@ -160,6 +162,9 @@ private:
   bool m_paused;
 
   QLabel* m_statusLabel;
+  QLabel* m_countersLabel;
+  QAction* m_actToggleTheme;
+  bool m_darkTheme;
   QComboBox* m_comboViewMode;
   QTableWidget* m_tableIdFilters;
   QStackedWidget* m_stackViews;

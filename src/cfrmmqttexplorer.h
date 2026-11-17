@@ -25,6 +25,9 @@ class QAction;
 class QMenu;
 class QMenuBar;
 class QTreeWidget;
+class QTabWidget;
+class QTextEdit;
+class CMqttPlotWidget;
 class QTreeWidgetItem;
 
 class CFrmMqttExplorer : public QDialog {
@@ -56,6 +59,9 @@ private slots:
   void onFilterChanged(const QString& filter);
   void onTopicFilterChanged(const QString& filter);
   void onTreeSelectionChanged();
+  void populateHistory(QTreeWidgetItem* topicNode);
+  void updateDiff();
+  void refreshCountText(QTreeWidgetItem* item);
   void onSaveSelected();
   void onPauseReceiveClicked();
   void onReceiveModeChanged(int index);
@@ -82,7 +88,9 @@ private:
     RolePayloadSize,
     RoleQos,
     RoleMid,
-    RoleMessageCount
+    RoleMessageCount,
+    RoleTopicCount,
+    RoleHasValue
   };
 
   enum ItemKind { KindTopicNode = 1, KindMessage = 2 };
@@ -220,6 +228,9 @@ private:
   QListWidget* m_listPublishTopics;
   QTreeWidget* m_tree;
   QTreeWidget* m_detailsTree;
+  QTreeWidget* m_historyTree;
+  CMqttPlotWidget* m_plot;
+  QTextEdit* m_diffView;
   QMenuBar* m_menuBar;
   QMenu* m_subscribeMenu;
   QAction* m_actConnect;
