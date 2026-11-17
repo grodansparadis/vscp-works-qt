@@ -1,3 +1,11 @@
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include "cfrmmqttexplorer.h"
 #include "explorerstyle.h"
 #include "vscpworks.h"

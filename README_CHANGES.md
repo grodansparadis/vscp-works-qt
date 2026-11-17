@@ -7,6 +7,7 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Fixed Windows x64 build failure in cfrmmqttexplorer.cpp by including windows.h before vscphelper.h
 - Added a persistent dark/light theme toggle to VSCP session windows
 - Persisted session and raw explorer themes with each connection, using the configured default for connections without a theme
 - Reduced session-window receive lag under heavy traffic by batching event rendering, limiting each poll pass, and eliminating repeated whole-table row-height work
