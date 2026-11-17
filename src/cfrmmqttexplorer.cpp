@@ -268,6 +268,11 @@ QString diffToHtml(const QString& before, const QString& after)
 {
   const QStringList a = before.split('\n');
   const QStringList b = after.split('\n');
+  constexpr qsizetype maxDiffCells = 1000000;
+  if (a.size() >= maxDiffCells || b.size() >= maxDiffCells ||
+      a.size() + 1 > maxDiffCells / (b.size() + 1)) {
+    return QCoreApplication::translate("CFrmMqttExplorer", "Diff is too large to display.");
+  }
   const int n = a.size(), m = b.size();
   QVector<QVector<int>> lcs(n + 1, QVector<int>(m + 1, 0));
   for (int i = n - 1; i >= 0; --i) {
