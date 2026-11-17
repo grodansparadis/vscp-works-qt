@@ -30,9 +30,9 @@ The **Subscribe** menu has the same functions, plus:
 
 ## Topic tree and message details
 
-Received messages are shown in a tree built from the topic levels. A topic node shows the last payload as a preview and the number of topics/messages below it. Expand a topic to see the individual messages.
+Received messages are shown in a tree built from the topic levels. A topic node shows the last payload as a preview and the number of topics/messages below it. Expand a topic to see its subtopics. Select a topic to inspect its messages in the **History** tab in the right pane.
 
-Select a message to see its details in the details pane:
+The details pane shows the selected topic's latest message:
 
 | Field | Description |
 | ----- | ----------- |
@@ -49,6 +49,8 @@ Select a message to see its details in the details pane:
 Selecting a topic node instead shows a summary of the branch and the last payload.
 
 Payloads larger than 256 KiB are not decoded (shown as `Payload skipped for performance`) to keep the window responsive.
+
+The **Plot** tab charts plain numeric payloads from the selected topic's stored messages, not values from its subtopics. The **Diff** tab compares the selected History message (or the latest message) with its predecessor. Selecting an older history entry keeps that selection as new messages arrive, while the entry remains in the displayed history. Comparisons requiring more than one million matrix cells show a size-limit message instead of allocating an unbounded diff.
 
 ## Searching and filtering
 
@@ -67,7 +69,7 @@ The two fields above the topic tree search and filter what is shown.
 
 Press `Save selected...` to write data to text files. Two save dialogs are shown in turn:
 
-1. The first saves all messages that are currently visible in the tree (that is, after topic search and filter are applied).
+1. The first saves all stored messages matching the topic search and message filter, including history hidden from the topic tree, with full topics and untruncated payloads.
 2. The second saves the details of the selected message or topic node. For a message the file contains topic, timestamp, format, QoS, retain flag, size, message id, decoded payload and raw payload.
 
 Cancel a dialog to skip that file.

@@ -34,6 +34,7 @@
 
 #include "cfrmrawcansession.h"
 #include "explorerstyle.h"
+#include <QSettings>
 
 #include <QDateTime>
 #include <QDesktopServices>
@@ -89,6 +90,9 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   , m_autoConnectAttempted(false)
   , m_paused(false)
   , m_statusLabel(nullptr)
+  , m_countersLabel(nullptr)
+  , m_actToggleTheme(nullptr)
+  , m_darkTheme(true)
   , m_comboViewMode(nullptr)
   , m_tableIdFilters(nullptr)
   , m_stackViews(nullptr)
@@ -163,13 +167,78 @@ CFrmRawCanSession::showEvent(QShowEvent* event)
 // ----------------------------------------------------------------------------
 
 void
+CFrmRawCanSession::applyTheme()
+{
+  static const QString tmpl = QStringLiteral(R"(
+    CFrmRawCanSession, QDialog, QWidget { background-color: @bg@; color: @fg@; }
+    QToolBar { background-color: @panel@; border: 1px solid @line@; border-radius: 14px; padding: 8px; spacing: 8px; }
+    QToolButton { background: transparent; color: @fg@; border: 1px solid @border@; border-radius: 16px; padding: 6px 16px; }
+    QToolButton:hover { border-color: @accent@; }
+    QToolButton:checked { color: @accent@; border-color: @accent@; }
+    QToolButton[explorerRole="primary"] { background-color: @pri@; color: @onacc@; border: none; font-weight: 600; }
+    QMenuBar { background-color: @bg@; color: @fg@; }
+    QMenuBar::item:selected, QMenu::item:selected { background-color: @line@; }
+    QMenu { background-color: @panel@; color: @fg@; border: 1px solid @line@; }
+    QGroupBox { background-color: @panel@; border: 1px solid @line@; border-radius: 12px; margin-top: 14px; padding: 10px; }
+    QGroupBox::title { subcontrol-origin: margin; left: 14px; color: @muted@; }
+    QLineEdit, QComboBox, QPlainTextEdit { background-color: @bg@; color: @fg@; border: 1px solid @border@; border-radius: 8px; padding: 4px 8px; }
+    QPushButton { background: transparent; color: @fg@; border: 1px solid @border@; border-radius: 16px; padding: 6px 16px; }
+    QPushButton:hover { border-color: @accent@; }
+    QPushButton[explorerRole="primary"] { background-color: @accent@; color: @onacc@; border: none; font-weight: 600; }
+    QTreeWidget, QTableWidget { background-color: @panel@; alternate-background-color: @panel@; color: @fg@;
+      border: 1px solid @line@; border-radius: 12px; gridline-color: @line@; outline: 0; }
+    QTreeWidget::item { padding: 4px 2px; border-bottom: 1px solid @line@; }
+    QTreeWidget::item:selected, QTableWidget::item:selected { background-color: @selbg@; color: @accent@; }
+    QHeaderView::section { background-color: @panel@; color: @muted@; border: none; padding: 6px 4px; font-size: 11px; font-weight: 600; }
+    QLabel[explorerRole="trace"] { color: @muted@; font-size: 11px; font-weight: 600; padding: 2px 4px; }
+  )");
+  const QStringList light = { "#f5f5f5", "#ffffff", "#e5e5e5", "#d4d4d4", "#171717", "#737373", "#b45309", "#fef3c7", "#fecaca", "#ffffff" };
+  const QStringList dark  = { "#0b0b0b", "#141414", "#262626", "#3f3f3f", "#e5e5e5", "#a3a3a3", "#fbbf24", "#3b2f0a", "#fecaca", "#111111" };
+  const QStringList names = { "@bg@", "@panel@", "@line@", "@border@", "@fg@", "@muted@", "@accent@", "@selbg@", "@pri@", "@onacc@" };
+  const QStringList& colors = m_darkTheme ? dark : light;
+  QString sheet = tmpl;
+  for (int i = 0; i < names.size(); ++i) {
+    sheet.replace(names.at(i), colors.at(i));
+  }
+  setStyleSheet(explorerstyle::styleSheet() + sheet);
+  if (nullptr != m_actToggleTheme) {
+    m_actToggleTheme->setText(m_darkTheme ? tr("Light theme") : tr("Dark theme"));
+  }
+}
+
+// ----------------------------------------------------------------------------
+
+void
+CFrmRawCanSession::toggleTheme()
+{
+  const QSignalBlocker blocker(m_treeFrames);
+  QList<int> selectedRows;
+  for (auto* item : m_treeFrames->selectedItems()) {
+    selectedRows.append(m_treeFrames->indexOfTopLevelItem(item));
+  }
+  m_darkTheme = !m_darkTheme;
+  QSettings().setValue(QStringLiteral("rawcan/darkTheme"), m_darkTheme);
+  applyTheme();
+  refreshViews();
+  for (int row : selectedRows) {
+    if (auto* item = m_treeFrames->topLevelItem(row)) {
+      item->setSelected(true);
+    }
+  }
+  updateStatusLabel();
+}
+
+// ----------------------------------------------------------------------------
+
+void
 CFrmRawCanSession::setupUi()
 {
   setWindowTitle(tr("CAN frame session - %1")
                    .arg(m_interfaceName.isEmpty() ? tr("Unknown device") : m_interfaceName));
   resize(1250, 780);
   setMinimumSize(980, 620);
-  setStyleSheet(explorerstyle::styleSheet());
+  m_darkTheme = QSettings().value(QStringLiteral("rawcan/darkTheme"), true).toBool();
+  applyTheme();
 
   QVBoxLayout* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(14, 8, 14, 14);
@@ -218,10 +287,18 @@ CFrmRawCanSession::setupUi()
   m_comboViewMode->addItem(tr("ID statistics"));
   m_toolBar->addWidget(new QLabel(tr("View "), this));
   m_toolBar->addWidget(m_comboViewMode);
+  m_toolBar->addSeparator();
+  m_actToggleTheme = m_toolBar->addAction(QString());
+  m_actToggleTheme->setToolTip(tr("Switch between dark and light theme"));
+  connect(m_actToggleTheme, &QAction::triggered, this, &CFrmRawCanSession::toggleTheme);
 
   QWidget* spacer = new QWidget(this);
   spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
   m_toolBar->addWidget(spacer);
+
+  m_countersLabel = new QLabel(this);
+  m_countersLabel->setTextFormat(Qt::RichText);
+  m_toolBar->addWidget(m_countersLabel);
 
   m_statusLabel = new QLabel(this);
   m_statusLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -234,16 +311,21 @@ CFrmRawCanSession::setupUi()
   m_actHelp->setShortcut(QKeySequence(Qt::Key_F1));
   m_actHelp->setShortcutContext(Qt::WindowShortcut);
   explorerstyle::setPrimary(m_toolBar, m_actConnect);
+  applyTheme();
   mainLayout->addWidget(m_toolBar);
+
+  QLabel* traceTitle = new QLabel(tr("TRACE  ·  chronological"), this);
+  traceTitle->setProperty("explorerRole", "trace");
+  mainLayout->addWidget(traceTitle);
 
   m_stackViews = new QStackedWidget(this);
 
   m_treeFrames = new QTreeWidget(m_stackViews);
-  m_treeFrames->setAlternatingRowColors(true);
-  m_treeFrames->setColumnCount(5);
+  m_treeFrames->setAlternatingRowColors(false);
+  m_treeFrames->setColumnCount(6);
   m_treeFrames->setSelectionMode(QAbstractItemView::ExtendedSelection);
   m_treeFrames->setSelectionBehavior(QAbstractItemView::SelectRows);
-  m_treeFrames->setHeaderLabels(QStringList() << tr("Time") << tr("ID") << tr("Type") << tr("Format") << tr("Data"));
+  m_treeFrames->setHeaderLabels(QStringList() << tr("TIME") << tr("DIR") << tr("ID") << tr("DLC") << tr("DATA") << tr("TYPE"));
   m_treeFrames->setUniformRowHeights(true);
   m_treeFrames->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_treeFrames->setRootIsDecorated(false);
@@ -254,11 +336,12 @@ CFrmRawCanSession::setupUi()
   m_treeFrames->header()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
   m_treeFrames->header()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
   m_treeFrames->header()->setSectionResizeMode(4, QHeaderView::Stretch);
+  m_treeFrames->header()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
   m_stackViews->addWidget(m_treeFrames);
 
   m_tableSummary = new QTableWidget(m_stackViews);
   m_tableSummary->setColumnCount(5);
-  m_tableSummary->setAlternatingRowColors(true);
+  m_tableSummary->setAlternatingRowColors(false);
   m_tableSummary->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_tableSummary->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_tableSummary->setHorizontalHeaderLabels(
@@ -569,6 +652,7 @@ CFrmRawCanSession::clearLog()
   m_frameHistory.clear();
   m_treeFrames->clear();
   m_tableSummary->setRowCount(0);
+  updateFrameCounters();
 }
 
 // ----------------------------------------------------------------------------
@@ -899,6 +983,7 @@ CFrmRawCanSession::onTemplateSelectionChanged()
 void
 CFrmRawCanSession::refreshViews()
 {
+  updateFrameCounters();
   if (m_stackViews->currentWidget() == m_treeFrames) {
     refreshFrameView();
   }
@@ -936,25 +1021,24 @@ CFrmRawCanSession::refreshFrameView()
                                   .arg(compactPayload.isEmpty() ? tr("<empty>") : compactPayload);
 
     QTreeWidgetItem* frameItem = new QTreeWidgetItem(m_treeFrames);
+    const QString idText = formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat());
     frameItem->setData(0, Qt::UserRole, visibleIndex);
-    frameItem->setText(0, rec.timestamp.toString(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz")));
-    frameItem->setText(1, formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()));
-    frameItem->setText(2, frameTypeText);
-    frameItem->setText(3, rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"));
-    frameItem->setText(4, compactPayload.isEmpty() ? tr("<empty>") : compactPayload);
-    frameItem->setFont(1, monoFont);
+    frameItem->setText(0, rec.timestamp.toString(QStringLiteral("hh:mm:ss.zzz")));
+    frameItem->setText(1, directionText(rec.direction));
+    frameItem->setText(2, idText);
+    frameItem->setText(3, QString::number(rec.frame.payload().size()));
+    frameItem->setText(4, compactPayload);
+    frameItem->setText(5, QStringLiteral("%1 %2").arg(rec.frame.hasExtendedFrameFormat() ? tr("EXT") : tr("STD"), frameTypeText));
+    frameItem->setFont(0, monoFont);
+    frameItem->setFont(2, monoFont);
     frameItem->setFont(4, monoFont);
+    frameItem->setForeground(0, QColor(m_darkTheme ? "#a3a3a3" : "#737373"));
+    frameItem->setForeground(1, FrameDirection::Tx == rec.direction ? QColor(m_darkTheme ? "#67e8f9" : "#0e7490") : QColor(m_darkTheme ? "#86efac" : "#15803d"));
+    frameItem->setForeground(5, QColor(m_darkTheme ? "#a3a3a3" : "#737373"));
     frameItem->setToolTip(0, tr("Frame ID: %1\nPayload: %2\nFlags: %3")
-                                 .arg(formatId(rec.frame.frameId(), rec.frame.hasExtendedFrameFormat()))
+                                 .arg(idText)
                                  .arg(formatPayload(rec.frame.payload()))
                                  .arg(frameFlagsToString(rec.frame)));
-
-    const QColor rowBgColor = rowBackgroundColorForDirection(rec.direction);
-    const QColor rowFgColor = rowForegroundColorForDirection(rec.direction);
-    frameItem->setBackground(0, rowBgColor);
-    frameItem->setBackground(1, rowBgColor);
-    frameItem->setForeground(0, rowFgColor);
-    frameItem->setForeground(1, rowFgColor);
 
     ++visibleIndex;
   }
@@ -965,6 +1049,38 @@ CFrmRawCanSession::refreshFrameView()
   }
 
   updateStatusLabel();
+}
+
+void
+CFrmRawCanSession::updateFrameCounters()
+{
+  int stdCount = 0, extCount = 0, txCount = 0, errCount = 0;
+  for (const FrameRecord& rec : m_frameHistory) {
+    if (!isFrameVisibleByFilter(rec.frame)) {
+      continue;
+    }
+    if (rec.direction == FrameDirection::Tx) {
+      ++txCount;
+    }
+    if (QCanBusFrame::ErrorFrame == rec.frame.frameType()) {
+      ++errCount;
+    }
+    else if (rec.frame.hasExtendedFrameFormat()) {
+      ++extCount;
+    }
+    else {
+      ++stdCount;
+    }
+  }
+
+  m_countersLabel->setText(
+    QStringLiteral("<span style='color:%5'><b>STD</b></span> %1 &nbsp;"
+                   "<span style='color:%6'><b>EXT</b></span> %2 &nbsp;"
+                   "<span style='color:%7'><b>TX</b></span> %3 &nbsp;"
+                   "<span style='color:%8'><b>ERR</b></span> %4")
+      .arg(stdCount).arg(extCount).arg(txCount).arg(errCount)
+      .arg(m_darkTheme ? "#86efac" : "#15803d", m_darkTheme ? "#fbbf24" : "#b45309",
+           m_darkTheme ? "#67e8f9" : "#0e7490", m_darkTheme ? "#fca5a5" : "#b91c1c"));
 }
 
 // ----------------------------------------------------------------------------
