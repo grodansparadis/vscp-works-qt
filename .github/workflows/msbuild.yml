@@ -52,12 +52,22 @@ jobs:
         shell: pwsh
         run: |
           $vcpkg = "${{ github.workspace }}/.vcpkg/vcpkg.exe"
-          & $vcpkg install curl:${env:TRIPLET}
-          & $vcpkg install dlfcn-win32:${env:TRIPLET}
-          & $vcpkg install expat:${env:TRIPLET}
-          & $vcpkg install mosquitto:${env:TRIPLET}
-          & $vcpkg install openssl:${env:TRIPLET}
-          & $vcpkg install pthreads:${env:TRIPLET}
+          $packages = @("curl", "dlfcn-win32", "expat", "mosquitto", "openssl", "pthreads")
+          foreach ($package in $packages) {
+            $packageSpec = "${package}:${env:TRIPLET}"
+            for ($attempt = 1; $attempt -le 3; $attempt++) {
+              & $vcpkg install $packageSpec
+              if ($LASTEXITCODE -eq 0) {
+                break
+              }
+              if ($attempt -eq 3) {
+                throw "vcpkg install $packageSpec failed after $attempt attempts"
+              }
+              $delaySeconds = 10 * $attempt
+              Write-Warning "vcpkg install $packageSpec failed (attempt $attempt); retrying in $delaySeconds seconds"
+              Start-Sleep -Seconds $delaySeconds
+            }
+          }
 
       - name: Configure
         shell: cmd
