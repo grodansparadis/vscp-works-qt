@@ -836,7 +836,7 @@ if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 include(InstallRequiredSystemLibraries)
 
 file(READ "${CMAKE_SOURCE_DIR}/src/version.h" VSCP_VERSION_HEADER)
-string(REGEX MATCH "#define VSCPWORKS_DISPLAY_VERSION[ 	]+\"([0-9]+)-([0-9]+)-([0-9]+)\"" _ "${VSCP_VERSION_HEADER}")
+string(REGEX MATCH "#define VSCPWORKS_DISPLAY_VERSION[ 	]+\"([0-9]+)[.]([0-9]+)[.]([0-9]+)\"" _ "${VSCP_VERSION_HEADER}")
 set(CPACK_PACKAGE_VERSION_MAJOR "${CMAKE_MATCH_1}")
 set(CPACK_PACKAGE_VERSION_MINOR "${CMAKE_MATCH_2}")
 set(CPACK_PACKAGE_VERSION_PATCH "${CMAKE_MATCH_3}")

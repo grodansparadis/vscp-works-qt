@@ -46,8 +46,8 @@ string(REGEX REPLACE
 
 # Update the display version in the same header.
 string(REGEX REPLACE
-  "(#define VSCPWORKS_DISPLAY_VERSION[ \t]+\")[0-9]+-[0-9]+-[0-9]+"
-  "\\1${PUBLIC_MAJOR}-${PUBLIC_MINOR}-${PATCH_COUNT}"
+  "(#define VSCPWORKS_DISPLAY_VERSION[ \t]+\")[0-9]+[.][0-9]+[.][0-9]+"
+  "\\1${PUBLIC_MAJOR}.${PUBLIC_MINOR}.${PATCH_COUNT}"
   VERSION_CONTENTS "${VERSION_CONTENTS}"
 )
 file(WRITE "${VERSION_FILE}" "${VERSION_CONTENTS}")
@@ -59,4 +59,4 @@ string(REGEX REPLACE
 )
 file(WRITE "${DOC_VARS_FILE}" "${DOC_VARS_CONTENTS}")
 
-message(STATUS "Build version: ${PUBLIC_MAJOR}-${PUBLIC_MINOR}-${PATCH_COUNT}")
+message(STATUS "Build version: ${PUBLIC_MAJOR}.${PUBLIC_MINOR}.${PATCH_COUNT}")
