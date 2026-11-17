@@ -276,10 +276,6 @@ QString diffToHtml(const QString& before, const QString& after)
     return QCoreApplication::translate("CFrmMqttExplorer", "Diff is too large to display.");
   }
   const int n = a.size(), m = b.size();
-  constexpr qint64 kMaxDiffCells = 1000000;
-  if ((qint64(n) + 1) * (qint64(m) + 1) > kMaxDiffCells) {
-    return CFrmMqttExplorer::tr("Messages are too large to compare. Select a smaller message.");
-  }
   QVector<QVector<int>> lcs(n + 1, QVector<int>(m + 1, 0));
   for (int i = n - 1; i >= 0; --i) {
     for (int j = m - 1; j >= 0; --j) {
