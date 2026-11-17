@@ -711,6 +711,24 @@ if(BUILD_TESTING)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test/find_mosquitto.py
   )
   set_tests_properties(find_mosquitto PROPERTIES LABELS "cmake" TIMEOUT 60)
+  if(NOT WIN32)
+    add_executable(explorer_regressions
+      test/explorer_regressions.cpp
+      src/cfrmmqttexplorer.h
+      src/cfrmrawcansession.h
+      src/explorerstyle.cpp
+    )
+    target_include_directories(explorer_regressions PRIVATE
+      $<TARGET_PROPERTY:${PROJECT_NAME},INCLUDE_DIRECTORIES>
+    )
+    target_link_libraries(explorer_regressions PRIVATE
+      Qt6::Widgets Qt6::SerialBus ${MOSQUITTO_LIBRARIES}
+    )
+    add_test(NAME explorer_regressions COMMAND explorer_regressions)
+    set_tests_properties(explorer_regressions PROPERTIES
+      ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30
+    )
+  endif()
 endif()
 
 if (MSVC)

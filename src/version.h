@@ -37,9 +37,13 @@
 // 39/40/41/42/43/44/45/46 I M P O T A N T ! ! !
 #define VSCPWORKS_MAJOR_VERSION     26
 #define VSCPWORKS_MINOR_VERSION     11
-#define VSCPWORKS_PATCH_VERSION     284
+#define VSCPWORKS_PATCH_VERSION     286
 
+<<<<<<< HEAD
 #define VSCPWORKS_DISPLAY_VERSION   "26.11.284"
+=======
+#define VSCPWORKS_DISPLAY_VERSION   "26-11-286"
+>>>>>>> c192bec7ab9997ce16d21847b2651310d78e755d
 
 #define VSCPWORKS_COPYRIGHT                                                    \
     "Copyright (C) 2000-2026 Ake Hedman, Grodans Paradis AB, "                   \
