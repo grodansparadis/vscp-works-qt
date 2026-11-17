@@ -2195,6 +2195,35 @@ MainWindow::connectionsWasModified()
   // setWindowModified(m_textEdit->document()->isModified());
 }
 
+void
+MainWindow::updateConnectionTheme(const QString& uuid, bool darkTheme)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  pworks->setConnectionTheme(uuid, darkTheme);
+
+  const std::string connectionId = uuid.toStdString();
+  for (int groupIndex = 0; groupIndex < m_connTreeTable->topLevelItemCount(); ++groupIndex) {
+    QTreeWidgetItem* group = m_connTreeTable->topLevelItem(groupIndex);
+    for (int connectionIndex = 0; connectionIndex < group->childCount(); ++connectionIndex) {
+      auto* item = dynamic_cast<treeWidgetItemConn*>(group->child(connectionIndex));
+      if (nullptr == item) {
+        continue;
+      }
+      json* conn = item->getJson();
+      if (!conn->contains("uuid") || !(*conn)["uuid"].is_string() ||
+          (*conn)["uuid"].get<std::string>() != connectionId) {
+        continue;
+      }
+
+      if (!conn->contains("ui") || !(*conn)["ui"].is_object()) {
+        (*conn)["ui"] = json::object();
+      }
+      (*conn)["ui"]["theme"] = darkTheme ? "dark" : "light";
+      return;
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // createActions for Main menu
 //
@@ -2686,6 +2715,10 @@ MainWindow::newSession()
       json* pconn    = itemConn->getJson();
       const int type = (*pconn)["type"].get<int>();
       CFrmSession* w = new CFrmSession(this, pconn);
+      connect(w,
+              &CFrmSession::connectionThemeChanged,
+              this,
+              &MainWindow::updateConnectionTheme);
       if (!w->isConnected() && (pworks->m_session_bAutoConnect)) {
         delete w;
         return;
@@ -2724,6 +2757,10 @@ MainWindow::newMqttExplorer()
       }
 
       CFrmMqttExplorer* w = new CFrmMqttExplorer(this, &conn);
+      connect(w,
+              &CFrmMqttExplorer::connectionThemeChanged,
+              this,
+              &MainWindow::updateConnectionTheme);
       w->setAttribute(Qt::WA_DeleteOnClose, true);
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
@@ -2760,6 +2797,10 @@ MainWindow::newMqttExplorer()
           return;
         }
         CFrmMqttExplorer* w = new CFrmMqttExplorer(this, &copied);
+        connect(w,
+                &CFrmMqttExplorer::connectionThemeChanged,
+                this,
+                &MainWindow::updateConnectionTheme);
         w->setAttribute(Qt::WA_DeleteOnClose, true);
         w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
         w->setWindowFlags(Qt::Window);
@@ -2771,6 +2812,10 @@ MainWindow::newMqttExplorer()
     }
 
     CFrmMqttExplorer* w = new CFrmMqttExplorer(this, pconn);
+    connect(w,
+            &CFrmMqttExplorer::connectionThemeChanged,
+            this,
+            &MainWindow::updateConnectionTheme);
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     w->setWindowFlags(Qt::Window);
@@ -2800,6 +2845,10 @@ MainWindow::newRawCanSession()
       }
 
       CFrmRawCanSession* w = new CFrmRawCanSession(this, &conn);
+      connect(w,
+              &CFrmRawCanSession::connectionThemeChanged,
+              this,
+              &MainWindow::updateConnectionTheme);
       w->setAttribute(Qt::WA_DeleteOnClose, true);
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
       w->setWindowFlags(Qt::Window);
@@ -2841,6 +2890,10 @@ MainWindow::newRawCanSession()
           return;
         }
         CFrmRawCanSession* w = new CFrmRawCanSession(this, &copied);
+        connect(w,
+                &CFrmRawCanSession::connectionThemeChanged,
+                this,
+                &MainWindow::updateConnectionTheme);
         w->setAttribute(Qt::WA_DeleteOnClose, true);
         w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
         w->setWindowFlags(Qt::Window);
@@ -2852,6 +2905,10 @@ MainWindow::newRawCanSession()
     }
 
     CFrmRawCanSession* w = new CFrmRawCanSession(this, pconn);
+    connect(w,
+            &CFrmRawCanSession::connectionThemeChanged,
+            this,
+            &MainWindow::updateConnectionTheme);
     w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
     w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     w->setWindowFlags(Qt::Window);

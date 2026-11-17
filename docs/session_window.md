@@ -16,6 +16,7 @@ The window has three parts:
 | ---- | ----------- |
 | Numerical base | Select `Hex`, `Decimal`, `Octal` or `Binary` presentation of numbers. |
 | Connect/disconnect | Connect to or disconnect from the remote host/interface (`Ctrl+O`). The icon shows the connection state. If `Connect automatically` is set in the [settings](settings.md?id=session-window) the window connects when it is opened. |
+| Theme | Switch between dark and light appearance. The selected theme is saved with the connection; new connections use the default in [settings](settings.md?id=general). |
 | Clear receive list | Remove all rows from the receive list. |
 | Unselect all | Unselect all rows in the receive list. |
 

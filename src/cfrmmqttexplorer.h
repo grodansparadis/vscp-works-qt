@@ -38,6 +38,9 @@ public:
   explicit CFrmMqttExplorer(QWidget* parent, json* pconn);
   ~CFrmMqttExplorer();
 
+signals:
+  void connectionThemeChanged(const QString& uuid, bool darkTheme);
+
 private slots:
   /*!
     Open the manual page for this window

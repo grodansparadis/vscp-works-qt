@@ -58,6 +58,7 @@
 #include <vscp-client-ws2.h>
 
 #include "cfrmnodeconfig.h"
+#include "mainwindow.h"
 
 #include "cfrmnodescan.h"
 #include "ui_cfrmnodescan.h"
@@ -1196,8 +1197,25 @@ void
 CFrmNodeScan::goSession(void)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  json sessionConnection = m_connObject;
+  const QString uuid = vscpworks_connectionUuid(sessionConnection);
+  const auto connection = pworks->m_mapConn.constFind(uuid.toStdString());
+  if ((connection != pworks->m_mapConn.constEnd()) &&
+      connection.value().contains("ui") && connection.value()["ui"].is_object() &&
+      connection.value()["ui"].contains("theme")) {
+    if (!sessionConnection.contains("ui") || !sessionConnection["ui"].is_object()) {
+      sessionConnection["ui"] = json::object();
+    }
+    sessionConnection["ui"]["theme"] = connection.value()["ui"]["theme"];
+  }
 
-  CFrmSession* w = new CFrmSession(parentWidget(), &m_connObject);
+  CFrmSession* w = new CFrmSession(parentWidget(), &sessionConnection);
+  if (auto* mainWindow = qobject_cast<MainWindow*>(parentWidget())) {
+    connect(w,
+            &CFrmSession::connectionThemeChanged,
+            mainWindow,
+            &MainWindow::updateConnectionTheme);
+  }
   w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
   w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
   w->setWindowFlags(Qt::Window);

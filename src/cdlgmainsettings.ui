@@ -190,11 +190,14 @@
         </item>
         <item row="2" column="1">
          <widget class="QCheckBox" name="chkDarkTheme">
+           <property name="toolTip">
+            <string>Default appearance for session, raw CAN and raw MQTT windows unless a connection has its own theme.</string>
+           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(222, 221, 218);</string>
           </property>
           <property name="text">
-           <string>Dark theme</string>
+            <string>Use dark theme by default</string>
           </property>
          </widget>
         </item>

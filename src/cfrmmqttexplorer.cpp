@@ -1,5 +1,6 @@
 #include "cfrmmqttexplorer.h"
 #include "explorerstyle.h"
+#include "vscpworks.h"
 
 #include <mosquitto.h>
 
@@ -34,7 +35,6 @@
 #include <QPushButton>
 #include <QDesktopServices>
 #include <QPalette>
-#include <QSettings>
 #include <QSplitter>
 #include <QTextStream>
 #include <QTreeWidget>
@@ -531,7 +531,9 @@ CFrmMqttExplorer::setupUi()
   setAttribute(Qt::WA_DeleteOnClose, true);
   setWindowTitle(tr("MQTT raw explorer"));
   resize(1200, 760);
-  m_darkTheme = QSettings().value(QStringLiteral("rawmqtt/darkTheme"), true).toBool();
+  m_darkTheme = vscpworks_connectionDarkTheme(
+    m_conn,
+    QCoreApplication::instance()->property("defaultDarkTheme").toBool());
 
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(14, 8, 14, 10);
@@ -940,7 +942,8 @@ void
 CFrmMqttExplorer::toggleTheme()
 {
   m_darkTheme = !m_darkTheme;
-  QSettings().setValue(QStringLiteral("rawmqtt/darkTheme"), m_darkTheme);
+  vscpworks_setConnectionTheme(m_conn, m_darkTheme);
+  emit connectionThemeChanged(vscpworks_connectionUuid(m_conn), m_darkTheme);
   applyTheme();
   refreshSelectedDetails();
   updateDiff();

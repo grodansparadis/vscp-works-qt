@@ -19,7 +19,7 @@ The explorer attempts to connect when it opens. Use `Connect` to retry or reconn
 
 ## Appearance
 
-Use the theme action at the right of the toolbar to switch between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is remembered for future MQTT raw explorer windows.
+Use the theme action at the right of the toolbar to switch between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is saved with the connection. New connections use the default in [settings](settings.md?id=general).
 
 ## Subscribing
 

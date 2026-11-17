@@ -261,6 +261,7 @@ CDlgMainSettings::done(int rv)
     // General
     pworks->m_base              = static_cast<numerical_base>(ui->comboNumberBase->currentIndex());
     pworks->m_bEnableDarkTheme  = ui->chkDarkTheme->isChecked();
+    pworks->setProperty("defaultDarkTheme", pworks->m_bEnableDarkTheme);
     pworks->m_bAskBeforeDelete  = ui->chkAskOnDelete->isChecked();
     pworks->m_bSaveAlwaysJSON   = ui->chkAlwaysJSON->isChecked();
     pworks->m_mdfAutoSaveEnabled = ui->chkMdfAutoSave->isChecked();

@@ -66,6 +66,9 @@ public:
   explicit CFrmRawCanSession(QWidget* parent, json* pconn);
   ~CFrmRawCanSession();
 
+signals:
+  void connectionThemeChanged(const QString& uuid, bool darkTheme);
+
 private slots:
   void connectOrDisconnect();
   void sendFrame();

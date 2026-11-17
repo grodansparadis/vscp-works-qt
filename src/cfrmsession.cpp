@@ -62,6 +62,7 @@
 #include "cdlgmainsettings.h"
 #include "cdlgtxedit.h"
 #include "cfrmmeasurementview.h"
+#include "vscpworks.h"
 
 #include <QClipboard>
 #include <QFile>
@@ -78,6 +79,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <utility>
 
 // ----------------------------------------------------------------------------
 
@@ -131,6 +133,8 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   // No connection set yet
   m_vscpConnType = CVscpClient::connType::NONE;
   m_vscpClient   = NULL;
+  m_themeAct = nullptr;
+  m_darkTheme = QCoreApplication::instance()->property("defaultDarkTheme").toBool();
 
   // Poll timer – started only when the interface requires polling
   m_pollTimer = new QTimer(this);
@@ -151,6 +155,9 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
 
   // Save session configuration
   m_connObject = *pconn;
+  m_darkTheme = vscpworks_connectionDarkTheme(
+    m_connObject,
+    QCoreApplication::instance()->property("defaultDarkTheme").toBool());
 
   // Must have a type
   if (!(m_connObject.contains("type") && m_connObject["type"].is_number())) {
@@ -221,6 +228,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   mainLayout->addWidget(m_txGroupBox, 3);
 
   setLayout(mainLayout);
+  applyTheme();
 
   /*!
     This is an old construct to call a method from a
@@ -229,7 +237,7 @@ CFrmSession::CFrmSession(QWidget* parent, json* pconn)
   qDebug() << connect(this,
                       &CFrmSession::dataReceived,
                       this,
-                      &CFrmSession::receiveRxRow,
+                      &CFrmSession::receivePendingRows,
                       Qt::ConnectionType::QueuedConnection);
 
   // QJsonDocument doc(m_connObject);
@@ -284,6 +292,14 @@ CFrmSession::~CFrmSession()
     vscp_deleteEvent(pev);
     pev = nullptr;
   }
+
+  m_mutexReceiveCallBack.lock();
+  while (m_pendingRxEvents.size()) {
+    vscp_event_t* pev = m_pendingRxEvents.front();
+    m_pendingRxEvents.pop_front();
+    vscp_deleteEvent(pev);
+  }
+  m_mutexReceiveCallBack.unlock();
 
   // This should neo be needed
   // m_txTable->clear();
@@ -633,6 +649,152 @@ CFrmSession::createToolbar()
   //         SIGNAL(triggered()),
   //         this,
   //         SLOT(menu_disconnect()));
+
+  m_toolBar->addSeparator();
+  m_themeAct = m_toolBar->addAction(QString());
+  m_themeAct->setToolTip(tr("Switch between dark and light theme"));
+  connect(m_themeAct, &QAction::triggered, this, &CFrmSession::toggleTheme);
+}
+
+void
+CFrmSession::applyTheme()
+{
+  QPalette themePalette = QApplication::palette();
+  if (m_darkTheme) {
+    themePalette.setColor(QPalette::Window, QColor("#0b0b0b"));
+    themePalette.setColor(QPalette::WindowText, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Base, QColor("#141414"));
+    themePalette.setColor(QPalette::AlternateBase, QColor("#1d1d1d"));
+    themePalette.setColor(QPalette::Text, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Button, QColor("#262626"));
+    themePalette.setColor(QPalette::ButtonText, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Mid, QColor("#3f3f3f"));
+    themePalette.setColor(QPalette::Midlight, QColor("#262626"));
+    themePalette.setColor(QPalette::Highlight, QColor("#3b2f0a"));
+    themePalette.setColor(QPalette::HighlightedText, QColor("#fef08a"));
+    themePalette.setColor(QPalette::ToolTipBase, QColor("#141414"));
+    themePalette.setColor(QPalette::ToolTipText, QColor("#e5e5e5"));
+  }
+
+  QString style;
+  if (m_darkTheme) {
+    style = QStringLiteral(R"(
+      QDialog, QWidget { background-color: #0b0b0b; color: #e5e5e5; }
+      QMenuBar { background-color: #0b0b0b; color: #e5e5e5; }
+      QMenuBar::item:selected, QMenu::item:selected { background-color: #3f3f3f; }
+      QMenu { background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QToolBar { background-color: #0b0b0b; color: #e5e5e5; }
+      QGroupBox { background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QLineEdit, QComboBox, QSpinBox, QTextBrowser {
+        background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f;
+      }
+      QComboBox QAbstractItemView { background-color: #141414; color: #e5e5e5; }
+      QPushButton, QToolButton { background-color: #262626; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QPushButton:hover, QToolButton:hover { background-color: #3f3f3f; }
+      QTableWidget {
+        background-color: #141414; alternate-background-color: #1d1d1d; color: #e5e5e5;
+        gridline-color: #3f3f3f; selection-background-color: #3b2f0a; selection-color: #fef08a;
+      }
+      QHeaderView::section { background-color: #0b0b0b; color: #a3a3a3; border: 1px solid #3f3f3f; }
+      QCheckBox { color: #e5e5e5; }
+      QLCDNumber { color: #fbbf24; }
+    )");
+  }
+  setStyleSheet(style);
+  setPalette(themePalette);
+  for (QWidget* widget : findChildren<QWidget*>()) {
+    widget->setPalette(themePalette);
+  }
+
+  refreshThemeItemColors();
+  if (nullptr != m_themeAct) {
+    m_themeAct->setText(m_darkTheme ? tr("Light theme") : tr("Dark theme"));
+  }
+}
+
+void
+CFrmSession::toggleTheme()
+{
+  m_darkTheme = !m_darkTheme;
+  vscpworks_setConnectionTheme(m_connObject, m_darkTheme);
+  emit connectionThemeChanged(vscpworks_connectionUuid(m_connObject), m_darkTheme);
+  applyTheme();
+
+  if (!m_rxTable->selectedItems().isEmpty()) {
+    if (1 == m_rxTable->selectionModel()->selectedRows().size()) {
+      fillRxStatusInfo(m_rxTable->currentRow());
+    }
+    else {
+      fillReceiveEventDiff();
+    }
+  }
+  else {
+    fillReceiveEventCount();
+  }
+}
+
+void
+CFrmSession::refreshThemeItemColors()
+{
+  const QColor blue = m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180);
+  const QColor green = m_darkTheme ? QColor("#86efac") : QColor(0, 99, 0);
+  const QColor marker = m_darkTheme ? QColor("#3b2f0a") : QColor(Qt::cyan);
+  const QColor markerText = m_darkTheme ? QColor("#fef08a") : QColor(Qt::black);
+
+  if (nullptr != m_rxTable) {
+    for (int row = 0; row < m_rxTable->rowCount(); ++row) {
+      for (int column = 0; column < m_rxTable->columnCount(); ++column) {
+        QTableWidgetItem* item = m_rxTable->item(row, column);
+        if (nullptr == item) {
+          continue;
+        }
+
+        const QBrush background = item->background();
+        const bool marked = (Qt::NoBrush != background.style()) &&
+                            (QColor(Qt::cyan) == background.color() ||
+                             QColor("#3b2f0a") == background.color());
+        if (marked) {
+          item->setBackground(marker);
+          item->setForeground(markerText);
+        }
+        else {
+          if (m_darkTheme && (QColor(Qt::white) == background.color())) {
+            item->setBackground(QBrush());
+          }
+          if (0 == column || 2 == column) {
+            item->setForeground(blue);
+          }
+          else if (1 == column) {
+            item->setForeground(green);
+          }
+        }
+      }
+    }
+  }
+
+  if (nullptr != m_txTable) {
+    for (int row = 0; row < m_txTable->rowCount(); ++row) {
+      if (QTableWidgetItem* item = m_txTable->item(row, txrow_name)) {
+        item->setForeground(blue);
+      }
+      if (QTableWidgetItem* item = m_txTable->item(row, txrow_event)) {
+        item->setForeground(green);
+      }
+    }
+  }
+}
+
+bool
+CFrmSession::isVscpRowMarked(const QTableWidgetItem* item) const
+{
+  if (nullptr == item) {
+    return false;
+  }
+
+  const QBrush background = item->background();
+  return (Qt::NoBrush != background.style()) &&
+         (QColor(Qt::cyan) == background.color() ||
+          QColor("#3b2f0a") == background.color());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -669,6 +831,9 @@ CFrmSession::createRxGroupBox()
   m_rxTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
   m_rxTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_rxTable->setAlternatingRowColors(true);
+  m_rxTable->setWordWrap(false);
+  m_rxTable->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+  m_rxTable->verticalHeader()->setDefaultSectionSize(10);
 
   m_rxTable->setColumnCount(5);
   m_rxTable->setColumnWidth(0, 10);  // Dir
@@ -723,6 +888,9 @@ CFrmSession::createTxGridGroup()
   m_txTable->setContextMenuPolicy(Qt::CustomContextMenu); // Enable context menu
   m_txTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   m_txTable->setAlternatingRowColors(true);
+  m_txTable->setWordWrap(false);
+  m_txTable->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+  m_txTable->verticalHeader()->setDefaultSectionSize(10);
   m_txTable->setColumnCount(5);
   m_txTable->setColumnWidth(txrow_enable, 80); // x
   m_txTable->setColumnWidth(txrow_name, 200);  // Name
@@ -1208,7 +1376,7 @@ CFrmSession::addTxRow(bool bEnable,
   item->setFlags(item->flags() & ~Qt::ItemIsEditable);
   item->setText(name);
   // Bluish
-  item->setForeground(QBrush(QColor(0, 5, 180)));
+  item->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
   m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
 
   // Count
@@ -1266,15 +1434,9 @@ CFrmSession::addTxRow(bool bEnable,
   vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
   strEvent += str.c_str();
   itemEvent->setText(strEvent);
-  itemEvent->setForeground(QBrush(QColor(0, 99, 0)));
+  itemEvent->setForeground(QBrush(m_darkTheme ? QColor("#86efac") : QColor(0, 99, 0)));
   m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemEvent);
 
-  m_txTable->setUpdatesEnabled(false);
-  for (int i = 0; i < m_txTable->rowCount(); i++) {
-    m_txTable->setRowHeight(i, 10);
-  }
-
-  m_txTable->setUpdatesEnabled(true);
   return true;
 }
 
@@ -1493,7 +1655,7 @@ CFrmSession::addTxEvent(void)
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     item->setText(dlg.getName());
     // Bluish
-    item->setForeground(QBrush(QColor(0, 5, 180)));
+    item->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
     m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
 
     // Count
@@ -1560,14 +1722,8 @@ CFrmSession::addTxEvent(void)
     vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
     strEvent += str.c_str();
     itemEvent->setText(strEvent);
-    itemEvent->setForeground(QBrush(QColor(0, 99, 0)));
+    itemEvent->setForeground(QBrush(m_darkTheme ? QColor("#86efac") : QColor(0, 99, 0)));
     m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemEvent);
-
-    m_txTable->setUpdatesEnabled(false);
-    for (int i = 0; i < m_txTable->rowCount(); i++) {
-      m_txTable->setRowHeight(i, 10);
-    }
-    m_txTable->setUpdatesEnabled(true);
 
     // Autosave TX data
     saveTxOnExit();
@@ -1742,7 +1898,7 @@ CFrmSession::cloneTxEvent(void)
     item->setFlags(item->flags() & ~Qt::ItemIsEditable);
     item->setText(name);
     // Bluish
-    item->setForeground(QBrush(QColor(0, 5, 180)));
+    item->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
     m_txTable->setItem(m_txTable->rowCount() - 1, txrow_name, item);
 
     // Count
@@ -1784,14 +1940,8 @@ CFrmSession::cloneTxEvent(void)
     vscp_writeDataWithSizeToString(str, pev->pdata, pev->sizeData);
     strEvent += str.c_str();
     itemTargetEvent->setText(strEvent);
-    itemTargetEvent->setForeground(QBrush(QColor(0, 99, 0)));
+    itemTargetEvent->setForeground(QBrush(m_darkTheme ? QColor("#86efac") : QColor(0, 99, 0)));
     m_txTable->setItem(m_txTable->rowCount() - 1, txrow_event, itemTargetEvent);
-
-    m_txTable->setUpdatesEnabled(false);
-    for (int i = 0; i < m_txTable->rowCount(); i++) {
-      m_txTable->setRowHeight(i, 10);
-    }
-    m_txTable->setUpdatesEnabled(true);
 
     // Autosave TX data
     saveTxOnExit();
@@ -2919,13 +3069,15 @@ CFrmSession::setVscpRowMark(void)
   QList<QTableWidgetItem*> sellist = m_rxTable->selectedItems();
   QList<QTableWidgetItem*>::iterator it;
   for (it = sellist.begin(); it != sellist.end(); it++) {
-    if (QBrush(Qt::cyan) == (*it)->background()) {
-      (*it)->setBackground(Qt::white);
+    const QColor markColor = m_darkTheme ? QColor("#3b2f0a") : QColor(Qt::cyan);
+    if ((*it)->background().color() == markColor) {
+      (*it)->setBackground(m_darkTheme ? QBrush() : QBrush(Qt::white));
     }
     else {
-      (*it)->setBackground(Qt::cyan);
+      (*it)->setBackground(markColor);
     }
   }
+  refreshThemeItemColors();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -2938,8 +3090,9 @@ CFrmSession::unsetVscpRowMark(void)
   QList<QTableWidgetItem*> sellist = m_rxTable->selectedItems();
   QList<QTableWidgetItem*>::iterator it;
   for (it = sellist.begin(); it != sellist.end(); it++) {
-    (*it)->setBackground(Qt::white);
+    (*it)->setBackground(m_darkTheme ? QBrush() : QBrush(Qt::white));
   }
+  refreshThemeItemColors();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -3168,12 +3321,12 @@ CFrmSession::saveMarkRxToFile(void)
     for (int i = 0; i < m_rxTable->rowCount(); i++) {
 
       QTableWidgetItem* itemDir = m_rxTable->item(i, rxrow_dir);
-      if (QBrush(Qt::cyan) == itemDir->background()) {
+      if (isVscpRowMarked(itemDir)) {
 
         stream.writeStartElement("row");
 
         stream.writeAttribute("mark-row",
-                              (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+                              isVscpRowMarked(itemDir) ? "true" : "false");
 
         QTableWidgetItem* itemClass = m_rxTable->item(i, rxrow_class);
         stream.writeAttribute("mark-class",
@@ -3260,7 +3413,7 @@ CFrmSession::saveRxToFile(void)
         // stream.writeAttribute("a", QString::number(itemDir->background().color().alpha()));
 
         stream.writeAttribute("mark-row",
-                              (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+                              isVscpRowMarked(itemDir) ? "true" : "false");
 
         QTableWidgetItem* itemClass = m_rxTable->item(it->row(), rxrow_class);
         stream.writeAttribute("mark-class",
@@ -3304,7 +3457,7 @@ CFrmSession::saveRxToFile(void)
         stream.writeAttribute("rgba", QString::number(rgba));
 
         stream.writeAttribute("mark-row",
-                              (QBrush(Qt::cyan) == itemDir->background()) ? "true" : "false");
+                              isVscpRowMarked(itemDir) ? "true" : "false");
 
         QTableWidgetItem* itemClass = m_rxTable->item(i, rxrow_class);
         stream.writeAttribute("mark-class",
@@ -3386,7 +3539,7 @@ CFrmSession::saveSessionToFile(const QString& path)
       int r, g, b, a;
       bc.getRgb(&r, &g, &b, &a);
       rxRow["rgba"] = (((uint32_t)r) << 24) + (((uint32_t)g) << 16) + (((uint32_t)b) << 8) + a;
-      rxRow["mark-row"] = (QBrush(Qt::cyan) == itemDir->background()) ? true : false;
+      rxRow["mark-row"] = isVscpRowMarked(itemDir);
     }
     else {
       rxRow["flags"] = 0;
@@ -3584,27 +3737,27 @@ CFrmSession::loadSessionFromFile(const QString& path)
         itemDir->setTextAlignment(Qt::AlignCenter);
         itemDir->setData(rxrow_role_flags, flags);
         itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
-        itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+        itemDir->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
         if (bMarkRow) {
-          itemDir->setBackground(QBrush(Qt::cyan));
+          itemDir->setBackground(QBrush(m_darkTheme ? QColor("#3b2f0a") : QColor(Qt::cyan)));
         }
         m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
 
-        if (!m_rxTable->selectedItems().size()) {
+        if (!m_rxTable->selectionModel()->hasSelection()) {
           m_rxTable->scrollToItem(itemDir);
         }
 
         QTableWidgetItem* itemClass = new QTableWidgetItem();
         setClassInfoForRow(itemClass, pev);
         if (bMarkClass) {
-          itemClass->setBackground(QBrush(Qt::cyan));
+          itemClass->setBackground(QBrush(m_darkTheme ? QColor("#3b2f0a") : QColor(Qt::cyan)));
         }
         m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
 
         QTableWidgetItem* itemType = new QTableWidgetItem();
         setTypeInfoForRow(itemType, pev);
         if (bMarkType) {
-          itemType->setBackground(QBrush(Qt::cyan));
+          itemType->setBackground(QBrush(m_darkTheme ? QColor("#3b2f0a") : QColor(Qt::cyan)));
         }
         m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
 
@@ -3799,13 +3952,13 @@ CFrmSession::loadRxFromFile(void)
         itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
 
         // Bluish
-        itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+        itemDir->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
 
         // Add
         m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
 
         // If one or more rows are selected don't autoscroll
-        if (!m_rxTable->selectedItems().size()) {
+        if (!m_rxTable->selectionModel()->hasSelection()) {
           m_rxTable->scrollToItem(itemDir);
         }
 
@@ -3829,12 +3982,6 @@ CFrmSession::loadRxFromFile(void)
         QTableWidgetItem* itemGuid = new QTableWidgetItem();
         setGuidInfoForRow(itemGuid, pev);
         m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
-
-        m_rxTable->setUpdatesEnabled(false);
-        for (int i = 0; i < m_rxTable->rowCount(); i++) {
-          m_rxTable->setRowHeight(i, 10);
-        }
-        m_rxTable->setUpdatesEnabled(true);
 
         // Display number of items
         m_lcdNumber->display(m_rxTable->rowCount());
@@ -3959,6 +4106,24 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     "<b>Data: </b><br><span style=\"color:rgb(0, 102, 0);\">"
     "{{{VscpData}}}</span><small>{{{VscpMeasurement}}}</small>"
     "{{{VscpComment}}}";
+
+  if (m_darkTheme) {
+    const std::pair<std::string, std::string> replacements[] = {
+      { "rgb(0, 0, 153)", "#93c5fd" },
+      { "rgb(0, 102, 0)", "#86efac" },
+      { "#666699", "#a5b4fc" },
+      { "#993399", "#d8b4fe" }
+    };
+    for (const auto& replacement : replacements) {
+      size_t pos = 0;
+      while ((pos = strVscpTemplate.find(replacement.first, pos)) !=
+             std::string::npos) {
+        strVscpTemplate.replace(
+          pos, replacement.first.length(), replacement.second);
+        pos += replacement.second.length();
+      }
+    }
+  }
 
   // Set event render template
   mustache templ{ strVscpTemplate };
@@ -4112,8 +4277,8 @@ CFrmSession::fillRxStatusInfo(int selectedRow)
     _data.set("lbl-end",
               "</b></small>"); // Label end (for "label: value"  renderings)
     _data.set("val-start",
-              "<span style=\"color:#666699\">"); // Value start (for "label:
-                                                 // value"  renderings)
+              m_darkTheme ? "<span style=\"color:#a5b4fc\">"
+                          : "<span style=\"color:#666699\">");
     _data.set("val-end",
               "</span>"); // Value end (for "label: value"  renderings)
 
@@ -4492,7 +4657,7 @@ CFrmSession::setClassInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
       pev->vscp_class)
       .c_str());
   item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-  item->setForeground(QBrush(QColor(0, 99, 0)));
+  item->setForeground(QBrush(m_darkTheme ? QColor("#86efac") : QColor(0, 99, 0)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4585,7 +4750,7 @@ CFrmSession::setTypeInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
       pev->vscp_type)
       .c_str());
   item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-  item->setForeground(QBrush(QColor(0, 5, 180)));
+  item->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4714,7 +4879,7 @@ CFrmSession::setGuidInfoForRow(QTableWidgetItem* item, const vscp_event_t* pev)
 //
 
 void
-CFrmSession::receiveRxRow(vscp_event_t* pev)
+CFrmSession::receiveRxRow(vscp_event_t* pev, bool refreshUi)
 {
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
 
@@ -4739,46 +4904,37 @@ CFrmSession::receiveRxRow(vscp_event_t* pev)
   itemDir->setData(rxrow_role_flags, flags & ~RX_ROW_FLAG_TX);
 
   // Bluish
-  itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+  itemDir->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
 
   // Add
-  m_rxTable->setItem(m_rxTable->rowCount() - 1, 0, itemDir);
+  m_rxTable->setItem(row, 0, itemDir);
 
   // If one or more rows are selected don't autoscroll
-  if (!m_rxTable->selectedItems().size()) {
+  if (refreshUi && !m_rxTable->selectionModel()->hasSelection()) {
     m_rxTable->scrollToItem(itemDir);
   }
 
   // * * * Class * * *
   QTableWidgetItem* itemClass = new QTableWidgetItem();
   setClassInfoForRow(itemClass, pev);
-  m_rxTable->setItem(m_rxTable->rowCount() - 1, 1, itemClass);
+  m_rxTable->setItem(row, 1, itemClass);
 
   // * * * Type * * *
   QTableWidgetItem* itemType = new QTableWidgetItem();
   setTypeInfoForRow(itemType, pev);
-  m_rxTable->setItem(m_rxTable->rowCount() - 1, 2, itemType);
+  m_rxTable->setItem(row, 2, itemType);
 
   // * * * Node id * * *
   QTableWidgetItem* itemNodeId = new QTableWidgetItem();
   setNodeIdInfoForRow(itemNodeId, pev);
-  m_rxTable->setItem(m_rxTable->rowCount() - 1, 3, itemNodeId);
+  m_rxTable->setItem(row, 3, itemNodeId);
 
   // * * * Guid * * *
   QTableWidgetItem* itemGuid = new QTableWidgetItem();
   setGuidInfoForRow(itemGuid, pev);
-  m_rxTable->setItem(m_rxTable->rowCount() - 1, 4, itemGuid);
+  m_rxTable->setItem(row, 4, itemGuid);
 
-  applyFilterToRow(m_rxTable->rowCount() - 1);
-
-  m_rxTable->setUpdatesEnabled(false);
-  for (int i = 0; i < m_rxTable->rowCount(); i++) {
-    m_rxTable->setRowHeight(i, 10);
-  }
-  m_rxTable->setUpdatesEnabled(true);
-
-  // Display number of items
-  m_lcdNumber->display(m_rxTable->rowCount());
+  applyFilterToRow(row);
 
   // Count events
   uint32_t cnt =
@@ -4791,8 +4947,10 @@ CFrmSession::receiveRxRow(vscp_event_t* pev)
 
   forwardMeasurementToRealtimeViews(pev);
 
-  // Fill unselected info
-  fillReceiveEventCount();
+  if (refreshUi) {
+    m_lcdNumber->display(m_rxTable->rowCount());
+    fillReceiveEventCount();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -4856,13 +5014,13 @@ CFrmSession::receiveTxRow(vscp_event_t* pev)
   itemDir->setFlags(itemDir->flags() & ~Qt::ItemIsEditable);
 
   // Bluish
-  itemDir->setForeground(QBrush(QColor(0, 5, 180)));
+  itemDir->setForeground(QBrush(m_darkTheme ? QColor("#93c5fd") : QColor(0, 5, 180)));
 
   // Add
   m_rxTable->setItem(m_rxTable->rowCount() - 1, rxrow_dir, itemDir);
 
   // If one or more rows are selected don't autoscroll
-  if (!m_rxTable->selectedItems().size()) {
+  if (!m_rxTable->selectionModel()->hasSelection()) {
     m_rxTable->scrollToItem(itemDir);
   }
 
@@ -4916,12 +5074,6 @@ CFrmSession::receiveTxRow(vscp_event_t* pev)
 
   applyFilterToRow(m_rxTable->rowCount() - 1);
 
-  m_rxTable->setUpdatesEnabled(false);
-  for (int i = 0; i < m_rxTable->rowCount(); i++) {
-    m_rxTable->setRowHeight(i, 10);
-  }
-  m_rxTable->setUpdatesEnabled(true);
-
   // Display number of items
   m_lcdNumber->display(m_rxTable->rowCount());
 
@@ -4962,7 +5114,9 @@ CFrmSession::fillReceiveEventCount()
     strOut += "<br><b>RX</b><br>";
     for (it = m_mapRxEventToCount.begin(); it != m_mapRxEventToCount.end();
          it++) {
-      strOut += "<small><span style=\"color:rgb(0, 0, 153);\">";
+      strOut += QStringLiteral("<small><span style=\"color:%1;\">")
+                  .arg(m_darkTheme ? QStringLiteral("#93c5fd")
+                                   : QStringLiteral("rgb(0, 0, 153)"));
       strOut +=
         pworks->m_mapVscpClassToToken[it->first >> 16]; // class token
       strOut += "/";
@@ -4977,7 +5131,9 @@ CFrmSession::fillReceiveEventCount()
 
     for (it = m_mapTxEventToCount.begin(); it != m_mapTxEventToCount.end();
          it++) {
-      strOut += "<small><span style=\"color:rgb(0, 0, 153);\">";
+      strOut += QStringLiteral("<small><span style=\"color:%1;\">")
+                  .arg(m_darkTheme ? QStringLiteral("#93c5fd")
+                                   : QStringLiteral("rgb(0, 0, 153)"));
       strOut +=
         pworks->m_mapVscpClassToToken[it->first >> 16]; // class token
       strOut += "/";
@@ -5015,11 +5171,13 @@ CFrmSession::fillReceiveEventDiff()
 
     m_mutexRxList.lock();
 
-    mustache templ{
-      "<b>UTC Time: </b><span style=\"color:rgb(0xc0, 0xc0, "
-      "0xc0);\">{{VscpYear}}-{{VscpMonth}}-{{VscpDay}}T{{VscpHour}}:{{"
-      "VscpMinute}}:{{VscpSecond}}</span><br>"
-    };
+    const QString timeColor =
+      m_darkTheme ? QStringLiteral("#d4d4d4") : QStringLiteral("rgb(0xc0, 0xc0, 0xc0)");
+    mustache templ{ QStringLiteral(
+      "<b>UTC Time: </b><span style=\"color:%1;\">{{VscpYear}}-{{VscpMonth}}-"
+      "{{VscpDay}}T{{VscpHour}}:{{VscpMinute}}:{{VscpSecond}}</span><br>")
+                      .arg(timeColor)
+                      .toStdString() };
 
     std::map<int, vscp_event_t*> mapRowEvent;
 
@@ -5043,7 +5201,9 @@ CFrmSession::fillReceiveEventDiff()
       _data.set("VscpSecond", vscp_str_format("%02d", pev->second));
       std::string strDate = templ.render(_data);
 
-      strOut += "<span style=\"color:rgb(0, 0, 153);\">";
+      strOut += QStringLiteral("<span style=\"color:%1;\">")
+                  .arg(m_darkTheme ? QStringLiteral("#93c5fd")
+                                   : QStringLiteral("rgb(0, 0, 153)"));
       strOut +=
         pworks->m_mapVscpClassToToken[pev->vscp_class]; // class token
       strOut += "/";
@@ -5090,17 +5250,64 @@ CFrmSession::receiveCallback(vscp_event_t& ev, void* pobj)
     ev.timestamp_ns = vscp_makeTimeStampNs();
   }
 
-  m_mutexReceiveCallBack.lock();
   vscp_event_t* pevnew = new vscp_event_t;
-  pevnew->sizeData  = 0;
-  pevnew->pdata     = nullptr;
+  if (nullptr == pevnew) {
+    spdlog::error("CFrmSession::receiveCallback - Failed to allocate event");
+    return;
+  }
+  pevnew->sizeData = 0;
+  pevnew->pdata    = nullptr;
+
+  m_mutexReceiveCallBack.lock();
   vscp_copyEvent(pevnew, &ev);
-  emit dataReceived(pevnew);
+  m_pendingRxEvents.push_back(pevnew);
+  const bool scheduleDrain = !m_rxDrainScheduled;
+  m_rxDrainScheduled = true;
   m_mutexReceiveCallBack.unlock();
 
-  // Alternative method for reference
-  // CFrmSession* pSession = (CFrmSession*)pobj;
-  // pSession->threadReceive(pevnew);
+  if (scheduleDrain) {
+    emit dataReceived();
+  }
+}
+
+void
+CFrmSession::receivePendingRows()
+{
+  constexpr size_t maxBatchSize = 256;
+  std::deque<vscp_event_t*> batch;
+  bool hasMore = false;
+
+  m_mutexReceiveCallBack.lock();
+  const size_t count = std::min(maxBatchSize, m_pendingRxEvents.size());
+  for (size_t i = 0; i < count; ++i) {
+    batch.push_back(m_pendingRxEvents.front());
+    m_pendingRxEvents.pop_front();
+  }
+  hasMore = !m_pendingRxEvents.empty();
+  if (!hasMore) {
+    m_rxDrainScheduled = false;
+  }
+  m_mutexReceiveCallBack.unlock();
+
+  if (batch.empty()) {
+    return;
+  }
+
+  m_rxTable->setUpdatesEnabled(false);
+  for (vscp_event_t* pev : batch) {
+    receiveRxRow(pev, false);
+  }
+  m_rxTable->setUpdatesEnabled(true);
+
+  if (!m_rxTable->selectionModel()->hasSelection()) {
+    m_rxTable->scrollToBottom();
+    fillReceiveEventCount();
+  }
+  m_lcdNumber->display(m_rxTable->rowCount());
+
+  if (hasMore) {
+    emit dataReceived();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -5131,8 +5338,8 @@ CFrmSession::stopPolling()
 
 ///////////////////////////////////////////////////////////////////////////////
 // pollForEvents
-// Drain all available events from the client and route each one through the
-// normal receiveCallback path so the rest of the receive pipeline is unchanged.
+// Process a bounded batch through the normal receiveCallback path so heavy
+// traffic does not monopolize the GUI thread.
 //
 
 void
@@ -5143,8 +5350,11 @@ CFrmSession::pollForEvents()
   }
 
   vscpEvent ev = {};
-  // Drain until no more events are available (receive returns non-success)
-  while (VSCP_ERROR_SUCCESS == m_vscpClient->receive(ev)) {
+  constexpr size_t maxPollBatchSize = 256;
+  for (size_t i = 0;
+       i < maxPollBatchSize &&
+       VSCP_ERROR_SUCCESS == m_vscpClient->receive(ev);
+       ++i) {
     receiveCallback(ev, this);
     // The callback copied the event; clear data ownership before next iteration
     if (ev.pdata) {

@@ -34,6 +34,7 @@
 
 #include "cfrmrawcansession.h"
 #include "explorerstyle.h"
+#include "vscpworks.h"
 #include <QSettings>
 
 #include <QDateTime>
@@ -132,6 +133,9 @@ CFrmRawCanSession::CFrmRawCanSession(QWidget* parent, json* pconn)
   if (nullptr != pconn) {
     m_connObject = *pconn;
   }
+  m_darkTheme = vscpworks_connectionDarkTheme(
+    m_connObject,
+    QCoreApplication::instance()->property("defaultDarkTheme").toBool());
 
   if (m_connObject.contains("device") && m_connObject["device"].is_string()) {
     m_interfaceName = m_connObject["device"].get<std::string>().c_str();
@@ -217,7 +221,8 @@ CFrmRawCanSession::toggleTheme()
     selectedRows.append(m_treeFrames->indexOfTopLevelItem(item));
   }
   m_darkTheme = !m_darkTheme;
-  QSettings().setValue(QStringLiteral("rawcan/darkTheme"), m_darkTheme);
+  vscpworks_setConnectionTheme(m_connObject, m_darkTheme);
+  emit connectionThemeChanged(vscpworks_connectionUuid(m_connObject), m_darkTheme);
   applyTheme();
   refreshViews();
   for (int row : selectedRows) {
@@ -237,7 +242,6 @@ CFrmRawCanSession::setupUi()
                    .arg(m_interfaceName.isEmpty() ? tr("Unknown device") : m_interfaceName));
   resize(1250, 780);
   setMinimumSize(980, 620);
-  m_darkTheme = QSettings().value(QStringLiteral("rawcan/darkTheme"), true).toBool();
   applyTheme();
 
   QVBoxLayout* mainLayout = new QVBoxLayout(this);

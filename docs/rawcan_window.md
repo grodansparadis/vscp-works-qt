@@ -20,7 +20,7 @@ The window attempts to open the CAN interface when it appears. Use `Connect` to 
 
 ## Appearance
 
-The toolbar theme action switches between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is remembered for future CAN raw explorer windows.
+The toolbar theme action switches between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is saved with the connection. New connections use the default in [settings](settings.md?id=general).
 
 ## Views
 

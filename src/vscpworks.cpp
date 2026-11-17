@@ -84,6 +84,7 @@ vscpworks::vscpworks(int& argc, char** argv)
   m_preferredLanguage = "en";                // Preferred language
   m_bAskBeforeDelete  = true;
   m_bEnableDarkTheme  = false;
+  setProperty("defaultDarkTheme", m_bEnableDarkTheme);
   m_bSaveAlwaysJSON   = false;
   m_mdfAutoSaveEnabled = false;
   m_mdfAutoSaveInterval = 300;
@@ -394,6 +395,7 @@ vscpworks::loadSettings(void)
   if (j.contains("bDarkTheme") && j["bDarkTheme"].is_boolean()) {
     m_bEnableDarkTheme = j["bDarkTheme"].get<bool>();
   }
+  setProperty("defaultDarkTheme", m_bEnableDarkTheme);
 
   if (j.contains("bAskBeforeDelete") && j["bAskBeforeDelete"].is_boolean()) {
     m_bAskBeforeDelete = j["bAskBeforeDelete"].get<bool>();
@@ -838,6 +840,22 @@ vscpworks::addConnection(json& conn, bool bSave)
     writeSettings();
 
   return true;
+}
+
+void
+vscpworks::setConnectionTheme(const QString& uuid, bool darkTheme)
+{
+  auto it = m_mapConn.find(uuid.toStdString());
+  if (it != m_mapConn.end()) {
+    if (!it.value().contains("ui") || !it.value()["ui"].is_object()) {
+      it.value()["ui"] = json::object();
+    }
+    const std::string theme = darkTheme ? "dark" : "light";
+    if (it.value()["ui"].value("theme", std::string()) != theme) {
+      it.value()["ui"]["theme"] = theme;
+      writeSettings();
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

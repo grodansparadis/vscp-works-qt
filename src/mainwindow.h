@@ -109,6 +109,7 @@ public:
 
     void loadConfiguration(const QString &fileName);
     bool importConnectionDataFromText(const QString& text);
+    void updateConnectionTheme(const QString& uuid, bool darkTheme);
 
 protected:
 
@@ -139,7 +140,6 @@ private slots:
     void newNodeBootload();
     void newVscpLinkProtocolTest();
     void mdfEdit();
-
     /// Handle app. settings.
     void showMainsettings(void);
 

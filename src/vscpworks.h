@@ -124,6 +124,9 @@ public:
   */
   bool addConnection(json& conn, bool bSave = false);
 
+  /// Persist a connection's theme.
+  void setConnectionTheme(const QString& uuid, bool darkTheme);
+
   /*!
     Remove connection
     @param uuid Id for connection
@@ -572,7 +575,45 @@ public:
   //                    Windows geometry
   // ------------------------------------------------------------------------
   QRect m_mainWindowRect;
+
 };
+
+inline bool
+vscpworks_connectionDarkTheme(const json& conn, bool defaultDarkTheme)
+{
+  if (conn.contains("ui") && conn["ui"].is_object() &&
+      conn["ui"].contains("theme") && conn["ui"]["theme"].is_string()) {
+    const std::string theme = conn["ui"]["theme"].get<std::string>();
+    if ("dark" == theme) {
+      return true;
+    }
+    if ("light" == theme) {
+      return false;
+    }
+  }
+  return defaultDarkTheme;
+}
+
+inline void
+vscpworks_setConnectionTheme(json& conn, bool darkTheme)
+{
+  if (!conn.is_object()) {
+    return;
+  }
+  if (!conn.contains("ui") || !conn["ui"].is_object()) {
+    conn["ui"] = json::object();
+  }
+  conn["ui"]["theme"] = darkTheme ? "dark" : "light";
+}
+
+inline QString
+vscpworks_connectionUuid(const json& conn)
+{
+  if (conn.contains("uuid") && conn["uuid"].is_string()) {
+    return QString::fromStdString(conn["uuid"].get<std::string>());
+  }
+  return QString();
+}
 
 /*!
   Connect timeout of a tcp/ip connection in milliseconds. Connections saved

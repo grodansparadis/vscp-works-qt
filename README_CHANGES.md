@@ -7,6 +7,9 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Added a persistent dark/light theme toggle to VSCP session windows
+- Persisted session and raw explorer themes with each connection, using the configured default for connections without a theme
+- Reduced session-window receive lag under heavy traffic by batching event rendering, limiting each poll pass, and eliminating repeated whole-table row-height work
 - Added unencrypted and authenticated-encryption binary protocol probes to the TCP/IP link test tool
 - Fix dark theme styling in the MQTT raw explorer, including the plot and native controls
 - Build against the latest vscp master (d75d4f5c6)

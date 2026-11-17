@@ -15,6 +15,19 @@ public:
 
   static void runMqtt()
   {
+    json themedConnection = {
+      { "uuid", "test-connection" },
+      { "ui", { { "theme", "light" } } }
+    };
+    check(vscpworks_connectionDarkTheme(json::object(), true),
+          "The configured dark theme must be the fallback for unthemed connections");
+    check(!vscpworks_connectionDarkTheme(themedConnection, true),
+          "A saved light theme must override the configured dark default");
+    vscpworks_setConnectionTheme(themedConnection, true);
+    check(vscpworks_connectionDarkTheme(themedConnection, false) &&
+            vscpworks_connectionUuid(themedConnection) == "test-connection",
+          "A connection theme must be serializable with its connection UUID");
+
     const QString manyLines = QString("x\n").repeated(20000);
     check(diffToHtml(manyLines, manyLines).contains("too large"), "Large diff must be bounded");
     const QString atBudget = QString("x\n").repeated(998);

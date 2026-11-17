@@ -92,7 +92,7 @@ The preferred language for the application. One of the following:
 If true, the application asks for confirmation before deleting an object.
 
 ### bDarkTheme
-Enables a dark theme for the application.
+Selects the default dark theme for session, raw CAN and raw MQTT windows. A theme saved with an individual connection overrides this default.
 
 ### bSaveAlwaysJson
 If true, the application always saves register configurations as JSON.

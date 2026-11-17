@@ -15,7 +15,7 @@ Open the settings dialog with `Edit/Settings...` in the main window. Settings ar
 | Use cumulative MDF backups | When an MDF is saved, keep timestamped backups (`file.bak.yyyyMMdd-HHmmss-zzz`) instead of replacing a single `file.bak`. |
 | Max cumulative backups per file | Number of timestamped backups to keep for each MDF file. The oldest are deleted first. `0` keeps all backups. |
 | Preferred language | Preferred language (ISO 639 code, for example `en`) for texts. |
-| Dark theme | Use a dark color theme. *Currently not applied by the program.* |
+| Use dark theme by default | Default theme for session, raw CAN and raw MQTT windows. A theme saved with a connection takes precedence. |
 | Always save in JSON format | Save register values from the [configuration window](config_window.md) in JSON format. |
 
 ## Logging

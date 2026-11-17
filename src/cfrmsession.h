@@ -48,6 +48,7 @@
 #include <QComboBox>
 #include <QDateTime>
 #include <QMutex>
+#include <deque>
 #include <vector>
 
 QT_BEGIN_NAMESPACE
@@ -300,7 +301,7 @@ public slots:
       @param ev Event to add
       @param bReceive Set to true if this is a received event
   */
-  void receiveRxRow(vscp_event_t* pev);
+  void receiveRxRow(vscp_event_t* pev, bool refreshUi = true);
 
   /*!
     Show help
@@ -512,9 +513,8 @@ public slots:
 signals:
 
   /// Data received from callback
-  void dataReceived(vscp_event_t* pev);
-
-  
+  void dataReceived();
+  void connectionThemeChanged(const QString& uuid, bool darkTheme);
 
 private:
   void createMenu();
@@ -523,6 +523,10 @@ private:
   void createRxGroupBox();
   void createTxGridGroup();
   void createFormGroupBox();
+  void applyTheme();
+  void toggleTheme();
+  void refreshThemeItemColors();
+  bool isVscpRowMarked(const QTableWidgetItem* item) const;
   void initializeClient(bool autoConnect = true);
   void updateSessionWindowTitle(void);
 
@@ -541,6 +545,7 @@ private:
 
   /// Reload the session filters and fill the toolbar combo
   void reloadSessionFilters(void);
+  void receivePendingRows(void);
 
   /// Reloads changed session filters when the window is activated
   void changeEvent(QEvent* event) override;
@@ -573,6 +578,8 @@ private:
 
   /// Toolbar
   QToolBar* m_toolBar;
+  QAction* m_themeAct;
+  bool m_darkTheme;
 
   QGroupBox* m_horizontalGroupBox;
   QGroupBox* m_gridGroupBox;
@@ -617,6 +624,7 @@ private:
 
   // Protect callback from multiple threads
   QMutex m_mutexReceiveCallBack;
+  bool m_rxDrainScheduled{false};
 
   /// Timer used for poll-mode interfaces (e.g. CANAL without worker thread)
   QTimer* m_pollTimer;  
@@ -626,6 +634,7 @@ private:
 
   /// Queue that holds received events
   std::deque<vscp_event_t*> m_rxEvents;
+  std::deque<vscp_event_t*> m_pendingRxEvents;
 
   /// VSCP (class-id + token-id) -> received count
   std::map<uint32_t, uint32_t> m_mapRxEventToCount;
