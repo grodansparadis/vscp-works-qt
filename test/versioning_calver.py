@@ -11,13 +11,19 @@ if not version_h.exists():
     sys.exit(1)
 
 text = version_h.read_text(encoding="utf-8")
+assert not re.search(r"^(<<<<<<<|=======|>>>>>>>)", text, re.MULTILINE), (
+    "Version header must not contain merge conflict markers"
+)
+assert len(re.findall(r"^#define\s+VSCPWORKS_DISPLAY_VERSION\b", text, re.MULTILINE)) == 1, (
+    "DISPLAY_VERSION must be defined exactly once"
+)
 assert re.search(r"#define\s+VSCPWORKS_MAJOR_VERSION\s+([0-9]+)", text), "MAJOR macro missing"
 assert re.search(r"#define\s+VSCPWORKS_MINOR_VERSION\s+([0-9]+)", text), "MINOR macro missing"
 assert re.search(r"#define\s+VSCPWORKS_PATCH_VERSION\s+([0-9]+)", text), "PATCH macro missing"
 assert "VSCPWORKS_RELEASE_VERSION" not in text, "Legacy RELEASE macro should not be used"
 
-match = re.search(r'#define\s+VSCPWORKS_DISPLAY_VERSION\s+"([0-9]+)-([0-9]+)-([0-9]+)"', text)
-assert match, "DISPLAY_VERSION should follow YEAR-MONTH-PATCH"
+match = re.search(r'#define\s+VSCPWORKS_DISPLAY_VERSION\s+"([0-9]+)\.([0-9]+)\.([0-9]+)"', text)
+assert match, "DISPLAY_VERSION should follow YEAR.MONTH.PATCH"
 major, minor, patch = map(int, match.groups())
 assert 10 <= major <= 99, "MAJOR should be a two-digit calendar year"
 assert 1 <= minor <= 12, "MINOR should be the calendar month"

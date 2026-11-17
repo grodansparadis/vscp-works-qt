@@ -61,7 +61,7 @@ with tempfile.TemporaryDirectory() as directory:
             "Patch should increment as the build number"
         )
         assert re.search(
-            rf'#define\s+VSCPWORKS_DISPLAY_VERSION\s+"26-{month:02d}-{patch[1]}"',
+            rf'#define\s+VSCPWORKS_DISPLAY_VERSION\s+"26\.{month:02d}\.{patch[1]}"',
             display,
         ), "Display version should use the build number and a zero-padded month"
         doc_vars = (source / "docs" / "variables.xml").read_text(encoding="utf-8")
