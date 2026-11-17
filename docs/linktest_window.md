@@ -17,7 +17,7 @@ The `Selected connection information` group shows the settings that will be used
 | Username | User used for login. |
 | SSL/TLS | Whether TLS is enabled. |
 | Connection timeout | Timeout used when connecting. |
-| Protocol settings | Selected interface, poll mode and full level II settings. |
+| Protocol settings | Selected interface, poll mode, full level II and binary mode settings. |
 | State | `Connected` or `Disconnected`. |
 | Server version | Filled in after the version has been queried. |
 | Server capabilities | Filled in after the capabilities have been queried. |
@@ -38,11 +38,15 @@ The steps table lists the individual tests. Each row has a step name, the comman
 | Verify full level II support | The connection reports full level II capability. |
 | Disconnect | The client can disconnect cleanly. |
 | Verify disconnected state | The client reports that it is disconnected. |
+| Test binary protocol (no encryption) | Opens a separate connection in binary mode without encryption and verifies a version response and clean disconnect. |
+| Test binary protocol (authenticated encryption) | Opens a separate connection using the selected connection's binary encryption algorithm and keys, then verifies a version response and clean disconnect. |
 
 - `Run selected steps` - Run the steps selected in the table. Select several rows to run them in order.
 - `Run all steps` - Run the complete flow from initialization to disconnect.
 
 When a step fails, the log lists **hints** about probable causes, such as an unreachable host, wrong credentials, a very low timeout, interface listing being disabled on the server or a stale connection after a failed disconnect.
+
+The binary protocol tests apply to the selected TCP/IP connection and use its host, credentials, TLS and timeout settings. The unencrypted test forces binary mode with encryption disabled, regardless of the connection's saved binary-mode setting. To run the authenticated-encryption test, enable binary mode and configure a supported encryption algorithm, AES key and HMAC key in the selected connection. If no binary encryption algorithm is configured, that test is marked `SKIP` and the remaining tests continue.
 
 ## Reliability test
 

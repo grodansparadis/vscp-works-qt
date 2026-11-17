@@ -10,12 +10,16 @@ The MQTT raw explorer is a general MQTT tool. It shows any MQTT traffic on a bro
 
 ## Connecting
 
-Press `Connect` on the toolbar. The button shows `Connecting...` while the connection is set up and `Disconnect` when connected. The badge at the right of the toolbar shows the connection state: green when connected, amber while connecting or when receiving is paused, and grey when disconnected. The line at the bottom of the window shows the result of the last action, for example the reason a connection failed.
+The explorer attempts to connect when it opens. Use `Connect` to retry or reconnect; the button shows `Connecting...` while the connection is set up and `Disconnect` when connected. The badge at the right of the toolbar shows the connection state: green when connected, amber while connecting or when receiving is paused, and grey when disconnected. The line at the bottom of the window shows the result of the last action, for example the reason a connection failed.
 
 - **Pause/Resume** - Temporarily stop adding incoming messages to the display. The connection is kept open.
 - **Messages** (receive mode, on the toolbar)
   - `Append all` - Every message is added under its topic (the last 250 messages per topic are kept).
   - `Replace per topic` - Only the latest message is kept for each topic. This gives a "current state" view of the broker.
+
+## Appearance
+
+Use the theme action at the right of the toolbar to switch between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is remembered for future MQTT raw explorer windows.
 
 ## Subscribing
 

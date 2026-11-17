@@ -14,9 +14,13 @@ The window title shows the CAN interface that is used, for example `CAN frame se
 
 ## Connecting
 
-Press `Connect` on the toolbar to open the CAN interface. The same button changes to `Disconnect` when the interface is open. The badge at the right of the toolbar shows the connection state: green when connected, amber when paused, grey when disconnected and red after an error.
+The window attempts to open the CAN interface when it appears. Use `Connect` to retry or reconnect; the action changes to `Disconnect` while the interface is open. The badge at the right of the toolbar shows the connection state: green when connected, amber when paused, grey when disconnected and red after an error.
 
-`Pause` stops new frames from being added to the display without closing the interface. Press `Resume` to continue. `Clear` (or `Frame/Clear receive log`) empties the receive log.
+`Pause` stops new frames from being added to the display without closing the interface. Selecting a frame also pauses the log so it stays available while you inspect it. Press `Resume` or clear the selection to continue. `Clear` (or `Frame/Clear receive log`) empties the receive log.
+
+## Appearance
+
+The toolbar theme action switches between dark and light themes. It displays `Light theme` while the dark theme is active and `Dark theme` while the light theme is active. The selected theme is remembered for future CAN raw explorer windows.
 
 ## Views
 
@@ -28,13 +32,14 @@ Every received or transmitted frame is listed with these columns:
 
 | Column | Content |
 | ------ | ------- |
-| Time | Time when the frame was received/sent. |
+| TIME | Time when the frame was received or sent. |
+| DIR | Direction: `RX` (received) or `TX` (transmitted). |
 | ID | The CAN identifier. |
-| Type | `Data` or `Remote` frame. |
-| Format | `STD` (11-bit identifier) or `EXT` (29-bit identifier). |
-| Data | The payload as hex bytes, or `<empty>`. |
+| DLC | Payload length in bytes. |
+| DATA | Payload as hex bytes, or `<empty>`. |
+| TYPE | Identifier format (`STD` or `EXT`) and frame type (`Data` or `Remote`). |
 
-Frames are also marked with their direction (`RX`/`TX`) and flags (`FD`, `BRS`, `ESI`). Hold the mouse over a row to see a tooltip with frame id, payload and flags.
+Hold the mouse over a row to see the frame ID, payload and flags, including CAN FD, BRS and ESI. The direction is color-coded.
 
 **Time difference between frames** - Select two or more frames in the log. The status badge then shows the time difference (`Δt`, in µs) between the first and the last of the selected frames.
 

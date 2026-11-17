@@ -33,6 +33,8 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QDesktopServices>
+#include <QPalette>
+#include <QSettings>
 #include <QSplitter>
 #include <QTextStream>
 #include <QTreeWidget>
@@ -266,7 +268,7 @@ private:
 
 namespace {
 
-QString diffToHtml(const QString& before, const QString& after)
+QString diffToHtml(const QString& before, const QString& after, bool darkTheme = false)
 {
   const QStringList a = before.split('\n');
   const QStringList b = after.split('\n');
@@ -282,10 +284,13 @@ QString diffToHtml(const QString& before, const QString& after)
       lcs[i][j] = a.at(i) == b.at(j) ? lcs[i + 1][j + 1] + 1 : std::max(lcs[i + 1][j], lcs[i][j + 1]);
     }
   }
-  QString html = "<pre style='margin:0; font-family:monospace;'>";
-  const auto line = [&](const QString& prefix, const QString& text, const char* color) {
+  const QString foreground = darkTheme ? QStringLiteral("#e5e7eb") : QStringLiteral("#1f2937");
+  const QString addedBackground = darkTheme ? QStringLiteral("#14532d") : QStringLiteral("#bbf7d0");
+  const QString removedBackground = darkTheme ? QStringLiteral("#7f1d1d") : QStringLiteral("#fecaca");
+  QString html = QString("<pre style='margin:0; font-family:monospace; color:%1;'>").arg(foreground);
+  const auto line = [&](const QString& prefix, const QString& text, const QString& background) {
     html += QString("<span style='background-color:%1;'>%2 %3</span>\n")
-              .arg(color, prefix, escapeHtml(text));
+              .arg(background, prefix, escapeHtml(text));
   };
   int i = 0, j = 0;
   while (i < n || j < m) {
@@ -295,10 +300,10 @@ QString diffToHtml(const QString& before, const QString& after)
       ++j;
     }
     else if (j < m && (i == n || lcs[i][j + 1] >= lcs[i + 1][j])) {
-      line("+", b.at(j++), "#bbf7d0");
+      line("+", b.at(j++), addedBackground);
     }
     else {
-      line("-", a.at(i++), "#fecaca");
+      line("-", a.at(i++), removedBackground);
     }
   }
   return html + "</pre>";
@@ -496,13 +501,15 @@ CFrmMqttExplorer::CFrmMqttExplorer(QWidget* parent, json* pconn)
   , m_connected(false)
   , m_connecting(false)
   , m_tlsEnabled(false)
+  , m_receivePaused(false)
+  , m_darkTheme(true)
   , m_verifyPeer(true)
   , m_port(1883)
   , m_keepAlive(60)
   , m_messageFlushTimer(nullptr)
   , m_messageRenderCount(0)
-  , m_receivePaused(false)
   , m_lastRenderedMessageCount(0)
+  , m_actToggleTheme(nullptr)
 {
   if (nullptr != pconn) {
     m_conn = *pconn;
@@ -524,8 +531,7 @@ CFrmMqttExplorer::setupUi()
   setAttribute(Qt::WA_DeleteOnClose, true);
   setWindowTitle(tr("MQTT raw explorer"));
   resize(1200, 760);
-
-  setStyleSheet(explorerstyle::styleSheet());
+  m_darkTheme = QSettings().value(QStringLiteral("rawmqtt/darkTheme"), true).toBool();
 
   auto* mainLayout = new QVBoxLayout(this);
   mainLayout->setContentsMargins(14, 8, 14, 10);
@@ -577,6 +583,10 @@ CFrmMqttExplorer::setupUi()
   helpAction->setShortcutContext(Qt::WindowShortcut);
   connect(helpAction, &QAction::triggered, this, &CFrmMqttExplorer::showHelp);
   explorerstyle::setPrimary(toolBar, m_actConnect);
+  toolBar->addSeparator();
+  m_actToggleTheme = toolBar->addAction(QString());
+  m_actToggleTheme->setToolTip(tr("Switch between dark and light theme"));
+  connect(m_actToggleTheme, &QAction::triggered, this, &CFrmMqttExplorer::toggleTheme);
   mainLayout->addWidget(toolBar);
 
   // Subscribe
@@ -859,6 +869,81 @@ CFrmMqttExplorer::setupUi()
           &QAction::triggered,
           this,
           &CFrmMqttExplorer::onMenuClearSubscriptions);
+  applyTheme();
+}
+
+void
+CFrmMqttExplorer::applyTheme()
+{
+  QPalette themePalette = QApplication::palette();
+  if (m_darkTheme) {
+    themePalette.setColor(QPalette::Window, QColor("#0b0b0b"));
+    themePalette.setColor(QPalette::WindowText, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Base, QColor("#141414"));
+    themePalette.setColor(QPalette::AlternateBase, QColor("#1d1d1d"));
+    themePalette.setColor(QPalette::Text, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Button, QColor("#262626"));
+    themePalette.setColor(QPalette::ButtonText, QColor("#e5e5e5"));
+    themePalette.setColor(QPalette::Mid, QColor("#3f3f3f"));
+    themePalette.setColor(QPalette::Midlight, QColor("#262626"));
+    themePalette.setColor(QPalette::Highlight, QColor("#fbbf24"));
+    themePalette.setColor(QPalette::HighlightedText, QColor("#111111"));
+    themePalette.setColor(QPalette::ToolTipBase, QColor("#141414"));
+    themePalette.setColor(QPalette::ToolTipText, QColor("#e5e5e5"));
+  }
+  QString style = explorerstyle::styleSheet();
+  if (m_darkTheme) {
+    style += QStringLiteral(R"(
+      QDialog, QWidget { background-color: #0b0b0b; color: #e5e5e5; }
+      QMenuBar { background-color: #0b0b0b; color: #e5e5e5; }
+      QMenuBar::item:selected, QMenu::item:selected { background-color: #3f3f3f; }
+      QMenu { background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QToolBar { background-color: #0b0b0b; color: #e5e5e5; }
+      QGroupBox { background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QLineEdit, QPlainTextEdit, QComboBox, QSpinBox, QTextEdit {
+        background-color: #141414; color: #e5e5e5; border: 1px solid #3f3f3f;
+      }
+      QComboBox QAbstractItemView { background-color: #141414; color: #e5e5e5; }
+      QPushButton, QToolButton { background-color: #262626; color: #e5e5e5; border: 1px solid #3f3f3f; }
+      QPushButton:hover, QToolButton:hover { background-color: #3f3f3f; }
+      QPushButton[explorerRole="primary"], QToolButton[explorerRole="primary"] {
+        background-color: #fbbf24; color: #111111; border-color: #fbbf24;
+      }
+      QTreeWidget, QTableWidget, QListWidget {
+        background-color: #141414; alternate-background-color: #1d1d1d; color: #e5e5e5;
+        border: 1px solid #3f3f3f; selection-background-color: #fbbf24; selection-color: #111111;
+      }
+      QHeaderView::section { background-color: #0b0b0b; color: #a3a3a3; border: none; }
+      QTabWidget::pane { border: 1px solid #3f3f3f; }
+      QTabBar::tab { background-color: #141414; color: #e5e5e5; }
+      QTabBar::tab:selected { background-color: #262626; }
+      QSplitter::handle { background-color: #262626; }
+      QLabel[explorerRole="hint"] { color: #a3a3a3; }
+      QLabel[explorerState="connected"] { background: #14532d; color: #bbf7d0; }
+      QLabel[explorerState="connecting"], QLabel[explorerState="paused"] { background: #713f12; color: #fde68a; }
+      QLabel[explorerState="disconnected"] { background: #374151; color: #d1d5db; }
+      QLabel[explorerState="error"] { background: #7f1d1d; color: #fecaca; }
+    )");
+  }
+  setStyleSheet(style);
+  setPalette(themePalette);
+  for (QWidget* widget : findChildren<QWidget*>()) {
+    widget->setPalette(themePalette);
+  }
+
+  if (nullptr != m_actToggleTheme) {
+    m_actToggleTheme->setText(m_darkTheme ? tr("Light theme") : tr("Dark theme"));
+  }
+}
+
+void
+CFrmMqttExplorer::toggleTheme()
+{
+  m_darkTheme = !m_darkTheme;
+  QSettings().setValue(QStringLiteral("rawmqtt/darkTheme"), m_darkTheme);
+  applyTheme();
+  refreshSelectedDetails();
+  updateDiff();
 }
 
 void
@@ -2019,7 +2104,7 @@ CFrmMqttExplorer::renderMessageTree(const QString& topic,
 
   auto* rawNode = new QTreeWidgetItem(root, { tr("Raw payload"), tr("Text") });
   auto* rawTextNode = new QTreeWidgetItem(rawNode, { tr("Value"), formatRichTextBlock(rawPayload) });
-  rawTextNode->setForeground(1, QColor("#334155"));
+  rawTextNode->setForeground(1, QColor(m_darkTheme ? "#cbd5e1" : "#334155"));
 
   m_detailsTree->expandToDepth(2);
 }
@@ -2086,7 +2171,8 @@ CFrmMqttExplorer::updateDiff()
     return;
   }
   m_diffView->setHtml(diffToHtml(older->data(0, Qt::UserRole).toString(),
-                                 row->data(0, Qt::UserRole).toString()));
+                                 row->data(0, Qt::UserRole).toString(),
+                                 m_darkTheme));
 }
 
 void
@@ -2313,7 +2399,9 @@ void
 CFrmMqttExplorer::setStatus(const QString& status, bool error)
 {
   m_lblStatus->setText(status);
-  m_lblStatus->setStyleSheet(error ? "QLabel { color: #c62828; }" : QString());
+  m_lblStatus->setStyleSheet(error
+                               ? (m_darkTheme ? "QLabel { color: #f87171; }" : "QLabel { color: #c62828; }")
+                               : QString());
 }
 
 void

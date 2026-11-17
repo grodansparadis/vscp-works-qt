@@ -171,6 +171,8 @@ private:
   void setStatus(const QString& status, bool error = false);
   void applyTlsSettings();
   void subscribeConfiguredTopics();
+  void applyTheme();
+  void toggleTheme();
 
   static void onMosquittoConnectStatic(struct mosquitto* mosq,
                                        void* userdata,
@@ -188,6 +190,7 @@ private:
   bool m_connecting;
   bool m_tlsEnabled;
   bool m_receivePaused;
+  bool m_darkTheme;
   bool m_verifyPeer;
   QString m_host;
   int m_port;
@@ -241,6 +244,7 @@ private:
   QAction* m_actUnsubscribe;
   QAction* m_actSubscribeConfigured;
   QAction* m_actClearSubscriptions;
+  QAction* m_actToggleTheme;
   QLabel* m_lblStatus;
 
   /// Connection state badge in the toolbar

@@ -36,6 +36,7 @@
 
 #include "cfrmvscplinktest.h"
 
+#include "keyvalidation.h"
 #include "vscpworks.h"
 
 #include <vscp-client-canal.h>
@@ -293,7 +294,9 @@ CFrmVscpLinkTest::addStepRows()
     tr("Test command responses"),
     tr("Verify full level II support"),
     tr("Disconnect"),
-    tr("Verify disconnected state")
+    tr("Verify disconnected state"),
+    tr("Test binary protocol (no encryption)"),
+    tr("Test binary protocol (authenticated encryption)")
   };
 
   m_stepTable->setRowCount(commands.size());
@@ -331,6 +334,10 @@ CFrmVscpLinkTest::setStepResult(int row,
   else if (StepResult::Fail == result) {
     statusText = tr("FAIL");
     statusColor = QColor(160, 0, 0);
+  }
+  else if (StepResult::Skipped == result) {
+    statusText = tr("SKIP");
+    statusColor = QColor(160, 105, 0);
   }
 
   QTableWidgetItem* statusItem = m_stepTable->item(row, 2);
@@ -558,6 +565,26 @@ CFrmVscpLinkTest::connectionProtocolDetails(const json& conn) const
   if (conn.contains("bfull-l2") && conn["bfull-l2"].is_boolean()) {
     details << tr("full-l2=%1").arg(conn["bfull-l2"].get<bool>() ? tr("yes") : tr("no"));
   }
+  if (conn.contains("binary-mode") && conn["binary-mode"].is_boolean()) {
+    details << tr("binary=%1").arg(conn["binary-mode"].get<bool>() ? tr("yes") : tr("no"));
+  }
+  if (conn.contains("binary-encryption") && conn["binary-encryption"].is_number_integer()) {
+    QString encryption = tr("none");
+    switch (conn["binary-encryption"].get<int>()) {
+      case VSCP_ENCRYPTION_AES128:
+        encryption = QStringLiteral("AES-128");
+        break;
+      case VSCP_ENCRYPTION_AES192:
+        encryption = QStringLiteral("AES-192");
+        break;
+      case VSCP_ENCRYPTION_AES256:
+        encryption = QStringLiteral("AES-256");
+        break;
+      default:
+        break;
+    }
+    details << tr("binary encryption=%1").arg(encryption);
+  }
 
   if (details.isEmpty()) {
     return tr("-");
@@ -632,6 +659,15 @@ CFrmVscpLinkTest::failureInsightForStep(int row, const QString& details) const
     case 9:
       hints << tr("Client still reports connected state after disconnect.");
       hints << tr("Possible stale socket/session state; retry disconnect or reinitialize client.");
+      break;
+
+    case 10:
+      hints << tr("The server may not support the VSCP binary protocol.");
+      hints << tr("Check server compatibility and binary-mode configuration.");
+      break;
+
+    case 11:
+      hints << tr("Verify that the selected connection has the same binary encryption algorithm, AES key and HMAC key configured as the server.");
       break;
 
     default:
@@ -996,6 +1032,99 @@ CFrmVscpLinkTest::stepVerifyLevel2(QString& details)
 }
 
 bool
+CFrmVscpLinkTest::stepTestBinaryProtocol(bool encrypted, QString& details, bool& skipped)
+{
+  skipped = false;
+  if (CVscpClient::connType::TCPIP != m_connType) {
+    details = tr("Binary protocol tests require a TCP/IP connection.");
+    return false;
+  }
+
+  json testConfig = m_connObject;
+  testConfig["binary-mode"] = true;
+  if (encrypted) {
+    if (!testConfig.contains("binary-encryption") ||
+        !testConfig["binary-encryption"].is_number_integer() ||
+        VSCP_ENCRYPTION_NONE == testConfig["binary-encryption"].get<int>()) {
+      skipped = true;
+      details = tr("Skipped: configure binary encryption and keys in the selected TCP/IP connection.");
+      return true;
+    }
+  }
+  else {
+    testConfig["binary-encryption"] = VSCP_ENCRYPTION_NONE;
+    testConfig["binary-key"] = "";
+    testConfig["binary-hmac-key"] = "";
+  }
+
+  const int encryption = encrypted
+                           ? testConfig["binary-encryption"].get<int>()
+                           : VSCP_ENCRYPTION_NONE;
+  const QString encryptionKey = encrypted && testConfig.contains("binary-key") &&
+                                        testConfig["binary-key"].is_string()
+                                  ? QString::fromStdString(testConfig["binary-key"].get<std::string>())
+                                  : QString();
+  const QString hmacKey = encrypted && testConfig.contains("binary-hmac-key") &&
+                                  testConfig["binary-hmac-key"].is_string()
+                            ? QString::fromStdString(testConfig["binary-hmac-key"].get<std::string>())
+                            : QString();
+  const QString validationError = keyvalidation::validateTcpBinary(true,
+                                                                   encryption,
+                                                                   encryptionKey,
+                                                                   hmacKey);
+  if (!validationError.isEmpty()) {
+    details = validationError;
+    return false;
+  }
+
+  vscpClientTcp binaryClient;
+  if (!binaryClient.initFromJson(testConfig.dump())) {
+    details = tr("Failed to initialize the binary-mode TCP/IP client.");
+    return false;
+  }
+  vscpworks_applyTcpipTimeouts(&binaryClient, testConfig);
+
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::processEvents();
+  const int connectResult = binaryClient.connect();
+  QApplication::restoreOverrideCursor();
+  if (VSCP_ERROR_SUCCESS != connectResult) {
+    binaryClient.disconnect();
+    details = tr("Binary-mode connect failed. Error code: %1").arg(connectResult);
+    return false;
+  }
+
+  uint8_t majorVersion = 0;
+  uint8_t minorVersion = 0;
+  uint8_t releaseVersion = 0;
+  uint8_t buildVersion = 0;
+  const int versionResult = binaryClient.getversion(&majorVersion,
+                                                     &minorVersion,
+                                                     &releaseVersion,
+                                                     &buildVersion);
+  const int disconnectResult = binaryClient.disconnect();
+  if (VSCP_ERROR_SUCCESS != versionResult) {
+    details = tr("Binary-mode version query failed. Error code: %1").arg(versionResult);
+    if (VSCP_ERROR_SUCCESS != disconnectResult) {
+      details += tr("; disconnect failed with error code: %1").arg(disconnectResult);
+    }
+    return false;
+  }
+  if (VSCP_ERROR_SUCCESS != disconnectResult) {
+    details = tr("Binary-mode version query succeeded, but disconnect failed. Error code: %1")
+                .arg(disconnectResult);
+    return false;
+  }
+
+  details = encrypted
+              ? tr("Authenticated binary protocol passed; server version %1.%2.%3.%4.")
+                  .arg(majorVersion).arg(minorVersion).arg(releaseVersion).arg(buildVersion)
+              : tr("Unencrypted binary protocol passed; server version %1.%2.%3.%4.")
+                  .arg(majorVersion).arg(minorVersion).arg(releaseVersion).arg(buildVersion);
+  return true;
+}
+
+bool
 CFrmVscpLinkTest::stepDisconnect(QString& details)
 {
   if (nullptr == m_vscpClient) {
@@ -1045,6 +1174,7 @@ CFrmVscpLinkTest::runStepByRow(int row)
 {
   QString details;
   bool ok = false;
+  bool skipped = false;
 
   switch (row) {
     case 0:
@@ -1087,10 +1217,24 @@ CFrmVscpLinkTest::runStepByRow(int row)
       ok = stepVerifyDisconnected(details);
       break;
 
+    case 10:
+      ok = stepTestBinaryProtocol(false, details, skipped);
+      break;
+
+    case 11:
+      ok = stepTestBinaryProtocol(true, details, skipped);
+      break;
+
     default:
       details = tr("Unknown step.");
       ok = false;
       break;
+  }
+
+  if (skipped) {
+    setStepResult(row, StepResult::Skipped, details);
+    appendLog(tr("Step %1: SKIP - %2").arg(row + 1).arg(details));
+    return true;
   }
 
   if (!ok) {
@@ -1133,7 +1277,7 @@ CFrmVscpLinkTest::runSelectedStep()
     }
   }
 
-  appendLog(tr("All selected steps passed."));
+  appendLog(tr("All selected steps completed."));
 }
 
 void
@@ -1149,7 +1293,7 @@ CFrmVscpLinkTest::runAllSteps()
     }
   }
 
-  appendLog(tr("All protocol verification steps passed."));
+  appendLog(tr("All protocol verification steps completed."));
 }
 
 void

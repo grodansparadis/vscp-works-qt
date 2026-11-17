@@ -25,10 +25,27 @@ public:
     const QString diff = diffToHtml("same\nold", "same\nnew");
     check(diff.contains("- old") && diff.contains("+ new") && diff.contains("  same"),
           "Small diffs must still show changed and unchanged lines");
+    const QString darkDiff = diffToHtml("old", "new", true);
+    check(darkDiff.contains("#e5e7eb") && darkDiff.contains("#14532d") &&
+            darkDiff.contains("#7f1d1d"),
+          "Dark diffs must use readable foreground and change colors");
 
     json connection = { { "host", "127.0.0.1" }, { "port", 1 } };
     CFrmMqttExplorer explorer(nullptr, &connection);
     explorer.disconnectFromBroker();
+    const QColor lightBase = QApplication::palette().color(QPalette::Base);
+    explorer.m_darkTheme = true;
+    explorer.applyTheme();
+    check(explorer.m_tree->palette().color(QPalette::Base) == QColor("#141414"),
+          "Dark theme must set the MQTT tree palette");
+    check(explorer.m_plot->palette().color(QPalette::Base) == QColor("#141414"),
+          "Dark theme must set the MQTT plot palette");
+    check(explorer.styleSheet().contains("background-color: #141414"),
+          "Dark theme must provide explicit dark widget styles");
+    explorer.m_darkTheme = false;
+    explorer.applyTheme();
+    check(explorer.m_tree->palette().color(QPalette::Base) == lightBase,
+          "Light theme must restore the application palette");
     const auto receive = [&](const QString& topic, const QByteArray& payload) {
       explorer.handleIncomingMessage(topic, payload, false, 1, 0);
       explorer.flushPendingMessages();

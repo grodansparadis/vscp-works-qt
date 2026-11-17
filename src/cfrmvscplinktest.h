@@ -70,7 +70,7 @@ private slots:
   void clearLog();
 
 private:
-  enum class StepResult { NotRun = 0, Pass, Fail };
+  enum class StepResult { NotRun = 0, Pass, Fail, Skipped };
 
   bool runStepByRow(int row);
   bool stepInitializeClient(QString& details);
@@ -81,6 +81,7 @@ private:
   bool stepReportUnsupportedCommands(QString& details);
   bool stepTestCommandResponses(QString& details);
   bool stepVerifyLevel2(QString& details);
+  bool stepTestBinaryProtocol(bool encrypted, QString& details, bool& skipped);
   bool stepDisconnect(QString& details);
   bool stepVerifyDisconnected(QString& details);
   bool ensureClientCreated(QString& details);
