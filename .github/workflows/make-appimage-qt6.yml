@@ -23,6 +23,10 @@ jobs:
     # https://github.com/actions/checkout  
     - uses: actions/checkout@v4
 
+    - name: Read version
+      id: version
+      run: bash .github/scripts/read-version.sh
+
     - name: Checkout eclipse paho repo
       uses: actions/checkout@v4
       with:
@@ -164,8 +168,8 @@ jobs:
       shell: bash
       # initialize AppDir, bundle shared libraries for QtQuickApp, use Qt plugin to bundle additional resources, and build AppImage, all in one single command
       env:
-        LDAI_OUTPUT: vscpworks-x86_64.AppImage
-        OUTPUT: vscpworks-x86_64.AppImage
+        LDAI_OUTPUT: vscpworks-${{ steps.version.outputs.version }}-x86_64.AppImage
+        OUTPUT: vscpworks-${{ steps.version.outputs.version }}-x86_64.AppImage
       run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
 
     - name: Write SHA256SUMS
@@ -173,15 +177,15 @@ jobs:
       continue-on-error: true
       shell: bash
       run: |
-        bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-${{ matrix.os }}" <<'SHA256SUMS_PATTERNS'
-        ${{github.workspace}}/build/*.AppImage
+        bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-${{ steps.version.outputs.version }}-${{ matrix.os }}" <<'SHA256SUMS_PATTERNS'
+        ${{github.workspace}}/build/vscpworks-*.AppImage
         SHA256SUMS_PATTERNS
 
     - uses: actions/upload-artifact@v4
       with:
-        name: vscp-works-qt-${{ matrix.os }}
+        name: vscp-works-qt-${{ steps.version.outputs.version }}-${{ matrix.os }}
         path: |
-          ${{github.workspace}}/build/*.AppImage
+          ${{github.workspace}}/build/vscpworks-*.AppImage
           ${{ steps.sha256sums_171.outputs.file }}
 
     # https://github.com/marketplace/actions/build-appimage  

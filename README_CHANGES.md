@@ -5,8 +5,9 @@ Add each change under **Unreleased** when it is made. When a release is
 tagged, rename **Unreleased** to the version and date, and start a new
 **Unreleased** section above it.
 
-## Unreleased
+## v261117
 
+- Add the VSCP Works version to generated package filenames and CI artifact names, resetting the build counter for each new month
 - Retry transient vcpkg download failures in the Windows build dependency setup
 - Fixed Windows x64 build failure in cfrmmqttexplorer.cpp by including windows.h before vscphelper.h
 - Added a persistent dark/light theme toggle to VSCP session windows

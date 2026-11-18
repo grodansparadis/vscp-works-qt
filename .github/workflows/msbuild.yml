@@ -20,6 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Read version
+        id: version
+        shell: bash
+        run: bash .github/scripts/read-version.sh
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -93,21 +98,21 @@ jobs:
       - name: Pack install tree
         shell: pwsh
         run: |
-          Compress-Archive -Path "${{ github.workspace }}/staging/*" -DestinationPath "${{ github.workspace }}/vscp-works-qt-windows-install.zip"
+          Compress-Archive -Path "${{ github.workspace }}/staging/*" -DestinationPath "${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-windows-install.zip"
 
       - name: Write SHA256SUMS
         id: sha256sums_89
         continue-on-error: true
         shell: bash
         run: |
-          bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-windows-install" <<'SHA256SUMS_PATTERNS'
-          ${{ github.workspace }}/vscp-works-qt-windows-install.zip
+          bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-${{ steps.version.outputs.version }}-windows-install" <<'SHA256SUMS_PATTERNS'
+          ${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-windows-install.zip
           SHA256SUMS_PATTERNS
 
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vscp-works-qt-windows-install
+          name: vscp-works-qt-${{ steps.version.outputs.version }}-windows-install
           path: |
-            ${{ github.workspace }}/vscp-works-qt-windows-install.zip
+            ${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-windows-install.zip
             ${{ steps.sha256sums_89.outputs.file }}

@@ -39,7 +39,7 @@
 #define VSCPWORKS_MINOR_VERSION     11
 #define VSCPWORKS_PATCH_VERSION     291
 
-#define VSCPWORKS_DISPLAY_VERSION   "26-11-287"
+#define VSCPWORKS_DISPLAY_VERSION   "26.11.291"
 
 #define VSCPWORKS_COPYRIGHT                                                    \
     "Copyright (C) 2000-2026 Ake Hedman, Grodans Paradis AB, "                   \

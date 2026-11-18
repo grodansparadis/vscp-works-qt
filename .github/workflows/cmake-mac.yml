@@ -18,6 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Read version
+        id: version
+        run: bash .github/scripts/read-version.sh
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -50,21 +54,21 @@ jobs:
 
       - name: Pack install tree
         run: |
-          tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz" staging
+          tar -C "${{ github.workspace }}" -czf "${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-macos-install.tar.gz" staging
 
       - name: Write SHA256SUMS
         id: sha256sums_56
         continue-on-error: true
         shell: bash
         run: |
-          bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-macos-install" <<'SHA256SUMS_PATTERNS'
-          ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
+          bash "${GITHUB_WORKSPACE//\\//}/.github/scripts/write-sha256sums.sh" "SHA256SUMS-vscp-works-qt-${{ steps.version.outputs.version }}-macos-install" <<'SHA256SUMS_PATTERNS'
+          ${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-macos-install.tar.gz
           SHA256SUMS_PATTERNS
 
       - name: Upload install artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vscp-works-qt-macos-install
+          name: vscp-works-qt-${{ steps.version.outputs.version }}-macos-install
           path: |
-            ${{ github.workspace }}/vscp-works-qt-macos-install.tar.gz
+            ${{ github.workspace }}/vscp-works-qt-${{ steps.version.outputs.version }}-macos-install.tar.gz
             ${{ steps.sha256sums_56.outputs.file }}
