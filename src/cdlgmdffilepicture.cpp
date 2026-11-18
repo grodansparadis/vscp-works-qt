@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdffilepicture.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdffilepicture.h"
 
 #include <QDate>
@@ -111,13 +112,8 @@ CDlgMdfFilePicture::initDialogData(const CMDF_Object* pmdfobj, mdf_file_picture_
   ui->editUrl->setText(m_ppicture->getUrl().c_str());
   ui->editFormat->setText(m_ppicture->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_ppicture->getDate().c_str(), Qt::ISODate);
-  if (!dd.isValid()) {
-    dd = QDate::fromString(m_ppicture->getDate().c_str(), "yy-MM-dd");
-  }
-  if (dd.isValid()) {
-    ui->date->setDate(dd);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->date, m_ppicture->getDate());
 
   switch (index) {
 
@@ -261,8 +257,7 @@ CDlgMdfFilePicture::accept()
     str = ui->editFormat->text().toStdString();
     m_ppicture->setFormat(str);
 
-    QDate dd = ui->date->date(); 
-    m_ppicture->setDate(dd.toString("yyyy-MM-dd").toStdString());
+    m_ppicture->setDate(m_dateKeeper.value(ui->date));
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

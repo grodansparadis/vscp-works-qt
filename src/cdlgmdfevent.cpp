@@ -172,11 +172,13 @@ CDlgMdfEvent::initDialogData(CMDF* pmdf, CMDF_Event* pevent, bool bAdd, int inde
           &CDlgMdfEvent::currentVscpClassIndexChanged);
 
   setName(pevent->getName().c_str());
-  setVscpClassType(pevent->getClass(), pevent->getType());
   setPriority(pevent->getPriority());
   setDirection(pevent->getDirection());
 
-  fillVscpClass(pevent->getClass());
+  // Class and type of the event (-1 = "-" = all)
+  m_initialClass = pevent->getClass();
+  m_initialType  = pevent->getType();
+  fillVscpClass(m_initialClass);
 
   // Render defined event data
   renderEventData();
@@ -277,36 +279,24 @@ CDlgMdfEvent::setDirection(mdf_event_direction dir)
 //
 
 void
-CDlgMdfEvent::setVscpClassType(uint16_t vscpClass, uint16_t vscpType)
+CDlgMdfEvent::setVscpClassType(int vscpClass, int vscpType)
 {
-  ui->comboClass->clear();
-  ui->comboType->clear();
-
-  // Select requested VSCP Class item
-  for (int i = 0; i < ui->comboClass->count(); i++) {
-    if (vscpClass == ui->comboClass->itemData(i).toInt()) {
-      ui->comboClass->setCurrentIndex(i);
-      break;
-    }
-  }
-
-  // Select requested VSCP Type item
-  for (int i = 0; i < ui->comboType->count(); i++) {
-    if (vscpType == ui->comboType->itemData(i).toInt()) {
-      ui->comboType->setCurrentIndex(i);
-      break;
-    }
-  }
+  m_initialClass = vscpClass;
+  m_initialType  = vscpType;
+  fillVscpClass(vscpClass);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // getVscpClass
 //
 
-uint16_t
+int
 CDlgMdfEvent::getVscpClass(void)
 {
   int selected = ui->comboClass->currentIndex();
+  if (selected < 0) {
+    return m_initialClass;
+  }
   return ui->comboClass->itemData(selected).toInt();
 }
 
@@ -314,10 +304,13 @@ CDlgMdfEvent::getVscpClass(void)
 // getVscpType
 //
 
-uint16_t
+int
 CDlgMdfEvent::getVscpType(void)
 {
   int selected = ui->comboType->currentIndex();
+  if (selected < 0) {
+    return m_initialType;
+  }
   return ui->comboType->itemData(selected).toInt();
 }
 
@@ -382,37 +375,46 @@ CDlgMdfEvent::showVscpTypeInfo()
 //
 
 void
-CDlgMdfEvent::fillVscpClass(uint16_t vscpclass)
+CDlgMdfEvent::fillVscpClass(int vscpclass)
 {
-  int selidx;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  int selidx        = -1;
 
-  // Clear all items
-  ui->comboType->clear();
+  // Filling must not trigger the class changed handler
+  ui->comboClass->blockSignals(true);
+  ui->comboClass->clear();
+
+  ui->comboClass->addItem(tr("- (all classes)"), -1);
+  if (vscpclass < 0) {
+    selidx = 0;
+  }
 
   std::map<uint16_t, QString>::iterator it;
-  for (it = pworks->m_mapVscpClassToToken.begin();
-       it != pworks->m_mapVscpClassToToken.end();
-       ++it) {
+  for (it = pworks->m_mapVscpClassToToken.begin(); it != pworks->m_mapVscpClassToToken.end(); ++it) {
 
     uint16_t classId   = it->first;
     QString classToken = it->second;
 
-    QString listItem =
-      vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
-    listItem +=
-      vscp_str_format(" -- (%d / 0x%04x)", (int)classId, (int)classId)
-        .c_str();
-    ui->comboClass->addItem(listItem, classId);
+    QString listItem = vscp_str_format("%s ", classToken.toStdString().c_str()).c_str();
+    listItem += vscp_str_format(" -- (%d / 0x%04x)", (int) classId, (int) classId).c_str();
+    ui->comboClass->addItem(listItem, (int) classId);
 
-    // Save index for requested sel
-    if (classId == vscpclass) {
+    if ((int) classId == vscpclass) {
       selidx = ui->comboClass->count() - 1;
     }
   }
 
-  // Select the requested item
+  // A class that is not in the class list is kept as it is
+  if (selidx < 0) {
+    ui->comboClass->addItem(QString(tr("Class %1 / 0x%2")).arg(vscpclass).arg(vscpclass, 4, 16, QChar('0')),
+                            vscpclass);
+    selidx = ui->comboClass->count() - 1;
+  }
+
   ui->comboClass->setCurrentIndex(selidx);
+  ui->comboClass->blockSignals(false);
+
+  fillVscpType(vscpclass, (vscpclass == m_initialClass) ? m_initialType : -1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -420,44 +422,45 @@ CDlgMdfEvent::fillVscpClass(uint16_t vscpclass)
 //
 
 void
-CDlgMdfEvent::fillVscpType(uint16_t vscpclass, uint16_t vscptype)
+CDlgMdfEvent::fillVscpType(int vscpclass, int vscptype)
 {
-  int selidx;
   vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  int selidx        = -1;
 
-  // Clear all items
+  ui->comboType->blockSignals(true);
   ui->comboType->clear();
 
-  std::map<uint32_t, QString>::iterator it;
-  for (it = pworks->m_mapVscpTypeToToken.begin();
-       it != pworks->m_mapVscpTypeToToken.end();
-       ++it) {
+  ui->comboType->addItem(tr("- (all types)"), -1);
+  if (vscptype < 0) {
+    selidx = 0;
+  }
 
-    uint16_t classId  = (it->first >> 16) & 0xffff;
-    uint16_t typeId   = it->first & 0xfff;
+  std::map<uint32_t, QString>::iterator it;
+  for (it = pworks->m_mapVscpTypeToToken.begin(); it != pworks->m_mapVscpTypeToToken.end(); ++it) {
+
+    int classId       = (it->first >> 16) & 0xffff;
+    int typeId        = it->first & 0xffff;
     QString typeToken = it->second;
 
-    if (classId == vscpclass) {
-      QString listItem =
-        vscp_str_format(
-          "%s ",
-          typeToken.toStdString().c_str())
-          .c_str();
-      // while (listItem.length() < 30) listItem += " ";
-      listItem +=
-        vscp_str_format(" -- (%d / 0x%04x)", (int)typeId, (int)typeId)
-          .c_str();
+    if ((vscpclass >= 0) && (classId == vscpclass)) {
+      QString listItem = vscp_str_format("%s ", typeToken.toStdString().c_str()).c_str();
+      listItem += vscp_str_format(" -- (%d / 0x%04x)", typeId, typeId).c_str();
       ui->comboType->addItem(listItem, typeId);
 
-      // Save index for requested sel
       if (typeId == vscptype) {
         selidx = ui->comboType->count() - 1;
       }
     }
   }
 
-  // Select the requested item
+  // A type that is not in the type list is kept as it is
+  if (selidx < 0) {
+    ui->comboType->addItem(QString(tr("Type %1 / 0x%2")).arg(vscptype).arg(vscptype, 4, 16, QChar('0')), vscptype);
+    selidx = ui->comboType->count() - 1;
+  }
+
   ui->comboType->setCurrentIndex(selidx);
+  ui->comboType->blockSignals(false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -468,7 +471,9 @@ void
 CDlgMdfEvent::currentVscpClassIndexChanged(int index)
 {
   int selected = ui->comboClass->currentIndex();
-  fillVscpType(ui->comboClass->itemData(selected).toInt(), 0);
+  int vscpclass = ui->comboClass->itemData(selected).toInt();
+  // Back to the class of the event: its type again. Another class: all types.
+  fillVscpType(vscpclass, (vscpclass == m_initialClass) ? m_initialType : -1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

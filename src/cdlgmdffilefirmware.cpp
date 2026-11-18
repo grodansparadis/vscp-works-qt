@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdffilefirmware.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdffilefirmware.h"
 
 #include <QDate>
@@ -109,13 +110,8 @@ CDlgMdfFileFirmware::initDialogData(const CMDF_Object* pmdfobj, mdf_file_firmwar
   ui->editUrl->setText(m_pfirmware->getUrl().c_str());
   ui->editFormat->setText(m_pfirmware->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_pfirmware->getDate().c_str(), Qt::ISODate);
-  if (!dd.isValid()) {
-    dd = QDate::fromString(m_pfirmware->getDate().c_str(), "yy-MM-dd");
-  }
-  if (dd.isValid()) {
-    ui->date->setDate(dd);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->date, m_pfirmware->getDate());
 
   ui->editVersion->setText(m_pfirmware->getVersion().c_str());
   ui->editSize->setText(QString::number(m_pfirmware->getSize()));
@@ -385,7 +381,7 @@ CDlgMdfFileFirmware::accept()
     str = ui->editFormat->text().toStdString();
     m_pfirmware->setFormat(str);
 
-    m_pfirmware->setDate(ui->date->date().toString(Qt::ISODate).toStdString());
+    m_pfirmware->setDate(m_dateKeeper.value(ui->date));
 
     str = ui->editVersion->text().toStdString();
     m_pfirmware->setVersion(str);

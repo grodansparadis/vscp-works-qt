@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdffilemanual.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdffilemanual.h"
 
 #include <QDate>
@@ -111,13 +112,8 @@ CDlgMdfFileManual::initDialogData(const CMDF_Object* pmdfobj, mdf_file_manual_in
   ui->editFormat->setText(m_pmanual->getFormat().c_str());
   ui->editLanguage->setText(m_pmanual->getLanguage().c_str());
 
-  QDate dd = QDate::fromString(m_pmanual->getDate().c_str(), Qt::ISODate);
-  if (!dd.isValid()) {
-    dd = QDate::fromString(m_pmanual->getDate().c_str(), "yy-MM-dd");
-  }
-  if (dd.isValid()) {
-    ui->date->setDate(dd);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->date, m_pmanual->getDate());
 
   switch (index) {
     case index_file_manual_url:
@@ -286,8 +282,7 @@ CDlgMdfFileManual::accept()
     str = ui->editLanguage->text().toStdString();
     m_pmanual->setLanguage(str);
 
-    QDate dd = ui->date->date();
-    m_pmanual->setDate(dd.toString(Qt::ISODate).toStdString());
+    m_pmanual->setDate(m_dateKeeper.value(ui->date));
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

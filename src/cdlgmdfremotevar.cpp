@@ -129,6 +129,10 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
           this,
           SLOT(setUndef()));
 
+  // Never clamp a value from the MDF (Level II offsets are 32-bit)
+  ui->spinOffset->setRange(0, 0x7fffffff);
+  ui->spinBitOffset->setRange(0, 7);
+
   setName(pvar->getName().c_str());
   setPage(pvar->getPage());
   setOffset(pvar->getOffset());
@@ -144,6 +148,7 @@ CDlgMdfRemoteVar::initDialogData(CMDF* pmdf, CMDF_RemoteVariable* pvar, int inde
   // Fill page combo box with used pages
   std::set<uint16_t> pages;
   uint32_t cnt = pmdf->getPages(pages);
+  pages.insert(pvar->getPage()); // The page of the variable is always listed
   ui->comboPage->clear();
   int pos = 0;
   for (std::set<uint16_t>::iterator it = pages.begin(); it != pages.end(); ++it) {
@@ -440,6 +445,7 @@ CDlgMdfRemoteVar::accept()
     m_pvar->setName(getName().toStdString());
     m_pvar->setPage(getPage());
     m_pvar->setOffset(getOffset());
+    m_pvar->setBitPos(getBitOffset());
     m_pvar->setType(static_cast<vscp_remote_variable_type>(getType()));
     // m_pvar->setSpan(getSpan());
     // m_pvar->setMin(getMin());

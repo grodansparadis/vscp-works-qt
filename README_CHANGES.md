@@ -5,6 +5,24 @@ Add each change under **Unreleased** when it is made. When a release is
 tagged, rename **Unreleased** to the version and date, and start a new
 **Unreleased** section above it.
 
+## Unreleased
+
+- MDF editor: unsaved changes are noticed (the MDF is compared with what was last loaded or saved) and New, Open, Open recent and closing the window ask to save them; they were lost without a question
+- MDF editor: saving no longer rewrites the saved file afterwards. The JSON decision matrix rewrite replaced the decision matrix the library wrote with one without action/parameter/bit/value descriptions and with read/write access swapped, and the date rewrite changed dates it guessed the format of (03/04/2025 became 2025-04-03). Both are removed
+- MDF editor: saving uses the library's safe save (temporary file, read back and compare, then replace). A failed save leaves the file as it was and tells why; an MDF that would not read back the same in the chosen format (XML can not hold everything JSON can) is only saved after the user agrees
+- MDF editor: a file that fails to open leaves the open MDF as it was (it was cleared, and the tree pointed to deleted items) and the error tells what is wrong
+- MDF editor: auto save only saves (and makes a backup) when there are changes, and never asks questions
+- MDF dialogs: values from the MDF are never changed just by opening a dialog and pressing OK:
+  - Register: the type was read and written through the page selector; access "Read Only"/"Write Only" were swapped; the page was set to 0 for Level II modules; span (max 127), min (max 99) were clamped; the default was shown as a number
+  - Bit: access labels swapped; default and min were clamped to 99
+  - Remote variable: the type list was off by one (a string variable was shown as "block", "string" stored "unknown"); offset was clamped to 99; the bit position was not saved; a page with no register was replaced
+  - Event: the type was reset to the first type of the class when the dialog opened; "-" (all classes/types) and classes/types not in the class list could not be shown and were replaced
+  - Decision matrix: the module level was used as the decision matrix level (and increased by one on every OK); start page and row size were reset for Level II modules
+  - Bootloader: only algorithm 0 could be shown; all algorithm codes of the specification (and any other code) are kept
+  - Module, picture, video, manual, firmware, driver, setup: a date that is not a valid ISO date was replaced with the date editor's default; the date text is now kept unless the date is changed. The module buffer size was clamped to 99 and forced to 8 for Level I modules
+  - Driver: the OS version was saved as the driver version (and the OS version was not saved)
+  - Description/info URL: the language was cut to two letters ("ja-JP" became "ja"), and changing the language to one that has a text replaced that text without asking
+
 ## v261117
 
 - Add the VSCP Works version to generated package filenames and CI artifact names, resetting the build counter for each new month

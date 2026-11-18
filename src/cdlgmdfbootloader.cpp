@@ -203,7 +203,27 @@ CDlgMdfBootLoader::initDialogData(const CMDF_Object* pmdfobj, mdf_bootloader_ind
 
   ui->editBlockSize->setText(QString::number(m_pbootinfo->getBlockSize()));
   ui->editBlockCount->setText(QString::number(m_pbootinfo->getBlockCount()));
-  ui->comboBoxAlgorithm->setCurrentIndex(m_pbootinfo->getAlgorithm());
+  // Algorithm codes from the specification (CLASS1.PROTOCOL, Type=12). The
+  // code is kept in the item data, so any code (also one not listed) is
+  // shown and written back as it is.
+  ui->comboBoxAlgorithm->clear();
+  const struct {
+    int code;
+    const char* name;
+  } algorithms[] = { { 0x00, "VSCP algorithm" },          { 0x01, "Microchip PIC algorithm" },
+                     { 0x10, "Atmel AVR algorithm 0" },   { 0x20, "NXP ARM algorithm 0" },
+                     { 0x30, "ST ARM algorithm 0" },      { 0x40, "Freescale algorithm 0" },
+                     { 0x50, "Espressif algorithm 0" },   { 0xFF, "No bootloader available" } };
+  for (auto& a : algorithms) {
+    ui->comboBoxAlgorithm->addItem(QString("%1 (0x%2)").arg(a.name).arg(a.code, 2, 16, QChar('0')), a.code);
+  }
+  int algidx = ui->comboBoxAlgorithm->findData((int) m_pbootinfo->getAlgorithm());
+  if (algidx < 0) {
+    ui->comboBoxAlgorithm->addItem(QString(tr("Algorithm 0x%1")).arg(m_pbootinfo->getAlgorithm(), 2, 16, QChar('0')),
+                                   (int) m_pbootinfo->getAlgorithm());
+    algidx = ui->comboBoxAlgorithm->count() - 1;
+  }
+  ui->comboBoxAlgorithm->setCurrentIndex(algidx);
 
   switch (index) {
     case index_bootloader_blockcount:
@@ -274,8 +294,10 @@ CDlgMdfBootLoader::accept()
 
     // m_pbootinfo->setModuleLevel(ui->comboModuleLevel->currentIndex());
 
-    int idx = ui->comboBoxAlgorithm->currentIndex(); //  ->text().toStdString();
-    m_pbootinfo->setAlgorithm(idx);
+    int idx = ui->comboBoxAlgorithm->currentIndex();
+    if (idx >= 0) {
+      m_pbootinfo->setAlgorithm(ui->comboBoxAlgorithm->itemData(idx).toInt());
+    }
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

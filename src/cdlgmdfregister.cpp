@@ -144,6 +144,11 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
           this,
           SLOT(onRemoteVariableAction()));
 
+  // Never clamp a value from the MDF (a smaller range would change it)
+  ui->spinSpan->setRange(0, 65535);
+  ui->spinMin->setRange(0, 0x7fffffff);
+  ui->spinMax->setRange(0, 0x7fffffff);
+
   setName(preg->getName().c_str());
   setPage(preg->getPage());
   setOffset(preg->getOffset());
@@ -153,25 +158,17 @@ CDlgMdfRegister::initDialogData(CMDF* pmdf, CMDF_Register* preg, int index)
   setMin(preg->getMin());
   setMax(preg->getMax());
   setAccess(preg->getAccess());
-  uint8_t val;
-  bool bDefault = preg->getDefault(val);
-  str           = preg->getDefault(val) ? QString("%1").arg(val) : "UNDEF";
+  // The default as it is written in the MDF (it is a string)
+  str = QString::fromStdString(preg->getDefault());
   setDefault(str);
   setForegroundColor(preg->getForegroundColor());
   setBackgroundColor(preg->getBackgroundColor());
 
-  // Only one page for Level II
-  if (VSCP_LEVEL2 == m_pmdf->getLevel()) {
-    ui->comboPage->setEnabled(false);
-    ui->btnNewPage->setEnabled(false);
-    ui->comboPage->addItem(QString("Level II (no pages)"), 0);
-  }
-  else {
-    // Find already defined pages
-    uint32_t cnt = m_pmdf->getPages(m_pages);
-
-    renderPages();
-  }
+  // Pages that are already used (Level II MDF files use pages too, so the
+  // page of a register is always kept)
+  m_pmdf->getPages(m_pages);
+  m_pages.insert(preg->getPage());
+  renderPages();
 
   switch (index) {
     case index_name:
@@ -418,17 +415,33 @@ CDlgMdfRegister::setOffset(uint32_t offset)
 
 // -----------------------------------------------------------------------
 
+// The type combo lists std, block, dmatrix1 (in that order)
 uint8_t
 CDlgMdfRegister::getType(void)
 {
-  return ui->comboPage->currentIndex();
+  switch (ui->comboType->currentIndex()) {
+    case 1:
+      return MDF_REG_TYPE_BLOCK;
+    case 2:
+      return MDF_REG_TYPE_DMATRIX1;
+    default:
+      return MDF_REG_TYPE_STANDARD;
+  }
 }
 
 void
 CDlgMdfRegister::setType(uint8_t type)
 {
-  if (type <= MDF_REG_TYPE_BLOCK) {
-    ui->comboPage->setCurrentIndex(type);
+  switch (type) {
+    case MDF_REG_TYPE_BLOCK:
+      ui->comboType->setCurrentIndex(1);
+      break;
+    case MDF_REG_TYPE_DMATRIX1:
+      ui->comboType->setCurrentIndex(2);
+      break;
+    default:
+      ui->comboType->setCurrentIndex(0);
+      break;
   }
 }
 
@@ -555,14 +568,7 @@ CDlgMdfRegister::accept()
   std::string str;
   if (nullptr != m_preg) {
     m_preg->setName(getName().toStdString());
-    
-    // Level I can only have offset 0-127
-    if (VSCP_LEVEL1 == m_pmdf->getLevel()) {
-      m_preg->setPage(getPage());
-    }
-    else {
-      m_preg->setPage(0);
-    }
+    m_preg->setPage(getPage());
 
     m_preg->setOffset(getOffset());
     m_preg->setType(static_cast<mdf_register_type>(getType()));

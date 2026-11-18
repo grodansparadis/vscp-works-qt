@@ -617,7 +617,6 @@ public slots:
   void saveMdf(void);
   bool saveMdfToPath(const QString& path, mdf_format format);
   bool createBackupForPath(const QString& path);
-  bool enrichSavedJsonWithDecisionMatrix(const QString& path);
   void addRecentSavedFile(const QString& path);
   void loadRecentSavedFiles();
   void rebuildRecentSavedFilesMenu();
@@ -645,6 +644,26 @@ public slots:
     Show help
   */
   void showHelp(void);
+
+  /*!
+    True if the MDF in memory differs from what was last loaded or saved
+  */
+  bool isModified(void);
+
+  /*!
+    Remember the current MDF content as the saved state
+  */
+  void markSaved(void);
+
+  /*!
+    If there are unsaved changes ask the user to save, discard or cancel.
+    @return true if it is OK to continue (saved or discarded), false to stop
+  */
+  bool maybeSave(void);
+
+protected:
+  /// Ask to save unsaved changes before the window closes
+  void closeEvent(QCloseEvent* event) override;
 
 signals:
 
@@ -694,6 +713,10 @@ private:
 
   /// True if a loadeed file has been edited
   bool m_bChanged;
+
+  /// The MDF content (as JSON) when it was last loaded or saved. Compared
+  /// with the current content to find unsaved changes.
+  std::string m_savedContent;
 };
 
 #endif // CFrmMdf_H

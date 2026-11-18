@@ -255,12 +255,12 @@
           </item>
           <item>
            <property name="text">
-            <string>Write Only</string>
+            <string>Read Only</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Read Only</string>
+            <string>Write Only</string>
            </property>
           </item>
           <item>

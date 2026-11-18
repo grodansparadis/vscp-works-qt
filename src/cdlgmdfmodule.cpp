@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdfmodule.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdfmodule.h"
 
 #include "cdlgmdfdescription.h"
@@ -122,16 +123,12 @@ CDlgMdfModule::initDialogData(const CMDF_Object* pmdfobj, mdf_module_index index
   ui->editModel->setText(QString::fromUtf8(m_pmdf->getModuleModel().c_str()));
   ui->comboModuleLevel->setCurrentIndex(m_pmdf->getModuleLevel());
   ui->editVersion->setText(QString::fromUtf8(m_pmdf->getModuleVersion().c_str()));
-  str = QString::fromUtf8(m_pmdf->getModuleChangeDate().c_str());
-  QDate date = QDate::fromString(str, Qt::ISODate);
-  if (!date.isValid()) {
-    date = QDate::fromString(str, "yy-MM-dd");
-  }
-  if (date.isValid()) {
-    ui->editDate->setDate(date);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->editDate, m_pmdf->getModuleChangeDate());
+  // Never clamp a value from the MDF
+  ui->editBufferSize->setRange(0, 65535);
   ui->editBufferSize->setValue(m_pmdf->getModuleBufferSize());
-  updateBufferSizeLockForLevel();
+  updateBufferSizeLockForLevel(false);
   ui->editCopyright->setText(QString::fromUtf8(m_pmdf->getModuleCopyright().c_str()));
 
   switch (index) {
@@ -299,10 +296,9 @@ CDlgMdfModule::accept()
     str = ui->editVersion->text().toUtf8().toStdString();
     m_pmdf->setModuleVersion(str);
 
-    str = ui->editDate->date().toString(Qt::ISODate).toStdString();
+    str = m_dateKeeper.value(ui->editDate);
     m_pmdf->setModuleChangeDate(str);
 
-    updateBufferSizeLockForLevel();
     m_pmdf->setModuleBufferSize(ui->editBufferSize->value());
 
     str = ui->editCopyright->text().toUtf8().toStdString();
@@ -320,12 +316,16 @@ CDlgMdfModule::accept()
 //
 
 void
-CDlgMdfModule::updateBufferSizeLockForLevel(void)
+CDlgMdfModule::updateBufferSizeLockForLevel(bool bSetDefault)
 {
-  // Combo index 0 corresponds to Level 1.
+  // Combo index 0 corresponds to Level 1. A Level I buffer is eight bytes;
+  // it is only set to that when the user changes the level (the value from
+  // the MDF is kept otherwise).
   const bool isLevel1 = (0 == ui->comboModuleLevel->currentIndex());
   if (isLevel1) {
-    ui->editBufferSize->setValue(8);
+    if (bSetDefault) {
+      ui->editBufferSize->setValue(8);
+    }
     ui->editBufferSize->setEnabled(false);
   }
   else {

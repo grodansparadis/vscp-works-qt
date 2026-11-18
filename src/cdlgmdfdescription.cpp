@@ -180,7 +180,8 @@ CDlgMdfDescription::accept()
   std::string str;
   if (nullptr != m_pMapDesc) {
 
-    str = ui->editLanguage->text().trimmed().left(2).toUtf8().toStdString();
+    // The whole language tag is kept ("ja-JP", "zh-CN" ... are used)
+    str = ui->editLanguage->text().trimmed().toUtf8().toStdString();
 
     if (str.length() < 2) {
       QMessageBox::warning(this, tr(APPNAME), tr("Invalid description object. Language must be set to IOS639 value."), QMessageBox::Ok);
@@ -189,7 +190,18 @@ CDlgMdfDescription::accept()
 
     // If selstr has been change in edit mode we have to take
     // special care (we remove the old key).
-    if (m_initial_selstr.length() && (m_initial_selstr != str.c_str())) {
+    const bool bNewKey = (m_initial_selstr != QString::fromUtf8(str.c_str()));
+    if (bNewKey && (m_pMapDesc->end() != m_pMapDesc->find(str))) {
+      if (QMessageBox::Yes != QMessageBox::question(this,
+                                                    tr(APPNAME),
+                                                    tr("There is already a text for language '%1'. Replace it?")
+                                                      .arg(QString::fromUtf8(str.c_str())),
+                                                    QMessageBox::Yes | QMessageBox::No,
+                                                    QMessageBox::No)) {
+        return;
+      }
+    }
+    if (m_initial_selstr.length() && bNewKey) {
       m_pMapDesc->erase(m_initial_selstr.toUtf8().toStdString());
     }
 

@@ -137,21 +137,24 @@ CDlgMdfDM::initDialogData(CMDF* pmdf, CMDF_DecisionMatrix* pdm, int index)
           SLOT(deleteAction()));
   connect(ui->listActions, &QListWidget::doubleClicked, this, &CDlgMdfDM::editAction);
 
-  setLevel(pmdf->getLevel());
+  // Never clamp a value from the MDF
+  ui->spinRowCnt->setRange(0, 65535);
+  ui->spinStartPage->setRange(0, 65535);
+  ui->spinRowSize->setRange(0, 65535);
+
+  // The level of the decision matrix (1/2), not the module level
+  setLevel(pdm->getLevel());
   ui->comboLevel->setEnabled(false);
 
+  // Every value is shown (and so written back unchanged)
+  setPage(pdm->getStartPage());
   setOffset(pdm->getStartOffset());
   setRows(pdm->getRowCount());
+  setSize(pdm->getRowSize());
 
-  if (0 == pmdf->getLevel()) {
-    setPage(pdm->getStartPage());
-    setSize(8);
+  if (VSCP_LEVEL1 == pmdf->getLevel()) {
+    // A Level I row is always eight bytes
     ui->spinRowSize->setEnabled(false);
-  }
-  else {
-    setPage(0);
-    ui->spinStartPage->setEnabled(false);
-    setSize(pdm->getRowSize());
   }
 
   // Render available actions

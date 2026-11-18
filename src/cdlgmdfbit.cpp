@@ -107,6 +107,11 @@ CDlgMdfBit::initDialogData(CMDF_Bit* pbit, int index, mdf_record_type type)
   m_index = index;
   m_type  = type;
 
+  // Bit field values are 0-255 (never clamp a value from the MDF)
+  ui->spinDefault->setRange(0, 255);
+  ui->spinMin->setRange(0, 255);
+  ui->spinMax->setRange(0, 255);
+
   setName(pbit->getName().c_str());
   setPos(pbit->getPos());
   setWidth(pbit->getWidth());

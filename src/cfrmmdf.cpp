@@ -146,130 +146,6 @@ formatIsoDate(const std::string& dateValue)
   return date.isValid() ? date.toString(Qt::ISODate) : source;
 }
 
-QString
-normalizeDateString(const QString& sourceValue)
-{
-  const QString source = sourceValue.trimmed();
-  if (source.isEmpty()) {
-    return source;
-  }
-
-  QDate date = QDate::fromString(source, Qt::ISODate);
-  if (date.isValid()) {
-    return date.toString(Qt::ISODate);
-  }
-
-  const QStringList formats = { "yyyy-MM-dd",
-                                "yy-MM-dd",
-                                "dd/MM/yyyy",
-                                "d/M/yyyy",
-                                "dd/MM/yy",
-                                "d/M/yy",
-                                "MM/dd/yyyy",
-                                "M/d/yyyy",
-                                "MM/dd/yy",
-                                "M/d/yy" };
-
-  for (const auto &fmt : formats) {
-    date = QDate::fromString(source, fmt);
-    if (date.isValid()) {
-      return date.toString(Qt::ISODate);
-    }
-  }
-
-  return source;
-}
-
-void
-normalizeJsonDateFields(json& node)
-{
-  if (node.is_object()) {
-    for (auto& item : node.items()) {
-      if (item.value().is_string()) {
-        const std::string& key = item.key();
-        if (("date" == key) || ("changed" == key)) {
-          const QString normalized = normalizeDateString(QString::fromStdString(item.value().get<std::string>()));
-          item.value()             = normalized.toStdString();
-        }
-      }
-
-      normalizeJsonDateFields(item.value());
-    }
-  }
-  else if (node.is_array()) {
-    for (auto& item : node) {
-      normalizeJsonDateFields(item);
-    }
-  }
-}
-
-bool
-normalizeSavedXmlDateFields(const QString& path)
-{
-  QFile file(path);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    QMessageBox::warning(nullptr,
-                         APPNAME,
-                         QObject::tr("Failed to normalize MDF date fields.\n\nWhere: %1\nWhat: Unable to read saved XML.")
-                           .arg(path));
-    return false;
-  }
-
-  const QString originalContent = QString::fromUtf8(file.readAll());
-  file.close();
-
-  QString content        = originalContent;
-  QString updatedContent = content;
-  int delta              = 0;
-  const QRegularExpression attrDateRe(R"re(date\s*=\s*"([^"]*)")re");
-  auto attrIt = attrDateRe.globalMatch(content);
-  while (attrIt.hasNext()) {
-    const QRegularExpressionMatch match = attrIt.next();
-    const QString current               = match.captured(1);
-    const QString normalized            = normalizeDateString(current);
-    if (current == normalized) {
-      continue;
-    }
-
-    const int start = match.capturedStart(1) + delta;
-    updatedContent.replace(start, current.length(), normalized);
-    delta += normalized.length() - current.length();
-  }
-
-  content = updatedContent;
-  delta   = 0;
-  const QRegularExpression changedDateRe(R"(<changed>\s*([^<]*)\s*</changed>)");
-  auto changedIt = changedDateRe.globalMatch(content);
-  while (changedIt.hasNext()) {
-    const QRegularExpressionMatch match = changedIt.next();
-    const QString current               = match.captured(1).trimmed();
-    const QString normalized            = normalizeDateString(current);
-    if (current == normalized) {
-      continue;
-    }
-
-    const int start = match.capturedStart(1) + delta;
-    const int len   = match.capturedLength(1);
-    updatedContent.replace(start, len, normalized);
-    delta += normalized.length() - len;
-  }
-
-  if (updatedContent == originalContent) {
-    return true;
-  }
-
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-    QMessageBox::warning(nullptr,
-                         APPNAME,
-                         QObject::tr("Failed to normalize MDF date fields.\n\nWhere: %1\nWhat: Unable to write updated XML.")
-                           .arg(path));
-    return false;
-  }
-  file.write(updatedContent.toUtf8());
-  file.close();
-  return true;
-}
-
 } // anonymous namespace
 
 // ----------------------------------------------------------------------------
@@ -424,6 +300,7 @@ CFrmMdf::CFrmMdf(QWidget* parent, const char* path)
 
   this->setFixedSize(this->size());
 
+  markSaved();
   newMdf(); // Render defaults
 }
 
@@ -490,11 +367,93 @@ CFrmMdf::eventFilter(QObject* watched, QEvent* event)
 void
 CFrmMdf::newMdf(void)
 {
-  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  if (!maybeSave()) {
+    return;
+  }
   m_mdf.clearStorage();
   m_last_path.clear();
   m_labelOpenedFile->setText(tr("File: (none)"));
   loadMdf();
+  markSaved();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// isModified / markSaved / maybeSave / closeEvent
+//
+// Unsaved changes are found by comparing the MDF content with the content
+// when it was last loaded or saved (so every kind of edit counts, without
+// each edit having to report it).
+//
+
+bool
+CFrmMdf::isModified(void)
+{
+  try {
+    return (m_mdf.toJsonString() != m_savedContent);
+  }
+  catch (...) {
+    return true;
+  }
+}
+
+void
+CFrmMdf::markSaved(void)
+{
+  try {
+    m_savedContent = m_mdf.toJsonString();
+  }
+  catch (...) {
+    m_savedContent.clear();
+  }
+  m_bChanged = false;
+}
+
+bool
+CFrmMdf::maybeSave(void)
+{
+  if (!isModified()) {
+    return true;
+  }
+
+  QMessageBox::StandardButton ret =
+    QMessageBox::warning(this,
+                         APPNAME,
+                         tr("The MDF has unsaved changes.\n\nDo you want to save them?"),
+                         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                         QMessageBox::Save);
+  if (QMessageBox::Cancel == ret) {
+    return false;
+  }
+  if (QMessageBox::Discard == ret) {
+    return true;
+  }
+
+  // Save
+  if (m_last_path.isEmpty()) {
+    QString path = QFileDialog::getSaveFileName(this,
+                                                tr("Save Module Description File (MDF)"),
+                                                "",
+                                                tr("MDF Files (*.mdf *.json *.xml);;All Files (*.*)"));
+    if (path.isEmpty()) {
+      return false;
+    }
+    return saveMdfToPath(path, detectMdfFormatForPath(path));
+  }
+  return saveMdfToPath(m_last_path, detectMdfFormatForPath(m_last_path));
+}
+
+void
+CFrmMdf::closeEvent(QCloseEvent* event)
+{
+  if (maybeSave()) {
+    if (nullptr != m_autoSaveTimer) {
+      m_autoSaveTimer->stop();
+    }
+    event->accept();
+  }
+  else {
+    event->ignore();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -504,6 +463,10 @@ CFrmMdf::newMdf(void)
 void
 CFrmMdf::openMdf(void)
 {
+  if (!maybeSave()) {
+    return;
+  }
+
   QString path = QFileDialog::getOpenFileName(this,
                                               tr("Open MDF (Module Description File)"),
                                               "" /*"/usr/local/src/VSCP/vscp-works-qt/mdf/beijing_2.xml"*/,
@@ -520,13 +483,16 @@ CFrmMdf::openMdfFromPath(const QString& path)
   qInfo() << "Selected MDF filename: " << path;
   const std::string pathUtf8 = path.toUtf8().toStdString();
   try {
+    // On failure the MDF that is open stays as it is
     int rv = m_mdf.parseMDF(pathUtf8);
     if (VSCP_ERROR_SUCCESS != rv) {
-      spdlog::error("Failed to parse MDF file {0}", pathUtf8);
+      spdlog::error("Failed to parse MDF file {0}: {1}", pathUtf8, m_mdf.getLastError());
       QMessageBox::warning(this,
                            APPNAME,
-                           tr("Failed to parse MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                           tr("Failed to read MDF file.\n\nWhere: %1\nWhat: %2 (error code %3).\n\n"
+                              "The MDF that was open is unchanged.")
                              .arg(path)
+                             .arg(QString::fromStdString(m_mdf.getLastError()))
                              .arg(rv));
       return false;
     }
@@ -553,7 +519,7 @@ CFrmMdf::openMdfFromPath(const QString& path)
   m_labelOpenedFile->setText(tr("File: %1").arg(path));
   addRecentSavedFile(path);
   loadMdf();
-  m_bChanged = false;
+  markSaved();
 
   return true;
 }
@@ -625,29 +591,46 @@ CFrmMdf::saveMdfToPath(const QString& path, mdf_format format)
     return false;
   }
 
+  // The library writes a temporary file, reads it back and checks that it
+  // gives the same MDF, and only then replaces the file. On any failure the
+  // file is left as it was.
   const std::string pathUtf8 = path.toUtf8().toStdString();
-  const int rv               = m_mdf.save(pathUtf8, format);
+  int rv                     = m_mdf.save(pathUtf8, format);
+  if (VSCP_ERROR_VERIFY == rv) {
+    spdlog::error("MDF file {0} would not read back the same: {1}", pathUtf8, m_mdf.getLastError());
+    QMessageBox msg(QMessageBox::Warning,
+                    APPNAME,
+                    tr("The MDF can not be saved in this format without changing it.\n\n%1\n\n"
+                       "%2 has not been changed. JSON can hold everything an MDF can, so saving "
+                       "as JSON keeps all of it.")
+                      .arg(QString::fromStdString(m_mdf.getLastError()))
+                      .arg(path),
+                    QMessageBox::NoButton,
+                    this);
+    QPushButton* btnAnyway = msg.addButton(tr("Save anyway (lose the difference)"), QMessageBox::DestructiveRole);
+    msg.addButton(QMessageBox::Cancel);
+    msg.exec();
+    if (msg.clickedButton() != btnAnyway) {
+      return false;
+    }
+    rv = m_mdf.save(pathUtf8, format, false);
+  }
   if (VSCP_ERROR_SUCCESS != rv) {
-    spdlog::error("Failed to save MDF file {0}", pathUtf8);
+    spdlog::error("Failed to save MDF file {0}: {1}", pathUtf8, m_mdf.getLastError());
     QMessageBox::warning(this,
                          APPNAME,
-                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Parser returned error code %2.")
+                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: %2 (error code %3).\n\n"
+                            "The file has not been changed.")
                            .arg(path)
+                           .arg(QString::fromStdString(m_mdf.getLastError()))
                            .arg(rv));
-    return false;
-  }
-
-  if ((MDF_FORMAT_JSON == format) && !enrichSavedJsonWithDecisionMatrix(path)) {
-    return false;
-  }
-  if ((MDF_FORMAT_XML == format) && !normalizeSavedXmlDateFields(path)) {
     return false;
   }
 
   m_last_path = path;
   m_labelOpenedFile->setText(tr("File: %1").arg(path));
   ui->statusbar->showMessage(tr("Saved %1").arg(path), 2000);
-  m_bChanged = false;
+  markSaved();
   addRecentSavedFile(path);
   return true;
 }
@@ -710,166 +693,28 @@ CFrmMdf::createBackupForPath(const QString& path)
   return true;
 }
 
-bool
-CFrmMdf::enrichSavedJsonWithDecisionMatrix(const QString& path)
-{
-  QFile file(path);
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    QMessageBox::warning(this,
-                         APPNAME,
-                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Unable to read saved JSON.")
-                           .arg(path));
-    return false;
-  }
-
-  json root;
-  try {
-    root = json::parse(file.readAll().toStdString());
-  }
-  catch (const std::exception &ex) {
-    QMessageBox::warning(this,
-                         APPNAME,
-                         tr("Failed to update JSON MDF with decision matrix data.\n\nWhere: %1\nWhat: %2")
-                           .arg(path)
-                           .arg(QString::fromUtf8(ex.what())));
-    return false;
-  }
-
-  if (!root.contains("module") || !root["module"].is_object()) {
-    QMessageBox::warning(this,
-                         APPNAME,
-                         tr("Failed to update JSON MDF with decision matrix data.\n\nWhere: %1\nWhat: Missing 'module' object.")
-                           .arg(path));
-    return false;
-  }
-
-  json &module = root["module"];
-  CMDF_DecisionMatrix* pdm = m_mdf.getDM();
-  if (nullptr != pdm) {
-    json jdm;
-    jdm["level"]        = pdm->getLevel();
-    jdm["start-page"]   = pdm->getStartPage();
-    jdm["start-offset"] = pdm->getStartOffset();
-    jdm["rowcnt"]       = pdm->getRowCount();
-    jdm["rowsize"]      = pdm->getRowSize();
-
-    json actions = json::array();
-    std::deque<CMDF_Action*>* pActionList = pdm->getActionList();
-    if (nullptr != pActionList) {
-      for (CMDF_Action* pAction : *pActionList) {
-        if (nullptr == pAction) {
-          continue;
-        }
-
-        json jaction;
-        jaction["name"] = pAction->getName();
-        jaction["code"] = pAction->getCode();
-
-        json params = json::array();
-        std::deque<CMDF_ActionParameter*>* pParams = pAction->getListActionParameter();
-        if (nullptr != pParams) {
-          for (CMDF_ActionParameter* pParam : *pParams) {
-            if (nullptr == pParam) {
-              continue;
-            }
-
-            json jparam;
-            jparam["name"]   = pParam->getName();
-            jparam["offset"] = pParam->getOffset();
-            jparam["min"]    = pParam->getMin();
-            jparam["max"]    = pParam->getMax();
-
-            json bits = json::array();
-            std::deque<CMDF_Bit*>* pBits = pParam->getListBits();
-            if (nullptr != pBits) {
-              for (CMDF_Bit* pBit : *pBits) {
-                if (nullptr == pBit) {
-                  continue;
-                }
-                json jbit;
-                jbit["name"]    = pBit->getName();
-                jbit["pos"]     = pBit->getPos();
-                jbit["width"]   = pBit->getWidth();
-                jbit["default"] = pBit->getDefault();
-                jbit["min"]     = pBit->getMin();
-                jbit["max"]     = pBit->getMax();
-
-                QString access;
-                if (2 & pBit->getAccess()) {
-                  access += "r";
-                }
-                if (1 & pBit->getAccess()) {
-                  access += "w";
-                }
-                jbit["access"] = access.toStdString();
-                bits.push_back(jbit);
-              }
-            }
-            if (!bits.empty()) {
-              jparam["bit"] = bits;
-            }
-
-            json values = json::array();
-            std::deque<CMDF_Value*>* pValues = pParam->getListValues();
-            if (nullptr != pValues) {
-              for (CMDF_Value* pValue : *pValues) {
-                if (nullptr == pValue) {
-                  continue;
-                }
-                json jvalue;
-                jvalue["name"]  = pValue->getName();
-                jvalue["value"] = pValue->getValue();
-                values.push_back(jvalue);
-              }
-            }
-            if (!values.empty()) {
-              jparam["valuelist"] = values;
-            }
-
-            params.push_back(jparam);
-          }
-        }
-
-        if (!params.empty()) {
-          jaction["param"] = params;
-        }
-
-        actions.push_back(jaction);
-      }
-    }
-
-    jdm["action"] = actions;
-    module["dmatrix"] = jdm;
-  }
-  else {
-    module.erase("dmatrix");
-  }
-
-  normalizeJsonDateFields(root);
-
-  file.close();
-
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-    QMessageBox::warning(this,
-                         APPNAME,
-                         tr("Failed to save MDF file.\n\nWhere: %1\nWhat: Unable to write updated JSON.")
-                           .arg(path));
-    return false;
-  }
-  file.write(QString::fromStdString(root.dump(2)).toUtf8());
-  file.close();
-
-  return true;
-}
-
 void
 CFrmMdf::onAutoSaveTimeout()
 {
-  if (m_last_path.isEmpty()) {
+  // Only when there is something to save (a backup is made on every save)
+  if (m_last_path.isEmpty() || !isModified()) {
     return;
   }
 
-  saveMdfToPath(m_last_path, detectMdfFormatForPath(m_last_path));
+  // No questions from a timer: a save that would change the MDF is not done
+  // (the user gets the question at the next manual save).
+  const std::string pathUtf8 = m_last_path.toUtf8().toStdString();
+  if (!createBackupForPath(m_last_path)) {
+    return;
+  }
+  int rv = m_mdf.save(pathUtf8, detectMdfFormatForPath(m_last_path));
+  if (VSCP_ERROR_SUCCESS == rv) {
+    markSaved();
+    ui->statusbar->showMessage(tr("Auto saved %1").arg(m_last_path), 2000);
+  }
+  else {
+    ui->statusbar->showMessage(tr("Auto save failed: %1").arg(QString::fromStdString(m_mdf.getLastError())), 10000);
+  }
 }
 
 void
@@ -932,6 +777,10 @@ CFrmMdf::openRecentSavedFile()
 
   const QString path = action->data().toString();
   if (path.isEmpty()) {
+    return;
+  }
+
+  if (!maybeSave()) {
     return;
   }
 
@@ -3040,14 +2889,14 @@ CFrmMdf::renderEvents(QMdfTreeWidgetItem* pItemEvent)
 
         pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
-          str = QString("VSCP Class: %1").arg(pevent->getClass());
+          str = QString("VSCP Class: %1").arg((pevent->getClass() < 0) ? QString("- (all)") : QString::number(pevent->getClass()));
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }
 
         pItem = new QMdfTreeWidgetItem(pSubItem, pevent, mdf_type_event_sub_item);
         if (nullptr != pItem) {
-          str = QString("VSCP Type: %1").arg(pevent->getType());
+          str = QString("VSCP Type: %1").arg((pevent->getType() < 0) ? QString("- (all)") : QString::number(pevent->getType()));
           pItem->setText(0, str);
           pSubItem->addChild(pItem);
         }

@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdffiledriver.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdffiledriver.h"
 
 #include <QDate>
@@ -106,13 +107,8 @@ CDlgMdfFileDriver::initDialogData(const CMDF_Object* pmdfobj, mdf_driver_index i
   ui->editOsVersion->setText(m_pdriver->getOSVer().c_str());
   ui->editVersion->setText(m_pdriver->getVersion().c_str());
 
-  QDate dd = QDate::fromString(m_pdriver->getDate().c_str(), Qt::ISODate);
-  if (!dd.isValid()) {
-    dd = QDate::fromString(m_pdriver->getDate().c_str(), "yy-MM-dd");
-  }
-  if (dd.isValid()) {
-    ui->date->setDate(dd);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->date, m_pdriver->getDate());
 
   switch (index) {
     case index_file_driver_name:
@@ -365,13 +361,14 @@ CDlgMdfFileDriver::accept()
     m_pdriver->setArchitecture(str);
 
     str = ui->editOsVersion->text().toStdString();
+    m_pdriver->setOSVer(str);
+    str = ui->editVersion->text().toStdString();
     m_pdriver->setVersion(str);
 
     str = ui->editMd5->text().toStdString();
     m_pdriver->setMd5(str);
 
-    QDate dd = ui->date->date();
-    m_pdriver->setDate(dd.toString(Qt::ISODate).toStdString());
+    m_pdriver->setDate(m_dateKeeper.value(ui->date));
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

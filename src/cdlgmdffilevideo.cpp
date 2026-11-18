@@ -36,6 +36,7 @@
 #include <vscpworks.h>
 
 #include "cdlgmdffilevideo.h"
+#include "mdfdatekeeper.h"
 #include "ui_cdlgmdffilevideo.h"
 
 #include <QDate>
@@ -110,13 +111,8 @@ CDlgMdfFileVideo::initDialogData(const CMDF_Object* pmdfobj, mdf_file_video_inde
   ui->editUrl->setText(m_pvideo->getUrl().c_str());
   ui->editFormat->setText(m_pvideo->getFormat().c_str());
 
-  QDate dd = QDate::fromString(m_pvideo->getDate().c_str(), Qt::ISODate);
-  if (!dd.isValid()) {
-    dd = QDate::fromString(m_pvideo->getDate().c_str(), "yy-MM-dd");
-  }
-  if (dd.isValid()) {
-    ui->date->setDate(dd);
-  }
+  // The date text is kept as it is unless the date is changed
+  m_dateKeeper.load(ui->date, m_pvideo->getDate());
 
   switch (index) {
     case index_file_video_url:
@@ -258,8 +254,7 @@ CDlgMdfFileVideo::accept()
     str = ui->editFormat->text().toStdString();
     m_pvideo->setFormat(str);
 
-    QDate dd = ui->date->date();
-    m_pvideo->setDate(dd.toString(Qt::ISODate).toStdString());
+    m_pvideo->setDate(m_dateKeeper.value(ui->date));
   }
   else {
     spdlog::error("MDF module information - Invalid MDF object (accept)");

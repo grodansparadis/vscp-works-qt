@@ -88,9 +88,9 @@ public:
   /*!
     Setters/getters for VSCP class/type
   */
-  uint16_t getVscpClass(void);
-  uint16_t getVscpType(void);
-  void setVscpClassType(uint16_t vscpClass, uint16_t vscpType);
+  int getVscpClass(void);
+  int getVscpType(void);
+  void setVscpClassType(int vscpClass, int vscpType);
 
   // Render available actions
   void renderEventData(void);
@@ -118,7 +118,7 @@ public:
         @param vscpClass VSCP class to select. Defaults
                 to zero for the first item.
     */
-  void fillVscpClass(uint16_t vscpclass = 0);
+  void fillVscpClass(int vscpclass = 0);
 
   /*!
       Fill the VSCP type combobox with
@@ -127,7 +127,7 @@ public:
       @param vscpType VSCP type to select. defaults to
               zero for the firsts item.
   */
-  void fillVscpType(uint16_t vscpclass, uint16_t vscpType = 0);
+  void fillVscpType(int vscpclass, int vscpType = 0);
 
 public slots:
 
@@ -169,6 +169,10 @@ private:
 
   /// Event to add/edit
   CMDF_Event* m_pEvent;
+
+  // Class and type of the event when the dialog was opened (-1 = all)
+  int m_initialClass = 0;
+  int m_initialType  = 0;
 };
 
 #endif // CDLGMDFDM_ACTIONS_H

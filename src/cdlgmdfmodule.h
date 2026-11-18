@@ -33,6 +33,7 @@
 #include <mdf.h>
 
 #include <QDialog>
+#include "mdfdatekeeper.h"
 
 // Id for fields to identify them in the UI.
 // Use to set focus on edit and to write changed values
@@ -151,7 +152,7 @@ public:
 
 public slots:
   void accept(void);
-  void updateBufferSizeLockForLevel(void);
+  void updateBufferSizeLockForLevel(bool bSetDefault = true);
 
   // Description buttons
   void addDesc(void);
@@ -169,6 +170,8 @@ public slots:
   void showHelp(void);
 
 private:
+  // Keeps the date text from the MDF unless the date is changed
+  MdfDateKeeper m_dateKeeper;
   Ui::CDlgMdfModule* ui;
   CMDF* m_pmdf;
 };
