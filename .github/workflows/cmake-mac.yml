@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Read version
         id: version
@@ -66,7 +66,7 @@ jobs:
           SHA256SUMS_PATTERNS
 
       - name: Upload install artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vscp-works-qt-${{ steps.version.outputs.version }}-macos-install
           path: |
