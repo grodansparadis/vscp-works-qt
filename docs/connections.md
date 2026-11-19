@@ -17,6 +17,7 @@ VSCP Works can communicate with many different hardware devices using a range of
   * [UDP](./connection_udp)
   * [Multicast](./connection_multicast)
   * [Level II driver](./connection_level2)
+  * [Bluetooth LE](./connection_ble)
 
 In addition, there are two groups of *raw* connections that are not limited to VSCP traffic:
 
@@ -36,6 +37,7 @@ The table below gives a short description of each protocol. Click a protocol nam
 | [UDP](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_udp) | The connectionless VSCP UDP protocol. |
 | [Multicast](https://grodansparadis.github.io/vscp-doc-spec/#/./vscp_over_multicast?id=vscp-multicast) | VSCP multicast.  |
 | [Level II driver](./connection_level2) | Loads a VSCP Level II driver (`vscpl2drv-*`) directly, with its configuration in a file or embedded in the connection. |
+| [Bluetooth LE](./connection_ble) | VSCP over Bluetooth Low Energy: events from E1, A2 (authenticated, encrypted) and F1 advertising, and a G1 GATT connection to a node. Opened in the [Bluetooth LE session](ble_window.md) window. |
 
 
 
@@ -89,7 +91,7 @@ You can move connection definitions between computers or share them with others.
 - A JSON object with the connection in a `connection` member, for example a session file exported from a [session window](session_window.md?id=sessions).
 - A JSON object with a `connections` array, or a JSON array, holding exactly one connection.
 
-The connection type may be given as a number or as a name (for example `tcpip`). After import, the settings dialog for the connection type is opened with the imported values so you can review them before the connection is added.
+The connection type may be given as a number or as a name (for example `tcpip`, or `ble` for Bluetooth LE). After import, the settings dialog for the connection type is opened with the imported values so you can review them before the connection is added.
 
 # Filter
 

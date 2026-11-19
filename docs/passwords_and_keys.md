@@ -1,6 +1,6 @@
 # Passwords and keys
 
-VSCP Works needs secrets for many connections: passwords, AES encryption keys, HMAC keys, the password of a TLS key file and, for Level II drivers, an embedded driver configuration that often holds credentials. This page describes how they are stored and how you handle them on each platform.
+VSCP Works needs secrets for many connections: passwords, AES encryption keys, HMAC keys, the password of a TLS key file, the A2 keys of [Bluetooth LE](connection_ble.md) connections and, for Level II drivers, an embedded driver configuration that often holds credentials. This page describes how they are stored and how you handle them on each platform.
 
 ## What is stored where
 

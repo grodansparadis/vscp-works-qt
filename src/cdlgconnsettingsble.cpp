@@ -26,6 +26,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include <pch.h> // First: windows.h, needed by the VSCP headers
+#endif
+
 #include "cdlgconnsettingsble.h"
 
 #include <QBluetoothLocalDevice>

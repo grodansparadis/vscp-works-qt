@@ -28,6 +28,10 @@
 // SOFTWARE.
 //
 
+#ifdef WIN32
+#include <pch.h> // First: windows.h, needed by the VSCP headers
+#endif
+
 #include "cfrmblesession.h"
 
 #include "cdlgconnsettingsble.h"

@@ -14,7 +14,7 @@ The window needs a Bluetooth adapter. Extended advertising (E1, A2, F1) needs a 
 
 ## Connections
 
-Bluetooth LE connections are listed under **Bluetooth LE Connections** in the connection tree. Create one with `Add new Bluetooth LE connection...` (right-click), by choosing **Bluetooth LE** in the new connection dialog, or with `Bluetooth LE session...` in the **File** menu.
+See [Bluetooth LE connections](connection_ble.md) for the settings, A2 keys and pairing. Bluetooth LE connections are listed under **Bluetooth LE Connections** in the connection tree. Create one with `Add new Bluetooth LE connection...` (right-click), by choosing **Bluetooth LE** in the new connection dialog, or with `Bluetooth LE session...` in the **File** menu.
 
 | Setting | |
 | --- | --- |

@@ -21,6 +21,7 @@ The VSCP system consists of the VSCP daemon, VSCP Works, and the VSCP helper lib
   * Configuration handling can be onended to remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Scan of devices can be handled for remote devices over socketcan/CANAL/tcp/ip and MQTT.
   * Firmware loading can be done using the VSCP bootloader protocol and the PIC1 protocol. 
+  * Bluetooth LE: VSCP events from Bluetooth LE nodes (E1, authenticated and encrypted A2, and F1 advertising) are shown in a Bluetooth LE session window, which can also connect to a node over the G1 GATT service to send and receive events. See [Bluetooth LE](https://grodansparadis.github.io/vscp-works-qt/#/connection_ble).
   * mdf editor is available that can be used to build mdf-files in XML or json format. This solution may still have problems with some more advanced files so be careful and save often.
 
 Binary versions for Linux and windows is available in the release section.
