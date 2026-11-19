@@ -3010,6 +3010,10 @@ MainWindow::newBleSession()
 {
   auto openWindow = [this](json* pconn) {
     CFrmBleSession* w = new CFrmBleSession(this, pconn);
+    connect(w,
+            &CFrmBleSession::connectionThemeChanged,
+            this,
+            &MainWindow::updateConnectionTheme);
     w->setAttribute(Qt::WA_DeleteOnClose, true);
     w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
     w->setWindowFlags(Qt::Window);

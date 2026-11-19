@@ -35,6 +35,7 @@
 #include "cfrmblesession.h"
 
 #include "cdlgconnsettingsble.h"
+#include "explorerstyle.h"
 #ifndef VSCPWORKS_BLE_TEST
 #include "vscpworks.h"
 #endif
@@ -46,6 +47,8 @@
 
 #include <QAction>
 #include <QBluetoothUuid>
+#include <QCheckBox>
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QDesktopServices>
 #include <QDir>
@@ -57,17 +60,24 @@
 #include <QJsonObject>
 #include <QLabel>
 #include <QLineEdit>
+#include <QLowEnergyAdvertisingData>
+#include <QLowEnergyAdvertisingParameters>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QSaveFile>
 #include <QSpinBox>
 #include <QSplitter>
 #include <QStandardPaths>
+#include <QStyle>
+#include <QTabWidget>
 #include <QTableWidget>
 #include <QToolBar>
 #include <QUrl>
 #include <QVBoxLayout>
 
 #include <spdlog/spdlog.h>
+
+#include <algorithm>
 
 namespace {
 
@@ -119,6 +129,307 @@ g1StatusName(uint8_t status)
   return (status < sizeof(names) / sizeof(names[0])) ? QString(names[status]) : QString("0x%1").arg(status, 2, 16);
 }
 
+enum BroadcastColumn
+{
+  BC_TIME = 0,
+  BC_DEVICE,
+  BC_NAME,
+  BC_RSSI,
+  BC_KIND,
+  BC_ID,
+  BC_DATA,
+  BC_DECODED,
+  BC_COUNT
+};
+
+const int MAX_BROADCAST_ROWS = 10000;
+
+// Legacy advertising data (the only kind the Qt Bluetooth module can send)
+const int LEGACY_ADV_MAX = 31;
+
+// AD types (Bluetooth Assigned Numbers)
+const uint8_t AD_FLAGS              = 0x01;
+const uint8_t AD_SHORT_NAME         = 0x08;
+const uint8_t AD_COMPLETE_NAME      = 0x09;
+const uint8_t AD_SERVICE_DATA_16    = 0x16;
+const uint8_t AD_SERVICE_DATA_32    = 0x20;
+const uint8_t AD_SERVICE_DATA_128   = 0x21;
+const uint8_t AD_MANUFACTURER       = 0xFF;
+const uint8_t FLAGS_GENERAL_NO_BREDR = 0x06;
+
+QString
+hex16(quint16 v)
+{
+  return QString("0x%1").arg(QString("%1").arg(v, 4, 16, QChar('0')).toUpper());
+}
+
+QString
+hexBytes(const QByteArray& data)
+{
+  return QString::fromLatin1(data.toHex(' ').toUpper());
+}
+
+// Names of some Company Identifiers seen often (Bluetooth SIG list)
+QString
+companyName(quint16 company)
+{
+  static const QHash<quint16, QString> names = {
+    { 0x0006, "Microsoft" },  { 0x004C, "Apple" },   { 0x0059, "Nordic Semiconductor" },
+    { 0x0075, "Samsung" },    { 0x0087, "Garmin" },  { 0x00E0, "Google" },
+    { 0x0157, "Anhui Huami" }, { 0x02E5, "Espressif" }, { 0x038F, "Xiaomi" },
+    { 0x0499, "Ruuvi Innovations" }, { 0xFFFF, "test / unassigned" },
+  };
+  return names.value(company);
+}
+
+QString
+uuidText(const QBluetoothUuid& uuid)
+{
+  bool is16       = false;
+  const quint16 v = uuid.toUInt16(&is16);
+  if (is16) {
+    const QString name = QBluetoothUuid::serviceClassToString(static_cast<QBluetoothUuid::ServiceClassUuid>(v));
+    return (name.isEmpty() || name.startsWith("Unknown")) ? hex16(v) : QString("%1 %2").arg(hex16(v), name);
+  }
+  return uuid.toString(QUuid::WithoutBraces);
+}
+
+// Data that is all printable ASCII is shown as text
+QString
+printableText(const QByteArray& data)
+{
+  if (data.size() < 3) {
+    return QString();
+  }
+  for (char c : data) {
+    if ((c < 0x20) || (c > 0x7E)) {
+      return QString();
+    }
+  }
+  return QString("\"%1\"").arg(QString::fromLatin1(data));
+}
+
+/*!
+  Decode well-known manufacturer data: VSCP frames (with the connection's
+  Company Identifier) and Apple iBeacon
+*/
+QString
+describeManufacturerData(quint16 company, const QByteArray& data, quint16 vscpCompany)
+{
+  const uint8_t* d = reinterpret_cast<const uint8_t*>(data.constData());
+  if ((company == vscpCompany) && !data.isEmpty()) {
+    switch (d[0]) {
+      case VSCP_BLE_VERSION_E1:
+        return QObject::tr("VSCP E1 frame");
+      case VSCP_BLE_VERSION_A2:
+        return QObject::tr("VSCP A2 frame");
+      case VSCP_BLE_VERSION_F1:
+        return QObject::tr("VSCP F1 fragment");
+      default:
+        if (0 == (d[0] & 0x0F)) {
+          return QObject::tr("VSCP L0 frame (legacy)");
+        }
+        break;
+    }
+  }
+  if ((0x004C == company) && (data.size() >= 23) && (0x02 == d[0]) && (0x15 == d[1])) {
+    const QUuid uuid = QUuid::fromRfc4122(data.mid(2, 16));
+    return QObject::tr("iBeacon %1 major %2 minor %3 tx power %4 dBm")
+      .arg(uuid.toString(QUuid::WithoutBraces))
+      .arg((d[18] << 8) | d[19])
+      .arg((d[20] << 8) | d[21])
+      .arg(static_cast<int8_t>(d[22]));
+  }
+  return printableText(data);
+}
+
+/*!
+  Decode well-known service data: Eddystone UID, URL and TLM
+*/
+QString
+describeServiceData(const QBluetoothUuid& uuid, const QByteArray& data)
+{
+  const uint8_t* d = reinterpret_cast<const uint8_t*>(data.constData());
+  bool is16        = false;
+  if ((0xFEAA == uuid.toUInt16(&is16)) && is16 && !data.isEmpty()) {
+    if ((0x00 == d[0]) && (data.size() >= 18)) {
+      return QObject::tr("Eddystone-UID namespace %1 instance %2 tx power %3 dBm")
+        .arg(QString::fromLatin1(data.mid(2, 10).toHex()), QString::fromLatin1(data.mid(12, 6).toHex()))
+        .arg(static_cast<int8_t>(d[1]));
+    }
+    if ((0x10 == d[0]) && (data.size() >= 3) && (d[2] < 4)) {
+      static const char* schemes[] = { "http://www.", "https://www.", "http://", "https://" };
+      static const char* expansions[] = { ".com/", ".org/", ".edu/", ".net/", ".info/", ".biz/", ".gov/",
+                                          ".com",  ".org",  ".edu",  ".net",  ".info",  ".biz",  ".gov" };
+      QString url = schemes[d[2]];
+      for (int i = 3; i < data.size(); i++) {
+        url += (d[i] < 14) ? QString(expansions[d[i]]) : QString(QChar(d[i]));
+      }
+      return QObject::tr("Eddystone-URL %1 tx power %2 dBm").arg(url).arg(static_cast<int8_t>(d[1]));
+    }
+    if ((0x20 == d[0]) && (data.size() >= 14) && (0x00 == d[1])) {
+      const int mv          = (d[2] << 8) | d[3];
+      const double temp     = static_cast<int16_t>((d[4] << 8) | d[5]) / 256.0;
+      const quint32 advCnt  = (quint32(d[6]) << 24) | (d[7] << 16) | (d[8] << 8) | d[9];
+      const quint32 secCnt  = (quint32(d[10]) << 24) | (d[11] << 16) | (d[12] << 8) | d[13];
+      return QObject::tr("Eddystone-TLM battery %1 mV, %2 °C, %3 advertisements, up %4 s")
+        .arg(mv)
+        .arg(temp, 0, 'f', 1)
+        .arg(advCnt)
+        .arg(secCnt / 10);
+    }
+  }
+  return printableText(data);
+}
+
+/*!
+  Hex octets, optionally separated by spaces, colons, commas or dashes and
+  prefixed with 0x
+*/
+bool
+parseHexBytes(const QString& text, QByteArray& out)
+{
+  QString h = text;
+  h.remove(QRegularExpression("0[xX]"));
+  h.remove(QRegularExpression("[\\s:,-]"));
+  if ((h.length() % 2) || !QRegularExpression("^[0-9A-Fa-f]*$").match(h).hasMatch()) {
+    return false;
+  }
+  out = QByteArray::fromHex(h.toLatin1());
+  return true;
+}
+
+/*!
+  A service UUID in advertising (little-endian) byte order: 4 hex digits
+  (16-bit), 8 hex digits (32-bit) or a 128-bit UUID
+*/
+bool
+parseServiceUuid(const QString& text, QByteArray& le)
+{
+  QString s = text.trimmed();
+  if (s.startsWith("0x", Qt::CaseInsensitive)) {
+    s = s.mid(2);
+  }
+  if (QRegularExpression("^([0-9A-Fa-f]{4}|[0-9A-Fa-f]{8})$").match(s).hasMatch()) {
+    le = QByteArray::fromHex(s.toLatin1());
+    std::reverse(le.begin(), le.end());
+    return true;
+  }
+  const QBluetoothUuid uuid(s);
+  if (uuid.isNull()) {
+    return false;
+  }
+  le = uuid.toRfc4122();
+  std::reverse(le.begin(), le.end());
+  return true;
+}
+
+void
+appendAd(QByteArray& ad, uint8_t type, const QByteArray& value)
+{
+  ad.append(static_cast<char>(value.size() + 1));
+  ad.append(static_cast<char>(type));
+  ad.append(value);
+}
+
+/// The fields of the Advertise box
+struct AdvertisingFields
+{
+  bool flags = true;
+  QString name;
+  bool hasManufacturer = false;
+  quint16 company      = 0;
+  QByteArray manufacturerData;
+  QByteArray serviceUuid; ///< Little-endian, 2, 4 or 16 octets; empty: no service data
+  QByteArray serviceData;
+};
+
+/*!
+  Legacy advertising data from the fields. A name that does not fit is
+  shortened (Shortened Local Name).
+*/
+bool
+buildAdvertisingData(const AdvertisingFields& f, QByteArray& ad, QString& error)
+{
+  ad.clear();
+  if (f.flags) {
+    appendAd(ad, AD_FLAGS, QByteArray(1, static_cast<char>(FLAGS_GENERAL_NO_BREDR)));
+  }
+  if (f.hasManufacturer) {
+    QByteArray v;
+    v.append(static_cast<char>(f.company & 0xFF));
+    v.append(static_cast<char>(f.company >> 8));
+    v.append(f.manufacturerData);
+    appendAd(ad, AD_MANUFACTURER, v);
+  }
+  if (!f.serviceUuid.isEmpty()) {
+    const uint8_t type = (2 == f.serviceUuid.size())   ? AD_SERVICE_DATA_16
+                         : (4 == f.serviceUuid.size()) ? AD_SERVICE_DATA_32
+                                                       : AD_SERVICE_DATA_128;
+    appendAd(ad, type, f.serviceUuid + f.serviceData);
+  }
+  if (!f.name.isEmpty()) {
+    const int room = LEGACY_ADV_MAX - static_cast<int>(ad.size()) - 2;
+    QString name   = f.name;
+    if (name.toUtf8().size() <= room) {
+      appendAd(ad, AD_COMPLETE_NAME, name.toUtf8());
+    }
+    else {
+      while (!name.isEmpty() && (name.toUtf8().size() > room)) {
+        name.chop(1);
+      }
+      if (!name.isEmpty()) {
+        appendAd(ad, AD_SHORT_NAME, name.toUtf8());
+      }
+    }
+  }
+  if (ad.isEmpty()) {
+    error = QObject::tr("Nothing to advertise");
+    return false;
+  }
+  if (ad.size() > LEGACY_ADV_MAX) {
+    error = QObject::tr("%1 octets: legacy advertising holds at most %2").arg(ad.size()).arg(LEGACY_ADV_MAX);
+    return false;
+  }
+  return true;
+}
+
+/*!
+  Raw advertising data must be a sequence of complete AD structures
+  (length, type, value), optionally followed by zero padding
+*/
+bool
+checkRawAdvertisingData(const QByteArray& ad, QString& error)
+{
+  if (ad.isEmpty()) {
+    error = QObject::tr("Nothing to advertise");
+    return false;
+  }
+  if (ad.size() > LEGACY_ADV_MAX) {
+    error = QObject::tr("%1 octets: legacy advertising holds at most %2").arg(ad.size()).arg(LEGACY_ADV_MAX);
+    return false;
+  }
+  int i = 0;
+  while (i < ad.size()) {
+    const int len = static_cast<uint8_t>(ad[i]);
+    if (0 == len) {
+      for (int j = i; j < ad.size(); j++) {
+        if (0 != ad[j]) {
+          error = QObject::tr("Data after a zero-length AD structure at octet %1").arg(i);
+          return false;
+        }
+      }
+      return true;
+    }
+    if (i + 1 + len > ad.size()) {
+      error = QObject::tr("The AD structure at octet %1 is longer than the data").arg(i);
+      return false;
+    }
+    i += 1 + len;
+  }
+  return true;
+}
+
 bool
 hexToBytes(const std::string& str, uint8_t* out, size_t len)
 {
@@ -143,6 +454,7 @@ CFrmBleSession::CFrmBleSession(QWidget* parent, json* pconn)
   , m_agent(nullptr)
   , m_f1rx(new vscp_ble_f1_rx_t)
   , m_paused(false)
+  , m_darkTheme(false)
   , m_ctrl(nullptr)
   , m_service(nullptr)
   , m_g1rx(new vscp_ble_g1_frag_rx_t)
@@ -153,10 +465,21 @@ CFrmBleSession::CFrmBleSession(QWidget* parent, json* pconn)
   , m_g1MaxData(0)
   , m_g1MaxRecord(VSCP_BLE_G1_RECORD_HEADER)
   , m_localDevice(nullptr)
+  , m_peripheral(nullptr)
+  , m_advertising(false)
+  , m_advErrors(0)
+  , m_tableEvents(nullptr)
+  , m_actTheme(nullptr)
 {
   if (nullptr != pconn) {
     m_conn = *pconn;
   }
+  const bool defaultDark = QCoreApplication::instance()->property("defaultDarkTheme").toBool();
+#ifndef VSCPWORKS_BLE_TEST
+  m_darkTheme = vscpworks_connectionDarkTheme(m_conn, defaultDark);
+#else
+  m_darkTheme = defaultDark;
+#endif
   if (m_conn.contains("company") && m_conn["company"].is_number_integer()) {
     m_company = static_cast<uint16_t>(m_conn["company"].get<int>() & 0xFFFF);
   }
@@ -195,6 +518,9 @@ CFrmBleSession::~CFrmBleSession()
   if (nullptr != m_ctrl) {
     m_ctrl->disconnectFromDevice();
   }
+  if ((nullptr != m_peripheral) && m_advertising) {
+    m_peripheral->stopAdvertising();
+  }
   // Keys are secrets
   for (auto& k : m_keys) {
     vscp_ble_secure_zero(&k, sizeof(k));
@@ -208,16 +534,21 @@ CFrmBleSession::~CFrmBleSession()
 void
 CFrmBleSession::setupUi(void)
 {
-  resize(1200, 760);
+  resize(1250, 800);
+  setMinimumSize(980, 620);
 
-  QToolBar* toolbar = new QToolBar(this);
-  m_actScan         = toolbar->addAction(QIcon(":/search.png"), tr("Scan"));
+  QToolBar* toolbar = new QToolBar(tr("Bluetooth LE"), this);
+  toolbar->setMovable(false);
+  toolbar->setFloatable(false);
+  toolbar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+  m_actScan = toolbar->addAction(tr("Scan"));
   m_actScan->setCheckable(true);
-  m_actScan->setToolTip(tr("Receive VSCP events from Bluetooth LE advertising"));
+  m_actScan->setToolTip(tr("Receive Bluetooth LE advertising"));
   m_actPause = toolbar->addAction(tr("Pause"));
   m_actPause->setCheckable(true);
-  m_actPause->setToolTip(tr("Stop adding events to the list (they are still received)"));
+  m_actPause->setToolTip(tr("Stop adding to the lists (advertising is still received)"));
   QAction* actClear = toolbar->addAction(tr("Clear"));
+  actClear->setToolTip(tr("Clear the event and advertising lists"));
   toolbar->addSeparator();
   m_actConnect = toolbar->addAction(tr("Connect G1"));
   m_actConnect->setToolTip(tr("Connect to the selected device (or the configured G1 node) over the G1 GATT service"));
@@ -225,7 +556,16 @@ CFrmBleSession::setupUi(void)
   m_actPair       = toolbar->addAction(tr("Pair"));
   m_actPair->setToolTip(tr("Pair with the selected device. G1 needs authenticated (passkey) pairing."));
   toolbar->addSeparator();
+  m_actTheme = toolbar->addAction(QString());
+  m_actTheme->setToolTip(tr("Switch between dark and light theme"));
+  QWidget* spacer = new QWidget(this);
+  spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  toolbar->addWidget(spacer);
   QAction* actHelp = toolbar->addAction(tr("Help"));
+  actHelp->setToolTip(tr("Open the manual (F1)"));
+  actHelp->setShortcut(QKeySequence(Qt::Key_F1));
+  actHelp->setShortcutContext(Qt::WindowShortcut);
+  explorerstyle::setPrimary(toolbar, m_actScan);
 
   connect(m_actScan, &QAction::triggered, this, &CFrmBleSession::toggleScan);
   connect(m_actPause, &QAction::toggled, this, [this](bool on) { m_paused = on; });
@@ -233,6 +573,7 @@ CFrmBleSession::setupUi(void)
   connect(m_actConnect, &QAction::triggered, this, &CFrmBleSession::connectG1);
   connect(m_actDisconnect, &QAction::triggered, this, &CFrmBleSession::disconnectG1);
   connect(m_actPair, &QAction::triggered, this, &CFrmBleSession::pairDevice);
+  connect(m_actTheme, &QAction::triggered, this, &CFrmBleSession::toggleTheme);
   connect(actHelp, &QAction::triggered, this, &CFrmBleSession::showHelp);
 
   // Devices
@@ -244,9 +585,10 @@ CFrmBleSession::setupUi(void)
   m_tableDevices->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_tableDevices->horizontalHeader()->setSectionResizeMode(DEV_GUID, QHeaderView::Stretch);
   m_tableDevices->verticalHeader()->hide();
+  m_tableDevices->setShowGrid(false);
   connect(m_tableDevices, &QTableWidget::cellDoubleClicked, this, [this](int, int) { connectG1(); });
 
-  // Events
+  // VSCP events
   m_tableEvents = new QTableWidget(0, EV_COUNT, this);
   m_tableEvents->setHorizontalHeaderLabels({ tr("Time"),
                                              tr("Device"),
@@ -261,10 +603,41 @@ CFrmBleSession::setupUi(void)
   m_tableEvents->setEditTriggers(QAbstractItemView::NoEditTriggers);
   m_tableEvents->horizontalHeader()->setSectionResizeMode(EV_DATA, QHeaderView::Stretch);
   m_tableEvents->verticalHeader()->hide();
+  m_tableEvents->setShowGrid(false);
 
-  // G1 send box
-  QGroupBox* g1Box = new QGroupBox(tr("G1 connection"), this);
-  m_g1Status       = new QLabel(tr("Not connected"), g1Box);
+  // All advertising
+  QWidget* broadcastPage = new QWidget(this);
+  m_editBroadcastFilter  = new QLineEdit(broadcastPage);
+  m_editBroadcastFilter->setPlaceholderText(tr("Filter: address, name, company, UUID, data or decoded text"));
+  m_editBroadcastFilter->setClearButtonEnabled(true);
+  m_chkChangesOnly = new QCheckBox(tr("Only changed data"), broadcastPage);
+  m_chkChangesOnly->setChecked(true);
+  m_chkChangesOnly->setToolTip(tr("Devices repeat their advertising: add a row only when a device's data changes"));
+  m_tableBroadcasts = new QTableWidget(0, BC_COUNT, broadcastPage);
+  m_tableBroadcasts->setHorizontalHeaderLabels(
+    { tr("Time"), tr("Device"), tr("Name"), tr("RSSI"), tr("Kind"), tr("Company / UUID"), tr("Data"), tr("Decoded") });
+  m_tableBroadcasts->setSelectionBehavior(QAbstractItemView::SelectRows);
+  m_tableBroadcasts->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_tableBroadcasts->horizontalHeader()->setSectionResizeMode(BC_DATA, QHeaderView::Stretch);
+  m_tableBroadcasts->verticalHeader()->hide();
+  m_tableBroadcasts->setShowGrid(false);
+  m_tableBroadcasts->setFont(explorerstyle::monospaceFont());
+  connect(m_editBroadcastFilter, &QLineEdit::textChanged, this, &CFrmBleSession::filterBroadcasts);
+  QHBoxLayout* filterRow = new QHBoxLayout;
+  filterRow->addWidget(m_editBroadcastFilter, 1);
+  filterRow->addWidget(m_chkChangesOnly);
+  QVBoxLayout* broadcastLayout = new QVBoxLayout(broadcastPage);
+  broadcastLayout->setContentsMargins(8, 8, 8, 8);
+  broadcastLayout->addLayout(filterRow);
+  broadcastLayout->addWidget(m_tableBroadcasts, 1);
+
+  m_tabs = new QTabWidget(this);
+  m_tabs->addTab(m_tableEvents, tr("VSCP events"));
+  m_tabs->addTab(broadcastPage, tr("All advertising"));
+
+  // G1 send page
+  QWidget* g1Box = new QWidget(this);
+  m_g1Status     = new QLabel(tr("Not connected"), g1Box);
   m_g1Status->setWordWrap(true);
   m_editGuid  = new QLineEdit(g1Box);
   m_spinClass = new QSpinBox(g1Box);
@@ -276,6 +649,7 @@ CFrmBleSession::setupUi(void)
   m_editData = new QLineEdit("0,0,0", g1Box);
   m_editData->setToolTip(tr("Data octets separated by commas or spaces (decimal, 0x hex)"));
   m_btnSend = new QPushButton(tr("Send event"), g1Box);
+  explorerstyle::setPrimary(m_btnSend);
   connect(m_btnSend, &QPushButton::clicked, this, &CFrmBleSession::sendEvent);
 
   // Sender GUID: FF:FF:FF:FF:FF:FF:FF:FE + adapter address + 00:00
@@ -303,32 +677,218 @@ CFrmBleSession::setupUi(void)
   g1Form->addRow(tr("Type:"), m_spinType);
   g1Form->addRow(tr("Data:"), m_editData);
   QVBoxLayout* g1Layout = new QVBoxLayout(g1Box);
+  g1Layout->setContentsMargins(8, 8, 8, 8);
   g1Layout->addWidget(m_g1Status);
   g1Layout->addLayout(g1Form);
   g1Layout->addWidget(m_btnSend);
   g1Layout->addStretch();
 
+  QTabWidget* sideTabs = new QTabWidget(this);
+  sideTabs->addTab(g1Box, tr("G1 connection"));
+  sideTabs->addTab(createAdvertiseBox(), tr("Advertise"));
+
   QSplitter* top = new QSplitter(Qt::Horizontal, this);
   top->addWidget(m_tableDevices);
-  top->addWidget(g1Box);
+  top->addWidget(sideTabs);
   top->setStretchFactor(0, 3);
-  top->setStretchFactor(1, 1);
+  top->setStretchFactor(1, 2);
 
   QSplitter* main = new QSplitter(Qt::Vertical, this);
   main->addWidget(top);
-  main->addWidget(m_tableEvents);
+  main->addWidget(m_tabs);
   main->setStretchFactor(0, 1);
   main->setStretchFactor(1, 2);
 
   m_status = new QLabel(this);
+  m_status->setProperty("explorerRole", "trace");
 
   QVBoxLayout* layout = new QVBoxLayout(this);
-  layout->setContentsMargins(4, 4, 4, 4);
+  layout->setContentsMargins(14, 8, 14, 10);
+  layout->setSpacing(10);
   layout->addWidget(toolbar);
   layout->addWidget(main, 1);
   layout->addWidget(m_status);
 
+  applyTheme();
   updateG1Controls();
+  updateAdvertisingPreview();
+}
+
+QWidget*
+CFrmBleSession::createAdvertiseBox(void)
+{
+  QWidget* page = new QWidget(this);
+
+  m_chkAdvFlags = new QCheckBox(tr("Flags (LE General Discoverable)"), page);
+  m_chkAdvFlags->setChecked(true);
+  m_editAdvName = new QLineEdit(page);
+  m_editAdvName->setPlaceholderText(tr("Optional, shortened if it does not fit"));
+  m_editAdvCompany = new QLineEdit(page);
+  m_editAdvCompany->setPlaceholderText(tr("Empty: no manufacturer data"));
+  m_editAdvCompany->setToolTip(tr("Bluetooth SIG Company Identifier, for example 0x004C. 0xFFFF is for tests only."));
+  m_editAdvMfgData = new QLineEdit(page);
+  m_editAdvMfgData->setPlaceholderText(tr("Hex octets, for example 01 02 03"));
+  m_editAdvServiceUuid = new QLineEdit(page);
+  m_editAdvServiceUuid->setPlaceholderText(tr("Empty: no service data. FEAA or a 128-bit UUID"));
+  m_editAdvServiceData = new QLineEdit(page);
+  m_editAdvServiceData->setPlaceholderText(tr("Hex octets"));
+  m_chkAdvRaw = new QCheckBox(tr("Raw advertising data"), page);
+  m_chkAdvRaw->setToolTip(tr("Enter the complete advertising data (AD structures: length, type, value) instead"));
+  m_editAdvRaw = new QLineEdit(page);
+  m_editAdvRaw->setPlaceholderText(tr("For example 02 01 06 05 FF FF FF 01 02"));
+  m_spinAdvInterval = new QSpinBox(page);
+  m_spinAdvInterval->setRange(100, 10240);
+  m_spinAdvInterval->setValue(200);
+  m_spinAdvInterval->setSuffix(tr(" ms"));
+  m_spinAdvInterval->setToolTip(tr("Advertising interval. Non-connectable advertising sends at most every 100 ms."));
+  m_lblAdvPreview = new QLabel(page);
+  m_lblAdvPreview->setWordWrap(true);
+  m_lblAdvPreview->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_lblAdvPreview->setFont(explorerstyle::monospaceFont());
+  m_btnAdvertise = new QPushButton(tr("Start advertising"), page);
+  explorerstyle::setPrimary(m_btnAdvertise);
+
+  QFormLayout* form = new QFormLayout;
+  form->addRow(QString(), m_chkAdvFlags);
+  form->addRow(tr("Local name:"), m_editAdvName);
+  form->addRow(tr("Company:"), m_editAdvCompany);
+  form->addRow(tr("Manufacturer data:"), m_editAdvMfgData);
+  form->addRow(tr("Service UUID:"), m_editAdvServiceUuid);
+  form->addRow(tr("Service data:"), m_editAdvServiceData);
+  form->addRow(QString(), m_chkAdvRaw);
+  form->addRow(tr("Raw data:"), m_editAdvRaw);
+  form->addRow(tr("Interval:"), m_spinAdvInterval);
+
+  QVBoxLayout* layout = new QVBoxLayout(page);
+  layout->setContentsMargins(8, 8, 8, 8);
+  layout->addLayout(form);
+  layout->addWidget(m_lblAdvPreview);
+  layout->addWidget(m_btnAdvertise);
+#if defined(Q_OS_WIN)
+  QLabel* note = new QLabel(tr("The Qt Bluetooth module cannot advertise on Windows."), page);
+  note->setWordWrap(true);
+  layout->addWidget(note);
+  m_btnAdvertise->setEnabled(false);
+#elif defined(Q_OS_MACOS)
+  QLabel* note = new QLabel(tr("macOS only advertises the local name: other data is not sent."), page);
+  note->setWordWrap(true);
+  layout->addWidget(note);
+#endif
+  layout->addStretch();
+
+  for (QLineEdit* edit :
+       { m_editAdvName, m_editAdvCompany, m_editAdvMfgData, m_editAdvServiceUuid, m_editAdvServiceData, m_editAdvRaw }) {
+    connect(edit, &QLineEdit::textChanged, this, &CFrmBleSession::updateAdvertisingPreview);
+  }
+  connect(m_chkAdvFlags, &QCheckBox::toggled, this, &CFrmBleSession::updateAdvertisingPreview);
+  connect(m_chkAdvRaw, &QCheckBox::toggled, this, &CFrmBleSession::updateAdvertisingPreview);
+  connect(m_btnAdvertise, &QPushButton::clicked, this, &CFrmBleSession::toggleAdvertising);
+  return page;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Theme
+//
+
+void
+CFrmBleSession::applyTheme(void)
+{
+  static const QString tmpl = QStringLiteral(R"(
+    CFrmBleSession, QDialog, QWidget { background-color: @bg@; color: @fg@; }
+    QToolBar { background-color: @panel@; border: 1px solid @line@; border-radius: 14px; padding: 8px; spacing: 8px; }
+    QToolButton { background: transparent; color: @fg@; border: 1px solid @border@; border-radius: 16px; padding: 6px 16px; }
+    QToolButton:hover { border-color: @accent@; }
+    QToolButton:checked { color: @accent@; border-color: @accent@; }
+    QToolButton:disabled, QPushButton:disabled { color: @border@; border-color: @line@; }
+    QToolButton[explorerRole="primary"] { background-color: @accent@; color: @onacc@; border: none; font-weight: 600; }
+    QToolButton[explorerRole="primary"]:checked { background-color: @selbg@; color: @accent@; border: 1px solid @accent@; }
+    QMenu { background-color: @panel@; color: @fg@; border: 1px solid @line@; }
+    QMenu::item:selected { background-color: @line@; }
+    QTabWidget::pane { background-color: @panel@; border: 1px solid @line@; border-radius: 12px; top: -1px; }
+    QTabWidget > QWidget, QTabWidget QStackedWidget > QWidget { background-color: @panel@; }
+    QTabBar::tab { background: transparent; color: @muted@; border: 1px solid transparent; border-radius: 12px;
+      padding: 5px 14px; margin: 0 4px 4px 0; }
+    QTabBar::tab:selected { color: @accent@; border-color: @accent@; }
+    QTabBar::tab:hover { color: @fg@; }
+    QLineEdit, QComboBox, QSpinBox { background-color: @bg@; color: @fg@; border: 1px solid @border@;
+      border-radius: 8px; padding: 4px 8px; selection-background-color: @selbg@; selection-color: @accent@; }
+    QLineEdit:focus, QSpinBox:focus { border-color: @accent@; }
+    QLineEdit:disabled, QSpinBox:disabled { color: @muted@; border-color: @line@; }
+    QCheckBox { background: transparent; color: @fg@; spacing: 6px; }
+    QLabel { background: transparent; }
+    QPushButton { background: transparent; color: @fg@; border: 1px solid @border@; border-radius: 16px; padding: 6px 16px; }
+    QPushButton:hover { border-color: @accent@; }
+    QPushButton[explorerRole="primary"] { background-color: @accent@; color: @onacc@; border: none; font-weight: 600; }
+    QPushButton[explorerRole="primary"]:disabled { background-color: @line@; color: @muted@; }
+    QTableWidget { background-color: @panel@; alternate-background-color: @panel@; color: @fg@;
+      border: 1px solid @line@; border-radius: 12px; gridline-color: @line@; outline: 0; }
+    QTableWidget::item { padding: 2px 4px; border-bottom: 1px solid @line@; }
+    QTableWidget::item:selected { background-color: @selbg@; color: @accent@; }
+    QHeaderView { background-color: @panel@; }
+    QHeaderView::section { background-color: @panel@; color: @muted@; border: none; padding: 6px 4px;
+      font-size: 11px; font-weight: 600; }
+    QTableCornerButton::section { background-color: @panel@; border: none; }
+    QSplitter::handle { background-color: @bg@; }
+    QScrollBar:vertical { background: @panel@; width: 10px; margin: 2px; border: none; }
+    QScrollBar:horizontal { background: @panel@; height: 10px; margin: 2px; border: none; }
+    QScrollBar::handle { background: @border@; border-radius: 3px; min-height: 24px; min-width: 24px; }
+    QScrollBar::handle:hover { background: @muted@; }
+    QScrollBar::add-line, QScrollBar::sub-line { width: 0; height: 0; }
+    QScrollBar::add-page, QScrollBar::sub-page { background: none; }
+    QToolTip { background-color: @panel@; color: @fg@; border: 1px solid @border@; }
+    QLabel[explorerRole="trace"] { color: @muted@; font-size: 11px; font-weight: 600; padding: 2px 4px; }
+    QLabel[bleRole="ok"] { color: @muted@; }
+    QLabel[bleRole="error"] { color: @err@; }
+  )");
+  const QStringList light = { "#f5f5f5", "#ffffff", "#e5e5e5", "#d4d4d4", "#171717", "#737373",
+                              "#b45309", "#fef3c7", "#ffffff", "#b91c1c" };
+  const QStringList dark  = { "#0b0b0b", "#141414", "#262626", "#3f3f3f", "#e5e5e5", "#a3a3a3",
+                              "#fbbf24", "#3b2f0a", "#111111", "#fca5a5" };
+  const QStringList names = { "@bg@",     "@panel@", "@line@",  "@border@", "@fg@",
+                              "@muted@", "@accent@", "@selbg@", "@onacc@",  "@err@" };
+  const QStringList& colors = m_darkTheme ? dark : light;
+  QString sheet             = tmpl;
+  for (int i = 0; i < names.size(); ++i) {
+    sheet.replace(names.at(i), colors.at(i));
+  }
+  setStyleSheet(explorerstyle::styleSheet() + sheet);
+  if (nullptr != m_actTheme) {
+    m_actTheme->setText(m_darkTheme ? tr("Light theme") : tr("Dark theme"));
+  }
+
+  // Trust colors of the listed events
+  if (nullptr != m_tableEvents) {
+    for (int row = 0; row < m_tableEvents->rowCount(); row++) {
+      if (QTableWidgetItem* item = m_tableEvents->item(row, EV_TRUST)) {
+        item->setForeground(trustColor(static_cast<Trust>(item->data(Qt::UserRole).toInt())));
+      }
+    }
+  }
+}
+
+QColor
+CFrmBleSession::trustColor(Trust trust) const
+{
+  switch (trust) {
+    case Trust::Authenticated:
+      return QColor(m_darkTheme ? "#86efac" : "#15803d");
+    case Trust::Link:
+      return QColor(m_darkTheme ? "#67e8f9" : "#0e7490");
+    case Trust::Public:
+    default:
+      return QColor(m_darkTheme ? "#fbbf24" : "#b45309");
+  }
+}
+
+void
+CFrmBleSession::toggleTheme(void)
+{
+  m_darkTheme = !m_darkTheme;
+#ifndef VSCPWORKS_BLE_TEST
+  vscpworks_setConnectionTheme(m_conn, m_darkTheme);
+  emit connectionThemeChanged(vscpworks_connectionUuid(m_conn), m_darkTheme);
+#endif
+  applyTheme();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -512,6 +1072,8 @@ CFrmBleSession::deviceUpdated(const QBluetoothDeviceInfo& info, QBluetoothDevice
 void
 CFrmBleSession::handleAdvertising(const QBluetoothDeviceInfo& info)
 {
+  handleBroadcast(info);
+
   if (info.serviceUuids().contains(g1Uuid(0))) {
     updateDeviceRow(info, QString(), nullptr);
   }
@@ -647,19 +1209,15 @@ CFrmBleSession::addEvent(const QString& device,
 #endif
 
   QString trustText;
-  QColor color;
   switch (trust) {
     case Trust::Public:
       trustText = tr("public");
-      color     = QColor(200, 120, 0);
       break;
     case Trust::Authenticated:
       trustText = tr("authenticated");
-      color     = QColor(0, 140, 0);
       break;
     case Trust::Link:
       trustText = tr("secure link");
-      color     = QColor(0, 110, 180);
       break;
   }
 
@@ -680,7 +1238,8 @@ CFrmBleSession::addEvent(const QString& device,
   for (int col = 0; col < EV_COUNT; col++) {
     QTableWidgetItem* item = new QTableWidgetItem(cells[col]);
     if (EV_TRUST == col) {
-      item->setForeground(color);
+      item->setData(Qt::UserRole, static_cast<int>(trust));
+      item->setForeground(trustColor(trust));
       item->setToolTip(Trust::Public == trust ? tr("Unauthenticated: anyone can send this. Never act on it for "
                                                    "anything privileged.")
                                               : tr("Verified sender"));
@@ -737,6 +1296,282 @@ void
 CFrmBleSession::clearEvents(void)
 {
   m_tableEvents->setRowCount(0);
+  m_tableBroadcasts->setRowCount(0);
+  m_lastBroadcast.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// All advertising
+//
+
+void
+CFrmBleSession::handleBroadcast(const QBluetoothDeviceInfo& info)
+{
+  const QMultiHash<quint16, QByteArray> mfg = info.manufacturerData();
+  for (auto it = mfg.cbegin(); it != mfg.cend(); ++it) {
+    const QString name = companyName(it.key());
+    addBroadcast(info,
+                 tr("Manufacturer"),
+                 name.isEmpty() ? hex16(it.key()) : QString("%1 %2").arg(hex16(it.key()), name),
+                 it.value(),
+                 describeManufacturerData(it.key(), it.value(), m_company));
+  }
+
+  const QMultiHash<QBluetoothUuid, QByteArray> svc = info.serviceData();
+  for (auto it = svc.cbegin(); it != svc.cend(); ++it) {
+    addBroadcast(info, tr("Service data"), uuidText(it.key()), it.value(), describeServiceData(it.key(), it.value()));
+  }
+
+  const QList<QBluetoothUuid> uuids = info.serviceUuids();
+  if (!uuids.isEmpty()) {
+    QStringList list;
+    for (const QBluetoothUuid& u : uuids) {
+      list << uuidText(u);
+    }
+    addBroadcast(info, tr("Services"), QString(), QByteArray(), list.join(", "));
+  }
+
+  if (mfg.isEmpty() && svc.isEmpty() && uuids.isEmpty() && !info.name().isEmpty()) {
+    addBroadcast(info, tr("Name"), QString(), QByteArray(), QString());
+  }
+}
+
+void
+CFrmBleSession::addBroadcast(const QBluetoothDeviceInfo& info,
+                             const QString& kind,
+                             const QString& id,
+                             const QByteArray& data,
+                             const QString& decoded)
+{
+  if (m_paused) {
+    return;
+  }
+  const QString device = deviceKey(info);
+
+  // Devices repeat their advertising: by default only changes are listed.
+  // Services and names have no data, so compare what is shown instead.
+  const QString key   = device + "/" + kind + "/" + id;
+  const QByteArray v  = data.isEmpty() ? (info.name() + "|" + decoded).toUtf8() : data;
+  const bool changed  = !m_lastBroadcast.contains(key) || (m_lastBroadcast.value(key) != v);
+  m_lastBroadcast[key] = v;
+  if (!changed && m_chkChangesOnly->isChecked()) {
+    return;
+  }
+
+  if (m_tableBroadcasts->rowCount() >= MAX_BROADCAST_ROWS) {
+    m_tableBroadcasts->removeRow(0);
+  }
+  const int row = m_tableBroadcasts->rowCount();
+  m_tableBroadcasts->insertRow(row);
+  const QStringList cells = { QDateTime::currentDateTime().toString("HH:mm:ss.zzz"),
+                              device,
+                              info.name(),
+                              QString::number(info.rssi()),
+                              kind,
+                              id,
+                              hexBytes(data),
+                              decoded };
+  for (int col = 0; col < BC_COUNT; col++) {
+    QTableWidgetItem* item = new QTableWidgetItem(cells[col]);
+    if ((BC_DATA == col) || (BC_DECODED == col)) {
+      item->setToolTip(cells[col]);
+    }
+    m_tableBroadcasts->setItem(row, col, item);
+  }
+  const bool visible = broadcastRowMatches(row);
+  m_tableBroadcasts->setRowHidden(row, !visible);
+  if (visible) {
+    m_tableBroadcasts->scrollToBottom();
+  }
+}
+
+bool
+CFrmBleSession::broadcastRowMatches(int row) const
+{
+  const QString filter = m_editBroadcastFilter->text().trimmed();
+  if (filter.isEmpty()) {
+    return true;
+  }
+  for (int col = BC_DEVICE; col < BC_COUNT; col++) {
+    const QTableWidgetItem* item = m_tableBroadcasts->item(row, col);
+    if ((nullptr != item) && item->text().contains(filter, Qt::CaseInsensitive)) {
+      return true;
+    }
+  }
+  // Hex data may be typed without spaces
+  QString compact = filter;
+  compact.remove(' ');
+  const QTableWidgetItem* data = m_tableBroadcasts->item(row, BC_DATA);
+  return (nullptr != data) && QString(data->text()).remove(' ').contains(compact, Qt::CaseInsensitive);
+}
+
+void
+CFrmBleSession::filterBroadcasts(void)
+{
+  for (int row = 0; row < m_tableBroadcasts->rowCount(); row++) {
+    m_tableBroadcasts->setRowHidden(row, !broadcastRowMatches(row));
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Sending general advertising
+//
+
+bool
+CFrmBleSession::advertisingData(QByteArray& ad, QString& error) const
+{
+  if (m_chkAdvRaw->isChecked()) {
+    if (!parseHexBytes(m_editAdvRaw->text(), ad)) {
+      error = tr("The raw data must be hex octets");
+      return false;
+    }
+    return checkRawAdvertisingData(ad, error);
+  }
+
+  AdvertisingFields f;
+  f.flags = m_chkAdvFlags->isChecked();
+  f.name  = m_editAdvName->text();
+  const QString company = m_editAdvCompany->text().trimmed();
+  if (!company.isEmpty()) {
+    bool ok             = false;
+    const uint value    = company.toUInt(&ok, 0);
+    if (!ok || (value > 0xFFFF)) {
+      error = tr("The Company Identifier must be a number 0-0xFFFF");
+      return false;
+    }
+    f.hasManufacturer = true;
+    f.company         = static_cast<quint16>(value);
+    if (!parseHexBytes(m_editAdvMfgData->text(), f.manufacturerData)) {
+      error = tr("The manufacturer data must be hex octets");
+      return false;
+    }
+  }
+  else if (!m_editAdvMfgData->text().trimmed().isEmpty()) {
+    error = tr("Manufacturer data needs a Company Identifier");
+    return false;
+  }
+  if (!m_editAdvServiceUuid->text().trimmed().isEmpty()) {
+    if (!parseServiceUuid(m_editAdvServiceUuid->text(), f.serviceUuid)) {
+      error = tr("The service UUID must be 4 or 8 hex digits or a 128-bit UUID");
+      return false;
+    }
+    if (!parseHexBytes(m_editAdvServiceData->text(), f.serviceData)) {
+      error = tr("The service data must be hex octets");
+      return false;
+    }
+  }
+  else if (!m_editAdvServiceData->text().trimmed().isEmpty()) {
+    error = tr("Service data needs a service UUID");
+    return false;
+  }
+  return buildAdvertisingData(f, ad, error);
+}
+
+void
+CFrmBleSession::updateAdvertisingPreview(void)
+{
+  const bool raw = m_chkAdvRaw->isChecked();
+  for (QWidget* w : std::initializer_list<QWidget*>{ m_chkAdvFlags,
+                                                     m_editAdvName,
+                                                     m_editAdvCompany,
+                                                     m_editAdvMfgData,
+                                                     m_editAdvServiceUuid,
+                                                     m_editAdvServiceData }) {
+    w->setEnabled(!raw && !m_advertising);
+  }
+  m_editAdvRaw->setEnabled(raw && !m_advertising);
+  m_chkAdvRaw->setEnabled(!m_advertising);
+  m_spinAdvInterval->setEnabled(!m_advertising);
+
+  QByteArray ad;
+  QString error;
+  const bool ok = advertisingData(ad, error);
+  m_lblAdvPreview->setText(ok ? tr("%1/%2 octets: %3").arg(ad.size()).arg(LEGACY_ADV_MAX).arg(hexBytes(ad)) : error);
+  m_lblAdvPreview->setProperty("bleRole", ok ? "ok" : "error");
+  m_lblAdvPreview->style()->unpolish(m_lblAdvPreview);
+  m_lblAdvPreview->style()->polish(m_lblAdvPreview);
+  if (!m_advertising) {
+#if !defined(Q_OS_WIN)
+    m_btnAdvertise->setEnabled(ok);
+#endif
+  }
+}
+
+void
+CFrmBleSession::setAdvertising(bool on, const QString& text)
+{
+  m_advertising = on;
+  m_btnAdvertise->setText(on ? tr("Stop advertising") : tr("Start advertising"));
+  updateAdvertisingPreview();
+  logLine(text);
+}
+
+void
+CFrmBleSession::toggleAdvertising(void)
+{
+  if (m_advertising) {
+    if (nullptr != m_peripheral) {
+      m_peripheral->stopAdvertising();
+    }
+    setAdvertising(false, tr("Advertising stopped"));
+    return;
+  }
+
+  QByteArray ad;
+  QString error;
+  if (!advertisingData(ad, error)) {
+    setAdvertising(false, error);
+    return;
+  }
+
+  QLowEnergyAdvertisingData data;
+#if defined(Q_OS_LINUX)
+  // BlueZ sends the data as given
+  data.setRawData(ad);
+#else
+  // Other platforms build the data themselves
+  data.setDiscoverability(m_chkAdvRaw->isChecked() || m_chkAdvFlags->isChecked()
+                            ? QLowEnergyAdvertisingData::DiscoverabilityGeneral
+                            : QLowEnergyAdvertisingData::DiscoverabilityNone);
+  data.setLocalName(m_editAdvName->text());
+  if (!m_editAdvCompany->text().trimmed().isEmpty()) {
+    QByteArray mfg;
+    parseHexBytes(m_editAdvMfgData->text(), mfg);
+    data.setManufacturerData(static_cast<quint16>(m_editAdvCompany->text().trimmed().toUInt(nullptr, 0)), mfg);
+  }
+  if (m_chkAdvRaw->isChecked() || !m_editAdvServiceUuid->text().trimmed().isEmpty()) {
+    setAdvertising(false, tr("Raw data and service data can only be advertised on Linux"));
+    return;
+  }
+#endif
+
+  if (nullptr == m_peripheral) {
+    m_peripheral = m_adapter.isNull() ? QLowEnergyController::createPeripheral(this)
+                                      : QLowEnergyController::createPeripheral(m_adapter, this);
+    connect(m_peripheral, &QLowEnergyController::errorOccurred, this, [this](QLowEnergyController::Error e) {
+      QString text = m_peripheral->errorString();
+#if defined(Q_OS_LINUX)
+      if (QLowEnergyController::AdvertisingError == e) {
+        text += " " + tr("(advertising on Linux needs the CAP_NET_ADMIN capability, see the manual)");
+      }
+#else
+      Q_UNUSED(e);
+#endif
+      m_advErrors++;
+      setAdvertising(false, tr("Advertising failed: %1").arg(text));
+    });
+  }
+
+  QLowEnergyAdvertisingParameters params;
+  params.setMode(QLowEnergyAdvertisingParameters::AdvNonConnInd);
+  const int interval = m_spinAdvInterval->value();
+  params.setInterval(static_cast<quint16>(interval), static_cast<quint16>(interval));
+  const int errors = m_advErrors;
+  m_peripheral->startAdvertising(params, data);
+  if (errors != m_advErrors) {
+    return; // Already reported
+  }
+  setAdvertising(true, tr("Advertising %1 octets every %2 ms").arg(ad.size()).arg(interval));
 }
 
 void

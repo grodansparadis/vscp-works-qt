@@ -155,7 +155,8 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to VSCP master with the safe MDF load/save and full MDF
+  # Pinned to VSCP master with the TCP/IP empty receive queue fix (polling
+  # no longer waits 2 s per poll), the safe MDF load/save and full MDF
   # specification support, the register read/write fix and the ws1/ws2
   # websocket clients (on top of the
   # receive filters for the CANAL, SocketCAN and MQTT clients, the Windows
@@ -166,8 +167,8 @@ FetchContent_Declare(
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/6dc1ec7288465efeca9429159f1be40d533c4c83
-  URL_HASH SHA256=5eb8237b47831e8b12b035fd3911868882b5e2a2a709d1722e1f4a6c0377ae17
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/498762d2b19cc4d8bdc2a0abb3648a3315441c91
+  URL_HASH SHA256=9813f0cbfaf01e4c8c438c8fc06b4dca6af7caf25ebccfba48a6ec13cce1bf43
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)
@@ -761,6 +762,7 @@ if(BUILD_TESTING)
     add_executable(ble_session_regressions
       test/ble_session_regressions.cpp
       src/cfrmblesession.h
+      src/explorerstyle.cpp
       ${VSCP_BLE_SOURCES}
     )
     target_compile_definitions(ble_session_regressions PRIVATE VSCPWORKS_BLE_TEST)

@@ -2,7 +2,9 @@
 //
 // Bluetooth LE session window: receives VSCP events from Bluetooth LE
 // advertising (E1, A2, F1, L0) and talks to a node over the G1 GATT
-// service. Uses the vscp-ble library for all frame handling.
+// service. Uses the vscp-ble library for all frame handling. It also shows
+// all other advertising data (manufacturer and service data) and can send
+// general legacy advertising.
 //
 // This file is part of the VSCP (https://www.vscp.org)
 //
@@ -37,6 +39,7 @@
 #include <QBluetoothDeviceDiscoveryAgent>
 #include <QBluetoothDeviceInfo>
 #include <QBluetoothLocalDevice>
+#include <QColor>
 #include <QDialog>
 #include <QElapsedTimer>
 #include <QHash>
@@ -56,10 +59,12 @@ using json = nlohmann::json;
 #include "vscp-ble-g1.h"
 
 class QAction;
+class QCheckBox;
 class QLabel;
 class QLineEdit;
 class QPushButton;
 class QSpinBox;
+class QTabWidget;
 class QTableWidget;
 
 class CFrmBleSession : public QDialog
@@ -69,6 +74,10 @@ class CFrmBleSession : public QDialog
 public:
   explicit CFrmBleSession(QWidget* parent, json* pconn);
   ~CFrmBleSession();
+
+signals:
+  /// The user switched the theme of this connection's window
+  void connectionThemeChanged(const QString& uuid, bool darkTheme);
 
 private slots:
   // Scanning
@@ -96,6 +105,12 @@ private slots:
 
   void clearEvents(void);
   void showHelp(void);
+  void toggleTheme(void);
+
+  // General advertising
+  void filterBroadcasts(void);
+  void updateAdvertisingPreview(void);
+  void toggleAdvertising(void);
 
 private:
   enum class Trust
@@ -106,6 +121,9 @@ private:
   };
 
   void setupUi(void);
+  QWidget* createAdvertiseBox(void);
+  void applyTheme(void);
+  QColor trustColor(Trust trust) const;
   void loadKeys(void);
   void loadReplayState(void);
   bool saveReplayState(void);
@@ -114,6 +132,19 @@ private:
   /// Decode the VSCP frames in one advertising report
   void handleAdvertising(const QBluetoothDeviceInfo& info);
   void handleFrame(const QBluetoothDeviceInfo& info, const QByteArray& ad);
+
+  /// List the manufacturer data, service data and services of a report
+  void handleBroadcast(const QBluetoothDeviceInfo& info);
+  void addBroadcast(const QBluetoothDeviceInfo& info,
+                    const QString& kind,
+                    const QString& id,
+                    const QByteArray& data,
+                    const QString& decoded);
+  bool broadcastRowMatches(int row) const;
+
+  /// Advertising data from the Advertise box; false with a reason if invalid
+  bool advertisingData(QByteArray& ad, QString& error) const;
+  void setAdvertising(bool on, const QString& text);
 
   /// Add a received event to the event list
   void addEvent(const QString& device,
@@ -152,6 +183,8 @@ private:
   std::unique_ptr<vscp_ble_f1_rx_t> m_f1rx;
   QElapsedTimer m_clock;
   bool m_paused;
+  bool m_darkTheme;
+  QHash<QString, QByteArray> m_lastBroadcast; ///< device/kind/id -> last data
 
   // G1
   QLowEnergyController* m_ctrl;
@@ -166,6 +199,11 @@ private:
   uint16_t m_g1MaxRecord;
   QTimer m_g1Timer;
   QBluetoothLocalDevice* m_localDevice;
+
+  // Sending general advertising (peripheral role)
+  QLowEnergyController* m_peripheral;
+  bool m_advertising;
+  int m_advErrors; ///< Counts advertising errors (they can be reported during startAdvertising)
 
   // Widgets
   QTableWidget* m_tableDevices;
@@ -182,6 +220,24 @@ private:
   QAction* m_actConnect;
   QAction* m_actDisconnect;
   QAction* m_actPair;
+  QAction* m_actTheme;
+  QTabWidget* m_tabs;
+  QTableWidget* m_tableBroadcasts;
+  QLineEdit* m_editBroadcastFilter;
+  QCheckBox* m_chkChangesOnly;
+
+  // Advertise box
+  QCheckBox* m_chkAdvRaw;
+  QLineEdit* m_editAdvRaw;
+  QCheckBox* m_chkAdvFlags;
+  QLineEdit* m_editAdvName;
+  QLineEdit* m_editAdvCompany;
+  QLineEdit* m_editAdvMfgData;
+  QLineEdit* m_editAdvServiceUuid;
+  QLineEdit* m_editAdvServiceData;
+  QSpinBox* m_spinAdvInterval;
+  QLabel* m_lblAdvPreview;
+  QPushButton* m_btnAdvertise;
 };
 
 #endif // CFRMBLESESSION_H
