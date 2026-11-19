@@ -75,6 +75,8 @@
 #include "cfrmnodeconfig.h"
 #include "cfrmnodescan.h"
 #include "cfrmrawcansession.h"
+#include "cfrmblesession.h"
+#include "cdlgconnsettingsble.h"
 #include "cfrmsession.h"
 #include "cfrmmqttexplorer.h"
 #include "cfrmvscplinktest.h"
@@ -324,6 +326,9 @@ extractImportedConnection(json& conn, QString& err)
              "level ii driver" == normalized) {
       conn["type"] = static_cast<int>(CVscpClient::connType::LEVEL2);
     }
+    else if ("ble" == normalized || "bluetooth" == normalized || "bluetooth le" == normalized) {
+      conn["type"] = VSCPWORKS_CONNTYPE_BLE;
+    }
     else {
       bool ok = false;
       const int numericType = type.toInt(&ok);
@@ -403,6 +408,14 @@ parseImportedConnectionText(const QString& text, json& conn, QString& err)
   }
 
   return extractImportedConnection(conn, err);
+}
+
+/// True for a Bluetooth LE connection (handled by VSCP Works, no CVscpClient)
+bool
+isBleConnection(const json* pconn)
+{
+  return (nullptr != pconn) && pconn->contains("type") && (*pconn)["type"].is_number_integer() &&
+         (VSCPWORKS_CONNTYPE_BLE == (*pconn)["type"].get<int>());
 }
 
 template <typename DialogT, typename SaveFunc>
@@ -596,6 +609,15 @@ MainWindow::MainWindow()
   m_topitem_rawcan->setForeground(0, b);
   m_topitem_rawcan->setFont(0, font);
   m_connTreeTable->addTopLevelItem(m_topitem_rawcan);
+
+  // Bluetooth LE
+  QStringList strlist_ble(QString(tr("Bluetooth LE Connections")).split(','));
+  m_topitem_ble = new QTreeWidgetItem(strlist_ble, VSCPWORKS_CONNTYPE_BLE);
+  m_topitem_ble->setIcon(0, iconTest);
+  m_topitem_ble->setToolTip(0, "Holds VSCP Bluetooth LE connections.");
+  m_topitem_ble->setForeground(0, b);
+  m_topitem_ble->setFont(0, font);
+  m_connTreeTable->addTopLevelItem(m_topitem_ble);
 
   // tcp/ip
   QStringList strlist_tcpip(QString(tr("TCP/IP Connections")).split(','));
@@ -939,7 +961,11 @@ MainWindow::addLoadedConnections(void)
 
     spdlog::trace("{}", SecretStore::withoutSecrets(j).dump(4));
 
-    if (j.contains("type") && j["type"].is_number()) {
+    if (isBleConnection(&j)) {
+      addChildItemToConnectionTree(m_topitem_ble, j);
+      m_topitem_ble->sortChildren(0, Qt::AscendingOrder);
+    }
+    else if (j.contains("type") && j["type"].is_number()) {
 
       switch (
         static_cast<CVscpClient::connType>(j["type"].get<int>())) {
@@ -1075,6 +1101,9 @@ MainWindow::openConnectionSettingsDialog(CVscpClient::connType type)
       break;
 
     default:
+      if (VSCPWORKS_CONNTYPE_BLE == static_cast<int>(type)) {
+        newBleConnection();
+      }
       break;
   }
 }
@@ -1161,6 +1190,10 @@ MainWindow::editConnectionItem(void)
 
         case static_cast<int>(CVscpClient::connType::LEVEL2):
           editLevel2Connection(itemConn);
+          break;
+
+        case VSCPWORKS_CONNTYPE_BLE:
+          editBleConnection(itemConn);
           break;
 
         default:
@@ -1257,6 +1290,10 @@ MainWindow::cloneConnectionItem(void)
         case static_cast<int>(CVscpClient::connType::LEVEL2):
           // Add connection to connection tree
           addChildItemToConnectionTree(m_topitem_level2, conn_copy);
+          break;
+
+        case VSCPWORKS_CONNTYPE_BLE:
+          addChildItemToConnectionTree(m_topitem_ble, conn_copy);
           break;
 
         default:
@@ -1405,7 +1442,7 @@ MainWindow::importConnectionData(const QString& text)
   const int connType = conn["type"].get<int>();
   const bool bUsesSecrets =
     (connType != static_cast<int>(CVscpClient::connType::CANAL)) &&
-    (connType != static_cast<int>(CVscpClient::connType::SOCKETCAN));
+    (connType != static_cast<int>(CVscpClient::connType::SOCKETCAN)) && (connType != VSCPWORKS_CONNTYPE_BLE);
   if (bUsesSecrets && !SecretStore::hasSecrets(conn)) {
     for (const char* field : { "password", "pwkeyfile" }) {
       if (!conn.contains(field)) {
@@ -1417,6 +1454,17 @@ MainWindow::importConnectionData(const QString& text)
                              tr("Passwords and keys are not included in exported connections.\n\n"
                                 "Enter them in the connection dialog that opens now."),
                              QMessageBox::Ok);
+  }
+
+  if (VSCPWORKS_CONNTYPE_BLE == connType) {
+    // A2 keys are secrets and never exported: enter them in the dialog
+    if (executeConnectionDialog<CDlgConnSettingsBle>(this, &conn, [this](json& imported) {
+          return saveNewConnection(imported, m_topitem_ble);
+        })) {
+      statusBar()->showMessage(tr("Session data imported"), 2000);
+      return true;
+    }
+    return false;
   }
 
   switch (static_cast<CVscpClient::connType>(conn["type"].get<int>())) {
@@ -1634,6 +1682,10 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
         newSession();
         break;
 
+      case VSCPWORKS_CONNTYPE_BLE:
+        newBleSession();
+        break;
+
       default:
         break;
     }
@@ -1680,6 +1732,10 @@ MainWindow::onDoubleClicked(QTreeWidgetItem* item)
 
       case static_cast<int>(CVscpClient::connType::LEVEL2):
         newLevel2Connection();
+        break;
+
+      case VSCPWORKS_CONNTYPE_BLE:
+        newBleConnection();
         break;
 
       default:
@@ -1786,12 +1842,29 @@ MainWindow::showConnectionContextMenu(const QPoint& pos)
                         SLOT(newLevel2Connection()));
         break;
 
+      case VSCPWORKS_CONNTYPE_BLE:
+        menu->addAction(QString(tr("Add new Bluetooth LE connection...")),
+                        this,
+                        SLOT(newBleConnection()));
+        break;
+
       default:
         menu->addAction(QString(tr("Add new connection...")),
                         this,
                         SLOT(newConnection()));
         break;
     }
+  }
+  else if (VSCPWORKS_CONNTYPE_BLE == item->parent()->type()) {
+    // Bluetooth LE: its own session window only (no VSCP client behind it)
+    menu->addAction(QString(tr("Add new Bluetooth LE connection")), this, SLOT(newBleConnection()));
+    menu->addAction(QString(tr("Edit this connection")), this, SLOT(editConnectionItem()));
+    menu->addAction(QString(tr("Remove this connection")), this, SLOT(removeConnectionItem()));
+    menu->addAction(QString(tr("Clone this connection")), this, SLOT(cloneConnectionItem()));
+    menu->addAction(QString(tr("Copy session data to clipboard")), this, SLOT(copyConnectionDataToClipboard()));
+    menu->addAction(QString(tr("Save session data to file")), this, SLOT(saveConnectionDataToFile()));
+    menu->addSeparator();
+    menu->addAction(QIcon(":/page.png"), QString(tr("Bluetooth LE session")), this, SLOT(newBleSession()));
   }
   else {
     switch (item->parent()->type()) {
@@ -2325,6 +2398,11 @@ MainWindow::createActions()
   connect(newRawCanSessionAct, &QAction::triggered, this, &MainWindow::newRawCanSession);
   fileMenu->addAction(newRawCanSessionAct);
   fileToolBar->addAction(newRawCanSessionAct);
+
+  QAction* newBleSessionAct = new QAction(QIcon(":/page.png"), tr("&Bluetooth LE session..."), this);
+  newBleSessionAct->setStatusTip(tr("Open a Bluetooth LE session window (VSCP over Bluetooth LE)"));
+  connect(newBleSessionAct, &QAction::triggered, this, &MainWindow::newBleSession);
+  fileMenu->addAction(newBleSessionAct);
 #endif
 
   fileMenu->addSeparator();
@@ -2713,6 +2791,10 @@ MainWindow::newSession()
       // Get the connection object
 
       json* pconn    = itemConn->getJson();
+      if (isBleConnection(pconn)) {
+        newBleSession(); // Bluetooth LE has its own session window
+        continue;
+      }
       const int type = (*pconn)["type"].get<int>();
       CFrmSession* w = new CFrmSession(this, pconn);
       connect(w,
@@ -2919,6 +3001,88 @@ MainWindow::newRawCanSession()
 #endif
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// newBleSession
+//
+
+void
+MainWindow::newBleSession()
+{
+  auto openWindow = [this](json* pconn) {
+    CFrmBleSession* w = new CFrmBleSession(this, pconn);
+    w->setAttribute(Qt::WA_DeleteOnClose, true);
+    w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+    w->setWindowFlags(Qt::Window);
+    w->show();
+    w->raise();
+    w->activateWindow();
+  };
+
+  bool opened = false;
+  for (QTreeWidgetItem* item : m_connTreeTable->selectedItems()) {
+    if ((nullptr == item) || (nullptr == item->parent())) {
+      continue;
+    }
+    json* pconn = ((treeWidgetItemConn*)item)->getJson();
+    if (isBleConnection(pconn)) {
+      openWindow(pconn);
+      opened = true;
+    }
+  }
+
+  if (!opened) {
+    // No Bluetooth LE connection selected: create one first
+    executeConnectionDialog<CDlgConnSettingsBle>(this, nullptr, [this, openWindow](json& conn) {
+      if (!saveNewConnection(conn, m_topitem_ble)) {
+        return false;
+      }
+      openWindow(&conn);
+      return true;
+    });
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// newBleConnection
+//
+
+void
+MainWindow::newBleConnection()
+{
+  executeConnectionDialog<CDlgConnSettingsBle>(this, nullptr, [this](json& conn) {
+    return saveNewConnection(conn, m_topitem_ble);
+  });
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// editBleConnection
+//
+
+void
+MainWindow::editBleConnection(treeWidgetItemConn* itemConn)
+{
+  vscpworks* pworks = (vscpworks*)QCoreApplication::instance();
+  json* pconn       = itemConn->getJson();
+
+  CDlgConnSettingsBle dlg(this);
+  dlg.setJson(pconn);
+  dlg.setInitialFocus();
+
+  while (QDialog::Accepted == dlg.exec()) {
+    if (dlg.getName().isEmpty()) {
+      QMessageBox::warning(this, tr(APPNAME), tr("A connection needs a description"), QMessageBox::Ok);
+      continue;
+    }
+    json conn = dlg.getJson();
+    itemConn->setJson(conn);
+    pworks->m_mapConn[conn["uuid"].get<std::string>().c_str()] = conn;
+    pworks->writeSettings();
+    itemConn->setText(0, conn["name"].get<std::string>().c_str());
+    m_topitem_ble->sortChildren(0, Qt::AscendingOrder);
+    break;
+  }
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 // newVscpLinkProtocolTest
 //
@@ -2934,7 +3098,7 @@ MainWindow::newVscpLinkProtocolTest()
       continue;
     }
     treeWidgetItemConn* itemConn = (treeWidgetItemConn*)item;
-    pconn = itemConn->getJson();
+    pconn = isBleConnection(itemConn->getJson()) ? nullptr : itemConn->getJson();
     break;
   }
 
@@ -3550,6 +3714,14 @@ MainWindow::newNodeConfiguration()
       // Get the connection object
       json* pconn = itemConn->getJson();
 
+      if (isBleConnection(pconn)) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("This is not available for Bluetooth LE connections. "
+                                    "Use the Bluetooth LE session window."));
+        continue;
+      }
+
       CFrmNodeConfig* w = new CFrmNodeConfig(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
       w->setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
@@ -3593,6 +3765,14 @@ MainWindow::newNodeScan()
 
       // Get the connection object
       json* pconn = itemConn->getJson();
+
+      if (isBleConnection(pconn)) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("This is not available for Bluetooth LE connections. "
+                                    "Use the Bluetooth LE session window."));
+        continue;
+      }
 
       CFrmNodeScan* w = new CFrmNodeScan(this, pconn);
       w->setAttribute(Qt::WA_DeleteOnClose, true); // Make window close on exit
@@ -3638,6 +3818,14 @@ MainWindow::newNodeBootload()
 
       // Get the connection object
       json* pconn = itemConn->getJson();
+
+      if (isBleConnection(pconn)) {
+        QMessageBox::information(this,
+                                 tr(APPNAME),
+                                 tr("This is not available for Bluetooth LE connections. "
+                                    "Use the Bluetooth LE session window."));
+        continue;
+      }
 
       CBootLoadWizard wiz(this, pconn);
       if (VSCP_ERROR_SUCCESS != (rv = wiz.initBootLoaderWizard())) {

@@ -41,6 +41,7 @@
 
 #include "filedownloader.h"
 #include "vscpworks.h"
+#include "cdlgconnsettingsble.h"
 
 #include <mustache.hpp>
 
@@ -301,6 +302,10 @@ QString
 vscpworks::getConnectionName(CVscpClient::connType type)
 {
   QString str = tr("Unknown type");
+
+  if (VSCPWORKS_CONNTYPE_BLE == static_cast<int>(type)) {
+    return tr("VSCP Bluetooth LE connection");
+  }
 
   switch (type) {
 

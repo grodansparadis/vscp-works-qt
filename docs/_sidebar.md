@@ -39,6 +39,9 @@
   * [CAN raw explorer](rawcan_window.md)
   * [MQTT raw explorer](mqtt_explorer_window.md)
 
+* **Bluetooth LE**
+  * [Bluetooth LE session](ble_window.md)
+
 * **Node scan window**
   * [General](scan_window.md)
 

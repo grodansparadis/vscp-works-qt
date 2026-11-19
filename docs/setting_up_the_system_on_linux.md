@@ -24,7 +24,7 @@ If you use the Qt packages of the distribution (Debian 13 and later):
 
 ```bash
 sudo apt install qt6-base-dev qt6-declarative-dev qt6-charts-dev \
-  qt6-serialbus-dev qt6-serialport-dev qt6-tools-dev
+  qt6-serialbus-dev qt6-serialport-dev qt6-connectivity-dev qt6-tools-dev
 ```
 
 If you use Qt from the online installer, you may also need the OpenGL development files:

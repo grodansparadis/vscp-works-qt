@@ -31,6 +31,7 @@
 #endif
 
 #include "cdlgnewconnection.h"
+#include "cdlgconnsettingsble.h"
 #include "mainwindow.h"
 #include "ui_cdlgnewconnection.h"
 #include <QDesktopServices>
@@ -139,6 +140,11 @@ CDlgNewConnection::addConnectionItems(void)
   const QIcon iconLevel2      = QIcon::fromTheme("network-transmit-receive", QIcon(":add.png"));
   QListWidgetItem* itemLevel2 = new QListWidgetItem(iconLevel2, QString::fromUtf8("Level II driver"), nullptr, static_cast<int>(CVscpClient::connType::LEVEL2));
   ui->listWidgetConnectionTypes->addItem(itemLevel2);
+
+  // Bluetooth LE (handled by VSCP Works, see cdlgconnsettingsble.h)
+  QListWidgetItem* itemBle = new QListWidgetItem(iconLevel2, QString::fromUtf8("Bluetooth LE"), nullptr, VSCPWORKS_CONNTYPE_BLE);
+  itemBle->setToolTip(tr("VSCP over Bluetooth LE: E1/A2/F1 advertising and the G1 GATT service"));
+  ui->listWidgetConnectionTypes->addItem(itemBle);
   itemLevel2->setToolTip("Load and use a VSCP Level II driver (vscpl2drv-*)");
 }
 

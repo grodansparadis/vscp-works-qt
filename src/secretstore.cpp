@@ -54,7 +54,8 @@ const char* const KEYRING_SERVICE = "VSCP Works";
 const char* const KEYRING_PREFIX  = "vscpworks/connection/";
 
 // Fields that hold secrets in all connection types
-const char* const SECRET_FIELDS[] = { "password", "key", "hmac-key", "binary-key", "binary-hmac-key", "pwkeyfile" };
+// "a2-keys": provisioned Bluetooth LE A2 keys (whole list)
+const char* const SECRET_FIELDS[] = { "password", "key", "hmac-key", "binary-key", "binary-hmac-key", "pwkeyfile", "a2-keys" };
 
 bool
 isEmptyValue(const json& v)

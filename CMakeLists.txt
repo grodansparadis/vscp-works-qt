@@ -83,7 +83,7 @@ set(REQUIRED_QT_VERSION "6.8.1")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # qt -   
-find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help)
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Widgets Core Network Qml Charts Quick SerialBus SerialPort Help Bluetooth)
 qt_standard_project_setup()
 
 # pthreads
@@ -177,6 +177,28 @@ FetchContent_MakeAvailable(vscp)
 # sources. Defines VSCP_NLOHMANN_INCLUDE_DIR, VSCP_SPDLOG_INCLUDE_DIR,
 # VSCP_MUSTACHE_INCLUDE_DIR and VSCP_MADDY_INCLUDE_DIR.
 include("${vscp_SOURCE_DIR}/cmake/VSCPDependencies.cmake")
+
+# vscp-ble: VSCP over Bluetooth LE frame codecs (E1, A2, F1, G1, L0) for the
+# Bluetooth LE session window. C99 sources compiled in with the OpenSSL
+# AES-CCM backend. Get URL_HASH with:
+# curl -sL https://codeload.github.com/grodansparadis/vscp-ble/tar.gz/<commit> | sha256sum
+FetchContent_Declare(
+  vscp_ble
+  URL https://codeload.github.com/grodansparadis/vscp-ble/tar.gz/764b22f3850ac2dd124f743038ed5d24ee141a89
+  URL_HASH SHA256=2d6df0885732764e72ef7c08e4ba6cdb9bafd535aa5035805a4c416ebc285e1c
+  ${VSCP_FETCH_CONTENT_OPTIONS}
+)
+FetchContent_MakeAvailable(vscp_ble)
+set(VSCP_BLE_SOURCES
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-common.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-counter.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-e1.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-l0.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-a2.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-f1.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-g1.c
+  ${vscp_ble_SOURCE_DIR}/src/vscp-ble-crypto-openssl.c
+)
 
 FetchContent_Declare(
   sqlite3
@@ -332,6 +354,10 @@ qt_add_executable(${PROJECT_NAME}
   src/cfrmmqttexplorer.cpp
   src/cfrmrawcansession.h
   src/cfrmrawcansession.cpp
+  src/cfrmblesession.h
+  src/cfrmblesession.cpp
+  src/cdlgconnsettingsble.h
+  src/cdlgconnsettingsble.cpp
   src/explorerstyle.h
   src/explorerstyle.cpp
   src/cfrmvscplinktest.h
@@ -665,6 +691,7 @@ qt_add_executable(${PROJECT_NAME}
   ${VSCP_MUSTACHE_INCLUDE_DIR}/mustache.hpp
   ${sqlite3_SOURCE_DIR}/sqlite3.h
   ${sqlite3_SOURCE_DIR}/sqlite3.c
+  ${VSCP_BLE_SOURCES}
   install/${PROJECT_NAME}.desktop
   ${TS_FILES}   
 ) 
@@ -692,6 +719,8 @@ elseif(APPLE)
   )
   set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_ICON_FILE vscpworks.icns
+    # Qt's template plus the Bluetooth usage text macOS requires
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/cmake/MacOSXBundleInfo.plist.in"
   )
 endif()
 
@@ -726,6 +755,23 @@ if(BUILD_TESTING)
       Qt6::Widgets Qt6::SerialBus ${MOSQUITTO_LIBRARIES}
     )
     add_test(NAME explorer_regressions COMMAND explorer_regressions)
+
+    # Bluetooth LE session window: decoding of E1, A2, F1 and L0 advertising
+    # (vscp-ble vectors), without Bluetooth hardware
+    add_executable(ble_session_regressions
+      test/ble_session_regressions.cpp
+      src/cfrmblesession.h
+      ${VSCP_BLE_SOURCES}
+    )
+    target_compile_definitions(ble_session_regressions PRIVATE VSCPWORKS_BLE_TEST)
+    target_include_directories(ble_session_regressions PRIVATE
+      $<TARGET_PROPERTY:${PROJECT_NAME},INCLUDE_DIRECTORIES>
+    )
+    target_link_libraries(ble_session_regressions PRIVATE Qt6::Widgets Qt6::Bluetooth OpenSSL::Crypto)
+    add_test(NAME ble_session_regressions COMMAND ble_session_regressions)
+    set_tests_properties(ble_session_regressions PROPERTIES
+      ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30
+    )
     set_tests_properties(explorer_regressions PROPERTIES
       ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30
     )
@@ -797,6 +843,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Help
   Qt6::SerialBus
   Qt6::SerialPort
+  Qt6::Bluetooth
   PThreads4W::PThreads4W
   OpenSSL::SSL
   OpenSSL::Crypto
@@ -819,6 +866,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   Qt6::Help
   Qt6::SerialBus
   Qt6::SerialPort
+  Qt6::Bluetooth
   m
   dl
   Threads::Threads
@@ -831,6 +879,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   ${DLFCN_LIBS}
 )
 endif()
+
+# vscp-ble headers
+target_include_directories(${PROJECT_NAME} PRIVATE ${vscp_ble_SOURCE_DIR}/src)
 
 # OS keyring for passwords and keys (QtKeychain)
 target_link_libraries(${PROJECT_NAME} PRIVATE qt6keychain)

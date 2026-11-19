@@ -10,7 +10,7 @@ VSCP Works needs Qt 6.8.1 or later and CMake 3.31 or later. Raspberry Pi OS base
 sudo apt update
 sudo apt install git cmake build-essential \
   qt6-base-dev qt6-declarative-dev qt6-charts-dev qt6-serialbus-dev \
-  qt6-serialport-dev qt6-tools-dev \
+  qt6-serialport-dev qt6-connectivity-dev qt6-tools-dev \
   libexpat1-dev libssl-dev libsecret-1-dev libmosquitto-dev libcurl4-openssl-dev
 ```
 
