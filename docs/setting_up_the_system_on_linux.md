@@ -64,7 +64,7 @@ Use `-DCMAKE_BUILD_TYPE=Debug` to build a version for debugging.
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DVSCPWORKS_DEPLOY_RUNTIME=ON
-cmake --build build --parallel
+cmake --build build --parallel 4
 cd build
 cpack
 ```

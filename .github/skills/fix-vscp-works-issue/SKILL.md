@@ -1,8 +1,8 @@
 ---
+name: fix-vscp-works-issue
 description: "Use this prompt when you need to investigate, fix, and verify a bug or regression in the VSCP Works Qt/C++ codebase."
-mode: agent
+disable-model-invocation: true
 ---
-
 You are working in the VSCP Works repository and should treat this as a focused debugging-and-fix task.
 
 Follow these steps:
