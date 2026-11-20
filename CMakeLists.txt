@@ -155,7 +155,8 @@ set(VSCP_FETCH_CONTENT_OPTIONS
 
 FetchContent_Declare(
   vscp
-  # Pinned to VSCP master with the TCP/IP empty receive queue fix (polling
+  # Pinned to VSCP master with measurement unit conversion and float
+  # measurement values MSB first, the TCP/IP empty receive queue fix (polling
   # no longer waits 2 s per poll), the safe MDF load/save and full MDF
   # specification support, the register read/write fix and the ws1/ws2
   # websocket clients (on top of the
@@ -167,8 +168,8 @@ FetchContent_Declare(
   # submodules.
   # Get URL_HASH with:
   # curl -sL https://codeload.github.com/grodansparadis/vscp/tar.gz/<commit> | sha256sum
-  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/498762d2b19cc4d8bdc2a0abb3648a3315441c91
-  URL_HASH SHA256=9813f0cbfaf01e4c8c438c8fc06b4dca6af7caf25ebccfba48a6ec13cce1bf43
+  URL https://codeload.github.com/grodansparadis/vscp/tar.gz/50a5337c3d09b3c9dc68b2f2c38f27f3832da3a3
+  URL_HASH SHA256=fa144ac34be2bedf85da00cbef01bfd3a95c9f990ad611224a41ee43c45d8e81
   ${VSCP_FETCH_CONTENT_OPTIONS}
 )
 FetchContent_MakeAvailable(vscp)

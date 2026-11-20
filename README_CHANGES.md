@@ -7,6 +7,7 @@ tagged, rename **Unreleased** to the version and date, and start a new
 
 ## Unreleased
 
+- Build against vscp 50a5337c3: measurement unit conversion in the helper (`vscp_convertMeasurementUnit()`, ...) and floating point measurement values read and written MSB first, as the specification says
 - TCP/IP: polling (connections with **Poll** set) is fast again. Every poll of an empty receive queue waited the full 2 s response timeout, because the client did not recognize the server's `-OK - No event(s) available` reply, so events arrived late and sending was blocked meanwhile. One poll now takes a round trip (6 ms to a local node). Fixed in the VSCP TCP/IP client; the VSCP pin is updated
 - Bluetooth LE window: dark and light theme (toolbar button), saved with the connection like the other session windows
 - Bluetooth LE window: new **All advertising** tab that lists the advertising of all devices (manufacturer data, service data, services, names) with a filter and an "only changed data" option, and decodes VSCP frames, iBeacon and Eddystone UID/URL/TLM. New **Advertise** box that sends general legacy advertising (flags, local name, manufacturer data, service data, or raw AD structures) at a chosen interval; on Linux it needs `CAP_NET_ADMIN`. Documentation in docs/ble_window.md
